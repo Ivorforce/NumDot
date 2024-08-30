@@ -1,14 +1,9 @@
-#include "gdexample.h"
+#include "ndarray.h"
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/godot.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 
 #include <iostream>
-
-#define XTENSOR_USE_XSIMD
-#include "xtensor/xarray.hpp"
-#include "xtensor/xio.hpp"
-#include "xtensor/xview.hpp"
 
 // From https://github.com/xtensor-stack/xtensor/issues/1413
 template <class E>
@@ -21,14 +16,11 @@ std::string xt_to_string(const xt::xexpression<E>& e)
 
 using namespace godot;
 
-void GDExample::_bind_methods() {
+void NDArray::_bind_methods() {
 }
 
-GDExample::GDExample() {
-	// Initialize any variables here.
-	time_passed = 0.0;
-
-	xt::xarray<double> arr1
+NDArray::NDArray() {
+	array = xt::xarray<double>
 	{{1.0, 2.0, 3.0},
 	{2.0, 5.0, 7.0},
 	{2.0, 5.0, 7.0}};
@@ -36,11 +28,11 @@ GDExample::GDExample() {
 	xt::xarray<double> arr2
 	{5.0, 6.0, 7.0};
 
-	xt::xarray<double> res = xt::view(arr1, 1) + arr2;
+	xt::xarray<double> res = xt::view(xtl::get<xt::xarray<double>>(array), 1) + arr2;
 
 	godot::UtilityFunctions::print(String(xt_to_string(res).c_str()));
 }
 
-GDExample::~GDExample() {
+NDArray::~NDArray() {
 	// Add your cleanup here.
 }

@@ -1,6 +1,6 @@
 extends Node2D
 
-var example := GDExample.new()
+var example := NDArray.new()
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

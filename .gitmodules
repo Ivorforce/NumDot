@@ -2,3 +2,12 @@
 	path = godot-cpp
 	url = https://github.com/godotengine/godot-cpp
 	branch = 4.3
+[submodule "xtensor"]
+	path = xtensor
+	url = git@github.com:xtensor-stack/xtensor.git
+[submodule "xtl"]
+	path = xtl
+	url = git@github.com:xtensor-stack/xtl.git
+[submodule "xsimd"]
+	path = xsimd
+	url = git@github.com:xtensor-stack/xsimd.git

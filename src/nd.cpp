@@ -10,6 +10,7 @@ using namespace godot;
 
 void ND::_bind_methods() {
 	godot::ClassDB::bind_static_method("ND", D_METHOD("zeros", "shape"), &ND::zeros, Variant());
+	godot::ClassDB::bind_static_method("ND", D_METHOD("ones", "shape"), &ND::ones, Variant());
 }
 
 ND::ND() {
@@ -41,6 +42,15 @@ std::optional<xt::xarray<uint64_t>> ND::asshape(Variant shape) {
 Variant ND::zeros(Variant shape) {
 	if (auto shape_array = asshape(shape)) {
 		xt::xarray<double> array = xt::zeros<double>(*shape_array);
+		return Variant(memnew(NDArray(array)));
+	}
+
+	return nullptr;
+}
+
+Variant ND::ones(Variant shape) {
+	if (auto shape_array = asshape(shape)) {
+		xt::xarray<double> array = xt::ones<double>(*shape_array);
 		return Variant(memnew(NDArray(array)));
 	}
 

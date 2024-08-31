@@ -32,7 +32,9 @@ public:
 	~ND();
 
 	static std::optional<xt::xarray<uint64_t>> asshape(Variant shape);
+	
 	static Variant zeros(Variant shape);
+	static Variant ones(Variant shape);
 };
 
 }

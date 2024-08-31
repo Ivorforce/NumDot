@@ -31,8 +31,8 @@ public:
 	ND();
 	~ND();
 
-	static std::optional<xt::xarray<uint64_t>> _asshape(Variant shape);
-	static std::optional<NDArrayVariant> _asarray(Variant array);
+	static bool _asshape(Variant shape, std::shared_ptr<xt::xarray<uint64_t>> &target);
+	static bool _asarray(Variant array, std::shared_ptr<NDArrayVariant> &target);
 
 	static Variant asarray(Variant array);
 	static Variant zeros(Variant shape);

@@ -26,10 +26,11 @@ protected:
 
 public:
 	NDArray();
-	NDArray(NDArrayVariant array) : array(array) {};
+	NDArray(std::shared_ptr<NDArrayVariant> array) : array(array) {};
 	~NDArray();
 	
-	NDArrayVariant array;
+	// We need a shared pointer because things like asarray can return either a view or an array
+	std::shared_ptr<NDArrayVariant> array;
 };
 
 }

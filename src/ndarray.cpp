@@ -27,7 +27,7 @@ NDArray::NDArray() {
 }
 
 String NDArray::_to_string() const {
-	return xt_to_string(xtl::get<xt::xarray<double>>(array));
+	return xt_to_string(xtl::get<xt::xarray<double>>(*array));
 }
 
 NDArray::~NDArray() {

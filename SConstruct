@@ -69,7 +69,8 @@ env.Append(CPPFLAGS=['-DXTENSOR_USE_XSIMD=1', '-msse2', '-msse3', '-msse4.1', '-
 # Keep in mind the resulting binary will likely not work on many other computers.
 #env.Append(CPPFLAGS=['-DXTENSOR_USE_XSIMD=1', '-march=native'])
 
-env.Append(CPPPATH=["xtl/build/include", "xsimd/build/include", "xtensor/include"])
+env.Append(CPPPATH=["xtl/build/include", "xsimd/build/include", "xtensor/build/include"])
+
 env.Append(CPPPATH=["src/"])
 sources = Glob("src/*.cpp")
 

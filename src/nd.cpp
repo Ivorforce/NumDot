@@ -16,6 +16,9 @@ void ND::_bind_methods() {
 	godot::ClassDB::bind_static_method("ND", D_METHOD("ones", "shape"), &ND::ones);
 
 	godot::ClassDB::bind_static_method("ND", D_METHOD("add", "a", "b"), &ND::add);
+	godot::ClassDB::bind_static_method("ND", D_METHOD("subtract", "a", "b"), &ND::subtract);
+	godot::ClassDB::bind_static_method("ND", D_METHOD("multiply", "a", "b"), &ND::multiply);
+	godot::ClassDB::bind_static_method("ND", D_METHOD("divide", "a", "b"), &ND::divide);
 }
 
 ND::ND() {
@@ -25,7 +28,7 @@ ND::~ND() {
 	// Add your cleanup here.
 }
 
-bool ND::_asshape(Variant shape, std::shared_ptr<xt::xarray<uint64_t>> &target) {
+bool _asshape(Variant shape, std::shared_ptr<xt::xarray<uint64_t>> &target) {
 	auto type = shape.get_type();
 
 	if (Variant::can_convert(type, Variant::Type::INT)) {
@@ -47,7 +50,7 @@ bool ND::_asshape(Variant shape, std::shared_ptr<xt::xarray<uint64_t>> &target) 
 	ERR_FAIL_V_MSG(false, "Variant cannot be converted to a shape.");
 }
 
-bool ND::_asarray(Variant array, std::shared_ptr<NDArrayVariant> &target) {
+bool _asarray(Variant array, std::shared_ptr<NDArrayVariant> &target) {
 	auto type = array.get_type();
 
 	if (type == Variant::OBJECT) {
@@ -125,10 +128,8 @@ Variant ND::ones(Variant shape) {
 	return Variant(memnew(NDArray(result)));
 }
 
-Variant ND::add(Variant a, Variant b) {
-	// godot::UtilityFunctions::print(xt::has_simd_interface<xt::xarray<int64_t>>::value);
-	// godot::UtilityFunctions::print(xt::has_simd_type<xt::xarray<int64_t>>::value);
-
+template <typename operation>
+inline Variant bin_op(Variant a, Variant b) {
 	std::shared_ptr<NDArrayVariant> a_;
 	if (!_asarray(a, a_)) {
 		return nullptr;
@@ -139,7 +140,25 @@ Variant ND::add(Variant a, Variant b) {
 	}
 
 	auto result = std::make_shared<NDArrayVariant>();
-	xtl::get<xt::xarray<double>>(*result) = xtl::get<xt::xarray<double>>(*a_) + xtl::get<xt::xarray<double>>(*b_);
+	xtl::get<xt::xarray<double>>(*result) = operation()(xtl::get<xt::xarray<double>>(*a_), xtl::get<xt::xarray<double>>(*b_));
 
 	return Variant(memnew(NDArray(result)));
+}
+
+Variant ND::add(Variant a, Variant b) {
+	// godot::UtilityFunctions::print(xt::has_simd_interface<xt::xarray<int64_t>>::value);
+	// godot::UtilityFunctions::print(xt::has_simd_type<xt::xarray<int64_t>>::value);
+	return bin_op<std::plus<xt::xarray<double>>>(a, b);
+}
+
+Variant ND::subtract(Variant a, Variant b) {
+	return bin_op<std::minus<xt::xarray<double>>>(a, b);
+}
+
+Variant ND::multiply(Variant a, Variant b) {
+	return bin_op<std::multiplies<xt::xarray<double>>>(a, b);
+}
+
+Variant ND::divide(Variant a, Variant b) {
+	return bin_op<std::divides<xt::xarray<double>>>(a, b);
 }

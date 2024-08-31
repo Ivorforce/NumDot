@@ -31,14 +31,14 @@ public:
 	ND();
 	~ND();
 
-	static bool _asshape(Variant shape, std::shared_ptr<xt::xarray<uint64_t>> &target);
-	static bool _asarray(Variant array, std::shared_ptr<NDArrayVariant> &target);
-
 	static Variant asarray(Variant array);
 	static Variant zeros(Variant shape);
 	static Variant ones(Variant shape);
 
 	static Variant add(Variant a, Variant b);
+	static Variant subtract(Variant a, Variant b);
+	static Variant multiply(Variant a, Variant b);
+	static Variant divide(Variant a, Variant b);
 };
 
 }

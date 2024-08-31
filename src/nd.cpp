@@ -131,13 +131,9 @@ Variant ND::add(Variant a, Variant b) {
 		return nullptr;
 	}
 
-	const auto p1 = std::chrono::system_clock::now();
+	auto result = std::make_shared<NDArrayVariant>();
+	xtl::get<xt::xarray<double>>(*result) = xtl::get<xt::xarray<double>>(*a_) + xtl::get<xt::xarray<double>>(*b_);
 
-	xt::xarray<double> result = xtl::get<xt::xarray<double>>(*a_) + xtl::get<xt::xarray<double>>(*b_);
-
-	std::chrono::milliseconds d = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - p1);
-	godot::UtilityFunctions::print(d.count());
-
-	return Variant(memnew(NDArray(std::make_shared<NDArrayVariant>(result))));
+	return Variant(memnew(NDArray(result)));
 }
 

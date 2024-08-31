@@ -2,7 +2,7 @@ extends Node2D
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	var test_size := 500000
+	var test_size := 50000000
 	
 	var a_packed := PackedFloat64Array()
 	for i in test_size:

@@ -75,11 +75,11 @@ env.Append(CPPPATH=["src/"])
 sources = Glob("src/*.cpp")
 
 if env["platform"] == "macos":
-    target_file_path = "demo/bin/libgdexample.{}.{}.framework/libgdexample.{}.{}".format(
+    target_file_path = "demo/bin/libnumdot.{}.{}.framework/libnumdot.{}.{}".format(
         env["platform"], env["target"], env["platform"], env["target"]
     )
 else:
-    target_file_path = "demo/bin/libgdexample{}{}".format(env["suffix"], env["SHLIBSUFFIX"])
+    target_file_path = "demo/bin/libnumdot{}{}".format(env["suffix"], env["SHLIBSUFFIX"])
 
 env.Depends('xsimd/build/include/xsimd/xsimd.hpp', ['xtl/build/include/xtl/xtl.hpp'])
 env.Depends('xtensor/build/include/xtensor/xtensor.hpp', ['xtl/build/include/xtl/xtl.hpp', 'xsimd/build/include/xsimd/xsimd.hpp'])

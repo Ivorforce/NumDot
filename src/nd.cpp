@@ -104,8 +104,13 @@ Variant ND::zeros(Variant shape) {
 		return nullptr;
 	}
 
-	xt::xarray<double> array = xt::zeros<double>(*shape_array);
-	return Variant(memnew(NDArray(std::make_shared<NDArrayVariant>(array))));
+	// General note: By creating the object first, and assigning later,
+	//  we avoid creating the result on the stack first and copying to the heap later.
+	// This means this kind of ugly contraption is quite a lot faster than the alternative.
+	auto result = std::make_shared<NDArrayVariant>();
+	xtl::get<xt::xarray<double>>(*result) = xt::zeros<double>(*shape_array);
+
+	return Variant(memnew(NDArray(result)));
 }
 
 Variant ND::ones(Variant shape) {
@@ -114,8 +119,10 @@ Variant ND::ones(Variant shape) {
 		return nullptr;
 	}
 
-	xt::xarray<double> array = xt::ones<double>(*shape_array);
-	return Variant(memnew(NDArray(std::make_shared<NDArrayVariant>(array))));
+	auto result = std::make_shared<NDArrayVariant>();
+	xtl::get<xt::xarray<double>>(*result) = xt::ones<double>(*shape_array);
+
+	return Variant(memnew(NDArray(result)));
 }
 
 Variant ND::add(Variant a, Variant b) {
@@ -136,4 +143,3 @@ Variant ND::add(Variant a, Variant b) {
 
 	return Variant(memnew(NDArray(result)));
 }
-

@@ -4,13 +4,17 @@ extends Node2D
 func _ready() -> void:
 	var test_size := 50000000
 	
+	var start_time := Time.get_ticks_msec()
 	var a_packed := PackedFloat64Array()
 	for i in test_size:
 		a_packed.append(1)
-	
+	print(Time.get_ticks_msec() - start_time)
+
+	start_time = Time.get_ticks_msec()
 	var a_nd = ND.ones(test_size)
-	
-	var start_time := Time.get_ticks_msec()
+	print(Time.get_ticks_msec() - start_time)
+
+	start_time = Time.get_ticks_msec()
 	for i in test_size:
 		a_packed[i] += a_packed[i]
 	print(Time.get_ticks_msec() - start_time)

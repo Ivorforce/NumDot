@@ -1,6 +1,5 @@
 #include "register_types.h"
 
-#define XTENSOR_USE_XSIMD
 #include "nd.h"
 #include "ndarray.h"
 

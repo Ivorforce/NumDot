@@ -1,6 +1,25 @@
 #!/usr/bin/env python
 import os
 import sys
+from SCons.Script import Command, File, DefaultEnvironment
+
+def subcommands(env, *, target_files, build_dir, commands):
+    # Create the build dir
+    os.makedirs(build_dir, exist_ok=True)
+
+    actions = [
+        f'cd {build_dir} && {command}'
+        for command in commands
+    ]
+
+    # Create placeholder files representing the build target files
+    targets = [File(target_file) for target_file in target_files]
+    
+    env.Command(
+        target=targets,
+        source=[],
+        action=actions,
+    )
 
 env = SConscript("godot-cpp/SConstruct")
 
@@ -12,23 +31,62 @@ env = SConscript("godot-cpp/SConstruct")
 # - CPPDEFINES are for pre-processor defines
 # - LINKFLAGS are for linking flags
 
-env.Append(CPPPATH = ['xtensor/include/', 'xtl/include/', 'xsimd/include/'])
+# xtl and xtensor are header only, but we might as well use their scripts so everything coheres.
+subcommands(
+    env,
+    target_files=['xtl/build/include/xtl/xtl.hpp'],
+    build_dir='xtl/build',
+    commands=[
+        'cmake ../',
+        'cmake --install . --prefix .'
+    ],
+)
+subcommands(
+    env,
+    target_files=['xsimd/build/include/xsimd/xsimd.hpp'],
+    build_dir='xsimd/build',
+    commands=[
+        "cmake ../ -DENABLE_XTL_COMPLEX=1 -Dxtl_DIR='../xtl/build/'",
+        'cmake --install . --prefix .'
+    ],
+)
+subcommands(
+    env,
+    target_files=['xtensor/build/include/xtensor/xtensor.hpp'],
+    build_dir='xtensor/build',
+    commands=[
+        # Exceptions are disabled in godot in general.
+        "cmake ../ -DXTENSOR_USE_XSIMD=1 -Dxtl_DIR='../xtl/build/' -Dxsimd_DIR='../xsimd/build/' -DXTENSOR_DISABLE_EXCEPTIONS=1",
+        'cmake --install . --prefix .'
+    ],
+)
 
-# tweak this if you want to use different folders, or more folders, to store your source code in.
+# See https://github.com/xtensor-stack/xsimd for supported list.
+# Choosing more will make your program faster, but also more incompatible to older machines.
+env.Append(CPPFLAGS=['-DXTENSOR_USE_XSIMD=1', '-msse2', '-msse3', '-msse4.1', '-msse4.2', '-mavx'])
+
+# You can also use '-march=native' instead, which will enable everything your computer has.
+# Keep in mind the resulting binary will likely not work on many other computers.
+#env.Append(CPPFLAGS=['-DXTENSOR_USE_XSIMD=1', '-march=native'])
+
+env.Append(CPPPATH=["xtl/build/include", "xsimd/build/include", "xtensor/include"])
 env.Append(CPPPATH=["src/"])
 sources = Glob("src/*.cpp")
 
 if env["platform"] == "macos":
-    library = env.SharedLibrary(
-        "demo/bin/libgdexample.{}.{}.framework/libgdexample.{}.{}".format(
-            env["platform"], env["target"], env["platform"], env["target"]
-        ),
-        source=sources,
+    target_file_path = "demo/bin/libgdexample.{}.{}.framework/libgdexample.{}.{}".format(
+        env["platform"], env["target"], env["platform"], env["target"]
     )
 else:
-    library = env.SharedLibrary(
-        "demo/bin/libgdexample{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
-        source=sources,
-    )
+    target_file_path = "demo/bin/libgdexample{}{}".format(env["suffix"], env["SHLIBSUFFIX"])
+
+env.Depends('xsimd/build/include/xsimd/xsimd.hpp', ['xtl/build/include/xtl/xtl.hpp'])
+env.Depends('xtensor/build/include/xtensor/xtensor.hpp', ['xtl/build/include/xtl/xtl.hpp', 'xsimd/build/include/xsimd/xsimd.hpp'])
+env.Depends(target_file_path, ['xtensor/build/include/xtensor/xtensor.hpp'])
+
+library = env.SharedLibrary(
+    target_file_path,
+    source=sources,
+)
 
 Default(library)

@@ -13,15 +13,15 @@ void NDArray::_bind_methods() {
 }
 
 NDArray::NDArray() {
-	array = xt::xarray<double>
-	{{1.0, 2.0, 3.0},
-	{2.0, 5.0, 7.0},
-	{2.0, 5.0, 7.0}};
+	// array = xt::xarray<double>
+	// {{1.0, 2.0, 3.0},
+	// {2.0, 5.0, 7.0},
+	// {2.0, 5.0, 7.0}};
 
-	xt::xarray<double> arr2
-	{5.0, 6.0, 7.0};
+	// xt::xarray<double> arr2
+	// {5.0, 6.0, 7.0};
 
-	xt::xarray<double> res = xt::view(xtl::get<xt::xarray<double>>(array), 1) + arr2;
+	// xt::xarray<double> res = xt::view(xtl::get<xt::xarray<double>>(array), 1) + arr2;
 
 	// godot::UtilityFunctions::print();
 }

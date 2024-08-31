@@ -1,0 +1,8 @@
+# C/C++ generated
+*.os
+
+# SCons
+.sconf_temp
+.sconsign*.dblite
+.scons_env.json
+.scons_node_count

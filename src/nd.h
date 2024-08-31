@@ -31,10 +31,14 @@ public:
 	ND();
 	~ND();
 
-	static std::optional<xt::xarray<uint64_t>> asshape(Variant shape);
-	
+	static std::optional<xt::xarray<uint64_t>> _asshape(Variant shape);
+	static std::optional<NDArrayVariant> _asarray(Variant array);
+
+	static Variant asarray(Variant array);
 	static Variant zeros(Variant shape);
 	static Variant ones(Variant shape);
+
+	static Variant add(Variant a, Variant b);
 };
 
 }

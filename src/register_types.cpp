@@ -1,5 +1,7 @@
 #include "register_types.h"
 
+#define XTENSOR_USE_XSIMD
+#include "nd.h"
 #include "ndarray.h"
 
 #include <gdextension_interface.h>
@@ -14,6 +16,7 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
 	}
 
 	GDREGISTER_CLASS(NDArray);
+	GDREGISTER_CLASS(ND);
 }
 
 void uninitialize_example_module(ModuleInitializationLevel p_level) {

@@ -1,18 +1,11 @@
 #include "ndarray.h"
+
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/godot.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 
 #include <iostream>
-
-// From https://github.com/xtensor-stack/xtensor/issues/1413
-template <class E>
-std::string xt_to_string(const xt::xexpression<E>& e)
-{
-    std::ostringstream out;
-    out << e;
-    return out.str();
-}
+#include "nd.h"
 
 using namespace godot;
 
@@ -30,7 +23,11 @@ NDArray::NDArray() {
 
 	xt::xarray<double> res = xt::view(xtl::get<xt::xarray<double>>(array), 1) + arr2;
 
-	godot::UtilityFunctions::print(String(xt_to_string(res).c_str()));
+	// godot::UtilityFunctions::print();
+}
+
+String NDArray::_to_string() const {
+	return xt_to_string(xtl::get<xt::xarray<double>>(array));
 }
 
 NDArray::~NDArray() {

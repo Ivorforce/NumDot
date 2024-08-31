@@ -1,9 +1,8 @@
-#ifndef GDEXAMPLE_H
-#define GDEXAMPLE_H
+#ifndef NUMDOT_NDARRAY_H
+#define NUMDOT_NDARRAY_H
 
 #include <godot_cpp/classes/object.hpp>
 
-#define XTENSOR_USE_XSIMD
 #include "xtensor/xarray.hpp"
 #include "xtensor/xio.hpp"
 #include "xtensor/xview.hpp"
@@ -20,14 +19,17 @@ class NDArray : public Object {
 	GDCLASS(NDArray, Object)
 
 private:
-	NDArrayVariant array;
 
 protected:
 	static void _bind_methods();
+	String _to_string() const;
 
 public:
 	NDArray();
+	NDArray(NDArrayVariant array) : array(array) {};
 	~NDArray();
+	
+	NDArrayVariant array;
 };
 
 }

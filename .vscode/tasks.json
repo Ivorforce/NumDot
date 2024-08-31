@@ -1,0 +1,12 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "taskName": "SCons Build Macos",
+            "command": "scons platform=macos",
+            "type": "shell",
+            "group": "build",
+            "problemMatcher": "$msCompile" // Important to catch the status
+        }
+    ]
+}

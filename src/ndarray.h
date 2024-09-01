@@ -28,19 +28,8 @@ protected:
 	String _to_string() const;
 
 public:
-	enum DType {
-		Double,
-		Float,
-		Int8,
-		Int16,
-		Int32,
-		Int64,
-		UInt8,
-		UInt16,
-		UInt32,
-		UInt64,
-		DTypeMax
-	};
+	// Godot needs NDArray::DType here.
+	using DType = xtv::DType;
 
 	// We need a shared pointer because things like asarray can return either a view or an array
 	std::shared_ptr<xtv::Variant> array;

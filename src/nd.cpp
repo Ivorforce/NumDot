@@ -86,49 +86,13 @@ bool _asarray(Variant array, std::shared_ptr<xtv::Variant> &target) {
 	ERR_FAIL_V_MSG(false, "Variant cannot be converted to an array.");
 }
 
-// TODO This should use templates, but i couldn't get it to work.
-#define DTypeSwitch(dtype, code, args) switch (dtype) {\
-	case NDArray::DType::Double:\
-		(*result).emplace<xt::xarray<double_t>>(code<double_t>(args));\
-		break;\
-	case NDArray::DType::Float:\
-		(*result).emplace<xt::xarray<float_t>>(code<float_t>(args));\
-		break;\
-	case NDArray::DType::Int8:\
-		(*result).emplace<xt::xarray<int8_t>>(code<int8_t>(args));\
-		break;\
-	case NDArray::DType::Int16:\
-		(*result).emplace<xt::xarray<int16_t>>(code<int16_t>(args));\
-		break;\
-	case NDArray::DType::Int32:\
-		(*result).emplace<xt::xarray<int32_t>>(code<int32_t>(args));\
-		break;\
-	case NDArray::DType::Int64:\
-		(*result).emplace<xt::xarray<int64_t>>(code<int64_t>(args));\
-		break;\
-	case NDArray::DType::UInt8:\
-		(*result).emplace<xt::xarray<uint8_t>>(code<uint8_t>(args));\
-		break;\
-	case NDArray::DType::UInt16:\
-		(*result).emplace<xt::xarray<uint16_t>>(code<uint16_t>(args));\
-		break;\
-	case NDArray::DType::UInt32:\
-		(*result).emplace<xt::xarray<uint32_t>>(code<uint32_t>(args));\
-		break;\
-	case NDArray::DType::UInt64:\
-		(*result).emplace<xt::xarray<uint64_t>>(code<uint64_t>(args));\
-		break;\
-	case NDArray::DType::DTypeMax:\
-		ERR_FAIL_V_MSG(nullptr, "Dtype must be set for this operation.");\
-}
-
-Variant ND::asarray(Variant array, NDArray::DType dtype) {
+Variant ND::asarray(Variant array, xtv::DType dtype) {
 	auto type = array.get_type();
 
 	// Can we take a view?
 	if (type == Variant::OBJECT) {
 		if (auto ndarray = dynamic_cast<NDArray*>((Object*)(array))) {
-			if (dtype == NDArray::DType::DTypeMax || ndarray->dtype() == dtype) {
+			if (dtype == xtv::DType::DTypeMax || ndarray->dtype() == dtype) {
 				return array;
 			}
 		}
@@ -138,7 +102,7 @@ Variant ND::asarray(Variant array, NDArray::DType dtype) {
 	return ND::array(array, dtype);
 }
 
-Variant ND::array(Variant array, NDArray::DType dtype) {
+Variant ND::array(Variant array, xtv::DType dtype) {
 	auto type = array.get_type();
 
 	std::shared_ptr<xtv::Variant> existing_array;
@@ -146,48 +110,43 @@ Variant ND::array(Variant array, NDArray::DType dtype) {
 		return nullptr;
 	}
 
-	if (dtype == NDArray::DType::DTypeMax) {
-		dtype = NDArray::DType((*existing_array).index());
+	if (dtype == xtv::DType::DTypeMax) {
+		dtype = xtv::DType((*existing_array).index());
 	}
-	
-	auto result = std::make_shared<xtv::Variant>();
 
-	// TODO Using the switch here is kinda dumb, but for now it's the easiest way of making it work, making use of std::visit later.
-	DTypeSwitch(dtype, xt::xarray, );
-
-	std::visit([](auto& a, auto& b){
-		a = b;
-	}, *result, *existing_array);
+	auto result = xtv::array(*existing_array, dtype);
+	if (result == nullptr) {
+		ERR_FAIL_V_MSG(nullptr, "Dtype must be set for this operation.");\
+	}
 	
 	return Variant(memnew(NDArray(result)));
 }
 
-Variant ND::zeros(Variant shape, NDArray::DType dtype) {
+Variant ND::zeros(Variant shape, xtv::DType dtype) {
 	xt::xarray<size_t> shape_array;
 	if (!_asshape(shape, shape_array)) {
 		return nullptr;
 	}
 
-	// General note: By creating the object first, and assigning later,
-	//  we avoid creating the result on the stack first and copying to the heap later.
-	// This means this kind of ugly contraption is quite a lot fasterhat than the alternative.
-	auto result = std::make_shared<xtv::Variant>();
-
-	DTypeSwitch(dtype, xt::zeros, std::move(shape_array));
-
+	auto result = xtv::zeros(shape_array, dtype);
+	if (result == nullptr) {
+		ERR_FAIL_V_MSG(nullptr, "Dtype must be set for this operation.");\
+	}
+	
 	return Variant(memnew(NDArray(result)));
 }
 
-Variant ND::ones(Variant shape, NDArray::DType dtype) {
+Variant ND::ones(Variant shape, xtv::DType dtype) {
 	xt::xarray<size_t> shape_array;
 	if (!_asshape(shape, shape_array)) {
 		return nullptr;
 	}
 
-	auto result = std::make_shared<xtv::Variant>();
-
-	DTypeSwitch(dtype, xt::ones, std::move(shape_array));
-
+	auto result = xtv::ones(shape_array, dtype);
+	if (result == nullptr) {
+		ERR_FAIL_V_MSG(nullptr, "Dtype must be set for this operation.");\
+	}
+	
 	return Variant(memnew(NDArray(result)));
 }
 

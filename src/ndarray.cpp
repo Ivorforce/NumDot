@@ -7,10 +7,11 @@
 #include <godot_cpp/godot.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 
-#include <iostream>
+#include "xtv.h"
 #include "nd.h"
 
 using namespace godot;
+using namespace xtv;
 
 void NDArray::_bind_methods() {
 	godot::ClassDB::bind_method(D_METHOD("dtype"), &NDArray::dtype);
@@ -38,5 +39,5 @@ String NDArray::_to_string() const {
 }
 
 NDArray::DType NDArray::dtype() {
-	return DType((*array).index());
+	return NDArray::DType((*array).index());
 }

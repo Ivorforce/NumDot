@@ -9,6 +9,8 @@
 #include "xtensor/xio.hpp"
 #include "xtensor/xview.hpp"
 
+#include "xtv.h"
+
 using namespace godot;
 
 // From https://github.com/xtensor-stack/xtensor/issues/1413

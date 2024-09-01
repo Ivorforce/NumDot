@@ -167,17 +167,17 @@ inline Variant binOp(Variant a, Variant b) {
 Variant ND::add(Variant a, Variant b) {
 	// godot::UtilityFunctions::print(xt::has_simd_interface<xt::xarray<int64_t>>::value);
 	// godot::UtilityFunctions::print(xt::has_simd_type<xt::xarray<int64_t>>::value);
-	return binOp<std::plus<xt::xarray<double>>>(a, b);
+	return binOp<xtv::Add>(a, b);
 }
 
 Variant ND::subtract(Variant a, Variant b) {
-	return binOp<std::minus<xt::xarray<double>>>(a, b);
+	return binOp<xtv::Subtract>(a, b);
 }
 
 Variant ND::multiply(Variant a, Variant b) {
-	return binOp<std::multiplies<xt::xarray<double>>>(a, b);
+	return binOp<xtv::Multiply>(a, b);
 }
 
 Variant ND::divide(Variant a, Variant b) {
-	return binOp<std::divides<xt::xarray<double>>>(a, b);
+	return binOp<xtv::Divide>(a, b);
 }

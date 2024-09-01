@@ -140,6 +140,38 @@ static inline std::shared_ptr<Variant> operation(Args... args) {
 	return std::visit(Operation<op>{}, args...);
 }
 
+// TODO std::add and the likes exist, but it requires type parameters.
+//  Therefore, we cannot pass them to operation() as template parameters.
+// It would be really nice though if that could be changed though,
+//  otherwise we need a good amount of boilerplate for every operation.
+struct Add {
+	template<typename A, typename B>
+	auto operator()(A a, B b) {
+		return a + b;
+	}
+};
+
+struct Subtract {
+	template<typename A, typename B>
+	auto operator()(A a, B b) {
+		return a - b;
+	}
+};
+
+struct Multiply {
+	template<typename A, typename B>
+	auto operator()(A a, B b) {
+		return a * b;
+	}
+};
+
+struct Divide {
+	template<typename A, typename B>
+	auto operator()(A a, B b) {
+		return a / b;
+	}
+};
+
 }
 
 #endif

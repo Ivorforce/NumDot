@@ -129,6 +129,30 @@ Variant ND::ones(Variant shape) {
 }
 
 template <typename operation>
+struct BinOperation {
+	NDArray *default_value() const {
+		return nullptr;
+    }
+
+	template<typename A, typename B>
+	NDArray *operator()(xt::xarray<A>& a, xt::xarray<B>& b) const {
+		// ResultType = what results from the usual C++ common promotion of a + b.
+		using ResultType = typename std::common_type<A, B>::type;
+
+		// General note: By creating the object first, and assigning later,
+		//  we avoid creating the result on the stack first and copying to the heap later.
+		// This means this kind of ugly contraption is quite a lot faster than the alternative.
+		auto result = std::make_shared<NDArrayVariant>();
+		
+		// Run the operation itself.
+		xtl::get<xt::xarray<ResultType>>(*result) = operation()(a, b);
+
+		// Assign to the result array.
+		return memnew(NDArray(result));
+	}
+};
+
+template <typename operation>
 inline Variant bin_op(Variant a, Variant b) {
 	std::shared_ptr<NDArrayVariant> a_;
 	if (!_asarray(a, a_)) {
@@ -139,10 +163,7 @@ inline Variant bin_op(Variant a, Variant b) {
 		return nullptr;
 	}
 
-	auto result = std::make_shared<NDArrayVariant>();
-	xtl::get<xt::xarray<double>>(*result) = operation()(xtl::get<xt::xarray<double>>(*a_), xtl::get<xt::xarray<double>>(*b_));
-
-	return Variant(memnew(NDArray(result)));
+	return Variant(xtl::visit(BinOperation<operation>{}, *a_, *b_));
 }
 
 Variant ND::add(Variant a, Variant b) {

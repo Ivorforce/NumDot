@@ -150,10 +150,13 @@ Variant ND::array(Variant array, NDArray::DType dtype) {
 	
 	auto result = std::make_shared<NDArrayVariant>();
 
-	// TODO
-	return nullptr;
-	// DTypeSwitch(dtype, std::get, existing_array);
+	// TODO Using the switch here is kinda dumb, but for now it's the easiest way of making it work, making use of std::visit later.
+	DTypeSwitch(dtype, xt::xarray, );
 
+	std::visit([](auto& a, auto& b){
+		a = b;
+	}, *result, *existing_array);
+	
 	return Variant(memnew(NDArray(result)));
 }
 

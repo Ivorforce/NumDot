@@ -34,7 +34,7 @@ NDArray::~NDArray() {
 }
 
 String NDArray::_to_string() const {
-	return xt_to_string(std::get<xt::xarray<double>>(*array));
+	return std::visit([](auto& arg){ return xt_to_string(arg); }, *array);
 }
 
 NDArray::DType NDArray::dtype() {

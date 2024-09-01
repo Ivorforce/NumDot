@@ -8,6 +8,8 @@
 #include "xtensor/xview.hpp"
 #include "xtensor/xlayout.hpp"
 
+#include "xtv.h"
+
 using namespace godot;
 
 void ND::_bind_methods() {
@@ -50,7 +52,7 @@ bool _asshape(Variant shape, T &target) {
 	ERR_FAIL_V_MSG(false, "Variant cannot be converted to a shape.");
 }
 
-bool _asarray(Variant array, std::shared_ptr<NDArrayVariant> &target) {
+bool _asarray(Variant array, std::shared_ptr<xtv::Variant> &target) {
 	auto type = array.get_type();
 
 	if (type == Variant::OBJECT) {
@@ -62,11 +64,11 @@ bool _asarray(Variant array, std::shared_ptr<NDArrayVariant> &target) {
 
 	if (Variant::can_convert(type, Variant::Type::INT)) {
 		// TODO Int array
-		target = std::make_shared<NDArrayVariant>(xt::xarray<double>());
+		target = std::make_shared<xtv::Variant>(xt::xarray<double>());
 		return true;
 	}
 	if (Variant::can_convert(type, Variant::Type::FLOAT)) {
-		target = std::make_shared<NDArrayVariant>(xt::xarray<double>(float_t(array)));
+		target = std::make_shared<xtv::Variant>(xt::xarray<double>(float_t(array)));
 		return true;
 	}
 	if (Variant::can_convert(type, Variant::Type::PACKED_FLOAT32_ARRAY)) {
@@ -75,7 +77,7 @@ bool _asarray(Variant array, std::shared_ptr<NDArrayVariant> &target) {
 
 		xt::static_shape<std::size_t, 1> shape_of_shape = { size };
 
-		target = std::make_shared<NDArrayVariant>(
+		target = std::make_shared<xtv::Variant>(
 			xt::xarray<double>(xt::adapt(shape_array.ptrw(), size, xt::no_ownership(), shape_of_shape))
 		);
 		return true;
@@ -139,7 +141,7 @@ Variant ND::asarray(Variant array, NDArray::DType dtype) {
 Variant ND::array(Variant array, NDArray::DType dtype) {
 	auto type = array.get_type();
 
-	std::shared_ptr<NDArrayVariant> existing_array;
+	std::shared_ptr<xtv::Variant> existing_array;
 	if (!_asarray(array, existing_array)) {
 		return nullptr;
 	}
@@ -148,7 +150,7 @@ Variant ND::array(Variant array, NDArray::DType dtype) {
 		dtype = NDArray::DType((*existing_array).index());
 	}
 	
-	auto result = std::make_shared<NDArrayVariant>();
+	auto result = std::make_shared<xtv::Variant>();
 
 	// TODO Using the switch here is kinda dumb, but for now it's the easiest way of making it work, making use of std::visit later.
 	DTypeSwitch(dtype, xt::xarray, );
@@ -169,7 +171,7 @@ Variant ND::zeros(Variant shape, NDArray::DType dtype) {
 	// General note: By creating the object first, and assigning later,
 	//  we avoid creating the result on the stack first and copying to the heap later.
 	// This means this kind of ugly contraption is quite a lot fasterhat than the alternative.
-	auto result = std::make_shared<NDArrayVariant>();
+	auto result = std::make_shared<xtv::Variant>();
 
 	DTypeSwitch(dtype, xt::zeros, std::move(shape_array));
 
@@ -182,7 +184,7 @@ Variant ND::ones(Variant shape, NDArray::DType dtype) {
 		return nullptr;
 	}
 
-	auto result = std::make_shared<NDArrayVariant>();
+	auto result = std::make_shared<xtv::Variant>();
 
 	DTypeSwitch(dtype, xt::ones, std::move(shape_array));
 
@@ -190,53 +192,33 @@ Variant ND::ones(Variant shape, NDArray::DType dtype) {
 }
 
 template <typename operation>
-struct BinOperation {
-	template<typename A, typename B>
-	NDArray *operator()(xt::xarray<A>& a, xt::xarray<B>& b) const {
-		// ResultType = what results from the usual C++ common promotion of a + b.
-		using ResultType = typename std::common_type<A, B>::type;
-
-		// General note: By creating the object first, and assigning later,
-		//  we avoid creating the result on the stack first and copying to the heap later.
-		// This means this kind of ugly contraption is quite a lot faster than the alternative.
-		auto result = std::make_shared<NDArrayVariant>(xt::xarray<ResultType>());
-		
-		// Run the operation itself.
-		std::get<xt::xarray<ResultType>>(*result) = operation()(a, b);
-
-		// Assign to the result array.
-		return memnew(NDArray(result));
-	}
-};
-
-template <typename operation>
-inline Variant bin_op(Variant a, Variant b) {
-	std::shared_ptr<NDArrayVariant> a_;
+inline Variant binOp(Variant a, Variant b) {
+	std::shared_ptr<xtv::Variant> a_;
 	if (!_asarray(a, a_)) {
 		return nullptr;
 	}
-	std::shared_ptr<NDArrayVariant> b_;
+	std::shared_ptr<xtv::Variant> b_;
 	if (!_asarray(b, b_)) {
 		return nullptr;
 	}
 
-	return Variant(std::visit(BinOperation<operation>{}, *a_, *b_));
+	return Variant(memnew(NDArray(xtv::binOp<operation>(*a_, *b_))));
 }
 
 Variant ND::add(Variant a, Variant b) {
 	// godot::UtilityFunctions::print(xt::has_simd_interface<xt::xarray<int64_t>>::value);
 	// godot::UtilityFunctions::print(xt::has_simd_type<xt::xarray<int64_t>>::value);
-	return bin_op<std::plus<xt::xarray<double>>>(a, b);
+	return binOp<std::plus<xt::xarray<double>>>(a, b);
 }
 
 Variant ND::subtract(Variant a, Variant b) {
-	return bin_op<std::minus<xt::xarray<double>>>(a, b);
+	return binOp<std::minus<xt::xarray<double>>>(a, b);
 }
 
 Variant ND::multiply(Variant a, Variant b) {
-	return bin_op<std::multiplies<xt::xarray<double>>>(a, b);
+	return binOp<std::multiplies<xt::xarray<double>>>(a, b);
 }
 
 Variant ND::divide(Variant a, Variant b) {
-	return bin_op<std::divides<xt::xarray<double>>>(a, b);
+	return binOp<std::divides<xt::xarray<double>>>(a, b);
 }

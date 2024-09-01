@@ -115,12 +115,12 @@ static std::shared_ptr<Variant> ones(xt::xarray<size_t>& shape_array, DType dtyp
 	return result;
 }
 
-template <typename operation>
-struct BinOperation {
-	template<typename A, typename B>
-	std::shared_ptr<Variant> operator()(xt::xarray<A>& a, xt::xarray<B>& b) const {
+template <typename op>
+struct Operation {
+	template<typename... Args>
+	std::shared_ptr<Variant> operator()(xt::xarray<Args>&... args) const {
 		// ResultType = what results from the usual C++ common promotion of a + b.
-		using ResultType = typename std::common_type<A, B>::type;
+		using ResultType = typename std::common_type<Args...>::type;
 
 		// General note: By creating the object first, and assigning later,
 		//  we avoid creating the result on the stack first and copying to the heap later.
@@ -128,16 +128,16 @@ struct BinOperation {
 		auto result = std::make_shared<Variant>(xt::xarray<ResultType>());
 		
 		// Run the operation itself.
-		std::get<xt::xarray<ResultType>>(*result) = operation()(a, b);
+		std::get<xt::xarray<ResultType>>(*result) = op()(args...);
 
 		// Assign to the result array.
 		return result;
 	}
 };
 
-template <typename operation>
-static inline std::shared_ptr<Variant> binOp(Variant& a, Variant& b) {
-	return std::visit(BinOperation<operation>{}, a, b);
+template <typename op, typename... Args>
+static inline std::shared_ptr<Variant> operation(Args... args) {
+	return std::visit(Operation<op>{}, args...);
 }
 
 }

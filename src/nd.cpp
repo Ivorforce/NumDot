@@ -161,7 +161,7 @@ inline Variant binOp(Variant a, Variant b) {
 		return nullptr;
 	}
 
-	return Variant(memnew(NDArray(xtv::binOp<operation>(*a_, *b_))));
+	return Variant(memnew(NDArray(xtv::operation<operation>(*a_, *b_))));
 }
 
 Variant ND::add(Variant a, Variant b) {

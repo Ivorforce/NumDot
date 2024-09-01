@@ -24,8 +24,8 @@
 using namespace godot;
 
 using NDArrayVariant = xtl::variant<
-	xt::xarray<double>,
- 	xt::xarray<float>,
+	xt::xarray<double_t>,
+ 	xt::xarray<float_t>,
  	xt::xarray<int8_t>,
  	xt::xarray<int16_t>,
  	xt::xarray<int32_t>,

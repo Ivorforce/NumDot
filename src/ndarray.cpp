@@ -1,5 +1,8 @@
 #include "ndarray.h"
 
+#include "xtensor/xio.hpp"
+#include "xtensor/xview.hpp"
+
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/godot.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
@@ -10,26 +13,30 @@
 using namespace godot;
 
 void NDArray::_bind_methods() {
+	godot::ClassDB::bind_method(D_METHOD("dtype"), &NDArray::dtype);
+
+	BIND_ENUM_CONSTANT(Double);
+	BIND_ENUM_CONSTANT(Float);
+	BIND_ENUM_CONSTANT(Int8);
+	BIND_ENUM_CONSTANT(Int16);
+	BIND_ENUM_CONSTANT(Int32);
+	BIND_ENUM_CONSTANT(Int64);
+	BIND_ENUM_CONSTANT(UInt8);
+	BIND_ENUM_CONSTANT(UInt16);
+	BIND_ENUM_CONSTANT(UInt32);
+	BIND_ENUM_CONSTANT(UInt64);
 }
 
 NDArray::NDArray() {
-	// array = xt::xarray<double>
-	// {{1.0, 2.0, 3.0},
-	// {2.0, 5.0, 7.0},
-	// {2.0, 5.0, 7.0}};
+}
 
-	// xt::xarray<double> arr2
-	// {5.0, 6.0, 7.0};
-
-	// xt::xarray<double> res = xt::view(xtl::get<xt::xarray<double>>(array), 1) + arr2;
-
-	// godot::UtilityFunctions::print();
+NDArray::~NDArray() {
 }
 
 String NDArray::_to_string() const {
 	return xt_to_string(xtl::get<xt::xarray<double>>(*array));
 }
 
-NDArray::~NDArray() {
-	// Add your cleanup here.
+NDArray::DType NDArray::dtype() {
+	return DType((*array).index());
 }

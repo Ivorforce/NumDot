@@ -10,7 +10,7 @@
 #include "xtensor/xview.hpp"
 #include "xtl/xvariant.hpp"
 
-namespace godot {
+using namespace godot;
 
 // From https://github.com/xtensor-stack/xtensor/issues/1413
 template <class E>
@@ -40,7 +40,5 @@ public:
 	static Variant multiply(Variant a, Variant b);
 	static Variant divide(Variant a, Variant b);
 };
-
-}
 
 #endif

@@ -2,6 +2,7 @@
 #define NUMDOT_NDARRAY_H
 
 #include "xtensor/xarray.hpp"
+#include "xtensor/xlayout.hpp"
 #include "xtl/xvariant.hpp"
 
 #ifdef WIN32
@@ -35,6 +36,7 @@ using NDArrayVariant = xtl::variant<
  	xt::xarray<uint32_t>,
  	xt::xarray<uint64_t>
 >;
+
 class NDArray : public Object {
 	GDCLASS(NDArray, Object)
 

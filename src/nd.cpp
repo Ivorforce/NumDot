@@ -6,6 +6,7 @@
 #include <iostream>
 #include "xtensor/xadapt.hpp"
 #include "xtensor/xview.hpp"
+#include "xtensor/xlayout.hpp"
 #include "xtl/xvariant.hpp"
 
 using namespace godot;
@@ -28,11 +29,12 @@ ND::~ND() {
 	// Add your cleanup here.
 }
 
-bool _asshape(Variant shape, std::shared_ptr<xt::xarray<uint64_t>> &target) {
+template <typename T>
+bool _asshape(Variant shape, T &target) {
 	auto type = shape.get_type();
 
 	if (Variant::can_convert(type, Variant::Type::INT)) {
-		target = std::make_shared<xt::xarray<uint64_t>>(xt::xarray<uint64_t> { uint64_t(shape) });
+		target = { uint64_t(shape) };
 		return true;
 	}
 	if (Variant::can_convert(type, Variant::Type::PACKED_INT32_ARRAY)) {
@@ -41,9 +43,7 @@ bool _asshape(Variant shape, std::shared_ptr<xt::xarray<uint64_t>> &target) {
 
 		xt::static_shape<std::size_t, 1> shape_of_shape = { size };
 
-		target = std::make_shared<xt::xarray<uint64_t>>(
-			xt::adapt(shape_array.ptrw(), size, xt::no_ownership(), shape_of_shape)
-		);
+		target = xt::adapt(shape_array.ptrw(), size, xt::no_ownership(), shape_of_shape);
 		return true;
 	}
 
@@ -62,7 +62,7 @@ bool _asarray(Variant array, std::shared_ptr<NDArrayVariant> &target) {
 
 	if (Variant::can_convert(type, Variant::Type::INT)) {
 		// TODO Int array
-		target = std::make_shared<NDArrayVariant>(xt::xarray<double>(uint64_t(array)));
+		target = std::make_shared<NDArrayVariant>(xt::xarray<double>());
 		return true;
 	}
 	if (Variant::can_convert(type, Variant::Type::FLOAT)) {
@@ -102,7 +102,7 @@ Variant ND::asarray(Variant array) {
 }
 
 Variant ND::zeros(Variant shape) {
-	std::shared_ptr<xt::xarray<uint64_t>> shape_array;
+	xt::xarray<size_t> shape_array;
 	if (!_asshape(shape, shape_array)) {
 		return nullptr;
 	}
@@ -111,29 +111,25 @@ Variant ND::zeros(Variant shape) {
 	//  we avoid creating the result on the stack first and copying to the heap later.
 	// This means this kind of ugly contraption is quite a lot faster than the alternative.
 	auto result = std::make_shared<NDArrayVariant>();
-	xtl::get<xt::xarray<double>>(*result) = xt::zeros<double>(*shape_array);
+	xtl::get<xt::xarray<double>>(*result) = xt::zeros<double>(std::move(shape_array));
 
 	return Variant(memnew(NDArray(result)));
 }
 
 Variant ND::ones(Variant shape) {
-	std::shared_ptr<xt::xarray<uint64_t>> shape_array;
+	xt::xarray<size_t> shape_array;
 	if (!_asshape(shape, shape_array)) {
 		return nullptr;
 	}
 
 	auto result = std::make_shared<NDArrayVariant>();
-	xtl::get<xt::xarray<double>>(*result) = xt::ones<double>(*shape_array);
+	xtl::get<xt::xarray<double>>(*result) = xt::ones<double>(std::move(shape_array));
 
 	return Variant(memnew(NDArray(result)));
 }
 
 template <typename operation>
 struct BinOperation {
-	NDArray *default_value() const {
-		return nullptr;
-    }
-
 	template<typename A, typename B>
 	NDArray *operator()(xt::xarray<A>& a, xt::xarray<B>& b) const {
 		// ResultType = what results from the usual C++ common promotion of a + b.

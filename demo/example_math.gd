@@ -3,7 +3,6 @@ extends Node2D
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	var test_size := 50000000
-	print(ND.ones([2, 2]).dtype())
 	
 	var start_time := Time.get_ticks_msec()
 	var a_packed := PackedVector2Array()
@@ -12,12 +11,13 @@ func _ready() -> void:
 	print(Time.get_ticks_msec() - start_time)
 
 	start_time = Time.get_ticks_msec()
-	var a_nd = ND.ones([test_size, 2])
+	var a_nd = ND.ones([test_size, 2], NDArray.DType.Float)
 	print(Time.get_ticks_msec() - start_time)
 
 	start_time = Time.get_ticks_msec()
+	var b_packed := PackedVector2Array()
 	for i in test_size:
-		a_packed[i] *= a_packed[i]
+		b_packed.append(a_packed[i] * a_packed[i])
 	print(Time.get_ticks_msec() - start_time)
 	
 	start_time = Time.get_ticks_msec()

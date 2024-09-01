@@ -37,6 +37,19 @@ using NDArrayVariant = xtl::variant<
  	xt::xarray<uint64_t>
 >;
 
+using NDArrayVariantContainedTypes = std::tuple<
+	double_t,
+ 	float_t,
+ 	int8_t,
+ 	int16_t,
+ 	int32_t,
+ 	int64_t,
+ 	uint8_t,
+ 	uint16_t,
+ 	uint32_t,
+ 	uint64_t
+>;
+
 class NDArray : public Object {
 	GDCLASS(NDArray, Object)
 
@@ -58,7 +71,6 @@ public:
 		UInt16,
 		UInt32,
 		UInt64,
-		DTypeMax
 	};
 
 	// We need a shared pointer because things like asarray can return either a view or an array

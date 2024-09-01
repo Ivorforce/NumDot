@@ -32,8 +32,8 @@ public:
 	~ND();
 
 	static Variant asarray(Variant array);
-	static Variant zeros(Variant shape);
-	static Variant ones(Variant shape);
+	static Variant zeros(Variant shape, NDArray::DType dtype = NDArray::DType::Double);
+	static Variant ones(Variant shape, NDArray::DType dtype = NDArray::DType::Double);
 
 	static Variant add(Variant a, Variant b);
 	static Variant subtract(Variant a, Variant b);

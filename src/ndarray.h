@@ -70,6 +70,7 @@ public:
 		UInt16,
 		UInt32,
 		UInt64,
+		DTypeMax
 	};
 
 	// We need a shared pointer because things like asarray can return either a view or an array

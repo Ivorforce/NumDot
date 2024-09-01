@@ -11,7 +11,8 @@
 using namespace godot;
 
 void ND::_bind_methods() {
-	godot::ClassDB::bind_static_method("ND", D_METHOD("asarray", "array"), &ND::asarray);
+	godot::ClassDB::bind_static_method("ND", D_METHOD("asarray", "array", "dtype"), &ND::asarray, DEFVAL(nullptr), DEFVAL(NDArray::DType::DTypeMax));
+	godot::ClassDB::bind_static_method("ND", D_METHOD("array", "array", "dtype"), &ND::array, DEFVAL(nullptr), DEFVAL(NDArray::DType::DTypeMax));
 	godot::ClassDB::bind_static_method("ND", D_METHOD("zeros", "shape", "dtype"), &ND::zeros, DEFVAL(nullptr), DEFVAL(NDArray::DType::Double));
 	godot::ClassDB::bind_static_method("ND", D_METHOD("ones", "shape", "dtype"), &ND::ones, DEFVAL(nullptr), DEFVAL(NDArray::DType::Double));
 
@@ -83,55 +84,77 @@ bool _asarray(Variant array, std::shared_ptr<NDArrayVariant> &target) {
 	ERR_FAIL_V_MSG(false, "Variant cannot be converted to an array.");
 }
 
-Variant ND::asarray(Variant array) {
+// TODO This should use templates, but i couldn't get it to work.
+#define DTypeSwitch(dtype, code, args) switch (dtype) {\
+	case NDArray::DType::Double:\
+		(*result).emplace<xt::xarray<double_t>>(code<double_t>(args));\
+		break;\
+	case NDArray::DType::Float:\
+		(*result).emplace<xt::xarray<float_t>>(code<float_t>(args));\
+		break;\
+	case NDArray::DType::Int8:\
+		(*result).emplace<xt::xarray<int8_t>>(code<int8_t>(args));\
+		break;\
+	case NDArray::DType::Int16:\
+		(*result).emplace<xt::xarray<int16_t>>(code<int16_t>(args));\
+		break;\
+	case NDArray::DType::Int32:\
+		(*result).emplace<xt::xarray<int32_t>>(code<int32_t>(args));\
+		break;\
+	case NDArray::DType::Int64:\
+		(*result).emplace<xt::xarray<int64_t>>(code<int64_t>(args));\
+		break;\
+	case NDArray::DType::UInt8:\
+		(*result).emplace<xt::xarray<uint8_t>>(code<uint8_t>(args));\
+		break;\
+	case NDArray::DType::UInt16:\
+		(*result).emplace<xt::xarray<uint16_t>>(code<uint16_t>(args));\
+		break;\
+	case NDArray::DType::UInt32:\
+		(*result).emplace<xt::xarray<uint32_t>>(code<uint32_t>(args));\
+		break;\
+	case NDArray::DType::UInt64:\
+		(*result).emplace<xt::xarray<uint64_t>>(code<uint64_t>(args));\
+		break;\
+	case NDArray::DType::DTypeMax:\
+		ERR_FAIL_V_MSG(nullptr, "Dtype must be set for this operation.");\
+}
+
+Variant ND::asarray(Variant array, NDArray::DType dtype) {
 	auto type = array.get_type();
 
+	// Can we take a view?
 	if (type == Variant::OBJECT) {
 		if (auto ndarray = dynamic_cast<NDArray*>((Object*)(array))) {
-			return array;
+			if (dtype == NDArray::DType::DTypeMax || ndarray->dtype() == dtype) {
+				return array;
+			}
 		}
 	}
 
-	NDArray *result = memnew(NDArray());
-	if (!_asarray(array, result->array)) {
+	// Ok, we need a copy of the data.
+	return ND::array(array, dtype);
+}
+
+Variant ND::array(Variant array, NDArray::DType dtype) {
+	auto type = array.get_type();
+
+	std::shared_ptr<NDArrayVariant> existing_array;
+	if (!_asarray(array, existing_array)) {
 		return nullptr;
 	}
 
-	return Variant(result);
-}
+	if (dtype == NDArray::DType::DTypeMax) {
+		dtype = NDArray::DType((*existing_array).index());
+	}
+	
+	auto result = std::make_shared<NDArrayVariant>();
 
-// TODO This should use templates, but i couldn't get it to work.
-#define DTypeSwitch(code) switch (dtype) {\
-	case NDArray::DType::Double:\
-		(*result).emplace<xt::xarray<double_t>>(code<double_t>(std::move(shape_array)));\
-		break;\
-	case NDArray::DType::Float:\
-		(*result).emplace<xt::xarray<float_t>>(code<float_t>(std::move(shape_array)));\
-		break;\
-	case NDArray::DType::Int8:\
-		(*result).emplace<xt::xarray<int8_t>>(code<int8_t>(std::move(shape_array)));\
-		break;\
-	case NDArray::DType::Int16:\
-		(*result).emplace<xt::xarray<int16_t>>(code<int16_t>(std::move(shape_array)));\
-		break;\
-	case NDArray::DType::Int32:\
-		(*result).emplace<xt::xarray<int32_t>>(code<int32_t>(std::move(shape_array)));\
-		break;\
-	case NDArray::DType::Int64:\
-		(*result).emplace<xt::xarray<int64_t>>(code<int64_t>(std::move(shape_array)));\
-		break;\
-	case NDArray::DType::UInt8:\
-		(*result).emplace<xt::xarray<uint8_t>>(code<uint8_t>(std::move(shape_array)));\
-		break;\
-	case NDArray::DType::UInt16:\
-		(*result).emplace<xt::xarray<uint16_t>>(code<uint16_t>(std::move(shape_array)));\
-		break;\
-	case NDArray::DType::UInt32:\
-		(*result).emplace<xt::xarray<uint32_t>>(code<uint32_t>(std::move(shape_array)));\
-		break;\
-	case NDArray::DType::UInt64:\
-		(*result).emplace<xt::xarray<uint64_t>>(code<uint64_t>(std::move(shape_array)));\
-		break;\
+	// TODO
+	return nullptr;
+	// DTypeSwitch(dtype, std::get, existing_array);
+
+	return Variant(memnew(NDArray(result)));
 }
 
 Variant ND::zeros(Variant shape, NDArray::DType dtype) {
@@ -145,7 +168,7 @@ Variant ND::zeros(Variant shape, NDArray::DType dtype) {
 	// This means this kind of ugly contraption is quite a lot fasterhat than the alternative.
 	auto result = std::make_shared<NDArrayVariant>();
 
-	DTypeSwitch(xt::zeros);
+	DTypeSwitch(dtype, xt::zeros, std::move(shape_array));
 
 	return Variant(memnew(NDArray(result)));
 }
@@ -158,7 +181,7 @@ Variant ND::ones(Variant shape, NDArray::DType dtype) {
 
 	auto result = std::make_shared<NDArrayVariant>();
 
-	DTypeSwitch(xt::ones);
+	DTypeSwitch(dtype, xt::ones, std::move(shape_array));
 
 	return Variant(memnew(NDArray(result)));
 }

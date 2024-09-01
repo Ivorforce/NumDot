@@ -30,7 +30,8 @@ public:
 	ND();
 	~ND();
 
-	static Variant asarray(Variant array);
+	static Variant asarray(Variant array, NDArray::DType dtype = NDArray::DType::DTypeMax);
+	static Variant array(Variant array, NDArray::DType dtype = NDArray::DType::DTypeMax);
 	static Variant zeros(Variant shape, NDArray::DType dtype = NDArray::DType::Double);
 	static Variant ones(Variant shape, NDArray::DType dtype = NDArray::DType::Double);
 

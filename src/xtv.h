@@ -136,7 +136,7 @@ struct Operation {
 };
 
 template <typename op, typename... Args>
-static inline std::shared_ptr<Variant> operation(Args... args) {
+static inline std::shared_ptr<Variant> operation(Args&... args) {
 	return std::visit(Operation<op>{}, args...);
 }
 
@@ -146,28 +146,28 @@ static inline std::shared_ptr<Variant> operation(Args... args) {
 //  otherwise we need a good amount of boilerplate for every operation.
 struct Add {
 	template<typename A, typename B>
-	auto operator()(A a, B b) {
+	auto operator()(A& a, B& b) {
 		return a + b;
 	}
 };
 
 struct Subtract {
 	template<typename A, typename B>
-	auto operator()(A a, B b) {
+	auto operator()(A& a, B& b) {
 		return a - b;
 	}
 };
 
 struct Multiply {
 	template<typename A, typename B>
-	auto operator()(A a, B b) {
+	auto operator()(A& a, B& b) {
 		return a * b;
 	}
 };
 
 struct Divide {
 	template<typename A, typename B>
-	auto operator()(A a, B b) {
+	auto operator()(A& a, B& b) {
 		return a / b;
 	}
 };

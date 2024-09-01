@@ -7,7 +7,6 @@
 #include "xtensor/xadapt.hpp"
 #include "xtensor/xview.hpp"
 #include "xtensor/xlayout.hpp"
-#include "xtl/xvariant.hpp"
 
 using namespace godot;
 
@@ -177,7 +176,7 @@ struct BinOperation {
 		auto result = std::make_shared<NDArrayVariant>(xt::xarray<ResultType>());
 		
 		// Run the operation itself.
-		xtl::get<xt::xarray<ResultType>>(*result) = operation()(a, b);
+		std::get<xt::xarray<ResultType>>(*result) = operation()(a, b);
 
 		// Assign to the result array.
 		return memnew(NDArray(result));
@@ -195,7 +194,7 @@ inline Variant bin_op(Variant a, Variant b) {
 		return nullptr;
 	}
 
-	return Variant(xtl::visit(BinOperation<operation>{}, *a_, *b_));
+	return Variant(std::visit(BinOperation<operation>{}, *a_, *b_));
 }
 
 Variant ND::add(Variant a, Variant b) {

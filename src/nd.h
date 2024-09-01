@@ -8,7 +8,6 @@
 #include "xtensor/xarray.hpp"
 #include "xtensor/xio.hpp"
 #include "xtensor/xview.hpp"
-#include "xtl/xvariant.hpp"
 
 using namespace godot;
 

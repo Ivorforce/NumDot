@@ -3,7 +3,6 @@
 
 #include "xtensor/xarray.hpp"
 #include "xtensor/xlayout.hpp"
-#include "xtl/xvariant.hpp"
 
 #ifdef WIN32
 #include <windows.h>
@@ -24,7 +23,7 @@
 
 using namespace godot;
 
-using NDArrayVariant = xtl::variant<
+using NDArrayVariant = std::variant<
 	xt::xarray<double_t>,
  	xt::xarray<float_t>,
  	xt::xarray<int8_t>,

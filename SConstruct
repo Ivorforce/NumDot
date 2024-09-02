@@ -61,9 +61,13 @@ subcommands(
     ],
 )
 
-# See https://github.com/xtensor-stack/xsimd for supported list.
+# See https://github.com/xtensor-stack/xsimd for supported list of simd.
 # Choosing more will make your program faster, but also more incompatible to older machines.
-env.Append(CPPFLAGS=['-DXTENSOR_USE_XSIMD=1', '-msse2', '-msse3', '-msse4.1', '-msse4.2', '-mavx'])
+
+# ffast-math: See https://stackoverflow.com/questions/57442255/xtensor-and-xsimd-improve-performance-on-reduction
+# And https://stackoverflow.com/questions/7420665/what-does-gccs-ffast-math-actually-do
+# TODO Should we have non-finite math?
+env.Append(CPPFLAGS=['-DXTENSOR_USE_XSIMD=1', '-ffast-math', '-msse2', '-msse3', '-msse4.1', '-msse4.2', '-mavx'])
 
 # You can also use '-march=native' instead, which will enable everything your computer has.
 # Keep in mind the resulting binary will likely not work on many other computers.

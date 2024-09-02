@@ -112,16 +112,18 @@ Variant nd::array(Variant array, xtv::DType dtype) {
 		return nullptr;
 	}
 
+	// Default value.
 	if (dtype == xtv::DType::DTypeMax) {
 		dtype = xtv::dtype(*existing_array);
 	}
 
-	// This cannot fail, because we converted DTypeMax to dtype.
-	// If it does, we have problems, because the other function returned
-	//  an invalid dtype.
-	auto result = xtv::array(*existing_array, dtype);
-
-	return Variant(memnew(NDArray(result)));
+	try {
+		auto result = xtv::array(*existing_array, dtype);
+		return Variant(memnew(NDArray(result)));
+	}
+	catch (std::runtime_error error) {
+		ERR_FAIL_V_MSG(nullptr, error.what());
+	}
 }
 
 Variant nd::zeros(Variant shape, xtv::DType dtype) {
@@ -130,12 +132,12 @@ Variant nd::zeros(Variant shape, xtv::DType dtype) {
 		return nullptr;
 	}
 
-	auto result = xtv::with_dtype<xtv::Zeros>(dtype, shape_array);
-	if (result == nullptr) {
-		ERR_FAIL_V_MSG(nullptr, "Dtype must be set for this operation.");\
+	try {
+		return Variant(memnew(NDArray(xtv::with_dtype<xtv::Zeros>(dtype, shape_array))));
 	}
-	
-	return Variant(memnew(NDArray(result)));
+	catch (std::runtime_error error) {
+		ERR_FAIL_V_MSG(nullptr, error.what());
+	}
 }
 
 Variant nd::ones(Variant shape, xtv::DType dtype) {
@@ -144,12 +146,12 @@ Variant nd::ones(Variant shape, xtv::DType dtype) {
 		return nullptr;
 	}
 
-	auto result = xtv::with_dtype<xtv::Ones>(dtype, shape_array);
-	if (result == nullptr) {
-		ERR_FAIL_V_MSG(nullptr, "Dtype must be set for this operation.");\
+	try {
+		return Variant(memnew(NDArray(xtv::with_dtype<xtv::Ones>(dtype, shape_array))));
 	}
-	
-	return Variant(memnew(NDArray(result)));
+	catch (std::runtime_error error) {
+		ERR_FAIL_V_MSG(nullptr, error.what());
+	}
 }
 
 template <typename operation>
@@ -169,9 +171,6 @@ inline Variant binary_operation(Variant a, Variant b) {
 	}
 	catch (std::runtime_error error) {
 		ERR_FAIL_V_MSG(nullptr, error.what());
-	}
-	catch (...) {
-		ERR_FAIL_V_MSG(nullptr, "Unknown error.");
 	}
 
 	return nullptr;

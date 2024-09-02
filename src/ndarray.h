@@ -35,7 +35,7 @@ public:
 	std::shared_ptr<xtv::XTVariant> array;
 
 	NDArray();
-	NDArray(std::shared_ptr<xtv::XTVariant> array) : array(array) {};
+	NDArray(std::shared_ptr<xtv::XTVariant> array) : array(std::move(array)) {};
 	~NDArray();
 
 	DType dtype();

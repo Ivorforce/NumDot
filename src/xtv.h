@@ -105,15 +105,15 @@ static std::shared_ptr<XTVariant> array(XTVariant &existing_array, DType dtype) 
 
 struct Zeros {
 	template <typename T, typename Sh>
-	std::shared_ptr<XTVariant> operator()(const T t, const Sh& shape) const {
-		return std::make_shared<XTVariant>(xt::xarray<T>(xt::zeros<T, Sh>(shape)));
+	std::shared_ptr<XTVariant> operator()(const T t, Sh&& shape) const {
+		return std::make_shared<XTVariant>(xt::xarray<T>(xt::zeros<T, Sh>(std::forward<Sh>(shape))));
 	}
 };
 
 struct Ones {
 	template <typename T, typename Sh>
-	std::shared_ptr<XTVariant> operator()(const T t, const Sh& shape) const {
-		return std::make_shared<XTVariant>(xt::xarray<T>(xt::ones<T, Sh>(shape)));
+	std::shared_ptr<XTVariant> operator()(const T t, Sh&& shape) const {
+		return std::make_shared<XTVariant>(xt::xarray<T>(xt::ones<T, Sh>(std::forward<Sh>(shape))));
 	}
 };
 

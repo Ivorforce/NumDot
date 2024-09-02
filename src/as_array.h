@@ -1,5 +1,5 @@
-#ifndef NUMDOT_ASARRAY_H
-#define NUMDOT_ASARRAY_H
+#ifndef NUMDOT_AS_ARRAY_H
+#define NUMDOT_AS_ARRAY_H
 
 #include <godot_cpp/godot.hpp>
 #include "xtensor/xtensor.hpp"

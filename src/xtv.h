@@ -133,28 +133,21 @@ static std::shared_ptr<XTVariant> ones(Sh& shape_array, DType dtype) {
 }
 
 template <typename op>
-struct Operation {
-	template<typename... Args>
-	std::shared_ptr<XTVariant> operator()(xt::xarray<Args>&... args) const {
+struct BinaryOperation {
+	template<typename A, typename B>
+	std::shared_ptr<XTVariant> operator()(xt::xarray<A>& a, xt::xarray<B>& b) const {
 		// ResultType = what results from the usual C++ common promotion of a + b.
-		using ResultType = typename std::common_type<Args...>::type;
+		using ResultType = typename std::common_type<A, B>::type;
 
-		// General note: By creating the object first, and assigning later,
-		//  we avoid creating the result on the stack first and copying to the heap later.
-		// This means this kind of ugly contraption is quite a lot faster than the alternative.
-		auto result = std::make_shared<XTVariant>(xt::xarray<ResultType>());
-		
-		// Run the operation itself.
-		std::get<xt::xarray<ResultType>>(*result) = op()(args...);
-
-		// Assign to the result array.
-		return result;
+		// Note: Need to do this in one line. If the operator is called after the make_shared,
+		//  any situations where broadcast errors would be thrown will instead crash the program.
+		return std::make_shared<XTVariant>(xt::xarray<ResultType>(op()(a, b)));
 	}
 };
 
-template <typename op, typename... Args>
-static inline std::shared_ptr<XTVariant> operation(Args&... args) {
-	return std::visit(Operation<op>{}, args...);
+template <typename op, typename A, typename B>
+static inline std::shared_ptr<XTVariant> binary_operation(A& a, B& b) {
+	return std::visit(BinaryOperation<op>{}, a, b);
 }
 
 // TODO std::add and the likes exist, but it requires type parameters.

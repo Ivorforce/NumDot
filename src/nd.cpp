@@ -1,11 +1,13 @@
 #include "nd.h"
 
 #include <godot_cpp/godot.hpp>
+#include <godot_cpp/variant/utility_functions.hpp>
+
 #include "xtensor/xtensor.hpp"
 #include "xtensor/xadapt.hpp"
 
-#include "asarray.h"
-#include "asshape.h"
+#include "as_array.h"
+#include "as_shape.h"
 #include "xtv.h"
 
 using namespace godot;
@@ -114,11 +116,9 @@ Variant nd::array(Variant array, xtv::DType dtype) {
 		dtype = xtv::DType((*existing_array).index());
 	}
 
+	// This cannot fail.	
 	auto result = xtv::array(*existing_array, dtype);
-	if (result == nullptr) {
-		ERR_FAIL_V_MSG(nullptr, "Dtype must be set for this operation.");\
-	}
-	
+
 	return Variant(memnew(NDArray(result)));
 }
 
@@ -151,7 +151,7 @@ Variant nd::ones(Variant shape, xtv::DType dtype) {
 }
 
 template <typename operation>
-inline Variant binOp(Variant a, Variant b) {
+inline Variant binary_operation(Variant a, Variant b) {
 	std::shared_ptr<xtv::XTVariant> a_;
 	if (!variant_as_array(a, a_)) {
 		return nullptr;
@@ -161,23 +161,34 @@ inline Variant binOp(Variant a, Variant b) {
 		return nullptr;
 	}
 
-	return Variant(memnew(NDArray(xtv::operation<operation>(*a_, *b_))));
+	try {
+		auto result = xtv::binary_operation<operation>(*a_, *b_);
+		return Variant(memnew(NDArray(result)));
+	}
+	catch (std::runtime_error error) {
+		ERR_FAIL_V_MSG(nullptr, error.what());
+	}
+	catch (...) {
+		ERR_FAIL_V_MSG(nullptr, "Unknown error.");
+	}
+
+	return nullptr;
 }
 
 Variant nd::add(Variant a, Variant b) {
 	// godot::UtilityFunctions::print(xt::has_simd_interface<xt::xarray<int64_t>>::value);
 	// godot::UtilityFunctions::print(xt::has_simd_type<xt::xarray<int64_t>>::value);
-	return binOp<xtv::Add>(a, b);
+	return binary_operation<xtv::Add>(a, b);
 }
 
 Variant nd::subtract(Variant a, Variant b) {
-	return binOp<xtv::Subtract>(a, b);
+	return binary_operation<xtv::Subtract>(a, b);
 }
 
 Variant nd::multiply(Variant a, Variant b) {
-	return binOp<xtv::Multiply>(a, b);
+	return binary_operation<xtv::Multiply>(a, b);
 }
 
 Variant nd::divide(Variant a, Variant b) {
-	return binOp<xtv::Divide>(a, b);
+	return binary_operation<xtv::Divide>(a, b);
 }

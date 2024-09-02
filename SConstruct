@@ -56,18 +56,29 @@ subcommands(
     build_dir='xtensor/build',
     commands=[
         # Exceptions are disabled in godot in general.
-        "cmake ../ -DXTENSOR_USE_XSIMD=1 -Dxtl_DIR='../xtl/build/' -Dxsimd_DIR='../xsimd/build/' -DXTENSOR_DISABLE_EXCEPTIONS=1",
+        "cmake ../ -DXTENSOR_USE_XSIMD=1 -Dxtl_DIR='../xtl/build/' -Dxsimd_DIR='../xsimd/build/'",
         'cmake --install . --prefix .'
     ],
 )
 
-# See https://github.com/xtensor-stack/xsimd for supported list of simd.
-# Choosing more will make your program faster, but also more incompatible to older machines.
 
-# ffast-math: See https://stackoverflow.com/questions/57442255/xtensor-and-xsimd-improve-performance-on-reduction
-# And https://stackoverflow.com/questions/7420665/what-does-gccs-ffast-math-actually-do
-# TODO Should we have non-finite math?
-env.Append(CPPFLAGS=['-DXTENSOR_USE_XSIMD=1', '-ffast-math', '-msse2', '-msse3', '-msse4.1', '-msse4.2', '-mavx'])
+env.Append(CPPFLAGS=[
+    '-DXTENSOR_USE_XSIMD=1',
+    
+    # Explicitly enable exceptions (see https://github.com/godotengine/godot-cpp/blob/master/CMakeLists.txt).
+    # '-DGODOT_DISABLE_EXCEPTIONS=OFF',
+    # XTensor could disable exceptions, but then we would have to duplicate all our checks.
+    # Would have to be passed to xtensor build too, I think.
+    # '-DXTENSOR_DISABLE_EXCEPTIONS=1',
+    
+    # ffast-math: See https://stackoverflow.com/questions/57442255/xtensor-and-xsimd-improve-performance-on-reduction
+    # And https://stackoverflow.com/questions/7420665/what-does-gccs-ffast-math-actually-do
+    # TODO Should we have non-finite math?
+    '-ffast-math',
+    # See https://github.com/xtensor-stack/xsimd for supported list of simd.
+    # Choosing more will make your program faster, but also more incompatible to older machines.
+    '-msse2', '-msse3', '-msse4.1', '-msse4.2', '-mavx'
+])
 
 # You can also use '-march=native' instead, which will enable everything your computer has.
 # Keep in mind the resulting binary will likely not work on many other computers.

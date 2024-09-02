@@ -1,5 +1,5 @@
-#ifndef NUMDOT_ASSHAPE_H
-#define NUMDOT_ASSHAPE_H
+#ifndef NUMDOT_AS_SHAPE_H
+#define NUMDOT_AS_SHAPE_H
 
 #include <godot_cpp/godot.hpp>
 #include "xtensor/xtensor.hpp"

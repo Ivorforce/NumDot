@@ -5,14 +5,12 @@ func _ready() -> void:
 	var test_size := 200000
 	var test_count := 500
 	
-	print(nd.ones([5, 2]).to_godot_array())
-		
 	# Test 1: Create packed arrays
 	var start_time := Time.get_ticks_usec()
 	for t in test_count:
 		var a_packed := PackedInt32Array()
-		for i in test_size:
-			a_packed.append(1)
+		a_packed.resize(test_size)
+		a_packed.fill(1)
 	print(Time.get_ticks_usec() - start_time)
 
 	# Test 2: Create nd arrays
@@ -23,14 +21,14 @@ func _ready() -> void:
 
 	# Test 3: Multiply packed arrays
 	var a_packed := PackedInt32Array()
-	for i in test_size:
-		a_packed.append(1)
+	a_packed.resize(test_size)
 	
 	start_time = Time.get_ticks_usec()
 	for t in test_count:
 		var b_packed := PackedInt32Array()
+		b_packed.resize(test_size)
 		for i in test_size:
-			b_packed.append(a_packed[i] * a_packed[i])
+			b_packed[i] = a_packed[i] * a_packed[i]
 	print(Time.get_ticks_usec() - start_time)
 	
 	# Test 4: Multiply nd arrays

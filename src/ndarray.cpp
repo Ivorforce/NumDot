@@ -16,8 +16,8 @@ using namespace xtv;
 void NDArray::_bind_methods() {
 	godot::ClassDB::bind_method(D_METHOD("dtype"), &NDArray::dtype);
 
-	BIND_ENUM_CONSTANT(Double);
-	BIND_ENUM_CONSTANT(Float);
+	BIND_ENUM_CONSTANT(Float64);
+	BIND_ENUM_CONSTANT(Float32);
 	BIND_ENUM_CONSTANT(Int8);
 	BIND_ENUM_CONSTANT(Int16);
 	BIND_ENUM_CONSTANT(Int32);

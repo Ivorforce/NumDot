@@ -33,8 +33,8 @@ using VariantContainedTypes = std::tuple<
 >;
 
 enum DType {
-    Double,
-    Float,
+    Float32,
+    Float64,
     Int8,
     Int16,
     Int32,
@@ -49,10 +49,10 @@ enum DType {
 
 // TODO This should use templates, but i couldn't get it to work.
 #define DTypeSwitch(dtype, code, args) switch (dtype) {\
-	case xtv::DType::Double:\
+	case xtv::DType::Float32:\
 		(*result).emplace<xt::xarray<double_t>>(code<double_t>(args));\
 		break;\
-	case xtv::DType::Float:\
+	case xtv::DType::Float64:\
 		(*result).emplace<xt::xarray<float_t>>(code<float_t>(args));\
 		break;\
 	case xtv::DType::Int8:\

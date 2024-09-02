@@ -2,27 +2,42 @@ extends Node2D
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	var test_size := 50000000
-			
-	var start_time := Time.get_ticks_msec()
-	var a_packed := PackedVector2Array()
-	for i in test_size:
-		a_packed.append(Vector2(1, 1))
-	print(Time.get_ticks_msec() - start_time)
-
-	start_time = Time.get_ticks_msec()
-	var a_nd = ND.ones([test_size, 2], NDArray.DType.Float)
-	print(Time.get_ticks_msec() - start_time)
-
-	start_time = Time.get_ticks_msec()
-	var b_packed := PackedVector2Array()
-	for i in test_size:
-		b_packed.append(a_packed[i] * a_packed[i])
-	print(Time.get_ticks_msec() - start_time)
+	var test_size := 20
+	var test_count := 500
 	
-	start_time = Time.get_ticks_msec()
-	a_nd = ND.multiply(a_nd, a_nd)
-	print(Time.get_ticks_msec() - start_time)
+	# Test 1: Create packed arrays
+	var start_time := Time.get_ticks_usec()
+	for t in test_count:
+		var a_packed := PackedInt32Array()
+		for i in test_size:
+			a_packed.append(1)
+	print(Time.get_ticks_usec() - start_time)
+
+	# Test 2: Create nd arrays
+	start_time = Time.get_ticks_usec()
+	for t in test_count:
+		var a_nd = ND.ones(test_size, NDArray.DType.Int32)
+	print(Time.get_ticks_usec() - start_time)
+
+	# Test 3: Multiply packed arrays
+	var a_packed := PackedInt32Array()
+	for i in test_size:
+		a_packed.append(1)
+	
+	start_time = Time.get_ticks_usec()
+	for t in test_count:
+		var b_packed := PackedInt32Array()
+		for i in test_size:
+			b_packed.append(a_packed[i] * a_packed[i])
+	print(Time.get_ticks_usec() - start_time)
+	
+	# Test 4: Multiply nd arrays
+	var a_nd = ND.ones(test_size, NDArray.DType.Int32)
+
+	start_time = Time.get_ticks_usec()
+	for t in test_count:
+		ND.multiply(a_nd, a_nd)
+	print(Time.get_ticks_usec() - start_time)
 	
 	pass # Replace with function body.
 

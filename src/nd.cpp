@@ -15,8 +15,8 @@ using namespace godot;
 void ND::_bind_methods() {
 	godot::ClassDB::bind_static_method("ND", D_METHOD("asarray", "array", "dtype"), &ND::asarray, DEFVAL(nullptr), DEFVAL(NDArray::DType::DTypeMax));
 	godot::ClassDB::bind_static_method("ND", D_METHOD("array", "array", "dtype"), &ND::array, DEFVAL(nullptr), DEFVAL(NDArray::DType::DTypeMax));
-	godot::ClassDB::bind_static_method("ND", D_METHOD("zeros", "shape", "dtype"), &ND::zeros, DEFVAL(nullptr), DEFVAL(NDArray::DType::Double));
-	godot::ClassDB::bind_static_method("ND", D_METHOD("ones", "shape", "dtype"), &ND::ones, DEFVAL(nullptr), DEFVAL(NDArray::DType::Double));
+	godot::ClassDB::bind_static_method("ND", D_METHOD("zeros", "shape", "dtype"), &ND::zeros, DEFVAL(nullptr), DEFVAL(NDArray::DType::Float64));
+	godot::ClassDB::bind_static_method("ND", D_METHOD("ones", "shape", "dtype"), &ND::ones, DEFVAL(nullptr), DEFVAL(NDArray::DType::Float64));
 
 	godot::ClassDB::bind_static_method("ND", D_METHOD("add", "a", "b"), &ND::add);
 	godot::ClassDB::bind_static_method("ND", D_METHOD("subtract", "a", "b"), &ND::subtract);

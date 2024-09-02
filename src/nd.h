@@ -34,8 +34,8 @@ public:
 
 	static Variant asarray(Variant array, NDArray::DType dtype = NDArray::DType::DTypeMax);
 	static Variant array(Variant array, NDArray::DType dtype = NDArray::DType::DTypeMax);
-	static Variant zeros(Variant shape, NDArray::DType dtype = NDArray::DType::Double);
-	static Variant ones(Variant shape, NDArray::DType dtype = NDArray::DType::Double);
+	static Variant zeros(Variant shape, NDArray::DType dtype = NDArray::DType::Float64);
+	static Variant ones(Variant shape, NDArray::DType dtype = NDArray::DType::Float64);
 
 	static Variant add(Variant a, Variant b);
 	static Variant subtract(Variant a, Variant b);

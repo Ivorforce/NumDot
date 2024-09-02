@@ -9,7 +9,7 @@
 using namespace godot;
 
 template <typename C, typename T>
-static inline bool _packed_as_array(const T shape_array, std::shared_ptr<xtv::XTVariant> &target) {
+static inline bool packed_as_array(const T shape_array, std::shared_ptr<xtv::XTVariant> &target) {
 	uint64_t size = shape_array.size();
 
 	xt::static_shape<std::size_t, 1> shape_of_shape = { size };
@@ -20,7 +20,7 @@ static inline bool _packed_as_array(const T shape_array, std::shared_ptr<xtv::XT
 	return true;
 }
 
-static bool _asarray(const Variant array, std::shared_ptr<xtv::XTVariant> &target) {
+static bool variant_as_array(const Variant array, std::shared_ptr<xtv::XTVariant> &target) {
 	auto type = array.get_type();
 
 	// TODO A bunch of interesting types are still missing
@@ -38,15 +38,15 @@ static bool _asarray(const Variant array, std::shared_ptr<xtv::XTVariant> &targe
 			target = std::make_shared<xtv::XTVariant>(xt::xarray<double_t>(double_t(array)));
 			return true;
 		case Variant::PACKED_BYTE_ARRAY:
-			return _packed_as_array<uint8_t>(PackedByteArray(array), target);
+			return packed_as_array<uint8_t>(PackedByteArray(array), target);
 		case Variant::PACKED_INT32_ARRAY:
-			return _packed_as_array<int32_t>(PackedInt32Array(array), target);
+			return packed_as_array<int32_t>(PackedInt32Array(array), target);
 		case Variant::PACKED_INT64_ARRAY:
-			return _packed_as_array<int64_t>(PackedInt64Array(array), target);
+			return packed_as_array<int64_t>(PackedInt64Array(array), target);
 		case Variant::PACKED_FLOAT32_ARRAY:
-			return _packed_as_array<float_t>(PackedFloat32Array(array), target);
+			return packed_as_array<float_t>(PackedFloat32Array(array), target);
 		case Variant::PACKED_FLOAT64_ARRAY:
-			return _packed_as_array<double_t>(PackedFloat64Array(array), target);
+			return packed_as_array<double_t>(PackedFloat64Array(array), target);
 		case Variant::VECTOR2I: {
 			auto vector = Vector2i(array);
 			target = std::make_shared<xtv::XTVariant>(xt::xarray<int64_t>(
@@ -103,11 +103,14 @@ static bool _asarray(const Variant array, std::shared_ptr<xtv::XTVariant> &targe
 		target = std::make_shared<xtv::XTVariant>(xt::xarray<int64_t>(int64_t(array)));
 		return true;
 	}
+
+	// TODO Godot will happily convert every number to float.
+	// We should manually adapt and look through Array to find what its parts are.
 	if (Variant::can_convert(type, Variant::Type::PACKED_FLOAT64_ARRAY)) {
-		return _packed_as_array<double_t>(PackedFloat64Array(array), target);
+		return packed_as_array<double_t>(PackedFloat64Array(array), target);
 	}
 	if (Variant::can_convert(type, Variant::Type::PACKED_INT64_ARRAY)) {
-		return _packed_as_array<int64_t>(PackedInt64Array(array), target);
+		return packed_as_array<int64_t>(PackedInt64Array(array), target);
 	}
 
 	ERR_FAIL_V_MSG(false, "Variant cannot be converted to an array.");

@@ -2,7 +2,7 @@ extends Node2D
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	var test_size := 20000
+	var test_size := 200000
 	var test_count := 500
 		
 	

@@ -15,6 +15,8 @@ void NDArray::_bind_methods() {
 	godot::ClassDB::bind_method(D_METHOD("size"), &NDArray::size);
 	godot::ClassDB::bind_method(D_METHOD("ndim"), &NDArray::ndim);
 
+	godot::ClassDB::bind_method(D_METHOD("as_type"), &NDArray::as_type);
+
 	BIND_ENUM_CONSTANT(Float64);
 	BIND_ENUM_CONSTANT(Float32);
 	BIND_ENUM_CONSTANT(Int8);
@@ -57,4 +59,8 @@ uint64_t NDArray::size() {
 
 uint64_t NDArray::ndim() {
 	return xtv::dimension(*array);
+}
+
+Variant NDArray::as_type(DType dtype) {
+	return nd::array(this, dtype);
 }

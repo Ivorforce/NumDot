@@ -7,13 +7,13 @@
 using namespace godot;
 
 template <typename T, typename Sh>
-static inline bool _packed_as_shape(const T& shape_array, Sh &target) {
+static inline bool packed_as_shape(const T& shape_array, Sh &target) {
 	target.assign(shape_array.ptr(), shape_array.ptr() + shape_array.size());
 	return true;
 }
 
 template <typename C, typename T>
-static bool _asshape(const Variant shape, T &target) {
+static bool variant_as_shape(const Variant shape, T &target) {
 	auto type = shape.get_type();
 
 	switch (type) {
@@ -28,11 +28,11 @@ static bool _asshape(const Variant shape, T &target) {
 			target = { C(int64_t(shape)) };
 			return true;
 		case Variant::PACKED_BYTE_ARRAY:
-			return _packed_as_shape(PackedByteArray(shape), target);
+			return packed_as_shape(PackedByteArray(shape), target);
 		case Variant::PACKED_INT32_ARRAY:
-			return _packed_as_shape(PackedInt32Array(shape), target);
+			return packed_as_shape(PackedInt32Array(shape), target);
 		case Variant::PACKED_INT64_ARRAY:
-			return _packed_as_shape(PackedInt64Array(shape), target);
+			return packed_as_shape(PackedInt64Array(shape), target);
 		case Variant::VECTOR2I: {
 			auto vector = Vector2i(shape);
 			target = { C(vector.x), C(vector.y) };
@@ -57,8 +57,9 @@ static bool _asshape(const Variant shape, T &target) {
 		return true;
 	}
 
+	// TODO Godot will probably convert float to int. We should check.
 	if (Variant::can_convert(type, Variant::Type::PACKED_INT32_ARRAY)) {
-		return _packed_as_shape(PackedInt32Array(shape), target);
+		return packed_as_shape(PackedInt32Array(shape), target);
 	}
 
 	ERR_FAIL_V_MSG(false, "Variant cannot be converted to a shape.");

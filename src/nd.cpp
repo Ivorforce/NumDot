@@ -11,7 +11,7 @@
 using namespace godot;
 
 void nd::_bind_methods() {
-	godot::ClassDB::bind_static_method("nd", D_METHOD("asarray", "array", "dtype"), &nd::asarray, DEFVAL(nullptr), DEFVAL(NDArray::DType::DTypeMax));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("as_array", "array", "dtype"), &nd::as_array, DEFVAL(nullptr), DEFVAL(NDArray::DType::DTypeMax));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("array", "array", "dtype"), &nd::array, DEFVAL(nullptr), DEFVAL(NDArray::DType::DTypeMax));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("zeros", "shape", "dtype"), &nd::zeros, DEFVAL(nullptr), DEFVAL(NDArray::DType::Float64));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("ones", "shape", "dtype"), &nd::ones, DEFVAL(nullptr), DEFVAL(NDArray::DType::Float64));
@@ -29,7 +29,7 @@ nd::~nd() {
 	// Add your cleanup here.
 }
 
-Variant nd::asarray(Variant array, xtv::DType dtype) {
+Variant nd::as_array(Variant array, xtv::DType dtype) {
 	auto type = array.get_type();
 
 	// Can we take a view?
@@ -49,7 +49,7 @@ Variant nd::array(Variant array, xtv::DType dtype) {
 	auto type = array.get_type();
 
 	std::shared_ptr<xtv::XTVariant> existing_array;
-	if (!_asarray(array, existing_array)) {
+	if (!variant_as_array(array, existing_array)) {
 		return nullptr;
 	}
 
@@ -67,7 +67,7 @@ Variant nd::array(Variant array, xtv::DType dtype) {
 
 Variant nd::zeros(Variant shape, xtv::DType dtype) {
 	std::vector<size_t> shape_array;
-	if (!_asshape<size_t>(shape, shape_array)) {
+	if (!variant_as_shape<size_t>(shape, shape_array)) {
 		return nullptr;
 	}
 
@@ -81,7 +81,7 @@ Variant nd::zeros(Variant shape, xtv::DType dtype) {
 
 Variant nd::ones(Variant shape, xtv::DType dtype) {
 	std::vector<size_t> shape_array;
-	if (!_asshape<size_t>(shape, shape_array)) {
+	if (!variant_as_shape<size_t>(shape, shape_array)) {
 		return nullptr;
 	}
 
@@ -96,11 +96,11 @@ Variant nd::ones(Variant shape, xtv::DType dtype) {
 template <typename operation>
 inline Variant binOp(Variant a, Variant b) {
 	std::shared_ptr<xtv::XTVariant> a_;
-	if (!_asarray(a, a_)) {
+	if (!variant_as_array(a, a_)) {
 		return nullptr;
 	}
 	std::shared_ptr<xtv::XTVariant> b_;
-	if (!_asarray(b, b_)) {
+	if (!variant_as_array(b, b_)) {
 		return nullptr;
 	}
 

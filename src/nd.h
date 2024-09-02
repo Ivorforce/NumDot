@@ -32,7 +32,7 @@ public:
 	nd();
 	~nd();
 
-	static Variant asarray(Variant array, NDArray::DType dtype = NDArray::DType::DTypeMax);
+	static Variant as_array(Variant array, NDArray::DType dtype = NDArray::DType::DTypeMax);
 	static Variant array(Variant array, NDArray::DType dtype = NDArray::DType::DTypeMax);
 	static Variant zeros(Variant shape, NDArray::DType dtype = NDArray::DType::Float64);
 	static Variant ones(Variant shape, NDArray::DType dtype = NDArray::DType::Float64);

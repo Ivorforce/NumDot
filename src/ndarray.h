@@ -42,6 +42,8 @@ public:
 	PackedInt64Array shape();
 	uint64_t size();
 	uint64_t ndim();
+	
+	Variant as_type(DType dtype);
 };
 
 VARIANT_ENUM_CAST(NDArray::DType);

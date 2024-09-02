@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import os
 import sys
-from SCons.Script import Command, File, DefaultEnvironment
+from SCons.Script import Variables, Command, File, DefaultEnvironment
 
 def subcommands(env, *, target_files, build_dir, commands):
     # Create the build dir
@@ -21,7 +21,12 @@ def subcommands(env, *, target_files, build_dir, commands):
         action=actions,
     )
 
-env = SConscript("godot-cpp/SConstruct")
+# This works like passing disable_exceptions=false by default.
+# Why I do this, see below.
+env = Environment()
+env['disable_exceptions'] = False
+
+env = SConscript("godot-cpp/SConstruct", 'env')
 
 # For reference:
 # - CCFLAGS are compilation flags shared between C and C++

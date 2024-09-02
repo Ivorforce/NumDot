@@ -3,7 +3,7 @@
     "tasks": [
         {
             "taskName": "SCons Build Macos", // See https://github.com/godotengine/godot-cpp/issues/1326
-            "command": "scons platform=macos disable_exceptions=false",
+            "command": "scons platform=macos",
             "type": "shell",
             "group": "build",
             "problemMatcher": "$msCompile" // Important to catch the status

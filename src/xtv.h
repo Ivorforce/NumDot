@@ -46,16 +46,20 @@ enum DType {
     DTypeMax
 };
 
+static inline DType dtype(XTVariant& variant) {
+	return DType(variant.index());
+}
+
 static inline xt::svector<size_t> shape(XTVariant& variant) {
-	return std::visit([](auto& arg){ return arg.shape(); }, variant);;
+	return std::visit([](auto& arg){ return arg.shape(); }, variant);
 }
 
 static inline size_t size(XTVariant& variant) {
-	return std::visit([](auto& arg){ return arg.size(); }, variant);;
+	return std::visit([](auto& arg){ return arg.size(); }, variant);
 }
 
 static inline size_t dimension(XTVariant& variant) {
-	return std::visit([](auto& arg){ return arg.dimension(); }, variant);;
+	return std::visit([](auto& arg){ return arg.dimension(); }, variant);
 }
 
 // TODO This should use templates, but i couldn't get it to work.

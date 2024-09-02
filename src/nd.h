@@ -32,6 +32,13 @@ public:
 	nd();
 	~nd();
 
+	static NDArray::DType dtype(Variant array);
+	static PackedInt64Array shape(Variant array);
+	static uint64_t size(Variant array);
+	static uint64_t ndim(Variant array);
+	
+	static Variant as_type(Variant array, NDArray::DType dtype);
+
 	static Variant as_array(Variant array, NDArray::DType dtype = NDArray::DType::DTypeMax);
 	static Variant array(Variant array, NDArray::DType dtype = NDArray::DType::DTypeMax);
 	static Variant zeros(Variant shape, NDArray::DType dtype = NDArray::DType::Float64);

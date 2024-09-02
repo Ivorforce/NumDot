@@ -40,17 +40,17 @@ String NDArray::_to_string() const {
 }
 
 NDArray::DType NDArray::dtype() {
-	return NDArray::DType((*array).index());
+	return xtv::dtype(*array);
 }
 
 PackedInt64Array NDArray::shape() {
 	auto shape = xtv::shape(*array);
 	// TODO This seems a bit weird, but it works for now.
-	auto array = PackedInt64Array();
+	auto packed = PackedInt64Array();
 	for (auto d : shape) {
-		array.append(d);
+		packed.append(d);
 	}
-	return array;
+	return packed;
 }
 
 uint64_t NDArray::size() {
@@ -62,5 +62,5 @@ uint64_t NDArray::ndim() {
 }
 
 Variant NDArray::as_type(DType dtype) {
-	return nd::array(this, dtype);
+	return nd::as_type(this, dtype);
 }

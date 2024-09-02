@@ -110,22 +110,12 @@ struct Zeros {
 	}
 };
 
-template <typename Sh>
-static std::shared_ptr<XTVariant> zeros(Sh& shape_array, DType dtype) {
-	return with_dtype<Zeros>(dtype, shape_array);
-}
-
 struct Ones {
 	template <typename T, typename Sh>
 	std::shared_ptr<XTVariant> operator()(const T t, const Sh& shape) const {
 		return std::make_shared<XTVariant>(xt::xarray<T>(xt::ones<T, Sh>(shape)));
 	}
 };
-
-template <typename Sh>
-static std::shared_ptr<XTVariant> ones(Sh& shape_array, DType dtype) {
-	return with_dtype<Ones>(dtype, shape_array);
-}
 
 template <typename op>
 struct BinaryOperation {

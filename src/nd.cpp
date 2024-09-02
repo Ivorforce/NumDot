@@ -130,7 +130,7 @@ Variant nd::zeros(Variant shape, xtv::DType dtype) {
 		return nullptr;
 	}
 
-	auto result = xtv::zeros(shape_array, dtype);
+	auto result = xtv::with_dtype<xtv::Zeros>(dtype, shape_array);
 	if (result == nullptr) {
 		ERR_FAIL_V_MSG(nullptr, "Dtype must be set for this operation.");\
 	}
@@ -144,7 +144,7 @@ Variant nd::ones(Variant shape, xtv::DType dtype) {
 		return nullptr;
 	}
 
-	auto result = xtv::ones(shape_array, dtype);
+	auto result = xtv::with_dtype<xtv::Ones>(dtype, shape_array);
 	if (result == nullptr) {
 		ERR_FAIL_V_MSG(nullptr, "Dtype must be set for this operation.");\
 	}

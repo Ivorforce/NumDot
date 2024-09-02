@@ -1,13 +1,11 @@
 #include "nd.h"
-#include <godot_cpp/core/class_db.hpp>
+
 #include <godot_cpp/godot.hpp>
-#include <godot_cpp/variant/utility_functions.hpp>
-
-#include <iostream>
+#include "xtensor/xtensor.hpp"
 #include "xtensor/xadapt.hpp"
-#include "xtensor/xview.hpp"
-#include "xtensor/xlayout.hpp"
 
+#include "asarray.h"
+#include "asshape.h"
 #include "xtv.h"
 
 using namespace godot;
@@ -31,60 +29,6 @@ nd::~nd() {
 	// Add your cleanup here.
 }
 
-template <typename T>
-bool _asshape(Variant shape, T &target) {
-	auto type = shape.get_type();
-
-	if (Variant::can_convert(type, Variant::Type::INT)) {
-		target = { uint64_t(shape) };
-		return true;
-	}
-	if (Variant::can_convert(type, Variant::Type::PACKED_INT32_ARRAY)) {
-		auto shape_array = PackedInt32Array(shape);
-		uint64_t size = shape_array.size();
-
-		xt::static_shape<std::size_t, 1> shape_of_shape = { size };
-
-		target = xt::adapt(shape_array.ptrw(), size, xt::no_ownership(), shape_of_shape);
-		return true;
-	}
-
-	ERR_FAIL_V_MSG(false, "Variant cannot be converted to a shape.");
-}
-
-bool _asarray(Variant array, std::shared_ptr<xtv::Variant> &target) {
-	auto type = array.get_type();
-
-	if (type == Variant::OBJECT) {
-		if (auto ndarray = dynamic_cast<NDArray*>((Object*)(array))) {
-			target = ndarray->array;
-			return true;
-		}
-	}
-
-	if (Variant::can_convert(type, Variant::Type::INT)) {
-		target = std::make_shared<xtv::Variant>(xt::xarray<int64_t>());
-		return true;
-	}
-	if (Variant::can_convert(type, Variant::Type::FLOAT)) {
-		target = std::make_shared<xtv::Variant>(xt::xarray<double_t>(double_t(array)));
-		return true;
-	}
-	if (Variant::can_convert(type, Variant::Type::PACKED_FLOAT64_ARRAY)) {
-		auto shape_array = PackedInt32Array(array);
-		uint64_t size = shape_array.size();
-
-		xt::static_shape<std::size_t, 1> shape_of_shape = { size };
-
-		target = std::make_shared<xtv::Variant>(
-			xt::xarray<double_t>(xt::adapt(shape_array.ptrw(), size, xt::no_ownership(), shape_of_shape))
-		);
-		return true;
-	}
-
-	ERR_FAIL_V_MSG(false, "Variant cannot be converted to an array.");
-}
-
 Variant nd::asarray(Variant array, xtv::DType dtype) {
 	auto type = array.get_type();
 
@@ -104,7 +48,7 @@ Variant nd::asarray(Variant array, xtv::DType dtype) {
 Variant nd::array(Variant array, xtv::DType dtype) {
 	auto type = array.get_type();
 
-	std::shared_ptr<xtv::Variant> existing_array;
+	std::shared_ptr<xtv::XTVariant> existing_array;
 	if (!_asarray(array, existing_array)) {
 		return nullptr;
 	}
@@ -122,8 +66,8 @@ Variant nd::array(Variant array, xtv::DType dtype) {
 }
 
 Variant nd::zeros(Variant shape, xtv::DType dtype) {
-	xt::xarray<size_t> shape_array;
-	if (!_asshape(shape, shape_array)) {
+	std::vector<size_t> shape_array;
+	if (!_asshape<size_t>(shape, shape_array)) {
 		return nullptr;
 	}
 
@@ -136,8 +80,8 @@ Variant nd::zeros(Variant shape, xtv::DType dtype) {
 }
 
 Variant nd::ones(Variant shape, xtv::DType dtype) {
-	xt::xarray<size_t> shape_array;
-	if (!_asshape(shape, shape_array)) {
+	std::vector<size_t> shape_array;
+	if (!_asshape<size_t>(shape, shape_array)) {
 		return nullptr;
 	}
 
@@ -151,11 +95,11 @@ Variant nd::ones(Variant shape, xtv::DType dtype) {
 
 template <typename operation>
 inline Variant binOp(Variant a, Variant b) {
-	std::shared_ptr<xtv::Variant> a_;
+	std::shared_ptr<xtv::XTVariant> a_;
 	if (!_asarray(a, a_)) {
 		return nullptr;
 	}
-	std::shared_ptr<xtv::Variant> b_;
+	std::shared_ptr<xtv::XTVariant> b_;
 	if (!_asarray(b, b_)) {
 		return nullptr;
 	}

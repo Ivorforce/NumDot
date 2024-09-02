@@ -17,7 +17,7 @@ func _ready() -> void:
 	# Test 2: Create nd arrays
 	start_time = Time.get_ticks_usec()
 	for t in test_count:
-		var a_nd = nd.ones(test_size, NDArray.DType.UInt32)
+		var a_nd = nd.ones(test_size, NDArray.DType.Int32)
 	print(Time.get_ticks_usec() - start_time)
 
 	# Test 3: Multiply packed arrays

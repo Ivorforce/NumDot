@@ -32,10 +32,10 @@ public:
 	using DType = xtv::DType;
 
 	// We need a shared pointer because things like asarray can return either a view or an array
-	std::shared_ptr<xtv::Variant> array;
+	std::shared_ptr<xtv::XTVariant> array;
 
 	NDArray();
-	NDArray(std::shared_ptr<xtv::Variant> array) : array(array) {};
+	NDArray(std::shared_ptr<xtv::XTVariant> array) : array(array) {};
 	~NDArray();
 
 	DType dtype();

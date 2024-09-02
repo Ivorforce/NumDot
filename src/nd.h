@@ -1,7 +1,7 @@
 #ifndef NUMDOT_ND_H
 #define NUMDOT_ND_H
 
-#include <godot_cpp/classes/object.hpp>
+#include <godot_cpp/godot.hpp>
 
 #include "ndarray.h"
 

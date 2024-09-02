@@ -6,7 +6,7 @@
 
 namespace xtv {
 
-using Variant = std::variant<
+using XTVariant = std::variant<
 	xt::xarray<double_t>,
  	xt::xarray<float_t>,
  	xt::xarray<int8_t>,
@@ -19,7 +19,7 @@ using Variant = std::variant<
  	xt::xarray<uint64_t>
 >;
 
-using VariantContainedTypes = std::tuple<
+using XTVariantContainedTypes = std::tuple<
 	double_t,
  	float_t,
  	int8_t,
@@ -46,15 +46,15 @@ enum DType {
     DTypeMax
 };
 
-xt::svector<size_t> shape(Variant& variant) {
+static inline xt::svector<size_t> shape(XTVariant& variant) {
 	return std::visit([](auto& arg){ return arg.shape(); }, variant);;
 }
 
-size_t size(Variant& variant) {
+static inline size_t size(XTVariant& variant) {
 	return std::visit([](auto& arg){ return arg.size(); }, variant);;
 }
 
-size_t dimension(Variant& variant) {
+static inline size_t dimension(XTVariant& variant) {
 	return std::visit([](auto& arg){ return arg.dimension(); }, variant);;
 }
 
@@ -94,8 +94,8 @@ size_t dimension(Variant& variant) {
 		return nullptr;\
 }
 
-static std::shared_ptr<Variant> array(Variant &existing_array, DType dtype) {
-    auto result = std::make_shared<Variant>();
+static std::shared_ptr<XTVariant> array(XTVariant &existing_array, DType dtype) {
+    auto result = std::make_shared<XTVariant>();
 
 	// TODO Using the switch here is kinda dumb, but for now it's the easiest way of making it work, making use of std::visit later.
 	DTypeSwitch(dtype, xt::xarray, );
@@ -107,19 +107,21 @@ static std::shared_ptr<Variant> array(Variant &existing_array, DType dtype) {
     return result;
 }
 
-static std::shared_ptr<Variant> zeros(xt::xarray<size_t>& shape_array, DType dtype) {
+template <typename Sh>
+static std::shared_ptr<XTVariant> zeros(Sh& shape_array, DType dtype) {
 	// General note: By creating the object first, and assigning later,
 	//  we avoid creating the result on the stack first and copying to the heap later.
 	// This means this kind of ugly contraption is quite a lot fasterhat than the alternative.
-	auto result = std::make_shared<xtv::Variant>();
+	auto result = std::make_shared<XTVariant>();
 
 	DTypeSwitch(dtype, xt::zeros, shape_array);
 
 	return result;
 }
 
-static std::shared_ptr<Variant> ones(xt::xarray<size_t>& shape_array, DType dtype) {
-	auto result = std::make_shared<xtv::Variant>();
+template <typename Sh>
+static std::shared_ptr<XTVariant> ones(Sh& shape_array, DType dtype) {
+	auto result = std::make_shared<XTVariant>();
 
 	DTypeSwitch(dtype, xt::ones, shape_array);
 
@@ -129,14 +131,14 @@ static std::shared_ptr<Variant> ones(xt::xarray<size_t>& shape_array, DType dtyp
 template <typename op>
 struct Operation {
 	template<typename... Args>
-	std::shared_ptr<Variant> operator()(xt::xarray<Args>&... args) const {
+	std::shared_ptr<XTVariant> operator()(xt::xarray<Args>&... args) const {
 		// ResultType = what results from the usual C++ common promotion of a + b.
 		using ResultType = typename std::common_type<Args...>::type;
 
 		// General note: By creating the object first, and assigning later,
 		//  we avoid creating the result on the stack first and copying to the heap later.
 		// This means this kind of ugly contraption is quite a lot faster than the alternative.
-		auto result = std::make_shared<Variant>(xt::xarray<ResultType>());
+		auto result = std::make_shared<XTVariant>(xt::xarray<ResultType>());
 		
 		// Run the operation itself.
 		std::get<xt::xarray<ResultType>>(*result) = op()(args...);
@@ -147,7 +149,7 @@ struct Operation {
 };
 
 template <typename op, typename... Args>
-static inline std::shared_ptr<Variant> operation(Args&... args) {
+static inline std::shared_ptr<XTVariant> operation(Args&... args) {
 	return std::visit(Operation<op>{}, args...);
 }
 
@@ -157,28 +159,28 @@ static inline std::shared_ptr<Variant> operation(Args&... args) {
 //  otherwise we need a good amount of boilerplate for every operation.
 struct Add {
 	template<typename A, typename B>
-	auto operator()(A& a, B& b) {
+	inline auto operator()(A& a, B& b) {
 		return a + b;
 	}
 };
 
 struct Subtract {
 	template<typename A, typename B>
-	auto operator()(A& a, B& b) {
+	inline auto operator()(A& a, B& b) {
 		return a - b;
 	}
 };
 
 struct Multiply {
 	template<typename A, typename B>
-	auto operator()(A& a, B& b) {
+	inline auto operator()(A& a, B& b) {
 		return a * b;
 	}
 };
 
 struct Divide {
 	template<typename A, typename B>
-	auto operator()(A& a, B& b) {
+	inline auto operator()(A& a, B& b) {
 		return a / b;
 	}
 };

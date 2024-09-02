@@ -1,11 +1,7 @@
 #include "ndarray.h"
 
-#include "xtensor/xio.hpp"
-#include "xtensor/xview.hpp"
-
-#include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/godot.hpp>
-#include <godot_cpp/variant/utility_functions.hpp>
+#include "xtensor/xtensor.hpp"
 
 #include "xtv.h"
 #include "nd.h"

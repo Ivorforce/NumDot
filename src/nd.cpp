@@ -12,22 +12,22 @@
 
 using namespace godot;
 
-void ND::_bind_methods() {
-	godot::ClassDB::bind_static_method("ND", D_METHOD("asarray", "array", "dtype"), &ND::asarray, DEFVAL(nullptr), DEFVAL(NDArray::DType::DTypeMax));
-	godot::ClassDB::bind_static_method("ND", D_METHOD("array", "array", "dtype"), &ND::array, DEFVAL(nullptr), DEFVAL(NDArray::DType::DTypeMax));
-	godot::ClassDB::bind_static_method("ND", D_METHOD("zeros", "shape", "dtype"), &ND::zeros, DEFVAL(nullptr), DEFVAL(NDArray::DType::Float64));
-	godot::ClassDB::bind_static_method("ND", D_METHOD("ones", "shape", "dtype"), &ND::ones, DEFVAL(nullptr), DEFVAL(NDArray::DType::Float64));
+void nd::_bind_methods() {
+	godot::ClassDB::bind_static_method("nd", D_METHOD("asarray", "array", "dtype"), &nd::asarray, DEFVAL(nullptr), DEFVAL(NDArray::DType::DTypeMax));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("array", "array", "dtype"), &nd::array, DEFVAL(nullptr), DEFVAL(NDArray::DType::DTypeMax));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("zeros", "shape", "dtype"), &nd::zeros, DEFVAL(nullptr), DEFVAL(NDArray::DType::Float64));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("ones", "shape", "dtype"), &nd::ones, DEFVAL(nullptr), DEFVAL(NDArray::DType::Float64));
 
-	godot::ClassDB::bind_static_method("ND", D_METHOD("add", "a", "b"), &ND::add);
-	godot::ClassDB::bind_static_method("ND", D_METHOD("subtract", "a", "b"), &ND::subtract);
-	godot::ClassDB::bind_static_method("ND", D_METHOD("multiply", "a", "b"), &ND::multiply);
-	godot::ClassDB::bind_static_method("ND", D_METHOD("divide", "a", "b"), &ND::divide);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("add", "a", "b"), &nd::add);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("subtract", "a", "b"), &nd::subtract);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("multiply", "a", "b"), &nd::multiply);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("divide", "a", "b"), &nd::divide);
 }
 
-ND::ND() {
+nd::nd() {
 }
 
-ND::~ND() {
+nd::~nd() {
 	// Add your cleanup here.
 }
 
@@ -63,22 +63,21 @@ bool _asarray(Variant array, std::shared_ptr<xtv::Variant> &target) {
 	}
 
 	if (Variant::can_convert(type, Variant::Type::INT)) {
-		// TODO Int array
-		target = std::make_shared<xtv::Variant>(xt::xarray<double>());
+		target = std::make_shared<xtv::Variant>(xt::xarray<int64_t>());
 		return true;
 	}
 	if (Variant::can_convert(type, Variant::Type::FLOAT)) {
-		target = std::make_shared<xtv::Variant>(xt::xarray<double>(float_t(array)));
+		target = std::make_shared<xtv::Variant>(xt::xarray<double_t>(double_t(array)));
 		return true;
 	}
-	if (Variant::can_convert(type, Variant::Type::PACKED_FLOAT32_ARRAY)) {
+	if (Variant::can_convert(type, Variant::Type::PACKED_FLOAT64_ARRAY)) {
 		auto shape_array = PackedInt32Array(array);
 		uint64_t size = shape_array.size();
 
 		xt::static_shape<std::size_t, 1> shape_of_shape = { size };
 
 		target = std::make_shared<xtv::Variant>(
-			xt::xarray<double>(xt::adapt(shape_array.ptrw(), size, xt::no_ownership(), shape_of_shape))
+			xt::xarray<double_t>(xt::adapt(shape_array.ptrw(), size, xt::no_ownership(), shape_of_shape))
 		);
 		return true;
 	}
@@ -86,7 +85,7 @@ bool _asarray(Variant array, std::shared_ptr<xtv::Variant> &target) {
 	ERR_FAIL_V_MSG(false, "Variant cannot be converted to an array.");
 }
 
-Variant ND::asarray(Variant array, xtv::DType dtype) {
+Variant nd::asarray(Variant array, xtv::DType dtype) {
 	auto type = array.get_type();
 
 	// Can we take a view?
@@ -99,10 +98,10 @@ Variant ND::asarray(Variant array, xtv::DType dtype) {
 	}
 
 	// Ok, we need a copy of the data.
-	return ND::array(array, dtype);
+	return nd::array(array, dtype);
 }
 
-Variant ND::array(Variant array, xtv::DType dtype) {
+Variant nd::array(Variant array, xtv::DType dtype) {
 	auto type = array.get_type();
 
 	std::shared_ptr<xtv::Variant> existing_array;
@@ -122,7 +121,7 @@ Variant ND::array(Variant array, xtv::DType dtype) {
 	return Variant(memnew(NDArray(result)));
 }
 
-Variant ND::zeros(Variant shape, xtv::DType dtype) {
+Variant nd::zeros(Variant shape, xtv::DType dtype) {
 	xt::xarray<size_t> shape_array;
 	if (!_asshape(shape, shape_array)) {
 		return nullptr;
@@ -136,7 +135,7 @@ Variant ND::zeros(Variant shape, xtv::DType dtype) {
 	return Variant(memnew(NDArray(result)));
 }
 
-Variant ND::ones(Variant shape, xtv::DType dtype) {
+Variant nd::ones(Variant shape, xtv::DType dtype) {
 	xt::xarray<size_t> shape_array;
 	if (!_asshape(shape, shape_array)) {
 		return nullptr;
@@ -164,20 +163,20 @@ inline Variant binOp(Variant a, Variant b) {
 	return Variant(memnew(NDArray(xtv::operation<operation>(*a_, *b_))));
 }
 
-Variant ND::add(Variant a, Variant b) {
+Variant nd::add(Variant a, Variant b) {
 	// godot::UtilityFunctions::print(xt::has_simd_interface<xt::xarray<int64_t>>::value);
 	// godot::UtilityFunctions::print(xt::has_simd_type<xt::xarray<int64_t>>::value);
 	return binOp<xtv::Add>(a, b);
 }
 
-Variant ND::subtract(Variant a, Variant b) {
+Variant nd::subtract(Variant a, Variant b) {
 	return binOp<xtv::Subtract>(a, b);
 }
 
-Variant ND::multiply(Variant a, Variant b) {
+Variant nd::multiply(Variant a, Variant b) {
 	return binOp<xtv::Multiply>(a, b);
 }
 
-Variant ND::divide(Variant a, Variant b) {
+Variant nd::divide(Variant a, Variant b) {
 	return binOp<xtv::Divide>(a, b);
 }

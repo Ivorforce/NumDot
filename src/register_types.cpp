@@ -16,7 +16,7 @@ void initialize_numdot_module(ModuleInitializationLevel p_level) {
 	}
 
 	GDREGISTER_CLASS(NDArray);
-	GDREGISTER_CLASS(ND);
+	GDREGISTER_CLASS(nd);
 }
 
 void uninitialize_numdot_module(ModuleInitializationLevel p_level) {

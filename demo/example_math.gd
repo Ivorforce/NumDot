@@ -5,6 +5,7 @@ func _ready() -> void:
 	var test_size := 20000
 	var test_count := 500
 		
+	
 	# Test 1: Create packed arrays
 	var start_time := Time.get_ticks_usec()
 	for t in test_count:
@@ -16,7 +17,7 @@ func _ready() -> void:
 	# Test 2: Create nd arrays
 	start_time = Time.get_ticks_usec()
 	for t in test_count:
-		var a_nd = ND.ones(test_size, NDArray.DType.UInt32)
+		var a_nd = nd.ones(test_size, NDArray.DType.UInt32)
 	print(Time.get_ticks_usec() - start_time)
 
 	# Test 3: Multiply packed arrays
@@ -32,11 +33,11 @@ func _ready() -> void:
 	print(Time.get_ticks_usec() - start_time)
 	
 	# Test 4: Multiply nd arrays
-	var a_nd = ND.ones(test_size, NDArray.DType.Int32)
+	var a_nd = nd.ones(test_size, NDArray.DType.Int32)
 
 	start_time = Time.get_ticks_usec()
 	for t in test_count:
-		ND.multiply(a_nd, a_nd)
+		nd.multiply(a_nd, a_nd)
 	print(Time.get_ticks_usec() - start_time)
 	
 	pass # Replace with function body.

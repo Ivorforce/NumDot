@@ -22,15 +22,15 @@ String xt_to_string(const xt::xexpression<E>& e)
     return String(out.str().c_str());
 }
 
-class ND : public Object {
-	GDCLASS(ND, Object)
+class nd : public Object {
+	GDCLASS(nd, Object)
 
 protected:
 	static void _bind_methods();
 
 public:
-	ND();
-	~ND();
+	nd();
+	~nd();
 
 	static Variant asarray(Variant array, NDArray::DType dtype = NDArray::DType::DTypeMax);
 	static Variant array(Variant array, NDArray::DType dtype = NDArray::DType::DTypeMax);

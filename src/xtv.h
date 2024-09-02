@@ -46,6 +46,17 @@ enum DType {
     DTypeMax
 };
 
+xt::svector<size_t> shape(Variant& variant) {
+	return std::visit([](auto& arg){ return arg.shape(); }, variant);;
+}
+
+size_t size(Variant& variant) {
+	return std::visit([](auto& arg){ return arg.size(); }, variant);;
+}
+
+size_t dimension(Variant& variant) {
+	return std::visit([](auto& arg){ return arg.dimension(); }, variant);;
+}
 
 // TODO This should use templates, but i couldn't get it to work.
 #define DTypeSwitch(dtype, code, args) switch (dtype) {\

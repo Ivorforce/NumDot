@@ -67,5 +67,6 @@
         "algorithm": "cpp",
         "version": "cpp",
         "*.inc": "cpp"
-    }
+    },
+    "cmake.ignoreCMakeListsMissing": true
 }

@@ -15,6 +15,9 @@ using namespace xtv;
 
 void NDArray::_bind_methods() {
 	godot::ClassDB::bind_method(D_METHOD("dtype"), &NDArray::dtype);
+	godot::ClassDB::bind_method(D_METHOD("shape"), &NDArray::shape);
+	godot::ClassDB::bind_method(D_METHOD("size"), &NDArray::size);
+	godot::ClassDB::bind_method(D_METHOD("ndim"), &NDArray::ndim);
 
 	BIND_ENUM_CONSTANT(Float64);
 	BIND_ENUM_CONSTANT(Float32);
@@ -40,4 +43,22 @@ String NDArray::_to_string() const {
 
 NDArray::DType NDArray::dtype() {
 	return NDArray::DType((*array).index());
+}
+
+PackedInt64Array NDArray::shape() {
+	auto shape = xtv::shape(*array);
+	// TODO This seems a bit weird, but it works for now.
+	auto array = PackedInt64Array();
+	for (auto d : shape) {
+		array.append(d);
+	}
+	return array;
+}
+
+uint64_t NDArray::size() {
+	return xtv::size(*array);
+}
+
+uint64_t NDArray::ndim() {
+	return xtv::dimension(*array);
 }

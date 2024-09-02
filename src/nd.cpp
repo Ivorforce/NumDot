@@ -113,10 +113,12 @@ Variant nd::array(Variant array, xtv::DType dtype) {
 	}
 
 	if (dtype == xtv::DType::DTypeMax) {
-		dtype = xtv::DType((*existing_array).index());
+		dtype = xtv::dtype(*existing_array);
 	}
 
-	// This cannot fail.	
+	// This cannot fail, because we converted DTypeMax to dtype.
+	// If it does, we have problems, because the other function returned
+	//  an invalid dtype.
 	auto result = xtv::array(*existing_array, dtype);
 
 	return Variant(memnew(NDArray(result)));

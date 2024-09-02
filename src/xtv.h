@@ -62,74 +62,69 @@ static inline size_t dimension(XTVariant& variant) {
 	return std::visit([](auto& arg){ return arg.dimension(); }, variant);
 }
 
-// TODO This should use templates, but i couldn't get it to work.
-#define DTypeSwitch(dtype, code, args) switch (dtype) {\
-	case xtv::DType::Float32:\
-		(*result).emplace<xt::xarray<double_t>>(code<double_t>(args));\
-		break;\
-	case xtv::DType::Float64:\
-		(*result).emplace<xt::xarray<float_t>>(code<float_t>(args));\
-		break;\
-	case xtv::DType::Int8:\
-		(*result).emplace<xt::xarray<int8_t>>(code<int8_t>(args));\
-		break;\
-	case xtv::DType::Int16:\
-		(*result).emplace<xt::xarray<int16_t>>(code<int16_t>(args));\
-		break;\
-	case xtv::DType::Int32:\
-		(*result).emplace<xt::xarray<int32_t>>(code<int32_t>(args));\
-		break;\
-	case xtv::DType::Int64:\
-		(*result).emplace<xt::xarray<int64_t>>(code<int64_t>(args));\
-		break;\
-	case xtv::DType::UInt8:\
-		(*result).emplace<xt::xarray<uint8_t>>(code<uint8_t>(args));\
-		break;\
-	case xtv::DType::UInt16:\
-		(*result).emplace<xt::xarray<uint16_t>>(code<uint16_t>(args));\
-		break;\
-	case xtv::DType::UInt32:\
-		(*result).emplace<xt::xarray<uint32_t>>(code<uint32_t>(args));\
-		break;\
-	case xtv::DType::UInt64:\
-		(*result).emplace<xt::xarray<uint64_t>>(code<uint64_t>(args));\
-		break;\
-	case xtv::DType::DTypeMax:\
-		return nullptr;\
+template <typename Func, typename... Args>
+static inline auto with_dtype(DType dtype, Args... args) {
+	switch (dtype) {
+		case xtv::DType::Float32:
+			return Func()(float_t(0), args...);
+		case xtv::DType::Float64:
+			return Func()(double_t(0), args...);
+		case xtv::DType::Int8:
+			return Func()(int8_t(0), args...);
+		case xtv::DType::Int16:
+			return Func()(int16_t(0), args...);
+		case xtv::DType::Int32:
+			return Func()(int32_t(0), args...);
+		case xtv::DType::Int64:
+			return Func()(int64_t(0), args...);
+		case xtv::DType::UInt8:
+			return Func()(uint8_t(0), args...);
+		case xtv::DType::UInt16:
+			return Func()(uint16_t(0), args...);
+		case xtv::DType::UInt32:
+			return Func()(uint32_t(0), args...);
+		case xtv::DType::UInt64:
+			return Func()(int64_t(0), args...);
+		case xtv::DType::DTypeMax:
+			throw std::runtime_error("Invalid dtype.");
+	}
 }
+
+struct MakeXArray {
+	template <typename T, typename O>
+	std::shared_ptr<XTVariant> operator()(const T t, const O& other) const {
+		return std::make_shared<XTVariant>(xt::xarray<T>(other));
+	}
+};
 
 static std::shared_ptr<XTVariant> array(XTVariant &existing_array, DType dtype) {
-    auto result = std::make_shared<XTVariant>();
-
-	// TODO Using the switch here is kinda dumb, but for now it's the easiest way of making it work, making use of std::visit later.
-	DTypeSwitch(dtype, xt::xarray, );
-
-	std::visit([](auto& a, auto& b){
-		a = b;
-	}, *result, existing_array);
-
-    return result;
+	return std::visit([dtype](auto& existing_array){
+		return with_dtype<MakeXArray>(dtype, existing_array);
+	}, existing_array);
 }
+
+struct Zeros {
+	template <typename T, typename Sh>
+	std::shared_ptr<XTVariant> operator()(const T t, const Sh& shape) const {
+		return std::make_shared<XTVariant>(xt::xarray<T>(xt::zeros<T, Sh>(shape)));
+	}
+};
 
 template <typename Sh>
 static std::shared_ptr<XTVariant> zeros(Sh& shape_array, DType dtype) {
-	// General note: By creating the object first, and assigning later,
-	//  we avoid creating the result on the stack first and copying to the heap later.
-	// This means this kind of ugly contraption is quite a lot fasterhat than the alternative.
-	auto result = std::make_shared<XTVariant>();
-
-	DTypeSwitch(dtype, xt::zeros, shape_array);
-
-	return result;
+	return with_dtype<Zeros>(dtype, shape_array);
 }
+
+struct Ones {
+	template <typename T, typename Sh>
+	std::shared_ptr<XTVariant> operator()(const T t, const Sh& shape) const {
+		return std::make_shared<XTVariant>(xt::xarray<T>(xt::ones<T, Sh>(shape)));
+	}
+};
 
 template <typename Sh>
 static std::shared_ptr<XTVariant> ones(Sh& shape_array, DType dtype) {
-	auto result = std::make_shared<XTVariant>();
-
-	DTypeSwitch(dtype, xt::ones, shape_array);
-
-	return result;
+	return with_dtype<Ones>(dtype, shape_array);
 }
 
 template <typename op>

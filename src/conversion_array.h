@@ -2,7 +2,9 @@
 #define NUMDOT_AS_ARRAY_H
 
 #include <godot_cpp/godot.hpp>
+
 #include "xtensor/xtensor.hpp"
+#include "xtensor/xadapt.hpp"
 
 #include "xtv.h"
 
@@ -114,6 +116,33 @@ static bool variant_as_array(const Variant array, std::shared_ptr<xtv::XTVariant
 	}
 
 	ERR_FAIL_V_MSG(false, "Variant cannot be converted to an array.");
+}
+
+template <typename P>
+static P xtvariant_to_packed(xtv::XTVariant& array) {
+	P p_array = P();
+
+	std::visit([&p_array](auto array){
+		p_array.resize(array.size());
+		std::copy(array.begin(), array.end(), p_array.ptrw());
+	}, array);
+
+	return p_array;
+}
+
+static Array xtvariant_to_godot_array(xtv::XTVariant& array) {
+	Array godot_array = Array();
+
+	std::visit([&godot_array](auto array){
+		godot_array.resize(array.size());
+		auto start = array.begin();
+
+		for (size_t i = 0; i < array.size(); ++i) {
+        	godot_array[i] = *(start + i);
+		}
+	}, array);
+
+	return godot_array;
 }
 
 #endif

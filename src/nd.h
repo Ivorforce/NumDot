@@ -38,9 +38,9 @@ public:
 	static uint64_t ndim(Variant array);
 	
 	static Variant as_type(Variant array, NDArray::DType dtype);
-
 	static Variant as_array(Variant array, NDArray::DType dtype = NDArray::DType::DTypeMax);
 	static Variant array(Variant array, NDArray::DType dtype = NDArray::DType::DTypeMax);
+
 	static Variant zeros(Variant shape, NDArray::DType dtype = NDArray::DType::Float64);
 	static Variant ones(Variant shape, NDArray::DType dtype = NDArray::DType::Float64);
 

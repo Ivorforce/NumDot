@@ -6,8 +6,8 @@
 #include "xtensor/xtensor.hpp"
 #include "xtensor/xadapt.hpp"
 
-#include "as_array.h"
-#include "as_shape.h"
+#include "conversion_array.h"
+#include "conversion_shape.h"
 #include "xtv.h"
 
 using namespace godot;

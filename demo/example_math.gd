@@ -4,6 +4,8 @@ extends Node2D
 func _ready() -> void:
 	var test_size := 200000
 	var test_count := 500
+	
+	print(nd.ones([5, 2]).to_godot_array())
 		
 	# Test 1: Create packed arrays
 	var start_time := Time.get_ticks_usec()

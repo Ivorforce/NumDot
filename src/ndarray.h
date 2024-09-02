@@ -44,6 +44,12 @@ public:
 	uint64_t ndim();
 	
 	Variant as_type(DType dtype);
+	PackedFloat32Array to_packed_float32_array();
+	PackedFloat64Array to_packed_float64_array();
+	PackedByteArray to_packed_byte_array();
+	PackedInt32Array to_packed_int32_array();
+	PackedInt64Array to_packed_int64_array();
+	Array to_godot_array();
 };
 
 VARIANT_ENUM_CAST(NDArray::DType);

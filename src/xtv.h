@@ -117,6 +117,39 @@ struct Full {
 
 template <typename op>
 struct XVariantFunction {
+// TODO Bind to scons option
+#ifndef NUMDOT_ALLOW_MIXED_TYPE_OPS
+	// This version exists to reduce the number of functions generated, from oxnxn to oxn.
+	// Essentially, we make sure that all calls to the function are performed with all types being the same.
+	// Every type that doesn't fit will be promoted before the function call.
+
+	// You may think this unnecessary, but it actually reduces the binary size by a factor of 2-3.
+	// All 'good' cases, where a promotion is not necessary, retain the same speed.
+
+	template<typename A, typename B>
+	std::shared_ptr<XTVariant> operator()(xt::xarray<A>& a, xt::xarray<B>& b) const {
+		using ResultType = decltype(std::declval<op>()(std::declval<A>(), std::declval<B>()));
+		
+		if constexpr (std::is_same_v<A, B>) {
+			// The types are the same, we can just call. If they're wrong, xtensor will promote them for us with optimal performance.
+			auto result = op()(a, b);
+			return std::make_shared<XTVariant>(xt::xarray<ResultType>(result));
+		} else if constexpr (std::is_same_v<A, ResultType>) {
+			// a is good, promote b.
+			auto result = op()(a, xt::xarray<ResultType>(xt::cast<ResultType>(b)));
+			return std::make_shared<XTVariant>(xt::xarray<ResultType>(result));
+		} else if constexpr (std::is_same_v<B, ResultType>) {
+			// b is good, promote a.
+			auto result = op()(xt::xarray<ResultType>(xt::cast<ResultType>(a)), b);
+			return std::make_shared<XTVariant>(xt::xarray<ResultType>(result));
+		} else {
+			// Both are bad, promote both. This is the worst case, but should be easy to avoid by the programmer if need be.
+			auto result = op()(xt::xarray<ResultType>(xt::cast<ResultType>(a)), xt::xarray<ResultType>(xt::cast<ResultType>(b)));
+			return std::make_shared<XTVariant>(xt::xarray<ResultType>(result));
+		}
+	}
+#endif
+
 	template<typename... Args>
 	std::shared_ptr<XTVariant> operator()(xt::xarray<Args>&... args) const {
 		// ResultType = what results from the native C++ operation op(A(), B())

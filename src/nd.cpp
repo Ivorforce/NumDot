@@ -5,6 +5,7 @@
 
 #include "xtensor/xtensor.hpp"
 #include "xtensor/xadapt.hpp"
+#include "xtensor/xoperation.hpp"
 
 #include "conversion_array.h"
 #include "conversion_shape.h"
@@ -167,7 +168,7 @@ Variant nd::ones(Variant shape, nd::DType dtype) {
 	}
 }
 
-template <typename operation>
+template <typename FX, typename FN>
 inline Variant binary_operation(Variant a, Variant b) {
 	std::shared_ptr<xtv::XTVariant> a_;
 	if (!variant_as_array(a, a_)) {
@@ -179,7 +180,7 @@ inline Variant binary_operation(Variant a, Variant b) {
 	}
 
 	try {
-		auto result = xtv::binary_operation<operation>(*a_, *b_);
+		auto result = xtv::xoperation<FX, FN>(*a_, *b_);
 		return Variant(memnew(NDArray(result)));
 	}
 	catch (std::runtime_error error) {
@@ -190,17 +191,17 @@ inline Variant binary_operation(Variant a, Variant b) {
 Variant nd::add(Variant a, Variant b) {
 	// godot::UtilityFunctions::print(xt::has_simd_interface<xt::xarray<int64_t>>::value);
 	// godot::UtilityFunctions::print(xt::has_simd_type<xt::xarray<int64_t>>::value);
-	return binary_operation<xtv::Add>(a, b);
+	return binary_operation<xt::detail::plus, xt::detail::plus>(a, b);
 }
 
 Variant nd::subtract(Variant a, Variant b) {
-	return binary_operation<xtv::Subtract>(a, b);
+	return binary_operation<xt::detail::minus, xt::detail::minus>(a, b);
 }
 
 Variant nd::multiply(Variant a, Variant b) {
-	return binary_operation<xtv::Multiply>(a, b);
+	return binary_operation<xt::detail::multiplies, xt::detail::multiplies>(a, b);
 }
 
 Variant nd::divide(Variant a, Variant b) {
-	return binary_operation<xtv::Divide>(a, b);
+	return binary_operation<xt::detail::divides, xt::detail::divides>(a, b);
 }

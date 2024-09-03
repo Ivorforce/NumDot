@@ -116,17 +116,20 @@ struct Full {
 };
 
 template <typename op>
-struct BinaryOperation {
-	template<typename A, typename B>
-	std::shared_ptr<XTVariant> operator()(xt::xarray<A>& a, xt::xarray<B>& b) const {
-		// ResultType = what results from the usual C++ common promotion of a + b.
-		using ResultType = typename std::common_type<A, B>::type;
-		// chatgpt promised me this would work but it doesnt :(
-		// using ResultType = decltype(std::declval<op>()(a, b));
+struct XVariantFunction {
+	template<typename... Args>
+	std::shared_ptr<XTVariant> operator()(xt::xarray<Args>&... args) const {
+		// ResultType = what results from the native C++ operation op(A(), B())
+		using ResultType = decltype(std::declval<op>()(std::declval<Args>()...));
+
+		// TODO We may want to explicitly define promotion types. uint8_t + uint8_t results in an int32, for example.
+		// That's for the future though.
+		// Also possible:
+		// using ResultType = typename std::common_type<Args...>::type;
 
 		// This doesn't do anything yet, it just constructs a value for operation.
 		// It will be executed when we use it on the xarray constructor!
-		auto result = op()(a, b);
+		auto result = op()(args...);
 
 		// Note: Need to do this in one line. If the operator is called after the make_shared,
 		//  any situations where broadcast errors would be thrown will instead crash the program.
@@ -134,42 +137,28 @@ struct BinaryOperation {
 	}
 };
 
-template <typename op, typename A, typename B>
-static inline std::shared_ptr<XTVariant> binary_operation(A&& a, B&& b) {
-	return std::visit(BinaryOperation<op>{}, std::forward<A>(a), std::forward<B>(b));
+template<typename FX, typename FN>
+struct XFunction {
+	// On xarray input: Make the xfunction.
+	// This is analogous to xt::add etc., with the main difference that in our setup it's easier to use this function with the
+	//  appropriate xt::detail:: operation.
+	template<typename... Args>
+	inline auto operator()(xt::xarray<Args>&&... args) const -> xt::detail::xfunction_type_t<FX, xt::xarray<Args>...> {
+		return xt::detail::make_xfunction<FX>(std::forward<xt::xarray<Args>>(args)...);
+	}
+
+	// On normal input: Run the normal function. 
+	// This is used by XVariantFunction to infer the dtype of the result.
+	template<typename... Args>
+	inline auto operator()(Args&&... args) const -> decltype(std::declval<FN>()(std::forward<Args>(args)...)) {
+		return FN()(std::forward<Args>(args)...);
+	}
+};
+
+template <typename FX, typename FN, typename... Args>
+static inline std::shared_ptr<XTVariant> xoperation(Args&&... args) {
+	return std::visit(XVariantFunction<XFunction<FX, FN>>{}, std::forward<Args>(args)...);
 }
-
-// TODO std::add and the likes exist, but it requires type parameters.
-//  Therefore, we cannot pass them to operation() as template parameters.
-// It would be really nice though if that could be changed though,
-//  otherwise we need a good amount of boilerplate for every operation.
-struct Add {
-	template<typename A, typename B>
-	inline auto operator()(A&& a, B&& b) const -> decltype(std::forward<A>(a) + std::forward<B>(b)) {
-        return std::forward<A>(a) + std::forward<B>(b);
-	}
-};
-
-struct Subtract {
-	template<typename A, typename B>
-	inline auto operator()(A&& a, B&& b) const -> decltype(std::forward<A>(a) - std::forward<B>(b)) {
-        return std::forward<A>(a) - std::forward<B>(b);
-	}
-};
-
-struct Multiply {
-	template<typename A, typename B>
-	inline auto operator()(A&& a, B&& b) const -> decltype(std::forward<A>(a) * std::forward<B>(b)) {
-        return std::forward<A>(a) * std::forward<B>(b);
-	}
-};
-
-struct Divide {
-	template<typename A, typename B>
-	inline auto operator()(A&& a, B&& b) const -> decltype(std::forward<A>(a) / std::forward<B>(b)) {
-        return std::forward<A>(a) / std::forward<B>(b);
-	}
-};
 
 }
 

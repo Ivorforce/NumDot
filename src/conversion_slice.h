@@ -5,6 +5,8 @@
 #include "xtensor/xtensor.hpp"
 #include "xtensor/xstrided_view.hpp"
 
+#include "nd.h"
+
 using namespace godot;
 
 static xt::xstrided_slice<std::ptrdiff_t> variant_as_slice_part(const Variant& variant) {
@@ -15,6 +17,11 @@ static xt::xstrided_slice<std::ptrdiff_t> variant_as_slice_part(const Variant& v
 			return xt::all();
 		case Variant::INT:
 			return int64_t(variant);
+		case Variant::STRING_NAME:
+			if (StringName(variant) == nd::newaxis()) {
+				return xt::newaxis();
+			}
+			break;
 		default:
 			break;
 	}

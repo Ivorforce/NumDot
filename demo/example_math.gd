@@ -4,10 +4,7 @@ extends Node2D
 func _ready() -> void:
 	var test_size := 2000000
 	var test_count := 1
-	
-	var vs = nd.ones([2, 3, 4], nd.DType.Int32)
-	vs.set(3.0, 0, null, 2)
-	print(vs)
+
 	
 	var a_packed := PackedInt32Array()
 	a_packed.resize(test_size)

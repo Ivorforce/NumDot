@@ -27,6 +27,8 @@ void nd::_bind_methods() {
 	BIND_ENUM_CONSTANT(UInt32);
 	BIND_ENUM_CONSTANT(UInt64);
 
+	godot::ClassDB::bind_static_method("nd", D_METHOD("newaxis"), &nd::newaxis);
+
 	godot::ClassDB::bind_static_method("nd", D_METHOD("dtype", "array"), &nd::dtype);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("shape", "array"), &nd::shape);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("size", "array"), &nd::size);
@@ -56,6 +58,11 @@ nd::nd() {
 
 nd::~nd() {
 	// Add your cleanup here.
+}
+
+StringName nd::newaxis() {
+	const StringName newaxis = StringName("newaxis");
+	return newaxis;
 }
 
 nd::DType nd::dtype(Variant array) {

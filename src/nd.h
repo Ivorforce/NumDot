@@ -35,6 +35,8 @@ public:
 	nd();
 	~nd();
 
+	static StringName newaxis();
+
 	static DType dtype(Variant array);
 	static PackedInt64Array shape(Variant array);
 	static uint64_t size(Variant array);

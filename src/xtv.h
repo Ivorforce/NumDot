@@ -90,29 +90,28 @@ static inline DTypeVariant dtype_to_variant(DType dtype) {
 	}
 }
 
-struct MakeXArray {
-	template <typename T, typename O>
-	std::shared_ptr<XTVariant> operator()(const T t, const O& other) const {
-		return std::make_shared<XTVariant>(xt::xarray<T>(other));
-	}
-};
+template <typename O>
+std::shared_ptr<XTVariant> make_xarray(DType dtype, O& other) {
+	return std::visit([](auto t, auto& other) {
+		using T = decltype(t);
+
+		return std::make_shared<XTVariant>( 
+			xt::xarray<T>(other)
+		);
+	}, dtype_to_variant(dtype), other);
+}
 
 template <typename V, typename Sh>
-struct Full {
-	public:
-		V fill_value;
-		Sh& shape;
-
-		Full(V fill_value, Sh& shape) : fill_value(fill_value), shape(shape) {};
-
-	template <typename T>
-	std::shared_ptr<XTVariant> operator()(const T t) const {
+std::shared_ptr<XTVariant> full(const DType dtype, const V fill_value, Sh& shape) {
+	return std::visit([fill_value, shape](auto t) {
+		using T = decltype(t);
+		
 		// xt::ones / xt::zeros are slow, I think. Gotta test again though.
 		auto ptr = std::make_shared<XTVariant>(xt::xarray<T>::from_shape(shape));
 		std::get<xt::xarray<T>>(*ptr).fill(fill_value);
 		return ptr;
-	}
-};
+	}, dtype_to_variant(dtype));
+}
 
 template <typename op>
 struct XVariantFunction {

@@ -138,7 +138,7 @@ Variant nd::array(Variant array, nd::DType dtype) {
 	}
 
 	try {
-		auto result = std::visit(xtv::MakeXArray{}, xtv::dtype_to_variant(dtype), *existing_array);
+		auto result = xtv::make_xarray(dtype, *existing_array);
 		return Variant(memnew(NDArray(result)));
 	}
 	catch (std::runtime_error error) {
@@ -155,7 +155,7 @@ Variant _full(Variant shape, V value, nd::DType dtype) {
 	}
 
 	try {
-		return Variant(memnew(NDArray(std::visit(xtv::Full{ value, shape_array }, xtv::dtype_to_variant(dtype)))));
+		return Variant(memnew(NDArray(xtv::full(dtype, value, shape_array))));
 	}
 	catch (std::runtime_error error) {
 		ERR_FAIL_V_MSG(nullptr, error.what());

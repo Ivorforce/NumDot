@@ -29,24 +29,39 @@ NumDot is inspired by the python tensor math library, [NumPy](https://numpy.org)
 
 Keep in mind these semantics are yet subject to change.
 
-
-### Building
-
-Build the library like so:
-
-```bash
-# Replace Use the fitting platform name of [macos, windows, linux]
-# Exceptions have to be explicitly enabled here
-scons platform=macos
-```
-
-### Godot Interoperability
+#### Godot Interoperability
 
 Godot types are automatically converted to NumDot types for operations. You can also convert it back to godot types:
 ```gdscript
 var a = nd.array(PackedFloat32Array([1, 2, 3]))
 a = nd.add(a, 5)
 var b: PackedFloat32Array = a.to_packed_float32_array()
+```
+
+
+### Installing and / or building
+
+To add this extension into your project, [run the following](https://docs.godotengine.org/en/stable/tutorials/scripting/gdextension/gdextension_cpp_example.html):
+```bash
+cd your/project/folder
+git submodule add https://github.com/Ivorforce/NumDot
+cd numdot
+git submodule update --init
+cd ..
+```
+
+Build the library like so:
+
+```bash
+# Need to do this once at the start
+cd godot-cpp
+# Replace Use the fitting platform name of [macos, windows, linux]
+scons platform=<platform> custom_api_file=../extension_api.json
+cd ..
+
+# Exceptions have to be explicitly enabled here
+scons platform=macos
+# You may have to build twice, see https://github.com/Ivorforce/NumDot/issues/23
 ```
 
 ### What Now?

@@ -23,7 +23,8 @@ NumDot is inspired by the python tensor math library, [NumPy](https://numpy.org)
 | NumPy  | NumDot |
 | ------------- | ------------- |
 | `x[a, b, c]` | `x.get(a, b, c)` |
-| `x[a]` returns a view | `x[a]` ([regretfully](https://github.com/Ivorforce/NumDot/issues/8)) returns a copy |
+| `x[...]` can return views | `x.get(...)` ([regretfully](https://github.com/Ivorforce/NumDot/issues/8)) returns a copy |
+| `x[...]` can return single values | `x.get(...)` always returns a tensor, use `x.get_float(...)` and `x.get_int(...)` to get values. |
 | `x[a, b, c] = d` | `x.set(d, a, b, c)` |
 | `x[1:]` | `x.get(nd.from(1))` |
 | `x[:1]` | `x.get(nd.to(1))` |

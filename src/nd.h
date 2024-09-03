@@ -61,6 +61,11 @@ public:
 	static Variant subtract(Variant a, Variant b);
 	static Variant multiply(Variant a, Variant b);
 	static Variant divide(Variant a, Variant b);
+	static Variant remainder(Variant a, Variant b);
+	static Variant pow(Variant a, Variant b);
+
+	static Variant abs(Variant a);
+	static Variant sqrt(Variant a);
 
 	static Variant sin(Variant a);
 	static Variant cos(Variant a);

@@ -53,6 +53,11 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("subtract", "a", "b"), &nd::subtract);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("multiply", "a", "b"), &nd::multiply);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("divide", "a", "b"), &nd::divide);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("remainder", "a", "b"), &nd::remainder);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("pow", "a", "b"), &nd::pow);
+
+	godot::ClassDB::bind_static_method("nd", D_METHOD("abs", "a"), &nd::abs);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("sqrt", "a"), &nd::sqrt);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("sin", "a"), &nd::sin);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("cos", "a"), &nd::cos);
@@ -280,6 +285,14 @@ Variant nd::divide(Variant a, Variant b) {
 	return binary_operation<xt::detail::divides, xt::detail::divides>(a, b);
 }
 
+Variant nd::remainder(Variant a, Variant b) {
+	return binary_operation<xt::math::remainder_fun, xt::math::remainder_fun>(a, b);
+}
+
+Variant nd::pow(Variant a, Variant b) {
+	return binary_operation<xt::math::pow_fun, xt::math::pow_fun>(a, b);
+}
+
 
 template <typename FX, typename FN>
 inline Variant unary_operation(Variant a) {
@@ -295,6 +308,14 @@ inline Variant unary_operation(Variant a) {
 	catch (std::runtime_error error) {
 		ERR_FAIL_V_MSG(nullptr, error.what());
 	}
+}
+
+Variant nd::abs(Variant a) {
+	return unary_operation<xt::math::abs_fun, xt::math::abs_fun>(a);
+}
+
+Variant nd::sqrt(Variant a) {
+	return unary_operation<xt::math::sqrt_fun, xt::math::sqrt_fun>(a);
 }
 
 Variant nd::sin(Variant a) {

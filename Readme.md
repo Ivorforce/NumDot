@@ -4,19 +4,11 @@ A tensor math library for the [Godot](https://godotengine.org) engine. Proof of 
 
 NumDot uses [xtensor](https://github.com/xtensor-stack/xtensor) under the hood.
 
-### Building
+### What and Why?
 
-Build the library like so:
+A tensor (or nd-array) is essentially a multi-dimensional vector. You can run mathematical operations on the _whole tensor_ at once, making these operations very fast.
 
-```bash
-# Replace Use the fitting platform name of [macos, windows, linux]
-# Exceptions have to be explicitly enabled here
-scons platform=macos
-```
-
-### Using
-
-A tensor is essentially a multi-dimensional vector. You can run mathematical operations on the _whole tensor_ at once, making these operations very fast.
+Operations with tensors are also very easy to write and read, once you're familiar with them. Vectorization allows you to forget about for loops, and focus on the operation itself.
 
 NumDot is inspired by the python tensor math library, [NumPy](https://numpy.org), and thus shares many semantics with it. If you are unfamiliar with tensor operations in general, I recommend taking a numpy tutorial or two first. That being said, here are some direct comparisons:
 
@@ -36,6 +28,17 @@ NumDot is inspired by the python tensor math library, [NumPy](https://numpy.org)
 | `np.sin(a)` | `nd.sin(a)` |
 
 Keep in mind these semantics are yet subject to change.
+
+
+### Building
+
+Build the library like so:
+
+```bash
+# Replace Use the fitting platform name of [macos, windows, linux]
+# Exceptions have to be explicitly enabled here
+scons platform=macos
+```
 
 ### Godot Interoperability
 

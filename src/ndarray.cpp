@@ -16,8 +16,10 @@ void NDArray::_bind_methods() {
 	godot::ClassDB::bind_method(D_METHOD("size"), &NDArray::size);
 	godot::ClassDB::bind_method(D_METHOD("ndim"), &NDArray::ndim);
 
-	ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "get", &NDArray::get);
 	ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "set", &NDArray::set);
+	ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "get", &NDArray::get);
+	ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "get_float", &NDArray::get_float);
+	ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "get_int", &NDArray::get_int);
 
 	godot::ClassDB::bind_method(D_METHOD("as_type", "type"), &NDArray::as_type);
 
@@ -75,11 +77,7 @@ void NDArray::set(const Variant **args, GDExtensionInt arg_count, GDExtensionCal
 
 	try {
 		const Variant &value = *args[0];
-
-		xt::xstrided_slice_vector sv(arg_count - 1);
-		for (int i = 1; i < arg_count; i++) {
-			sv[i - 1] = variant_as_slice_part(*args[i]);
-		}
+		xt::xstrided_slice_vector sv = variants_as_slice_vector(args + 1, arg_count - 1, error);
 
 		switch (value.get_type()) {
 			case Variant::INT:
@@ -106,16 +104,39 @@ void NDArray::set(const Variant **args, GDExtensionInt arg_count, GDExtensionCal
 
 Variant NDArray::get(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
 	try {
-		xt::xstrided_slice_vector sv(arg_count);
-		for (int i = 0; i < arg_count; i++) {
-			sv[i] = variant_as_slice_part(*args[i]);
-		}
+		xt::xstrided_slice_vector sv = variants_as_slice_vector(args, arg_count, error);
 
 		auto result = xtv::get_slice(*array, sv);
 		return Variant(memnew(NDArray(result)));
 	}
 	catch (std::runtime_error error) {
 		ERR_FAIL_V_MSG(nullptr, error.what());
+	}
+}
+
+double_t NDArray::get_float(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
+	try {
+		xt::xstrided_slice_vector sv = variants_as_slice_vector(args, arg_count, error);
+
+		// TODO This can probably be faster with a specific implementation that doesn't allocate an xarray.
+		auto result = xtv::get_slice(*array, sv);
+		return xtv::to_single_value<double_t>(*result);
+	}
+	catch (std::runtime_error error) {
+		ERR_FAIL_V_MSG(0, error.what());
+	}
+}
+
+int64_t NDArray::get_int(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
+	try {
+		xt::xstrided_slice_vector sv = variants_as_slice_vector(args, arg_count, error);
+
+		// TODO This can probably be faster with a specific implementation that doesn't allocate an xarray.
+		auto result = xtv::get_slice(*array, sv);
+		return xtv::to_single_value<int64_t>(*result);
+	}
+	catch (std::runtime_error error) {
+		ERR_FAIL_V_MSG(0, error.what());
 	}
 }
 

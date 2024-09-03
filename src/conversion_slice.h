@@ -51,4 +51,12 @@ static xt::xstrided_slice<std::ptrdiff_t> variant_as_slice_part(const Variant& v
 	throw std::runtime_error("Variant cannot be converted to a shape.");
 }
 
+xt::xstrided_slice_vector variants_as_slice_vector(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
+	xt::xstrided_slice_vector sv(arg_count);
+	for (int i = 0; i < arg_count; i++) {
+		sv[i] = variant_as_slice_part(*args[i]);
+	}
+	return sv;
+}
+
 #endif

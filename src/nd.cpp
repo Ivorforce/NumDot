@@ -36,6 +36,8 @@ void nd::_bind_methods() {
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("as_array", "array", "dtype"), &nd::as_array, DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("array", "array", "dtype"), &nd::array, DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax));
+
+	godot::ClassDB::bind_static_method("nd", D_METHOD("full", "shape", "fill_value", "dtype"), &nd::full, DEFVAL(nullptr), DEFVAL(nullptr), DEFVAL(nd::DType::Float64));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("zeros", "shape", "dtype"), &nd::zeros, DEFVAL(nullptr), DEFVAL(nd::DType::Float64));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("ones", "shape", "dtype"), &nd::ones, DEFVAL(nullptr), DEFVAL(nd::DType::Float64));
 
@@ -144,32 +146,41 @@ Variant nd::array(Variant array, nd::DType dtype) {
 	}
 }
 
-Variant nd::zeros(Variant shape, nd::DType dtype) {
+
+template <typename V>
+Variant _full(Variant shape, V value, nd::DType dtype) {
 	std::vector<size_t> shape_array;
 	if (!variant_as_shape<size_t>(shape, shape_array)) {
 		return nullptr;
 	}
 
 	try {
-		return Variant(memnew(NDArray(xtv::with_dtype<xtv::Full<0>>(dtype, shape_array))));
+		return Variant(memnew(NDArray(xtv::with_dtype<xtv::Full>(dtype, shape_array, value))));
 	}
 	catch (std::runtime_error error) {
 		ERR_FAIL_V_MSG(nullptr, error.what());
 	}
 }
 
-Variant nd::ones(Variant shape, nd::DType dtype) {
-	std::vector<size_t> shape_array;
-	if (!variant_as_shape<size_t>(shape, shape_array)) {
-		return nullptr;
+Variant nd::full(Variant shape, Variant fill_value, nd::DType dtype) {
+	switch (fill_value.get_type()) {
+		case Variant::INT:
+			if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Int64;
+			return _full(shape, int64_t(fill_value), dtype);
+		case Variant::FLOAT:
+			if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Float64;
+			return _full(shape, double_t(fill_value), dtype);
+		default:
+			ERR_FAIL_V_MSG(nullptr, "The fill value must be a number literal (for now).");
 	}
+}
 
-	try {
-		return Variant(memnew(NDArray(xtv::with_dtype<xtv::Full<1>>(dtype, shape_array))));
-	}
-	catch (std::runtime_error error) {
-		ERR_FAIL_V_MSG(nullptr, error.what());
-	}
+Variant nd::zeros(Variant shape, nd::DType dtype) {
+	return _full(shape, 0, dtype);
+}
+
+Variant nd::ones(Variant shape, nd::DType dtype) {
+	return _full(shape, 1, dtype);
 }
 
 // The first parameter is the one used by the xarray operation, while the second is used for type deduction.

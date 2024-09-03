@@ -44,6 +44,7 @@ public:
 	static Variant as_array(Variant array, DType dtype = DType::DTypeMax);
 	static Variant array(Variant array, DType dtype = DType::DTypeMax);
 
+	static Variant full(Variant shape, Variant fill_value, DType dtype = DType::Float64);
 	static Variant zeros(Variant shape, DType dtype = DType::Float64);
 	static Variant ones(Variant shape, DType dtype = DType::Float64);
 

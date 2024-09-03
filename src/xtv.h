@@ -104,13 +104,12 @@ static std::shared_ptr<XTVariant> array(XTVariant &existing_array, DType dtype) 
 	}, existing_array);
 }
 
-template <int N>
 struct Full {
-	template <typename T, typename Sh>
-	std::shared_ptr<XTVariant> operator()(const T t, Sh&& shape) const {
-		// xt::ones / xt::zeros are very slow...
+	template <typename T, typename Sh, typename V>
+	std::shared_ptr<XTVariant> operator()(const T t, Sh&& shape, V fill_value) const {
+		// xt::ones / xt::zeros are slow, I think. Gotta test again though.
 		auto ptr = std::make_shared<XTVariant>(xt::xarray<T>::from_shape(shape));
-		std::get<xt::xarray<T>>(*ptr).fill(N);
+		std::get<xt::xarray<T>>(*ptr).fill(fill_value);
 		return ptr;
 	}
 };
@@ -119,7 +118,7 @@ template <typename op>
 struct XVariantFunction {
 // TODO Bind to scons option
 #ifndef NUMDOT_ALLOW_MIXED_TYPE_OPS
-	// This version exists to reduce the number of functions generated, from oxnxn to oxn.
+	// This version exists to reduce the number of functions generated, from O(op n n) to O(o n).
 	// Essentially, we make sure that all calls to the function are performed with all types being the same.
 	// Every type that doesn't fit will be promoted before the function call.
 

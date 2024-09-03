@@ -7,21 +7,21 @@ func _ready() -> void:
 		
 	var a_packed := PackedInt32Array()
 	a_packed.resize(test_size)
-	a_packed.fill(1)
-	var a_nd = nd.ones(test_size, nd.DType.Int32)
+	a_packed.fill(5)
+	var a_nd = nd.full(test_size, 5, nd.DType.Int32)
 
 	## Test 1: Create packed arrays
 	var start_time := Time.get_ticks_usec()
 	for t in test_count:
 		var b_packed := PackedInt32Array()
 		b_packed.resize(test_size)
-		b_packed.fill(1)
+		b_packed.fill(5)
 	print(Time.get_ticks_usec() - start_time)
 
 	# Test 2: Create nd arrays
 	start_time = Time.get_ticks_usec()
 	for t in test_count:
-		var b_nd = nd.ones(test_size, nd.DType.Int32)
+		var b_nd = nd.full(test_size, 5, nd.DType.Int32)
 	print(Time.get_ticks_usec() - start_time)
 
 	# Test 3: Multiply packed arrays

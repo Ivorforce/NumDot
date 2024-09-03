@@ -20,7 +20,7 @@ using XTVariant = std::variant<
  	xt::xarray<uint64_t>
 >;
 
-using XTVariantContainedTypes = std::tuple<
+using DTypeVariant = std::variant<
 	double_t,
  	float_t,
  	int8_t,
@@ -63,29 +63,28 @@ static inline size_t dimension(XTVariant& variant) {
 	return std::visit([](auto& arg){ return arg.dimension(); }, variant);
 }
 
-template <typename Func, typename... Args>
-static inline auto with_dtype(DType dtype, Args... args) {
+static inline DTypeVariant dtype_to_variant(DType dtype) {
 	switch (dtype) {
 		case xtv::DType::Float32:
-			return Func()(float_t(0), args...);
+			return float_t();
 		case xtv::DType::Float64:
-			return Func()(double_t(0), args...);
+			return double_t();
 		case xtv::DType::Int8:
-			return Func()(int8_t(0), args...);
+			return int8_t();
 		case xtv::DType::Int16:
-			return Func()(int16_t(0), args...);
+			return int16_t();
 		case xtv::DType::Int32:
-			return Func()(int32_t(0), args...);
+			return int32_t();
 		case xtv::DType::Int64:
-			return Func()(int64_t(0), args...);
+			return int64_t();
 		case xtv::DType::UInt8:
-			return Func()(uint8_t(0), args...);
+			return uint8_t();
 		case xtv::DType::UInt16:
-			return Func()(uint16_t(0), args...);
+			return uint16_t();
 		case xtv::DType::UInt32:
-			return Func()(uint32_t(0), args...);
+			return uint32_t();
 		case xtv::DType::UInt64:
-			return Func()(int64_t(0), args...);
+			return int64_t();
 		case xtv::DType::DTypeMax:
 			throw std::runtime_error("Invalid dtype.");
 	}
@@ -98,15 +97,16 @@ struct MakeXArray {
 	}
 };
 
-static std::shared_ptr<XTVariant> array(XTVariant &existing_array, DType dtype) {
-	return std::visit([dtype](auto& existing_array){
-		return with_dtype<MakeXArray>(dtype, existing_array);
-	}, existing_array);
-}
-
+template <typename V, typename Sh>
 struct Full {
-	template <typename T, typename Sh, typename V>
-	std::shared_ptr<XTVariant> operator()(const T t, Sh&& shape, V fill_value) const {
+	public:
+		V fill_value;
+		Sh& shape;
+
+		Full(V fill_value, Sh& shape) : fill_value(fill_value), shape(shape) {};
+
+	template <typename T>
+	std::shared_ptr<XTVariant> operator()(const T t) const {
 		// xt::ones / xt::zeros are slow, I think. Gotta test again though.
 		auto ptr = std::make_shared<XTVariant>(xt::xarray<T>::from_shape(shape));
 		std::get<xt::xarray<T>>(*ptr).fill(fill_value);

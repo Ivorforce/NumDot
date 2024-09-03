@@ -105,7 +105,7 @@ uint64_t nd::ndim(Variant array) {
 }
 
 Variant nd::as_type(Variant array, nd::DType dtype) {
-	return nd::array(array, dtype);
+	return nd::as_array(array, dtype);
 }
 
 Variant nd::as_array(Variant array, nd::DType dtype) {
@@ -138,7 +138,7 @@ Variant nd::array(Variant array, nd::DType dtype) {
 	}
 
 	try {
-		auto result = xtv::array(*existing_array, dtype);
+		auto result = std::visit(xtv::MakeXArray{}, xtv::dtype_to_variant(dtype), *existing_array);
 		return Variant(memnew(NDArray(result)));
 	}
 	catch (std::runtime_error error) {
@@ -155,7 +155,7 @@ Variant _full(Variant shape, V value, nd::DType dtype) {
 	}
 
 	try {
-		return Variant(memnew(NDArray(xtv::with_dtype<xtv::Full>(dtype, shape_array, value))));
+		return Variant(memnew(NDArray(std::visit(xtv::Full{ value, shape_array }, xtv::dtype_to_variant(dtype)))));
 	}
 	catch (std::runtime_error error) {
 		ERR_FAIL_V_MSG(nullptr, error.what());

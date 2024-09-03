@@ -5,6 +5,8 @@ func _ready() -> void:
 	var test_size := 2000000
 	var test_count := 1
 	
+	var vs = nd.full([2, 3], 5, nd.DType.Int32)
+	print(nd.exp(vs))
 	
 	var a_packed := PackedInt32Array()
 	a_packed.resize(test_size)

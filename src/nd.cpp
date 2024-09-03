@@ -59,6 +59,9 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("abs", "a"), &nd::abs);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("sqrt", "a"), &nd::sqrt);
 
+	godot::ClassDB::bind_static_method("nd", D_METHOD("exp", "a"), &nd::exp);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("log", "a"), &nd::log);
+
 	godot::ClassDB::bind_static_method("nd", D_METHOD("sin", "a"), &nd::sin);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("cos", "a"), &nd::cos);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("tan", "a"), &nd::tan);
@@ -316,6 +319,14 @@ Variant nd::abs(Variant a) {
 
 Variant nd::sqrt(Variant a) {
 	return unary_operation<xt::math::sqrt_fun, xt::math::sqrt_fun>(a);
+}
+
+Variant nd::exp(Variant a) {
+	return unary_operation<xt::math::exp_fun, xt::math::exp_fun>(a);
+}
+
+Variant nd::log(Variant a) {
+	return unary_operation<xt::math::log_fun, xt::math::log_fun>(a);
 }
 
 Variant nd::sin(Variant a) {

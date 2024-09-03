@@ -67,6 +67,9 @@ public:
 	static Variant abs(Variant a);
 	static Variant sqrt(Variant a);
 
+	static Variant exp(Variant a);
+	static Variant log(Variant a);
+
 	static Variant sin(Variant a);
 	static Variant cos(Variant a);
 	static Variant tan(Variant a);

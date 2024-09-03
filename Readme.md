@@ -44,3 +44,9 @@ var a = nd.array(PackedFloat32Array([1, 2, 3]))
 a = nd.add(a, 5)
 var b: PackedFloat32Array = a.to_packed_float32_array()
 ```
+
+### What Now?
+
+NumDot is still in its experimental stages. If you want to contribute, or enquire about the project's state, feel free to join on Discord: [Discord Channel](https://discord.gg/hxuWcAXF).
+
+I will be keeping track of ToDos through the GitHub issues.

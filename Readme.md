@@ -23,7 +23,7 @@ NumDot is inspired by the python tensor math library, [NumPy](https://numpy.org)
 | NumPy  | NumDot |
 | ------------- | ------------- |
 | `x[a, b, c]` | `x.get(a, b, c)` |
-| `x[a]` returns a view | `x[a]` returns a copy |
+| `x[a]` returns a view | `x[a]` ([regretfully](https://github.com/Ivorforce/NumDot/issues/8)) returns a copy |
 | `x[a, b, c] = d` | `x.set(d, a, b, c)` |
 | `x[1:]` | `x.get(nd.from(1))` |
 | `x[:1]` | `x.get(nd.to(1))` |
@@ -44,3 +44,9 @@ var a = nd.array(PackedFloat32Array([1, 2, 3]))
 a = nd.add(a, 5)
 var b: PackedFloat32Array = a.to_packed_float32_array()
 ```
+
+### What Now?
+
+NumDot is still in its experimental stages. If you want to contribute, or enquire about the project's state, feel free to join on Discord: [Discord Channel](https://discord.gg/hxuWcAXF).
+
+I will be keeping track of ToDos through the GitHub issues.

@@ -43,6 +43,10 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("subtract", "a", "b"), &nd::subtract);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("multiply", "a", "b"), &nd::multiply);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("divide", "a", "b"), &nd::divide);
+
+	godot::ClassDB::bind_static_method("nd", D_METHOD("sin", "a"), &nd::sin);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("cos", "a"), &nd::cos);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("tan", "a"), &nd::tan);
 }
 
 nd::nd() {
@@ -168,6 +172,8 @@ Variant nd::ones(Variant shape, nd::DType dtype) {
 	}
 }
 
+// The first parameter is the one used by the xarray operation, while the second is used for type deduction.
+// It's ok if they're the same.
 template <typename FX, typename FN>
 inline Variant binary_operation(Variant a, Variant b) {
 	std::shared_ptr<xtv::XTVariant> a_;
@@ -190,7 +196,6 @@ inline Variant binary_operation(Variant a, Variant b) {
 
 Variant nd::add(Variant a, Variant b) {
 	// godot::UtilityFunctions::print(xt::has_simd_interface<xt::xarray<int64_t>>::value);
-	// godot::UtilityFunctions::print(xt::has_simd_type<xt::xarray<int64_t>>::value);
 	return binary_operation<xt::detail::plus, xt::detail::plus>(a, b);
 }
 
@@ -204,4 +209,33 @@ Variant nd::multiply(Variant a, Variant b) {
 
 Variant nd::divide(Variant a, Variant b) {
 	return binary_operation<xt::detail::divides, xt::detail::divides>(a, b);
+}
+
+
+template <typename FX, typename FN>
+inline Variant unary_operation(Variant a) {
+	std::shared_ptr<xtv::XTVariant> a_;
+	if (!variant_as_array(a, a_)) {
+		return nullptr;
+	}
+
+	try {
+		auto result = xtv::xoperation<FX, FN>(*a_);
+		return Variant(memnew(NDArray(result)));
+	}
+	catch (std::runtime_error error) {
+		ERR_FAIL_V_MSG(nullptr, error.what());
+	}
+}
+
+Variant nd::sin(Variant a) {
+	return unary_operation<xt::math::sin_fun, xt::math::sin_fun>(a);
+}
+
+Variant nd::cos(Variant a) {
+	return unary_operation<xt::math::cos_fun, xt::math::cos_fun>(a);
+}
+
+Variant nd::tan(Variant a) {
+	return unary_operation<xt::math::tan_fun, xt::math::tan_fun>(a);
 }

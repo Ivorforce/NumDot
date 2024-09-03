@@ -6,7 +6,7 @@ NumDot uses [xtensor](https://github.com/xtensor-stack/xtensor) under the hood.
 
 ### What and Why?
 
-A tensor (or nd-array) is essentially a multi-dimensional vector. You can run mathematical operations on the _whole tensor_ at once, making these operations very fast.
+A tensor (or nd-array) is essentially a multi-dimensional vector. You can run mathematical operations on the _whole tensor_ at once, making these operations very fast. Currently, common math operations can run up to 30 times faster than a conventional for-loop in gdscript.
 
 Operations with tensors are also very easy to write and read, once you're familiar with them. Vectorization allows you to forget about for loops, and focus on the operation itself.
 

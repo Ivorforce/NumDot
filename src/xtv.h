@@ -213,6 +213,17 @@ static inline std::shared_ptr<XTVariant> xoperation(Args&&... args) {
 	return std::visit(XVariantFunction<XFunction<FX, FN>>{}, std::forward<Args>(args)...);
 }
 
+template <typename T>
+static inline T to_single_value(XTVariant& variant) {
+	return std::visit([](auto array) {
+		if (array.size() != 1) {
+			throw std::runtime_error("Array has more than one value; cannot reduce to one.");
+		}
+
+		return T(array.flat(0));
+	}, variant);
+}
+
 }
 
 #endif

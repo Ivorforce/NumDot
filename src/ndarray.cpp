@@ -20,6 +20,10 @@ void NDArray::_bind_methods() {
 	ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "set", &NDArray::set);
 
 	godot::ClassDB::bind_method(D_METHOD("as_type", "type"), &NDArray::as_type);
+
+	godot::ClassDB::bind_method(D_METHOD("to_float"), &NDArray::to_float);
+	godot::ClassDB::bind_method(D_METHOD("to_int"), &NDArray::to_int);
+
 	godot::ClassDB::bind_method(D_METHOD("to_packed_float32_array"), &NDArray::to_packed_float32_array);
 	godot::ClassDB::bind_method(D_METHOD("to_packed_float64_array"), &NDArray::to_packed_float64_array);
 	godot::ClassDB::bind_method(D_METHOD("to_packed_byte_array"), &NDArray::to_packed_byte_array);
@@ -112,6 +116,24 @@ Variant NDArray::get(const Variant **args, GDExtensionInt arg_count, GDExtension
 	}
 	catch (std::runtime_error error) {
 		ERR_FAIL_V_MSG(nullptr, error.what());
+	}
+}
+
+double_t NDArray::to_float() {
+	try {
+		return xtv::to_single_value<double_t>(*array);
+	}
+	catch (std::runtime_error error) {
+		ERR_FAIL_V_MSG(0, error.what());
+	}
+}
+
+int64_t NDArray::to_int() {
+	try {
+		return xtv::to_single_value<int64_t>(*array);
+	}
+	catch (std::runtime_error error) {
+		ERR_FAIL_V_MSG(0, error.what());
 	}
 }
 

@@ -45,11 +45,16 @@ public:
 	Variant get(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
 
 	Variant as_type(xtv::DType dtype);
+
+	double_t to_float();
+	int64_t to_int();
+
 	PackedFloat32Array to_packed_float32_array();
 	PackedFloat64Array to_packed_float64_array();
 	PackedByteArray to_packed_byte_array();
 	PackedInt32Array to_packed_int32_array();
 	PackedInt64Array to_packed_int64_array();
+	
 	Array to_godot_array();
 };
 

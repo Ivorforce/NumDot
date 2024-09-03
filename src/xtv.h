@@ -3,6 +3,7 @@
 
 #include "xtensor/xarray.hpp"
 #include "xtensor/xlayout.hpp"
+#include "pm_profiler.h"
 
 namespace xtv {
 
@@ -103,17 +104,14 @@ static std::shared_ptr<XTVariant> array(XTVariant &existing_array, DType dtype) 
 	}, existing_array);
 }
 
-struct Zeros {
+template <int N>
+struct Full {
 	template <typename T, typename Sh>
 	std::shared_ptr<XTVariant> operator()(const T t, Sh&& shape) const {
-		return std::make_shared<XTVariant>(xt::xarray<T>(xt::zeros<T, Sh>(std::forward<Sh>(shape))));
-	}
-};
-
-struct Ones {
-	template <typename T, typename Sh>
-	std::shared_ptr<XTVariant> operator()(const T t, Sh&& shape) const {
-		return std::make_shared<XTVariant>(xt::xarray<T>(xt::ones<T, Sh>(std::forward<Sh>(shape))));
+		// xt::ones / xt::zeros are very slow...
+		auto ptr = std::make_shared<XTVariant>(xt::xarray<T>::from_shape(shape));
+		std::get<xt::xarray<T>>(*ptr).fill(N);
+		return ptr;
 	}
 };
 

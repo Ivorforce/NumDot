@@ -8,7 +8,6 @@
 #include "conversion_array.h"
 
 using namespace godot;
-using namespace xtv;
 
 void NDArray::_bind_methods() {
 	godot::ClassDB::bind_method(D_METHOD("dtype"), &NDArray::dtype);
@@ -23,17 +22,6 @@ void NDArray::_bind_methods() {
 	godot::ClassDB::bind_method(D_METHOD("to_packed_int32_array"), &NDArray::to_packed_int32_array);
 	godot::ClassDB::bind_method(D_METHOD("to_packed_int64_array"), &NDArray::to_packed_int64_array);
 	godot::ClassDB::bind_method(D_METHOD("to_godot_array"), &NDArray::to_godot_array);
-
-	BIND_ENUM_CONSTANT(Float64);
-	BIND_ENUM_CONSTANT(Float32);
-	BIND_ENUM_CONSTANT(Int8);
-	BIND_ENUM_CONSTANT(Int16);
-	BIND_ENUM_CONSTANT(Int32);
-	BIND_ENUM_CONSTANT(Int64);
-	BIND_ENUM_CONSTANT(UInt8);
-	BIND_ENUM_CONSTANT(UInt16);
-	BIND_ENUM_CONSTANT(UInt32);
-	BIND_ENUM_CONSTANT(UInt64);
 }
 
 NDArray::NDArray() {
@@ -46,7 +34,7 @@ String NDArray::_to_string() const {
 	return std::visit([](auto& arg){ return xt_to_string(arg); }, *array);
 }
 
-NDArray::DType NDArray::dtype() {
+nd::DType NDArray::dtype() {
 	return xtv::dtype(*array);
 }
 
@@ -68,7 +56,7 @@ uint64_t NDArray::ndim() {
 	return xtv::dimension(*array);
 }
 
-Variant NDArray::as_type(DType dtype) {
+Variant NDArray::as_type(nd::DType dtype) {
 	return nd::as_type(this, dtype);
 }
 

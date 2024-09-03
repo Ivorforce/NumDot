@@ -7,6 +7,7 @@
 #include "xtensor/xadapt.hpp"
 
 #include "xtv.h"
+#include "ndarray.h"
 
 using namespace godot;
 

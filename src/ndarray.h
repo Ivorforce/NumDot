@@ -9,10 +9,8 @@
 #endif
 
 #include <godot_cpp/variant/variant.hpp>
-
 #include <godot_cpp/classes/ref.hpp>
 #include <godot_cpp/core/binder_common.hpp>
-#include <godot_cpp/core/gdvirtual.gen.inc>
 
 #include "xtv.h"
 
@@ -28,9 +26,6 @@ protected:
 	String _to_string() const;
 
 public:
-	// Godot needs NDArray::DType here.
-	using DType = xtv::DType;
-
 	// We need a shared pointer because things like asarray can return either a view or an array
 	std::shared_ptr<xtv::XTVariant> array;
 
@@ -38,12 +33,12 @@ public:
 	NDArray(std::shared_ptr<xtv::XTVariant> array) : array(std::move(array)) {};
 	~NDArray();
 
-	DType dtype();
+	xtv::DType dtype();
 	PackedInt64Array shape();
 	uint64_t size();
 	uint64_t ndim();
 	
-	Variant as_type(DType dtype);
+	Variant as_type(xtv::DType dtype);
 	PackedFloat32Array to_packed_float32_array();
 	PackedFloat64Array to_packed_float64_array();
 	PackedByteArray to_packed_byte_array();
@@ -51,7 +46,5 @@ public:
 	PackedInt64Array to_packed_int64_array();
 	Array to_godot_array();
 };
-
-VARIANT_ENUM_CAST(NDArray::DType);
 
 #endif

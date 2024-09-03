@@ -9,8 +9,10 @@
 
 #include "conversion_array.h"
 #include "conversion_shape.h"
+#include "conversion_slice.h"
 #include "xtv.h"
 #include "ndarray.h"
+#include "ndrange.h"
 
 using namespace godot;
 using namespace xtv;
@@ -28,6 +30,10 @@ void nd::_bind_methods() {
 	BIND_ENUM_CONSTANT(UInt64);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("newaxis"), &nd::newaxis);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("from"), &nd::from);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("to"), &nd::to);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("range"), &nd::range);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("range_step"), &nd::range_step);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("dtype", "array"), &nd::dtype);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("shape", "array"), &nd::shape);
@@ -61,8 +67,53 @@ nd::~nd() {
 }
 
 StringName nd::newaxis() {
-	const StringName newaxis = StringName("newaxis");
-	return newaxis;
+	return ::newaxis();
+}
+
+// Not needed right now, only needed again if static varargs methods are supported
+// range_part to_range_part(const Variant& variant) {
+// 	switch (variant.get_type()) {
+// 		case Variant::INT:
+// 			return int64_t(variant);
+// 		case NULL:
+// 			return xt::placeholders::xtuph{};
+// 		default:
+// 			throw std::runtime_error("Invalid type for range.");
+// 	}
+// }
+
+// Variant nd::range(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
+// 	try {
+// 		switch (arg_count) {
+// 			case 1:
+// 				return Variant(memnew(NDRange(xt::placeholders::xtuph{}, to_range_part(*args[0]), xt::placeholders::xtuph{})));
+// 			case 2:
+// 				return Variant(memnew(NDRange(to_range_part(*args[0]), to_range_part(*args[1]), xt::placeholders::xtuph{})));
+// 			case 3:
+// 				return Variant(memnew(NDRange(to_range_part(*args[0]), to_range_part(*args[1]), to_range_part(*args[2]))));
+// 			default:
+// 				ERR_FAIL_V_MSG(nullptr, "Argument list not valid for a range, pass 1-3 arguments.");
+// 		}
+// 	}
+// 	catch (std::runtime_error error) {
+// 		ERR_FAIL_V_MSG(nullptr, error.what());
+// 	}
+// }
+
+Variant nd::from(int64_t start) {
+	return Variant(memnew(NDRange(start, xt::placeholders::xtuph{}, xt::placeholders::xtuph{})));
+}
+
+Variant nd::to(int64_t stop) {
+	return Variant(memnew(NDRange(xt::placeholders::xtuph{}, stop, xt::placeholders::xtuph{})));
+}
+
+Variant nd::range(int64_t start, int64_t stop) {
+	return Variant(memnew(NDRange(start, stop, xt::placeholders::xtuph{})));
+}
+
+Variant nd::range_step(int64_t start, int64_t stop, int64_t step) {
+	return Variant(memnew(NDRange(start, stop, step)));
 }
 
 nd::DType nd::dtype(Variant array) {

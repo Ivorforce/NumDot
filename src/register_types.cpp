@@ -2,6 +2,7 @@
 
 #include "nd.h"
 #include "ndarray.h"
+#include "ndrange.h"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
@@ -15,8 +16,9 @@ void initialize_numdot_module(ModuleInitializationLevel p_level) {
 		return;
 	}
 
-	GDREGISTER_CLASS(NDArray);
 	GDREGISTER_CLASS(nd);
+	GDREGISTER_CLASS(NDArray);
+	GDREGISTER_CLASS(NDRange);
 }
 
 void uninitialize_numdot_module(ModuleInitializationLevel p_level) {

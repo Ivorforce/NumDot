@@ -5,9 +5,7 @@
 #include <godot_cpp/classes/ref.hpp>
 #include <godot_cpp/core/binder_common.hpp>
 
-#include "xtensor/xarray.hpp"
 #include "xtensor/xio.hpp"
-#include "xtensor/xview.hpp"
 
 #include "xtv.h"
 
@@ -20,6 +18,11 @@ String xt_to_string(const xt::xexpression<E>& e)
     std::ostringstream out;
     out << e;
     return String(out.str().c_str());
+}
+
+StringName newaxis() {
+	const StringName newaxis = StringName("newaxis");
+	return newaxis;
 }
 
 class nd : public Object {
@@ -36,6 +39,10 @@ public:
 	~nd();
 
 	static StringName newaxis();
+	static Variant range(int64_t start, int64_t stop);
+	static Variant range_step(int64_t start, int64_t stop, int64_t step);
+	static Variant from(int64_t start);
+	static Variant to(int64_t stop);
 
 	static DType dtype(Variant array);
 	static PackedInt64Array shape(Variant array);

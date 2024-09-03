@@ -4,7 +4,9 @@ extends Node2D
 func _ready() -> void:
 	var test_size := 2000000
 	var test_count := 1
-
+	
+	var vs = nd.ones([2, 3, 4], nd.DType.Int32)
+	print(vs.get(nd.newaxis(), 0, 0))
 	
 	var a_packed := PackedInt32Array()
 	a_packed.resize(test_size)

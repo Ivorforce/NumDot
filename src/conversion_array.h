@@ -6,13 +6,13 @@
 #include "xtensor/xtensor.hpp"
 #include "xtensor/xadapt.hpp"
 
-#include "xtv.h"
 #include "ndarray.h"
+#include "xtv.h"
 
 using namespace godot;
 
 template <typename C, typename T>
-static inline bool packed_as_array(const T shape_array, std::shared_ptr<xtv::XTVariant> &target) {
+inline bool packed_as_array(const T shape_array, std::shared_ptr<xtv::XTVariant> &target) {
 	uint64_t size = shape_array.size();
 
 	xt::static_shape<std::size_t, 1> shape_of_shape = { size };
@@ -120,7 +120,7 @@ static bool variant_as_array(const Variant array, std::shared_ptr<xtv::XTVariant
 }
 
 template <typename P>
-static P xtvariant_to_packed(xtv::XTVariant& array) {
+P xtvariant_to_packed(xtv::XTVariant& array) {
 	P p_array = P();
 
 	std::visit([&p_array](auto array){
@@ -131,7 +131,7 @@ static P xtvariant_to_packed(xtv::XTVariant& array) {
 	return p_array;
 }
 
-static Array xtvariant_to_godot_array(xtv::XTVariant& array) {
+Array xtvariant_to_godot_array(xtv::XTVariant& array) {
 	Array godot_array = Array();
 
 	std::visit([&godot_array](auto array){

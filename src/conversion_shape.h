@@ -2,18 +2,22 @@
 #define NUMDOT_AS_SHAPE_H
 
 #include <godot_cpp/godot.hpp>
-#include "xtensor/xtensor.hpp"
+#include <godot_cpp/variant/variant.hpp>
+#include <godot_cpp/classes/object.hpp>
+#include <godot_cpp/variant/utility_functions.hpp>
+
+#include "ndarray.h"
 
 using namespace godot;
 
 template <typename T, typename Sh>
-static inline bool packed_as_shape(const T& shape_array, Sh &target) {
+inline bool packed_as_shape(const T& shape_array, Sh &target) {
 	target.assign(shape_array.ptr(), shape_array.ptr() + shape_array.size());
 	return true;
 }
 
 template <typename C, typename T>
-static bool variant_as_shape(const Variant shape, T &target) {
+bool variant_as_shape(const Variant shape, T &target) {
 	auto type = shape.get_type();
 
 	switch (type) {
@@ -59,5 +63,4 @@ static bool variant_as_shape(const Variant shape, T &target) {
 
 	ERR_FAIL_V_MSG(false, "Variant cannot be converted to a shape.");
 }
-
 #endif

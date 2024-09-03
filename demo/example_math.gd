@@ -6,7 +6,7 @@ func _ready() -> void:
 	var test_count := 1
 	
 	var vs = nd.ones([2, 3, 4], nd.DType.Int32)
-	print(vs.get(nd.newaxis(), 0, 0))
+	print(vs.get(0, nd.from(2), null))
 	
 	var a_packed := PackedInt32Array()
 	a_packed.resize(test_size)

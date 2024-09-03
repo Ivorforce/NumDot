@@ -22,17 +22,19 @@ NumDot is inspired by the python tensor math library, [NumPy](https://numpy.org)
 
 | NumPy  | NumDot |
 | ------------- | ------------- |
-| x[a, b, c] | x.get(a, b, c) |
-| x[a] returns a view | x[a] returns a copy |
-| x[a, b, c] = d | x.set(d, a, b, c) |
-| x[1:] | x.get(nd.from(1)) |
-| x[:1] | x.get(nd.to(1)) |
-| x[1:2] | x.get(nd.range(1, 2)) |
-| x[0:5:2] | x.get(nd.range_step(0, 5, 2)) |
-| np.array([2, 3, 4]) | nd.array([2, 3, 4]) |
-| np.ones((2, 3, 4)) | nd.ones([2, 3, 4]) |
-| np.add(a, b) | nd.add(a, b) |
-| np.sin(a) | nd.sin(a) |
+| `x[a, b, c]` | `x.get(a, b, c)` |
+| `x[a]` returns a view | `x[a]` returns a copy |
+| `x[a, b, c] = d` | `x.set(d, a, b, c)` |
+| `x[1:]` | `x.get(nd.from(1))` |
+| `x[:1]` | `x.get(nd.to(1))` |
+| `x[1:2]` | `x.get(nd.range(1, 2))` |
+| `x[0:5:2]` | `x.get(nd.range_step(0, 5, 2))` |
+| `np.array([2, 3, 4])` | `nd.array([2, 3, 4])` |
+| `np.ones((2, 3, 4))` | `nd.ones([2, 3, 4])` |
+| `np.add(a, b)` | `nd.add(a, b)` |
+| `np.sin(a)` | `nd.sin(a)` |
+
+Keep in mind these semantics are yet subject to change.
 
 ### Godot Interoperability
 

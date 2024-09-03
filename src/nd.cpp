@@ -206,7 +206,7 @@ inline Variant binary_operation(Variant a, Variant b) {
 }
 
 Variant nd::add(Variant a, Variant b) {
-	// godot::UtilityFunctions::print(xt::has_simd_interface<xt::xarray<int64_t>>::value);
+	// godot::UtilityFunctions::print(value);
 	return binary_operation<xt::detail::plus, xt::detail::plus>(a, b);
 }
 

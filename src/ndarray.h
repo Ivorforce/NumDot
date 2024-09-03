@@ -38,6 +38,12 @@ public:
 	uint64_t size();
 	uint64_t ndim();
 	
+	// Subscript not available, i think. See object's set_bind / get_bind:
+	// I think godot assumes that all [] accesses are keypaths.
+	// https://github.com/godotengine/godot/blob/514c564a8c855d798ec6b5a52860e5bca8d57bc9/core/object/object.h#L643
+	void set(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
+	Variant get(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
+
 	Variant as_type(xtv::DType dtype);
 	PackedFloat32Array to_packed_float32_array();
 	PackedFloat64Array to_packed_float64_array();

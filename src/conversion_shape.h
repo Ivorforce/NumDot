@@ -52,11 +52,6 @@ static bool variant_as_shape(const Variant shape, T &target) {
 			break;
 	}
 
-	if (Variant::can_convert(type, Variant::Type::INT)) {
-		target = { C(int64_t(shape)) };
-		return true;
-	}
-
 	// TODO Godot will probably convert float to int. We should check.
 	if (Variant::can_convert(type, Variant::Type::PACKED_INT32_ARRAY)) {
 		return packed_as_shape(PackedInt32Array(shape), target);

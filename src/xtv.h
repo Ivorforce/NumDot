@@ -63,7 +63,7 @@ static inline size_t dimension(XTVariant& variant) {
 	return std::visit([](auto& arg){ return arg.dimension(); }, variant);
 }
 
-static inline DTypeVariant dtype_to_variant(DType dtype) {
+static DTypeVariant dtype_to_variant(DType dtype) {
 	switch (dtype) {
 		case xtv::DType::Float32:
 			return float_t();
@@ -90,8 +90,7 @@ static inline DTypeVariant dtype_to_variant(DType dtype) {
 	}
 }
 
-template <typename O>
-std::shared_ptr<XTVariant> make_xarray(DType dtype, O& other) {
+std::shared_ptr<XTVariant> make_xarray(DType dtype, XTVariant& other) {
 	return std::visit([](auto t, auto& other) {
 		using T = decltype(t);
 
@@ -99,6 +98,29 @@ std::shared_ptr<XTVariant> make_xarray(DType dtype, O& other) {
 			xt::xarray<T>(other)
 		);
 	}, dtype_to_variant(dtype), other);
+}
+
+static std::shared_ptr<XTVariant> get_slice(XTVariant& array, xt::xstrided_slice_vector& slice) {
+	return std::visit([slice](auto& array) {
+		using T = std::decay_t<decltype(array)>;
+
+		auto view = xt::strided_view(array, slice);
+
+		return std::make_shared<XTVariant>(T(view));
+	}, array);
+}
+
+template <typename V>
+static void set_slice_value(XTVariant& array, xt::xstrided_slice_vector& slice, V value) {
+	return std::visit([slice, value](auto& array) {
+		xt::strided_view(array, slice) = value;
+	}, array);
+}
+
+static void set_slice(XTVariant& array, xt::xstrided_slice_vector& slice, XTVariant& value) {
+	return std::visit([slice](auto& array, auto& value) {
+		xt::strided_view(array, slice) = value;
+	}, array, value);
 }
 
 template <typename V, typename Sh>

@@ -18,7 +18,7 @@ NumDot itself is a very thin wrapper over [xtensor](https://xtensor.readthedocs.
 - **[C++ Variant](https://en.cppreference.com/w/cpp/utility/variant):** To offer support for different data types, NumDot uses `std::variant` in [XTVariant](https://github.com/Ivorforce/NumDot/blob/main/src/xtv.h).
 - **[XTensor / XArray](https://xtensor.readthedocs.io/en/latest/getting_started.html):** XTensor is used for actually doing the math. That means you need to understand what it's doing to produce code that works with it.
 
-You don't need to be proficient with all of these technologies to help! You can contribute without understanding any of these, e.g. by improving the documentation. 
+You don't need to be proficient with all of these technologies to help! You can contribute without full knowledge of all of these, e.g. by improving the documentation, class interfaces, or utility functions. There is a lot to do!
 
 ## Making a contribution
 

@@ -1,6 +1,6 @@
 # NumDot
 
-A tensor math library for the [Godot](https://godotengine.org) engine. Proof of concept. I will likely return to this soon and create a full release.
+A tensor math library for the [Godot](https://godotengine.org) engine. Proof of concept, [contributions are welcome](https://github.com/Ivorforce/NumDot/blob/main/CONTRIBUTING.md).
 
 NumDot uses [xtensor](https://github.com/xtensor-stack/xtensor) under the hood.
 

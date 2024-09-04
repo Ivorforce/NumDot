@@ -20,7 +20,9 @@ NumDot itself is a very thin wrapper over [xtensor](https://xtensor.readthedocs.
 
 You don't need to be proficient with all of these technologies to help! Check out the [open issues](https://github.com/Ivorforce/NumDot/issues) for anything that interests you. There is a lot left to do!
 
-## Making a 
+## Making a contribution
+
+First, set up the project:
 ```bash
 # Clone the repository
 git clone https://github.com/YourUsername/NumDot
@@ -45,7 +47,7 @@ Make your changes using a code editor (I use [VSCode](https://code.visualstudio.
 
 Test your changes in the demo project.
 
-Then, [make a Pull Request (PR)](https://github.com/Ivorforce/NumDot/compare). We will check your changes, make suggestions, and finally integrate your code into the project. Try to make sure you don't include any accidental changes, like editing the test file.
+Finally, [make a Pull Request (PR)](https://github.com/Ivorforce/NumDot/compare). We will check your changes, make suggestions, and finally integrate your code into the project. Try to make sure you don't include any accidental changes, like editing the test file.
 
 ## Any Problems?
 

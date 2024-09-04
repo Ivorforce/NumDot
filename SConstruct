@@ -3,6 +3,7 @@ import os
 import sys
 from SCons.Script import Variables, Command, File, DefaultEnvironment
 
+# Helper function to depend on a bunch of shell scripts.
 def subcommands(env, *, target_files, build_dir, commands):
     # Create the build dir
     os.makedirs(build_dir, exist_ok=True)
@@ -22,21 +23,15 @@ def subcommands(env, *, target_files, build_dir, commands):
     )
 
 # This works like passing disable_exceptions=false by default.
-# Why I do this, see below.
+# To read up on why exceptions must be enabled, read further below.
 env = Environment()
 env['disable_exceptions'] = False
 
 env = SConscript("godot-cpp/SConstruct", 'env')
 
-# For reference:
-# - CCFLAGS are compilation flags shared between C and C++
-# - CFLAGS are for C-specific compilation flags
-# - CXXFLAGS are for C++-specific compilation flags
-# - CPPFLAGS are for pre-processor flags
-# - CPPDEFINES are for pre-processor defines
-# - LINKFLAGS are for linking flags
-
 # xtl and xtensor are header only, but we might as well use their scripts so everything coheres.
+# TODO I'm not sure if this is actually needed, or better than just including their ./ include directories.
+# The difference between the two approaches should be checked.
 subcommands(
     env,
     target_files=['xtl/build/include/xtl/xtl.hpp'],
@@ -66,6 +61,13 @@ subcommands(
     ],
 )
 
+# For reference:
+# - CCFLAGS are compilation flags shared between C and C++
+# - CFLAGS are for C-specific compilation flags
+# - CXXFLAGS are for C++-specific compilation flags
+# - CPPFLAGS are for pre-processor flags
+# - CPPDEFINES are for pre-processor defines
+# - LINKFLAGS are for linking flags
 
 env.Append(CPPFLAGS=[
     '-DXTENSOR_USE_XSIMD=1',

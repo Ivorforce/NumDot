@@ -18,12 +18,9 @@ NumDot itself is a very thin wrapper over [xtensor](https://xtensor.readthedocs.
 - **[C++ Variant](https://en.cppreference.com/w/cpp/utility/variant):** To offer support for different data types, NumDot uses `std::variant` in [XTVariant](https://github.com/Ivorforce/NumDot/blob/main/src/xtv.h).
 - **[XTensor / XArray](https://xtensor.readthedocs.io/en/latest/getting_started.html):** XTensor is used for actually doing the math. That means you need to understand what it's doing to produce code that works with it.
 
-You don't need to be proficient with all of these technologies to help! You can contribute without full knowledge of all of these, e.g. by improving the documentation, class interfaces, or utility functions. There is a lot to do!
+You don't need to be proficient with all of these technologies to help! Check out the [open issues](https://github.com/Ivorforce/NumDot/issues) for anything that interests you. There is a lot left to do!
 
-## Making a contribution
-
-You first need to fork, clone, and setup this project. Start by clicking "Fork" at the top of https://github.com/Ivorforce/NumDot. Then, clone your copy:
-
+## Making a 
 ```bash
 # Clone the repository
 git clone https://github.com/YourUsername/NumDot

@@ -43,9 +43,14 @@ Make a branch for your changes:
 ```bash
 git checkout -b my-new-feature
 ```
-Make your changes using a code editor (I use [VSCode](https://code.visualstudio.com)).
-
-Test your changes in the demo project.
+Make your changes using a code editor (I use [VSCode](https://code.visualstudio.com)).Test your changes in the demo project. Make a commit:
+```bash
+git status
+# If everything seems ok
+git add .
+git commit -m "My change message."
+git push
+```
 
 Finally, [make a Pull Request (PR)](https://github.com/Ivorforce/NumDot/compare). We will check your changes, make suggestions, and finally integrate your code into the project. Try to make sure you don't include any accidental changes, like editing the test file.
 

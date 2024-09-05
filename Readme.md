@@ -8,7 +8,7 @@ NumDot uses [xtensor](https://github.com/xtensor-stack/xtensor) under the hood.
 
 A tensor (or nd-array) is essentially a multi-dimensional array. You can run mathematical operations on the _whole tensor_ at once, making these operations very fast. Currently, common math operations can run up to 30 times faster than a conventional for-loop in gdscript (when using about 100+ floats).
 
-Operations with tensors are also very easy to write and read, once you're familiar with them. Vectorization allows you to forget about for loops, and focus on the operation itself.
+Operations with tensors are also very easy to write and read, once you're familiar with them. Vectorization reduces boilerplate a ton, and allows you to focus on the actual operations taking place.
 
 NumDot is inspired by the python tensor math library, [NumPy](https://numpy.org), and thus shares many semantics with it. If you are unfamiliar with tensor operations in general, I recommend taking a numpy tutorial or two first. That being said, here are some direct comparisons:
 

@@ -30,17 +30,17 @@ void nd::_bind_methods() {
 	BIND_ENUM_CONSTANT(UInt64);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("newaxis"), &nd::newaxis);
-	godot::ClassDB::bind_static_method("nd", D_METHOD("from"), &nd::from);
-	godot::ClassDB::bind_static_method("nd", D_METHOD("to"), &nd::to);
-	godot::ClassDB::bind_static_method("nd", D_METHOD("range"), &nd::range);
-	godot::ClassDB::bind_static_method("nd", D_METHOD("range_step"), &nd::range_step);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("from", "start"), &nd::from);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("to", "stop"), &nd::to);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("range", "start", "stop"), &nd::range);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("range_step", "start", "stop", "step"), &nd::range_step);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("dtype", "array"), &nd::dtype);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("shape", "array"), &nd::shape);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("size", "array"), &nd::size);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("ndim", "array"), &nd::ndim);
 
-	godot::ClassDB::bind_static_method("nd", D_METHOD("as_type", "array"), &nd::as_type);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("as_type", "array", "dtype"), &nd::as_type);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("as_array", "array", "dtype"), &nd::as_array, DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("array", "array", "dtype"), &nd::array, DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax));

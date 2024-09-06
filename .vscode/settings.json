@@ -67,7 +67,9 @@
         "algorithm": "cpp",
         "version": "cpp",
         "*.inc": "cpp",
-        "type_traits": "cpp"
+        "type_traits": "cpp",
+        "iterator": "cpp",
+        "memory": "cpp"
     },
     "cmake.ignoreCMakeListsMissing": true,
     "godotTools.editorPath.godot4": "/Applications/Godot.app"

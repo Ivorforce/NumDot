@@ -7,6 +7,8 @@
 
 #include "xtensor/xio.hpp"
 
+#include "ndarray.h"
+#include "ndrange.h"
 #include "xtv.h"
 
 using namespace godot;
@@ -39,40 +41,40 @@ public:
 	~nd();
 
 	static StringName newaxis();
-	static Variant range(int64_t start, int64_t stop);
-	static Variant range_step(int64_t start, int64_t stop, int64_t step);
-	static Variant from(int64_t start);
-	static Variant to(int64_t stop);
+	static Ref<NDRange> range(int64_t start, int64_t stop);
+	static Ref<NDRange> range_step(int64_t start, int64_t stop, int64_t step);
+	static Ref<NDRange> from(int64_t start);
+	static Ref<NDRange> to(int64_t stop);
 
 	static DType dtype(Variant array);
 	static PackedInt64Array shape(Variant array);
 	static uint64_t size(Variant array);
 	static uint64_t ndim(Variant array);
 	
-	static Variant as_type(Variant array, DType dtype);
-	static Variant as_array(Variant array, DType dtype = DType::DTypeMax);
-	static Variant array(Variant array, DType dtype = DType::DTypeMax);
+	static Ref<NDArray> as_type(Variant array, DType dtype);
+	static Ref<NDArray> as_array(Variant array, DType dtype = DType::DTypeMax);
+	static Ref<NDArray> array(Variant array, DType dtype = DType::DTypeMax);
 
-	static Variant full(Variant shape, Variant fill_value, DType dtype = DType::Float64);
-	static Variant zeros(Variant shape, DType dtype = DType::Float64);
-	static Variant ones(Variant shape, DType dtype = DType::Float64);
+	static Ref<NDArray> full(Variant shape, Variant fill_value, DType dtype = DType::Float64);
+	static Ref<NDArray> zeros(Variant shape, DType dtype = DType::Float64);
+	static Ref<NDArray> ones(Variant shape, DType dtype = DType::Float64);
 
-	static Variant add(Variant a, Variant b);
-	static Variant subtract(Variant a, Variant b);
-	static Variant multiply(Variant a, Variant b);
-	static Variant divide(Variant a, Variant b);
-	static Variant remainder(Variant a, Variant b);
-	static Variant pow(Variant a, Variant b);
+	static Ref<NDArray> add(Variant a, Variant b);
+	static Ref<NDArray> subtract(Variant a, Variant b);
+	static Ref<NDArray> multiply(Variant a, Variant b);
+	static Ref<NDArray> divide(Variant a, Variant b);
+	static Ref<NDArray> remainder(Variant a, Variant b);
+	static Ref<NDArray> pow(Variant a, Variant b);
 
-	static Variant abs(Variant a);
-	static Variant sqrt(Variant a);
+	static Ref<NDArray> abs(Variant a);
+	static Ref<NDArray> sqrt(Variant a);
 
-	static Variant exp(Variant a);
-	static Variant log(Variant a);
+	static Ref<NDArray> exp(Variant a);
+	static Ref<NDArray> log(Variant a);
 
-	static Variant sin(Variant a);
-	static Variant cos(Variant a);
-	static Variant tan(Variant a);
+	static Ref<NDArray> sin(Variant a);
+	static Ref<NDArray> cos(Variant a);
+	static Ref<NDArray> tan(Variant a);
 };
 
 VARIANT_ENUM_CAST(nd::DType);

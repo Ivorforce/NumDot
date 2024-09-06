@@ -2,8 +2,8 @@ extends Node2D
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	var test_size := 2000000
-	var test_count := 1
+	var test_size := 10000
+	var test_count := 1000
 	
 	var a_packed := PackedInt32Array()
 	a_packed.resize(test_size)
@@ -23,6 +23,7 @@ func _ready() -> void:
 	for t in test_count:
 		var b_nd = nd.full(test_size, 5, nd.DType.Int32)
 	print(Time.get_ticks_usec() - start_time)
+	
 
 	# Test 3: Multiply packed arrays
 	start_time = Time.get_ticks_usec()

@@ -108,20 +108,20 @@ StringName nd::newaxis() {
 // 	}
 // }
 
-Variant nd::from(int64_t start) {
-	return Variant(memnew(NDRange(start, xt::placeholders::xtuph{}, xt::placeholders::xtuph{})));
+Ref<NDRange> nd::from(int64_t start) {
+	return Ref(memnew(NDRange(start, xt::placeholders::xtuph{}, xt::placeholders::xtuph{})));
 }
 
-Variant nd::to(int64_t stop) {
-	return Variant(memnew(NDRange(xt::placeholders::xtuph{}, stop, xt::placeholders::xtuph{})));
+Ref<NDRange> nd::to(int64_t stop) {
+	return Ref(memnew(NDRange(xt::placeholders::xtuph{}, stop, xt::placeholders::xtuph{})));
 }
 
-Variant nd::range(int64_t start, int64_t stop) {
-	return Variant(memnew(NDRange(start, stop, xt::placeholders::xtuph{})));
+Ref<NDRange> nd::range(int64_t start, int64_t stop) {
+	return Ref(memnew(NDRange(start, stop, xt::placeholders::xtuph{})));
 }
 
-Variant nd::range_step(int64_t start, int64_t stop, int64_t step) {
-	return Variant(memnew(NDRange(start, stop, step)));
+Ref<NDRange> nd::range_step(int64_t start, int64_t stop, int64_t step) {
+	return Ref(memnew(NDRange(start, stop, step)));
 }
 
 nd::DType nd::dtype(Variant array) {
@@ -170,11 +170,11 @@ uint64_t nd::ndim(Variant array) {
 	return xtv::dimension(*existing_array);
 }
 
-Variant nd::as_type(Variant array, nd::DType dtype) {
+Ref<NDArray> nd::as_type(Variant array, nd::DType dtype) {
 	return nd::as_array(array, dtype);
 }
 
-Variant nd::as_array(Variant array, nd::DType dtype) {
+Ref<NDArray> nd::as_array(Variant array, nd::DType dtype) {
 	auto type = array.get_type();
 
 	// Can we take a view?
@@ -190,12 +190,12 @@ Variant nd::as_array(Variant array, nd::DType dtype) {
 	return nd::array(array, dtype);
 }
 
-Variant nd::array(Variant array, nd::DType dtype) {
+Ref<NDArray> nd::array(Variant array, nd::DType dtype) {
 	auto type = array.get_type();
 
 	std::shared_ptr<xtv::XTVariant> existing_array;
 	if (!variant_as_array(array, existing_array)) {
-		return nullptr;
+		return Ref<NDArray>();
 	}
 
 	// Default value.
@@ -205,30 +205,30 @@ Variant nd::array(Variant array, nd::DType dtype) {
 
 	try {
 		auto result = xtv::make_xarray(dtype, *existing_array);
-		return Variant(memnew(NDArray(result)));
+		return Ref(memnew(NDArray(result)));
 	}
 	catch (std::runtime_error error) {
-		ERR_FAIL_V_MSG(nullptr, error.what());
+		ERR_FAIL_V_MSG(Ref<NDArray>(), error.what());
 	}
 }
 
 
 template <typename V>
-Variant _full(Variant shape, V value, nd::DType dtype) {
+Ref<NDArray> _full(Variant shape, V value, nd::DType dtype) {
 	std::vector<size_t> shape_array;
 	if (!variant_as_shape<size_t>(shape, shape_array)) {
-		return nullptr;
+		return Ref<NDArray>();
 	}
 
 	try {
-		return Variant(memnew(NDArray(xtv::full(dtype, value, shape_array))));
+		return Ref(memnew(NDArray(xtv::full(dtype, value, shape_array))));
 	}
 	catch (std::runtime_error error) {
-		ERR_FAIL_V_MSG(nullptr, error.what());
+		ERR_FAIL_V_MSG(Ref<NDArray>(), error.what());
 	}
 }
 
-Variant nd::full(Variant shape, Variant fill_value, nd::DType dtype) {
+Ref<NDArray> nd::full(Variant shape, Variant fill_value, nd::DType dtype) {
 	switch (fill_value.get_type()) {
 		case Variant::INT:
 			if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Int64;
@@ -237,62 +237,62 @@ Variant nd::full(Variant shape, Variant fill_value, nd::DType dtype) {
 			if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Float64;
 			return _full(shape, double_t(fill_value), dtype);
 		default:
-			ERR_FAIL_V_MSG(nullptr, "The fill value must be a number literal (for now).");
+			ERR_FAIL_V_MSG(Ref<NDArray>(), "The fill value must be a number literal (for now).");
 	}
 }
 
-Variant nd::zeros(Variant shape, nd::DType dtype) {
+Ref<NDArray> nd::zeros(Variant shape, nd::DType dtype) {
 	return _full(shape, 0, dtype);
 }
 
-Variant nd::ones(Variant shape, nd::DType dtype) {
+Ref<NDArray> nd::ones(Variant shape, nd::DType dtype) {
 	return _full(shape, 1, dtype);
 }
 
 // The first parameter is the one used by the xarray operation, while the second is used for type deduction.
 // It's ok if they're the same.
 template <typename FX, typename FN>
-inline Variant binary_operation(Variant a, Variant b) {
+inline Ref<NDArray> binary_operation(Variant a, Variant b) {
 	std::shared_ptr<xtv::XTVariant> a_;
 	if (!variant_as_array(a, a_)) {
-		return nullptr;
+		return Ref<NDArray>();
 	}
 	std::shared_ptr<xtv::XTVariant> b_;
 	if (!variant_as_array(b, b_)) {
-		return nullptr;
+		return Ref<NDArray>();
 	}
 
 	try {
 		auto result = xtv::xoperation<FX, FN>(*a_, *b_);
-		return Variant(memnew(NDArray(result)));
+		return Ref<NDArray>(memnew(NDArray(result)));
 	}
 	catch (std::runtime_error error) {
-		ERR_FAIL_V_MSG(nullptr, error.what());
+		ERR_FAIL_V_MSG(Ref<NDArray>(), error.what());
 	}
 }
 
-Variant nd::add(Variant a, Variant b) {
+Ref<NDArray> nd::add(Variant a, Variant b) {
 	// godot::UtilityFunctions::print(value);
 	return binary_operation<xt::detail::plus, xt::detail::plus>(a, b);
 }
 
-Variant nd::subtract(Variant a, Variant b) {
+Ref<NDArray> nd::subtract(Variant a, Variant b) {
 	return binary_operation<xt::detail::minus, xt::detail::minus>(a, b);
 }
 
-Variant nd::multiply(Variant a, Variant b) {
+Ref<NDArray> nd::multiply(Variant a, Variant b) {
 	return binary_operation<xt::detail::multiplies, xt::detail::multiplies>(a, b);
 }
 
-Variant nd::divide(Variant a, Variant b) {
+Ref<NDArray> nd::divide(Variant a, Variant b) {
 	return binary_operation<xt::detail::divides, xt::detail::divides>(a, b);
 }
 
-Variant nd::remainder(Variant a, Variant b) {
+Ref<NDArray> nd::remainder(Variant a, Variant b) {
 	return binary_operation<xt::math::remainder_fun, xt::math::remainder_fun>(a, b);
 }
 
-Variant nd::pow(Variant a, Variant b) {
+Ref<NDArray> nd::pow(Variant a, Variant b) {
 	return binary_operation<xt::math::pow_fun, xt::math::pow_fun>(a, b);
 }
 
@@ -301,42 +301,42 @@ template <typename FX, typename FN>
 inline Variant unary_operation(Variant a) {
 	std::shared_ptr<xtv::XTVariant> a_;
 	if (!variant_as_array(a, a_)) {
-		return nullptr;
+		return Ref<NDArray>();
 	}
 
 	try {
 		auto result = xtv::xoperation<FX, FN>(*a_);
-		return Variant(memnew(NDArray(result)));
+		return Ref<NDArray>(memnew(NDArray(result)));
 	}
 	catch (std::runtime_error error) {
-		ERR_FAIL_V_MSG(nullptr, error.what());
+		ERR_FAIL_V_MSG(Ref<NDArray>(), error.what());
 	}
 }
 
-Variant nd::abs(Variant a) {
+Ref<NDArray> nd::abs(Variant a) {
 	return unary_operation<xt::math::abs_fun, xt::math::abs_fun>(a);
 }
 
-Variant nd::sqrt(Variant a) {
+Ref<NDArray> nd::sqrt(Variant a) {
 	return unary_operation<xt::math::sqrt_fun, xt::math::sqrt_fun>(a);
 }
 
-Variant nd::exp(Variant a) {
+Ref<NDArray> nd::exp(Variant a) {
 	return unary_operation<xt::math::exp_fun, xt::math::exp_fun>(a);
 }
 
-Variant nd::log(Variant a) {
+Ref<NDArray> nd::log(Variant a) {
 	return unary_operation<xt::math::log_fun, xt::math::log_fun>(a);
 }
 
-Variant nd::sin(Variant a) {
+Ref<NDArray> nd::sin(Variant a) {
 	return unary_operation<xt::math::sin_fun, xt::math::sin_fun>(a);
 }
 
-Variant nd::cos(Variant a) {
+Ref<NDArray> nd::cos(Variant a) {
 	return unary_operation<xt::math::cos_fun, xt::math::cos_fun>(a);
 }
 
-Variant nd::tan(Variant a) {
+Ref<NDArray> nd::tan(Variant a) {
 	return unary_operation<xt::math::tan_fun, xt::math::tan_fun>(a);
 }

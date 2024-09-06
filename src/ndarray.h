@@ -42,7 +42,7 @@ public:
 	// I think godot assumes that all [] accesses are keypaths.
 	// https://github.com/godotengine/godot/blob/514c564a8c855d798ec6b5a52860e5bca8d57bc9/core/object/object.h#L643
 	void set(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
-	Variant get(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
+	Ref<NDArray> get(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
 	double_t get_float(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
 	int64_t get_int(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
 

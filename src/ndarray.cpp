@@ -102,15 +102,15 @@ void NDArray::set(const Variant **args, GDExtensionInt arg_count, GDExtensionCal
 	}
 }
 
-Variant NDArray::get(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
+Ref<NDArray> NDArray::get(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
 	try {
 		xt::xstrided_slice_vector sv = variants_as_slice_vector(args, arg_count, error);
 
 		auto result = xtv::get_slice(*array, sv);
-		return Variant(memnew(NDArray(result)));
+		return Ref<NDArray>(memnew(NDArray(result)));
 	}
 	catch (std::runtime_error error) {
-		ERR_FAIL_V_MSG(nullptr, error.what());
+		ERR_FAIL_V_MSG(Ref<NDArray>(), error.what());
 	}
 }
 

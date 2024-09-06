@@ -6,7 +6,7 @@
 #endif
 
 #include <godot_cpp/variant/variant.hpp>
-#include <godot_cpp/classes/ref.hpp>
+#include <godot_cpp/classes/ref_counted.hpp>
 #include <godot_cpp/core/binder_common.hpp>
 
 #include "xtensor/xslice.hpp"
@@ -15,8 +15,8 @@ using namespace godot;
 
 using range_part = std::variant<xt::placeholders::xtuph, std::ptrdiff_t>;
 
-class NDRange : public Object {
-	GDCLASS(NDRange, Object)
+class NDRange : public RefCounted {
+	GDCLASS(NDRange, RefCounted)
 
 private:
 

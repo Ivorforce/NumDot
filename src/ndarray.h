@@ -9,15 +9,15 @@
 #endif
 
 #include <godot_cpp/variant/variant.hpp>
-#include <godot_cpp/classes/ref.hpp>
+#include <godot_cpp/classes/ref_counted.hpp>
 #include <godot_cpp/core/binder_common.hpp>
 
 #include "xtv.h"
 
 using namespace godot;
 
-class NDArray : public Object {
-	GDCLASS(NDArray, Object)
+class NDArray : public RefCounted {
+	GDCLASS(NDArray, RefCounted)
 
 private:
 

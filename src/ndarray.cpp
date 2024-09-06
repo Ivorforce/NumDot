@@ -14,6 +14,7 @@ void NDArray::_bind_methods() {
 	godot::ClassDB::bind_method(D_METHOD("dtype"), &NDArray::dtype);
 	godot::ClassDB::bind_method(D_METHOD("shape"), &NDArray::shape);
 	godot::ClassDB::bind_method(D_METHOD("size"), &NDArray::size);
+	godot::ClassDB::bind_method(D_METHOD("array_size_in_bytes"), &NDArray::array_size_in_bytes);
 	godot::ClassDB::bind_method(D_METHOD("ndim"), &NDArray::ndim);
 
 	ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "set", &NDArray::set);
@@ -60,6 +61,10 @@ PackedInt64Array NDArray::shape() {
 
 uint64_t NDArray::size() {
 	return xtv::size(*array);
+}
+
+uint64_t NDArray::array_size_in_bytes() {
+	return xtv::size_of_array_in_bytes(*array);
 }
 
 uint64_t NDArray::ndim() {

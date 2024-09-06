@@ -90,6 +90,19 @@ static DTypeVariant dtype_to_variant(DType dtype) {
 	}
 }
 
+static inline size_t size_of_dtype_in_bytes(DType dtype) {
+	return std::visit([](auto dtype){
+		return sizeof(dtype);
+	}, dtype_to_variant(dtype));
+}
+
+static inline size_t size_of_array_in_bytes(XTVariant& array) {
+	return std::visit([](auto& array){
+        using V = typename std::decay_t<decltype(array)>::value_type;
+		return array.size() * sizeof(V);
+	}, array);
+}
+
 std::shared_ptr<XTVariant> make_xarray(DType dtype, XTVariant& other) {
 	return std::visit([](auto t, auto& other) {
 		using T = decltype(t);

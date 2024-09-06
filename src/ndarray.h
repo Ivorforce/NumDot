@@ -36,6 +36,7 @@ public:
 	xtv::DType dtype();
 	PackedInt64Array shape();
 	uint64_t size();
+	uint64_t array_size_in_bytes();
 	uint64_t ndim();
 	
 	// Subscript not available, i think. See object's set_bind / get_bind:

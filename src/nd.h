@@ -47,6 +47,7 @@ public:
 	static Ref<NDRange> to(int64_t stop);
 
 	static DType dtype(Variant array);
+	static uint64_t size_of_dtype_in_bytes(DType dtype);
 	static PackedInt64Array shape(Variant array);
 	static uint64_t size(Variant array);
 	static uint64_t ndim(Variant array);

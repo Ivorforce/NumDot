@@ -36,6 +36,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("range_step", "start", "stop", "step"), &nd::range_step);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("dtype", "array"), &nd::dtype);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("size_of_dtype_in_bytes", "dtype"), &nd::size_of_dtype_in_bytes);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("shape", "array"), &nd::shape);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("size", "array"), &nd::size);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("ndim", "array"), &nd::ndim);
@@ -132,6 +133,10 @@ nd::DType nd::dtype(Variant array) {
 	}
 
 	return xtv::dtype(*existing_array);
+}
+
+uint64_t nd::size_of_dtype_in_bytes(DType dtype) {
+	return xtv::size_of_dtype_in_bytes(dtype);
 }
 
 PackedInt64Array nd::shape(Variant array) {

@@ -163,6 +163,8 @@ struct XVariantFunction {
 	std::shared_ptr<XTVariant> operator()(xt::xarray<A>& a, xt::xarray<B>& b) const {
 		using ResultType = decltype(std::declval<op>()(std::declval<A>(), std::declval<B>()));
 		
+		// Note: When making a copy instead of just casting, we can save even more space and compile time.
+		//  But it also comes at a larger cost. Just casting as type should be the best of both worlds.
 		if constexpr (std::is_same_v<A, B>) {
 			// The types are the same, we can just call. If they're wrong, xtensor will promote them for us with optimal performance.
 			auto result = op()(a, b);
@@ -173,11 +175,11 @@ struct XVariantFunction {
 			return std::make_shared<XTVariant>(xt::xarray<ResultType>(result));
 		} else if constexpr (std::is_same_v<B, ResultType>) {
 			// b is good, promote a.
-			auto result = op()(xt::xarray<ResultType>(xt::cast<ResultType>(a)), b);
+			auto result = op()(xt::cast<ResultType>(a), b);
 			return std::make_shared<XTVariant>(xt::xarray<ResultType>(result));
 		} else {
 			// Both are bad, promote both. This is the worst case, but should be easy to avoid by the programmer if need be.
-			auto result = op()(xt::xarray<ResultType>(xt::cast<ResultType>(a)), xt::xarray<ResultType>(xt::cast<ResultType>(b)));
+			auto result = op()(xt::cast<ResultType>(a), xt::cast<ResultType>(b));
 			return std::make_shared<XTVariant>(xt::xarray<ResultType>(result));
 		}
 	}

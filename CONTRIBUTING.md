@@ -57,3 +57,11 @@ Finally, [make a Pull Request (PR)](https://github.com/Ivorforce/NumDot/compare)
 ## Any Problems?
 
 Please [come by our Discord and have a chat with us](https://discord.gg/hxuWcAXF). We are happy you want to help, and should be able to help you make a contribution.
+
+## CLion Support
+To get CLion support, run this:
+```bash
+scons compiledb=yes compile_commands.json
+```
+
+We do _not_ commit the file to the repo because it contains duplicate information.

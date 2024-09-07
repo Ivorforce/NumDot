@@ -3,6 +3,7 @@
   <component name="BackendCodeEditorSettings">
     <option name="/Default/RiderDebugger/RiderRestoreDecompile/RestoreDecompileSetting/@EntryValue" value="false" type="bool" />
     <option name="/Default/Housekeeping/GlobalSettingsUpgraded/IsUpgraded/@EntryValue" value="true" type="bool" />
+    <option name="/Default/Housekeeping/FeatureSuggestion/FeatureSuggestionManager/DisabledSuggesters/=SwitchToGoToActionSuggester/@EntryIndexedValue" value="true" type="bool" />
     <option name="/Default/CodeStyle/CodeFormatting/CppClangFormat/EnableClangFormatSupport/@EntryValue" value="false" type="bool" />
     <option name="/Default/CodeStyle/EditorConfig/EnableClangFormatSupport/@EntryValue" value="false" type="bool" />
     <option name="/Default/CodeStyle/CodeFormatting/CppFormatting/ALIGN_MULTILINE_BINARY_EXPRESSIONS_CHAIN/@EntryValue" value="true" type="bool" />
@@ -100,7 +101,6 @@
     <option name="/Default/CodeStyle/CodeFormatting/CppFormatting/INDENT_SIZE/@EntryValue" value="4" type="int" />
     <option name="/Default/CodeStyle/CodeFormatting/CppFormatting/CONTINUOUS_LINE_INDENT/@EntryValue" value="Double" type="string" />
     <option name="/Default/CodeStyle/CodeFormatting/CppFormatting/TAB_WIDTH/@EntryValue" value="4" type="int" />
-    <option name="/Default/Housekeeping/FeatureSuggestion/FeatureSuggestionManager/DisabledSuggesters/=SwitchToGoToActionSuggester/@EntryIndexedValue" value="true" type="bool" />
     <option name="/Default/CodeInspection/Highlighting/InspectionSeverities/=CppSmartPointerVsMakeFunction/@EntryIndexedValue" value="SUGGESTION" type="string" />
     <option name="/Default/CodeInspection/Highlighting/InspectionSeverities/=CppCStyleCast/@EntryIndexedValue" value="SUGGESTION" type="string" />
     <option name="/Default/CodeInspection/Highlighting/InspectionSeverities/=CppFunctionalStyleCast/@EntryIndexedValue" value="SUGGESTION" type="string" />
@@ -340,6 +340,7 @@
     <option name="/Default/CodeInspection/Highlighting/InspectionSeverities/=StringLiteralTypo/@EntryIndexedValue" value="DO_NOT_SHOW" type="string" />
     <option name="/Default/CodeInspection/Highlighting/InspectionSeverities/=CommentTypo/@EntryIndexedValue" value="DO_NOT_SHOW" type="string" />
     <option name="/Default/CodeInspection/Highlighting/InspectionSeverities/=IdentifierTypo/@EntryIndexedValue" value="DO_NOT_SHOW" type="string" />
+    <option name="/Default/Environment/Hierarchy/GeneratedFilesCacheKey/Timestamp/@EntryValue" value="11" type="long" />
     <option name="/Default/CodeInspection/Highlighting/InspectionSeverities/=CppSmartPointerVsMakeFunction/@EntryIndexRemoved" />
     <option name="/Default/CodeInspection/Highlighting/InspectionSeverities/=CppCStyleCast/@EntryIndexRemoved" />
     <option name="/Default/CodeInspection/Highlighting/InspectionSeverities/=CppFunctionalStyleCast/@EntryIndexRemoved" />
@@ -579,6 +580,5 @@
     <option name="/Default/CodeInspection/Highlighting/InspectionSeverities/=StringLiteralTypo/@EntryIndexRemoved" />
     <option name="/Default/CodeInspection/Highlighting/InspectionSeverities/=CommentTypo/@EntryIndexRemoved" />
     <option name="/Default/CodeInspection/Highlighting/InspectionSeverities/=IdentifierTypo/@EntryIndexRemoved" />
-    <option name="/Default/Housekeeping/FeatureSuggestion/FeatureSuggestionManager/DisabledSuggesters/=SwitchToGoToActionSuggester/@EntryIndexRemoved" />
   </component>
 </project>

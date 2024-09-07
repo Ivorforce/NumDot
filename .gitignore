@@ -6,3 +6,6 @@
 .sconsign*.dblite
 .scons_env.json
 .scons_node_count
+
+# Scons generated
+compile_commands.json

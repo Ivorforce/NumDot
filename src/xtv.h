@@ -103,7 +103,7 @@ static inline size_t size_of_array_in_bytes(XTVariant& array) {
 	}, array);
 }
 
-std::shared_ptr<XTVariant> make_xarray(DType dtype, XTVariant& other) {
+static std::shared_ptr<XTVariant> make_xarray(DType dtype, XTVariant& other) {
 	return std::visit([](auto t, auto& other) {
 		using T = decltype(t);
 

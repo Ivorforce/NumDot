@@ -30,14 +30,14 @@ public:
 	std::shared_ptr<xtv::XTVariant> array;
 
 	NDArray();
-	NDArray(std::shared_ptr<xtv::XTVariant> array) : array(std::move(array)) {};
-	~NDArray();
+	explicit NDArray(std::shared_ptr<xtv::XTVariant> array) : array(std::move(array)) {};
+	~NDArray() override;
 
-	xtv::DType dtype();
-	PackedInt64Array shape();
-	uint64_t size();
-	uint64_t array_size_in_bytes();
-	uint64_t ndim();
+	[[nodiscard]] xtv::DType dtype() const;
+	[[nodiscard]] PackedInt64Array shape() const;
+	[[nodiscard]] uint64_t size() const;
+	[[nodiscard]] uint64_t array_size_in_bytes() const;
+	[[nodiscard]] uint64_t ndim() const;
 	
 	// Subscript not available, i think. See object's set_bind / get_bind:
 	// I think godot assumes that all [] accesses are keypaths.
@@ -47,18 +47,18 @@ public:
 	double_t get_float(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
 	int64_t get_int(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
 
-	Variant as_type(xtv::DType dtype);
+	[[nodiscard]] Variant as_type(xtv::DType dtype) const;
 
-	double_t to_float();
-	int64_t to_int();
+	[[nodiscard]] double_t to_float() const;
+	[[nodiscard]] int64_t to_int() const;
 
-	PackedFloat32Array to_packed_float32_array();
-	PackedFloat64Array to_packed_float64_array();
-	PackedByteArray to_packed_byte_array();
-	PackedInt32Array to_packed_int32_array();
-	PackedInt64Array to_packed_int64_array();
+	[[nodiscard]] PackedFloat32Array to_packed_float32_array() const;
+	[[nodiscard]] PackedFloat64Array to_packed_float64_array() const;
+	[[nodiscard]] PackedByteArray to_packed_byte_array() const;
+	[[nodiscard]] PackedInt32Array to_packed_int32_array() const;
+	[[nodiscard]] PackedInt64Array to_packed_int64_array() const;
 
-	Array to_godot_array();
+	[[nodiscard]] Array to_godot_array() const;
 };
 
 #endif

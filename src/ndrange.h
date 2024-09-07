@@ -30,10 +30,10 @@ public:
 	range_part stop = xt::placeholders::xtuph{};
 	range_part step = xt::placeholders::xtuph{};
 
-	NDRange(range_part start, range_part stop, range_part step) : start(start), stop(stop), step(step) {};
+	NDRange(const range_part start, const range_part stop, const range_part step) : start(start), stop(stop), step(step) {};
 
 	NDRange();
-	~NDRange();
+	~NDRange() override;
 };
 
 #endif

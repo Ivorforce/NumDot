@@ -35,21 +35,19 @@ void NDArray::_bind_methods() {
 	godot::ClassDB::bind_method(D_METHOD("to_godot_array"), &NDArray::to_godot_array);
 }
 
-NDArray::NDArray() {
-}
+NDArray::NDArray() = default;
 
-NDArray::~NDArray() {
-}
+NDArray::~NDArray() = default;
 
 String NDArray::_to_string() const {
 	return std::visit([](auto& arg){ return xt_to_string(arg); }, *array);
 }
 
-nd::DType NDArray::dtype() {
+nd::DType NDArray::dtype() const {
 	return xtv::dtype(*array);
 }
 
-PackedInt64Array NDArray::shape() {
+PackedInt64Array NDArray::shape() const {
 	auto shape = xtv::shape(*array);
 	// TODO This seems a bit weird, but it works for now.
 	auto packed = PackedInt64Array();
@@ -59,19 +57,19 @@ PackedInt64Array NDArray::shape() {
 	return packed;
 }
 
-uint64_t NDArray::size() {
+uint64_t NDArray::size() const {
 	return xtv::size(*array);
 }
 
-uint64_t NDArray::array_size_in_bytes() {
+uint64_t NDArray::array_size_in_bytes() const {
 	return xtv::size_of_array_in_bytes(*array);
 }
 
-uint64_t NDArray::ndim() {
+uint64_t NDArray::ndim() const {
 	return xtv::dimension(*array);
 }
 
-Variant NDArray::as_type(nd::DType dtype) {
+Variant NDArray::as_type(nd::DType dtype) const {
 	return nd::as_type(this, dtype);
 }
 
@@ -145,7 +143,7 @@ int64_t NDArray::get_int(const Variant **args, GDExtensionInt arg_count, GDExten
 	}
 }
 
-double_t NDArray::to_float() {
+double_t NDArray::to_float() const {
 	try {
 		return xtv::to_single_value<double_t>(*array);
 	}
@@ -154,7 +152,7 @@ double_t NDArray::to_float() {
 	}
 }
 
-int64_t NDArray::to_int() {
+int64_t NDArray::to_int() const {
 	try {
 		return xtv::to_single_value<int64_t>(*array);
 	}
@@ -163,26 +161,26 @@ int64_t NDArray::to_int() {
 	}
 }
 
-PackedFloat32Array NDArray::to_packed_float32_array() {
+PackedFloat32Array NDArray::to_packed_float32_array() const {
 	return xtvariant_to_packed<PackedFloat32Array>(*array);
 }
 
-PackedFloat64Array NDArray::to_packed_float64_array() {
+PackedFloat64Array NDArray::to_packed_float64_array() const {
 	return xtvariant_to_packed<PackedFloat64Array>(*array);
 }
 
-PackedByteArray NDArray::to_packed_byte_array() {
+PackedByteArray NDArray::to_packed_byte_array() const {
 	return xtvariant_to_packed<PackedByteArray>(*array);
 }
 
-PackedInt32Array NDArray::to_packed_int32_array() {
+PackedInt32Array NDArray::to_packed_int32_array() const {
 	return xtvariant_to_packed<PackedInt32Array>(*array);
 }
 
-PackedInt64Array NDArray::to_packed_int64_array() {
+PackedInt64Array NDArray::to_packed_int64_array() const {
 	return xtvariant_to_packed<PackedInt64Array>(*array);
 }
 
-Array NDArray::to_godot_array() {
+Array NDArray::to_godot_array() const {
 	return xtvariant_to_godot_array(*array);
 }

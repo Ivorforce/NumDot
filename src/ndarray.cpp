@@ -121,9 +121,9 @@ double_t NDArray::get_float(const Variant **args, GDExtensionInt arg_count, GDEx
 	try {
 		xt::xstrided_slice_vector sv = variants_as_slice_vector(args, arg_count, error);
 
-		// TODO This can probably be faster with a specific implementation that doesn't allocate an xarray.
-		auto result = xtv::get_slice(*array, sv);
-		return xtv::to_single_value<double_t>(*result);
+		xt::xarray<double_t> test = {};
+		auto a = test[{2, 3}];
+		return xtv::get_single_value<double_t>(*array, sv);
 	}
 	catch (std::runtime_error error) {
 		ERR_FAIL_V_MSG(0, error.what());
@@ -134,9 +134,7 @@ int64_t NDArray::get_int(const Variant **args, GDExtensionInt arg_count, GDExten
 	try {
 		xt::xstrided_slice_vector sv = variants_as_slice_vector(args, arg_count, error);
 
-		// TODO This can probably be faster with a specific implementation that doesn't allocate an xarray.
-		auto result = xtv::get_slice(*array, sv);
-		return xtv::to_single_value<int64_t>(*result);
+		return xtv::get_single_value<int64_t>(*array, sv);
 	}
 	catch (std::runtime_error error) {
 		ERR_FAIL_V_MSG(0, error.what());

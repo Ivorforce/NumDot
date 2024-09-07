@@ -124,6 +124,20 @@ static std::shared_ptr<XTVariant> get_slice(XTVariant& array, xt::xstrided_slice
 }
 
 template <typename V>
+static V get_single_value(XTVariant& array, xt::xstrided_slice_vector& slice) {
+	return std::visit([slice](auto& array) {
+		auto sliced_array = xt::strided_view(array, slice);
+		if (sliced_array.size() != 1) {
+			throw std::runtime_error("Expected a single element after slicing");
+		}
+		return static_cast<V>(sliced_array(0));
+		// TODO I expected this to work, but it doesn't. See https://xtensor.readthedocs.io/en/latest/indices.html#operator
+		// But at least the above is a view, so no copy is made.
+		// return V(array[slice]);
+	}, array);
+}
+
+template <typename V>
 static void set_slice_value(XTVariant& array, xt::xstrided_slice_vector& slice, V value) {
 	return std::visit([slice, value](auto& array) {
 		xt::strided_view(array, slice) = value;
@@ -150,7 +164,6 @@ std::shared_ptr<XTVariant> full(const DType dtype, const V fill_value, Sh& shape
 
 template <typename op>
 struct XVariantFunction {
-// TODO Bind to scons option
 #ifndef NUMDOT_ALLOW_MIXED_TYPE_OPS
 	// This version exists to reduce the number of functions generated, from O(op n n) to O(o n).
 	// Essentially, we make sure that all calls to the function are performed with all types being the same.

@@ -10,20 +10,12 @@
 
 using namespace godot;
 
-// TODO It somehow doesn't work with a template function... :<
-// Feel free to try yourself.
+// TODO Somehow, I can't manage to make this a lambda function visitor.
 struct ToRangeVisitor {
-	xt::xstrided_slice<std::ptrdiff_t> operator()(xt::placeholders::xtuph a, xt::placeholders::xtuph b, xt::placeholders::xtuph c) { return xt::range(a, b, c); };
-	xt::xstrided_slice<std::ptrdiff_t> operator()(xt::placeholders::xtuph a, xt::placeholders::xtuph b, std::ptrdiff_t c) { return xt::range(a, b, c); };
-
-	xt::xstrided_slice<std::ptrdiff_t> operator()(xt::placeholders::xtuph a, std::ptrdiff_t b, xt::placeholders::xtuph c) { return xt::range(a, b, c); };
-	xt::xstrided_slice<std::ptrdiff_t> operator()(xt::placeholders::xtuph a, std::ptrdiff_t b, std::ptrdiff_t c) { return xt::range(a, b, c); };
-
-	xt::xstrided_slice<std::ptrdiff_t> operator()(std::ptrdiff_t a, xt::placeholders::xtuph b, xt::placeholders::xtuph c) { return xt::range(a, b, c); };
-	xt::xstrided_slice<std::ptrdiff_t> operator()(std::ptrdiff_t a, xt::placeholders::xtuph b, std::ptrdiff_t c) { return xt::range(a, b, c); };
-
-	xt::xstrided_slice<std::ptrdiff_t> operator()(std::ptrdiff_t a, std::ptrdiff_t b, xt::placeholders::xtuph c) { return xt::range(a, b, c); };
-	xt::xstrided_slice<std::ptrdiff_t> operator()(std::ptrdiff_t a, std::ptrdiff_t b, std::ptrdiff_t c) { return xt::range(a, b, c); };
+    template <typename T1, typename T2, typename T3>
+    xt::xstrided_slice<std::ptrdiff_t> operator()(T1 a, T2 b, T3 c) {
+        return xt::range(a, b, c);
+    }
 };
 
 static xt::xstrided_slice<std::ptrdiff_t> variant_as_slice_part(const Variant& variant) {

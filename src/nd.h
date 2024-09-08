@@ -65,6 +65,8 @@ public:
 	static Ref<NDArray> full(Variant shape, Variant fill_value, DType dtype = DType::Float64);
 	static Ref<NDArray> zeros(Variant shape, DType dtype = DType::Float64);
 	static Ref<NDArray> ones(Variant shape, DType dtype = DType::Float64);
+	static Ref<NDArray> linspace(Variant start, Variant stop, int64_t num = 50, bool endpoint = true, DType dtype = DType::DTypeMax);
+	static Ref<NDArray> arange(Variant start_or_stop = static_cast<int64_t>(0), Variant stop = nullptr, Variant step = static_cast<int64_t>(1), DType dtype = DType::DTypeMax);
 
 	// Basic math functions.
 	static Ref<NDArray> add(Variant a, Variant b);

@@ -51,6 +51,8 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("full", "shape", "fill_value", "dtype"), &nd::full, DEFVAL(nullptr), DEFVAL(nullptr), DEFVAL(nd::DType::Float64));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("zeros", "shape", "dtype"), &nd::zeros, DEFVAL(nullptr), DEFVAL(nd::DType::Float64));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("ones", "shape", "dtype"), &nd::ones, DEFVAL(nullptr), DEFVAL(nd::DType::Float64));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("linspace", "start", "stop", "num", "endpoint", "dtype"), &nd::linspace, DEFVAL(0), DEFVAL(nullptr), DEFVAL(50), DEFVAL(true), DEFVAL(nd::DType::DTypeMax));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("arange", "start_or_stop", "stop", "step", "dtype"), &nd::arange, DEFVAL(0), DEFVAL(nullptr), DEFVAL(1), DEFVAL(nd::DType::DTypeMax));
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("add", "a", "b"), &nd::add);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("subtract", "a", "b"), &nd::subtract);
@@ -206,10 +208,10 @@ Ref<NDArray> nd::array(Variant array, nd::DType dtype) {
 		}
 
 		auto result = xtv::make_xarray(dtype, *existing_array);
-		return Ref(memnew(NDArray(result)));
+		return {memnew(NDArray(result))};
 	}
 	catch (std::runtime_error& error) {
-		ERR_FAIL_V_MSG(Ref<NDArray>(), error.what());
+		ERR_FAIL_V_MSG({}, error.what());
 	}
 }
 
@@ -217,10 +219,10 @@ Ref<NDArray> nd::empty(Variant shape, nd::DType dtype) {
 	try {
 		std::vector<size_t> shape_array = variant_as_shape<size_t, std::vector<size_t>>(shape);
 
-		return Ref(memnew(NDArray(xtv::empty(dtype, shape_array))));
+		return {memnew(NDArray(xtv::empty(dtype, shape_array)))};
 	}
 	catch (std::runtime_error& error) {
-		ERR_FAIL_V_MSG(Ref<NDArray>(), error.what());
+		ERR_FAIL_V_MSG({}, error.what());
 	}
 }
 
@@ -229,10 +231,10 @@ Ref<NDArray> _full(Variant shape, V value, nd::DType dtype) {
 	try {
 		std::vector<size_t> shape_array = variant_as_shape<size_t, std::vector<size_t>>(shape);
 
-		return Ref(memnew(NDArray(xtv::full(dtype, value, shape_array))));
+		return {memnew(NDArray(xtv::full(dtype, value, shape_array)))};
 	}
 	catch (std::runtime_error& error) {
-		ERR_FAIL_V_MSG(Ref<NDArray>(), error.what());
+		ERR_FAIL_V_MSG({}, error.what());
 	}
 }
 
@@ -245,7 +247,7 @@ Ref<NDArray> nd::full(Variant shape, Variant fill_value, nd::DType dtype) {
 			if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Float64;
 			return _full(shape, double_t(fill_value), dtype);
 		default:
-			ERR_FAIL_V_MSG(Ref<NDArray>(), "The fill value must be a number literal (for now).");
+			ERR_FAIL_V_MSG({}, "The fill value must be a number literal (for now).");
 	}
 }
 
@@ -255,6 +257,62 @@ Ref<NDArray> nd::zeros(Variant shape, nd::DType dtype) {
 
 Ref<NDArray> nd::ones(Variant shape, nd::DType dtype) {
 	return _full(shape, 1, dtype);
+}
+
+Ref<NDArray> nd::linspace(Variant start, Variant stop, int64_t num, bool endpoint, DType dtype) {
+	if (dtype == DType::DTypeMax) {
+		dtype = start.get_type() == Variant::FLOAT || stop.get_type() == Variant::FLOAT
+			? nd::DType::Float64
+			: nd::DType::Float32;
+	}
+
+	try {
+		auto result = std::visit([start, stop, num, endpoint](auto t) {
+			using T = std::decay_t<decltype(t)>;
+
+			if constexpr (std::is_floating_point_v<T>) {
+				return std::make_shared<XTVariant>(xt::xarray<T>(xt::linspace(static_cast<double_t>(start), static_cast<double_t>(stop), num, endpoint)));
+			}
+			else {
+				return std::make_shared<XTVariant>(xt::xarray<T>(xt::linspace(static_cast<int64_t>(start), static_cast<int64_t>(stop), num, endpoint)));
+			}
+		}, xtv::dtype_to_variant(dtype));
+		return {memnew(NDArray(result))};
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
+}
+
+Ref<NDArray> nd::arange(Variant start_or_stop, Variant stop, Variant step, DType dtype) {
+	if (dtype == DType::DTypeMax) {
+		dtype = start_or_stop.get_type() == Variant::FLOAT || stop.get_type() == Variant::FLOAT || step.get_type() == Variant::FLOAT
+			? nd::DType::Float64
+			: nd::DType::Int64;
+	}
+
+	// Support arange(x) syntax
+	if (stop.get_type() == Variant::NIL) {
+		stop = start_or_stop;
+		start_or_stop = 0;
+	}
+
+	try {
+		auto result = std::visit([start_or_stop, stop, step](auto t) {
+			using T = std::decay_t<decltype(t)>;
+
+			if constexpr (std::is_floating_point_v<T>) {
+				return std::make_shared<XTVariant>(xt::xarray<T>(xt::arange(static_cast<double_t>(start_or_stop), static_cast<double_t>(stop), static_cast<double_t>(step))));
+			}
+			else {
+				return std::make_shared<XTVariant>(xt::xarray<T>(xt::arange(static_cast<int64_t>(start_or_stop), static_cast<int64_t>(stop), static_cast<int64_t>(step))));
+			}
+		}, xtv::dtype_to_variant(dtype));
+		return {memnew(NDArray(result))};
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
 }
 
 // The first parameter is the one used by the xarray operation, while the second is used for type deduction.

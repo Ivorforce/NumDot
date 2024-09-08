@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="nd" inherits="Object" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+		Contains NumDot functions.
+	</brief_description>
+	<description>
+		The base namespace for NumDot functions.
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="abs" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				Calculate the absolute value element-wise.
+			</description>
+		</method>
+		<method name="add" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+				Add arguments element-wise.
+			</description>
+		</method>
+		<method name="arange" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="start_or_stop" type="Variant" default="0" />
+			<param index="1" name="stop" type="Variant" default="null" />
+			<param index="2" name="step" type="Variant" default="1" />
+			<param index="3" name="dtype" type="int" enum="nd.DType" default="10" />
+			<description>
+				Return evenly spaced values within a given interval.
+			</description>
+		</method>
+		<method name="array" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="array" type="Variant" default="null" />
+			<param index="1" name="dtype" type="int" enum="nd.DType" default="10" />
+			<description>
+				Copy existing data to a new array.
+			</description>
+		</method>
+		<method name="as_array" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="array" type="Variant" default="null" />
+			<param index="1" name="dtype" type="int" enum="nd.DType" default="10" />
+			<description>
+				Convert the input to an array, but avoid copying data if possible.
+			</description>
+		</method>
+		<method name="as_type" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="array" type="Variant" />
+			<param index="1" name="dtype" type="int" enum="nd.DType" />
+			<description>
+				Convert the input to an array, but avoid copying data if possible.
+			</description>
+		</method>
+		<method name="cos" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				Cosine element-wise.
+			</description>
+		</method>
+		<method name="divide" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+				Divide arguments element-wise.
+			</description>
+		</method>
+		<method name="dtype" qualifiers="static">
+			<return type="int" enum="nd.DType" />
+			<param index="0" name="array" type="Variant" />
+			<description>
+				Get the dtype of an array.
+			</description>
+		</method>
+		<method name="empty" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="shape" type="Variant" default="null" />
+			<param index="1" name="dtype" type="int" enum="nd.DType" default="1" />
+			<description>
+				Return a new array of given shape and type, without initializing entries.
+			</description>
+		</method>
+		<method name="exp" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				Calculate the exponential of all elements in the input array.
+			</description>
+		</method>
+		<method name="from" qualifiers="static">
+			<return type="NDRange" />
+			<param index="0" name="start" type="int" />
+			<description>
+				Create a range that starts at the given index.
+			</description>
+		</method>
+		<method name="full" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="shape" type="Variant" default="null" />
+			<param index="1" name="fill_value" type="Variant" default="null" />
+			<param index="2" name="dtype" type="int" enum="nd.DType" default="1" />
+			<description>
+				Return a new array of given shape and type, filled with fill_value.
+			</description>
+		</method>
+		<method name="linspace" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="start" type="Variant" default="0" />
+			<param index="1" name="stop" type="Variant" default="null" />
+			<param index="2" name="num" type="int" default="50" />
+			<param index="3" name="endpoint" type="bool" default="true" />
+			<param index="4" name="dtype" type="int" enum="nd.DType" default="10" />
+			<description>
+				Return evenly spaced numbers over a specified interval.
+				Returns num evenly spaced samples, calculated over the interval [start, stop].
+				The endpoint of the interval can optionally be excluded.
+			</description>
+		</method>
+		<method name="log" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				Natural logarithm, element-wise.
+				The natural logarithm log is the inverse of the exponential function, so that log(exp(x)) = x. The natural logarithm is logarithm in base e.
+			</description>
+		</method>
+		<method name="max" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" default="null" />
+			<param index="1" name="_unnamed_arg1" type="Variant" default="null" />
+			<description>
+				Return the maximum of an array or maximum along an axis.
+			</description>
+		</method>
+		<method name="mean" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" default="null" />
+			<param index="1" name="_unnamed_arg1" type="Variant" default="null" />
+			<description>
+				Compute the arithmetic mean along the specified axis.
+				Returns the average of the array elements. The average is taken over the flattened array by default, otherwise over the specified axis.
+			</description>
+		</method>
+		<method name="min" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" default="null" />
+			<param index="1" name="_unnamed_arg1" type="Variant" default="null" />
+			<description>
+				Return the minimum of an array or minimum along an axis.
+			</description>
+		</method>
+		<method name="multiply" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+				Multiply arguments element-wise.
+			</description>
+		</method>
+		<method name="ndim" qualifiers="static">
+			<return type="int" />
+			<param index="0" name="array" type="Variant" />
+			<description>
+				Number of array dimensions of an array.
+			</description>
+		</method>
+		<method name="newaxis" qualifiers="static">
+			<return type="StringName" />
+			<description>
+				An alias for the StringName &amp;"newaxis". In a subscript, this will add a dimension of size one.
+			</description>
+		</method>
+		<method name="ones" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="shape" type="Variant" default="null" />
+			<param index="1" name="dtype" type="int" enum="nd.DType" default="1" />
+			<description>
+				Return a new array of given shape and type, filled with ones.
+			</description>
+		</method>
+		<method name="pow" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+				First array elements raised to powers from second array, element-wise.
+			</description>
+		</method>
+		<method name="prod" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" default="null" />
+			<param index="1" name="_unnamed_arg1" type="Variant" default="null" />
+			<description>
+				Return the product of array elements over a given axis.
+			</description>
+		</method>
+		<method name="range" qualifiers="static">
+			<return type="NDRange" />
+			<param index="0" name="start_or_stop" type="Variant" default="0" />
+			<param index="1" name="stop" type="Variant" default="null" />
+			<param index="2" name="step" type="Variant" default="null" />
+			<description>
+				Create a range. arange can be called with a varying number of positional arguments:
+				arange(stop): Values are generated within the half-open interval [0, stop) (in other words, the interval including start but excluding stop).
+				arange(start, stop): Values are generated within the half-open interval [start, stop).
+				arange(start, stop, step) Values are generated within the half-open interval [start, stop), with spacing between values given by step.
+			</description>
+		</method>
+		<method name="remainder" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+				Returns the element-wise remainder of division.
+				Computes the remainder complementary to the floor_divide function. It is equivalent to the modulus operator x1 % x2 and has the same sign as the divisor x2.
+			</description>
+		</method>
+		<method name="shape" qualifiers="static">
+			<return type="PackedInt64Array" />
+			<param index="0" name="array" type="Variant" />
+			<description>
+				Return the shape of an array.
+			</description>
+		</method>
+		<method name="sin" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				Trigonometric sine, element-wise.
+			</description>
+		</method>
+		<method name="size" qualifiers="static">
+			<return type="int" />
+			<param index="0" name="array" type="Variant" />
+			<description>
+				Number of elements in the array.
+				Equal to nd.prod(a.shape()), i.e., the product of the array’s dimensions.
+			</description>
+		</method>
+		<method name="size_of_dtype_in_bytes" qualifiers="static">
+			<return type="int" />
+			<param index="0" name="dtype" type="int" enum="nd.DType" />
+			<description>
+				Size of a single element of an array using the dtype.
+			</description>
+		</method>
+		<method name="sqrt" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				Return the non-negative square-root of an array, element-wise.
+			</description>
+		</method>
+		<method name="std" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" default="null" />
+			<param index="1" name="_unnamed_arg1" type="Variant" default="null" />
+			<description>
+				Compute the standard deviation along the specified axis.
+				Returns the standard deviation, a measure of the spread of a distribution, of the array elements. The standard deviation is computed for the flattened array by default, otherwise over the specified axis.
+			</description>
+		</method>
+		<method name="subtract" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+				Subtract arguments, element-wise.
+			</description>
+		</method>
+		<method name="sum" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" default="null" />
+			<param index="1" name="_unnamed_arg1" type="Variant" default="null" />
+			<description>
+				Sum of array elements over a given axis.
+			</description>
+		</method>
+		<method name="tan" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				Compute tangent element-wise.
+				Equivalent to nd.sin(x) / nd.cos(x) element-wise.
+			</description>
+		</method>
+		<method name="to" qualifiers="static">
+			<return type="NDRange" />
+			<param index="0" name="stop" type="int" />
+			<description>
+				Create a range that starts at 0, and stops at the given index (exclusive).
+			</description>
+		</method>
+		<method name="var" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" default="null" />
+			<param index="1" name="_unnamed_arg1" type="Variant" default="null" />
+			<description>
+				Compute the variance along the specified axis.
+				Returns the variance of the array elements, a measure of the spread of a distribution. The variance is computed for the flattened array by default, otherwise over the specified axis.
+			</description>
+		</method>
+		<method name="zeros" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="shape" type="Variant" default="null" />
+			<param index="1" name="dtype" type="int" enum="nd.DType" default="1" />
+			<description>
+				Return a new array of given shape and type, filled with zeros.
+			</description>
+		</method>
+	</methods>
+	<constants>
+		<constant name="Float64" value="1" enum="DType">
+		</constant>
+		<constant name="Float32" value="0" enum="DType">
+		</constant>
+		<constant name="Int8" value="2" enum="DType">
+		</constant>
+		<constant name="Int16" value="3" enum="DType">
+		</constant>
+		<constant name="Int32" value="4" enum="DType">
+		</constant>
+		<constant name="Int64" value="5" enum="DType">
+		</constant>
+		<constant name="UInt8" value="6" enum="DType">
+		</constant>
+		<constant name="UInt16" value="7" enum="DType">
+		</constant>
+		<constant name="UInt32" value="8" enum="DType">
+		</constant>
+		<constant name="UInt64" value="9" enum="DType">
+		</constant>
+	</constants>
+</class>

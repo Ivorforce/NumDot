@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="NDArray" inherits="RefCounted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+		A NumDot tensor object.
+	</brief_description>
+	<description>
+		A NumDot tensor object.
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="array_size_in_bytes" qualifiers="const">
+			<return type="int" />
+			<description>
+				Returns the number of bytes used by the contiguous data block of this array.
+				This is equivalent to nd.size_of_dtype_in_bytes(x.dtype()) * x.size().
+			</description>
+		</method>
+		<method name="as_type" qualifiers="const">
+			<return type="Variant" />
+			<param index="0" name="type" type="int" enum="nd.DType" />
+			<description>
+				Convert to an array of the given type, but avoid copying data if possible.
+			</description>
+		</method>
+		<method name="dtype" qualifiers="const">
+			<return type="int" enum="nd.DType" />
+			<description>
+				Data-type of the array’s elements.
+			</description>
+		</method>
+		<method name="get" qualifiers="const vararg">
+			<return type="NDArray" />
+			<description>
+				Indexes into the array, and return the resulting tensor.
+			</description>
+		</method>
+		<method name="get_float" qualifiers="const vararg">
+			<return type="float" />
+			<description>
+				Indexes into the array, and return the resulting value as float.
+				Errors if the index does not yield a single value.
+			</description>
+		</method>
+		<method name="get_int" qualifiers="const vararg">
+			<return type="int" />
+			<description>
+				Indexes into the array, and return the resulting value as int.
+				Errors if the index does not yield a single value.
+			</description>
+		</method>
+		<method name="ndim" qualifiers="const">
+			<return type="int" />
+			<description>
+				Number of array dimensions.
+			</description>
+		</method>
+		<method name="set" qualifiers="const vararg">
+			<return type="void" />
+			<description>
+				Indexes into the array, sets the element to the given value.
+				The value's dimensions must match this array's last dimensions.
+			</description>
+		</method>
+		<method name="shape" qualifiers="const">
+			<return type="PackedInt64Array" />
+			<description>
+				Array of array dimensions.
+			</description>
+		</method>
+		<method name="size" qualifiers="const">
+			<return type="int" />
+			<description>
+				Number of elements in the array. Equal to nd.prod(a.shape()), i.e., the product of the array’s dimensions.
+			</description>
+		</method>
+		<method name="to_float" qualifiers="const">
+			<return type="float" />
+			<description>
+				Convert this tensor to a single float.
+				Errors if size() is not 1.
+			</description>
+		</method>
+		<method name="to_godot_array" qualifiers="const">
+			<return type="Array" />
+			<description>
+				Convert this tensor to a Godot array. For now, the resulting array is flat.
+			</description>
+		</method>
+		<method name="to_int" qualifiers="const">
+			<return type="int" />
+			<description>
+				Convert this tensor to a single int.
+				Errors if size() is not 1.
+			</description>
+		</method>
+		<method name="to_packed_byte_array" qualifiers="const">
+			<return type="PackedByteArray" />
+			<description>
+				Convert a flat version of this tensor to a PackedByteArray.
+			</description>
+		</method>
+		<method name="to_packed_float32_array" qualifiers="const">
+			<return type="PackedFloat32Array" />
+			<description>
+				Convert a flat version of this tensor to a PackedFloat32Array.
+			</description>
+		</method>
+		<method name="to_packed_float64_array" qualifiers="const">
+			<return type="PackedFloat64Array" />
+			<description>
+				Convert a flat version of this tensor to a PackedFloat64Array.
+			</description>
+		</method>
+		<method name="to_packed_int32_array" qualifiers="const">
+			<return type="PackedInt32Array" />
+			<description>
+				Convert a flat version of this tensor to a PackedInt32Array.
+			</description>
+		</method>
+		<method name="to_packed_int64_array" qualifiers="const">
+			<return type="PackedInt64Array" />
+			<description>
+				Convert a flat version of this tensor to a PackedInt64Array.
+			</description>
+		</method>
+	</methods>
+</class>

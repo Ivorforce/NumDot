@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="NDRange" inherits="RefCounted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+		A NumDot range object.
+	</brief_description>
+	<description>
+		A NumDot range object.
+	</description>
+	<tutorials>
+	</tutorials>
+</class>

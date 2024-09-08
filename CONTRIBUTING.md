@@ -43,7 +43,13 @@ Make a branch for your changes:
 ```bash
 git checkout -b my-new-feature
 ```
-Make your changes using a code editor (I use [VSCode](https://code.visualstudio.com)).Test your changes in the demo project. Make a commit:
+Make your changes using a code editor (I use [VSCode](https://code.visualstudio.com)).Test your changes in the demo project. Generate empty documentation for new code:
+
+```bash
+godot --doctool ../ --gdextension-docs
+```
+
+Edit the new entries in `./doc_classes/` ([see the godot docs for more information](https://docs.godotengine.org/en/stable/tutorials/scripting/gdextension/gdextension_docs_system.html)). Make a commit:
 ```bash
 git status
 # If everything seems ok

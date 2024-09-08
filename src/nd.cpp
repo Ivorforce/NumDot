@@ -278,27 +278,27 @@ inline Ref<NDArray> binary_operation(Variant a, Variant b) {
 
 Ref<NDArray> nd::add(Variant a, Variant b) {
 	// godot::UtilityFunctions::print(value);
-	return binary_operation<xt::detail::plus, xt::detail::plus>(a, b);
+	return binary_operation<xt::detail::plus, xtv::promote::function_result<xt::detail::plus>>(a, b);
 }
 
 Ref<NDArray> nd::subtract(Variant a, Variant b) {
-	return binary_operation<xt::detail::minus, xt::detail::minus>(a, b);
+	return binary_operation<xt::detail::minus, xtv::promote::function_result<xt::detail::minus>>(a, b);
 }
 
 Ref<NDArray> nd::multiply(Variant a, Variant b) {
-	return binary_operation<xt::detail::multiplies, xt::detail::multiplies>(a, b);
+	return binary_operation<xt::detail::multiplies, xtv::promote::function_result<xt::detail::multiplies>>(a, b);
 }
 
 Ref<NDArray> nd::divide(Variant a, Variant b) {
-	return binary_operation<xt::detail::divides, xt::detail::divides>(a, b);
+	return binary_operation<xt::detail::divides, xtv::promote::function_result<xt::detail::divides>>(a, b);
 }
 
 Ref<NDArray> nd::remainder(Variant a, Variant b) {
-	return binary_operation<xt::math::remainder_fun, xt::math::remainder_fun>(a, b);
+	return binary_operation<xt::math::remainder_fun, xtv::promote::function_result<xt::math::remainder_fun>>(a, b);
 }
 
 Ref<NDArray> nd::pow(Variant a, Variant b) {
-	return binary_operation<xt::math::pow_fun, xt::math::pow_fun>(a, b);
+	return binary_operation<xt::math::pow_fun, xtv::promote::function_result<xt::math::pow_fun>>(a, b);
 }
 
 
@@ -319,29 +319,29 @@ inline Variant unary_operation(Variant a) {
 }
 
 Ref<NDArray> nd::abs(Variant a) {
-	return unary_operation<xt::math::abs_fun, xt::math::abs_fun>(a);
+	return unary_operation<xt::math::abs_fun, xtv::promote::function_result<xt::math::abs_fun>>(a);
 }
 
 Ref<NDArray> nd::sqrt(Variant a) {
-	return unary_operation<xt::math::sqrt_fun, xt::math::sqrt_fun>(a);
+	return unary_operation<xt::math::sqrt_fun, xtv::promote::function_result<xt::math::sqrt_fun>>(a);
 }
 
 Ref<NDArray> nd::exp(Variant a) {
-	return unary_operation<xt::math::exp_fun, xt::math::exp_fun>(a);
+	return unary_operation<xt::math::exp_fun, xtv::promote::function_result<xt::math::exp_fun>>(a);
 }
 
 Ref<NDArray> nd::log(Variant a) {
-	return unary_operation<xt::math::log_fun, xt::math::log_fun>(a);
+	return unary_operation<xt::math::log_fun, xtv::promote::function_result<xt::math::log_fun>>(a);
 }
 
 Ref<NDArray> nd::sin(Variant a) {
-	return unary_operation<xt::math::sin_fun, xt::math::sin_fun>(a);
+	return unary_operation<xt::math::sin_fun, xtv::promote::function_result<xt::math::sin_fun>>(a);
 }
 
 Ref<NDArray> nd::cos(Variant a) {
-	return unary_operation<xt::math::cos_fun, xt::math::cos_fun>(a);
+	return unary_operation<xt::math::cos_fun, xtv::promote::function_result<xt::math::cos_fun>>(a);
 }
 
 Ref<NDArray> nd::tan(Variant a) {
-	return unary_operation<xt::math::tan_fun, xt::math::tan_fun>(a);
+	return unary_operation<xt::math::tan_fun, xtv::promote::function_result<xt::math::tan_fun>>(a);
 }

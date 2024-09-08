@@ -162,7 +162,7 @@ std::shared_ptr<XTVariant> full(const DType dtype, const V fill_value, Sh& shape
 	}, dtype_to_variant(dtype));
 }
 
-template <typename op>
+template <typename FX, typename PromotionRule>
 struct XVariantFunction {
 #ifndef NUMDOT_ALLOW_MIXED_TYPE_OPS
 	// This version exists to reduce the number of functions generated, from O(op n n) to O(o n).
@@ -174,25 +174,25 @@ struct XVariantFunction {
 
 	template<typename A, typename B>
 	std::shared_ptr<XTVariant> operator()(xt::xarray<A>& a, xt::xarray<B>& b) const {
-		using ResultType = decltype(std::declval<op>()(std::declval<A>(), std::declval<B>()));
-		
+		using ResultType = typename PromotionRule::template result<A, B>;
+
 		// Note: When making a copy instead of just casting, we can save even more space and compile time.
 		//  But it also comes at a larger cost. Just casting as type should be the best of both worlds.
 		if constexpr (std::is_same_v<A, B>) {
 			// The types are the same, we can just call. If they're wrong, xtensor will promote them for us with optimal performance.
-			auto result = op()(a, b);
+			auto result = FX()(a, b);
 			return std::make_shared<XTVariant>(xt::xarray<ResultType>(result));
 		} else if constexpr (std::is_same_v<A, ResultType>) {
 			// a is good, promote b.
-			auto result = op()(a, xt::xarray<ResultType>(xt::cast<ResultType>(b)));
+			auto result = FX()(a, xt::xarray<ResultType>(xt::cast<ResultType>(b)));
 			return std::make_shared<XTVariant>(xt::xarray<ResultType>(result));
 		} else if constexpr (std::is_same_v<B, ResultType>) {
 			// b is good, promote a.
-			auto result = op()(xt::cast<ResultType>(a), b);
+			auto result = FX()(xt::cast<ResultType>(a), b);
 			return std::make_shared<XTVariant>(xt::xarray<ResultType>(result));
 		} else {
 			// Both are bad, promote both. This is the worst case, but should be easy to avoid by the programmer if need be.
-			auto result = op()(xt::cast<ResultType>(a), xt::cast<ResultType>(b));
+			auto result = FX()(xt::cast<ResultType>(a), xt::cast<ResultType>(b));
 			return std::make_shared<XTVariant>(xt::xarray<ResultType>(result));
 		}
 	}
@@ -200,8 +200,7 @@ struct XVariantFunction {
 
 	template<typename... Args>
 	std::shared_ptr<XTVariant> operator()(xt::xarray<Args>&... args) const {
-		// ResultType = what results from the native C++ operation op(A(), B())
-		using ResultType = decltype(std::declval<op>()(std::declval<Args>()...));
+		using ResultType = typename PromotionRule::template result<Args...>;
 
 		// TODO We may want to explicitly define promotion types. uint8_t + uint8_t results in an int32, for example.
 		// That's for the future though.
@@ -210,7 +209,7 @@ struct XVariantFunction {
 
 		// This doesn't do anything yet, it just constructs a value for operation.
 		// It will be executed when we use it on the xarray constructor!
-		auto result = op()(args...);
+		auto result = FX()(args...);
 
 		// Note: Need to do this in one line. If the operator is called after the make_shared,
 		//  any situations where broadcast errors would be thrown will instead crash the program.
@@ -218,27 +217,19 @@ struct XVariantFunction {
 	}
 };
 
-template<typename FX, typename FN>
+template<typename FX>
 struct XFunction {
-	// On xarray input: Make the xfunction.
 	// This is analogous to xt::add etc., with the main difference that in our setup it's easier to use this function with the
 	//  appropriate xt::detail:: operation.
 	template<typename... Args>
-	inline auto operator()(xt::xarray<Args>&&... args) const -> xt::detail::xfunction_type_t<FX, xt::xarray<Args>...> {
-		return xt::detail::make_xfunction<FX>(std::forward<xt::xarray<Args>>(args)...);
-	}
-
-	// On normal input: Run the normal function. 
-	// This is used by XVariantFunction to infer the dtype of the result.
-	template<typename... Args>
-	inline auto operator()(Args&&... args) const -> decltype(std::declval<FN>()(std::forward<Args>(args)...)) {
-		return FN()(std::forward<Args>(args)...);
+	inline auto operator()(Args&&... args) const -> xt::detail::xfunction_type_t<FX, Args...> {
+		return xt::detail::make_xfunction<FX>(std::forward<Args>(args)...);
 	}
 };
 
-template <typename FX, typename FN, typename... Args>
+template <typename FX, typename PromotionRule, typename... Args>
 static inline std::shared_ptr<XTVariant> xoperation(Args&&... args) {
-	return std::visit(XVariantFunction<XFunction<FX, FN>>{}, std::forward<Args>(args)...);
+	return std::visit(XVariantFunction<XFunction<FX>, PromotionRule>{}, std::forward<Args>(args)...);
 }
 
 template <typename T>
@@ -250,6 +241,17 @@ static inline T to_single_value(XTVariant& variant) {
 
 		return T(array.flat(0));
 	}, variant);
+}
+
+namespace promote {
+	/**
+	 * 	what results from the native C++ operation op(A(), B())
+	 */
+	template<typename FN>
+	struct function_result {
+		template <typename... Args>
+		using result = decltype(std::declval<FN>()(std::forward<Args>(std::declval<Args>())...));
+	};
 }
 
 }

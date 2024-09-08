@@ -9,3 +9,4 @@
 
 # Scons generated
 compile_commands.json
+src/gen

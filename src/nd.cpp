@@ -9,6 +9,7 @@
 
 #include "conversion_array.h"
 #include "conversion_shape.h"
+#include "conversion_range.h"
 #include "conversion_slice.h"
 #include "conversion_axes.h"
 #include "xtv.h"
@@ -86,17 +87,6 @@ nd::~nd() {
 
 StringName nd::newaxis() {
 	return ::newaxis();
-}
-
-range_part to_range_part(const Variant& variant) {
-	switch (variant.get_type()) {
-		case Variant::INT:
-			return int64_t(variant);
-		case NULL:
-			return xt::placeholders::xtuph{};
-		default:
-			throw std::runtime_error("Invalid type for range.");
-	}
 }
 
 Ref<NDRange> nd::from(int64_t start) {

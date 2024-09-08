@@ -44,7 +44,7 @@ public:
 	static StringName newaxis();
 
 	// Range.
-	static Ref<NDRange> range(Variant start_or_stop = static_cast<int64_t>(0), Variant stop = nullptr, Variant step = static_cast<int64_t>(1));
+	static Ref<NDRange> range(Variant start_or_stop = static_cast<int64_t>(0), Variant stop = nullptr, Variant step = DEFVAL(nullptr));
 	static Ref<NDRange> from(int64_t start);
 	static Ref<NDRange> to(int64_t stop);
 

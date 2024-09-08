@@ -157,15 +157,24 @@ static void set_slice(XTVariant& array, xt::xstrided_slice_vector& slice, XTVari
 	}, array, value);
 }
 
-template <typename V, typename Sh>
-std::shared_ptr<XTVariant> full(const DType dtype, const V fill_value, Sh& shape) {
+	template <typename V, typename Sh>
+	std::shared_ptr<XTVariant> full(const DType dtype, const V fill_value, Sh& shape) {
 	return std::visit([fill_value, shape](auto t) {
 		using T = decltype(t);
-		
+
 		// xt::ones / xt::zeros are slow, I think. Gotta test again though.
 		auto ptr = std::make_shared<XTVariant>(xt::xarray<T>::from_shape(shape));
 		std::get<xt::xarray<T>>(*ptr).fill(fill_value);
 		return ptr;
+	}, dtype_to_variant(dtype));
+}
+
+template <typename Sh>
+std::shared_ptr<XTVariant> empty(const DType dtype, Sh& shape) {
+	return std::visit([shape](auto t) {
+		using T = decltype(t);
+
+		return std::make_shared<XTVariant>(static_cast<xt::xarray<T>>(xt::empty<T>(shape)));
 	}, dtype_to_variant(dtype));
 }
 

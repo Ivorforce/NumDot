@@ -47,6 +47,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("as_array", "array", "dtype"), &nd::as_array, DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("array", "array", "dtype"), &nd::array, DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax));
 
+	godot::ClassDB::bind_static_method("nd", D_METHOD("empty", "shape", "dtype"), &nd::empty, DEFVAL(nullptr), DEFVAL(nd::DType::Float64));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("full", "shape", "fill_value", "dtype"), &nd::full, DEFVAL(nullptr), DEFVAL(nullptr), DEFVAL(nd::DType::Float64));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("zeros", "shape", "dtype"), &nd::zeros, DEFVAL(nullptr), DEFVAL(nd::DType::Float64));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("ones", "shape", "dtype"), &nd::ones, DEFVAL(nullptr), DEFVAL(nd::DType::Float64));
@@ -233,6 +234,16 @@ Ref<NDArray> nd::array(Variant array, nd::DType dtype) {
 	}
 }
 
+Ref<NDArray> nd::empty(Variant shape, nd::DType dtype) {
+	try {
+		std::vector<size_t> shape_array = variant_as_shape<size_t, std::vector<size_t>>(shape);
+
+		return Ref(memnew(NDArray(xtv::empty(dtype, shape_array))));
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG(Ref<NDArray>(), error.what());
+	}
+}
 
 template <typename V>
 Ref<NDArray> _full(Variant shape, V value, nd::DType dtype) {

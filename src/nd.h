@@ -62,6 +62,7 @@ public:
 	static Ref<NDArray> array(Variant array, DType dtype = DType::DTypeMax);
 
 	// Array creation.
+	static Ref<NDArray> empty(Variant shape, DType dtype = DType::Float64);
 	static Ref<NDArray> full(Variant shape, Variant fill_value, DType dtype = DType::Float64);
 	static Ref<NDArray> zeros(Variant shape, DType dtype = DType::Float64);
 	static Ref<NDArray> ones(Variant shape, DType dtype = DType::Float64);

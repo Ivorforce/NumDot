@@ -33,8 +33,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("newaxis"), &nd::newaxis);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("from", "start"), &nd::from);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("to", "stop"), &nd::to);
-	godot::ClassDB::bind_static_method("nd", D_METHOD("range", "start", "stop"), &nd::range);
-	godot::ClassDB::bind_static_method("nd", D_METHOD("range_step", "start", "stop", "step"), &nd::range_step);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("range", "start_or_stop", "stop", "step"), &nd::range, static_cast<int64_t>(0), DEFVAL(nullptr), static_cast<int64_t>(1));
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("dtype", "array"), &nd::dtype);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("size_of_dtype_in_bytes", "dtype"), &nd::size_of_dtype_in_bytes);
@@ -89,35 +88,16 @@ StringName nd::newaxis() {
 	return ::newaxis();
 }
 
-// Not needed right now, only needed again if static varargs methods are supported
-// range_part to_range_part(const Variant& variant) {
-// 	switch (variant.get_type()) {
-// 		case Variant::INT:
-// 			return int64_t(variant);
-// 		case NULL:
-// 			return xt::placeholders::xtuph{};
-// 		default:
-// 			throw std::runtime_error("Invalid type for range.");
-// 	}
-// }
-
-// Variant nd::range(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
-// 	try {
-// 		switch (arg_count) {
-// 			case 1:
-// 				return Variant(memnew(NDRange(xt::placeholders::xtuph{}, to_range_part(*args[0]), xt::placeholders::xtuph{})));
-// 			case 2:
-// 				return Variant(memnew(NDRange(to_range_part(*args[0]), to_range_part(*args[1]), xt::placeholders::xtuph{})));
-// 			case 3:
-// 				return Variant(memnew(NDRange(to_range_part(*args[0]), to_range_part(*args[1]), to_range_part(*args[2]))));
-// 			default:
-// 				ERR_FAIL_V_MSG(nullptr, "Argument list not valid for a range, pass 1-3 arguments.");
-// 		}
-// 	}
-// 	catch (std::runtime_error error) {
-// 		ERR_FAIL_V_MSG(nullptr, error.what());
-// 	}
-// }
+range_part to_range_part(const Variant& variant) {
+	switch (variant.get_type()) {
+		case Variant::INT:
+			return int64_t(variant);
+		case NULL:
+			return xt::placeholders::xtuph{};
+		default:
+			throw std::runtime_error("Invalid type for range.");
+	}
+}
 
 Ref<NDRange> nd::from(int64_t start) {
 	return {memnew(NDRange(start, xt::placeholders::xtuph{}, xt::placeholders::xtuph{}))};
@@ -127,12 +107,21 @@ Ref<NDRange> nd::to(int64_t stop) {
 	return {memnew(NDRange(xt::placeholders::xtuph{}, stop, xt::placeholders::xtuph{}))};
 }
 
-Ref<NDRange> nd::range(int64_t start, int64_t stop) {
-	return {memnew(NDRange(start, stop, xt::placeholders::xtuph{}))};
-}
-
-Ref<NDRange> nd::range_step(int64_t start, int64_t stop, int64_t step) {
-	return {memnew(NDRange(start, stop, step))};
+Ref<NDRange> nd::range(Variant start_or_stop, Variant stop, Variant step) {
+	try {
+		if (stop.get_type() == Variant::Type::NIL && step.get_type() == Variant::Type::NIL) {
+			return {memnew(NDRange(0, to_range_part(start_or_stop), xt::placeholders::xtuph{}))};
+		}
+		else if (step.get_type() == Variant::Type::NIL) {
+			return {memnew(NDRange(to_range_part(start_or_stop), to_range_part(stop), xt::placeholders::xtuph{}))};
+		}
+		else {
+			return {memnew(NDRange(to_range_part(start_or_stop), to_range_part(stop), to_range_part(step)))};
+		}
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG(nullptr, error.what());
+	}
 }
 
 nd::DType nd::dtype(Variant array) {

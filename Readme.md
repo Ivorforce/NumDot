@@ -21,7 +21,7 @@ NumDot is inspired by the python tensor math library, [NumPy](https://numpy.org)
 | `x[1:]`                           | `x.get(nd.from(1))`                                                                                   |
 | `x[:1]`                           | `x.get(nd.to(1))`                                                                                     |
 | `x[1:2]`                          | `x.get(nd.range(1, 2))`                                                                               |
-| `x[0:5:2]`                        | `x.get(nd.range_step(0, 5, 2))`                                                                       |
+| `x[0:5:2]`                        | `x.get(nd.range(0, 5, 2))`                                                                       |
 | `np.array([2, 3, 4])`             | `nd.array([2, 3, 4])`                                                                                 |
 | `np.ones((2, 3, 4))`              | `nd.ones([2, 3, 4])`                                                                                  |
 | `np.add(a, b)`                    | `nd.add(a, b)`                                                                                        |

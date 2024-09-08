@@ -40,26 +40,33 @@ public:
 	nd();
 	~nd();
 
+	// Constants.
 	static StringName newaxis();
+
+	// Range.
 	static Ref<NDRange> range(int64_t start, int64_t stop);
 	static Ref<NDRange> range_step(int64_t start, int64_t stop, int64_t step);
 	static Ref<NDRange> from(int64_t start);
 	static Ref<NDRange> to(int64_t stop);
 
+	// Property access.
 	static DType dtype(Variant array);
 	static uint64_t size_of_dtype_in_bytes(DType dtype);
 	static PackedInt64Array shape(Variant array);
 	static uint64_t size(Variant array);
 	static uint64_t ndim(Variant array);
 	
+	// Array interpretation.
 	static Ref<NDArray> as_type(Variant array, DType dtype);
 	static Ref<NDArray> as_array(Variant array, DType dtype = DType::DTypeMax);
 	static Ref<NDArray> array(Variant array, DType dtype = DType::DTypeMax);
 
+	// Array creation.
 	static Ref<NDArray> full(Variant shape, Variant fill_value, DType dtype = DType::Float64);
 	static Ref<NDArray> zeros(Variant shape, DType dtype = DType::Float64);
 	static Ref<NDArray> ones(Variant shape, DType dtype = DType::Float64);
 
+	// Basic math functions.
 	static Ref<NDArray> add(Variant a, Variant b);
 	static Ref<NDArray> subtract(Variant a, Variant b);
 	static Ref<NDArray> multiply(Variant a, Variant b);
@@ -73,9 +80,13 @@ public:
 	static Ref<NDArray> exp(Variant a);
 	static Ref<NDArray> log(Variant a);
 
+	// Trigonometric functions.
 	static Ref<NDArray> sin(Variant a);
 	static Ref<NDArray> cos(Variant a);
 	static Ref<NDArray> tan(Variant a);
+
+	// Reductions.
+	static Ref<NDArray> mean(Variant a, Variant axes);
 };
 
 VARIANT_ENUM_CAST(nd::DType);

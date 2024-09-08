@@ -10,6 +10,7 @@
 #include "conversion_array.h"
 #include "conversion_shape.h"
 #include "conversion_slice.h"
+#include "conversion_axes.h"
 #include "xtv.h"
 #include "ndarray.h"
 #include "ndrange.h"
@@ -66,6 +67,8 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("sin", "a"), &nd::sin);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("cos", "a"), &nd::cos);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("tan", "a"), &nd::tan);
+
+	godot::ClassDB::bind_static_method("nd", D_METHOD("mean", "a"), &nd::mean, DEFVAL(nullptr), DEFVAL(nullptr));
 }
 
 nd::nd() {
@@ -256,7 +259,7 @@ Ref<NDArray> nd::ones(Variant shape, nd::DType dtype) {
 
 // The first parameter is the one used by the xarray operation, while the second is used for type deduction.
 // It's ok if they're the same.
-template <typename FX, typename FN>
+template <typename FX, typename PromotionRule>
 inline Ref<NDArray> binary_operation(Variant a, Variant b) {
 	std::shared_ptr<xtv::XTVariant> a_;
 	if (!variant_as_array(a, a_)) {
@@ -268,7 +271,7 @@ inline Ref<NDArray> binary_operation(Variant a, Variant b) {
 	}
 
 	try {
-		auto result = xtv::xoperation<FX, FN>(*a_, *b_);
+		auto result = xtv::xoperation<PromotionRule>(XFunction<FX> {}, *a_, *b_);
 		return Ref<NDArray>(memnew(NDArray(result)));
 	}
 	catch (std::runtime_error error) {
@@ -302,7 +305,7 @@ Ref<NDArray> nd::pow(Variant a, Variant b) {
 }
 
 
-template <typename FX, typename FN>
+template <typename FX, typename PromotionRule>
 inline Variant unary_operation(Variant a) {
 	std::shared_ptr<xtv::XTVariant> a_;
 	if (!variant_as_array(a, a_)) {
@@ -310,7 +313,7 @@ inline Variant unary_operation(Variant a) {
 	}
 
 	try {
-		auto result = xtv::xoperation<FX, FN>(*a_);
+		auto result = xtv::xoperation<PromotionRule>(XFunction<FX> {}, *a_);
 		return Ref<NDArray>(memnew(NDArray(result)));
 	}
 	catch (std::runtime_error error) {
@@ -344,4 +347,36 @@ Ref<NDArray> nd::cos(Variant a) {
 
 Ref<NDArray> nd::tan(Variant a) {
 	return unary_operation<xt::math::tan_fun, xtv::promote::function_result<xt::math::tan_fun>>(a);
+}
+
+Ref<NDArray> nd::mean(Variant a, Variant axes) {
+	try {
+		auto axes_ = variant_to_axes(axes);
+
+		std::shared_ptr<xtv::XTVariant> a_;
+		if (!variant_as_array(a, a_)) {
+			return Ref<NDArray>();
+		}
+
+		auto result = std::visit([a_](auto&& axes) {
+			using Axes = std::decay_t<decltype(axes)>;
+			if constexpr (std::is_same_v<Axes, nullptr_t>) {
+				return xtv::xoperation<xtv::promote::matching_float_or_default<double_t>>([](auto&& a) {
+					using T = decltype(a);
+					return xt::mean(std::forward<T>(a));
+				}, *a_);
+			}
+			else {
+				return xtv::xoperation<xtv::promote::matching_float_or_default<double_t>>([axes](auto&& a) {
+					using T = decltype(a);
+					return xt::mean(std::forward<T>(a), axes);
+				}, *a_);
+			}
+		}, axes_);
+
+		return Ref<NDArray>(memnew(NDArray(result)));
+	}
+	catch (std::runtime_error error) {
+		ERR_FAIL_V_MSG(Ref<NDArray>(), error.what());
+	}
 }

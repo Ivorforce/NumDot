@@ -162,8 +162,14 @@ std::shared_ptr<XTVariant> full(const DType dtype, const V fill_value, Sh& shape
 	}, dtype_to_variant(dtype));
 }
 
-template <typename FX, typename PromotionRule>
+template <typename PromotionRule, typename Visitor>
 struct XVariantFunction {
+	Visitor visitor;
+
+	explicit XVariantFunction(const Visitor &visitor)
+		: visitor(visitor) {
+	}
+
 #ifndef NUMDOT_ALLOW_MIXED_TYPE_OPS
 	// This version exists to reduce the number of functions generated, from O(op n n) to O(o n).
 	// Essentially, we make sure that all calls to the function are performed with all types being the same.
@@ -180,19 +186,19 @@ struct XVariantFunction {
 		//  But it also comes at a larger cost. Just casting as type should be the best of both worlds.
 		if constexpr (std::is_same_v<A, B>) {
 			// The types are the same, we can just call. If they're wrong, xtensor will promote them for us with optimal performance.
-			auto result = FX()(a, b);
+			auto result = visitor(a, b);
 			return std::make_shared<XTVariant>(xt::xarray<ResultType>(result));
 		} else if constexpr (std::is_same_v<A, ResultType>) {
 			// a is good, promote b.
-			auto result = FX()(a, xt::xarray<ResultType>(xt::cast<ResultType>(b)));
+			auto result = visitor(a, xt::xarray<ResultType>(xt::cast<ResultType>(b)));
 			return std::make_shared<XTVariant>(xt::xarray<ResultType>(result));
 		} else if constexpr (std::is_same_v<B, ResultType>) {
 			// b is good, promote a.
-			auto result = FX()(xt::cast<ResultType>(a), b);
+			auto result = visitor(xt::cast<ResultType>(a), b);
 			return std::make_shared<XTVariant>(xt::xarray<ResultType>(result));
 		} else {
 			// Both are bad, promote both. This is the worst case, but should be easy to avoid by the programmer if need be.
-			auto result = FX()(xt::cast<ResultType>(a), xt::cast<ResultType>(b));
+			auto result = visitor(xt::cast<ResultType>(a), xt::cast<ResultType>(b));
 			return std::make_shared<XTVariant>(xt::xarray<ResultType>(result));
 		}
 	}
@@ -209,7 +215,7 @@ struct XVariantFunction {
 
 		// This doesn't do anything yet, it just constructs a value for operation.
 		// It will be executed when we use it on the xarray constructor!
-		auto result = FX()(args...);
+		auto result = visitor(args...);
 
 		// Note: Need to do this in one line. If the operator is called after the make_shared,
 		//  any situations where broadcast errors would be thrown will instead crash the program.
@@ -227,9 +233,9 @@ struct XFunction {
 	}
 };
 
-template <typename FX, typename PromotionRule, typename... Args>
-static inline std::shared_ptr<XTVariant> xoperation(Args&&... args) {
-	return std::visit(XVariantFunction<XFunction<FX>, PromotionRule>{}, std::forward<Args>(args)...);
+template <typename PromotionRule, typename FX, typename... Args>
+static inline std::shared_ptr<XTVariant> xoperation(FX&& fx, Args&&... args) {
+	return std::visit(XVariantFunction<PromotionRule, FX>{ std::forward<FX>(fx) }, std::forward<Args>(args)...);
 }
 
 template <typename T>
@@ -251,6 +257,16 @@ namespace promote {
 	struct function_result {
 		template <typename... Args>
 		using result = decltype(std::declval<FN>()(std::forward<Args>(std::declval<Args>())...));
+	};
+
+	template<typename Default>
+	struct matching_float_or_default {
+		template <typename... Args>
+		using result = std::conditional_t<
+			std::is_floating_point_v<std::common_type_t<Args...>>,
+			std::common_type_t<Args...>,
+			Default
+		>;
 	};
 }
 

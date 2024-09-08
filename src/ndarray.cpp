@@ -92,10 +92,8 @@ void NDArray::set(const Variant **args, GDExtensionInt arg_count, GDExtensionCal
 			// TODO We could optimize more assignments of literals.
 			//  Just need to figure out how, ideally without duplicating code - as_array already does much type checking work.
 			default:
-				std::shared_ptr<xtv::XTVariant> a_;
-				if (!variant_as_array(value, a_)) {
-					return;
-				}
+				std::shared_ptr<xtv::XTVariant> a_ = variant_as_array(value);
+
 				xtv::set_slice(*array, sv, *a_);
 				return;
 		}

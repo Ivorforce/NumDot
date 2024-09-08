@@ -113,29 +113,30 @@ StringName nd::newaxis() {
 // }
 
 Ref<NDRange> nd::from(int64_t start) {
-	return Ref(memnew(NDRange(start, xt::placeholders::xtuph{}, xt::placeholders::xtuph{})));
+	return {memnew(NDRange(start, xt::placeholders::xtuph{}, xt::placeholders::xtuph{}))};
 }
 
 Ref<NDRange> nd::to(int64_t stop) {
-	return Ref(memnew(NDRange(xt::placeholders::xtuph{}, stop, xt::placeholders::xtuph{})));
+	return {memnew(NDRange(xt::placeholders::xtuph{}, stop, xt::placeholders::xtuph{}))};
 }
 
 Ref<NDRange> nd::range(int64_t start, int64_t stop) {
-	return Ref(memnew(NDRange(start, stop, xt::placeholders::xtuph{})));
+	return {memnew(NDRange(start, stop, xt::placeholders::xtuph{}))};
 }
 
 Ref<NDRange> nd::range_step(int64_t start, int64_t stop, int64_t step) {
-	return Ref(memnew(NDRange(start, stop, step)));
+	return {memnew(NDRange(start, stop, step))};
 }
 
 nd::DType nd::dtype(Variant array) {
 	// TODO We can totally do this without constructing an array. More code though.
-	std::shared_ptr<xtv::XTVariant> existing_array;
-	if (!variant_as_array(array, existing_array)) {
-		ERR_FAIL_V_MSG(nd::DType::DTypeMax, "Not an array.");
+	try {
+		std::shared_ptr<xtv::XTVariant> existing_array = variant_as_array(array);
+		return xtv::dtype(*existing_array);
 	}
-
-	return xtv::dtype(*existing_array);
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG(DTypeMax, error.what());
+	}
 }
 
 uint64_t nd::size_of_dtype_in_bytes(DType dtype) {
@@ -143,43 +144,54 @@ uint64_t nd::size_of_dtype_in_bytes(DType dtype) {
 }
 
 PackedInt64Array nd::shape(Variant array) {
-	// TODO We can totally do this without constructing an array. More code though.
-	std::shared_ptr<xtv::XTVariant> existing_array;
-	if (!variant_as_array(array, existing_array)) {
-		ERR_FAIL_V_MSG(PackedInt64Array(), "Not an array.");
-	}
+	try {
+		// TODO We can totally do this without constructing an array. More code though.
+		std::shared_ptr<xtv::XTVariant> existing_array = variant_as_array(array);
 
-	auto shape = xtv::shape(*existing_array);
-	// TODO This seems a bit weird, but it works for now.
-	auto packed = PackedInt64Array();
-	for (auto d : shape) {
-		packed.append(d);
+		auto shape = xtv::shape(*existing_array);
+		// TODO This seems a bit weird, but it works for now.
+		auto packed = PackedInt64Array();
+		for (auto d : shape) {
+			packed.append(d);
+		}
+		return packed;
 	}
-	return packed;
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG(PackedInt64Array(), error.what());
+	}
 }
 
 uint64_t nd::size(Variant array) {
-	// TODO We can totally do this without constructing an array. More code though.
-	std::shared_ptr<xtv::XTVariant> existing_array;
-	if (!variant_as_array(array, existing_array)) {
-		ERR_FAIL_V_MSG(nd::DType::DTypeMax, "Not an array.");
-	}
+	try {
+		// TODO We can totally do this without constructing an array. More code though.
+		std::shared_ptr<xtv::XTVariant> existing_array = variant_as_array(array);
 
-	return xtv::size(*existing_array);
+		return xtv::size(*existing_array);
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG(0, error.what());
+	}
 }
 
 uint64_t nd::ndim(Variant array) {
-	// TODO We can totally do this without constructing an array. More code though.
-	std::shared_ptr<xtv::XTVariant> existing_array;
-	if (!variant_as_array(array, existing_array)) {
-		ERR_FAIL_V_MSG(nd::DType::DTypeMax, "Not an array.");
-	}
+	try {
+		// TODO We can totally do this without constructing an array. More code though.
+		std::shared_ptr<xtv::XTVariant> existing_array = variant_as_array(array);
 
-	return xtv::dimension(*existing_array);
+		return xtv::dimension(*existing_array);
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG(0, error.what());
+	}
 }
 
 Ref<NDArray> nd::as_type(Variant array, nd::DType dtype) {
-	return nd::as_array(array, dtype);
+	try {
+		return nd::as_array(array, dtype);
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG(nullptr, error.what());
+	}
 }
 
 Ref<NDArray> nd::as_array(Variant array, nd::DType dtype) {
@@ -187,7 +199,7 @@ Ref<NDArray> nd::as_array(Variant array, nd::DType dtype) {
 
 	// Can we take a view?
 	if (type == Variant::OBJECT) {
-		if (auto ndarray = dynamic_cast<NDArray*>((Object*)(array))) {
+		if (auto ndarray = dynamic_cast<NDArray*>(static_cast<Object *>(array))) {
 			if (dtype == nd::DType::DTypeMax || ndarray->dtype() == dtype) {
 				return array;
 			}
@@ -199,23 +211,18 @@ Ref<NDArray> nd::as_array(Variant array, nd::DType dtype) {
 }
 
 Ref<NDArray> nd::array(Variant array, nd::DType dtype) {
-	auto type = array.get_type();
-
-	std::shared_ptr<xtv::XTVariant> existing_array;
-	if (!variant_as_array(array, existing_array)) {
-		return Ref<NDArray>();
-	}
-
-	// Default value.
-	if (dtype == nd::DType::DTypeMax) {
-		dtype = xtv::dtype(*existing_array);
-	}
-
 	try {
+		std::shared_ptr<xtv::XTVariant> existing_array = variant_as_array(array);
+
+		// Default value.
+		if (dtype == nd::DType::DTypeMax) {
+			dtype = xtv::dtype(*existing_array);
+		}
+
 		auto result = xtv::make_xarray(dtype, *existing_array);
 		return Ref(memnew(NDArray(result)));
 	}
-	catch (std::runtime_error error) {
+	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG(Ref<NDArray>(), error.what());
 	}
 }
@@ -223,15 +230,12 @@ Ref<NDArray> nd::array(Variant array, nd::DType dtype) {
 
 template <typename V>
 Ref<NDArray> _full(Variant shape, V value, nd::DType dtype) {
-	std::vector<size_t> shape_array;
-	if (!variant_as_shape<size_t>(shape, shape_array)) {
-		return Ref<NDArray>();
-	}
-
 	try {
+		std::vector<size_t> shape_array = variant_as_shape<size_t, std::vector<size_t>>(shape);
+
 		return Ref(memnew(NDArray(xtv::full(dtype, value, shape_array))));
 	}
-	catch (std::runtime_error error) {
+	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG(Ref<NDArray>(), error.what());
 	}
 }
@@ -261,21 +265,15 @@ Ref<NDArray> nd::ones(Variant shape, nd::DType dtype) {
 // It's ok if they're the same.
 template <typename FX, typename PromotionRule>
 inline Ref<NDArray> binary_operation(Variant a, Variant b) {
-	std::shared_ptr<xtv::XTVariant> a_;
-	if (!variant_as_array(a, a_)) {
-		return Ref<NDArray>();
-	}
-	std::shared_ptr<xtv::XTVariant> b_;
-	if (!variant_as_array(b, b_)) {
-		return Ref<NDArray>();
-	}
-
 	try {
+		std::shared_ptr<xtv::XTVariant> a_ = variant_as_array(a);
+		std::shared_ptr<xtv::XTVariant> b_ = variant_as_array(b);
+
 		auto result = xtv::xoperation<PromotionRule>(XFunction<FX> {}, *a_, *b_);
-		return Ref<NDArray>(memnew(NDArray(result)));
+		return { memnew(NDArray(result)) };
 	}
-	catch (std::runtime_error error) {
-		ERR_FAIL_V_MSG(Ref<NDArray>(), error.what());
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
 	}
 }
 
@@ -306,18 +304,15 @@ Ref<NDArray> nd::pow(Variant a, Variant b) {
 
 
 template <typename FX, typename PromotionRule>
-inline Variant unary_operation(Variant a) {
-	std::shared_ptr<xtv::XTVariant> a_;
-	if (!variant_as_array(a, a_)) {
-		return Ref<NDArray>();
-	}
-
+inline Ref<NDArray> unary_operation(Variant a) {
 	try {
+		auto a_ = variant_as_array(a);
+
 		auto result = xtv::xoperation<PromotionRule>(XFunction<FX> {}, *a_);
-		return Ref<NDArray>(memnew(NDArray(result)));
+		return { memnew(NDArray(result)) };
 	}
-	catch (std::runtime_error error) {
-		ERR_FAIL_V_MSG(Ref<NDArray>(), error.what());
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
 	}
 }
 
@@ -352,31 +347,25 @@ Ref<NDArray> nd::tan(Variant a) {
 Ref<NDArray> nd::mean(Variant a, Variant axes) {
 	try {
 		auto axes_ = variant_to_axes(axes);
-
-		std::shared_ptr<xtv::XTVariant> a_;
-		if (!variant_as_array(a, a_)) {
-			return Ref<NDArray>();
-		}
+		std::shared_ptr<xtv::XTVariant> a_ = variant_as_array(a);
 
 		auto result = std::visit([a_](auto&& axes) {
-			using Axes = std::decay_t<decltype(axes)>;
-			if constexpr (std::is_same_v<Axes, nullptr_t>) {
-				return xtv::xoperation<xtv::promote::matching_float_or_default<double_t>>([](auto&& a) {
-					using T = decltype(a);
-					return xt::mean(std::forward<T>(a));
-				}, *a_);
-			}
-			else {
-				return xtv::xoperation<xtv::promote::matching_float_or_default<double_t>>([axes](auto&& a) {
-					using T = decltype(a);
-					return xt::mean(std::forward<T>(a), axes);
-				}, *a_);
-			}
+		    using Axes = std::decay_t<decltype(axes)>;
+
+		    auto mean_func = [&](auto&& a) {
+		        if constexpr (std::is_same_v<Axes, std::nullptr_t>) {
+		            return xt::mean(std::forward<decltype(a)>(a));
+		        } else {
+		            return xt::mean(std::forward<decltype(a)>(a), axes);
+		        }
+		    };
+
+		    return xtv::xoperation<xtv::promote::matching_float_or_default<double_t>>(mean_func, *a_);
 		}, axes_);
 
-		return Ref<NDArray>(memnew(NDArray(result)));
+		return {memnew(NDArray(result))};
 	}
-	catch (std::runtime_error error) {
-		ERR_FAIL_V_MSG(Ref<NDArray>(), error.what());
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
 	}
 }

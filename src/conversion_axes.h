@@ -1,6 +1,8 @@
 #ifndef CONVERSION_AXES_H
 #define CONVERSION_AXES_H
 
+#include <godot_cpp/variant/variant.hpp>
+
 using Axes = std::variant<
     nullptr_t,
     std::vector<std::ptrdiff_t>

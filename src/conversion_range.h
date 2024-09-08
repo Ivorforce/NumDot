@@ -1,7 +1,10 @@
 #ifndef CONVERSION_RANGE_H
 #define CONVERSION_RANGE_H
 
-range_part to_range_part(const Variant& variant) {
+#include <godot_cpp/godot.hpp>
+#include <godot_cpp/variant/variant.hpp>
+
+static range_part to_range_part(const Variant& variant) {
     switch (variant.get_type()) {
         case Variant::INT:
             return int64_t(variant);

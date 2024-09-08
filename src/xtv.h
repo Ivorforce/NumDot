@@ -157,8 +157,8 @@ static void set_slice(XTVariant& array, xt::xstrided_slice_vector& slice, XTVari
 	}, array, value);
 }
 
-	template <typename V, typename Sh>
-	std::shared_ptr<XTVariant> full(const DType dtype, const V fill_value, Sh& shape) {
+template <typename V, typename Sh>
+std::shared_ptr<XTVariant> full(const DType dtype, const V fill_value, Sh& shape) {
 	return std::visit([fill_value, shape](auto t) {
 		using T = decltype(t);
 
@@ -170,7 +170,7 @@ static void set_slice(XTVariant& array, xt::xstrided_slice_vector& slice, XTVari
 }
 
 template <typename Sh>
-std::shared_ptr<XTVariant> empty(const DType dtype, Sh& shape) {
+std::shared_ptr<XTVariant> empty(const DType dtype, const Sh& shape) {
 	return std::visit([shape](auto t) {
 		using T = decltype(t);
 

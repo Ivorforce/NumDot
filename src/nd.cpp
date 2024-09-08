@@ -344,28 +344,35 @@ Ref<NDArray> nd::tan(Variant a) {
 	return unary_operation<xt::math::tan_fun, xtv::promote::function_result<xt::math::tan_fun>>(a);
 }
 
-Ref<NDArray> nd::mean(Variant a, Variant axes) {
+template <typename FX, typename PromotionRule>
+inline Ref<NDArray> reduction(Variant a, Variant axes) {
 	try {
 		auto axes_ = variant_to_axes(axes);
-		std::shared_ptr<xtv::XTVariant> a_ = variant_as_array(a);
+		auto a_ = variant_as_array(a);
 
-		auto result = std::visit([a_](auto&& axes) {
-		    using Axes = std::decay_t<decltype(axes)>;
-
-		    auto mean_func = [&](auto&& a) {
-		        if constexpr (std::is_same_v<Axes, std::nullptr_t>) {
-		            return xt::mean(std::forward<decltype(a)>(a));
-		        } else {
-		            return xt::mean(std::forward<decltype(a)>(a), axes);
-		        }
-		    };
-
-		    return xtv::xoperation<xtv::promote::matching_float_or_default<double_t>>(mean_func, *a_);
-		}, axes_);
+		auto result = xtv::xreduction<PromotionRule>(
+			FX{}, axes_, *a_
+		);
 
 		return {memnew(NDArray(result))};
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
 	}
+}
+
+struct Mean {
+	template <typename A>
+	auto operator()(xtv::GivenAxes& axes, A&& a) const {
+		return xt::mean(std::forward<A>(a), axes);
+	}
+
+	template <typename A>
+	auto operator()(A&& a) const {
+		return xt::mean(std::forward<A>(a));
+	}
+};
+
+Ref<NDArray> nd::mean(Variant a, Variant axes) {
+	return reduction<Mean, xtv::promote::matching_float_or_default<double_t>>(a, axes);
 }

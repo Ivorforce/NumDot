@@ -3,10 +3,7 @@
 
 #include <godot_cpp/variant/variant.hpp>
 
-using Axes = std::variant<
-    nullptr_t,
-    std::vector<std::ptrdiff_t>
->;
+#include "xtv.h"
 
 template <typename T, typename Packed>
 static T packed_as_array(Packed packed) {
@@ -15,7 +12,7 @@ static T packed_as_array(Packed packed) {
     return axes;
 }
 
-static Axes variant_to_axes(Variant variant) {
+static xtv::Axes variant_to_axes(Variant variant) {
     const auto type = variant.get_type();
 
     switch (type) {

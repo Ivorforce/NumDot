@@ -47,6 +47,13 @@ enum DType {
     DTypeMax
 };
 
+using GivenAxes = std::vector<std::ptrdiff_t>;
+
+using Axes = std::variant<
+	nullptr_t,
+	GivenAxes
+>;
+
 static inline DType dtype(XTVariant& variant) {
 	return DType(variant.index());
 }
@@ -236,6 +243,21 @@ struct XFunction {
 template <typename PromotionRule, typename FX, typename... Args>
 static inline std::shared_ptr<XTVariant> xoperation(FX&& fx, Args&&... args) {
 	return std::visit(XVariantFunction<PromotionRule, FX>{ std::forward<FX>(fx) }, std::forward<Args>(args)...);
+}
+
+template <typename PromotionRule, typename FX, typename... Args>
+static inline std::shared_ptr<XTVariant> xreduction(FX&& fx, Axes& axes, Args&&... args) {
+	return std::visit([&, fx = std::forward<FX>(fx)](auto& axes) {
+		using AxesType = std::decay_t<decltype(axes)>;
+
+		return xoperation<PromotionRule>([&](auto&&... args) {
+			if constexpr (std::is_same_v<AxesType, std::nullptr_t>) {
+				return fx(std::forward<decltype(args)>(args)...);
+			} else {
+				return fx(axes, std::forward<decltype(args)>(args)...);
+			}
+		}, args...);
+	}, axes);
 }
 
 template <typename T>

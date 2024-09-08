@@ -71,13 +71,13 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("cos", "a"), &nd::cos);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("tan", "a"), &nd::tan);
 
-	godot::ClassDB::bind_static_method("nd", D_METHOD("sum", "a"), &nd::sum, DEFVAL(nullptr), DEFVAL(nullptr));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("prod", "a"), &nd::sum, DEFVAL(nullptr), DEFVAL(nullptr));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("mean", "a"), &nd::mean, DEFVAL(nullptr), DEFVAL(nullptr));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("var", "a"), &nd::std, DEFVAL(nullptr), DEFVAL(nullptr));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("std", "a"), &nd::std, DEFVAL(nullptr), DEFVAL(nullptr));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("max", "a"), &nd::std, DEFVAL(nullptr), DEFVAL(nullptr));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("min", "a"), &nd::std, DEFVAL(nullptr), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("sum", "a", "axes"), &nd::sum, DEFVAL(nullptr), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("prod", "a", "axes"), &nd::sum, DEFVAL(nullptr), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("mean", "a", "axes"), &nd::mean, DEFVAL(nullptr), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("var", "a", "axes"), &nd::std, DEFVAL(nullptr), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("std", "a", "axes"), &nd::std, DEFVAL(nullptr), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("max", "a", "axes"), &nd::std, DEFVAL(nullptr), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("min", "a", "axes"), &nd::std, DEFVAL(nullptr), DEFVAL(nullptr));
 }
 
 nd::nd() {

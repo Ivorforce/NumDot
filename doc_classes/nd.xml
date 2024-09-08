@@ -135,7 +135,7 @@
 		<method name="max" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" default="null" />
-			<param index="1" name="_unnamed_arg1" type="Variant" default="null" />
+			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				Return the maximum of an array or maximum along an axis.
 			</description>
@@ -143,7 +143,7 @@
 		<method name="mean" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" default="null" />
-			<param index="1" name="_unnamed_arg1" type="Variant" default="null" />
+			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				Compute the arithmetic mean along the specified axis.
 				Returns the average of the array elements. The average is taken over the flattened array by default, otherwise over the specified axis.
@@ -152,7 +152,7 @@
 		<method name="min" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" default="null" />
-			<param index="1" name="_unnamed_arg1" type="Variant" default="null" />
+			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				Return the minimum of an array or minimum along an axis.
 			</description>
@@ -197,7 +197,7 @@
 		<method name="prod" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" default="null" />
-			<param index="1" name="_unnamed_arg1" type="Variant" default="null" />
+			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				Return the product of array elements over a given axis.
 			</description>
@@ -262,7 +262,7 @@
 		<method name="std" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" default="null" />
-			<param index="1" name="_unnamed_arg1" type="Variant" default="null" />
+			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				Compute the standard deviation along the specified axis.
 				Returns the standard deviation, a measure of the spread of a distribution, of the array elements. The standard deviation is computed for the flattened array by default, otherwise over the specified axis.
@@ -279,7 +279,7 @@
 		<method name="sum" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" default="null" />
-			<param index="1" name="_unnamed_arg1" type="Variant" default="null" />
+			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				Sum of array elements over a given axis.
 			</description>
@@ -302,7 +302,7 @@
 		<method name="var" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" default="null" />
-			<param index="1" name="_unnamed_arg1" type="Variant" default="null" />
+			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				Compute the variance along the specified axis.
 				Returns the variance of the array elements, a measure of the spread of a distribution. The variance is computed for the flattened array by default, otherwise over the specified axis.

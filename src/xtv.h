@@ -281,6 +281,24 @@ namespace promote {
 		using result = decltype(std::declval<FN>()(std::forward<Args>(std::declval<Args>())...));
 	};
 
+	struct common_type {
+		template <typename... Args>
+		using result = std::common_type_t<Args...>;
+	};
+
+	struct at_least_int32 {
+		template <typename T>
+		using result = typename std::conditional<
+		  (std::numeric_limits<T>::digits >= std::numeric_limits<int32_t>::digits),
+		  T,
+		  typename std::conditional<
+			std::is_signed<T>::value,
+			int32_t,
+			uint32_t
+		  >::type
+		>::type;
+	};
+
 	template<typename Default>
 	struct matching_float_or_default {
 		template <typename... Args>

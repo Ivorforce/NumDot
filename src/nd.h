@@ -86,7 +86,13 @@ public:
 	static Ref<NDArray> tan(Variant a);
 
 	// Reductions.
+	static Ref<NDArray> sum(Variant a, Variant axes);
+	static Ref<NDArray> prod(Variant a, Variant axes);
 	static Ref<NDArray> mean(Variant a, Variant axes);
+	static Ref<NDArray> var(Variant a, Variant axes);
+	static Ref<NDArray> std(Variant a, Variant axes);
+	static Ref<NDArray> max(Variant a, Variant axes);
+	static Ref<NDArray> min(Variant a, Variant axes);
 };
 
 VARIANT_ENUM_CAST(nd::DType);

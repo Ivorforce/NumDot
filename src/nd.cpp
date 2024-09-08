@@ -68,7 +68,13 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("cos", "a"), &nd::cos);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("tan", "a"), &nd::tan);
 
+	godot::ClassDB::bind_static_method("nd", D_METHOD("sum", "a"), &nd::sum, DEFVAL(nullptr), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("prod", "a"), &nd::sum, DEFVAL(nullptr), DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("mean", "a"), &nd::mean, DEFVAL(nullptr), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("var", "a"), &nd::std, DEFVAL(nullptr), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("std", "a"), &nd::std, DEFVAL(nullptr), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("max", "a"), &nd::std, DEFVAL(nullptr), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("min", "a"), &nd::std, DEFVAL(nullptr), DEFVAL(nullptr));
 }
 
 nd::nd() {
@@ -361,18 +367,55 @@ inline Ref<NDArray> reduction(Variant a, Variant axes) {
 	}
 }
 
-struct Mean {
-	template <typename A>
-	auto operator()(xtv::GivenAxes& axes, A&& a) const {
-		return xt::mean(std::forward<A>(a), axes);
+#define Reducer(fun_name)\
+	template <typename A>\
+	auto operator()(xtv::GivenAxes& axes, A&& a) const {\
+		return xt::fun_name(std::forward<A>(a), axes);\
+	}\
+\
+	template <typename A>\
+	auto operator()(A&& a) const {\
+		return xt::fun_name(std::forward<A>(a));\
 	}
 
-	template <typename A>
-	auto operator()(A&& a) const {
-		return xt::mean(std::forward<A>(a));
-	}
-};
+struct Sum { Reducer(sum) };
+
+Ref<NDArray> nd::sum(Variant a, Variant axes) {
+	return reduction<Sum, xtv::promote::common_type>(a, axes);
+}
+
+struct Prod { Reducer(prod) };
+
+Ref<NDArray> nd::prod(Variant a, Variant axes) {
+	return reduction<Prod, xtv::promote::at_least_int32>(a, axes);
+}
+
+struct Mean { Reducer(mean) };
 
 Ref<NDArray> nd::mean(Variant a, Variant axes) {
 	return reduction<Mean, xtv::promote::matching_float_or_default<double_t>>(a, axes);
+}
+
+struct Variance { Reducer(variance) };
+
+Ref<NDArray> nd::var(Variant a, Variant axes) {
+	return reduction<Variance, xtv::promote::matching_float_or_default<double_t>>(a, axes);
+}
+
+struct Std { Reducer(stddev) };
+
+Ref<NDArray> nd::std(Variant a, Variant axes) {
+	return reduction<Std, xtv::promote::matching_float_or_default<double_t>>(a, axes);
+}
+
+struct Amax { Reducer(amax) };
+
+Ref<NDArray> nd::max(Variant a, Variant axes) {
+	return reduction<Amax, xtv::promote::common_type>(a, axes);
+}
+
+struct Amin { Reducer(amin) };
+
+Ref<NDArray> nd::min(Variant a, Variant axes) {
+	return reduction<Amin, xtv::promote::common_type>(a, axes);
 }

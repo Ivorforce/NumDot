@@ -229,6 +229,14 @@
 				Up to one element in the new shape can be -1 to infer its size.
 			</description>
 		</method>
+		<method name="sign" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				Returns an element-wise indication of the sign of a number.
+				The sign function returns -1 if x &lt; 0, 0 if x==0, 1 if x &gt; 0. nan is returned for nan inputs.
+			</description>
+		</method>
 		<method name="sin" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />

@@ -50,14 +50,6 @@
 				Convert the input to an array, but avoid copying data if possible.
 			</description>
 		</method>
-		<method name="as_type" qualifiers="static">
-			<return type="NDArray" />
-			<param index="0" name="array" type="Variant" />
-			<param index="1" name="dtype" type="int" enum="nd.DType" />
-			<description>
-				Convert the input to an array, but avoid copying data if possible.
-			</description>
-		</method>
 		<method name="cos" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
@@ -71,13 +63,6 @@
 			<param index="1" name="b" type="Variant" />
 			<description>
 				Divide arguments element-wise.
-			</description>
-		</method>
-		<method name="dtype" qualifiers="static">
-			<return type="int" enum="nd.DType" />
-			<param index="0" name="array" type="Variant" />
-			<description>
-				Get the dtype of an array.
 			</description>
 		</method>
 		<method name="empty" qualifiers="static">
@@ -165,13 +150,6 @@
 				Multiply arguments element-wise.
 			</description>
 		</method>
-		<method name="ndim" qualifiers="static">
-			<return type="int" />
-			<param index="0" name="array" type="Variant" />
-			<description>
-				Number of array dimensions of an array.
-			</description>
-		</method>
 		<method name="newaxis" qualifiers="static">
 			<return type="StringName" />
 			<description>
@@ -223,26 +201,11 @@
 				Computes the remainder complementary to the floor_divide function. It is equivalent to the modulus operator x1 % x2 and has the same sign as the divisor x2.
 			</description>
 		</method>
-		<method name="shape" qualifiers="static">
-			<return type="PackedInt64Array" />
-			<param index="0" name="array" type="Variant" />
-			<description>
-				Return the shape of an array.
-			</description>
-		</method>
 		<method name="sin" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
 				Trigonometric sine, element-wise.
-			</description>
-		</method>
-		<method name="size" qualifiers="static">
-			<return type="int" />
-			<param index="0" name="array" type="Variant" />
-			<description>
-				Number of elements in the array.
-				Equal to nd.prod(a.shape()), i.e., the product of the array’s dimensions.
 			</description>
 		</method>
 		<method name="size_of_dtype_in_bytes" qualifiers="static">
@@ -297,6 +260,14 @@
 			<param index="0" name="stop" type="int" />
 			<description>
 				Create a range that starts at 0, and stops at the given index (exclusive).
+			</description>
+		</method>
+		<method name="transpose" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="permutation" type="Variant" />
+			<description>
+				Returns an array with axes transposed.
 			</description>
 		</method>
 		<method name="var" qualifiers="static">

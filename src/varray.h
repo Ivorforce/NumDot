@@ -44,11 +44,6 @@ namespace va {
         auto strides = varray.strides;
         auto size_ = std::accumulate(shape.begin(), shape.end(), static_cast<size_t>(1), std::multiplies());
 
-        // Just a quick sanity check. Should not be needed if slice() does its job.
-        if (size_ + varray.offset > store->size() || varray.offset < 0) {
-            throw std::runtime_error("VArray size is out of range");
-        }
-
         // return xt::adapt(store->data(), store->size(), xt::no_ownership(), store->shape(), store->strides());
         return xt::adapt(store->data() + varray.offset, size_, xt::no_ownership(), shape, strides);
     }
@@ -136,6 +131,30 @@ namespace va {
             return to_compute_variant_(store, varray);
         }, varray.store);
     };
+
+    static VArray transpose(const VArray& varray, strides_type permutation) {
+        return std::visit([permutation, varray](auto& store) -> VArray {
+            auto shape = varray.shape;
+            auto strides = varray.strides;
+
+            // xt doesn't have a nice 'just give me shapes and strides' implementation like for views.
+            // So let's just use their wrapper implementation as a shortcut to properly transpositions.
+            auto strided = xt::strided_view(store, std::move(shape), std::move(strides), varray.offset, varray.layout);
+            auto transposed = xt::transpose(
+                strided,
+                permutation,
+                xt::check_policy::full{}
+            );
+
+            return VArray {
+                store,  // Implicit copy
+                transposed.shape(),
+                transposed.strides(),
+                transposed.data_offset(),
+                transposed.layout()
+            };
+        }, varray.store);
+    }
 
     template <typename T>
     static inline DType dtype(T&& variant) {

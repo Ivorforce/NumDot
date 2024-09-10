@@ -51,6 +51,8 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("linspace", "start", "stop", "num", "endpoint", "dtype"), &nd::linspace, DEFVAL(0), DEFVAL(nullptr), DEFVAL(50), DEFVAL(true), DEFVAL(nd::DType::DTypeMax));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("arange", "start_or_stop", "stop", "step", "dtype"), &nd::arange, DEFVAL(0), DEFVAL(nullptr), DEFVAL(1), DEFVAL(nd::DType::DTypeMax));
 
+	godot::ClassDB::bind_static_method("nd", D_METHOD("transpose", "permutation"), &nd::transpose);
+
 	godot::ClassDB::bind_static_method("nd", D_METHOD("add", "a", "b"), &nd::add);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("subtract", "a", "b"), &nd::subtract);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("multiply", "a", "b"), &nd::multiply);
@@ -248,6 +250,20 @@ Ref<NDArray> nd::arange(Variant start_or_stop, Variant stop, Variant step, DType
 			}
 		}, va::dtype_to_variant(dtype));
 		return {memnew(NDArray(result))};
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
+}
+
+Ref<NDArray> nd::transpose(Variant a, Variant permutation) {
+	try {
+		va::VArray a_ = variant_as_array(a);
+		// TODO It's not exactly a shape, but 'int array' is close enough.
+		//  We should probably decouple them when we add better shape checks.
+		auto permutation_ = variant_as_shape<std::ptrdiff_t, va::strides_type>(permutation);
+
+		return {memnew(NDArray(va::transpose(a_, permutation_)))};
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());

@@ -15,7 +15,6 @@ NumDot is inspired by the python tensor math library, [NumPy](https://numpy.org)
 | NumPy                             | NumDot                                                                                                                           |
 |-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
 | `x[a, b, c]`                      | `x.get(a, b, c)`                                                                                                                 |
-| `x[...]` can return views         | `x.get(...)` can return views                                                                                                    |
 | `x[...]` can return single values | `x.get(...)` always returns a tensor, use `x.get_float(...)` and `x.get_int(...)` to get values.                                 |
 | `x[a, b, c] = d`                  | `x.set(d, a, b, c)`                                                                                                              |
 | `x[1:]`                           | `x.get(nd.from(1))`                                                                                                              |
@@ -27,6 +26,8 @@ NumDot is inspired by the python tensor math library, [NumPy](https://numpy.org)
 | `a + b`                           | `nd.add(a, b)` ([operator overloads are not yet supported by godot](https://github.com/godotengine/godot-proposals/issues/8383)) |
 | `np.sin(a)`                       | `nd.sin(a)`                                                                                                                      |
 | `np.mean(a, [1, -1])`             | `nd.mean(a, [1, -1])`                                                                                                            |
+| `np.reshape(a, (50, -1))`         | `nd.reshape(a, [50, -1])`                                                                                                        |
+| `np.transpose(a, (2, 0, 1))`      | `nd.reshape(a, [2, 0, 1])`                                                                                                       |
 
 Keep in mind these semantics are yet subject to change.
 

@@ -132,48 +132,65 @@ namespace va {
         }, varray.store);
     };
 
-    static VArray transpose(const VArray& varray, strides_type permutation) {
-        return std::visit([permutation, varray](auto& store) -> VArray {
-            auto shape = varray.shape;
-            auto strides = varray.strides;
+    template <typename T>
+    static auto to_strided(T&& store, const VArray& varray) {
+        auto shape = varray.shape;
+        auto strides = varray.strides;
 
-            // xt doesn't have a nice 'just give me shapes and strides' implementation like for views.
-            // So let's just use their wrapper implementation as a shortcut to properly transpositions.
-            auto strided = xt::strided_view(store, std::move(shape), std::move(strides), varray.offset, varray.layout);
-            auto transposed = xt::transpose(
-                strided,
-                permutation,
-                xt::check_policy::full{}
-            );
+        return xt::strided_view(
+            std::forward<T>(store),
+            std::move(shape),
+            std::move(strides),
+            varray.offset,
+            varray.layout
+        );
+    }
 
-            return VArray {
-                store,  // Implicit copy
-                transposed.shape(),
-                transposed.strides(),
-                transposed.data_offset(),
-                transposed.layout()
-            };
+    template <typename V>
+    static VArray from_store(const V store) {
+        return {
+            store,
+            store->shape(),
+            store->strides(),
+            0,
+            xt::layout_type::dynamic
+        };
+    }
+
+    template <typename V, typename S>
+    static VArray from_surrogate(V&& store, const S& surrogate) {
+        return {
+            std::forward<V>(store),
+            surrogate.shape(),
+            surrogate.strides(),
+            surrogate.data_offset(),
+            surrogate.layout()
+        };
+    }
+
+    template <typename Visitor>
+    static VArray map(const Visitor& visitor, const VArray& varray) {
+        return std::visit([visitor, varray](auto& store) -> VArray {
+            auto strided = to_strided(store, varray);
+            return from_surrogate(store, visitor(strided));
         }, varray.store);
     }
 
+    static VArray transpose(const VArray& varray, strides_type permutation) {
+        return map([permutation](auto& array) {
+            return xt::transpose(
+                array,
+                permutation,
+                xt::check_policy::full{}
+            );
+        }, varray);
+    }
+
     static VArray reshape(const VArray& varray, strides_type new_shape) {
-        return std::visit([new_shape, varray](auto& store) -> VArray {
-            auto shape = varray.shape;
-            auto strides = varray.strides;
+        return map([new_shape](auto& array) {
             auto new_shape_ = new_shape;
-
-            // Use reshape_view to handle the reshaping logic for us.
-            auto strided = xt::strided_view(store, std::move(shape), std::move(strides), varray.offset, varray.layout);
-            auto reshaped = xt::reshape_view(strided, new_shape_);
-
-            return VArray {
-                store,  // Implicit copy
-                reshaped.shape(),
-                reshaped.strides(),
-                reshaped.data_offset(),
-                reshaped.layout()
-            };
-        }, varray.store);
+            return xt::reshape_view(array, new_shape_);
+        }, varray);
     }
 
     template <typename T>
@@ -235,17 +252,6 @@ namespace va {
             using V = typename std::decay_t<decltype(carray)>::value_type;
             return carray.size() * sizeof(V);
         }, to_compute_variant(array));
-    }
-
-    template <typename V>
-    static VArray from_store(const V store) {
-        return {
-            store,
-            store->shape(),
-            store->strides(),
-            0,
-            xt::layout_type::dynamic
-        };
     }
 
     static VArray copy_as_dtype(const VArray& other, const DType dtype) {

@@ -14,13 +14,15 @@ NumDot is inspired by the python tensor math library, [NumPy](https://numpy.org)
 
 | NumPy                             | NumDot                                                                                                                           |
 |-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
-| `x[a, b, c]`                      | `x.get(a, b, c)`                                                                                                                 |
+| `x[a, b, c]`                      | `x.get(a, b, c)` ([syntax discussion](https://github.com/Ivorforce/NumDot/issues/6))                                             |
 | `x[...]` can return single values | `x.get(...)` always returns a tensor, use `x.get_float(...)` and `x.get_int(...)` to get values.                                 |
 | `x[a, b, c] = d`                  | `x.set(d, a, b, c)`                                                                                                              |
 | `x[1:]`                           | `x.get(nd.from(1))`                                                                                                              |
 | `x[:1]`                           | `x.get(nd.to(1))`                                                                                                                |
 | `x[1:2]`                          | `x.get(nd.range(1, 2))`                                                                                                          |
 | `x[0:5:2]`                        | `x.get(nd.range(0, 5, 2))`                                                                                                       |
+| `x[..., 5]`                       | `x.get(&"...", 5)`                                                                                                               |
+| `x[np.newaxis, 5]`                | `x.get(nd.newaxis(), 5)`                                                                                                         |
 | `np.array([2, 3, 4])`             | `nd.array([2, 3, 4])`                                                                                                            |
 | `np.ones((2, 3, 4))`              | `nd.ones([2, 3, 4])`                                                                                                             |
 | `a + b`                           | `nd.add(a, b)` ([operator overloads are not yet supported by godot](https://github.com/godotengine/godot-proposals/issues/8383)) |

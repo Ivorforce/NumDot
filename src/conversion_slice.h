@@ -35,12 +35,15 @@ static xt::xstrided_slice<std::ptrdiff_t> variant_as_slice_part(const Variant& v
 			if (StringName(variant) == ::newaxis()) {
 				return xt::newaxis();
 			}
+			else if (StringName(variant) == ::ellipsis()) {
+				return xt::ellipsis();
+			}
 			break;
 		default:
 			break;
 	}
 
-	throw std::runtime_error("Variant cannot be converted to a shape.");
+	throw std::runtime_error("Variant cannot be converted to a slice.");
 }
 
 static xt::xstrided_slice_vector variants_as_slice_vector(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {

@@ -35,6 +35,8 @@ void nd::_bind_methods() {
 	BIND_ENUM_CONSTANT(UInt64);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("newaxis"), &nd::newaxis);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("ellipsis"), &nd::ellipsis);
+
 	godot::ClassDB::bind_static_method("nd", D_METHOD("from", "start"), &nd::from);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("to", "stop"), &nd::to);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("range", "start_or_stop", "stop", "step"), &nd::range, static_cast<int64_t>(0), DEFVAL(nullptr), DEFVAL(nullptr));
@@ -93,6 +95,10 @@ nd::~nd() {
 
 StringName nd::newaxis() {
 	return ::newaxis();
+}
+
+StringName nd::ellipsis() {
+	return ::ellipsis();
 }
 
 Ref<NDRange> nd::from(int64_t start) {

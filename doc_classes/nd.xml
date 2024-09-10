@@ -65,6 +65,12 @@
 				Divide arguments element-wise.
 			</description>
 		</method>
+		<method name="ellipsis" qualifiers="static">
+			<return type="StringName" />
+			<description>
+				An alias for the StringName &amp;"...". In a subscript, this will stand in for omitted dimensions, for example if you want to index the last dimension.
+			</description>
+		</method>
 		<method name="empty" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="shape" type="Variant" default="null" />

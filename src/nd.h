@@ -29,6 +29,11 @@ StringName newaxis() {
 	return newaxis;
 }
 
+StringName ellipsis() {
+	const StringName ellipsis = StringName("...");
+	return ellipsis;
+}
+
 class nd : public Object {
 	GDCLASS(nd, Object)
 
@@ -44,6 +49,7 @@ public:
 
 	// Constants.
 	static StringName newaxis();
+	static StringName ellipsis();
 
 	// Range.
 	static Ref<NDRange> range(Variant start_or_stop = static_cast<int64_t>(0), Variant stop = nullptr, Variant step = DEFVAL(nullptr));

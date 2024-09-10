@@ -201,6 +201,15 @@
 				Computes the remainder complementary to the floor_divide function. It is equivalent to the modulus operator x1 % x2 and has the same sign as the divisor x2.
 			</description>
 		</method>
+		<method name="reshape" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="shape" type="Variant" />
+			<description>
+				Gives a new shape to an array without changing its data.
+				Up to one element in the new shape can be -1 to infer its size.
+			</description>
+		</method>
 		<method name="sin" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />

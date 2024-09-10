@@ -52,6 +52,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("arange", "start_or_stop", "stop", "step", "dtype"), &nd::arange, DEFVAL(0), DEFVAL(nullptr), DEFVAL(1), DEFVAL(nd::DType::DTypeMax));
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("transpose", "a", "permutation"), &nd::transpose);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("reshape", "a", "shape"), &nd::reshape);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("add", "a", "b"), &nd::add);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("subtract", "a", "b"), &nd::subtract);
@@ -264,6 +265,20 @@ Ref<NDArray> nd::transpose(Variant a, Variant permutation) {
 		auto permutation_ = variant_as_shape<std::ptrdiff_t, va::strides_type>(permutation);
 
 		return {memnew(NDArray(va::transpose(a_, permutation_)))};
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
+}
+
+Ref<NDArray> nd::reshape(Variant a, Variant shape) {
+	try {
+		va::VArray a_ = variant_as_array(a);
+		// TODO It's not exactly a shape, but 'int array' is close enough.
+		//  We should probably decouple them when we add better shape checks.
+		auto new_shape_ = variant_as_shape<std::ptrdiff_t, va::strides_type>(shape);
+
+		return {memnew(NDArray(va::reshape(a_, new_shape_)))};
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());

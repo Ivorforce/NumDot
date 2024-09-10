@@ -67,6 +67,7 @@ public:
 
 	// Rearrange
 	static Ref<NDArray> transpose(Variant a, Variant permutation);
+	static Ref<NDArray> reshape(Variant a, Variant shape);
 
 	// Basic math functions.
 	static Ref<NDArray> add(Variant a, Variant b);

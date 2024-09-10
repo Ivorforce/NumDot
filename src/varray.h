@@ -156,6 +156,26 @@ namespace va {
         }, varray.store);
     }
 
+    static VArray reshape(const VArray& varray, strides_type new_shape) {
+        return std::visit([new_shape, varray](auto& store) -> VArray {
+            auto shape = varray.shape;
+            auto strides = varray.strides;
+            auto new_shape_ = new_shape;
+
+            // Use reshape_view to handle the reshaping logic for us.
+            auto strided = xt::strided_view(store, std::move(shape), std::move(strides), varray.offset, varray.layout);
+            auto reshaped = xt::reshape_view(strided, new_shape_);
+
+            return VArray {
+                store,  // Implicit copy
+                reshaped.shape(),
+                reshaped.strides(),
+                reshaped.data_offset(),
+                reshaped.layout()
+            };
+        }, varray.store);
+    }
+
     template <typename T>
     static inline DType dtype(T&& variant) {
         return DType(std::forward<T>(variant).store.index());

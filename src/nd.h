@@ -80,6 +80,7 @@ public:
 	static Ref<NDArray> remainder(Variant a, Variant b);
 	static Ref<NDArray> pow(Variant a, Variant b);
 
+	static Ref<NDArray> sign(Variant a);
 	static Ref<NDArray> abs(Variant a);
 	static Ref<NDArray> sqrt(Variant a);
 

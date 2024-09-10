@@ -64,6 +64,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("remainder", "a", "b"), &nd::remainder);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("pow", "a", "b"), &nd::pow);
 
+	godot::ClassDB::bind_static_method("nd", D_METHOD("sign", "a"), &nd::sign);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("abs", "a"), &nd::abs);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("sqrt", "a"), &nd::sqrt);
 
@@ -376,6 +377,10 @@ inline Ref<NDArray> unary_operation(Variant a) {
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
 	}
+}
+
+Ref<NDArray> nd::sign(Variant a) {
+	return unary_operation<xt::math::sign_fun, va::promote::common_type>(a);
 }
 
 Ref<NDArray> nd::abs(Variant a) {

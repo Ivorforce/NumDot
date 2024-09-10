@@ -15,7 +15,7 @@ NumDot itself is a very thin wrapper over [xtensor](https://xtensor.readthedocs.
 
 - **[Tensors and broadcasting](https://numpy.org/doc/stable/user/basics.broadcasting.html):** If unfamiliar with these terms, we recommend [experimenting with NumPy first](https://numpy.org/doc/stable/user/quickstart.html). While NumPy is not involved, it is the most popular implementation of this concept.
 - **[C++ Templates](https://www.google.com/search?client=safari&rls=en&q=C%2B%2B+templates&ie=UTF-8&oe=UTF-8):** To generate efficient code with few lines, NumDot makes use of C++ templates. They're essentially fancy generics, but are a bit harder to understand.
-- **[C++ Variant](https://en.cppreference.com/w/cpp/utility/variant):** To offer support for different data types, NumDot uses `std::variant` in [XTVariant](https://github.com/Ivorforce/NumDot/blob/main/src/xtv.h).
+- **[C++ Variant](https://en.cppreference.com/w/cpp/utility/variant):** To offer support for different data types, NumDot uses `std::variant`.
 - **[XTensor / XArray](https://xtensor.readthedocs.io/en/latest/getting_started.html):** XTensor is used for actually doing the math. That means you need to understand what it's doing to produce code that works with it.
 
 You don't need to be proficient with all of these technologies to help! Check out the [open issues](https://github.com/Ivorforce/NumDot/issues) for anything that interests you. There is a lot left to do!

@@ -7,19 +7,22 @@
 #include "xtensor/xadapt.hpp"
 #include "xtensor/xoperation.hpp"
 
+#include "varray.h"
+#include "vcompute.h"
+
 #include "conversion_array.h"
 #include "conversion_shape.h"
 #include "conversion_range.h"
 #include "conversion_slice.h"
 #include "conversion_axes.h"
-#include "xtv.h"
 #include "ndarray.h"
 #include "ndrange.h"
 
 using namespace godot;
-using namespace xtv;
 
 void nd::_bind_methods() {
+	// For the macros, we need to have the values in our namespace.
+	using namespace va;
 	BIND_ENUM_CONSTANT(Float64);
 	BIND_ENUM_CONSTANT(Float32);
 	BIND_ENUM_CONSTANT(Int8);
@@ -36,13 +39,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("to", "stop"), &nd::to);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("range", "start_or_stop", "stop", "step"), &nd::range, static_cast<int64_t>(0), DEFVAL(nullptr), DEFVAL(nullptr));
 
-	godot::ClassDB::bind_static_method("nd", D_METHOD("dtype", "array"), &nd::dtype);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("size_of_dtype_in_bytes", "dtype"), &nd::size_of_dtype_in_bytes);
-	godot::ClassDB::bind_static_method("nd", D_METHOD("shape", "array"), &nd::shape);
-	godot::ClassDB::bind_static_method("nd", D_METHOD("size", "array"), &nd::size);
-	godot::ClassDB::bind_static_method("nd", D_METHOD("ndim", "array"), &nd::ndim);
-
-	godot::ClassDB::bind_static_method("nd", D_METHOD("as_type", "array", "dtype"), &nd::as_type);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("as_array", "array", "dtype"), &nd::as_array, DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("array", "array", "dtype"), &nd::array, DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax));
@@ -116,70 +113,8 @@ Ref<NDRange> nd::range(Variant start_or_stop, Variant stop, Variant step) {
 	}
 }
 
-nd::DType nd::dtype(Variant array) {
-	// TODO We can totally do this without constructing an array. More code though.
-	try {
-		std::shared_ptr<xtv::XTVariant> existing_array = variant_as_array(array);
-		return xtv::dtype(*existing_array);
-	}
-	catch (std::runtime_error& error) {
-		ERR_FAIL_V_MSG(DTypeMax, error.what());
-	}
-}
-
 uint64_t nd::size_of_dtype_in_bytes(DType dtype) {
-	return xtv::size_of_dtype_in_bytes(dtype);
-}
-
-PackedInt64Array nd::shape(Variant array) {
-	try {
-		// TODO We can totally do this without constructing an array. More code though.
-		std::shared_ptr<xtv::XTVariant> existing_array = variant_as_array(array);
-
-		auto shape = xtv::shape(*existing_array);
-		// TODO This seems a bit weird, but it works for now.
-		auto packed = PackedInt64Array();
-		for (auto d : shape) {
-			packed.append(d);
-		}
-		return packed;
-	}
-	catch (std::runtime_error& error) {
-		ERR_FAIL_V_MSG(PackedInt64Array(), error.what());
-	}
-}
-
-uint64_t nd::size(Variant array) {
-	try {
-		// TODO We can totally do this without constructing an array. More code though.
-		std::shared_ptr<xtv::XTVariant> existing_array = variant_as_array(array);
-
-		return xtv::size(*existing_array);
-	}
-	catch (std::runtime_error& error) {
-		ERR_FAIL_V_MSG(0, error.what());
-	}
-}
-
-uint64_t nd::ndim(Variant array) {
-	try {
-		// TODO We can totally do this without constructing an array. More code though.
-		std::shared_ptr<xtv::XTVariant> existing_array = variant_as_array(array);
-
-		return xtv::dimension(*existing_array);
-	}
-	catch (std::runtime_error& error) {
-		ERR_FAIL_V_MSG(0, error.what());
-	}
-}
-
-Ref<NDArray> nd::as_type(Variant array, nd::DType dtype) {
-	try {
-		return nd::as_array(array, dtype);
-	}
-	catch (std::runtime_error& error) {
-		ERR_FAIL_V_MSG(nullptr, error.what());
-	}
+	return va::size_of_dtype_in_bytes(dtype);
 }
 
 Ref<NDArray> nd::as_array(Variant array, nd::DType dtype) {
@@ -200,14 +135,14 @@ Ref<NDArray> nd::as_array(Variant array, nd::DType dtype) {
 
 Ref<NDArray> nd::array(Variant array, nd::DType dtype) {
 	try {
-		std::shared_ptr<xtv::XTVariant> existing_array = variant_as_array(array);
+		va::VArray existing_array = variant_as_array(array);
 
 		// Default value.
 		if (dtype == nd::DType::DTypeMax) {
-			dtype = xtv::dtype(*existing_array);
+			dtype = va::dtype(existing_array);
 		}
 
-		auto result = xtv::make_xarray(dtype, *existing_array);
+		auto result = va::copy_as_dtype(existing_array, dtype);
 		return {memnew(NDArray(result))};
 	}
 	catch (std::runtime_error& error) {
@@ -219,7 +154,7 @@ Ref<NDArray> nd::empty(Variant shape, nd::DType dtype) {
 	try {
 		std::vector<size_t> shape_array = variant_as_shape<size_t, std::vector<size_t>>(shape);
 
-		return {memnew(NDArray(xtv::empty(dtype, shape_array)))};
+		return {memnew(NDArray(va::empty(dtype, shape_array)))};
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
@@ -231,7 +166,7 @@ Ref<NDArray> _full(Variant shape, V value, nd::DType dtype) {
 	try {
 		std::vector<size_t> shape_array = variant_as_shape<size_t, std::vector<size_t>>(shape);
 
-		return {memnew(NDArray(xtv::full(dtype, value, shape_array)))};
+		return {memnew(NDArray(va::full(dtype, value, shape_array)))};
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
@@ -271,12 +206,14 @@ Ref<NDArray> nd::linspace(Variant start, Variant stop, int64_t num, bool endpoin
 			using T = std::decay_t<decltype(t)>;
 
 			if constexpr (std::is_floating_point_v<T>) {
-				return std::make_shared<XTVariant>(xt::xarray<T>(xt::linspace(static_cast<double_t>(start), static_cast<double_t>(stop), num, endpoint)));
+				auto store = std::make_shared<xt::xarray<T>>(xt::linspace(static_cast<double_t>(start), static_cast<double_t>(stop), num, endpoint));
+				return va::from_store(store);
 			}
 			else {
-				return std::make_shared<XTVariant>(xt::xarray<T>(xt::linspace(static_cast<int64_t>(start), static_cast<int64_t>(stop), num, endpoint)));
+				auto store = std::make_shared<xt::xarray<T>>(xt::linspace(static_cast<int64_t>(start), static_cast<int64_t>(stop), num, endpoint));
+				return va::from_store(store);
 			}
-		}, xtv::dtype_to_variant(dtype));
+		}, va::dtype_to_variant(dtype));
 		return {memnew(NDArray(result))};
 	}
 	catch (std::runtime_error& error) {
@@ -302,12 +239,14 @@ Ref<NDArray> nd::arange(Variant start_or_stop, Variant stop, Variant step, DType
 			using T = std::decay_t<decltype(t)>;
 
 			if constexpr (std::is_floating_point_v<T>) {
-				return std::make_shared<XTVariant>(xt::xarray<T>(xt::arange(static_cast<double_t>(start_or_stop), static_cast<double_t>(stop), static_cast<double_t>(step))));
+				auto store = std::make_shared<xt::xarray<T>>(xt::arange(static_cast<double_t>(start_or_stop), static_cast<double_t>(stop), static_cast<double_t>(step)));
+				return va::from_store(store);
 			}
 			else {
-				return std::make_shared<XTVariant>(xt::xarray<T>(xt::arange(static_cast<int64_t>(start_or_stop), static_cast<int64_t>(stop), static_cast<int64_t>(step))));
+				auto store = std::make_shared<xt::xarray<T>>(xt::arange(static_cast<int64_t>(start_or_stop), static_cast<int64_t>(stop), static_cast<int64_t>(step)));
+				return va::from_store(store);
 			}
-		}, xtv::dtype_to_variant(dtype));
+		}, va::dtype_to_variant(dtype));
 		return {memnew(NDArray(result))};
 	}
 	catch (std::runtime_error& error) {
@@ -320,10 +259,13 @@ Ref<NDArray> nd::arange(Variant start_or_stop, Variant stop, Variant step, DType
 template <typename FX, typename PromotionRule>
 inline Ref<NDArray> binary_operation(Variant a, Variant b) {
 	try {
-		std::shared_ptr<xtv::XTVariant> a_ = variant_as_array(a);
-		std::shared_ptr<xtv::XTVariant> b_ = variant_as_array(b);
+		va::VArray a_ = variant_as_array(a);
+		va::VArray b_ = variant_as_array(b);
 
-		auto result = xtv::xoperation<PromotionRule>(XFunction<FX> {}, *a_, *b_);
+		auto comp_a = va::to_compute_variant(a_);
+		auto comp_b = va::to_compute_variant(b_);
+
+		auto result = va::xoperation<PromotionRule>(va::XFunction<FX> {}, comp_a, comp_b);
 		return { memnew(NDArray(result)) };
 	}
 	catch (std::runtime_error& error) {
@@ -333,27 +275,27 @@ inline Ref<NDArray> binary_operation(Variant a, Variant b) {
 
 Ref<NDArray> nd::add(Variant a, Variant b) {
 	// godot::UtilityFunctions::print(value);
-	return binary_operation<xt::detail::plus, xtv::promote::function_result<xt::detail::plus>>(a, b);
+	return binary_operation<xt::detail::plus, va::promote::function_result<xt::detail::plus>>(a, b);
 }
 
 Ref<NDArray> nd::subtract(Variant a, Variant b) {
-	return binary_operation<xt::detail::minus, xtv::promote::function_result<xt::detail::minus>>(a, b);
+	return binary_operation<xt::detail::minus, va::promote::function_result<xt::detail::minus>>(a, b);
 }
 
 Ref<NDArray> nd::multiply(Variant a, Variant b) {
-	return binary_operation<xt::detail::multiplies, xtv::promote::function_result<xt::detail::multiplies>>(a, b);
+	return binary_operation<xt::detail::multiplies, va::promote::function_result<xt::detail::multiplies>>(a, b);
 }
 
 Ref<NDArray> nd::divide(Variant a, Variant b) {
-	return binary_operation<xt::detail::divides, xtv::promote::function_result<xt::detail::divides>>(a, b);
+	return binary_operation<xt::detail::divides, va::promote::function_result<xt::detail::divides>>(a, b);
 }
 
 Ref<NDArray> nd::remainder(Variant a, Variant b) {
-	return binary_operation<xt::math::remainder_fun, xtv::promote::function_result<xt::math::remainder_fun>>(a, b);
+	return binary_operation<xt::math::remainder_fun, va::promote::function_result<xt::math::remainder_fun>>(a, b);
 }
 
 Ref<NDArray> nd::pow(Variant a, Variant b) {
-	return binary_operation<xt::math::pow_fun, xtv::promote::function_result<xt::math::pow_fun>>(a, b);
+	return binary_operation<xt::math::pow_fun, va::promote::function_result<xt::math::pow_fun>>(a, b);
 }
 
 
@@ -362,7 +304,9 @@ inline Ref<NDArray> unary_operation(Variant a) {
 	try {
 		auto a_ = variant_as_array(a);
 
-		auto result = xtv::xoperation<PromotionRule>(XFunction<FX> {}, *a_);
+		auto comp_a = va::to_compute_variant(a_);
+
+		auto result = va::xoperation<PromotionRule>(va::XFunction<FX> {}, comp_a);
 		return { memnew(NDArray(result)) };
 	}
 	catch (std::runtime_error& error) {
@@ -371,31 +315,31 @@ inline Ref<NDArray> unary_operation(Variant a) {
 }
 
 Ref<NDArray> nd::abs(Variant a) {
-	return unary_operation<xt::math::abs_fun, xtv::promote::function_result<xt::math::abs_fun>>(a);
+	return unary_operation<xt::math::abs_fun, va::promote::function_result<xt::math::abs_fun>>(a);
 }
 
 Ref<NDArray> nd::sqrt(Variant a) {
-	return unary_operation<xt::math::sqrt_fun, xtv::promote::function_result<xt::math::sqrt_fun>>(a);
+	return unary_operation<xt::math::sqrt_fun, va::promote::function_result<xt::math::sqrt_fun>>(a);
 }
 
 Ref<NDArray> nd::exp(Variant a) {
-	return unary_operation<xt::math::exp_fun, xtv::promote::function_result<xt::math::exp_fun>>(a);
+	return unary_operation<xt::math::exp_fun, va::promote::function_result<xt::math::exp_fun>>(a);
 }
 
 Ref<NDArray> nd::log(Variant a) {
-	return unary_operation<xt::math::log_fun, xtv::promote::function_result<xt::math::log_fun>>(a);
+	return unary_operation<xt::math::log_fun, va::promote::function_result<xt::math::log_fun>>(a);
 }
 
 Ref<NDArray> nd::sin(Variant a) {
-	return unary_operation<xt::math::sin_fun, xtv::promote::function_result<xt::math::sin_fun>>(a);
+	return unary_operation<xt::math::sin_fun, va::promote::function_result<xt::math::sin_fun>>(a);
 }
 
 Ref<NDArray> nd::cos(Variant a) {
-	return unary_operation<xt::math::cos_fun, xtv::promote::function_result<xt::math::cos_fun>>(a);
+	return unary_operation<xt::math::cos_fun, va::promote::function_result<xt::math::cos_fun>>(a);
 }
 
 Ref<NDArray> nd::tan(Variant a) {
-	return unary_operation<xt::math::tan_fun, xtv::promote::function_result<xt::math::tan_fun>>(a);
+	return unary_operation<xt::math::tan_fun, va::promote::function_result<xt::math::tan_fun>>(a);
 }
 
 template <typename FX, typename PromotionRule>
@@ -404,8 +348,8 @@ inline Ref<NDArray> reduction(Variant a, Variant axes) {
 		auto axes_ = variant_to_axes(axes);
 		auto a_ = variant_as_array(a);
 
-		auto result = xtv::xreduction<PromotionRule>(
-			FX{}, axes_, *a_
+		auto result = va::xreduction<PromotionRule>(
+			FX{}, axes_, va::to_compute_variant(a_)
 		);
 
 		return {memnew(NDArray(result))};
@@ -415,10 +359,17 @@ inline Ref<NDArray> reduction(Variant a, Variant axes) {
 	}
 }
 
-#define Reducer(fun_name)\
-	template <typename A>\
-	auto operator()(xtv::GivenAxes& axes, A&& a) const {\
-		return xt::fun_name(std::forward<A>(a), axes);\
+#define Reducer(Name, fun_name)\
+	Name() = default;\
+	Name(const Name&) = default;\
+	Name(Name&&) noexcept = default;\
+	Name& operator=(const Name&) = default;\
+	Name& operator=(Name&&) noexcept = default;\
+	~Name() = default;\
+\
+	template <typename GivenAxes, typename A>\
+	auto operator()(GivenAxes&& axes, A&& a) const {\
+		return xt::fun_name(std::forward<A>(a), std::forward<GivenAxes>(axes));\
 	}\
 \
 	template <typename A>\
@@ -426,44 +377,44 @@ inline Ref<NDArray> reduction(Variant a, Variant axes) {
 		return xt::fun_name(std::forward<A>(a));\
 	}
 
-struct Sum { Reducer(sum) };
+struct Sum { Reducer(Sum, sum) };
 
 Ref<NDArray> nd::sum(Variant a, Variant axes) {
-	return reduction<Sum, xtv::promote::common_type>(a, axes);
+	return reduction<Sum, va::promote::common_type>(a, axes);
 }
 
-struct Prod { Reducer(prod) };
+struct Prod { Reducer(Prod, prod) };
 
 Ref<NDArray> nd::prod(Variant a, Variant axes) {
-	return reduction<Prod, xtv::promote::at_least_int32>(a, axes);
+	return reduction<Prod, va::promote::at_least_int32>(a, axes);
 }
 
-struct Mean { Reducer(mean) };
+struct Mean { Reducer(Mean, mean) };
 
 Ref<NDArray> nd::mean(Variant a, Variant axes) {
-	return reduction<Mean, xtv::promote::matching_float_or_default<double_t>>(a, axes);
+	return reduction<Mean, va::promote::matching_float_or_default<double_t>>(a, axes);
 }
 
-struct Variance { Reducer(variance) };
+struct Variance { Reducer(Variance, variance) };
 
 Ref<NDArray> nd::var(Variant a, Variant axes) {
-	return reduction<Variance, xtv::promote::matching_float_or_default<double_t>>(a, axes);
+	return reduction<Variance, va::promote::matching_float_or_default<double_t>>(a, axes);
 }
 
-struct Std { Reducer(stddev) };
+struct Std { Reducer(Std, stddev) };
 
 Ref<NDArray> nd::std(Variant a, Variant axes) {
-	return reduction<Std, xtv::promote::matching_float_or_default<double_t>>(a, axes);
+	return reduction<Std, va::promote::matching_float_or_default<double_t>>(a, axes);
 }
 
-struct Amax { Reducer(amax) };
+struct Amax { Reducer(Amax, amax) };
 
 Ref<NDArray> nd::max(Variant a, Variant axes) {
-	return reduction<Amax, xtv::promote::common_type>(a, axes);
+	return reduction<Amax, va::promote::common_type>(a, axes);
 }
 
-struct Amin { Reducer(amin) };
+struct Amin { Reducer(Amin, amin) };
 
 Ref<NDArray> nd::min(Variant a, Variant axes) {
-	return reduction<Amin, xtv::promote::common_type>(a, axes);
+	return reduction<Amin, va::promote::common_type>(a, axes);
 }

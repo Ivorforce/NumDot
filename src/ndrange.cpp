@@ -1,12 +1,4 @@
-#include "ndarray.h"
-
-#include <godot_cpp/godot.hpp>
-#include "xtensor/xtensor.hpp"
-
-#include "xtv.h"
-#include "nd.h"
-#include "conversion_array.h"
-#include "conversion_slice.h"
+#include "ndrange.h"
 
 using namespace godot;
 

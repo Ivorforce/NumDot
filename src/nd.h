@@ -7,18 +7,20 @@
 
 #include "xtensor/xio.hpp"
 
+#include "varray.h"
+#include "vcompute.h"
+
 #include "ndarray.h"
 #include "ndrange.h"
-#include "xtv.h"
 
 using namespace godot;
 
 // From https://github.com/xtensor-stack/xtensor/issues/1413
-template <class E>
-String xt_to_string(const xt::xexpression<E>& e)
+template <typename E>
+String xt_to_string(E&& e)
 {
     std::ostringstream out;
-    out << e;
+    out << std::forward<E>(e);
     return String(out.str().c_str());
 }
 
@@ -35,7 +37,7 @@ protected:
 
 public:
 	// Godot needs nd::DType here.
-	using DType = xtv::DType;
+	using DType = va::DType;
 
 	nd();
 	~nd();
@@ -49,14 +51,9 @@ public:
 	static Ref<NDRange> to(int64_t stop);
 
 	// Property access.
-	static DType dtype(Variant array);
 	static uint64_t size_of_dtype_in_bytes(DType dtype);
-	static PackedInt64Array shape(Variant array);
-	static uint64_t size(Variant array);
-	static uint64_t ndim(Variant array);
-	
+
 	// Array interpretation.
-	static Ref<NDArray> as_type(Variant array, DType dtype);
 	static Ref<NDArray> as_array(Variant array, DType dtype = DType::DTypeMax);
 	static Ref<NDArray> array(Variant array, DType dtype = DType::DTypeMax);
 

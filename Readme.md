@@ -12,21 +12,21 @@ Operations with tensors are also very easy to write and read, once you're famili
 
 NumDot is inspired by the python tensor math library, [NumPy](https://numpy.org), and thus shares many semantics with it. If you are unfamiliar with tensor operations in general, I recommend taking a numpy tutorial or two first. That being said, here are some direct comparison examples:
 
-| NumPy                             | NumDot                                                                                                |
-|-----------------------------------|-------------------------------------------------------------------------------------------------------|
-| `x[a, b, c]`                      | `x.get(a, b, c)`                                                                                      |
-| `x[...]` can return views         | `x.get(...)` ([regretfully](https://github.com/Ivorforce/NumDot/issues/8)) returns a copy (as of now) |
-| `x[...]` can return single values | `x.get(...)` always returns a tensor, use `x.get_float(...)` and `x.get_int(...)` to get values.      |
-| `x[a, b, c] = d`                  | `x.set(d, a, b, c)`                                                                                   |
-| `x[1:]`                           | `x.get(nd.from(1))`                                                                                   |
-| `x[:1]`                           | `x.get(nd.to(1))`                                                                                     |
-| `x[1:2]`                          | `x.get(nd.range(1, 2))`                                                                               |
-| `x[0:5:2]`                        | `x.get(nd.range(0, 5, 2))`                                                                       |
-| `np.array([2, 3, 4])`             | `nd.array([2, 3, 4])`                                                                                 |
-| `np.ones((2, 3, 4))`              | `nd.ones([2, 3, 4])`                                                                                  |
-| `np.add(a, b)`                    | `nd.add(a, b)`                                                                                        |
-| `np.sin(a)`                       | `nd.sin(a)`                                                                                           |
-| `np.mean(a, [1, -1])`             | `nd.mean(a, [1, -1])`                                                                                 |
+| NumPy                             | NumDot                                                                                                                           |
+|-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
+| `x[a, b, c]`                      | `x.get(a, b, c)`                                                                                                                 |
+| `x[...]` can return views         | `x.get(...)` can return views                                                                                                    |
+| `x[...]` can return single values | `x.get(...)` always returns a tensor, use `x.get_float(...)` and `x.get_int(...)` to get values.                                 |
+| `x[a, b, c] = d`                  | `x.set(d, a, b, c)`                                                                                                              |
+| `x[1:]`                           | `x.get(nd.from(1))`                                                                                                              |
+| `x[:1]`                           | `x.get(nd.to(1))`                                                                                                                |
+| `x[1:2]`                          | `x.get(nd.range(1, 2))`                                                                                                          |
+| `x[0:5:2]`                        | `x.get(nd.range(0, 5, 2))`                                                                                                       |
+| `np.array([2, 3, 4])`             | `nd.array([2, 3, 4])`                                                                                                            |
+| `np.ones((2, 3, 4))`              | `nd.ones([2, 3, 4])`                                                                                                             |
+| `a + b`                           | `nd.add(a, b)` ([operator overloads are not yet supported by godot](https://github.com/godotengine/godot-proposals/issues/8383)) |
+| `np.sin(a)`                       | `nd.sin(a)`                                                                                                                      |
+| `np.mean(a, [1, -1])`             | `nd.mean(a, [1, -1])`                                                                                                            |
 
 Keep in mind these semantics are yet subject to change.
 

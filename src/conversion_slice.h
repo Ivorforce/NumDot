@@ -32,7 +32,7 @@ static xt::xstrided_slice<std::ptrdiff_t> variant_as_slice_part(const Variant& v
 		case Variant::INT:
 			return int64_t(variant);
 		case Variant::STRING_NAME:
-			if (StringName(variant) == newaxis()) {
+			if (StringName(variant) == ::newaxis()) {
 				return xt::newaxis();
 			}
 			break;

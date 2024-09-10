@@ -12,7 +12,8 @@
 #include <godot_cpp/classes/ref_counted.hpp>
 #include <godot_cpp/core/binder_common.hpp>
 
-#include "xtv.h"
+#include "varray.h"
+#include "vcompute.h"
 
 using namespace godot;
 
@@ -27,13 +28,13 @@ protected:
 
 public:
 	// We need a shared pointer because things like asarray can return either a view or an array
-	std::shared_ptr<xtv::XTVariant> array;
+	va::VArray array;
 
 	NDArray();
-	explicit NDArray(std::shared_ptr<xtv::XTVariant> array) : array(std::move(array)) {};
+	explicit NDArray(va::VArray array) : array(std::move(array)) {};
 	~NDArray() override;
 
-	[[nodiscard]] xtv::DType dtype() const;
+	[[nodiscard]] va::DType dtype() const;
 	[[nodiscard]] PackedInt64Array shape() const;
 	[[nodiscard]] uint64_t size() const;
 	[[nodiscard]] uint64_t array_size_in_bytes() const;
@@ -47,7 +48,7 @@ public:
 	double_t get_float(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
 	int64_t get_int(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
 
-	[[nodiscard]] Variant as_type(xtv::DType dtype) const;
+	[[nodiscard]] Variant as_type(va::DType dtype) const;
 
 	[[nodiscard]] double_t to_float() const;
 	[[nodiscard]] int64_t to_int() const;

@@ -3,7 +3,8 @@
 #include <godot_cpp/godot.hpp>
 #include "xtensor/xtensor.hpp"
 
-#include "xtv.h"
+#include "varray.h"
+#include "vcompute.h"
 #include "nd.h"
 #include "conversion_array.h"
 #include "conversion_slice.h"
@@ -40,15 +41,15 @@ NDArray::NDArray() = default;
 NDArray::~NDArray() = default;
 
 String NDArray::_to_string() const {
-	return std::visit([](auto& arg){ return xt_to_string(arg); }, *array);
+	return std::visit([](auto&& arg){ return xt_to_string(arg); }, va::to_compute_variant(array));
 }
 
 nd::DType NDArray::dtype() const {
-	return xtv::dtype(*array);
+	return va::dtype(array);
 }
 
 PackedInt64Array NDArray::shape() const {
-	auto shape = xtv::shape(*array);
+	auto shape = va::shape(array);
 	// TODO This seems a bit weird, but it works for now.
 	auto packed = PackedInt64Array();
 	for (auto d : shape) {
@@ -58,19 +59,19 @@ PackedInt64Array NDArray::shape() const {
 }
 
 uint64_t NDArray::size() const {
-	return xtv::size(*array);
+	return va::size(array);
 }
 
 uint64_t NDArray::array_size_in_bytes() const {
-	return xtv::size_of_array_in_bytes(*array);
+	return va::size_of_array_in_bytes(array);
 }
 
 uint64_t NDArray::ndim() const {
-	return xtv::dimension(*array);
+	return va::dimension(array);
 }
 
 Variant NDArray::as_type(nd::DType dtype) const {
-	return nd::as_type(this, dtype);
+	return nd::as_array(this, dtype);
 }
 
 void NDArray::set(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
@@ -80,21 +81,23 @@ void NDArray::set(const Variant **args, GDExtensionInt arg_count, GDExtensionCal
 
 	try {
 		const Variant &value = *args[0];
-		xt::xstrided_slice_vector sv = variants_as_slice_vector(args + 1, arg_count - 1, error);
+		// todo don't need slices if arg_count == 1
+		auto slices = variants_as_slice_vector(args + 1, arg_count - 1, error);
+		va::VArray sliced = arg_count == 1 ? array : va::slice(array, slices);
 
 		switch (value.get_type()) {
 			case Variant::INT:
-				xtv::set_slice_value(*array, sv, int64_t(value));
+				va::set_value(array, int64_t(value));
 				return;
 			case Variant::FLOAT:
-				xtv::set_slice_value(*array, sv, double_t(value));
+				va::set_value(array, double_t(value));
 				return;
 			// TODO We could optimize more assignments of literals.
 			//  Just need to figure out how, ideally without duplicating code - as_array already does much type checking work.
 			default:
-				std::shared_ptr<xtv::XTVariant> a_ = variant_as_array(value);
+				va::VArray a_ = variant_as_array(value);
 
-				xtv::set_slice(*array, sv, *a_);
+				va::set_with_array(array, a_);
 				return;
 		}
 	}
@@ -107,10 +110,10 @@ Ref<NDArray> NDArray::get(const Variant **args, GDExtensionInt arg_count, GDExte
 	try {
 		xt::xstrided_slice_vector sv = variants_as_slice_vector(args, arg_count, error);
 
-		auto result = xtv::get_slice(*array, sv);
-		return Ref<NDArray>(memnew(NDArray(result)));
+		auto result = va::slice(array, sv);
+		return {memnew(NDArray(result))};
 	}
-	catch (std::runtime_error error) {
+	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG(Ref<NDArray>(), error.what());
 	}
 }
@@ -118,12 +121,9 @@ Ref<NDArray> NDArray::get(const Variant **args, GDExtensionInt arg_count, GDExte
 double_t NDArray::get_float(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
 	try {
 		xt::xstrided_slice_vector sv = variants_as_slice_vector(args, arg_count, error);
-
-		xt::xarray<double_t> test = {};
-		auto a = test[{2, 3}];
-		return xtv::get_single_value<double_t>(*array, sv);
+		return va::to_single_value<double_t>(slice(array, sv));
 	}
-	catch (std::runtime_error error) {
+	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG(0, error.what());
 	}
 }
@@ -131,52 +131,51 @@ double_t NDArray::get_float(const Variant **args, GDExtensionInt arg_count, GDEx
 int64_t NDArray::get_int(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
 	try {
 		xt::xstrided_slice_vector sv = variants_as_slice_vector(args, arg_count, error);
-
-		return xtv::get_single_value<int64_t>(*array, sv);
+		return va::to_single_value<int64_t>(slice(array, sv));
 	}
-	catch (std::runtime_error error) {
+	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG(0, error.what());
 	}
 }
 
 double_t NDArray::to_float() const {
 	try {
-		return xtv::to_single_value<double_t>(*array);
+		return va::to_single_value<double_t>(array);
 	}
-	catch (std::runtime_error error) {
+	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG(0, error.what());
 	}
 }
 
 int64_t NDArray::to_int() const {
 	try {
-		return xtv::to_single_value<int64_t>(*array);
+		return va::to_single_value<int64_t>(array);
 	}
-	catch (std::runtime_error error) {
+	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG(0, error.what());
 	}
 }
 
 PackedFloat32Array NDArray::to_packed_float32_array() const {
-	return xtvariant_to_packed<PackedFloat32Array>(*array);
+	return xtvariant_to_packed<PackedFloat32Array>(array);
 }
 
 PackedFloat64Array NDArray::to_packed_float64_array() const {
-	return xtvariant_to_packed<PackedFloat64Array>(*array);
+	return xtvariant_to_packed<PackedFloat64Array>(array);
 }
 
 PackedByteArray NDArray::to_packed_byte_array() const {
-	return xtvariant_to_packed<PackedByteArray>(*array);
+	return xtvariant_to_packed<PackedByteArray>(array);
 }
 
 PackedInt32Array NDArray::to_packed_int32_array() const {
-	return xtvariant_to_packed<PackedInt32Array>(*array);
+	return xtvariant_to_packed<PackedInt32Array>(array);
 }
 
 PackedInt64Array NDArray::to_packed_int64_array() const {
-	return xtvariant_to_packed<PackedInt64Array>(*array);
+	return xtvariant_to_packed<PackedInt64Array>(array);
 }
 
 Array NDArray::to_godot_array() const {
-	return xtvariant_to_godot_array(*array);
+	return xtvariant_to_godot_array(array);
 }

@@ -193,6 +193,24 @@ namespace va {
         }, varray);
     }
 
+    static VArray swapaxes(const VArray& varray, std::ptrdiff_t a, std::ptrdiff_t b) {
+        return map([a, b](auto& array) {
+            return xt::swapaxes(array, a, b);
+        }, varray);
+    }
+
+    static VArray moveaxis(const VArray& varray, std::ptrdiff_t src, std::ptrdiff_t dst) {
+        return map([src, dst](auto& array) {
+            return xt::moveaxis(array, src, dst);
+        }, varray);
+    }
+
+    static VArray flip(const VArray& varray, size_t axis) {
+        return map([axis](auto& array) {
+            return xt::flip(array, axis);
+        }, varray);
+    }
+
     template <typename T>
     static inline DType dtype(T&& variant) {
         return DType(std::forward<T>(variant).store.index());

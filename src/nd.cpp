@@ -53,6 +53,9 @@ void nd::_bind_methods() {
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("transpose", "a", "permutation"), &nd::transpose);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("reshape", "a", "shape"), &nd::reshape);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("swapaxes", "v", "a", "b"), &nd::swapaxes);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("moveaxis", "v", "src", "dst"), &nd::moveaxis);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("flip", "v", "axis"), &nd::flip);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("add", "a", "b"), &nd::add);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("subtract", "a", "b"), &nd::subtract);
@@ -279,6 +282,36 @@ Ref<NDArray> nd::reshape(Variant a, Variant shape) {
 		auto new_shape_ = variant_as_shape<std::ptrdiff_t, va::strides_type>(shape);
 
 		return {memnew(NDArray(va::reshape(a_, new_shape_)))};
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
+}
+
+Ref<NDArray> nd::swapaxes(Variant v, int64_t a, int64_t b) {
+	try {
+		va::VArray v_ = variant_as_array(v);
+		return {memnew(NDArray(va::swapaxes(v_, a, b)))};
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
+}
+
+Ref<NDArray> nd::moveaxis(Variant v, int64_t src, int64_t dst) {
+	try {
+		va::VArray v_ = variant_as_array(v);
+		return {memnew(NDArray(va::moveaxis(v_, src, dst)))};
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
+}
+
+Ref<NDArray> nd::flip(Variant v, int64_t axis) {
+	try {
+		va::VArray v_ = variant_as_array(v);
+		return {memnew(NDArray(va::flip(v_, axis)))};
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());

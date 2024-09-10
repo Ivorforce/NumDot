@@ -80,6 +80,15 @@
 				Calculate the exponential of all elements in the input array.
 			</description>
 		</method>
+		<method name="flip" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="v" type="Variant" />
+			<param index="1" name="axis" type="int" />
+			<description>
+				Reverse the order of elements in an array along the given axis.
+				The shape of the array is preserved, but the elements are reordered.
+			</description>
+		</method>
 		<method name="from" qualifiers="static">
 			<return type="NDRange" />
 			<param index="0" name="start" type="int" />
@@ -140,6 +149,16 @@
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				Return the minimum of an array or minimum along an axis.
+			</description>
+		</method>
+		<method name="moveaxis" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="v" type="Variant" />
+			<param index="1" name="src" type="int" />
+			<param index="2" name="dst" type="int" />
+			<description>
+				Move axes of an array to new positions.
+				Other axes remain in their original order.
 			</description>
 		</method>
 		<method name="multiply" qualifiers="static">
@@ -254,6 +273,15 @@
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				Sum of array elements over a given axis.
+			</description>
+		</method>
+		<method name="swapaxes" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="v" type="Variant" />
+			<param index="1" name="a" type="int" />
+			<param index="2" name="b" type="int" />
+			<description>
+				Interchange two axes of an array.
 			</description>
 		</method>
 		<method name="tan" qualifiers="static">

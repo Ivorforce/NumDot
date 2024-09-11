@@ -1,5 +1,9 @@
 #include "ndrange.h"
 
+#include <sstream>          // for operator<<, basic_stringstream, basic_ios
+#include <string>           // for char_traits, allocator, basic_string, string
+#include <type_traits>      // for decay_t
+
 using namespace godot;
 
 void NDRange::_bind_methods() {
@@ -10,10 +14,6 @@ std::string arg_to_string(xt::placeholders::xtuph v) { return "null"; };
 
 String NDRange::_to_string() const {
 	return std::visit([](auto a, auto b, auto c){
-		using A = std::decay_t<decltype(a)>;
-		using B = std::decay_t<decltype(b)>;
-		using C = std::decay_t<decltype(c)>;
-		
 		std::stringstream ss;
 		ss << "nd.range(" << arg_to_string(a) << ", " << arg_to_string(b) << ", " << arg_to_string(c) << ")";
 

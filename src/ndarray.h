@@ -1,19 +1,27 @@
 #ifndef NUMDOT_NDARRAY_H
 #define NUMDOT_NDARRAY_H
 
-#include "xtensor/xarray.hpp"
-#include "xtensor/xlayout.hpp"
-
 #ifdef WIN32
 #include <windows.h>
 #endif
 
-#include <godot_cpp/variant/variant.hpp>
-#include <godot_cpp/classes/ref_counted.hpp>
-#include <godot_cpp/core/binder_common.hpp>
-
-#include "varray.h"
-#include "vcompute.h"
+#include <math.h>                                      // for double_t
+#include <stdint.h>                                    // for uint64_t, int64_t
+#include <godot_cpp/classes/ref_counted.hpp>           // for RefCounted
+#include <godot_cpp/variant/variant.hpp>               // for Variant
+#include <utility>                                     // for move
+#include "gdextension_interface.h"                     // for GDExtensionCal...
+#include "godot_cpp/classes/ref.hpp"                   // for Ref
+#include "godot_cpp/classes/wrapped.hpp"               // for GDCLASS
+#include "godot_cpp/variant/array.hpp"                 // for Array
+#include "godot_cpp/variant/packed_byte_array.hpp"     // for PackedByteArray
+#include "godot_cpp/variant/packed_float32_array.hpp"  // for PackedFloat32A...
+#include "godot_cpp/variant/packed_float64_array.hpp"  // for PackedFloat64A...
+#include "godot_cpp/variant/packed_int32_array.hpp"    // for PackedInt32Array
+#include "godot_cpp/variant/packed_int64_array.hpp"    // for PackedInt64Array
+#include "godot_cpp/variant/string.hpp"                // for String
+#include "varray.h"                                    // for DType, VArray
+namespace godot { class ClassDB; }
 
 using namespace godot;
 

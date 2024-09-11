@@ -1,13 +1,12 @@
 #include "register_types.h"
 
-#include "nd.h"
-#include "ndarray.h"
-#include "ndrange.h"
-
-#include <gdextension_interface.h>
-#include <godot_cpp/core/defs.hpp>
-#include <godot_cpp/godot.hpp>
-#include <godot_cpp/variant/utility_functions.hpp>
+#include <gdextension_interface.h>      // for GDExtensionBool, GDExtensionC...
+#include <godot_cpp/core/defs.hpp>      // for GDE_EXPORT
+#include <godot_cpp/godot.hpp>          // for ModuleInitializationLevel
+#include "godot_cpp/core/class_db.hpp"  // for GDREGISTER_CLASS
+#include "nd.h"                         // for nd
+#include "ndarray.h"                    // for NDArray
+#include "ndrange.h"                    // for NDRange
 
 using namespace godot;
 

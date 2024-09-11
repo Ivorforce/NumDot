@@ -1,35 +1,30 @@
 #ifndef NUMDOT_ND_H
 #define NUMDOT_ND_H
 
-#include <godot_cpp/godot.hpp>
-#include <godot_cpp/classes/ref.hpp>
-#include <godot_cpp/core/binder_common.hpp>
-
-#include "xtensor/xio.hpp"
-
-#include "varray.h"
-#include "vcompute.h"
-
-#include "ndarray.h"
-#include "ndrange.h"
+#include <cstdint>                            // for int64_t, uint64_t
+#include <godot_cpp/classes/ref.hpp>          // for Ref
+#include <godot_cpp/core/binder_common.hpp>   // for VARIANT_ENUM_CAST
+#include <memory>                             // for allocator
+#include <sstream>                            // for ostringstream
+#include <utility>                            // for forward
+#include "godot_cpp/classes/object.hpp"       // for Object
+#include "godot_cpp/classes/wrapped.hpp"      // for GDCLASS
+#include "godot_cpp/core/class_db.hpp"        // for ClassDB (ptr only), DEFVAL
+#include "godot_cpp/variant/string.hpp"       // for String
+#include "godot_cpp/variant/string_name.hpp"  // for StringName
+#include "godot_cpp/variant/variant.hpp"      // for Variant
+#include "ndarray.h"                          // for NDArray
+#include "ndrange.h"                          // for NDRange
+#include "varray.h"                           // for DType
 
 using namespace godot;
 
-// From https://github.com/xtensor-stack/xtensor/issues/1413
-template <typename E>
-String xt_to_string(E&& e)
-{
-    std::ostringstream out;
-    out << std::forward<E>(e);
-    return String(out.str().c_str());
-}
-
-StringName newaxis() {
+static StringName newaxis() {
 	const StringName newaxis = StringName("newaxis");
 	return newaxis;
 }
 
-StringName ellipsis() {
+static StringName ellipsis() {
 	const StringName ellipsis = StringName("...");
 	return ellipsis;
 }

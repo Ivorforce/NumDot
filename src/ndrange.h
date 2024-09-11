@@ -5,11 +5,14 @@
 #include <windows.h>
 #endif
 
-#include <godot_cpp/variant/variant.hpp>
-#include <godot_cpp/classes/ref_counted.hpp>
-#include <godot_cpp/core/binder_common.hpp>
+#include <cstddef>                            // for ptrdiff_t
+#include <godot_cpp/classes/ref_counted.hpp>  // for RefCounted
+#include <variant>                            // for variant
+#include "godot_cpp/classes/wrapped.hpp"      // for GDCLASS
+#include "godot_cpp/variant/string.hpp"       // for String
+#include "xtensor/xslice.hpp"                 // for xtuph
+namespace godot { class ClassDB; }
 
-#include "xtensor/xslice.hpp"
 
 using namespace godot;
 

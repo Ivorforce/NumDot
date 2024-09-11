@@ -1,22 +1,30 @@
 #include "nd.h"
 
-#include <godot_cpp/godot.hpp>
-#include <godot_cpp/variant/utility_functions.hpp>
+#include <cmath>                                            // for double_t
+#include <cstddef>                                          // for size_t
+#include <stdexcept>                                        // for runtime_e...
+#include <type_traits>                                      // for decay_t
+#include <variant>                                          // for visit
+#include <vector>                                           // for vector
+#include "conversion_array.h"                               // for variant_a...
+#include "conversion_axes.h"                                // for variant_t...
+#include "conversion_range.h"                               // for to_range_...
+#include "conversion_shape.h"                               // for variant_a...
+#include "godot_cpp/classes/ref.hpp"                        // for Ref
+#include "godot_cpp/core/error_macros.hpp"                  // for ERR_FAIL_...
+#include "godot_cpp/core/memory.hpp"                        // for _post_ini...
+#include "ndarray.h"                                        // for NDArray
+#include "ndrange.h"                                        // for NDRange
+#include "varray.h"                                         // for DType
+#include "vcompute.h"                                       // for function_...
+#include "xtensor/xbuilder.hpp"                             // for arange
+#include "xtensor/xiterator.hpp"                            // for operator==
+#include "xtensor/xlayout.hpp"                              // for layout_type
+#include "xtensor/xmath.hpp"                                // for pow_fun
+#include "xtensor/xoperation.hpp"                           // for divides
+#include "xtensor/xslice.hpp"                               // for xtuph
+#include "xtensor/xtensor_forward.hpp"                      // for xarray
 
-#include "xtensor/xtensor.hpp"
-#include "xtensor/xadapt.hpp"
-#include "xtensor/xoperation.hpp"
-
-#include "varray.h"
-#include "vcompute.h"
-
-#include "conversion_array.h"
-#include "conversion_shape.h"
-#include "conversion_range.h"
-#include "conversion_slice.h"
-#include "conversion_axes.h"
-#include "ndarray.h"
-#include "ndrange.h"
 
 using namespace godot;
 

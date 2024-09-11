@@ -1,13 +1,24 @@
 #include "ndarray.h"
 
-#include <godot_cpp/godot.hpp>
-#include "xtensor/xtensor.hpp"
+#include <algorithm>                               // for copy
+#include <stdexcept>                               // for runtime_error
+#include <variant>                                 // for visit
+#include "conversion_array.h"                      // for xtvariant_to_packed
+#include "conversion_slice.h"                      // for variants_as_slice_...
+#include "conversion_string.h"                     // for xt_to_string
+#include "godot_cpp/classes/global_constants.hpp"  // for MethodFlags
+#include "godot_cpp/core/class_db.hpp"             // for D_METHOD, ClassDB
+#include "godot_cpp/core/error_macros.hpp"         // for ERR_FAIL_V_MSG
+#include "godot_cpp/core/memory.hpp"               // for _post_initialize
+#include "godot_cpp/variant/string_name.hpp"       // for StringName
+#include "godot_cpp/variant/variant.hpp"           // for Variant
+#include "nd.h"                                    // for nd
+#include "varray.h"                                // for slice, to_single_v...
+#include "xtensor/xiterator.hpp"                   // for operator==
+#include "xtensor/xlayout.hpp"                     // for layout_type
+#include "xtensor/xstorage.hpp"                    // for svector
+#include "xtensor/xstrided_view.hpp"               // for xstrided_slice_vector
 
-#include "varray.h"
-#include "vcompute.h"
-#include "nd.h"
-#include "conversion_array.h"
-#include "conversion_slice.h"
 
 using namespace godot;
 

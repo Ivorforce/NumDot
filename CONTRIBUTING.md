@@ -71,3 +71,12 @@ scons compiledb=yes compile_commands.json
 ```
 
 We do _not_ commit the file to the repo because it contains duplicate information.
+
+## Include what you use
+
+We can use [include-what-you-use](https://github.com/include-what-you-use/include-what-you-use/) should be used to keep the includes tidy and explicit. This may be needed because OS specific implementations leading to working code on one machine can lead to missing include problems on others. 
+```
+iwyu_tool.py -p . src > iwyu.txt
+```
+
+The resulting txt is _very_ explicit, but it's useful input.

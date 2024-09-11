@@ -29,7 +29,7 @@ NumDot is inspired by the python tensor math library, [NumPy](https://numpy.org)
 | `np.sin(a)`                       | `nd.sin(a)`                                                                                                                      |
 | `np.mean(a, [1, -1])`             | `nd.mean(a, [1, -1])`                                                                                                            |
 | `np.reshape(a, (50, -1))`         | `nd.reshape(a, [50, -1])`                                                                                                        |
-| `np.transpose(a, (2, 0, 1))`      | `nd.reshape(a, [2, 0, 1])`                                                                                                       |
+| `np.transpose(a, (2, 0, 1))`      | `nd.transpose(a, [2, 0, 1])`                                                                                                       |
 
 Keep in mind these semantics are yet subject to change.
 

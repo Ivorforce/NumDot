@@ -11,7 +11,7 @@
 using namespace godot;
 
 template <typename Sh, typename T>
-inline Sh packed_as_shape(const T& shape_array) {
+Sh packed_as_shape(const T& shape_array) {
 	Sh sh;
 	sh.assign(shape_array.ptr(), shape_array.ptr() + shape_array.size());
 	return sh;

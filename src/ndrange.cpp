@@ -1,8 +1,7 @@
 #include "ndrange.h"
 
-#include <sstream>          // for operator<<, basic_stringstream, basic_ios
+#include <sstream>          // for operator<<, basic_stringstream, basic_ost...
 #include <string>           // for char_traits, allocator, basic_string, string
-#include <type_traits>      // for decay_t
 
 using namespace godot;
 

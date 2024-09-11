@@ -1,0 +1,11 @@
+#ifndef CONVERSION_AXES_H
+#define CONVERSION_AXES_H
+
+#include <godot_cpp/variant/variant.hpp>
+#include "vcompute.h"
+
+using namespace godot;
+
+va::Axes variant_to_axes(Variant variant);
+
+#endif //CONVERSION_AXES_H

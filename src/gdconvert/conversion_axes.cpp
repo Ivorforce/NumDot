@@ -1,19 +1,15 @@
-#ifndef CONVERSION_AXES_H
-#define CONVERSION_AXES_H
+#include "conversion_axes.h"
 
-#include <godot_cpp/variant/variant.hpp>
+#include <cstdint>                                  // for int64_t
+#include <cstddef>                                   // for ptrdiff_t
+#include <stdexcept>                                 // for runtime_error
+#include <vector>                                    // for vector
+#include "conversion_range.h"                        // for packed_as_array
+#include "godot_cpp/variant/packed_int32_array.hpp"  // for PackedInt32Array
+#include "godot_cpp/variant/packed_int64_array.hpp"  // for PackedInt64Array
+#include "godot_cpp/variant/variant.hpp"             // for Variant
 
-#include "varray.h"
-#include "vcompute.h"
-
-template <typename T, typename Packed>
-static T packed_as_array(Packed packed) {
-    T axes;
-    axes.assign(packed.ptr(), packed.ptr() + packed.size());
-    return axes;
-}
-
-static va::Axes variant_to_axes(Variant variant) {
+va::Axes variant_to_axes(Variant variant) {
     const auto type = variant.get_type();
 
     switch (type) {
@@ -36,5 +32,3 @@ static va::Axes variant_to_axes(Variant variant) {
 
     throw std::runtime_error("Variant cannot be converted to a shape.");
 }
-
-#endif //CONVERSION_AXES_H

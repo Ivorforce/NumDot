@@ -3,9 +3,9 @@
 #include <algorithm>                               // for copy
 #include <stdexcept>                               // for runtime_error
 #include <variant>                                 // for visit
-#include "conversion_array.h"                      // for xtvariant_to_packed
-#include "conversion_slice.h"                      // for variants_as_slice_...
-#include "conversion_string.h"                     // for xt_to_string
+#include "gdconvert/conversion_array.h"                      // for xtvariant_to_packed
+#include "gdconvert/conversion_slice.h"                      // for variants_as_slice_...
+#include "gdconvert/conversion_string.h"                     // for xt_to_string
 #include "godot_cpp/classes/global_constants.hpp"  // for MethodFlags
 #include "godot_cpp/core/class_db.hpp"             // for D_METHOD, ClassDB
 #include "godot_cpp/core/error_macros.hpp"         // for ERR_FAIL_V_MSG
@@ -18,6 +18,7 @@
 #include "xtensor/xlayout.hpp"                     // for layout_type
 #include "xtensor/xstorage.hpp"                    // for svector
 #include "xtensor/xstrided_view.hpp"               // for xstrided_slice_vector
+#include "xtl/xiterator_base.hpp"                  // for operator!=
 
 
 using namespace godot;
@@ -55,7 +56,7 @@ String NDArray::_to_string() const {
 	return std::visit([](auto&& arg){ return xt_to_string(arg); }, va::to_compute_variant(array));
 }
 
-nd::DType NDArray::dtype() const {
+va::DType NDArray::dtype() const {
 	return va::dtype(array);
 }
 
@@ -81,7 +82,7 @@ uint64_t NDArray::ndim() const {
 	return va::dimension(array);
 }
 
-Variant NDArray::as_type(nd::DType dtype) const {
+Variant NDArray::as_type(va::DType dtype) const {
 	return nd::as_array(this, dtype);
 }
 

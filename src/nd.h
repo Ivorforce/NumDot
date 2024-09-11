@@ -4,30 +4,17 @@
 #include <cstdint>                            // for int64_t, uint64_t
 #include <godot_cpp/classes/ref.hpp>          // for Ref
 #include <godot_cpp/core/binder_common.hpp>   // for VARIANT_ENUM_CAST
-#include <memory>                             // for allocator
-#include <sstream>                            // for ostringstream
-#include <utility>                            // for forward
 #include "godot_cpp/classes/object.hpp"       // for Object
 #include "godot_cpp/classes/wrapped.hpp"      // for GDCLASS
 #include "godot_cpp/core/class_db.hpp"        // for ClassDB (ptr only), DEFVAL
-#include "godot_cpp/variant/string.hpp"       // for String
 #include "godot_cpp/variant/string_name.hpp"  // for StringName
 #include "godot_cpp/variant/variant.hpp"      // for Variant
 #include "ndarray.h"                          // for NDArray
 #include "ndrange.h"                          // for NDRange
 #include "varray.h"                           // for DType
 
+
 using namespace godot;
-
-static StringName newaxis() {
-	const StringName newaxis = StringName("newaxis");
-	return newaxis;
-}
-
-static StringName ellipsis() {
-	const StringName ellipsis = StringName("...");
-	return ellipsis;
-}
 
 class nd : public Object {
 	GDCLASS(nd, Object)

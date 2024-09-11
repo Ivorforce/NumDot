@@ -94,7 +94,7 @@ env.Append(CPPFLAGS=[
 env.Append(CPPPATH=["xtl/build/include", "xsimd/build/include", "xtensor/build/include"])
 
 env.Append(CPPPATH=["src/"])
-sources = Glob("src/*.cpp")
+sources = Glob("src/*.cpp") + Glob("src/*/*.cpp")
 
 if env["platform"] == "macos":
     target_file_path = "demo/bin/libnumdot.{}.{}.framework/libnumdot.{}.{}".format(

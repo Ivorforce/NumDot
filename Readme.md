@@ -10,7 +10,7 @@ A tensor (or nd-array) is essentially a multi-dimensional array. You can run mat
 
 Operations with tensors are also very easy to write and read, once you're familiar with them. Vectorization reduces boilerplate a ton, and allows you to focus on the actual operations taking place.
 
-NumDot is inspired by the python tensor math library, [NumPy](https://numpy.org), and thus shares many semantics with it. If you are unfamiliar with tensor operations in general, I recommend taking a numpy tutorial or two first. That being said, here are some direct comparison examples:
+NumDot is inspired by the python tensor math library, [NumPy](https://numpy.org), and thus shares many semantics with it. If you are unfamiliar with tensor operations in general, we recommend taking a numpy tutorial or two first. That being said, here are some direct comparison examples:
 
 | NumPy                             | NumDot                                                                                                                           |
 |-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------|

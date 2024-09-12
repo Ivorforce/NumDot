@@ -8,6 +8,10 @@
 #include <utility>                                          // for forward
 #include <variant>                                          // for visit
 #include <vector>                                           // for vector
+#include <vatensor/math.h>
+#include <vatensor/reduce.h>
+#include <vatensor/trigonometry.h>
+
 #include "gdconvert/conversion_array.h"                     // for variant_a...
 #include "gdconvert/conversion_axes.h"                      // for variant_t...
 #include "gdconvert/conversion_range.h"                     // for to_range_...
@@ -338,18 +342,10 @@ Ref<NDArray> nd::flip(Variant v, int64_t axis) {
 	}
 }
 
-// The first parameter is the one used by the xarray operation, while the second is used for type deduction.
-// It's ok if they're the same.
-template <typename FX, typename PromotionRule>
-inline Ref<NDArray> binary_operation(Variant a, Variant b) {
+template <typename Visitor, typename... Args>
+Ref<NDArray> map_variants_as_arrays(Visitor visitor, Args... args) {
 	try {
-		va::VArray a_ = variant_as_array(a);
-		va::VArray b_ = variant_as_array(b);
-
-		auto comp_a = a_.to_compute_variant();
-		auto comp_b = b_.to_compute_variant();
-
-		auto result = va::xoperation<PromotionRule>(va::XFunction<FX> {}, comp_a, comp_b);
+		const auto result = visitor(variant_as_array(args)...);
 		return { memnew(NDArray(result)) };
 	}
 	catch (std::runtime_error& error) {
@@ -359,86 +355,67 @@ inline Ref<NDArray> binary_operation(Variant a, Variant b) {
 
 Ref<NDArray> nd::add(Variant a, Variant b) {
 	// godot::UtilityFunctions::print(value);
-	return binary_operation<xt::detail::plus, va::promote::function_result<xt::detail::plus>>(a, b);
+	return map_variants_as_arrays([](const va::VArray &a, const va::VArray &b) { return va::add(a, b); }, a, b);
 }
 
 Ref<NDArray> nd::subtract(Variant a, Variant b) {
-	return binary_operation<xt::detail::minus, va::promote::function_result<xt::detail::minus>>(a, b);
+	return map_variants_as_arrays([](const va::VArray &a, const va::VArray &b) { return va::subtract(a, b); }, a, b);
 }
 
 Ref<NDArray> nd::multiply(Variant a, Variant b) {
-	return binary_operation<xt::detail::multiplies, va::promote::function_result<xt::detail::multiplies>>(a, b);
+	return map_variants_as_arrays([](const va::VArray &a, const va::VArray &b) { return va::multiply(a, b); }, a, b);
 }
 
 Ref<NDArray> nd::divide(Variant a, Variant b) {
-	return binary_operation<xt::detail::divides, va::promote::function_result<xt::detail::divides>>(a, b);
+	return map_variants_as_arrays([](const va::VArray &a, const va::VArray &b) { return va::divide(a, b); }, a, b);
 }
 
 Ref<NDArray> nd::remainder(Variant a, Variant b) {
-	return binary_operation<xt::math::remainder_fun, va::promote::function_result<xt::math::remainder_fun>>(a, b);
+	return map_variants_as_arrays([](const va::VArray &a, const va::VArray &b) { return va::remainder(a, b); }, a, b);
 }
 
 Ref<NDArray> nd::pow(Variant a, Variant b) {
-	return binary_operation<xt::math::pow_fun, va::promote::function_result<xt::math::pow_fun>>(a, b);
-}
-
-
-template <typename FX, typename PromotionRule>
-inline Ref<NDArray> unary_operation(Variant a) {
-	try {
-		auto a_ = variant_as_array(a);
-
-		auto comp_a = a_.to_compute_variant();
-
-		auto result = va::xoperation<PromotionRule>(va::XFunction<FX> {}, comp_a);
-		return { memnew(NDArray(result)) };
-	}
-	catch (std::runtime_error& error) {
-		ERR_FAIL_V_MSG({}, error.what());
-	}
+	return map_variants_as_arrays([](const va::VArray &a, const va::VArray &b) { return va::pow(a, b); }, a, b);
 }
 
 Ref<NDArray> nd::sign(Variant a) {
-	return unary_operation<xt::math::sign_fun, va::promote::common_type>(a);
+	return map_variants_as_arrays([](const va::VArray &varray){ return va::sign(varray); }, a);
 }
 
 Ref<NDArray> nd::abs(Variant a) {
-	return unary_operation<xt::math::abs_fun, va::promote::function_result<xt::math::abs_fun>>(a);
+	return map_variants_as_arrays([](const va::VArray &varray){ return va::abs(varray); }, a);
 }
 
 Ref<NDArray> nd::sqrt(Variant a) {
-	return unary_operation<xt::math::sqrt_fun, va::promote::function_result<xt::math::sqrt_fun>>(a);
+	return map_variants_as_arrays([](const va::VArray &varray){ return va::sqrt(varray); }, a);
 }
 
 Ref<NDArray> nd::exp(Variant a) {
-	return unary_operation<xt::math::exp_fun, va::promote::function_result<xt::math::exp_fun>>(a);
+	return map_variants_as_arrays([](const va::VArray &varray){ return va::exp(varray); }, a);
 }
 
 Ref<NDArray> nd::log(Variant a) {
-	return unary_operation<xt::math::log_fun, va::promote::function_result<xt::math::log_fun>>(a);
+	return map_variants_as_arrays([](const va::VArray &varray){ return va::log(varray); }, a);
 }
 
 Ref<NDArray> nd::sin(Variant a) {
-	return unary_operation<xt::math::sin_fun, va::promote::function_result<xt::math::sin_fun>>(a);
+	return map_variants_as_arrays([](const va::VArray &varray){ return va::sin(varray); }, a);
 }
 
 Ref<NDArray> nd::cos(Variant a) {
-	return unary_operation<xt::math::cos_fun, va::promote::function_result<xt::math::cos_fun>>(a);
+	return map_variants_as_arrays([](const va::VArray &varray){ return va::cos(varray); }, a);
 }
 
 Ref<NDArray> nd::tan(Variant a) {
-	return unary_operation<xt::math::tan_fun, va::promote::function_result<xt::math::tan_fun>>(a);
+	return map_variants_as_arrays([](const va::VArray &varray){ return va::tan(varray); }, a);
 }
 
-template <typename FX, typename PromotionRule>
-inline Ref<NDArray> reduction(Variant a, Variant axes) {
+inline Ref<NDArray> reduction(std::function<va::VArray(const va::VArray&, const va::Axes&)> visitor, Variant a, Variant axes) {
 	try {
-		auto axes_ = variant_to_axes(axes);
-		auto a_ = variant_as_array(a);
+		const auto axes_ = variant_to_axes(axes);
+		const auto a_ = variant_as_array(a);
 
-		auto result = va::xreduction<PromotionRule>(
-			FX{}, axes_, a_.to_compute_variant()
-		);
+		const auto result = visitor(a_, axes_);
 
 		return {memnew(NDArray(result))};
 	}
@@ -447,62 +424,30 @@ inline Ref<NDArray> reduction(Variant a, Variant axes) {
 	}
 }
 
-#define Reducer(Name, fun_name)\
-	Name() = default;\
-	Name(const Name&) = default;\
-	Name(Name&&) noexcept = default;\
-	Name& operator=(const Name&) = default;\
-	Name& operator=(Name&&) noexcept = default;\
-	~Name() = default;\
-\
-	template <typename GivenAxes, typename A>\
-	auto operator()(GivenAxes&& axes, A&& a) const {\
-		return xt::fun_name(std::forward<A>(a), std::forward<GivenAxes>(axes));\
-	}\
-\
-	template <typename A>\
-	auto operator()(A&& a) const {\
-		return xt::fun_name(std::forward<A>(a));\
-	}
-
-struct Sum { Reducer(Sum, sum) };
-
 Ref<NDArray> nd::sum(Variant a, Variant axes) {
-	return reduction<Sum, va::promote::common_type>(a, axes);
+	return reduction([](const va::VArray& array, const va::Axes& axes) { return va::sum(array, axes); }, a, axes);
 }
-
-struct Prod { Reducer(Prod, prod) };
 
 Ref<NDArray> nd::prod(Variant a, Variant axes) {
-	return reduction<Prod, va::promote::at_least_int32>(a, axes);
+	return reduction([](const va::VArray& array, const va::Axes& axes) { return va::prod(array, axes); }, a, axes);
 }
-
-struct Mean { Reducer(Mean, mean) };
 
 Ref<NDArray> nd::mean(Variant a, Variant axes) {
-	return reduction<Mean, va::promote::matching_float_or_default<double_t>>(a, axes);
+	return reduction([](const va::VArray& array, const va::Axes& axes) { return va::mean(array, axes); }, a, axes);
 }
-
-struct Variance { Reducer(Variance, variance) };
 
 Ref<NDArray> nd::var(Variant a, Variant axes) {
-	return reduction<Variance, va::promote::matching_float_or_default<double_t>>(a, axes);
+	return reduction([](const va::VArray& array, const va::Axes& axes) { return va::var(array, axes); }, a, axes);
 }
-
-struct Std { Reducer(Std, stddev) };
 
 Ref<NDArray> nd::std(Variant a, Variant axes) {
-	return reduction<Std, va::promote::matching_float_or_default<double_t>>(a, axes);
+	return reduction([](const va::VArray& array, const va::Axes& axes) { return va::std(array, axes); }, a, axes);
 }
-
-struct Amax { Reducer(Amax, amax) };
 
 Ref<NDArray> nd::max(Variant a, Variant axes) {
-	return reduction<Amax, va::promote::common_type>(a, axes);
+	return reduction([](const va::VArray& array, const va::Axes& axes) { return va::max(array, axes); }, a, axes);
 }
 
-struct Amin { Reducer(Amin, amin) };
-
 Ref<NDArray> nd::min(Variant a, Variant axes) {
-	return reduction<Amin, va::promote::common_type>(a, axes);
+	return reduction([](const va::VArray& array, const va::Axes& axes) { return va::min(array, axes); }, a, axes);
 }

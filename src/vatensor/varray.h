@@ -127,17 +127,6 @@ namespace va {
     }
 
     template <typename T>
-    static VArray dummy() {
-        return VArray {
-            std::make_shared<xt::xarray<T>>(xt::xarray<T>({ 0 })),
-            { 1 },
-            { 1 },
-            0,
-            xt::layout_type::dynamic,
-        };
-    }
-
-    template <typename T>
     static auto to_strided(T&& store, const VArray& varray) {
         auto shape = varray.shape;
         auto strides = varray.strides;

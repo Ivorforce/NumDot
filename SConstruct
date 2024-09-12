@@ -34,7 +34,7 @@ env = SConscript("godot-cpp/SConstruct", 'env')
 # The difference between the two approaches should be checked.
 subcommands(
     env,
-    target_files=['xtl/build/include/xtl/xtl.hpp'],
+    target_files=['xtl/build/include/xtl/xtl_config.hpp'],
     build_dir='xtl/build',
     commands=[
         'cmake ../',
@@ -103,8 +103,8 @@ if env["platform"] == "macos":
 else:
     target_file_path = "demo/bin/libnumdot{}{}".format(env["suffix"], env["SHLIBSUFFIX"])
 
-env.Depends('xsimd/build/include/xsimd/xsimd.hpp', ['xtl/build/include/xtl/xtl.hpp'])
-env.Depends('xtensor/build/include/xtensor/xtensor.hpp', ['xtl/build/include/xtl/xtl.hpp', 'xsimd/build/include/xsimd/xsimd.hpp'])
+env.Depends('xsimd/build/include/xsimd/xsimd.hpp', ['xtl/build/include/xtl/xtl_config.hpp'])
+env.Depends('xtensor/build/include/xtensor/xtensor.hpp', ['xtl/build/include/xtl/xtl_config.hpp', 'xsimd/build/include/xsimd/xsimd.hpp'])
 env.Depends(target_file_path, ['xtensor/build/include/xtensor/xtensor.hpp'])
 
 # Via https://docs.godotengine.org/en/stable/tutorials/scripting/gdextension/gdextension_docs_system.html

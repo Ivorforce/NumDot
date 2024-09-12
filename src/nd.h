@@ -88,6 +88,14 @@ public:
 	static Ref<NDArray> std(Variant a, Variant axes);
 	static Ref<NDArray> max(Variant a, Variant axes);
 	static Ref<NDArray> min(Variant a, Variant axes);
+
+	//Rounding
+	static Ref<NDArray> floor(Variant a);
+	static Ref<NDArray> ceil(Variant a);
+	static Ref<NDArray> round(Variant a);
+	static Ref<NDArray> trunc(Variant a);
+	static Ref<NDArray> rint(Variant a);
+	static Ref<NDArray> nearbyint(Variant a);
 };
 
 VARIANT_ENUM_CAST(nd::DType);

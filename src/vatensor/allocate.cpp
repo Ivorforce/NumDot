@@ -14,16 +14,19 @@ using namespace va;
 VArray empty(VConstant type, shape_type shape) {
     return std::visit([shape](auto t) {
         using T = decltype(t);
-        auto store = std::make_shared<xt::xarray<T>>(xt::empty<T>(shape));
+        const auto store = std::make_shared<xt::xarray<T>>(xt::empty<T>(shape));
         return from_store(store);
     }, type);
 }
 
 VArray va::full(const VConstant fill_value, shape_type shape) {
-    // Could do this in one go but that would generate more code. This is fast enough.
-    VArray va = ::empty(fill_value, std::move(shape));
-    va.fill(fill_value);
-    return va;
+    // This is duplicate code, but by filling the store directly instead of the VArray we avoid a few checks, speeding it up a ton.
+    return std::visit([shape](auto fill_value) {
+        using T = decltype(fill_value);
+        auto store = std::make_shared<xt::xarray<T>>(xt::empty<T>(shape));
+        store->fill(fill_value);
+        return from_store(store);
+    }, fill_value);
 }
 
 VArray va::empty(DType dtype, shape_type shape) {

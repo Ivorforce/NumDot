@@ -60,13 +60,7 @@ va::DType NDArray::dtype() const {
 }
 
 PackedInt64Array NDArray::shape() const {
-	const auto shape = array.shape;
-	// TODO This seems a bit weird, but it works for now.
-	auto packed = PackedInt64Array();
-	for (auto d : shape) {
-		packed.append(d);
-	}
-	return packed;
+	return packed_from_sequence<PackedInt64Array>(array.shape);
 }
 
 uint64_t NDArray::size() const {
@@ -168,23 +162,23 @@ int64_t NDArray::to_int() const {
 }
 
 PackedFloat32Array NDArray::to_packed_float32_array() const {
-	return xtvariant_to_packed<PackedFloat32Array>(array);
+	return varray_to_packed<PackedFloat32Array>(array);
 }
 
 PackedFloat64Array NDArray::to_packed_float64_array() const {
-	return xtvariant_to_packed<PackedFloat64Array>(array);
+	return varray_to_packed<PackedFloat64Array>(array);
 }
 
 PackedByteArray NDArray::to_packed_byte_array() const {
-	return xtvariant_to_packed<PackedByteArray>(array);
+	return varray_to_packed<PackedByteArray>(array);
 }
 
 PackedInt32Array NDArray::to_packed_int32_array() const {
-	return xtvariant_to_packed<PackedInt32Array>(array);
+	return varray_to_packed<PackedInt32Array>(array);
 }
 
 PackedInt64Array NDArray::to_packed_int64_array() const {
-	return xtvariant_to_packed<PackedInt64Array>(array);
+	return varray_to_packed<PackedInt64Array>(array);
 }
 
 Array NDArray::to_godot_array() const {

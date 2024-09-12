@@ -3,9 +3,9 @@
 #include <algorithm>                               // for copy
 #include <stdexcept>                               // for runtime_error
 #include <variant>                                 // for visit
-#include "gdconvert/conversion_array.h"                      // for xtvariant_to_packed
-#include "gdconvert/conversion_slice.h"                      // for variants_as_slice_...
-#include "gdconvert/conversion_string.h"                     // for xt_to_string
+#include "gdconvert/conversion_array.h"            // for xtvariant_to_packed
+#include "gdconvert/conversion_slice.h"            // for variants_as_slice_...
+#include "gdconvert/conversion_string.h"           // for xt_to_string
 #include "godot_cpp/classes/global_constants.hpp"  // for MethodFlags
 #include "godot_cpp/core/class_db.hpp"             // for D_METHOD, ClassDB
 #include "godot_cpp/core/error_macros.hpp"         // for ERR_FAIL_V_MSG
@@ -13,10 +13,8 @@
 #include "godot_cpp/variant/string_name.hpp"       // for StringName
 #include "godot_cpp/variant/variant.hpp"           // for Variant
 #include "nd.h"                                    // for nd
-#include "vatensor/varray.h"                                // for slice, to_single_v...
+#include "vatensor/varray.h"                       // for VArray, to_single_...
 #include "xtensor/xiterator.hpp"                   // for operator==
-#include "xtensor/xlayout.hpp"                     // for layout_type
-#include "xtensor/xstorage.hpp"                    // for svector
 #include "xtensor/xstrided_view.hpp"               // for xstrided_slice_vector
 #include "xtl/xiterator_base.hpp"                  // for operator!=
 
@@ -95,7 +93,7 @@ void NDArray::set(const Variant **args, GDExtensionInt arg_count, GDExtensionCal
 		const Variant &value = *args[0];
 		// todo don't need slices if arg_count == 1
 		auto slices = variants_as_slice_vector(args + 1, arg_count - 1, error);
-		va::VArray sliced = arg_count == 1 ? array : va::slice(array, slices);
+		va::VArray sliced = arg_count == 1 ? array : array.slice(slices);
 
 		switch (value.get_type()) {
 			case Variant::INT:
@@ -122,7 +120,7 @@ Ref<NDArray> NDArray::get(const Variant **args, GDExtensionInt arg_count, GDExte
 	try {
 		xt::xstrided_slice_vector sv = variants_as_slice_vector(args, arg_count, error);
 
-		auto result = va::slice(array, sv);
+		auto result = array.slice(sv);
 		return {memnew(NDArray(result))};
 	}
 	catch (std::runtime_error& error) {
@@ -133,7 +131,7 @@ Ref<NDArray> NDArray::get(const Variant **args, GDExtensionInt arg_count, GDExte
 double_t NDArray::get_float(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
 	try {
 		xt::xstrided_slice_vector sv = variants_as_slice_vector(args, arg_count, error);
-		return va::to_single_value<double_t>(slice(array, sv));
+		return va::to_single_value<double_t>(array.slice(sv));
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG(0, error.what());
@@ -143,7 +141,7 @@ double_t NDArray::get_float(const Variant **args, GDExtensionInt arg_count, GDEx
 int64_t NDArray::get_int(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
 	try {
 		xt::xstrided_slice_vector sv = variants_as_slice_vector(args, arg_count, error);
-		return va::to_single_value<int64_t>(slice(array, sv));
+		return va::to_single_value<int64_t>(array.slice(sv));
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG(0, error.what());

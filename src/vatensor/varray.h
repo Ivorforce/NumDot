@@ -1,25 +1,23 @@
 #ifndef VARRAY_H
 #define VARRAY_H
 
-#include <cmath>                                       // for double_t, flo...
-#include <cstdint>                                     // for int64_t, int16_t
+#include <cmath>                                        // for double_t, flo...
 #include <cstddef>                                      // for size_t, ptrdi...
+#include <cstdint>                                      // for int64_t, int16_t
 #include <functional>                                   // for multiplies
-#include <memory>                                       // for make_shared
+#include <memory>                                       // for shared_ptr
 #include <numeric>                                      // for accumulate
 #include <stdexcept>                                    // for runtime_error
-#include <utility>                                      // for move, forward
-#include <variant>                                      // for visit, variant
+#include <utility>                                      // for forward, move
+#include <variant>                                      // for variant, visit
 #include <vector>                                       // for vector
 #include "xtensor/xadapt.hpp"                           // for adapt
 #include "xtensor/xarray.hpp"                           // for xarray_adaptor
 #include "xtensor/xbuffer_adaptor.hpp"                  // for no_ownership
-#include "xtensor/xbuilder.hpp"                         // for empty
 #include "xtensor/xlayout.hpp"                          // for layout_type
 #include "xtensor/xshape.hpp"                           // for dynamic_shape
 #include "xtensor/xstorage.hpp"                         // for uvector
-#include "xtensor/xstrided_view.hpp"                    // for no_adj_stride...
-#include "xtensor/xstrided_view_base.hpp"               // for strided_view_...
+#include "xtensor/xstrided_view.hpp"                    // for strided_view
 #include "xtensor/xtensor_forward.hpp"                  // for xarray
 
 namespace va {
@@ -89,6 +87,8 @@ namespace va {
         [[nodiscard]] size_t size() const;
         [[nodiscard]] size_t dimension() const;
 
+        [[nodiscard]] VArray slice(const xt::xstrided_slice_vector &slices) const;
+
         [[nodiscard]] ComputeVariant to_compute_variant() const;
         [[nodiscard]] size_t size_of_array_in_bytes() const;
     };
@@ -133,29 +133,6 @@ namespace va {
         nullptr_t,
         GivenAxes
     >;
-
-    static VArray slice(const VArray& varray, const xt::xstrided_slice_vector &slices) {
-        return std::visit([slices, varray](auto &store) -> VArray {
-            xt::detail::strided_view_args<xt::detail::no_adj_strides_policy> args;
-            args.fill_args(
-                varray.shape,
-                varray.strides,
-                varray.offset,
-                varray.layout,
-                slices
-            );
-
-            auto result = VArray{
-                store,  // Implicit copy
-                std::move(args.new_shape),
-                std::move(args.new_strides),
-                args.new_offset,
-                args.new_layout
-            };
-
-            return result;
-        }, varray.store);
-    }
 
     template <typename T>
     static auto to_strided(T&& store, const VArray& varray) {
@@ -224,13 +201,6 @@ namespace va {
         return std::visit([](auto dtype){
             return sizeof(dtype);
         }, dtype_to_variant(dtype));
-    }
-
-    static VArray copy_as_dtype(const VArray& other, const DType dtype) {
-        return std::visit([](auto t, auto carray) -> VArray {
-            using T = decltype(t);
-            return from_store(std::make_shared<xt::xarray<T>>(carray));
-        }, dtype_to_variant(dtype), other.to_compute_variant());
     }
 
     template<typename T>

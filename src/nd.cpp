@@ -3,6 +3,7 @@
 #include <vatensor/vmath.h>                  // for abs, add, divide, exp, log
 #include <vatensor/reduce.h>                // for max, mean, min, prod, std
 #include <vatensor/trigonometry.h>          // for cos, sin, tan
+#include <vatensor/round.h>					// for rounding functions
 #include <cmath>                            // for double_t
 #include <cstddef>                          // for size_t, ptrdiff_t
 #include <functional>                       // for function
@@ -97,6 +98,14 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("std", "a", "axes"), &nd::std, DEFVAL(nullptr), DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("max", "a", "axes"), &nd::std, DEFVAL(nullptr), DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("min", "a", "axes"), &nd::std, DEFVAL(nullptr), DEFVAL(nullptr));
+
+	godot::ClassDB::bind_static_method("nd", D_METHOD("floor", "a"), &nd::floor);
+    godot::ClassDB::bind_static_method("nd", D_METHOD("ceil", "a"), &nd::ceil);
+    godot::ClassDB::bind_static_method("nd", D_METHOD("round", "a"), &nd::round);
+    godot::ClassDB::bind_static_method("nd", D_METHOD("trunc", "a"), &nd::trunc);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("rint", "a"), &nd::rint);
+    godot::ClassDB::bind_static_method("nd", D_METHOD("nearbyint", "a"), &nd::nearbyint);
+    
 }
 
 nd::nd() = default;
@@ -424,3 +433,27 @@ Ref<NDArray> nd::max(Variant a, Variant axes) {
 Ref<NDArray> nd::min(Variant a, Variant axes) {
 	return reduction([](const va::VArray& array, const va::Axes& axes) { return va::min(array, axes); }, a, axes);
 }
+Ref<NDArray> nd::floor(Variant a) {
+	return map_variants_as_arrays([](const va::VArray &varray) { return va::floor(varray); }, a);
+}
+
+Ref<NDArray> nd::ceil(Variant a) {
+	return map_variants_as_arrays([](const va::VArray &varray) { return va::ceil(varray); }, a);
+}
+
+Ref<NDArray> nd::round(Variant a) {
+	return map_variants_as_arrays([](const va::VArray &varray) { return va::round(varray); }, a);
+}
+
+Ref<NDArray> nd::trunc(Variant a) {
+	return map_variants_as_arrays([](const va::VArray &varray) { return va::trunc(varray); }, a);
+}
+
+Ref<NDArray> nd::rint(Variant a) {
+	return map_variants_as_arrays([](const va::VArray &varray) { return va::rint(varray); }, a);
+}
+
+Ref<NDArray> nd::nearbyint(Variant a) {
+	return map_variants_as_arrays([](const va::VArray &varray) { return va::nearbyint(varray); }, a);
+}
+

@@ -1,6 +1,5 @@
 #include "conversion_array.h"
 
-#include <cmath>                                      // for double_t, float_t
 #include <cmath>                                       // for double_t, float_t
 #include <cstddef>                                     // for size_t
 #include <cstdint>                                     // for int64_t, int32_t
@@ -25,6 +24,7 @@
 #include "xtensor/xadapt.hpp"                          // for adapt
 #include "xtensor/xarray.hpp"                          // for xarray_container
 #include "xtensor/xbuffer_adaptor.hpp"                 // for no_ownership
+#include "xtensor/xlayout.hpp"                         // for layout_type
 #include "xtensor/xshape.hpp"                          // for static_shape
 #include "xtensor/xstorage.hpp"                        // for svector, uvector
 #include "xtensor/xtensor_forward.hpp"                 // for xarray

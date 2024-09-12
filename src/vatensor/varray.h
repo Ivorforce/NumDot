@@ -39,6 +39,26 @@ namespace va {
         DTypeMax
     };
 
+    using VConstant = std::variant<
+        double_t,
+        float_t,
+        int8_t,
+        int16_t,
+        int32_t,
+        int64_t,
+        uint8_t,
+        uint16_t,
+        uint32_t,
+        uint64_t
+    >;
+
+    using GivenAxes = std::vector<std::ptrdiff_t>;
+
+    using Axes = std::variant<
+        nullptr_t,
+        GivenAxes
+    >;
+
     template <typename T>
     using array_case = xt::xarray<T>;
 
@@ -87,7 +107,10 @@ namespace va {
         [[nodiscard]] size_t size() const;
         [[nodiscard]] size_t dimension() const;
 
+        // TODO Can probably change these to subscript syntax
         [[nodiscard]] VArray slice(const xt::xstrided_slice_vector &slices) const;
+        void fill(VConstant value) const;
+        void set_with_array(const VArray& value) const;
 
         [[nodiscard]] ComputeVariant to_compute_variant() const;
         [[nodiscard]] size_t size_of_array_in_bytes() const;
@@ -103,19 +126,6 @@ namespace va {
         return xt::adapt(store->data() + varray.offset, size_, xt::no_ownership(), shape, strides);
     }
 
-    using DTypeVariant = std::variant<
-        double_t,
-        float_t,
-        int8_t,
-        int16_t,
-        int32_t,
-        int64_t,
-        uint8_t,
-        uint16_t,
-        uint32_t,
-        uint64_t
-    >;
-
     template <typename T>
     static VArray dummy() {
         return VArray {
@@ -126,13 +136,6 @@ namespace va {
             xt::layout_type::dynamic,
         };
     }
-
-    using GivenAxes = std::vector<std::ptrdiff_t>;
-
-    using Axes = std::variant<
-        nullptr_t,
-        GivenAxes
-    >;
 
     template <typename T>
     static auto to_strided(T&& store, const VArray& varray) {
@@ -170,38 +173,9 @@ namespace va {
         };
     }
 
-    static DTypeVariant dtype_to_variant(const DType dtype) {
-        switch (dtype) {
-            case DType::Float32:
-                return float_t();
-            case DType::Float64:
-                return double_t();
-            case DType::Int8:
-                return int8_t();
-            case DType::Int16:
-                return int16_t();
-            case DType::Int32:
-                return int32_t();
-            case DType::Int64:
-                return int64_t();
-            case DType::UInt8:
-                return uint8_t();
-            case DType::UInt16:
-                return uint16_t();
-            case DType::UInt32:
-                return uint32_t();
-            case DType::UInt64:
-                return int64_t();
-            default:
-                throw std::runtime_error("Invalid dtype.");
-        }
-    }
+    VConstant dtype_to_variant(DType dtype);
 
-    static inline size_t size_of_dtype_in_bytes(const DType dtype) {
-        return std::visit([](auto dtype){
-            return sizeof(dtype);
-        }, dtype_to_variant(dtype));
-    }
+    size_t size_of_dtype_in_bytes(DType dtype);
 
     template<typename T>
     static inline T to_single_value(const VArray& varray) {
@@ -216,18 +190,7 @@ namespace va {
         }, varray.to_compute_variant());
     }
 
-    template <typename V>
-    static void set_value(const VArray& varray, V&& value) {
-        return std::visit([&value](auto&& carray) {
-            carray.fill(std::forward<V>(value));
-        }, varray.to_compute_variant());
-    }
-
-    static void set_with_array(const VArray& array, const VArray& value) {
-        return std::visit([](auto&& carray, auto&& cvalue) {
-            carray.computed_assign(std::forward<decltype(cvalue)>(cvalue));
-        }, array.to_compute_variant(), value.to_compute_variant());
-    }
+    VConstant constant_as_type(VConstant v, DType dtype);
 }
 
 #endif //VARRAY_H

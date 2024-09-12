@@ -97,21 +97,21 @@ void NDArray::set(const Variant **args, GDExtensionInt arg_count, GDExtensionCal
 
 		switch (value.get_type()) {
 			case Variant::INT:
-				va::set_value(array, int64_t(value));
+				array.fill(static_cast<int64_t>(value));
 				return;
 			case Variant::FLOAT:
-				va::set_value(array, double_t(value));
+				array.fill(static_cast<double_t>(value));
 				return;
 			// TODO We could optimize more assignments of literals.
 			//  Just need to figure out how, ideally without duplicating code - as_array already does much type checking work.
 			default:
 				va::VArray a_ = variant_as_array(value);
 
-				va::set_with_array(array, a_);
+				array.set_with_array(a_);
 				return;
 		}
 	}
-	catch (std::runtime_error error) {
+	catch (std::runtime_error& error) {
 		ERR_FAIL_MSG(error.what());
 	}
 }

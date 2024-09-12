@@ -8,20 +8,20 @@
 #include <utility>                                          // for forward
 #include <variant>                                          // for visit
 #include <vector>                                           // for vector
-#include "gdconvert/conversion_array.h"                               // for variant_a...
-#include "gdconvert/conversion_axes.h"                                // for variant_t...
-#include "gdconvert/conversion_range.h"                               // for to_range_...
-#include "gdconvert/conversion_shape.h"                               // for variant_a...
-#include "gdconvert/conversion_slice.h"                               // for ellipsis
+#include "gdconvert/conversion_array.h"                     // for variant_a...
+#include "gdconvert/conversion_axes.h"                      // for variant_t...
+#include "gdconvert/conversion_range.h"                     // for to_range_...
+#include "gdconvert/conversion_shape.h"                     // for variant_a...
+#include "gdconvert/conversion_slice.h"                     // for ellipsis
 #include "godot_cpp/classes/ref.hpp"                        // for Ref
 #include "godot_cpp/core/error_macros.hpp"                  // for ERR_FAIL_...
 #include "godot_cpp/core/memory.hpp"                        // for _post_ini...
 #include "ndarray.h"                                        // for NDArray
 #include "ndrange.h"                                        // for NDRange
-#include "vatensor/allocate.h"                                       // for allocate functions
-#include "vatensor/rearrange.h"                                         // for rearrange functions
-#include "vatensor/varray.h"                                         // for DType
-#include "vatensor/vcompute.h"                                       // for function_...
+#include "vatensor/allocate.h"                              // for empty, full
+#include "vatensor/rearrange.h"                             // for flip, mov...
+#include "vatensor/varray.h"                                // for DType
+#include "vatensor/vcompute.h"                              // for function_...
 #include "xtensor/xbuilder.hpp"                             // for arange
 #include "xtensor/xiterator.hpp"                            // for operator==
 #include "xtensor/xlayout.hpp"                              // for layout_type
@@ -188,37 +188,36 @@ Ref<NDArray> nd::empty(Variant shape, nd::DType dtype) {
 	}
 }
 
-template <typename V>
-Ref<NDArray> _full(Variant shape, V value, nd::DType dtype) {
+Ref<NDArray> _full(Variant shape, va::VConstant value) {
 	try {
 		std::vector<size_t> shape_array = variant_as_shape<size_t, std::vector<size_t>>(shape);
 
-		return {memnew(NDArray(va::full(dtype, value, shape_array)))};
+		return {memnew(NDArray(va::full(value, shape_array)))};
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
 	}
 }
 
-Ref<NDArray> nd::full(Variant shape, Variant fill_value, nd::DType dtype) {
+Ref<NDArray> nd::full(const Variant& shape, const Variant& fill_value, nd::DType dtype) {
 	switch (fill_value.get_type()) {
 		case Variant::INT:
 			if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Int64;
-			return _full(shape, int64_t(fill_value), dtype);
+			return _full(shape, va::constant_as_type(static_cast<int64_t>(fill_value), dtype));
 		case Variant::FLOAT:
 			if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Float64;
-			return _full(shape, double_t(fill_value), dtype);
+			return _full(shape, va::constant_as_type(static_cast<double_t>(fill_value), dtype));
 		default:
 			ERR_FAIL_V_MSG({}, "The fill value must be a number literal (for now).");
 	}
 }
 
 Ref<NDArray> nd::zeros(Variant shape, nd::DType dtype) {
-	return _full(shape, 0, dtype);
+	return _full(std::move(shape), va::constant_as_type(0, dtype));
 }
 
 Ref<NDArray> nd::ones(Variant shape, nd::DType dtype) {
-	return _full(shape, 1, dtype);
+	return _full(std::move(shape), va::constant_as_type(1, dtype));
 }
 
 Ref<NDArray> nd::linspace(Variant start, Variant stop, int64_t num, bool endpoint, DType dtype) {

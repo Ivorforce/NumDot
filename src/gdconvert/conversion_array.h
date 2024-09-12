@@ -4,8 +4,7 @@
 #include <godot_cpp/variant/variant.hpp>  // for Variant
 #include <variant>                        // for visit
 #include "godot_cpp/variant/array.hpp"    // for Array
-#include "vatensor/varray.h"                       // for to_compute_variant, VArray
-#include "xtensor/xlayout.hpp"            // for layout_type
+#include "vatensor/varray.h"              // for VArray
 
 using namespace godot;
 

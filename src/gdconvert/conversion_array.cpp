@@ -53,6 +53,10 @@ va::VArray variant_as_array(const Variant array) {
                 return ndarray->array;
             }
             break;
+        case Variant::BOOL: {
+            auto store = std::make_shared<xt::xarray<bool>>(xt::xarray<bool>(bool(array)));
+            return va::from_store(store);
+        }
         case Variant::INT: {
             auto store = std::make_shared<xt::xarray<int64_t>>(xt::xarray<int64_t>(int64_t(array)));
             return va::from_store(store);

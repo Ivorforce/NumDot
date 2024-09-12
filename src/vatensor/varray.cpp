@@ -72,6 +72,8 @@ size_t va::VArray::size_of_array_in_bytes() const {
 
 va::VConstant va::dtype_to_variant(DType dtype) {
     switch (dtype) {
+        case DType::Bool:
+            return bool();
         case DType::Float32:
             return float_t();
         case DType::Float64:

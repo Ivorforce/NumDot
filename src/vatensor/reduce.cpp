@@ -4,6 +4,7 @@
 #include <utility>                                      // for forward
 #include "vatensor/varray.h"                            // for VArray, Axes
 #include "vcompute.h"                                   // for matching_floa...
+#include "vpromote.h"                                    // for promote
 #include "xtensor/xiterator.hpp"                        // for operator==
 #include "xtensor/xlayout.hpp"                          // for layout_type
 #include "xtensor/xmath.hpp"                            // for amax, amin, mean
@@ -44,43 +45,43 @@ struct Amax { Reducer(Amax, amax) };
 struct Amin { Reducer(Amin, amin) };
 
 VArray va::sum(const VArray &array, const Axes &axes) {
-	return va::xreduction<promote::common_type>(
+	return va::xreduction<promote::num_common_type>(
 		Sum{}, axes, array.to_compute_variant()
 	);
 }
 
 VArray va::prod(const VArray &array, const Axes &axes) {
-	return va::xreduction<promote::at_least_int32>(
+	return va::xreduction<promote::num_at_least_int32>(
 		Prod{}, axes, array.to_compute_variant()
 	);
 }
 
 VArray va::mean(const VArray &array, const Axes &axes) {
-	return va::xreduction<promote::matching_float_or_default<double_t>>(
+	return va::xreduction<promote::num_matching_float_or_default<double_t>>(
 		Mean{}, axes, array.to_compute_variant()
 	);
 }
 
 VArray va::var(const VArray &array, const Axes &axes) {
-	return va::xreduction<promote::matching_float_or_default<double_t>>(
+	return va::xreduction<promote::num_matching_float_or_default<double_t>>(
 		Variance{}, axes, array.to_compute_variant()
 	);
 }
 
 VArray va::std(const VArray &array, const Axes &axes) {
-	return va::xreduction<promote::matching_float_or_default<double_t>>(
+	return va::xreduction<promote::num_matching_float_or_default<double_t>>(
 		Std{}, axes, array.to_compute_variant()
 	);
 }
 
 VArray va::max(const VArray &array, const Axes &axes) {
-	return va::xreduction<promote::common_type>(
+	return va::xreduction<promote::num_common_type>(
 		Amax{}, axes, array.to_compute_variant()
 	);
 }
 
 VArray va::min(const VArray &array, const Axes &axes) {
-	return va::xreduction<promote::common_type>(
+	return va::xreduction<promote::num_common_type>(
 		Amin{}, axes, array.to_compute_variant()
 	);
 }

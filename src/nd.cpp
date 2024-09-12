@@ -37,8 +37,9 @@ using namespace godot;
 void nd::_bind_methods() {
 	// For the macros, we need to have the values in our namespace.
 	using namespace va;
-	BIND_ENUM_CONSTANT(Float64);
+	BIND_ENUM_CONSTANT(Bool);
 	BIND_ENUM_CONSTANT(Float32);
+	BIND_ENUM_CONSTANT(Float64);
 	BIND_ENUM_CONSTANT(Int8);
 	BIND_ENUM_CONSTANT(Int16);
 	BIND_ENUM_CONSTANT(Int32);

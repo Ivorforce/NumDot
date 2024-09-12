@@ -24,6 +24,7 @@ namespace va {
     using size_type = std::size_t;
 
     enum DType {
+        Bool,
         Float32,
         Float64,
         Int8,
@@ -38,8 +39,9 @@ namespace va {
     };
 
     using VConstant = std::variant<
-        double_t,
+        bool,
         float_t,
+        double_t,
         int8_t,
         int16_t,
         int32_t,
@@ -65,8 +67,9 @@ namespace va {
     using compute_case = xt::xarray_adaptor<xt::xbuffer_adaptor<T*>,xt::layout_type::dynamic>;
 
     using ComputeVariant = std::variant<
-        compute_case<double_t>,
+        compute_case<bool>,
         compute_case<float_t>,
+        compute_case<double_t>,
         compute_case<int8_t>,
         compute_case<int16_t>,
         compute_case<int32_t>,
@@ -81,8 +84,9 @@ namespace va {
     using store_case = std::shared_ptr<array_case<T>>;
 
     using StoreVariant = std::variant<
-        store_case<double_t>,
+        store_case<bool>,
         store_case<float_t>,
+        store_case<double_t>,
         store_case<int8_t>,
         store_case<int16_t>,
         store_case<int32_t>,

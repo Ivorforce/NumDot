@@ -11,7 +11,7 @@
 #include "godot_cpp/variant/variant.hpp"      // for Variant
 #include "ndarray.h"                          // for NDArray
 #include "ndrange.h"                          // for NDRange
-#include "varray.h"                           // for DType
+#include "vatensor/varray.h"                           // for DType
 
 
 using namespace godot;

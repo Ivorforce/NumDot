@@ -13,7 +13,7 @@
 #include "godot_cpp/variant/string_name.hpp"       // for StringName
 #include "godot_cpp/variant/variant.hpp"           // for Variant
 #include "nd.h"                                    // for nd
-#include "varray.h"                                // for slice, to_single_v...
+#include "vatensor/varray.h"                                // for slice, to_single_v...
 #include "xtensor/xiterator.hpp"                   // for operator==
 #include "xtensor/xlayout.hpp"                     // for layout_type
 #include "xtensor/xstorage.hpp"                    // for svector
@@ -53,15 +53,15 @@ NDArray::NDArray() = default;
 NDArray::~NDArray() = default;
 
 String NDArray::_to_string() const {
-	return std::visit([](auto&& arg){ return xt_to_string(arg); }, va::to_compute_variant(array));
+	return std::visit([](auto&& arg){ return xt_to_string(arg); }, array.to_compute_variant());
 }
 
 va::DType NDArray::dtype() const {
-	return va::dtype(array);
+	return array.dtype();
 }
 
 PackedInt64Array NDArray::shape() const {
-	auto shape = va::shape(array);
+	const auto shape = array.shape;
 	// TODO This seems a bit weird, but it works for now.
 	auto packed = PackedInt64Array();
 	for (auto d : shape) {
@@ -71,15 +71,15 @@ PackedInt64Array NDArray::shape() const {
 }
 
 uint64_t NDArray::size() const {
-	return va::size(array);
+	return array.size();
 }
 
 uint64_t NDArray::array_size_in_bytes() const {
-	return va::size_of_array_in_bytes(array);
+	return array.size_of_array_in_bytes();
 }
 
 uint64_t NDArray::ndim() const {
-	return va::dimension(array);
+	return array.dimension();
 }
 
 Variant NDArray::as_type(va::DType dtype) const {

@@ -4,13 +4,6 @@
 #include "varray.h"
 
 namespace va {
-    using GivenAxes = std::vector<std::ptrdiff_t>;
-
-    using Axes = std::variant<
-        nullptr_t,
-        GivenAxes
-    >;
-
     template<typename PromotionRule, typename Visitor>
     struct VArrayFunction {
         Visitor visitor;

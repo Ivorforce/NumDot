@@ -20,7 +20,7 @@
 #include "godot_cpp/variant/packed_int32_array.hpp"    // for PackedInt32Array
 #include "godot_cpp/variant/packed_int64_array.hpp"    // for PackedInt64Array
 #include "godot_cpp/variant/string.hpp"                // for String
-#include "varray.h"                                    // for DType, VArray
+#include "vatensor/varray.h"                                    // for DType, VArray
 namespace godot { class ClassDB; }
 
 using namespace godot;

@@ -1,52 +1,48 @@
 #ifndef VARRAY_H
 #define VARRAY_H
 
-#include "xtensor/xstrided_view.hpp"
-#include "xtensor/xadapt.hpp"
-#include "xtensor/xstrided_view.hpp"
-#include <godot_cpp/variant/utility_functions.hpp>
+#include <cmath>                                       // for double_t, flo...
+#include <cstdint>                                     // for int64_t, int16_t
+#include <cstddef>                                      // for size_t, ptrdi...
+#include <functional>                                   // for multiplies
+#include <memory>                                       // for make_shared
+#include <numeric>                                      // for accumulate
+#include <stdexcept>                                    // for runtime_error
+#include <utility>                                      // for move, forward
+#include <variant>                                      // for visit, variant
+#include <vector>                                       // for vector
+#include "xtensor/xadapt.hpp"                           // for adapt
+#include "xtensor/xarray.hpp"                           // for xarray_adaptor
+#include "xtensor/xbuffer_adaptor.hpp"                  // for no_ownership
+#include "xtensor/xbuilder.hpp"                         // for empty
+#include "xtensor/xlayout.hpp"                          // for layout_type
+#include "xtensor/xshape.hpp"                           // for dynamic_shape
+#include "xtensor/xstorage.hpp"                         // for uvector
+#include "xtensor/xstrided_view.hpp"                    // for no_adj_stride...
+#include "xtensor/xstrided_view_base.hpp"               // for strided_view_...
+#include "xtensor/xtensor_forward.hpp"                  // for xarray
 
 namespace va {
     using shape_type = xt::dynamic_shape<std::size_t>;
     using strides_type = xt::dynamic_shape<std::ptrdiff_t>;
     using size_type = std::size_t;
 
-    template <typename T>
-    using array_case = xt::xarray<T>;
-
-    template <typename T>
-    using store_case = std::shared_ptr<array_case<T>>;
-
-    using StoreVariant = std::variant<
-        store_case<double_t>,
-        store_case<float_t>,
-        store_case<int8_t>,
-        store_case<int16_t>,
-        store_case<int32_t>,
-        store_case<int64_t>,
-        store_case<uint8_t>,
-        store_case<uint16_t>,
-        store_case<uint32_t>,
-        store_case<uint64_t>
-    >;
-
-    struct VArray {
-        StoreVariant store;
-        shape_type shape;
-        strides_type strides;
-        size_type offset;
-        xt::layout_type layout;
+    enum DType {
+        Float32,
+        Float64,
+        Int8,
+        Int16,
+        Int32,
+        Int64,
+        UInt8,
+        UInt16,
+        UInt32,
+        UInt64,
+        DTypeMax
     };
 
     template <typename T>
-    static auto to_compute_variant_(const store_case<T>& store, const VArray &varray) {
-        auto shape = varray.shape;
-        auto strides = varray.strides;
-        auto size_ = std::accumulate(shape.begin(), shape.end(), static_cast<size_t>(1), std::multiplies());
-
-        // return xt::adapt(store->data(), store->size(), xt::no_ownership(), store->shape(), store->strides());
-        return xt::adapt(store->data() + varray.offset, size_, xt::no_ownership(), shape, strides);
-    }
+    using array_case = xt::xarray<T>;
 
     // P&& pointer, typename A::size_type size, O ownership, SC&& shape, SS&& strides, const A& alloc = A()
     template <typename T>
@@ -65,6 +61,48 @@ namespace va {
         compute_case<uint64_t>
     >;
 
+    template <typename T>
+    using store_case = std::shared_ptr<array_case<T>>;
+
+    using StoreVariant = std::variant<
+        store_case<double_t>,
+        store_case<float_t>,
+        store_case<int8_t>,
+        store_case<int16_t>,
+        store_case<int32_t>,
+        store_case<int64_t>,
+        store_case<uint8_t>,
+        store_case<uint16_t>,
+        store_case<uint32_t>,
+        store_case<uint64_t>
+    >;
+
+    class VArray {
+    public:
+        StoreVariant store;
+        shape_type shape;
+        strides_type strides;
+        size_type offset;
+        xt::layout_type layout;
+
+        [[nodiscard]] DType dtype() const;
+        [[nodiscard]] size_t size() const;
+        [[nodiscard]] size_t dimension() const;
+
+        [[nodiscard]] ComputeVariant to_compute_variant() const;
+        [[nodiscard]] size_t size_of_array_in_bytes() const;
+    };
+
+    template <typename T>
+    static auto to_compute_variant(const store_case<T>& store, const VArray& varray) {
+        auto shape = varray.shape;
+        auto strides = varray.strides;
+        auto size_ = std::accumulate(shape.begin(), shape.end(), static_cast<size_t>(1), std::multiplies());
+
+        // return xt::adapt(store->data(), store->size(), xt::no_ownership(), store->shape(), store->strides());
+        return xt::adapt(store->data() + varray.offset, size_, xt::no_ownership(), shape, strides);
+    }
+
     using DTypeVariant = std::variant<
         double_t,
         float_t,
@@ -78,20 +116,6 @@ namespace va {
         uint64_t
     >;
 
-    enum DType {
-        Float32,
-        Float64,
-        Int8,
-        Int16,
-        Int32,
-        Int64,
-        UInt8,
-        UInt16,
-        UInt32,
-        UInt64,
-        DTypeMax
-    };
-
     template <typename T>
     static VArray dummy() {
         return VArray {
@@ -102,6 +126,13 @@ namespace va {
             xt::layout_type::dynamic,
         };
     }
+
+    using GivenAxes = std::vector<std::ptrdiff_t>;
+
+    using Axes = std::variant<
+        nullptr_t,
+        GivenAxes
+    >;
 
     static VArray slice(const VArray& varray, const xt::xstrided_slice_vector &slices) {
         return std::visit([slices, varray](auto &store) -> VArray {
@@ -125,12 +156,6 @@ namespace va {
             return result;
         }, varray.store);
     }
-
-    static ComputeVariant to_compute_variant(const VArray& varray) {
-        return std::visit([varray](const auto& store) -> ComputeVariant {
-            return to_compute_variant_(store, varray);
-        }, varray.store);
-    };
 
     template <typename T>
     static auto to_strided(T&& store, const VArray& varray) {
@@ -168,69 +193,6 @@ namespace va {
         };
     }
 
-    template <typename Visitor>
-    static VArray map(const Visitor& visitor, const VArray& varray) {
-        return std::visit([visitor, varray](auto& store) -> VArray {
-            auto strided = to_strided(store, varray);
-            return from_surrogate(store, visitor(strided));
-        }, varray.store);
-    }
-
-    static VArray transpose(const VArray& varray, strides_type permutation) {
-        return map([permutation](auto& array) {
-            return xt::transpose(
-                array,
-                permutation,
-                xt::check_policy::full{}
-            );
-        }, varray);
-    }
-
-    static VArray reshape(const VArray& varray, strides_type new_shape) {
-        return map([new_shape](auto& array) {
-            auto new_shape_ = new_shape;
-            return xt::reshape_view(array, new_shape_);
-        }, varray);
-    }
-
-    static VArray swapaxes(const VArray& varray, std::ptrdiff_t a, std::ptrdiff_t b) {
-        return map([a, b](auto& array) {
-            return xt::swapaxes(array, a, b);
-        }, varray);
-    }
-
-    static VArray moveaxis(const VArray& varray, std::ptrdiff_t src, std::ptrdiff_t dst) {
-        return map([src, dst](auto& array) {
-            return xt::moveaxis(array, src, dst);
-        }, varray);
-    }
-
-    static VArray flip(const VArray& varray, size_t axis) {
-        return map([axis](auto& array) {
-            return xt::flip(array, axis);
-        }, varray);
-    }
-
-    template <typename T>
-    static inline DType dtype(T&& variant) {
-        return DType(std::forward<T>(variant).store.index());
-    }
-
-    template <typename T>
-    static inline auto shape(T&& variant) {
-        return std::visit([](auto&& carray) { return carray.shape(); }, to_compute_variant(std::forward<T>(variant)));
-    }
-
-    template <typename T>
-    static inline size_t size(T&& variant) {
-        return std::visit([](auto&& carray) { return carray.size(); }, to_compute_variant(std::forward<T>(variant)));
-    }
-
-    template <typename T>
-    static inline size_t dimension(T&& variant) {
-        return std::visit([](auto&& carray) { return carray.dimension(); }, to_compute_variant(std::forward<T>(variant)));
-    }
-
     static DTypeVariant dtype_to_variant(const DType dtype) {
         switch (dtype) {
             case DType::Float32:
@@ -264,19 +226,11 @@ namespace va {
         }, dtype_to_variant(dtype));
     }
 
-    template <typename T>
-    static inline size_t size_of_array_in_bytes(T&& array) {
-        return std::visit([](auto&& carray){
-            using V = typename std::decay_t<decltype(carray)>::value_type;
-            return carray.size() * sizeof(V);
-        }, to_compute_variant(array));
-    }
-
     static VArray copy_as_dtype(const VArray& other, const DType dtype) {
         return std::visit([](auto t, auto carray) -> VArray {
             using T = decltype(t);
             return from_store(std::make_shared<xt::xarray<T>>(carray));
-        }, dtype_to_variant(dtype), to_compute_variant(other));
+        }, dtype_to_variant(dtype), other.to_compute_variant());
     }
 
     template<typename T>
@@ -289,20 +243,20 @@ namespace va {
             // TODO I expected this to work, but it doesn't. See https://xtensor.readthedocs.io/en/latest/indices.html#operator
             // But at least the above is a view, so no copy is made.
             // return V(array[slice]);
-        }, to_compute_variant(varray));
+        }, varray.to_compute_variant());
     }
 
     template <typename V>
     static void set_value(const VArray& varray, V&& value) {
         return std::visit([&value](auto&& carray) {
             carray.fill(std::forward<V>(value));
-        }, to_compute_variant(varray));
+        }, varray.to_compute_variant());
     }
 
     static void set_with_array(const VArray& array, const VArray& value) {
         return std::visit([](auto&& carray, auto&& cvalue) {
             carray.computed_assign(std::forward<decltype(cvalue)>(cvalue));
-        }, to_compute_variant(array), to_compute_variant(value));
+        }, array.to_compute_variant(), value.to_compute_variant());
     }
 
     template <typename V, typename Sh>

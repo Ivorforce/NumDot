@@ -4,7 +4,7 @@
 #include <godot_cpp/variant/variant.hpp>  // for Variant
 #include <variant>                        // for visit
 #include "godot_cpp/variant/array.hpp"    // for Array
-#include "varray.h"                       // for to_compute_variant, VArray
+#include "vatensor/varray.h"                       // for to_compute_variant, VArray
 #include "xtensor/xlayout.hpp"            // for layout_type
 
 using namespace godot;
@@ -18,7 +18,7 @@ P xtvariant_to_packed(const va::VArray& array) {
 	std::visit([&p_array](auto carray){
 		p_array.resize(carray.size());
 		std::copy(carray.begin(), carray.end(), p_array.ptrw());
-	}, va::to_compute_variant(array));
+	}, array.to_compute_variant());
 
 	return p_array;
 }

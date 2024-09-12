@@ -150,7 +150,7 @@ Array xtvariant_to_godot_array(const va::VArray &array) {
         for (size_t i = 0; i < carray.size(); ++i) {
             godot_array[i] = *(start + i);
         }
-    }, to_compute_variant(array));
+    }, array.to_compute_variant());
 
     return godot_array;
 }

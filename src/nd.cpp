@@ -18,8 +18,9 @@
 #include "godot_cpp/core/memory.hpp"                        // for _post_ini...
 #include "ndarray.h"                                        // for NDArray
 #include "ndrange.h"                                        // for NDRange
-#include "varray.h"                                         // for DType
-#include "vcompute.h"                                       // for function_...
+#include "vatensor/rearrange.h"                                         // for rearrange functions
+#include "vatensor/varray.h"                                         // for DType
+#include "vatensor/vcompute.h"                                       // for function_...
 #include "xtensor/xbuilder.hpp"                             // for arange
 #include "xtensor/xiterator.hpp"                            // for operator==
 #include "xtensor/xlayout.hpp"                              // for layout_type
@@ -164,7 +165,7 @@ Ref<NDArray> nd::array(Variant array, nd::DType dtype) {
 
 		// Default value.
 		if (dtype == nd::DType::DTypeMax) {
-			dtype = va::dtype(existing_array);
+			dtype = existing_array.dtype();
 		}
 
 		auto result = va::copy_as_dtype(existing_array, dtype);
@@ -345,8 +346,8 @@ inline Ref<NDArray> binary_operation(Variant a, Variant b) {
 		va::VArray a_ = variant_as_array(a);
 		va::VArray b_ = variant_as_array(b);
 
-		auto comp_a = va::to_compute_variant(a_);
-		auto comp_b = va::to_compute_variant(b_);
+		auto comp_a = a_.to_compute_variant();
+		auto comp_b = b_.to_compute_variant();
 
 		auto result = va::xoperation<PromotionRule>(va::XFunction<FX> {}, comp_a, comp_b);
 		return { memnew(NDArray(result)) };
@@ -387,7 +388,7 @@ inline Ref<NDArray> unary_operation(Variant a) {
 	try {
 		auto a_ = variant_as_array(a);
 
-		auto comp_a = va::to_compute_variant(a_);
+		auto comp_a = a_.to_compute_variant();
 
 		auto result = va::xoperation<PromotionRule>(va::XFunction<FX> {}, comp_a);
 		return { memnew(NDArray(result)) };
@@ -436,7 +437,7 @@ inline Ref<NDArray> reduction(Variant a, Variant axes) {
 		auto a_ = variant_as_array(a);
 
 		auto result = va::xreduction<PromotionRule>(
-			FX{}, axes_, va::to_compute_variant(a_)
+			FX{}, axes_, a_.to_compute_variant()
 		);
 
 		return {memnew(NDArray(result))};

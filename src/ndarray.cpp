@@ -132,7 +132,7 @@ Ref<NDArray> NDArray::get(const Variant **args, GDExtensionInt arg_count, GDExte
 double_t NDArray::get_float(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
 	try {
 		xt::xstrided_slice_vector sv = variants_as_slice_vector(args, arg_count, error);
-		return va::to_single_value<double_t>(array.slice(sv));
+		return va::constant_to_type<double_t>(array.slice(sv).to_single_value());
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG(0, error.what());
@@ -142,7 +142,7 @@ double_t NDArray::get_float(const Variant **args, GDExtensionInt arg_count, GDEx
 int64_t NDArray::get_int(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
 	try {
 		xt::xstrided_slice_vector sv = variants_as_slice_vector(args, arg_count, error);
-		return va::to_single_value<int64_t>(array.slice(sv));
+		return va::constant_to_type<int64_t>(array.slice(sv).to_single_value());
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG(0, error.what());
@@ -151,7 +151,7 @@ int64_t NDArray::get_int(const Variant **args, GDExtensionInt arg_count, GDExten
 
 double_t NDArray::to_float() const {
 	try {
-		return va::to_single_value<double_t>(array);
+		return va::constant_to_type<double_t>(array.to_single_value());
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG(0, error.what());
@@ -160,7 +160,7 @@ double_t NDArray::to_float() const {
 
 int64_t NDArray::to_int() const {
 	try {
-		return va::to_single_value<int64_t>(array);
+		return va::constant_to_type<int64_t>(array.to_single_value());
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG(0, error.what());

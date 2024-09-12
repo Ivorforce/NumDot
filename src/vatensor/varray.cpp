@@ -1,6 +1,7 @@
 #include "varray.h"
 
 #include <cstddef>                         // for size_t
+#include <stdexcept>                       // for runtime_error
 #include <type_traits>                     // for decay_t
 #include "xtensor/xoperation.hpp"          // for cast
 #include "xtensor/xstrided_view_base.hpp"  // for strided_view_args
@@ -102,9 +103,21 @@ size_t va::size_of_dtype_in_bytes(DType dtype) {
     }, dtype_to_variant(dtype));
 }
 
-va::VConstant va::constant_as_type(VConstant v, DType dtype) {
+va::VConstant va::constant_to_dtype(VConstant v, DType dtype) {
     return std::visit([](auto v, const auto t) -> va::VConstant {
         using T = std::decay_t<decltype(t)>;
         return static_cast<T>(v);
     }, v, dtype_to_variant(dtype));
+}
+
+va::VConstant va::VArray::to_single_value() const {
+    return std::visit([](const auto& carray) -> va::VConstant {
+        if (carray.size() != 1) {
+            throw std::runtime_error("Expected a single element after slicing.");
+        }
+        return *carray.data();
+        // TODO I expected this to work, but it doesn't. See https://xtensor.readthedocs.io/en/latest/indices.html#operator
+        // But at least the above is a view, so no copy is made.
+        // return V(array[slice]);
+    }, to_compute_variant());
 }

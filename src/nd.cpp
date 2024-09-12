@@ -202,21 +202,21 @@ Ref<NDArray> nd::full(const Variant& shape, const Variant& fill_value, nd::DType
 	switch (fill_value.get_type()) {
 		case Variant::INT:
 			if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Int64;
-			return _full(shape, va::constant_as_type(static_cast<int64_t>(fill_value), dtype));
+			return _full(shape, va::constant_to_dtype(static_cast<int64_t>(fill_value), dtype));
 		case Variant::FLOAT:
 			if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Float64;
-			return _full(shape, va::constant_as_type(static_cast<double_t>(fill_value), dtype));
+			return _full(shape, va::constant_to_dtype(static_cast<double_t>(fill_value), dtype));
 		default:
 			ERR_FAIL_V_MSG({}, "The fill value must be a number literal (for now).");
 	}
 }
 
 Ref<NDArray> nd::zeros(Variant shape, nd::DType dtype) {
-	return _full(std::move(shape), va::constant_as_type(0, dtype));
+	return _full(std::move(shape), va::constant_to_dtype(0, dtype));
 }
 
 Ref<NDArray> nd::ones(Variant shape, nd::DType dtype) {
-	return _full(std::move(shape), va::constant_as_type(1, dtype));
+	return _full(std::move(shape), va::constant_to_dtype(1, dtype));
 }
 
 Ref<NDArray> nd::linspace(Variant start, Variant stop, int64_t num, bool endpoint, DType dtype) {

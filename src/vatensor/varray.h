@@ -7,7 +7,6 @@
 #include <functional>                   // for multiplies
 #include <memory>                       // for shared_ptr
 #include <numeric>                      // for accumulate
-#include <stdexcept>                    // for runtime_error
 #include <utility>                      // for move, forward
 #include <variant>                      // for variant, visit
 #include <vector>                       // for vector
@@ -113,6 +112,8 @@ namespace va {
 
         [[nodiscard]] ComputeVariant to_compute_variant() const;
         [[nodiscard]] size_t size_of_array_in_bytes() const;
+
+        [[nodiscard]] VConstant to_single_value() const;
     };
 
     template <typename T>
@@ -165,20 +166,13 @@ namespace va {
 
     size_t size_of_dtype_in_bytes(DType dtype);
 
-    template<typename T>
-    static inline T to_single_value(const VArray& varray) {
-        return std::visit([](const auto carray) {
-            if (carray.size() != 1) {
-                throw std::runtime_error("Expected a single element after slicing.");
-            }
-            return static_cast<T>(*carray.data());
-            // TODO I expected this to work, but it doesn't. See https://xtensor.readthedocs.io/en/latest/indices.html#operator
-            // But at least the above is a view, so no copy is made.
-            // return V(array[slice]);
-        }, varray.to_compute_variant());
-    }
+    VConstant constant_to_dtype(VConstant v, DType dtype);
 
-    VConstant constant_as_type(VConstant v, DType dtype);
+    // TODO Can probably just be static_cast override or some such.
+    template <typename V>
+    V constant_to_type(VConstant v) {
+        return std::visit([](auto v) { return static_cast<V>(v); }, v);
+    }
 }
 
 #endif //VARRAY_H

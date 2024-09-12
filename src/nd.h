@@ -95,7 +95,6 @@ public:
 	static Ref<NDArray> round(Variant a);
 	static Ref<NDArray> trunc(Variant a);
 	static Ref<NDArray> rint(Variant a);
-	static Ref<NDArray> nearbyint(Variant a);
 };
 
 VARIANT_ENUM_CAST(nd::DType);

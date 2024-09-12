@@ -50,6 +50,14 @@
 				Convert the input to an array, but avoid copying data if possible.
 			</description>
 		</method>
+		<method name="ceil" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				Return the ceiling of the input, element-wise.
+				The ceil of the scalar x is the smallest integer i, such that i &gt;= x.
+			</description>
+		</method>
 		<method name="cos" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
@@ -93,6 +101,14 @@
 			<description>
 				Reverse the order of elements in an array along the given axis.
 				The shape of the array is preserved, but the elements are reordered.
+			</description>
+		</method>
+		<method name="floor" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				Return the floor of the input, element-wise.
+				The floor of the scalar x is the largest integer i, such that i &lt;= x.
 			</description>
 		</method>
 		<method name="from" qualifiers="static">
@@ -235,6 +251,20 @@
 				Up to one element in the new shape can be -1 to infer its size.
 			</description>
 		</method>
+		<method name="rint" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				Round elements of the array to the nearest integer.
+			</description>
+		</method>
+		<method name="round" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				Round elements of the array to the nearest integer.
+			</description>
+		</method>
 		<method name="sign" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
@@ -319,6 +349,14 @@
 			<param index="1" name="permutation" type="Variant" />
 			<description>
 				Returns an array with axes transposed.
+			</description>
+		</method>
+		<method name="trunc" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				Return the truncated value of the input, element-wise.
+				The truncated value of the scalar x is the nearest integer i which is closer to zero than x is. In short, the fractional part of the signed number x is discarded.
 			</description>
 		</method>
 		<method name="var" qualifiers="static">

@@ -9,7 +9,6 @@ namespace va {
     VArray trunc(const VArray& array);
     VArray round(const VArray& array);
     VArray nearbyint(const VArray& array);
-    VArray rint(const VArray& array);
 }
 
 #endif //ROUND_H

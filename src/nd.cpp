@@ -104,8 +104,7 @@ void nd::_bind_methods() {
     godot::ClassDB::bind_static_method("nd", D_METHOD("round", "a"), &nd::round);
     godot::ClassDB::bind_static_method("nd", D_METHOD("trunc", "a"), &nd::trunc);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("rint", "a"), &nd::rint);
-    godot::ClassDB::bind_static_method("nd", D_METHOD("nearbyint", "a"), &nd::nearbyint);
-    
+
 }
 
 nd::nd() = default;
@@ -433,6 +432,7 @@ Ref<NDArray> nd::max(Variant a, Variant axes) {
 Ref<NDArray> nd::min(Variant a, Variant axes) {
 	return reduction([](const va::VArray& array, const va::Axes& axes) { return va::min(array, axes); }, a, axes);
 }
+
 Ref<NDArray> nd::floor(Variant a) {
 	return map_variants_as_arrays([](const va::VArray &varray) { return va::floor(varray); }, a);
 }
@@ -450,10 +450,6 @@ Ref<NDArray> nd::trunc(Variant a) {
 }
 
 Ref<NDArray> nd::rint(Variant a) {
-	return map_variants_as_arrays([](const va::VArray &varray) { return va::rint(varray); }, a);
-}
-
-Ref<NDArray> nd::nearbyint(Variant a) {
+	// Actually uses nearbyint because rint can throw, which is undesirable in our case, and unlike numpy's behavior.
 	return map_variants_as_arrays([](const va::VArray &varray) { return va::nearbyint(varray); }, a);
 }
-

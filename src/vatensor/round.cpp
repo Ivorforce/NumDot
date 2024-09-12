@@ -1,11 +1,11 @@
 
 #include "round.h"
 
-#include "vatensor/varray.h"                   
-#include "vcompute.h"                                   
-// #include "xtensor/xlayout.hpp"                           
-// #include "xtensor/xmath.hpp"                             
-// #include "xtensor/xoperation.hpp"                       
+#include "vatensor/varray.h"                             // for VArray
+#include "vcompute.h"                                    // for XFunction
+#include "xtensor/xlayout.hpp"                           // for layout_type
+#include "xtensor/xmath.hpp"                             // for ceil_fun
+#include "xtensor/xoperation.hpp"                        // for make_xfunction
 
 using namespace va;
 
@@ -27,8 +27,4 @@ VArray va::round(const VArray &array) {
 
 VArray va::nearbyint(const VArray &array) {
     return xoperation<promote::function_result<xt::math::nearbyint_fun>>(va::XFunction<xt::math::nearbyint_fun> {}, array.to_compute_variant());
-}
-
-VArray va::rint(const VArray &array) {
-    return xoperation<promote::function_result<xt::math::rint_fun>>(va::XFunction<xt::math::rint_fun> {}, array.to_compute_variant());
 }

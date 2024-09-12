@@ -215,7 +215,7 @@ namespace va {
                 return uint32_t();
             case DType::UInt64:
                 return int64_t();
-            case DType::DTypeMax:
+            case default:
                 throw std::runtime_error("Invalid dtype.");
         }
     }

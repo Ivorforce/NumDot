@@ -87,6 +87,14 @@
 				Return a new array of given shape and type, without initializing entries.
 			</description>
 		</method>
+		<method name="equal" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+				Return (x1 == x2) element-wise.
+			</description>
+		</method>
 		<method name="exp" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
@@ -146,6 +154,14 @@
 			<description>
 				Natural logarithm, element-wise.
 				The natural logarithm log is the inverse of the exponential function, so that log(exp(x)) = x. The natural logarithm is logarithm in base e.
+			</description>
+		</method>
+		<method name="logical_and" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+				Compute the truth value of x1 AND x2 element-wise.
 			</description>
 		</method>
 		<method name="max" qualifiers="static">

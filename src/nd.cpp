@@ -13,6 +13,8 @@
 #include <utility>                          // for move
 #include <variant>                          // for visit
 #include <vector>                           // for vector
+#include <vatensor/comparison.h>
+#include <vatensor/logical.h>
 #include "gdconvert/conversion_array.h"     // for variant_as_array
 #include "gdconvert/conversion_axes.h"      // for variant_to_axes
 #include "gdconvert/conversion_range.h"     // for to_range_part
@@ -106,6 +108,9 @@ void nd::_bind_methods() {
     godot::ClassDB::bind_static_method("nd", D_METHOD("trunc", "a"), &nd::trunc);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("rint", "a"), &nd::rint);
 
+	godot::ClassDB::bind_static_method("nd", D_METHOD("equal", "a", "b"), &nd::equal);
+
+	godot::ClassDB::bind_static_method("nd", D_METHOD("logical_and", "a", "b"), &nd::logical_and);
 }
 
 nd::nd() = default;
@@ -453,4 +458,12 @@ Ref<NDArray> nd::trunc(Variant a) {
 Ref<NDArray> nd::rint(Variant a) {
 	// Actually uses nearbyint because rint can throw, which is undesirable in our case, and unlike numpy's behavior.
 	return map_variants_as_arrays([](const va::VArray &varray) { return va::nearbyint(varray); }, a);
+}
+
+Ref<NDArray> nd::equal(Variant a, Variant b) {
+	return map_variants_as_arrays([](const va::VArray &a, const va::VArray &b) { return va::equal_to(a, b); }, a, b);
+}
+
+Ref<NDArray> nd::logical_and(Variant a, Variant b) {
+	return map_variants_as_arrays([](const va::VArray &a, const va::VArray &b) { return va::logical_and(a, b); }, a, b);
 }

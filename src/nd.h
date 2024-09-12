@@ -89,12 +89,18 @@ public:
 	static Ref<NDArray> max(Variant a, Variant axes);
 	static Ref<NDArray> min(Variant a, Variant axes);
 
-	//Rounding
+	// Rounding.
 	static Ref<NDArray> floor(Variant a);
 	static Ref<NDArray> ceil(Variant a);
 	static Ref<NDArray> round(Variant a);
 	static Ref<NDArray> trunc(Variant a);
 	static Ref<NDArray> rint(Variant a);
+
+	// Comparisons.
+	static Ref<NDArray> equal(Variant a, Variant b);
+
+	// Logical.
+	static Ref<NDArray> logical_and(Variant a, Variant b);
 };
 
 VARIANT_ENUM_CAST(nd::DType);

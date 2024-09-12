@@ -58,6 +58,22 @@ namespace va {
                 Default
             >;
         };
+
+        struct identity_in_bool_out {
+            template<typename Arg>
+            using promote_input = Arg;
+
+            template<typename... Args>
+            using result = bool;
+        };
+
+        struct bool_in_bool_out {
+            template<typename Arg>
+            using promote_input = bool;
+
+            template<typename... Args>
+            using result = bool;
+        };
     }
 }
 

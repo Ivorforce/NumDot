@@ -18,6 +18,7 @@
 #include "godot_cpp/core/memory.hpp"                        // for _post_ini...
 #include "ndarray.h"                                        // for NDArray
 #include "ndrange.h"                                        // for NDRange
+#include "vatensor/allocate.h"                                       // for allocate functions
 #include "vatensor/rearrange.h"                                         // for rearrange functions
 #include "vatensor/varray.h"                                         // for DType
 #include "vatensor/vcompute.h"                                       // for function_...

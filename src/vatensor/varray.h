@@ -215,7 +215,7 @@ namespace va {
                 return uint32_t();
             case DType::UInt64:
                 return int64_t();
-            case default:
+            default:
                 throw std::runtime_error("Invalid dtype.");
         }
     }
@@ -258,26 +258,6 @@ namespace va {
             carray.computed_assign(std::forward<decltype(cvalue)>(cvalue));
         }, array.to_compute_variant(), value.to_compute_variant());
     }
-
-    template <typename V, typename Sh>
-    VArray full(const DType dtype, const V fill_value, const Sh& shape) {
-        return std::visit([fill_value, shape](auto t) {
-            using T = decltype(t);
-            auto store = std::make_shared<xt::xarray<T>>(xt::xarray<T>::from_shape(shape));
-            store->fill(fill_value);
-            return from_store(store);
-        }, dtype_to_variant(dtype));
-    }
-
-    template <typename Sh>
-    VArray empty(const DType dtype, const Sh& shape) {
-        return std::visit([shape](auto t) {
-            using T = decltype(t);
-            auto store = std::make_shared<xt::xarray<T>>(xt::empty<T>(shape));
-            return from_store(store);
-        }, dtype_to_variant(dtype));
-    }
-
 }
 
 #endif //VARRAY_H

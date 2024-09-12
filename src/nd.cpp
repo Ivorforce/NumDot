@@ -99,11 +99,18 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("min", "a", "axes"), &nd::std, DEFVAL(nullptr), DEFVAL(nullptr));
 }
 
-nd::nd() {
-}
+nd::nd() = default;
+nd::~nd() = default;
 
-nd::~nd() {
-	// Add your cleanup here.
+template <typename Visitor, typename... Args>
+Ref<NDArray> map_variants_as_arrays(Visitor visitor, Args... args) {
+	try {
+		const auto result = visitor(variant_as_array(args)...);
+		return { memnew(NDArray(result)) };
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
 }
 
 StringName nd::newaxis() {
@@ -308,44 +315,15 @@ Ref<NDArray> nd::reshape(Variant a, Variant shape) {
 }
 
 Ref<NDArray> nd::swapaxes(Variant v, int64_t a, int64_t b) {
-	try {
-		va::VArray v_ = variant_as_array(v);
-		return {memnew(NDArray(va::swapaxes(v_, a, b)))};
-	}
-	catch (std::runtime_error& error) {
-		ERR_FAIL_V_MSG({}, error.what());
-	}
+	return map_variants_as_arrays([a, b](const va::VArray &v) { return va::swapaxes(v, a, b); }, v);
 }
 
 Ref<NDArray> nd::moveaxis(Variant v, int64_t src, int64_t dst) {
-	try {
-		va::VArray v_ = variant_as_array(v);
-		return {memnew(NDArray(va::moveaxis(v_, src, dst)))};
-	}
-	catch (std::runtime_error& error) {
-		ERR_FAIL_V_MSG({}, error.what());
-	}
+	return map_variants_as_arrays([src, dst](const va::VArray &v) { return va::moveaxis(v, src, dst); }, v);
 }
 
 Ref<NDArray> nd::flip(Variant v, int64_t axis) {
-	try {
-		va::VArray v_ = variant_as_array(v);
-		return {memnew(NDArray(va::flip(v_, axis)))};
-	}
-	catch (std::runtime_error& error) {
-		ERR_FAIL_V_MSG({}, error.what());
-	}
-}
-
-template <typename Visitor, typename... Args>
-Ref<NDArray> map_variants_as_arrays(Visitor visitor, Args... args) {
-	try {
-		const auto result = visitor(variant_as_array(args)...);
-		return { memnew(NDArray(result)) };
-	}
-	catch (std::runtime_error& error) {
-		ERR_FAIL_V_MSG({}, error.what());
-	}
+	return map_variants_as_arrays([axis](const va::VArray &v) { return va::flip(v, axis); }, v);
 }
 
 Ref<NDArray> nd::add(Variant a, Variant b) {

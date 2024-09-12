@@ -1,5 +1,5 @@
-#ifndef MATH_H
-#define MATH_H
+#ifndef VMATH_H
+#define VMATH_H
 
 #include "varray.h"
 

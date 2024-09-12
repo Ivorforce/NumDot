@@ -5,8 +5,8 @@
 #include <windows.h>
 #endif
 
-#include <math.h>                                      // for double_t
-#include <stdint.h>                                    // for uint64_t, int64_t
+#include <cmath>                                      // for double_t
+#include <cstdint>                                    // for uint64_t, int64_t
 #include <godot_cpp/classes/ref_counted.hpp>           // for RefCounted
 #include <godot_cpp/variant/variant.hpp>               // for Variant
 #include <utility>                                     // for move

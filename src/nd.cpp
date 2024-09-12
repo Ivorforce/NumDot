@@ -1,39 +1,34 @@
 #include "nd.h"
 
-#include <cmath>                                            // for double_t
-#include <cstddef>                                          // for size_t
-#include <memory>                                           // for make_shared
-#include <stdexcept>                                        // for runtime_e...
-#include <type_traits>                                      // for decay_t
-#include <utility>                                          // for forward
-#include <variant>                                          // for visit
-#include <vector>                                           // for vector
-#include <vatensor/math.h>
-#include <vatensor/reduce.h>
-#include <vatensor/trigonometry.h>
-
-#include "gdconvert/conversion_array.h"                     // for variant_a...
-#include "gdconvert/conversion_axes.h"                      // for variant_t...
-#include "gdconvert/conversion_range.h"                     // for to_range_...
-#include "gdconvert/conversion_shape.h"                     // for variant_a...
-#include "gdconvert/conversion_slice.h"                     // for ellipsis
-#include "godot_cpp/classes/ref.hpp"                        // for Ref
-#include "godot_cpp/core/error_macros.hpp"                  // for ERR_FAIL_...
-#include "godot_cpp/core/memory.hpp"                        // for _post_ini...
-#include "ndarray.h"                                        // for NDArray
-#include "ndrange.h"                                        // for NDRange
-#include "vatensor/allocate.h"                              // for empty, full
-#include "vatensor/rearrange.h"                             // for flip, mov...
-#include "vatensor/varray.h"                                // for DType
-#include "vatensor/vcompute.h"                              // for function_...
-#include "xtensor/xbuilder.hpp"                             // for arange
-#include "xtensor/xiterator.hpp"                            // for operator==
-#include "xtensor/xlayout.hpp"                              // for layout_type
-#include "xtensor/xmath.hpp"                                // for pow_fun
-#include "xtensor/xoperation.hpp"                           // for divides
-#include "xtensor/xslice.hpp"                               // for xtuph
-#include "xtensor/xtensor_forward.hpp"                      // for xarray
-#include "xtl/xiterator_base.hpp"                           // for operator!=
+#include <vatensor/vmath.h>                  // for abs, add, divide, exp, log
+#include <vatensor/reduce.h>                // for max, mean, min, prod, std
+#include <vatensor/trigonometry.h>          // for cos, sin, tan
+#include <cmath>                            // for double_t
+#include <cstddef>                          // for size_t, ptrdiff_t
+#include <functional>                       // for function
+#include <memory>                           // for make_shared
+#include <stdexcept>                        // for runtime_error
+#include <type_traits>                      // for decay_t
+#include <utility>                          // for move
+#include <variant>                          // for visit
+#include <vector>                           // for vector
+#include "gdconvert/conversion_array.h"     // for variant_as_array
+#include "gdconvert/conversion_axes.h"      // for variant_to_axes
+#include "gdconvert/conversion_range.h"     // for to_range_part
+#include "gdconvert/conversion_shape.h"     // for variant_as_shape
+#include "gdconvert/conversion_slice.h"     // for ellipsis, newaxis
+#include "godot_cpp/classes/ref.hpp"        // for Ref
+#include "godot_cpp/core/error_macros.hpp"  // for ERR_FAIL_V_MSG
+#include "godot_cpp/core/memory.hpp"        // for _post_initialize, memnew
+#include "ndarray.h"                        // for NDArray
+#include "ndrange.h"                        // for NDRange
+#include "vatensor/allocate.h"              // for empty, full, copy_as_dtype
+#include "vatensor/rearrange.h"             // for flip, moveaxis, reshape
+#include "vatensor/varray.h"                // for VArray, DType, Axes, cons...
+#include "xtensor/xbuilder.hpp"             // for arange, linspace
+#include "xtensor/xlayout.hpp"              // for layout_type
+#include "xtensor/xslice.hpp"               // for xtuph
+#include "xtensor/xtensor_forward.hpp"      // for xarray
 
 
 using namespace godot;

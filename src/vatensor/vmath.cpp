@@ -1,6 +1,10 @@
-#include "math.h"
+#include "vmath.h"
 
-#include "vcompute.h"
+#include "vatensor/varray.h"                                // for VArray
+#include "vcompute.h"                                       // for XFunction
+#include "xtensor/xlayout.hpp"                              // for layout_type
+#include "xtensor/xmath.hpp"                                // for pow_fun
+#include "xtensor/xoperation.hpp"                           // for divides
 
 using namespace va;
 

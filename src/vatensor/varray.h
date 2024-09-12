@@ -1,24 +1,23 @@
 #ifndef VARRAY_H
 #define VARRAY_H
 
-#include <cmath>                                        // for double_t, flo...
-#include <cstddef>                                      // for size_t, ptrdi...
-#include <cstdint>                                      // for int64_t, int16_t
-#include <functional>                                   // for multiplies
-#include <memory>                                       // for shared_ptr
-#include <numeric>                                      // for accumulate
-#include <stdexcept>                                    // for runtime_error
-#include <utility>                                      // for forward, move
-#include <variant>                                      // for variant, visit
-#include <vector>                                       // for vector
-#include "xtensor/xadapt.hpp"                           // for adapt
-#include "xtensor/xarray.hpp"                           // for xarray_adaptor
-#include "xtensor/xbuffer_adaptor.hpp"                  // for no_ownership
-#include "xtensor/xlayout.hpp"                          // for layout_type
-#include "xtensor/xshape.hpp"                           // for dynamic_shape
-#include "xtensor/xstorage.hpp"                         // for uvector
-#include "xtensor/xstrided_view.hpp"                    // for strided_view
-#include "xtensor/xtensor_forward.hpp"                  // for xarray
+#include <cmath>                        // for double_t, float_t
+#include <cstddef>                      // for size_t, ptrdiff_t, nullptr_t
+#include <cstdint>                      // for int16_t, int32_t, int64_t
+#include <functional>                   // for multiplies
+#include <memory>                       // for shared_ptr
+#include <numeric>                      // for accumulate
+#include <stdexcept>                    // for runtime_error
+#include <utility>                      // for move, forward
+#include <variant>                      // for variant, visit
+#include <vector>                       // for vector
+#include "xtensor/xadapt.hpp"           // for adapt
+#include "xtensor/xarray.hpp"           // for xarray_adaptor
+#include "xtensor/xbuffer_adaptor.hpp"  // for no_ownership, xbuffer_adaptor
+#include "xtensor/xlayout.hpp"          // for layout_type
+#include "xtensor/xshape.hpp"           // for dynamic_shape
+#include "xtensor/xstrided_view.hpp"    // for strided_view, xstrided_slice_...
+#include "xtensor/xtensor_forward.hpp"  // for xarray
 
 namespace va {
     using shape_type = xt::dynamic_shape<std::size_t>;

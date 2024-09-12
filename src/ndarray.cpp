@@ -15,6 +15,7 @@
 #include "nd.h"                                    // for nd
 #include "vatensor/varray.h"                       // for VArray, to_single_...
 #include "xtensor/xiterator.hpp"                   // for operator==
+#include "xtensor/xlayout.hpp"                     // for layout_type
 #include "xtensor/xstrided_view.hpp"               // for xstrided_slice_vector
 #include "xtl/xiterator_base.hpp"                  // for operator!=
 

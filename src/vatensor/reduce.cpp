@@ -1,6 +1,13 @@
 #include "reduce.h"
 
-#include "vcompute.h"
+#include <cmath>                                       // for double_t
+#include <utility>                                      // for forward
+#include "vatensor/varray.h"                            // for VArray, Axes
+#include "vcompute.h"                                   // for matching_floa...
+#include "xtensor/xiterator.hpp"                        // for operator==
+#include "xtensor/xlayout.hpp"                          // for layout_type
+#include "xtensor/xmath.hpp"                            // for amax, amin, mean
+#include "xtl/xiterator_base.hpp"                       // for operator!=
 
 using namespace va;
 

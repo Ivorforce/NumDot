@@ -48,6 +48,13 @@ Make your changes using a code editor (I use [VSCode](https://code.visualstudio.
 cd demo && godot --doctool ../ --gdextension-docs
 ```
 
+[include-what-you-use](https://github.com/include-what-you-use/include-what-you-use/) should be used to keep the includes tidy and explicit. This workflow is needed because code that works with one compiler can break down with another, due to differences in intrinsic headers. If you can't run it, don't worry, we can always fix includes post merge.
+```
+# Run the tool, dump the results into iwyu.txt.
+iwyu_tool.py -p . src > iwyu.txt
+```
+The resulting txt is _very_ explicit. Drop xsimd and intrinsics specific files you are offered, but most of the rest can be copied over as-is.
+
 Edit the new entries in `./doc_classes/` ([see the godot docs for more information](https://docs.godotengine.org/en/stable/tutorials/scripting/gdextension/gdextension_docs_system.html)). Make a commit:
 ```bash
 git status
@@ -68,12 +75,3 @@ To get CLion support, run this:
 ```bash
 scons compiledb=yes compile_commands.json
 ```
-
-## Include what you use
-
-[include-what-you-use](https://github.com/include-what-you-use/include-what-you-use/) should be used to keep the includes tidy and explicit. This workflow is needed because code that works with one compiler can break down with another, due to differences in intrinsic headers.
-```
-# Run the tool, dump the results into iwyu.txt.
-iwyu_tool.py -p . src > iwyu.txt
-```
-The resulting txt is _very_ explicit. Drop xsimd and intrinsics specific files you are offered, but most of the rest can be copied over as-is.

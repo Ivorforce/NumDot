@@ -9,5 +9,5 @@
 using namespace va;
 
 VArray va::equal_to(const VArray &a, const VArray &b) {
-    return xoperation<promote::identity_in_bool_out>(va::XFunction<xt::detail::equal_to> {}, a.to_compute_variant(), b.to_compute_variant());
+    return xoperation<promote::common_in_bool_out>(va::XFunction<xt::detail::equal_to> {}, a.to_compute_variant(), b.to_compute_variant());
 }

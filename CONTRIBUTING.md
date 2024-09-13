@@ -71,9 +71,9 @@ scons compiledb=yes compile_commands.json
 
 ## Include what you use
 
-[include-what-you-use](https://github.com/include-what-you-use/include-what-you-use/) should be used to keep the includes tidy and explicit. This workflow is needed because OS specific implementations leading to working code on one machine can lead to missing include problems on others. 
+[include-what-you-use](https://github.com/include-what-you-use/include-what-you-use/) should be used to keep the includes tidy and explicit. This workflow is needed because code that works with one compiler can break down with another, due to differences in intrinsic headers.
 ```
+# Run the tool, dump the results into iwyu.txt.
 iwyu_tool.py -p . src > iwyu.txt
 ```
-
 The resulting txt is _very_ explicit. Drop xsimd and intrinsics specific files you are offered, but most of the rest can be copied over as-is.

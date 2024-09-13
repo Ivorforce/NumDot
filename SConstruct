@@ -29,8 +29,8 @@ env.Append(CPPFLAGS=[
     
     # ffast-math: See https://stackoverflow.com/questions/57442255/xtensor-and-xsimd-improve-performance-on-reduction
     # And https://stackoverflow.com/questions/7420665/what-does-gccs-ffast-math-actually-do
-    # TODO Should we have non-finite math?
-    '-ffast-math',
+    # We should not enable this flag by default, because infinite maths is definitely expected in many situations.
+    # '-ffast-math',
     # See https://github.com/xtensor-stack/xsimd for supported list of simd.
     # Choosing more will make your program faster, but also more incompatible to older machines.
     '-msse2', '-msse3', '-msse4.1', '-msse4.2', '-mavx'

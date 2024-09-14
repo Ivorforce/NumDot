@@ -212,6 +212,12 @@
 				Compute the truth value of x1 AND x2 element-wise.
 			</description>
 		</method>
+		<method name="logical_not" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+			</description>
+		</method>
 		<method name="logical_or" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />

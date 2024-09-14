@@ -118,6 +118,7 @@ public:
 	// Logical.
 	static Ref<NDArray> logical_and(Variant a, Variant b);
 	static Ref<NDArray> logical_or(Variant a, Variant b);
+	static Ref<NDArray> logical_not(Variant a);
 };
 
 VARIANT_ENUM_CAST(nd::DType);

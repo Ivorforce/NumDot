@@ -68,6 +68,9 @@ public:
 	static Ref<NDArray> remainder(Variant a, Variant b);
 	static Ref<NDArray> pow(Variant a, Variant b);
 
+	static Ref<NDArray> minimum(Variant a, Variant b);
+	static Ref<NDArray> maximum(Variant a, Variant b);
+
 	static Ref<NDArray> sign(Variant a);
 	static Ref<NDArray> abs(Variant a);
 	static Ref<NDArray> sqrt(Variant a);
@@ -75,6 +78,9 @@ public:
 	static Ref<NDArray> exp(Variant a);
 	static Ref<NDArray> log(Variant a);
 
+	static Ref<NDArray> rad2deg(Variant a);
+	static Ref<NDArray> deg2rad(Variant a);
+	
 	// Trigonometric functions.
 	static Ref<NDArray> sin(Variant a);
 	static Ref<NDArray> cos(Variant a);

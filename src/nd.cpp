@@ -83,12 +83,18 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("remainder", "a", "b"), &nd::remainder);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("pow", "a", "b"), &nd::pow);
 
+	godot::ClassDB::bind_static_method("nd", D_METHOD("minimum", "a", "b"), &nd::minimum);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("maximum", "a", "b"), &nd::maximum);
+
 	godot::ClassDB::bind_static_method("nd", D_METHOD("sign", "a"), &nd::sign);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("abs", "a"), &nd::abs);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("sqrt", "a"), &nd::sqrt);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("exp", "a"), &nd::exp);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("log", "a"), &nd::log);
+
+	godot::ClassDB::bind_static_method("nd", D_METHOD("rad2deg", "a"), &nd::rad2deg);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("deg2rad", "a"), &nd::deg2rad);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("sin", "a"), &nd::sin);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("cos", "a"), &nd::cos);
@@ -107,10 +113,10 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("sum", "a", "axes"), &nd::sum, DEFVAL(nullptr), DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("prod", "a", "axes"), &nd::sum, DEFVAL(nullptr), DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("mean", "a", "axes"), &nd::mean, DEFVAL(nullptr), DEFVAL(nullptr));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("var", "a", "axes"), &nd::std, DEFVAL(nullptr), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("var", "a", "axes"), &nd::var, DEFVAL(nullptr), DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("std", "a", "axes"), &nd::std, DEFVAL(nullptr), DEFVAL(nullptr));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("max", "a", "axes"), &nd::std, DEFVAL(nullptr), DEFVAL(nullptr));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("min", "a", "axes"), &nd::std, DEFVAL(nullptr), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("max", "a", "axes"), &nd::max, DEFVAL(nullptr), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("min", "a", "axes"), &nd::min, DEFVAL(nullptr), DEFVAL(nullptr));
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("floor", "a"), &nd::floor);
     godot::ClassDB::bind_static_method("nd", D_METHOD("ceil", "a"), &nd::ceil);
@@ -376,6 +382,14 @@ Ref<NDArray> nd::pow(Variant a, Variant b) {
 	return map_variants_as_arrays([](const va::VArray &a, const va::VArray &b) { return va::pow(a, b); }, a, b);
 }
 
+Ref<NDArray> nd::minimum(Variant a, Variant b) {
+	return map_variants_as_arrays([](const va::VArray &a, const va::VArray &b) { return va::minimum(a, b); }, a, b);
+}
+
+Ref<NDArray> nd::maximum(Variant a, Variant b) {
+	return map_variants_as_arrays([](const va::VArray &a, const va::VArray &b) { return va::maximum(a, b); }, a, b);
+}
+
 Ref<NDArray> nd::sign(Variant a) {
 	return map_variants_as_arrays([](const va::VArray &varray){ return va::sign(varray); }, a);
 }
@@ -394,6 +408,14 @@ Ref<NDArray> nd::exp(Variant a) {
 
 Ref<NDArray> nd::log(Variant a) {
 	return map_variants_as_arrays([](const va::VArray &varray){ return va::log(varray); }, a);
+}
+
+Ref<NDArray> nd::rad2deg(Variant a) {
+	return map_variants_as_arrays([](const va::VArray &varray){ return va::rad2deg(varray); }, a);
+}
+
+Ref<NDArray> nd::deg2rad(Variant a) {
+	return map_variants_as_arrays([](const va::VArray &varray){ return va::deg2rad(varray); }, a);
 }
 
 Ref<NDArray> nd::sin(Variant a) {

@@ -107,6 +107,12 @@
 			<description>
 			</description>
 		</method>
+		<method name="deg2rad" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+			</description>
+		</method>
 		<method name="divide" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
@@ -221,6 +227,13 @@
 				Return the maximum of an array or maximum along an axis.
 			</description>
 		</method>
+		<method name="maximum" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+			</description>
+		</method>
 		<method name="mean" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" default="null" />
@@ -236,6 +249,13 @@
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				Return the minimum of an array or minimum along an axis.
+			</description>
+		</method>
+		<method name="minimum" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
 			</description>
 		</method>
 		<method name="moveaxis" qualifiers="static">
@@ -284,6 +304,12 @@
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				Return the product of array elements over a given axis.
+			</description>
+		</method>
+		<method name="rad2deg" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
 			</description>
 		</method>
 		<method name="range" qualifiers="static">

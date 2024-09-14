@@ -121,6 +121,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("equal", "a", "b"), &nd::equal);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("logical_and", "a", "b"), &nd::logical_and);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("logical_or", "a", "b"), &nd::logical_or);
 }
 
 nd::nd() = default;
@@ -512,4 +513,8 @@ Ref<NDArray> nd::equal(Variant a, Variant b) {
 
 Ref<NDArray> nd::logical_and(Variant a, Variant b) {
 	return map_variants_as_arrays([](const va::VArray &a, const va::VArray &b) { return va::logical_and(a, b); }, a, b);
+}
+
+Ref<NDArray> nd::logical_or(Variant a, Variant b) {
+	return map_variants_as_arrays([](const va::VArray &a, const va::VArray &b) { return va::logical_or(a, b); }, a, b);
 }

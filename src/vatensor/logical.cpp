@@ -11,3 +11,7 @@ using namespace va;
 VArray va::logical_and(const VArray &a, const VArray &b) {
     return xoperation<promote::bool_in_bool_out>(XFunction<xt::detail::logical_and> {}, a.to_compute_variant(), b.to_compute_variant());
 }
+
+VArray va::logical_or(const VArray &a, const VArray &b) {
+    return xoperation<promote::bool_in_bool_out>(XFunction<xt::detail::logical_or> {}, a.to_compute_variant(), b.to_compute_variant());
+}

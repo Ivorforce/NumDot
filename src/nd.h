@@ -79,6 +79,16 @@ public:
 	static Ref<NDArray> sin(Variant a);
 	static Ref<NDArray> cos(Variant a);
 	static Ref<NDArray> tan(Variant a);
+	static Ref<NDArray> asin(Variant a);
+	static Ref<NDArray> acos(Variant a);
+	static Ref<NDArray> atan(Variant a);
+
+	static Ref<NDArray> sinh(Variant a);
+	static Ref<NDArray> cosh(Variant a);
+	static Ref<NDArray> tanh(Variant a);
+	static Ref<NDArray> asinh(Variant a);
+	static Ref<NDArray> acosh(Variant a);
+	static Ref<NDArray> atanh(Variant a);
 
 	// Reductions.
 	static Ref<NDArray> sum(Variant a, Variant axes);

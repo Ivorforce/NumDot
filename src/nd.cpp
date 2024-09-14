@@ -93,6 +93,16 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("sin", "a"), &nd::sin);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("cos", "a"), &nd::cos);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("tan", "a"), &nd::tan);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("asin", "a"), &nd::asin);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("acos", "a"), &nd::acos);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("atan", "a"), &nd::atan);
+
+	godot::ClassDB::bind_static_method("nd", D_METHOD("sinh", "a"), &nd::sinh);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("cosh", "a"), &nd::cosh);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("tanh", "a"), &nd::tanh);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("asinh", "a"), &nd::asinh);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("acosh", "a"), &nd::acosh);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("atanh", "a"), &nd::atanh);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("sum", "a", "axes"), &nd::sum, DEFVAL(nullptr), DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("prod", "a", "axes"), &nd::sum, DEFVAL(nullptr), DEFVAL(nullptr));
@@ -395,6 +405,42 @@ Ref<NDArray> nd::cos(Variant a) {
 
 Ref<NDArray> nd::tan(Variant a) {
 	return map_variants_as_arrays([](const va::VArray &varray){ return va::tan(varray); }, a);
+}
+
+Ref<NDArray> nd::asin(Variant a) {
+	return map_variants_as_arrays([](const va::VArray &varray){ return va::asin(varray); }, a);
+}
+
+Ref<NDArray> nd::acos(Variant a) {
+	return map_variants_as_arrays([](const va::VArray &varray){ return va::acos(varray); }, a);
+}
+
+Ref<NDArray> nd::atan(Variant a) {
+	return map_variants_as_arrays([](const va::VArray &varray){ return va::atan(varray); }, a);
+}
+
+Ref<NDArray> nd::sinh(Variant a) {
+	return map_variants_as_arrays([](const va::VArray &varray){ return va::sinh(varray); }, a);
+}
+
+Ref<NDArray> nd::cosh(Variant a) {
+	return map_variants_as_arrays([](const va::VArray &varray){ return va::cosh(varray); }, a);
+}
+
+Ref<NDArray> nd::tanh(Variant a) {
+	return map_variants_as_arrays([](const va::VArray &varray){ return va::tanh(varray); }, a);
+}
+
+Ref<NDArray> nd::asinh(Variant a) {
+	return map_variants_as_arrays([](const va::VArray &varray){ return va::asinh(varray); }, a);
+}
+
+Ref<NDArray> nd::acosh(Variant a) {
+	return map_variants_as_arrays([](const va::VArray &varray){ return va::acosh(varray); }, a);
+}
+
+Ref<NDArray> nd::atanh(Variant a) {
+	return map_variants_as_arrays([](const va::VArray &varray){ return va::atanh(varray); }, a);
 }
 
 inline Ref<NDArray> reduction(std::function<va::VArray(const va::VArray&, const va::Axes&)> visitor, Variant a, Variant axes) {

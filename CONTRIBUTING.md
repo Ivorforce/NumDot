@@ -22,7 +22,7 @@ You don't need to be proficient with all of these technologies to help! Check ou
 
 ## Making a contribution
 
-First, set up the project:
+1) Set up the project:
 ```bash
 # Clone the repository
 git clone https://github.com/YourUsername/NumDot
@@ -38,11 +38,17 @@ cd ..
 scons platform=macos
 ```
 
-Make a branch for your changes:
+**For Windows users:** It is recommended to use [MinGW](https://www.mingw-w64.org/) to compile the project as the build process currently invokes gcc-specific compiler flags that will **not** be recognized by [MSVC](https://visualstudio.microsoft.com/vs/features/cplusplus/). In this case, MinGW must be added to PATH and specified to scons like so:
+
+```bash
+scons platform=windows use-mingw=yes
+```
+
+2) Make a branch for your changes:
 ```bash
 git checkout -b my-new-feature
 ```
-Make your changes using a code editor (I use [VSCode](https://code.visualstudio.com)).Test your changes in the demo project. Generate empty documentation for new code:
+Make your changes using a code editor (I use [VSCode](https://code.visualstudio.com)). Test your changes in the demo project. Generate empty documentation for new code:
 
 ```bash
 cd demo && godot --doctool ../ --gdextension-docs
@@ -64,7 +70,7 @@ git commit -m "My change message."
 git push
 ```
 
-Finally, [make a Pull Request (PR)](https://github.com/Ivorforce/NumDot/compare). We will check your changes, make suggestions, and finally integrate your code into the project. Try to make sure you don't include any accidental changes, like editing the test file.
+3) Finally, [make a Pull Request (PR)](https://github.com/Ivorforce/NumDot/compare). We will check your changes, make suggestions, and finally integrate your code into the project. Try to make sure you don't include any accidental changes, like editing the test file.
 
 ## Any Problems?
 

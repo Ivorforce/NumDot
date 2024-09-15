@@ -33,6 +33,10 @@ VArray va::atan(const VArray &array) {
     return xoperation<promote::num_function_result<xt::math::atan_fun>>(va::XFunction<xt::math::atan_fun> {}, array.to_compute_variant());
 }
 
+VArray va::atan2(const VArray &x1, const VArray &x2) {
+    return xoperation<promote::num_function_result<xt::math::atan2_fun>>(va::XFunction<xt::math::atan2_fun> {}, x1.to_compute_variant(), x2.to_compute_variant());
+}
+
 VArray va::sinh(const VArray &array) {
     return xoperation<promote::num_function_result<xt::math::sinh_fun>>(va::XFunction<xt::math::sinh_fun> {}, array.to_compute_variant());
 }

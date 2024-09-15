@@ -11,6 +11,7 @@ namespace va {
     VArray asin(const VArray& array);
     VArray acos(const VArray& array);
     VArray atan(const VArray& array);
+    VArray atan2(const VArray& x1, const VArray& x2);
 
     VArray sinh(const VArray& array);
     VArray cosh(const VArray& array);

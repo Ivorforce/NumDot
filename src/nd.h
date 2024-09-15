@@ -88,6 +88,7 @@ public:
 	static Ref<NDArray> asin(Variant a);
 	static Ref<NDArray> acos(Variant a);
 	static Ref<NDArray> atan(Variant a);
+	static Ref<NDArray> atan2(Variant x1, Variant x2);
 
 	static Ref<NDArray> sinh(Variant a);
 	static Ref<NDArray> cosh(Variant a);

@@ -102,6 +102,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("asin", "a"), &nd::asin);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("acos", "a"), &nd::acos);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("atan", "a"), &nd::atan);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("atan2", "x1", "x2"), &nd::atan2);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("sinh", "a"), &nd::sinh);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("cosh", "a"), &nd::cosh);
@@ -441,6 +442,10 @@ Ref<NDArray> nd::acos(Variant a) {
 
 Ref<NDArray> nd::atan(Variant a) {
 	return map_variants_as_arrays([](const va::VArray &varray){ return va::atan(varray); }, a);
+}
+
+Ref<NDArray> nd::atan2(Variant x1, Variant x2) {
+	return map_variants_as_arrays([](const va::VArray &x1, const va::VArray &x2){ return va::atan2(x1, x2); }, x1, x2);
 }
 
 Ref<NDArray> nd::sinh(Variant a) {

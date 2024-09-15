@@ -1,6 +1,6 @@
 # NumDot
 
-A tensor math library for the [Godot](https://godotengine.org) engine. Proof of concept, [contributions are welcome](https://github.com/Ivorforce/NumDot/blob/main/CONTRIBUTING.md).
+A tensor math and scientific computation library for the [Godot](https://godotengine.org) game engine. The project is still in its early stages. [Contributions are welcome](https://github.com/Ivorforce/NumDot/blob/main/CONTRIBUTING.md)!
 
 NumDot uses [xtensor](https://github.com/xtensor-stack/xtensor) under the hood.
 
@@ -70,7 +70,7 @@ Copy the folder `demo/bin` into your project folder as `bin`.
 
 ### What Now?
 
-NumDot is still in its experimental stages. If you want to keep up to date, come by and chat with us on our [Discord Server](https://discord.gg/hxuWcAXF).
+NumDot is still in its early stages. If you want to keep up to date, come by and chat with us on our [Discord Server](https://discord.gg/hxuWcAXF).
 
 If you want to contribute, check out [CONTRIBUTING.md](https://github.com/Ivorforce/NumDot/blob/main/CONTRIBUTING.md) or come by our [Discord Server](https://discord.gg/hxuWcAXF).
 

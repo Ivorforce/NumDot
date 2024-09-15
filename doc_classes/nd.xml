@@ -16,6 +16,18 @@
 				Calculate the absolute value element-wise.
 			</description>
 		</method>
+		<method name="acos" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+			</description>
+		</method>
+		<method name="acosh" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+			</description>
+		</method>
 		<method name="add" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
@@ -50,6 +62,30 @@
 				Convert the input to an array, but avoid copying data if possible.
 			</description>
 		</method>
+		<method name="asin" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+			</description>
+		</method>
+		<method name="asinh" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+			</description>
+		</method>
+		<method name="atan" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+			</description>
+		</method>
+		<method name="atanh" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+			</description>
+		</method>
 		<method name="ceil" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
@@ -63,6 +99,18 @@
 			<param index="0" name="a" type="Variant" />
 			<description>
 				Cosine element-wise.
+			</description>
+		</method>
+		<method name="cosh" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+			</description>
+		</method>
+		<method name="deg2rad" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
 			</description>
 		</method>
 		<method name="divide" qualifiers="static">
@@ -164,12 +212,32 @@
 				Compute the truth value of x1 AND x2 element-wise.
 			</description>
 		</method>
+		<method name="logical_not" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+			</description>
+		</method>
+		<method name="logical_or" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+			</description>
+		</method>
 		<method name="max" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" default="null" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				Return the maximum of an array or maximum along an axis.
+			</description>
+		</method>
+		<method name="maximum" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
 			</description>
 		</method>
 		<method name="mean" qualifiers="static">
@@ -187,6 +255,13 @@
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				Return the minimum of an array or minimum along an axis.
+			</description>
+		</method>
+		<method name="minimum" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
 			</description>
 		</method>
 		<method name="moveaxis" qualifiers="static">
@@ -235,6 +310,12 @@
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				Return the product of array elements over a given axis.
+			</description>
+		</method>
+		<method name="rad2deg" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
 			</description>
 		</method>
 		<method name="range" qualifiers="static">
@@ -296,6 +377,12 @@
 				Trigonometric sine, element-wise.
 			</description>
 		</method>
+		<method name="sinh" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+			</description>
+		</method>
 		<method name="size_of_dtype_in_bytes" qualifiers="static">
 			<return type="int" />
 			<param index="0" name="dtype" type="int" enum="nd.DType" />
@@ -350,6 +437,12 @@
 			<description>
 				Compute tangent element-wise.
 				Equivalent to nd.sin(x) / nd.cos(x) element-wise.
+			</description>
+		</method>
+		<method name="tanh" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
 			</description>
 		</method>
 		<method name="to" qualifiers="static">

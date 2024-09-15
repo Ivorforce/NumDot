@@ -68,6 +68,9 @@ public:
 	static Ref<NDArray> remainder(Variant a, Variant b);
 	static Ref<NDArray> pow(Variant a, Variant b);
 
+	static Ref<NDArray> minimum(Variant a, Variant b);
+	static Ref<NDArray> maximum(Variant a, Variant b);
+
 	static Ref<NDArray> sign(Variant a);
 	static Ref<NDArray> abs(Variant a);
 	static Ref<NDArray> sqrt(Variant a);
@@ -75,10 +78,23 @@ public:
 	static Ref<NDArray> exp(Variant a);
 	static Ref<NDArray> log(Variant a);
 
+	static Ref<NDArray> rad2deg(Variant a);
+	static Ref<NDArray> deg2rad(Variant a);
+	
 	// Trigonometric functions.
 	static Ref<NDArray> sin(Variant a);
 	static Ref<NDArray> cos(Variant a);
 	static Ref<NDArray> tan(Variant a);
+	static Ref<NDArray> asin(Variant a);
+	static Ref<NDArray> acos(Variant a);
+	static Ref<NDArray> atan(Variant a);
+
+	static Ref<NDArray> sinh(Variant a);
+	static Ref<NDArray> cosh(Variant a);
+	static Ref<NDArray> tanh(Variant a);
+	static Ref<NDArray> asinh(Variant a);
+	static Ref<NDArray> acosh(Variant a);
+	static Ref<NDArray> atanh(Variant a);
 
 	// Reductions.
 	static Ref<NDArray> sum(Variant a, Variant axes);
@@ -101,6 +117,8 @@ public:
 
 	// Logical.
 	static Ref<NDArray> logical_and(Variant a, Variant b);
+	static Ref<NDArray> logical_or(Variant a, Variant b);
+	static Ref<NDArray> logical_not(Variant a);
 };
 
 VARIANT_ENUM_CAST(nd::DType);

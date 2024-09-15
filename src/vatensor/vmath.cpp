@@ -57,6 +57,22 @@ VArray va::pow(const VArray &a, const VArray &b) {
     );
 }
 
+VArray va::minimum(const VArray &a, const VArray &b) {
+    return va::xoperation<promote::num_function_result<xt::math::minimum<void>>>(
+        XFunction<xt::math::minimum<void>> {},
+        a.to_compute_variant(),
+        b.to_compute_variant()
+    );
+}
+
+VArray va::maximum(const VArray &a, const VArray &b) {
+    return va::xoperation<promote::num_function_result<xt::math::maximum<void>>>(
+        XFunction<xt::math::maximum<void>> {},
+        a.to_compute_variant(),
+        b.to_compute_variant()
+    );
+}
+
 VArray va::sign(const VArray &array) {
     return xoperation<promote::num_common_type>(va::XFunction<xt::math::sign_fun> {}, array.to_compute_variant());
 }
@@ -75,4 +91,12 @@ VArray va::exp(const VArray &array) {
 
 VArray va::log(const VArray &array) {
     return xoperation<promote::num_function_result<xt::math::log_fun>>(va::XFunction<xt::math::log_fun> {}, array.to_compute_variant());
+}
+
+VArray va::rad2deg(const VArray &array) {
+    return xoperation<promote::num_function_result<xt::math::rad2deg>>(va::XFunction<xt::math::rad2deg> {}, array.to_compute_variant());
+}
+
+VArray va::deg2rad(const VArray &array) {
+    return xoperation<promote::num_function_result<xt::math::deg2rad>>(va::XFunction<xt::math::deg2rad> {}, array.to_compute_variant());
 }

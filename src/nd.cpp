@@ -83,6 +83,9 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("remainder", "a", "b"), &nd::remainder);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("pow", "a", "b"), &nd::pow);
 
+	godot::ClassDB::bind_static_method("nd", D_METHOD("minimum", "a", "b"), &nd::minimum);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("maximum", "a", "b"), &nd::maximum);
+
 	godot::ClassDB::bind_static_method("nd", D_METHOD("sign", "a"), &nd::sign);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("abs", "a"), &nd::abs);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("sqrt", "a"), &nd::sqrt);
@@ -90,17 +93,30 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("exp", "a"), &nd::exp);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("log", "a"), &nd::log);
 
+	godot::ClassDB::bind_static_method("nd", D_METHOD("rad2deg", "a"), &nd::rad2deg);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("deg2rad", "a"), &nd::deg2rad);
+
 	godot::ClassDB::bind_static_method("nd", D_METHOD("sin", "a"), &nd::sin);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("cos", "a"), &nd::cos);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("tan", "a"), &nd::tan);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("asin", "a"), &nd::asin);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("acos", "a"), &nd::acos);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("atan", "a"), &nd::atan);
+
+	godot::ClassDB::bind_static_method("nd", D_METHOD("sinh", "a"), &nd::sinh);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("cosh", "a"), &nd::cosh);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("tanh", "a"), &nd::tanh);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("asinh", "a"), &nd::asinh);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("acosh", "a"), &nd::acosh);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("atanh", "a"), &nd::atanh);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("sum", "a", "axes"), &nd::sum, DEFVAL(nullptr), DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("prod", "a", "axes"), &nd::sum, DEFVAL(nullptr), DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("mean", "a", "axes"), &nd::mean, DEFVAL(nullptr), DEFVAL(nullptr));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("var", "a", "axes"), &nd::std, DEFVAL(nullptr), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("var", "a", "axes"), &nd::var, DEFVAL(nullptr), DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("std", "a", "axes"), &nd::std, DEFVAL(nullptr), DEFVAL(nullptr));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("max", "a", "axes"), &nd::std, DEFVAL(nullptr), DEFVAL(nullptr));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("min", "a", "axes"), &nd::std, DEFVAL(nullptr), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("max", "a", "axes"), &nd::max, DEFVAL(nullptr), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("min", "a", "axes"), &nd::min, DEFVAL(nullptr), DEFVAL(nullptr));
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("floor", "a"), &nd::floor);
     godot::ClassDB::bind_static_method("nd", D_METHOD("ceil", "a"), &nd::ceil);
@@ -111,6 +127,8 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("equal", "a", "b"), &nd::equal);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("logical_and", "a", "b"), &nd::logical_and);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("logical_or", "a", "b"), &nd::logical_or);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("logical_not", "a"), &nd::logical_not);
 }
 
 nd::nd() = default;
@@ -365,6 +383,14 @@ Ref<NDArray> nd::pow(Variant a, Variant b) {
 	return map_variants_as_arrays([](const va::VArray &a, const va::VArray &b) { return va::pow(a, b); }, a, b);
 }
 
+Ref<NDArray> nd::minimum(Variant a, Variant b) {
+	return map_variants_as_arrays([](const va::VArray &a, const va::VArray &b) { return va::minimum(a, b); }, a, b);
+}
+
+Ref<NDArray> nd::maximum(Variant a, Variant b) {
+	return map_variants_as_arrays([](const va::VArray &a, const va::VArray &b) { return va::maximum(a, b); }, a, b);
+}
+
 Ref<NDArray> nd::sign(Variant a) {
 	return map_variants_as_arrays([](const va::VArray &varray){ return va::sign(varray); }, a);
 }
@@ -385,6 +411,14 @@ Ref<NDArray> nd::log(Variant a) {
 	return map_variants_as_arrays([](const va::VArray &varray){ return va::log(varray); }, a);
 }
 
+Ref<NDArray> nd::rad2deg(Variant a) {
+	return map_variants_as_arrays([](const va::VArray &varray){ return va::rad2deg(varray); }, a);
+}
+
+Ref<NDArray> nd::deg2rad(Variant a) {
+	return map_variants_as_arrays([](const va::VArray &varray){ return va::deg2rad(varray); }, a);
+}
+
 Ref<NDArray> nd::sin(Variant a) {
 	return map_variants_as_arrays([](const va::VArray &varray){ return va::sin(varray); }, a);
 }
@@ -395,6 +429,42 @@ Ref<NDArray> nd::cos(Variant a) {
 
 Ref<NDArray> nd::tan(Variant a) {
 	return map_variants_as_arrays([](const va::VArray &varray){ return va::tan(varray); }, a);
+}
+
+Ref<NDArray> nd::asin(Variant a) {
+	return map_variants_as_arrays([](const va::VArray &varray){ return va::asin(varray); }, a);
+}
+
+Ref<NDArray> nd::acos(Variant a) {
+	return map_variants_as_arrays([](const va::VArray &varray){ return va::acos(varray); }, a);
+}
+
+Ref<NDArray> nd::atan(Variant a) {
+	return map_variants_as_arrays([](const va::VArray &varray){ return va::atan(varray); }, a);
+}
+
+Ref<NDArray> nd::sinh(Variant a) {
+	return map_variants_as_arrays([](const va::VArray &varray){ return va::sinh(varray); }, a);
+}
+
+Ref<NDArray> nd::cosh(Variant a) {
+	return map_variants_as_arrays([](const va::VArray &varray){ return va::cosh(varray); }, a);
+}
+
+Ref<NDArray> nd::tanh(Variant a) {
+	return map_variants_as_arrays([](const va::VArray &varray){ return va::tanh(varray); }, a);
+}
+
+Ref<NDArray> nd::asinh(Variant a) {
+	return map_variants_as_arrays([](const va::VArray &varray){ return va::asinh(varray); }, a);
+}
+
+Ref<NDArray> nd::acosh(Variant a) {
+	return map_variants_as_arrays([](const va::VArray &varray){ return va::acosh(varray); }, a);
+}
+
+Ref<NDArray> nd::atanh(Variant a) {
+	return map_variants_as_arrays([](const va::VArray &varray){ return va::atanh(varray); }, a);
 }
 
 inline Ref<NDArray> reduction(std::function<va::VArray(const va::VArray&, const va::Axes&)> visitor, Variant a, Variant axes) {
@@ -466,4 +536,12 @@ Ref<NDArray> nd::equal(Variant a, Variant b) {
 
 Ref<NDArray> nd::logical_and(Variant a, Variant b) {
 	return map_variants_as_arrays([](const va::VArray &a, const va::VArray &b) { return va::logical_and(a, b); }, a, b);
+}
+
+Ref<NDArray> nd::logical_or(Variant a, Variant b) {
+	return map_variants_as_arrays([](const va::VArray &a, const va::VArray &b) { return va::logical_or(a, b); }, a, b);
+}
+
+Ref<NDArray> nd::logical_not(Variant a) {
+	return map_variants_as_arrays([](const va::VArray &a) { return va::logical_not(a); }, a);
 }

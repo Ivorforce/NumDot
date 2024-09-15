@@ -209,6 +209,7 @@
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
+				Return (x1 &gt; x2) element-wise.
 			</description>
 		</method>
 		<method name="greater_equal" qualifiers="static">
@@ -216,6 +217,7 @@
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
+				Return (x1 &gt;= x2) element-wise.
 			</description>
 		</method>
 		<method name="less" qualifiers="static">
@@ -223,6 +225,7 @@
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
+				Return (x1 &lt; x2) element-wise.
 			</description>
 		</method>
 		<method name="less_equal" qualifiers="static">
@@ -230,6 +233,7 @@
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
+				Return (x1 &lt;= x2) element-wise.
 			</description>
 		</method>
 		<method name="linspace" qualifiers="static">
@@ -348,6 +352,7 @@
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
+				Return (x1 != x2) element-wise.
 			</description>
 		</method>
 		<method name="ones" qualifiers="static">

@@ -115,6 +115,11 @@ public:
 
 	// Comparisons.
 	static Ref<NDArray> equal(Variant a, Variant b);
+	static Ref<NDArray> not_equal(Variant a, Variant b);
+	static Ref<NDArray> greater(Variant a, Variant b);
+	static Ref<NDArray> greater_equal(Variant a, Variant b);
+	static Ref<NDArray> less(Variant a, Variant b);
+	static Ref<NDArray> less_equal(Variant a, Variant b);
 
 	// Logical.
 	static Ref<NDArray> logical_and(Variant a, Variant b);

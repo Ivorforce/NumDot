@@ -14,6 +14,15 @@ namespace va {
         //  I think it may be faster to not cast beforehand, but it's possible it does it later down the line anyway.
         //  That should be tested.
         // Also, mixed-type input ops can really increase binary size, so it should be used with care if at all.
+        
+        template<typename OutputType>
+        struct common_num_in_x_out {
+            template<typename... Args>
+            using input_type = std::common_type_t<int64_if_bool_else_id<Args>...>;
+
+            template<typename InputType>
+            using output_type = OutputType;
+        };
 
         /**
          * 	what results from the native C++ operation op(A(), B())

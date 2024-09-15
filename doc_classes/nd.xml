@@ -20,12 +20,15 @@
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
+				Trigonometric inverse cosine, element-wise.
+				The inverse of cos so that, if y = cos(x), then x = arccos(y).
 			</description>
 		</method>
 		<method name="acosh" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
+				Inverse hyperbolic cosine, element-wise.
 			</description>
 		</method>
 		<method name="add" qualifiers="static">
@@ -66,24 +69,30 @@
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
+				Inverse sine, element-wise.
+				The inverse of sine, so that if y = sin(x) then x = arcsin(y).
 			</description>
 		</method>
 		<method name="asinh" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
+				Inverse hyperbolic sine element-wise.
 			</description>
 		</method>
 		<method name="atan" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
+				Trigonometric inverse tangent, element-wise.
+				The inverse of tan, so that if y = tan(x) then x = arctan(y).
 			</description>
 		</method>
 		<method name="atanh" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
+				Inverse hyperbolic tangent element-wise.
 			</description>
 		</method>
 		<method name="ceil" qualifiers="static">
@@ -105,12 +114,15 @@
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
+				Hyperbolic cosine, element-wise.
+				Equivalent to 0.5 * (nd.exp(x) + nd.exp(-x)).
 			</description>
 		</method>
 		<method name="deg2rad" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
+                Convert angles from degrees to radians.
 			</description>
 		</method>
 		<method name="divide" qualifiers="static">
@@ -216,6 +228,7 @@
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
+				Compute the truth value of NOT x element-wise.
 			</description>
 		</method>
 		<method name="logical_or" qualifiers="static">
@@ -223,6 +236,7 @@
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
+				Compute the truth value of x1 OR x2 element-wise.
 			</description>
 		</method>
 		<method name="max" qualifiers="static">
@@ -238,6 +252,8 @@
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
+				Element-wise maximum of array elements.
+				Compare two arrays and return a new array containing the element-wise maxima. If one of the elements being compared is a NaN, then that element is returned. If both elements are NaNs then the first is returned. The latter distinction is important for complex NaNs, which are defined as at least one of the real or imaginary parts being a NaN. The net effect is that NaNs are propagated.
 			</description>
 		</method>
 		<method name="mean" qualifiers="static">
@@ -262,6 +278,8 @@
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
+                Element-wise minimum of array elements.
+                Compare two arrays and return a new array containing the element-wise minima. If one of the elements being compared is a NaN, then that element is returned. If both elements are NaNs then the first is returned. The latter distinction is important for complex NaNs, which are defined as at least one of the real or imaginary parts being a NaN. The net effect is that NaNs are propagated.
 			</description>
 		</method>
 		<method name="moveaxis" qualifiers="static">
@@ -316,6 +334,7 @@
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
+				Convert angles from radians to degrees.
 			</description>
 		</method>
 		<method name="range" qualifiers="static">
@@ -381,6 +400,8 @@
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
+				Hyperbolic sine, element-wise.
+				Equivalent to 0.5 * (nd.exp(x) - nd.exp(-x)).
 			</description>
 		</method>
 		<method name="size_of_dtype_in_bytes" qualifiers="static">
@@ -443,6 +464,8 @@
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
+				Compute hyperbolic tangent element-wise.
+				Equivalent to nd.sinh(x) / nd.cosh(x).
 			</description>
 		</method>
 		<method name="to" qualifiers="static">

@@ -13,7 +13,7 @@ Operations with tensors are also very easy to write and read, once you're famili
 NumDot is inspired by the python tensor math library, [NumPy](https://numpy.org), and thus shares many semantics with it. If you are unfamiliar with tensor operations in general, we recommend taking a numpy tutorial or two first. That being said, here are some direct comparison examples:
 
 | NumPy                             | NumDot                                                                                                                           |
-|-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
+| --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | `x[a, b, c]`                      | `x.get(a, b, c)` ([syntax discussion](https://github.com/Ivorforce/NumDot/issues/6))                                             |
 | `x[...]` can return single values | `x.get(...)` always returns a tensor, use `x.get_float(...)` and `x.get_int(...)` to get values.                                 |
 | `x[a, b, c] = d`                  | `x.set(d, a, b, c)`                                                                                                              |
@@ -29,7 +29,7 @@ NumDot is inspired by the python tensor math library, [NumPy](https://numpy.org)
 | `np.sin(a)`                       | `nd.sin(a)`                                                                                                                      |
 | `np.mean(a, [1, -1])`             | `nd.mean(a, [1, -1])`                                                                                                            |
 | `np.reshape(a, (50, -1))`         | `nd.reshape(a, [50, -1])`                                                                                                        |
-| `np.transpose(a, (2, 0, 1))`      | `nd.transpose(a, [2, 0, 1])`                                                                                                       |
+| `np.transpose(a, (2, 0, 1))`      | `nd.transpose(a, [2, 0, 1])`                                                                                                     |
 
 Keep in mind these semantics are yet subject to change.
 
@@ -65,7 +65,9 @@ cd ..
 
 # Exceptions have to be explicitly enabled here
 scons platform=macos
-# You may have to build twice, see https://github.com/Ivorforce/NumDot/issues/23
+
+# On windows, use MinGW for compiling like so
+# scons platform=windows use-mingw=yes
 ```
 
 ### What Now?

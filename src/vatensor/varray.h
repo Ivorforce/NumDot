@@ -55,7 +55,7 @@ namespace va {
     using GivenAxes = std::vector<std::ptrdiff_t>;
 
     using Axes = std::variant<
-        nullptr_t,
+        std::nullptr_t,
         GivenAxes
     >;
 
@@ -64,7 +64,7 @@ namespace va {
 
     // P&& pointer, typename A::size_type size, O ownership, SC&& shape, SS&& strides, const A& alloc = A()
     template <typename T>
-    using compute_case = xt::xarray_adaptor<xt::xbuffer_adaptor<T*>,xt::layout_type::dynamic>;
+    using compute_case = xt::xarray_adaptor<xt::xbuffer_adaptor<T*>, xt::layout_type::dynamic>;
 
     using ComputeVariant = std::variant<
         compute_case<bool>,
@@ -110,7 +110,7 @@ namespace va {
         [[nodiscard]] size_t dimension() const;
 
         // TODO Can probably change these to subscript syntax
-        [[nodiscard]] VArray slice(const xt::xstrided_slice_vector &slices) const;
+        [[nodiscard]] VArray slice(const xt::xstrided_slice_vector& slices) const;
         void fill(VConstant value) const;
         void set_with_array(const VArray& value) const;
 

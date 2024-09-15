@@ -204,6 +204,34 @@
 				Return a new array of given shape and type, filled with fill_value.
 			</description>
 		</method>
+		<method name="greater" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+			</description>
+		</method>
+		<method name="greater_equal" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+			</description>
+		</method>
+		<method name="less" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+			</description>
+		</method>
+		<method name="less_equal" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+			</description>
+		</method>
 		<method name="linspace" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="start" type="Variant" default="0" />
@@ -313,6 +341,13 @@
 			<return type="StringName" />
 			<description>
 				An alias for the StringName &amp;"newaxis". In a subscript, this will add a dimension of size one.
+			</description>
+		</method>
+		<method name="not_equal" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
 			</description>
 		</method>
 		<method name="ones" qualifiers="static">

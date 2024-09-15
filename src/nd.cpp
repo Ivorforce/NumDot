@@ -126,6 +126,11 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("rint", "a"), &nd::rint);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("equal", "a", "b"), &nd::equal);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("not_equal", "a", "b"), &nd::not_equal);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("greater", "a", "b"), &nd::greater);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("greater_equal", "a", "b"), &nd::greater_equal);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("less", "a", "b"), &nd::less);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("less_equal", "a", "b"), &nd::less_equal);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("logical_and", "a", "b"), &nd::logical_and);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("logical_or", "a", "b"), &nd::logical_or);
@@ -537,6 +542,26 @@ Ref<NDArray> nd::rint(Variant a) {
 
 Ref<NDArray> nd::equal(Variant a, Variant b) {
 	return map_variants_as_arrays([](const va::VArray &a, const va::VArray &b) { return va::equal_to(a, b); }, a, b);
+}
+
+Ref<NDArray> nd::not_equal(Variant a, Variant b) {
+	return map_variants_as_arrays([](const va::VArray &a, const va::VArray &b) { return va::not_equal_to(a, b); }, a, b);
+}
+
+Ref<NDArray> nd::greater(Variant a, Variant b) {
+	return map_variants_as_arrays([](const va::VArray &a, const va::VArray &b) { return va::greater(a, b); }, a, b);
+}
+
+Ref<NDArray> nd::greater_equal(Variant a, Variant b) {
+	return map_variants_as_arrays([](const va::VArray &a, const va::VArray &b) { return va::greater_equal(a, b); }, a, b);
+}
+
+Ref<NDArray> nd::less(Variant a, Variant b) {
+	return map_variants_as_arrays([](const va::VArray &a, const va::VArray &b) { return va::less(a, b); }, a, b);
+}
+
+Ref<NDArray> nd::less_equal(Variant a, Variant b) {
+	return map_variants_as_arrays([](const va::VArray &a, const va::VArray &b) { return va::less_equal(a, b); }, a, b);
 }
 
 Ref<NDArray> nd::logical_and(Variant a, Variant b) {

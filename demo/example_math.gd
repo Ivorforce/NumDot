@@ -2,8 +2,10 @@ extends Node2D
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	var test_size := 10000
+	var test_size := 50000
 	var test_count := 1000
+	
+	print(nd.logical_and(nd.array(0), nd.array(5)))
 	
 	var a_packed := PackedInt32Array()
 	a_packed.resize(test_size)
@@ -54,8 +56,6 @@ func _ready() -> void:
 	for t in test_count:
 		nd.sin(a_nd)
 	print(Time.get_ticks_usec() - start_time)
-	
-	pass # Replace with function body.
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

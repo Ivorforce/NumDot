@@ -1,0 +1,6 @@
+# Poetry
+.venv
+
+# Build files
+_build
+classes

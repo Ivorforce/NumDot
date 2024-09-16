@@ -11,3 +11,6 @@
 [submodule "xsimd"]
 	path = xsimd
 	url = git@github.com:xtensor-stack/xsimd.git
+[submodule "doc/godot-docs"]
+	path = doc/godot-docs
+	url = git@github.com:godotengine/godot-docs.git

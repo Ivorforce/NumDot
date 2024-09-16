@@ -160,43 +160,43 @@ va::VArray variant_as_array(const Variant array) {
             return packed_as_xarray<double_t>(PackedFloat64Array(array));
         case Variant::VECTOR2I: {
             auto vector = Vector2i(array);
-            auto store = std::make_shared<xt::xarray<int64_t>>(xt::xarray<int64_t>(
-                { int64_t(vector.x), int64_t(vector.y) }
+            auto store = std::make_shared<xt::xarray<int32_t>>(xt::xarray<int32_t>(
+                { vector.x, vector.y }
             ));
             return va::from_store(store);
         }
         case Variant::VECTOR3I: {
             auto vector = Vector3i(array);
-            auto store = std::make_shared<xt::xarray<int64_t>>(xt::xarray<int64_t>(
-                { int64_t(vector.x), int64_t(vector.y), int64_t(vector.z) }
+            auto store = std::make_shared<xt::xarray<int32_t>>(xt::xarray<int32_t>(
+                { vector.x, vector.y, vector.z }
             ));
             return va::from_store(store);
         }
         case Variant::VECTOR4I: {
             auto vector = Vector4i(array);
-            auto store = std::make_shared<xt::xarray<int64_t>>(xt::xarray<int64_t>(
-                { int64_t(vector.x), int64_t(vector.y), int64_t(vector.z), int64_t(vector.w) }
+            auto store = std::make_shared<xt::xarray<int32_t>>(xt::xarray<int32_t>(
+                { vector.x, vector.y, vector.z, vector.w }
             ));
             return va::from_store(store);
         }
         case Variant::VECTOR2: {
             auto vector = Vector2(array);
-            auto store = std::make_shared<xt::xarray<double_t>>(xt::xarray<double_t>(
-                { double_t(vector.x), double_t(vector.y) }
+            auto store = std::make_shared<xt::xarray<real_t>>(xt::xarray<real_t>(
+                { vector.x, vector.y }
             ));
             return va::from_store(store);
         }
         case Variant::VECTOR3: {
             auto vector = Vector3(array);
-            auto store = std::make_shared<xt::xarray<double_t>>(xt::xarray<double_t>(
-                { double_t(vector.x), double_t(vector.y), double_t(vector.z) }
+            auto store = std::make_shared<xt::xarray<real_t>>(xt::xarray<real_t>(
+                { vector.x, vector.y, vector.z }
             ));
             return va::from_store(store);
         }
         case Variant::VECTOR4: {
             auto vector = Vector4(array);
-            auto store = std::make_shared<xt::xarray<double_t>>(xt::xarray<double_t>(
-                { double_t(vector.x), double_t(vector.y), double_t(vector.z), double_t(vector.w) }
+            auto store = std::make_shared<xt::xarray<real_t>>(xt::xarray<real_t>(
+                { vector.x, vector.y, vector.z, vector.w }
             ));
             return va::from_store(store);
         }

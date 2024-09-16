@@ -30,4 +30,4 @@ submodules:
 
 python:
   install:
-    - requirements: godot-docs/requirements.txt
+    - requirements: docs/godot-docs/requirements.txt

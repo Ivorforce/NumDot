@@ -1,0 +1,3 @@
+user-agent: *
+
+sitemap: https://numdot.readthedocs.io/sitemap.xml

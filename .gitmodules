@@ -4,13 +4,13 @@
 	branch = 4.3
 [submodule "xtensor"]
 	path = xtensor
-	url = git@github.com:xtensor-stack/xtensor.git
+	url = https://github.com/xtensor-stack/xtensor.git
 [submodule "xtl"]
 	path = xtl
-	url = git@github.com:xtensor-stack/xtl.git
+	url = https://github.com/xtensor-stack/xtl.git
 [submodule "xsimd"]
 	path = xsimd
-	url = git@github.com:xtensor-stack/xsimd.git
+	url = https://github.com/xtensor-stack/xsimd.git
 [submodule "docs/godot-docs"]
 	path = docs/godot-docs
-	url = git@github.com:godotengine/godot-docs.git
+	url = https://github.com/godotengine/godot-docs.git

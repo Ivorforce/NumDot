@@ -123,11 +123,8 @@ va::VArray packed_as_xarray(const T shape_array) {
     return va::from_store(store);
 }
 
-va::VArray variant_as_array(const Variant array) {
-    auto type = array.get_type();
-
-    // TODO A bunch of interesting types are still missing
-    switch (type) {
+va::VArray variant_as_array(const Variant& array) {
+    switch (array.get_type()) {
         case Variant::OBJECT:
             if (auto ndarray = Object::cast_to<NDArray>(array)) {
                 return ndarray->array;
@@ -137,16 +134,13 @@ va::VArray variant_as_array(const Variant array) {
             return array_as_varray(array);
         }
         case Variant::BOOL: {
-            auto store = std::make_shared<xt::xarray<bool>>(xt::xarray<bool>(array));
-            return va::from_store(store);
+            return va::from_store(std::make_shared<xt::xarray<bool>>(xt::xarray<bool>(array)));
         }
         case Variant::INT: {
-            auto store = std::make_shared<xt::xarray<int64_t>>(xt::xarray<int64_t>(array));
-            return va::from_store(store);
+            return va::from_store(std::make_shared<xt::xarray<int64_t>>(xt::xarray<int64_t>(array)));
         }
         case Variant::FLOAT: {
-            auto store = std::make_shared<xt::xarray<double_t>>(xt::xarray<double_t>(array));
-            return va::from_store(store);
+            return va::from_store(std::make_shared<xt::xarray<double_t>>(xt::xarray<double_t>(array)));
         }
         case Variant::PACKED_BYTE_ARRAY:
             return packed_as_xarray<uint8_t>(PackedByteArray(array));
@@ -160,76 +154,51 @@ va::VArray variant_as_array(const Variant array) {
             return packed_as_xarray<double_t>(PackedFloat64Array(array));
         case Variant::VECTOR2I: {
             auto vector = Vector2i(array);
-            auto store = std::make_shared<xt::xarray<int32_t>>(xt::xarray<int32_t>(
+            return va::from_store(std::make_shared<xt::xarray<int32_t>>(xt::xarray<int32_t>(
                 { vector.x, vector.y }
-            ));
-            return va::from_store(store);
+            )));
         }
         case Variant::VECTOR3I: {
             auto vector = Vector3i(array);
-            auto store = std::make_shared<xt::xarray<int32_t>>(xt::xarray<int32_t>(
+            return va::from_store(std::make_shared<xt::xarray<int32_t>>(xt::xarray<int32_t>(
                 { vector.x, vector.y, vector.z }
-            ));
-            return va::from_store(store);
+            )));
         }
         case Variant::VECTOR4I: {
             auto vector = Vector4i(array);
-            auto store = std::make_shared<xt::xarray<int32_t>>(xt::xarray<int32_t>(
+            return va::from_store(std::make_shared<xt::xarray<int32_t>>(xt::xarray<int32_t>(
                 { vector.x, vector.y, vector.z, vector.w }
-            ));
-            return va::from_store(store);
+            )));
         }
         case Variant::VECTOR2: {
             auto vector = Vector2(array);
-            auto store = std::make_shared<xt::xarray<real_t>>(xt::xarray<real_t>(
+            return va::from_store(std::make_shared<xt::xarray<real_t>>(xt::xarray<real_t>(
                 { vector.x, vector.y }
-            ));
-            return va::from_store(store);
+            )));
         }
         case Variant::VECTOR3: {
             auto vector = Vector3(array);
-            auto store = std::make_shared<xt::xarray<real_t>>(xt::xarray<real_t>(
+            return va::from_store(std::make_shared<xt::xarray<real_t>>(xt::xarray<real_t>(
                 { vector.x, vector.y, vector.z }
-            ));
-            return va::from_store(store);
+            )));
         }
         case Variant::VECTOR4: {
             auto vector = Vector4(array);
-            auto store = std::make_shared<xt::xarray<real_t>>(xt::xarray<real_t>(
+            return va::from_store(std::make_shared<xt::xarray<real_t>>(xt::xarray<real_t>(
                 { vector.x, vector.y, vector.z, vector.w }
-            ));
-            return va::from_store(store);
+            )));
         }
-
         default:
             break;
-    }
-
-    // Try float first. Int may be more lossy.
-    if (Variant::can_convert(type, Variant::Type::FLOAT)) {
-        auto store = std::make_shared<xt::xarray<double_t>>(xt::xarray<double_t>(double_t(array)));
-        return va::from_store(store);
-    }
-    if (Variant::can_convert(type, Variant::Type::INT)) {
-        auto store = std::make_shared<xt::xarray<int64_t>>(xt::xarray<int64_t>(int64_t(array)));
-        return va::from_store(store);
-    }
-
-    // TODO Godot will happily convert every number to float.
-    // We should manually adapt and look through Array to find what its parts are.
-    if (Variant::can_convert(type, Variant::Type::PACKED_FLOAT64_ARRAY)) {
-        return packed_as_xarray<double_t>(PackedFloat64Array(array));
-    }
-    if (Variant::can_convert(type, Variant::Type::PACKED_INT64_ARRAY)) {
-        return packed_as_xarray<int64_t>(PackedInt64Array(array));
     }
 
     throw std::runtime_error("Unsupported type");
 }
 
-Array xtvariant_to_godot_array(const va::VArray &array) {
+Array varray_to_godot_array(const va::VArray &array) {
     Array godot_array = Array();
 
+    // TODO Non-flat
     std::visit([&godot_array](auto carray){
         godot_array.resize(carray.size());
         auto start = carray.begin();

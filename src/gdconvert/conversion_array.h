@@ -8,7 +8,7 @@
 
 using namespace godot;
 
-va::VArray variant_as_array(const Variant array);
+va::VArray variant_as_array(const Variant& array);
 
 template <typename P, typename A>
 P packed_from_sequence(A& a) {
@@ -25,6 +25,6 @@ P varray_to_packed(const va::VArray& array) {
 	}, array.to_compute_variant());
 }
 
-Array xtvariant_to_godot_array(const va::VArray& array);
+Array varray_to_godot_array(const va::VArray& array);
 
 #endif

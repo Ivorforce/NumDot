@@ -182,5 +182,5 @@ PackedInt64Array NDArray::to_packed_int64_array() const {
 }
 
 Array NDArray::to_godot_array() const {
-	return xtvariant_to_godot_array(array);
+	return varray_to_godot_array(array);
 }

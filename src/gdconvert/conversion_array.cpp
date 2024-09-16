@@ -6,6 +6,8 @@
 #include <memory>                                      // for allocator, sha...
 #include <stdexcept>                                   // for runtime_error
 #include <vector>                                      // for vector
+#include <vatensor/allocate.h>
+
 #include "godot_cpp/classes/object.hpp"                // for Object
 #include "godot_cpp/core/object.hpp"                   // for Object::cast_to
 #include "godot_cpp/variant/packed_byte_array.hpp"     // for PackedByteArray
@@ -30,6 +32,94 @@
 #include "xtensor/xtensor_forward.hpp"                 // for xarray
 #include "xtl/xiterator_base.hpp"                      // for operator+
 
+
+va::VArray array_as_varray(const Array& array) {
+    va::shape_type shape;
+    va::DType dtype = va::DTypeMax;
+    std::vector<Array> current_dim_arrays = { array };
+
+    while (true) {
+        size_t current_dim_size = current_dim_arrays[0].size();
+
+        for (auto& array : current_dim_arrays) {
+            if (current_dim_size >= 1 && array.size() == 1) continue;
+            if (array.size() != current_dim_size) {
+                throw std::runtime_error("array size mismatch");
+            }
+        }
+
+        shape.push_back(current_dim_size);
+        std::vector<Array> next_dim_arrays;
+
+        for (Array& array : current_dim_arrays) {
+            for (int i = 0; i < array.size(); ++i) {
+                Variant& element = array[i];
+                switch (element.get_type()) {
+                    case Variant::ARRAY:
+                        next_dim_arrays.push_back(element);
+                    case Variant::FLOAT:
+                        dtype = va::dtype_common_type(dtype, va::Float64);
+                        break;
+                    case Variant::INT:
+                        dtype = va::dtype_common_type(dtype, va::Int64);
+                        break;
+                    case Variant::BOOL:
+                        dtype = va::dtype_common_type(dtype, va::Bool);
+                        break;
+                    default:
+                        throw std::runtime_error("unsupported array type");
+                }
+            }
+        }
+
+        if (next_dim_arrays.empty()) {
+            break;
+        }
+
+        current_dim_arrays = next_dim_arrays;
+    }
+
+    if (dtype == va::DTypeMax) {
+        dtype = va::Float64;
+    }
+
+    va::VArray varray = va::empty(dtype, shape);
+    std::vector<std::tuple<xt::xstrided_slice_vector, Variant>> next = { { {}, array } };
+
+    while (!next.empty()) {
+        auto [idx, var] = std::move(next.back());
+        next.pop_back();
+
+        switch (var.get_type()) {
+            // TODO Needs to support more types, but should be merged with other type interpretations.
+            case Variant::ARRAY: {
+                const Array array = var;
+                for (int i = 0; i < array.size(); ++i) {
+                    auto new_idx = idx;
+                    new_idx.emplace_back(i);
+                    next.push_back({new_idx, array[i]});
+                }
+                break;
+            }
+            case Variant::FLOAT: {
+                const va::VArray slice = varray.slice(idx);
+                slice.fill(static_cast<double_t>(var));
+                break;
+            }
+            case Variant::INT: {
+                const va::VArray slice = varray.slice(idx);
+                slice.fill(static_cast<int64_t>(var));
+                break;
+            }
+            default:
+                throw std::runtime_error("unsupported array type");
+        }
+    }
+
+    return varray;
+}
+
+
 template <typename C, typename T>
 va::VArray packed_as_xarray(const T shape_array) {
     uint64_t size = shape_array.size();
@@ -53,6 +143,9 @@ va::VArray variant_as_array(const Variant array) {
                 return ndarray->array;
             }
             break;
+        case Variant::ARRAY: {
+            return array_as_varray(array);
+        }
         case Variant::BOOL: {
             auto store = std::make_shared<xt::xarray<bool>>(xt::xarray<bool>(bool(array)));
             return va::from_store(store);

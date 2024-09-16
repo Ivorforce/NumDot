@@ -167,10 +167,13 @@ namespace va {
     }
 
     VConstant dtype_to_variant(DType dtype);
+    DType variant_to_dtype(VConstant dtype);
 
     size_t size_of_dtype_in_bytes(DType dtype);
 
     VConstant constant_to_dtype(VConstant v, DType dtype);
+
+    DType dtype_common_type(DType a, DType b);
 
     // TODO Can probably just be static_cast override or some such.
     template <typename V>

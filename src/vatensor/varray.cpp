@@ -99,6 +99,10 @@ va::VConstant va::dtype_to_variant(DType dtype) {
     }
 }
 
+va::DType va::variant_to_dtype(VConstant dtype) {
+    return static_cast<DType>(dtype.index());
+}
+
 size_t va::size_of_dtype_in_bytes(DType dtype) {
     return std::visit([](auto dtype){
         return sizeof(dtype);
@@ -110,6 +114,17 @@ va::VConstant va::constant_to_dtype(VConstant v, DType dtype) {
         using T = std::decay_t<decltype(t)>;
         return static_cast<T>(v);
     }, v, dtype_to_variant(dtype));
+}
+
+va::DType va::dtype_common_type(DType a, DType b) {
+    if (a == DTypeMax) return b;
+    if (b == DTypeMax) return a;
+
+    return std::visit(
+        [](auto a, auto b) { return variant_to_dtype(std::common_type_t<decltype(a), decltype(b)>()); },
+        dtype_to_variant(a),
+        dtype_to_variant(b)
+    );
 }
 
 va::VConstant va::VArray::to_single_value() const {

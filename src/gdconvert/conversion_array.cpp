@@ -41,9 +41,8 @@ va::VArray array_as_varray(const Array& array) {
     while (true) {
         size_t current_dim_size = current_dim_arrays[0].size();
 
-        for (auto& array : current_dim_arrays) {
-            if (current_dim_size >= 1 && array.size() == 1) continue;
-            if (array.size() != current_dim_size) {
+        for (const auto& array : current_dim_arrays) {
+            if (current_dim_size > 1 && array.size() != current_dim_size) {
                 throw std::runtime_error("array size mismatch");
             }
         }
@@ -51,12 +50,13 @@ va::VArray array_as_varray(const Array& array) {
         shape.push_back(current_dim_size);
         std::vector<Array> next_dim_arrays;
 
-        for (Array& array : current_dim_arrays) {
+        for (const Array& array : current_dim_arrays) {
             for (int i = 0; i < array.size(); ++i) {
-                Variant& element = array[i];
+                const Variant& element = array[i];
                 switch (element.get_type()) {
                     case Variant::ARRAY:
                         next_dim_arrays.push_back(element);
+                        break;
                     case Variant::FLOAT:
                         dtype = va::dtype_common_type(dtype, va::Float64);
                         break;
@@ -72,16 +72,12 @@ va::VArray array_as_varray(const Array& array) {
             }
         }
 
-        if (next_dim_arrays.empty()) {
-            break;
-        }
+        if (next_dim_arrays.empty()) break;
 
-        current_dim_arrays = next_dim_arrays;
+        current_dim_arrays = std::move(next_dim_arrays);
     }
 
-    if (dtype == va::DTypeMax) {
-        dtype = va::Float64;
-    }
+    if (dtype == va::DTypeMax) dtype = va::Float64; // Default dtype
 
     va::VArray varray = va::empty(dtype, shape);
     std::vector<std::tuple<xt::xstrided_slice_vector, Variant>> next = { { {}, array } };
@@ -91,26 +87,21 @@ va::VArray array_as_varray(const Array& array) {
         next.pop_back();
 
         switch (var.get_type()) {
-            // TODO Needs to support more types, but should be merged with other type interpretations.
             case Variant::ARRAY: {
                 const Array array = var;
-                for (int i = 0; i < array.size(); ++i) {
+                for (size_t i = 0; i < array.size(); ++i) {
                     auto new_idx = idx;
                     new_idx.emplace_back(i);
                     next.push_back({new_idx, array[i]});
                 }
                 break;
             }
-            case Variant::FLOAT: {
-                const va::VArray slice = varray.slice(idx);
-                slice.fill(static_cast<double_t>(var));
+            case Variant::FLOAT:
+                varray.slice(idx).fill(static_cast<double_t>(var));
                 break;
-            }
-            case Variant::INT: {
-                const va::VArray slice = varray.slice(idx);
-                slice.fill(static_cast<int64_t>(var));
+            case Variant::INT:
+                varray.slice(idx).fill(static_cast<int64_t>(var));
                 break;
-            }
             default:
                 throw std::runtime_error("unsupported array type");
         }
@@ -118,7 +109,6 @@ va::VArray array_as_varray(const Array& array) {
 
     return varray;
 }
-
 
 template <typename C, typename T>
 va::VArray packed_as_xarray(const T shape_array) {

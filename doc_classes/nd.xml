@@ -560,26 +560,37 @@
 	</methods>
 	<constants>
 		<constant name="Bool" value="0" enum="DType">
+			Boolean type (true or false), stored as a byte.
 		</constant>
 		<constant name="Float32" value="1" enum="DType">
+			Single-precision (32 bit) floating-point number type.
 		</constant>
 		<constant name="Float64" value="2" enum="DType">
+			Double-precision (64 bit) floating-point number type.
 		</constant>
 		<constant name="Int8" value="3" enum="DType">
+			Signed integer type with 8 bits.
 		</constant>
 		<constant name="Int16" value="4" enum="DType">
+			Signed integer type with 16 bits.
 		</constant>
 		<constant name="Int32" value="5" enum="DType">
+			Signed integer type with 32 bits.
 		</constant>
 		<constant name="Int64" value="6" enum="DType">
+			Signed integer type with 64 bits.
 		</constant>
 		<constant name="UInt8" value="7" enum="DType">
+			Unsigned integer type with 8 bits. This dtype cannot express negative values.
 		</constant>
 		<constant name="UInt16" value="8" enum="DType">
+			Unsigned integer type with 16 bits. This dtype cannot express negative values.
 		</constant>
 		<constant name="UInt32" value="9" enum="DType">
+			Unsigned integer type with 32 bits. This dtype cannot express negative values.
 		</constant>
 		<constant name="UInt64" value="10" enum="DType">
+			Unsigned integer type with 64 bits. This dtype cannot express negative values.
 		</constant>
 	</constants>
 </class>

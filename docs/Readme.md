@@ -17,7 +17,7 @@ To build the documentation, run:
 ```bash
 source .venv/bin/activate
 # Build class ref
-cd .. && curl -sSL https://raw.githubusercontent.com/godotengine/godot/master/doc/tools/make_rst.py | python3 - -o "doc/classes" -l "en" doc_classes
+cd .. && curl -sSL https://raw.githubusercontent.com/godotengine/godot/master/doc/tools/make_rst.py | python3 - -o "docs/classes" -l "en" doc_classes
 # Build sphinx
 cd doc && make html
 ```

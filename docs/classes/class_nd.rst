@@ -188,11 +188,7 @@ enum **DType**: :ref:`🔗<enum_nd_DType>`
 
 :ref:`DType<enum_nd_DType>` **Bool** = ``0``
 
-.. container:: contribute
-
-	There is currently no description for this enum. Please help us by :ref:`contributing one <doc_updating_the_class_reference>`!
-
-
+Boolean type (true or false), stored as a byte.
 
 .. _class_nd_constant_Float32:
 
@@ -200,11 +196,7 @@ enum **DType**: :ref:`🔗<enum_nd_DType>`
 
 :ref:`DType<enum_nd_DType>` **Float32** = ``1``
 
-.. container:: contribute
-
-	There is currently no description for this enum. Please help us by :ref:`contributing one <doc_updating_the_class_reference>`!
-
-
+Single-precision (32 bit) floating-point number type.
 
 .. _class_nd_constant_Float64:
 
@@ -212,11 +204,7 @@ enum **DType**: :ref:`🔗<enum_nd_DType>`
 
 :ref:`DType<enum_nd_DType>` **Float64** = ``2``
 
-.. container:: contribute
-
-	There is currently no description for this enum. Please help us by :ref:`contributing one <doc_updating_the_class_reference>`!
-
-
+Double-precision (64 bit) floating-point number type.
 
 .. _class_nd_constant_Int8:
 
@@ -224,11 +212,7 @@ enum **DType**: :ref:`🔗<enum_nd_DType>`
 
 :ref:`DType<enum_nd_DType>` **Int8** = ``3``
 
-.. container:: contribute
-
-	There is currently no description for this enum. Please help us by :ref:`contributing one <doc_updating_the_class_reference>`!
-
-
+Signed integer type with 8 bits.
 
 .. _class_nd_constant_Int16:
 
@@ -236,11 +220,7 @@ enum **DType**: :ref:`🔗<enum_nd_DType>`
 
 :ref:`DType<enum_nd_DType>` **Int16** = ``4``
 
-.. container:: contribute
-
-	There is currently no description for this enum. Please help us by :ref:`contributing one <doc_updating_the_class_reference>`!
-
-
+Signed integer type with 16 bits.
 
 .. _class_nd_constant_Int32:
 
@@ -248,11 +228,7 @@ enum **DType**: :ref:`🔗<enum_nd_DType>`
 
 :ref:`DType<enum_nd_DType>` **Int32** = ``5``
 
-.. container:: contribute
-
-	There is currently no description for this enum. Please help us by :ref:`contributing one <doc_updating_the_class_reference>`!
-
-
+Signed integer type with 32 bits.
 
 .. _class_nd_constant_Int64:
 
@@ -260,11 +236,7 @@ enum **DType**: :ref:`🔗<enum_nd_DType>`
 
 :ref:`DType<enum_nd_DType>` **Int64** = ``6``
 
-.. container:: contribute
-
-	There is currently no description for this enum. Please help us by :ref:`contributing one <doc_updating_the_class_reference>`!
-
-
+Signed integer type with 64 bits.
 
 .. _class_nd_constant_UInt8:
 
@@ -272,11 +244,7 @@ enum **DType**: :ref:`🔗<enum_nd_DType>`
 
 :ref:`DType<enum_nd_DType>` **UInt8** = ``7``
 
-.. container:: contribute
-
-	There is currently no description for this enum. Please help us by :ref:`contributing one <doc_updating_the_class_reference>`!
-
-
+Unsigned integer type with 8 bits. This dtype cannot express negative values.
 
 .. _class_nd_constant_UInt16:
 
@@ -284,11 +252,7 @@ enum **DType**: :ref:`🔗<enum_nd_DType>`
 
 :ref:`DType<enum_nd_DType>` **UInt16** = ``8``
 
-.. container:: contribute
-
-	There is currently no description for this enum. Please help us by :ref:`contributing one <doc_updating_the_class_reference>`!
-
-
+Unsigned integer type with 16 bits. This dtype cannot express negative values.
 
 .. _class_nd_constant_UInt32:
 
@@ -296,11 +260,7 @@ enum **DType**: :ref:`🔗<enum_nd_DType>`
 
 :ref:`DType<enum_nd_DType>` **UInt32** = ``9``
 
-.. container:: contribute
-
-	There is currently no description for this enum. Please help us by :ref:`contributing one <doc_updating_the_class_reference>`!
-
-
+Unsigned integer type with 32 bits. This dtype cannot express negative values.
 
 .. _class_nd_constant_UInt64:
 
@@ -308,11 +268,7 @@ enum **DType**: :ref:`🔗<enum_nd_DType>`
 
 :ref:`DType<enum_nd_DType>` **UInt64** = ``10``
 
-.. container:: contribute
-
-	There is currently no description for this enum. Please help us by :ref:`contributing one <doc_updating_the_class_reference>`!
-
-
+Unsigned integer type with 64 bits. This dtype cannot express negative values.
 
 .. rst-class:: classref-section-separator
 

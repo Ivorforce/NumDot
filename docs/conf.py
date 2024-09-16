@@ -167,7 +167,7 @@ html_context = {
     "github_user": "ivorforce",  # Username
     "github_repo": "numdot",  # Repo name
     "github_version": "main",  # Version
-    "conf_py_path": "/doc/",  # Path in the checkout to the docs root
+    "conf_py_path": "/docs/",  # Path in the checkout to the docs root
     "godot_inject_language_links": True,
     "godot_docs_supported_languages": list(supported_languages.keys()),
     "godot_docs_title": supported_languages[language],

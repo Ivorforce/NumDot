@@ -24,6 +24,10 @@ sphinx:
 # (Track https://github.com/readthedocs/readthedocs.org/issues/3242)
 formats: []
 
+submodules:
+  include: ["docs/godot-docs"]
+  recursive: false
+
 python:
   install:
     - requirements: godot-docs/requirements.txt

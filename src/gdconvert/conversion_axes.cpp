@@ -9,7 +9,7 @@
 #include "godot_cpp/variant/packed_int64_array.hpp"  // for PackedInt64Array
 #include "godot_cpp/variant/variant.hpp"             // for Variant
 
-va::Axes variant_to_axes(Variant variant) {
+va::Axes variant_to_axes(const Variant& variant) {
     const auto type = variant.get_type();
 
     switch (type) {

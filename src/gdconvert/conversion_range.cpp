@@ -6,7 +6,7 @@
 #include "ndrange.h"                      // for range_part
 #include "xtensor/xslice.hpp"             // for xtuph
 
-range_part to_range_part(const Variant &variant) {
+range_part to_range_part(const Variant& variant) {
     switch (variant.get_type()) {
         case Variant::INT:
             return int64_t(variant);

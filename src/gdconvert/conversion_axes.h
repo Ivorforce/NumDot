@@ -6,6 +6,6 @@
 
 using namespace godot;
 
-va::Axes variant_to_axes(Variant variant);
+va::Axes variant_to_axes(const Variant& variant);
 
 #endif //CONVERSION_AXES_H

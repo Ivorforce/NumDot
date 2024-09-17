@@ -32,19 +32,20 @@ for your topic of interest. You can also use the search function in the top-left
 .. Below is the main table-of-content tree of the documentation website. It is hidden on the page itself, but it makes up the sidebar for navigation.
 
 .. toctree::
-   :hidden:
-   :maxdepth: 1
-   :caption: Introduction
+   :caption: How to Install
    :name: sec-learn
 
-   introduction/about
-   introduction/getting_started
-   introduction/tensors
+   how-to-install/how-to-install
 
 .. toctree::
-   :hidden:
-   :maxdepth: 1
-   :caption: Class reference
+   :caption: How to Use
+   :name: sec-learn
+
+   how-to-use/getting_started
+   how-to-use/tensors
+
+.. toctree::
+   :caption: Class Reference
    :name: sec-class-ref
 
    classes/index

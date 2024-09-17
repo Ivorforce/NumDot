@@ -153,8 +153,10 @@ if on_rtd:
 html_theme_options = {
     # if we have a html_logo below, this shows /only/ the logo with no title text
     "logo_only": True,
-    # Collapse navigation (False makes it tree-like)
+    # Collapse navigation (False makes it tree-like, aka navigation items are 'expanded' by default)
     "collapse_navigation": False,
+    # Max depth of navigation in the sidebar.
+    "navigation_depth": 2,
     # Hide the documentation version name/number under the logo
     "display_version": False,
 }

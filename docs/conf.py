@@ -162,6 +162,7 @@ html_theme_options = {
     # if we have a html_logo below, this shows /only/ the logo with no title text
     "logo_only": True,
     # Collapse navigation (False makes it tree-like, aka navigation items are 'expanded' by default)
+    # Header collapse cannot be disabled yet, see https://github.com/readthedocs/sphinx_rtd_theme/issues/455
     "collapse_navigation": False,
     # Max depth of navigation in the sidebar.
     "navigation_depth": 2,

@@ -68,23 +68,13 @@ Run the following command to download godot-cpp:
 
 env = SConscript("godot-cpp/SConstruct", {"env": env, "customs": customs})
 
-env.Append(CPPFLAGS=[
-    '-DXTENSOR_USE_XSIMD=1',
-
-    # Explicitly enable exceptions (see https://github.com/godotengine/godot-cpp/blob/master/CMakeLists.txt).
-    # '-DGODOT_DISABLE_EXCEPTIONS=OFF',
-    # XTensor could disable exceptions, but then we would have to duplicate all our checks.
-    # Would have to be passed to xtensor build too, I think.
-    # '-DXTENSOR_DISABLE_EXCEPTIONS=1',
-
-    # ffast-math: See https://stackoverflow.com/questions/57442255/xtensor-and-xsimd-improve-performance-on-reduction
-    # And https://stackoverflow.com/questions/7420665/what-does-gccs-ffast-math-actually-do
-    # We should not enable this flag by default, because infinite maths is definitely expected in many situations.
-    # '-ffast-math',
-    # See https://github.com/xtensor-stack/xsimd for supported list of simd.
-    # Choosing more will make your program faster, but also more incompatible to older machines.
-    '-msse2', '-msse3', '-msse4.1', '-msse4.2', '-mavx'
-])
+if env["platform"] != "web" and env["platform"] != "windows":
+    env.Append(CPPFLAGS=[
+        '-DXTENSOR_USE_XSIMD=1',
+        # See https://github.com/xtensor-stack/xsimd for supported list of simd.
+        # Choosing more will make your program faster, but also more incompatible to older machines.
+        '-msse2', '-msse3', '-msse4.1', '-msse4.2', '-mavx'
+    ])
 
 # You can also use '-march=native' instead, which will enable everything your computer has.
 # Keep in mind the resulting binary will likely not work on many other computers.

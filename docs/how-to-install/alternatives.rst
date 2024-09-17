@@ -8,9 +8,10 @@ If you want to use fast tensor math in godot, there are alternative approaches y
 NumDot
 ------
 
-This library. To be fair, we will list this library's pros and cons as well.
+This library: A NumPy-like tensor math library made for Godot.
 
 **Pro**
+
 - Good integration in the Godot ecosystem.
 - Does not require any additional language beyond gdscript.
 - Easy to install (through the asset library).
@@ -20,6 +21,7 @@ This library. To be fair, we will list this library's pros and cons as well.
 - (Ability to run operations in-place on godot types, WIP).
 
 **Con**
+
 - Small ecosystem, small userbase.
 - Young library with many uncertainties.
 - Important parts of NumPy not yet covered.
@@ -30,12 +32,14 @@ NumPy
 `NumPy <https://numpy.org>`_ is the most popular tensor math solution.
 
 **Pro**
+
 - Largest Ecosystem of all solutions.
 - Very Mature.
 - Large existing userbase.
 - Ability to prepare code in ipython notebooks.
 
 **Con**
+
 - Requires another language as gdextension (python), increasing complexity.
 - Requires the full python interpreter, and the large NumPy binary (150+mb).
 - No interoperability with Godot types.
@@ -50,11 +54,13 @@ xtensor
 NumDot uses xtensor under the hood. If you want to use xtensor, consider forking or extending NumDot instead.
 
 **Pro**
+
 - Extremely Fast, SIMD accelerated.
 - Good coverage of NumPy API.
 - Header only, i.e. very small binary size.
 
 **Con**
+
 - Requires another language as gdextension (C++), increasing complexity.
 - Requires using a low level language (C++), which can be difficult.
 - Small ecosystem.
@@ -66,11 +72,13 @@ NumSharp
 `NumSharp <https://github.com/SciSharp/NumSharp>`_ is a NumPy port for the C# ecosystem.
 
 **Pro**
+
 - Well integrated in the C# ecosystem: no gdextension needed.
 - Reasonable binary size (~20mb).
 - Good coverage of NumPy API.
 
 **Con**
+
 - You may prefer gdscript over C#.
 - No interoperability with Godot types.
 - No in-place operations, slowing down repeated computation due to repeated allocation.

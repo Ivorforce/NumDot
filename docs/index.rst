@@ -29,15 +29,17 @@ a tensor math and scientific computation library for the `Godot Engine <https://
 The table of contents in the sidebar should let you easily access the documentation
 for your topic of interest. You can also use the search function in the top-left corner.
 
-.. Below is the main table-of-content tree of the documentation website. It is hidden on the page itself, but it makes up the sidebar for navigation.
+.. Add :hidden: to each to hide them on this page. For now it's better to have them for quick navigation.
 
 .. toctree::
+   :maxdepth: 2
    :caption: How to Install
    :name: sec-learn
 
    how-to-install/how-to-install
 
 .. toctree::
+   :maxdepth: 2
    :caption: How to Use
    :name: sec-learn
 
@@ -45,6 +47,7 @@ for your topic of interest. You can also use the search function in the top-left
    how-to-use/tensors
 
 .. toctree::
+   :maxdepth: 2
    :caption: Class Reference
    :name: sec-class-ref
 

@@ -84,3 +84,4 @@ jobs:
         with:
           name: GDExtension-all
           pattern: GDExtension-*
+          delete-merged: true

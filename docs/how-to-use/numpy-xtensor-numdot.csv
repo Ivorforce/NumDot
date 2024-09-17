@@ -1,5 +1,11 @@
 NumPy;xtensor;NumDot;Notes
-``a[0]``;``xt::view(a, { 0 })``;``a.get(0)``;Create a view.
+``a.shape``;``a.shape()``;``a.shape()``;
+``a.size``;``a.size()``;``a.size()``;
+``a.ndim``;``a.dimension()``;``a.ndim()``;
+``a[0]``;"| ``xt::view(a, { 0 })``
+| ``a(0)`` ";"| ``a.get(0)``
+| ``a.get_int(0)``
+| ``a.get_float(0)``";Create a view, or return an element of the tensor.
 ``a[:]``;``xt::view(a, { xt::all() })``;``a.get(null)``;Select all elements.
 ``a[None]``;``xt::view(a, { xt::newaxis() })``;"``a.get(&""newaxis"")``";Insert new axis.
 ``a[..., 0]``;``xt::view(a, { xt::ellipsis(), 0 })``;"``a.get(&""..."", 0)``";Ellipsis stands in for all other dimensions.

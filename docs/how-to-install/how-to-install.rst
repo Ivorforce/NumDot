@@ -14,6 +14,7 @@ Manual Download
 You can manually download the `latest release <https://github.com/Ivorforce/NumDot/releases>`__ from GitHub.
 To install, simply place the files into your Godot project.
 
+.. _doc_how_to_install_manual_build:
 Manual Build
 ------------
 

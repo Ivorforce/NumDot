@@ -51,7 +51,7 @@ xtensor
 
 `xtensor <https://github.com/xtensor-stack/xtensor>`_ is a numpy-like library made for C++ developers.
 
-NumDot uses xtensor under the hood. If you want to use xtensor, consider forking or extending NumDot instead.
+NumDot uses xtensor under the hood. If you want to use xtensor, consider forking or extending NumDot instead, using a :ref:`manual build<doc_how_to_install_manual_build>`.
 
 **Pro**
 

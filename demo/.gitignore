@@ -13,3 +13,7 @@ export_presets.cfg
 .mono/
 data_*/
 mono_crash.*.json
+
+# Locally built addon
+addons/numdot/*
+!addons/numdot/numdot.gdextension

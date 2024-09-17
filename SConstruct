@@ -109,16 +109,16 @@ file = "{}{}{}".format(libname, env["suffix"], env["SHLIBSUFFIX"])
 filepath = ""
 
 if env["platform"] == "macos" or env["platform"] == "ios":
-    filepath = "{}.framework/".format(env["platform"])
+    filepath = "{}-{}.framework/".format(libname, env["platform"])
     file = "{}.{}.{}".format(libname, env["platform"], env["target"])
 
-libraryfile = "bin/{}/{}{}".format(env["platform"], filepath, file)
+libraryfile = "addons/{}/{}/{}{}".format(libname, env["platform"], filepath, file)
 library = env.SharedLibrary(
     libraryfile,
     source=sources,
 )
 
-copy = env.InstallAs("{}/bin/{}/{}lib{}".format(projectdir, env["platform"], filepath, file), library)
+copy = env.Install("{}/addons/{}/{}/{}".format(projectdir, libname, env["platform"], filepath), library),
 
 default_args = [library, copy]
 if localEnv.get("compiledb", False):

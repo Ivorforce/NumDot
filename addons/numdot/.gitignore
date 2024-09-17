@@ -10,5 +10,7 @@
 # Add back .gitkeep files
 !**/*.gitkeep
 
-# Add back Info.plist files
+# Add back root files, which contains useful things.
+!/*
+# Add back wanted files
 !**/Info.plist

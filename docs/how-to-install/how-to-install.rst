@@ -21,7 +21,7 @@ You may want to manually build NumDot, for example to:
 
 - **Reduce Build Size:** The default NumDot build is fairly large. You can compile it with fewer features to reduce the binary size.
 - **Adjust Optimization Options:** You can accelerate your mathematical operations further, by sacrificing compatibility and increasing binary size.
-- **Custom Extension:** You can extend NumDot's functionality by interfacing to `xtensor <http://xtensor.readthedocs.io>`__ directly, substantially increasing performance of individual computations.
+- **Custom Extension:** You can extend NumDot's functionality by interfacing with `xtensor <http://xtensor.readthedocs.io>`__ directly, substantially improving performance of individual computations.
 
 The steps to setting up the workspace are outlined in NumDot manually are outlined in `Contributing.md <https://github.com/Ivorforce/NumDot/blob/main/CONTRIBUTING.md>`__.
 

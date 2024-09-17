@@ -3,7 +3,7 @@
 Tensors and Broadcasting
 =========================
 
-Broadcasting is a powerful feature in NumDot that allows for arithmetic operations on arrays of different shapes. It can be found in all major tensor libraries, such as `NumPy <https://numpy.org>`__, tensorflow `tensorflow <http://tensorflow.org>`__ and `xtensor <http://xtensor.readthedocs.io>`__,
+Broadcasting is a powerful feature in NumDot that allows for arithmetic operations on arrays of different shapes. It can be found in all major tensor libraries, such as `NumPy <https://numpy.org>`__, `tensorflow <http://tensorflow.org>`__ and `xtensor <http://xtensor.readthedocs.io>`__,
 
 This guide will help you understand the rules and applications of broadcasting with code examples.
 

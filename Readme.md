@@ -42,31 +42,9 @@ a = nd.add(a, 5)
 var b: PackedFloat32Array = a.to_packed_float32_array()
 ```
 
-
 ### Adding the extension to your Godot project
 
-To add this extension into your project, run the following
-```bash
-git clone --recurse-submodules https://github.com/Ivorforce/NumDot
-cd numdot
-```
-
-Build the library like so:
-
-```bash
-# Need to do this once at the start
-cd godot-cpp
-# Replace Use the fitting platform name of [macos, windows, linux]
-scons platform=<platform> custom_api_file=../extension_api.json
-cd ..
-
-# Build the project.
-scons platform=<platform>
-# On windows, use MinGW for compiling like so:
-scons platform=windows use-mingw=yes
-```
-
-Copy the folder `demo/bin` into your project folder as `bin`.
+Download the [latest release](https://github.com/Ivorforce/NumDot/releases) and place it into your project folder.
 
 ### What Now?
 

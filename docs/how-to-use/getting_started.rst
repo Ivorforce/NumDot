@@ -9,7 +9,7 @@ Then, jump into the Godot editor, and create a new node with a script attached i
 
 Creating Arrays
 ---------------
-NumDot provides the :ref:`NDArray <class_NDArray>` type to represent vectors, matrices, and tensors. You will find most functions in the global class :ref:`nd <class_nd>`:
+NumDot provides the :ref:`NDArray <class_NDArray>` type to represent vectors, matrices, and tensors.
 
 .. code-block:: gdscript
 
@@ -49,7 +49,7 @@ NumDot arrays can be indexed and sliced similarly to godot lists, but with more 
 
 Common Operations
 -----------------
-NumDot supports a wealth of operations on arrays. Here are a few examples:
+NumDot supports a wealth of operations on arrays. You will find most functions in the global class :ref:`nd <class_nd>`:. Here are a few examples:
 
 .. code-block:: gdscript
 

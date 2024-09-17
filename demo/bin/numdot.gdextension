@@ -8,8 +8,8 @@ reloadable = true
 
 macos.debug = "res://bin/macos/macos.framework/libnumdot.macos.template_debug"
 macos.release = "res://bin/macos/macos.framework/libnumdot.macos.template_release"
-ios.debug = "res://bin/ios/libnumdot.ios.template_debug"
-ios.release = "res://bin/ios/libnumdot.ios.template_release"
+ios.debug = "res://bin/ios/ios.framework/libnumdot.ios.template_debug"
+ios.release = "res://bin/ios/ios.framework/libnumdot.ios.template_release"
 windows.debug.x86_32 = "res://bin/windows/libnumdot.windows.template_debug.x86_32.dll"
 windows.release.x86_32 = "res://bin/windows/libnumdot.windows.template_release.x86_32.dll"
 windows.debug.x86_64 = "res://bin/windows/libnumdot.windows.template_debug.x86_64.dll"

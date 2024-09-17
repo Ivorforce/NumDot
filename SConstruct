@@ -83,7 +83,7 @@ if env["platform"] in ["macos", "ios"]:
         # For now let's keep it blank because some SIMD extensions should be available by default anyway.
 #         '-msse2', '-msse3', '-msse4.1', '-msse4.2', '-mavx'
     ])
-if env["platform"] in ["windows"]:
+if env["platform"] in ["windows"] and "msvc" in env["TOOLS"]:
     env.Append(CPPFLAGS=[
         # Needed because we have very large functions due to templates.
         '/bigobj',

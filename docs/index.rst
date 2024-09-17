@@ -39,6 +39,8 @@ Table of Contents
 
    how-to-use/getting_started
    how-to-use/tensors
+   how-to-use/godot-interop
+   how-to-use/numpy-xtensor-numdot
 
 .. toctree::
    :maxdepth: 2

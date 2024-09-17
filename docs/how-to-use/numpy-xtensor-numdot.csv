@@ -1,0 +1,22 @@
+NumPy;xtensor;NumDot;Notes
+``a[0]``;``xt::view(a, { 0 })``;``a.get(0)``;Create a view.
+``a[:]``;``xt::view(a, { xt::all() })``;``a.get(null)``;Select all elements.
+``a[None]``;``xt::view(a, { xt::newaxis() })``;"``a.get(&""newaxis"")``";Insert new axis.
+``a[..., 0]``;``xt::view(a, { xt::ellipsis(), 0 })``;"``a.get(&""..."", 0)``";Ellipsis stands in for all other dimensions.
+``a[2:]``;``xt::view(a, { 2|_ })``;``a.get(nd.from(2))``;Select elements starting at index 2.
+``a[:2]``;``xt::view(a, { _|2 })``;``a.get(nd.to(2))``;Select elements ending at index 2.
+``a[2:4]``;``xt::view(a, { 2|4 })``;``a.get(nd.range(2, 4))``;Select elements starting at index 2, ending at index 4.
+``a[2:40:2]``;``xt::view(a, { 2|40|2 })``;``a.get(nd.range(2, 40, 2))``;Select every second element, starting at index 2, ending at index 4.
+"| ``a + b``
+| ``np.add(a, b)``";``a + b``;``nd.add(a, b)``;
+"| ``a - b``
+| ``np.subtract(a, b)``";``a - b``;``nd.subtract(a, b)``;
+"| ``a * b``
+| ``np.multiply(a, b)``";``a * b``;``nd.multiply(a, b)``;
+"| ``a / b``
+| ``np.divide(a, b)``";``a / b``;``nd.divide(a, b)``;
+``np.sin(a)``;``xt::sin(a)``;``nd.sin(a)``;Analogous for all trig functions.
+"| ``np.degrees``
+| ``np.deg2rad``";``xt::deg2rad``;``nd.deg2rad``;
+"| ``np.radians``
+| ``np.rad2deg``";``xt::rad2deg``;``nd.rad2deg``;

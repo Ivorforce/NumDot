@@ -83,11 +83,13 @@ if env["platform"] in ["macos", "ios"]:
         # For now let's keep it blank because some SIMD extensions should be available by default anyway.
 #         '-msse2', '-msse3', '-msse4.1', '-msse4.2', '-mavx'
     ])
-if env["platform"] in ["windows"] and "msvc" in env["TOOLS"]:
-    env.Append(CPPFLAGS=[
-        # Needed because we have very large functions due to templates.
-        '/bigobj',
-    ])
+if env["platform"] in ["windows"]:
+    # bigobj is needed because we have very large functions due to templates:
+    # C1128: "number of sections exceeded object file format limit : compile with /bigobj
+    if "msvc" in env["TOOLS"]:
+        env.Append(CPPFLAGS=['/bigobj'])
+    else:
+        env.Append(CPPFLAGS=['-Wa,-mbig-obj'])
 
 # You can also use '-march=native' instead, which will enable everything your computer has.
 # Keep in mind the resulting binary will likely not work on many other computers.

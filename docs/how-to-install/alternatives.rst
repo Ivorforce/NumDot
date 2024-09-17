@@ -13,7 +13,7 @@ This library: A NumPy-like tensor math library made for Godot.
 **Pro**
 
 - Good integration in the Godot ecosystem.
-- Does not require any additional language beyond gdscript.
+- Does not require any additional language beyond gdscript (or C#).
 - Easy to install (through the asset library).
 - Accessible documentation.
 - Developed for games, with according priorities.

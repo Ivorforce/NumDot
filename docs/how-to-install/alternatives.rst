@@ -22,7 +22,7 @@ This library: A NumPy-like tensor math library made for Godot.
 
 **Con**
 
-- Small ecosystem, small userbase.
+- No ecosystem, small userbase.
 - Young library with many uncertainties.
 - Important parts of NumPy not yet covered.
 
@@ -63,7 +63,7 @@ NumDot uses xtensor under the hood. If you want to use xtensor, consider forking
 
 - Requires another language as gdextension (C++), increasing complexity.
 - Requires using a low level language (C++), which can be difficult.
-- Small ecosystem.
+- Fairly small ecosystem.
 - No interoperability with Godot types.
 
 NumSharp
@@ -83,5 +83,6 @@ NumSharp
 - No interoperability with Godot types.
 - No in-place operations, slowing down repeated computation due to repeated allocation.
 - No SIMD acceleration (benchmarks needed).
+- Fairly small ecosystem.
 - No online documentation.
 - No way to reduce binary size.

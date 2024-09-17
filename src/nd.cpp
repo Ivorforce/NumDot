@@ -160,11 +160,19 @@ StringName nd::ellipsis() {
 }
 
 Ref<NDRange> nd::from(int64_t start) {
-	return {memnew(NDRange(start, xt::placeholders::xtuph{}, xt::placeholders::xtuph{}))};
+	return {memnew(NDRange(
+		static_cast<std::ptrdiff_t>(start),
+		xt::placeholders::xtuph{},
+		xt::placeholders::xtuph{}
+	))};
 }
 
 Ref<NDRange> nd::to(int64_t stop) {
-	return {memnew(NDRange(xt::placeholders::xtuph{}, stop, xt::placeholders::xtuph{}))};
+	return {memnew(NDRange(
+		xt::placeholders::xtuph{},
+		static_cast<std::ptrdiff_t>(stop),
+		xt::placeholders::xtuph{}
+	))};
 }
 
 Ref<NDRange> nd::range(Variant start_or_stop, Variant stop, Variant step) {

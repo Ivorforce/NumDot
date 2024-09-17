@@ -52,6 +52,13 @@ notfound_context = {
     """,
 }
 
+# General information about the project
+project = "NumDot"
+copyright = (
+    "2024-present Lukas Tenbrink and NumDot contributors (MIT Licensed)"
+)
+author = "Lukas Tenbrink and NumDot contributors"
+
 # on_rtd is whether we are on readthedocs.org, this line of code grabbed from docs.readthedocs.org
 on_rtd = os.environ.get("READTHEDOCS", None) == "True"
 
@@ -79,16 +86,12 @@ source_encoding = "utf-8-sig"
 # The master toctree document
 master_doc = "index"
 
-# General information about the project
-project = "NumDot"
-copyright = (
-    "2024-present Lukas Tenbrink and NumDot contributors (MIT Licensed)"
-)
-author = "Lukas Tenbrink and NumDot contributors"
-
 # Version info for the project, acts as replacement for |version| and |release|
 # The short X.Y version
-version = os.getenv("READTHEDOCS_VERSION", "latest")
+version = os.getenv("READTHEDOCS_VERSION_NAME", "latest")
+if version.startswith("release/"):
+    version = version[8:]
+
 # The full version, including alpha/beta/rc tags
 release = version
 
@@ -182,7 +185,7 @@ html_context = {
     "godot_inject_language_links": True,
     "godot_docs_supported_languages": list(supported_languages.keys()),
     "godot_docs_title": supported_languages[language],
-    "godot_docs_basepath": "https://docs.godotengine.org/",
+    "godot_docs_basepath": "https://numdot.readthedocs.io/",
     "godot_docs_suffix": ".html",
     "godot_default_lang": "en",
     "godot_canonical_version": "stable",
@@ -191,8 +194,8 @@ html_context = {
     "godot_title_prefix": "" if on_rtd else "(DEV) ",
     # Set this to `True` when in the `latest` branch to clearly indicate to the reader
     # that they are not reading the `stable` documentation.
-    "godot_is_latest": True,
-    "godot_version": "0.1",
+    "godot_is_latest": version == "latest",
+    "godot_version": version,
     # Enables a banner that displays the up-to-date status of each article.
     "godot_show_article_status": True,
     # Display user-contributed notes at the bottom of pages that don't have `:allow_comments: False` at the top.

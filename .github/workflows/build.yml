@@ -83,7 +83,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         path: bin
-        pattern: GDExtension-
+        pattern: GDExtension-*
         merge-multiple: true
     - name: Upload Merged Artifact
       uses: actions/upload-artifact@v4

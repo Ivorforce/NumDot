@@ -31,6 +31,7 @@ Table of Contents
    :name: sec-learn
 
    how-to-install/how-to-install
+   how-to-install/alternatives
 
 .. toctree::
    :maxdepth: 2

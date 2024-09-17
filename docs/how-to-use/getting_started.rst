@@ -35,7 +35,7 @@ NumDot arrays have several properties that give useful information about the arr
 
 Indexing and Slicing
 --------------------
-NumDot arrays can be indexed and sliced similarly to godot lists, but with more powerful capabilities.
+NumDot arrays can be indexed and sliced similarly to godot Arrays, but with more powerful capabilities.
 
 .. code-block:: gdscript
 

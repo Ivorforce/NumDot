@@ -45,14 +45,15 @@ va::VArray array_as_varray(const Array& array) {
         size_t current_dim_size = current_dim_arrays[0].size();
 
         for (const auto& array : current_dim_arrays) {
-            if (current_dim_size == 1 && array.size() > 1) {
-                // We broadcasted before, this element defines the size.
-                current_dim_size = array.size();
-                continue;
-            }
+            // Sizes are the same.
+            if (current_dim_size == array.size()) { continue; }
 
-            if (array.size() == 1 && current_dim_size >= 1) {
-                // We defined the size before, this element can broadcast.
+            // We defined the size before, this element can broadcast.
+            if (array.size() == 1 && current_dim_size >= 1) { continue; }
+
+            // We broadcasted before, this element defines the size.
+            if (current_dim_size == 1 && array.size() > 1) {
+                current_dim_size = array.size();
                 continue;
             }
 

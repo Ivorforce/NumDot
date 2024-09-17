@@ -1,0 +1,82 @@
+name: Build GDExtension
+on:
+  workflow_call:
+  push:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux
+            arch: x86_64
+            os: ubuntu-20.04
+          - platform: windows
+            arch: x86_32
+            os: windows-latest
+          - platform: windows
+            arch: x86_64
+            os: windows-latest
+          - platform: macos
+            arch: universal
+            os: macos-latest
+          - platform: android
+            arch: arm64
+            os: ubuntu-20.04
+          - platform: android
+            arch: arm32
+            os: ubuntu-20.04
+          - platform: android
+            arch: x86_64
+            os: ubuntu-20.04
+          - platform: android
+            arch: x86_32
+            os: ubuntu-20.04
+          - platform: ios
+            arch: arm64
+            os: macos-latest
+          - platform: web
+            arch: wasm32
+            os: ubuntu-20.04
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+          fetch-depth: 0
+      - name: 🔗 GDExtension Build
+        uses: godotengine/godot-cpp-template/.github/actions/build@main
+        with:
+          platform: ${{ matrix.platform }}
+          arch: ${{ matrix.arch }}
+          float-precision: single
+          build-target-type: template_release
+      - name: 🔗 GDExtension Build
+        uses: ./.github/actions/build
+        with:
+          platform: ${{ matrix.platform }}
+          arch: ${{ matrix.arch }}
+          float-precision: ${{ matrix.float-precision }}
+          build-target-type: template_debug
+      - name: Mac Sign
+        if: ${{ matrix.platform == 'macos' && env.APPLE_CERT_BASE64 }}
+        env:
+          APPLE_CERT_BASE64: ${{ secrets.APPLE_CERT_BASE64 }}
+        uses: godotengine/godot-cpp-template/.github/actions/sign@main
+        with:
+          FRAMEWORK_PATH: bin/macos/macos.framework
+          APPLE_CERT_BASE64: ${{ secrets.APPLE_CERT_BASE64 }}
+          APPLE_CERT_PASSWORD: ${{ secrets.APPLE_CERT_PASSWORD }}
+          APPLE_DEV_PASSWORD: ${{ secrets.APPLE_DEV_PASSWORD }}
+          APPLE_DEV_ID: ${{ secrets.APPLE_DEV_ID }}
+          APPLE_DEV_TEAM_ID: ${{ secrets.APPLE_DEV_TEAM_ID }}
+          APPLE_DEV_APP_ID: ${{ secrets.APPLE_DEV_APP_ID }}
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: GDExtension
+          path: |
+            ${{ github.workspace }}/bin/**

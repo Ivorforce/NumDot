@@ -75,19 +75,12 @@ jobs:
           name: GDExtension-${{ matrix.platform }}-${{ matrix.arch }}
           path: |
             ${{ github.workspace }}/bin/**
-  download:
-    needs: build
+  merge:
     runs-on: ubuntu-latest
+    needs: build
     steps:
-    - name: Download All Artifacts
-      uses: actions/download-artifact@v4
-      with:
-        path: bin
-        pattern: GDExtension-*
-        merge-multiple: true
-    - name: Upload Merged Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: GDExtension-all
-        path: |
-          bin/**
+      - name: Merge Artifacts
+        uses: actions/upload-artifact/merge@v4
+        with:
+          name: GDExtension-all
+          pattern: GDExtension-*

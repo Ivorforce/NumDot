@@ -9,7 +9,7 @@
 range_part to_range_part(const Variant& variant) {
     switch (variant.get_type()) {
         case Variant::INT:
-            return int64_t(variant);
+            return static_cast<std::ptrdiff_t>(static_cast<int64_t>(variant));
         case Variant::NIL:
             return xt::placeholders::xtuph{};
         default:

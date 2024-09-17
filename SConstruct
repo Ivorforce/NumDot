@@ -68,7 +68,7 @@ Run the following command to download godot-cpp:
 
 env = SConscript("godot-cpp/SConstruct", {"env": env, "customs": customs})
 
-if env["platform"] != "web" and env["platform"] != "windows":
+if env["platform"] in ["macos", "ios"]:
     env.Append(CPPFLAGS=[
         '-DXTENSOR_USE_XSIMD=1',
         # See https://github.com/xtensor-stack/xsimd for supported list of simd.

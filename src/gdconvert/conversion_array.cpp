@@ -83,7 +83,7 @@ va::VArray array_as_varray(const Array& array) {
     if (dtype == va::DTypeMax) dtype = va::Float64; // Default dtype
 
     va::VArray varray = va::empty(dtype, shape);
-    std::vector<std::tuple<xt::xstrided_slice_vector, Variant>> next = { { {}, array } };
+    std::vector<std::tuple<xt::xstrided_slice_vector, Variant>> next = { std::make_tuple(xt::xstrided_slice_vector {}, array) };
 
     while (!next.empty()) {
         auto [idx, var] = std::move(next.back());

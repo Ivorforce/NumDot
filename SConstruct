@@ -75,6 +75,11 @@ if env["platform"] in ["macos", "ios"]:
         # Choosing more will make your program faster, but also more incompatible to older machines.
         '-msse2', '-msse3', '-msse4.1', '-msse4.2', '-mavx'
     ])
+if env["platform"] in ["windows"]:
+    env.Append(CPPFLAGS=[
+        # Needed because we have very large functions due to templates.
+        '/bigobj',
+    ])
 
 # You can also use '-march=native' instead, which will enable everything your computer has.
 # Keep in mind the resulting binary will likely not work on many other computers.

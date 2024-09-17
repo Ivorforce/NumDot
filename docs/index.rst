@@ -1,33 +1,27 @@
 :allow_comments: False
 
-NumDot Docs – *master* branch
+Introduction
 ============================
 
-.. only:: not i18n
+`NumDot <https://github.com/Ivorforce/NumDot>`__ is a tensor math and scientific computation library for the `Godot Engine <https://godotengine.org>`__.
 
-  .. note:: NumDot's documentation is currently only available in english.
+NumDot provides a multidimensional array object (:ref:`NDArray <class_NDArray>`) and :ref:`many functions <class_nd>` for fast operations on arrays, including mathematical, logical, statistical, and more. It is inspired by the Python tensor math library, `NumPy <https://numpy.org>`__, and thus shares many semantics with it.
 
-.. only:: i18n
+Motivation
+==========
 
-  .. note:: This documentation is translated from the `original English one
-            <https://docs.godotengine.org/en/stable>`_ by community members
-            on `Weblate <https://hosted.weblate.org/projects/godot-engine/godot-docs>`_.
+The NumDot library for Godot Engine is designed to make scientific and mathematical computations fast and easy using GDScript. Here are some reasons why you may want to consider using NumDot:
 
-            Depending on the translation effort's completion level, you may
-            find paragraphs or whole pages which are still in English. You can
-            help the community by providing new translations or reviewing existing
-            ones on Weblate.
+- **Performance**: NumDot is optimized for handling performance-intensive mathematical operations.
+- **Convenience**: NumDot reduces the need for complex, hard to understand code by providing comprehensive mathematical functions.
+- **Ease of Use**: User-friendly design simplifies complex mathematical tasks.
+- **Consistency**: NumDot ensures accurate calculations consistent with NumPy.
+- **Educational Benefit**: NumDot facilitates learning and teaching mathematical concepts within Godot.
 
-            For the time being, localized translations are only available for
-            the "stable" branch. You can still view the English documentation for
-            other engine versions using the "Read the Docs" panel at the bottom
-            of the sidebar.
+In short, NumDot bridges the gap between high-level GDScript programming and efficient mathematical computations, enhancing both the development process and the final product.
 
-Welcome to the official documentation of `NumDot <https://github.com/Ivorforce/NumDot>`__,
-a tensor math and scientific computation library for the `Godot Engine <https://godotengine.org>`__.
-
-The table of contents in the sidebar should let you easily access the documentation
-for your topic of interest. You can also use the search function in the top-left corner.
+Table of Contents
+============================
 
 .. Add :hidden: to each to hide them on this page. For now it's better to have them for quick navigation.
 

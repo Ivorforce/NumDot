@@ -115,7 +115,7 @@ va::VArray array_as_varray(const Array& array) {
 
 template <typename C, typename T>
 va::VArray packed_as_xarray(const T shape_array) {
-    uint64_t size = shape_array.size();
+    auto size = static_cast<std::size_t>(shape_array.size());
 
     xt::static_shape<std::size_t, 1> shape_of_shape = { size };
 

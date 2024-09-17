@@ -68,12 +68,14 @@ Run the following command to download godot-cpp:
 
 env = SConscript("godot-cpp/SConstruct", {"env": env, "customs": customs})
 
-env.Append(CPPFLAGS=[
-    # See https://xtensor.readthedocs.io/en/latest/build-options.html
-    # See https://github.com/xtensor-stack/xsimd for supported list of simd extensions.
-    # Choosing more will make your program faster, but also more incompatible to older machines.
-    '-DXTENSOR_USE_XSIMD=1',
-])
+# Web "requires target feature 'simd128'", we should solve that but for now let's just disable simd on web.
+if env["platform"] not in ["web"]:
+    env.Append(CPPFLAGS=[
+        # See https://xtensor.readthedocs.io/en/latest/build-options.html
+        # See https://github.com/xtensor-stack/xsimd for supported list of simd extensions.
+        # Choosing more will make your program faster, but also more incompatible to older machines.
+        '-DXTENSOR_USE_XSIMD=1',
+    ])
 
 if env["platform"] in ["macos", "ios"]:
     env.Append(CPPFLAGS=[

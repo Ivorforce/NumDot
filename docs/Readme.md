@@ -7,7 +7,7 @@ You can install the project with pip:
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r godot-docs/requirements.txt
+pip install -r godot-docs/requirements.txt && pip install setuptools
 ```
 
 ## Build

@@ -89,7 +89,8 @@ if env["platform"] in ["windows"]:
     if "msvc" in env["TOOLS"]:
         env.Append(CPPFLAGS=['/bigobj'])
     else:
-        env.Append(CPPFLAGS=['-Wa,-mbig-obj'])
+        # Supposedly it should be -Wa,-mbigobj but -bigobj has worked more reliably.
+        env.Append(CPPFLAGS=['-bigobj'])
 
 # You can also use '-march=native' instead, which will enable everything your computer has.
 # Keep in mind the resulting binary will likely not work on many other computers.

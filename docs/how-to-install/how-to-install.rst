@@ -1,4 +1,4 @@
-.. _doc_introduction_index:
+.. _doc_how_to_install:
 
 How to Install
 ==============

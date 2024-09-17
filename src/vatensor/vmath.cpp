@@ -6,6 +6,7 @@
 #include "xtensor/xlayout.hpp"                              // for layout_type
 #include "xtensor/xmath.hpp"                                // for pow_fun
 #include "xtensor/xoperation.hpp"                           // for divides
+#include "xtl/xfunctional.hpp"                              // for select
 
 using namespace va;
 

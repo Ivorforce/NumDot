@@ -1,14 +1,16 @@
 #include "conversion_array.h"
 
+#include <vatensor/allocate.h>                         // for empty
 #include <cmath>                                       // for double_t, float_t
 #include <cstddef>                                     // for size_t
-#include <cstdint>                                     // for int64_t, int32_t
+#include <cstdint>                                     // for int32_t, int64_t
 #include <memory>                                      // for allocator, sha...
 #include <stdexcept>                                   // for runtime_error
+#include <tuple>                                       // for tuple
+#include <utility>                                     // for move
 #include <vector>                                      // for vector
-#include <vatensor/allocate.h>
-
 #include "godot_cpp/classes/object.hpp"                // for Object
+#include "godot_cpp/core/defs.hpp"                     // for real_t
 #include "godot_cpp/core/object.hpp"                   // for Object::cast_to
 #include "godot_cpp/variant/packed_byte_array.hpp"     // for PackedByteArray
 #include "godot_cpp/variant/packed_float32_array.hpp"  // for PackedFloat32A...
@@ -29,6 +31,7 @@
 #include "xtensor/xlayout.hpp"                         // for layout_type
 #include "xtensor/xshape.hpp"                          // for static_shape
 #include "xtensor/xstorage.hpp"                        // for svector, uvector
+#include "xtensor/xstrided_view.hpp"                   // for xstrided_slice...
 #include "xtensor/xtensor_forward.hpp"                 // for xarray
 #include "xtl/xiterator_base.hpp"                      // for operator+
 

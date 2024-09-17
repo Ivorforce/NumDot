@@ -68,12 +68,18 @@ Run the following command to download godot-cpp:
 
 env = SConscript("godot-cpp/SConstruct", {"env": env, "customs": customs})
 
+env.Append(CPPFLAGS=[
+    # See https://xtensor.readthedocs.io/en/latest/build-options.html
+    # See https://github.com/xtensor-stack/xsimd for supported list of simd extensions.
+    # Choosing more will make your program faster, but also more incompatible to older machines.
+    '-DXTENSOR_USE_XSIMD=1',
+])
+
 if env["platform"] in ["macos", "ios"]:
     env.Append(CPPFLAGS=[
-        '-DXTENSOR_USE_XSIMD=1',
-        # See https://github.com/xtensor-stack/xsimd for supported list of simd.
-        # Choosing more will make your program faster, but also more incompatible to older machines.
-        '-msse2', '-msse3', '-msse4.1', '-msse4.2', '-mavx'
+        # Simd extensions
+        # For now let's keep it blank because some SIMD extensions should be available by default anyway.
+#         '-msse2', '-msse3', '-msse4.1', '-msse4.2', '-mavx'
     ])
 if env["platform"] in ["windows"]:
     env.Append(CPPFLAGS=[
@@ -83,7 +89,7 @@ if env["platform"] in ["windows"]:
 
 # You can also use '-march=native' instead, which will enable everything your computer has.
 # Keep in mind the resulting binary will likely not work on many other computers.
-#env.Append(CPPFLAGS=['-DXTENSOR_USE_XSIMD=1', '-march=native'])
+#env.Append(CPPFLAGS=['-march=native'])
 
 env.Append(CPPPATH=["xtl/include", "xsimd/include", "xtensor/include"])
 

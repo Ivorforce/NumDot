@@ -82,7 +82,7 @@ master_doc = "index"
 # General information about the project
 project = "NumDot"
 copyright = (
-    "2024-present Lukas Tenbrink and NumDot contributors (MIT)"
+    "2024-present Lukas Tenbrink and NumDot contributors (MIT Licensed)"
 )
 author = "Lukas Tenbrink and NumDot contributors"
 
@@ -122,9 +122,17 @@ if not language in supported_languages.keys():
     language = "en"
 
 is_i18n = tags.has("i18n")  # noqa: F821
+if is_i18n:
+    raise RuntimeError("i18n is currently not supported.")
+
 print("Build language: {}, i18n tag: {}".format(language, is_i18n))
 
-exclude_patterns = ["_build"]
+exclude_patterns = [
+    # Don't build the build folder accidentally.
+    "_build",
+    # Don't build whatever godot-docs has to offer.
+    "godot-docs/**",
+]
 
 # fmt: off
 # These imports should *not* be moved to the start of the file,
@@ -228,9 +236,9 @@ file_insertion_enabled = False
 latex_documents = [
     (
         master_doc,
-        "GodotEngine.tex",
-        "Godot Engine Documentation",
-        "Juan Linietsky, Ariel Manzur and the Godot community",
+        "NumDot.tex",
+        "NumDot Documentation",
+        "Lukas Tenbrink and NumDot contributors",
         "manual",
     ),
 ]
@@ -241,72 +249,6 @@ latex_documents = [
 linkcheck_anchors = False
 
 linkcheck_timeout = 10
-
-# -- I18n settings --------------------------------------------------------
-
-# Godot localization is handled via https://github.com/godotengine/godot-docs-l10n
-# where the main docs repo is a submodule. Therefore the translated material is
-# actually in the parent folder of this conf.py, hence the "../".
-
-locale_dirs = ["../sphinx/po/"]
-gettext_compact = False
-
-# We want to host the localized images in godot-docs-l10n, but Sphinx does not provide
-# the necessary feature to do so. `figure_language_filename` has `{root}` and `{path}`,
-# but they resolve to (host) absolute paths, so we can't use them as is to access "../".
-# However, Python is glorious and lets us redefine Sphinx's internal method that handles
-# `figure_language_filename`, so we do our own post-processing to fix the absolute path
-# and point to the parallel folder structure in godot-docs-l10n.
-# Note: Sphinx's handling of `figure_language_filename` may change in the future, monitor
-# https://github.com/sphinx-doc/sphinx/issues/7768 to see what would be relevant for us.
-figure_language_filename = "{root}.{language}{ext}"
-
-cwd = os.getcwd()
-
-sphinx_original_get_image_filename_for_language = sphinx.util.i18n.get_image_filename_for_language
-
-
-def godot_get_image_filename_for_language(filename, env):
-    """
-    Hack the absolute path returned by Sphinx based on `figure_language_filename`
-    to insert our `../images` relative path to godot-docs-l10n's images folder,
-    which mirrors the folder structure of the docs repository.
-    The returned string should also be absolute so that `os.path.exists` can properly
-    resolve it when trying to concatenate with the original doc folder.
-    """
-    path = sphinx_original_get_image_filename_for_language(filename, env)
-    path = os.path.abspath(os.path.join("../images/", os.path.relpath(path, cwd)))
-    return path
-
-sphinx.util.i18n.get_image_filename_for_language = godot_get_image_filename_for_language
-
-# Similar story for the localized class reference, it's out of tree and there doesn't
-# seem to be an easy way for us to tweak the toctree to take this into account.
-# So we're deleting the existing class reference and adding a symlink instead...
-if is_i18n and os.path.exists("../classes/" + language):
-    import shutil
-
-    if os.path.islink("classes"):  # Previously made symlink.
-        os.unlink("classes")
-    else:
-        shutil.rmtree("classes")
-
-    os.symlink("../classes/" + language, "classes")
-
-# Couldn't find a way to retrieve variables nor do advanced string
-# concat from reST, so had to hardcode this in the "epilog" added to
-# all pages. This is used in index.rst to display the Weblate badge.
-# On English pages, the badge points to the language-neutral engage page.
-rst_epilog = """
-.. |weblate_widget| image:: https://hosted.weblate.org/widgets/godot-engine/{image_locale}/godot-docs/287x66-white.png
-    :alt: Translation status
-    :target: https://hosted.weblate.org/engage/godot-engine{target_locale}/?utm_source=widget
-    :width: 287
-    :height: 66
-""".format(
-    image_locale="-" if language == "en" else language,
-    target_locale="" if language == "en" else "/" + language,
-)
 
 # Needed so the table of contents is created for EPUB
 epub_tocscope = 'includehidden'

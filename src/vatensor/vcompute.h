@@ -39,7 +39,7 @@ namespace va {
 
             // This doesn't do anything yet, it just constructs a value for operation.
             // It will be executed when we use it on the xarray constructor!
-            auto result = visitor(promote_compute_case_if_needed<InputType>(args)...);
+            const auto result = visitor(promote_compute_case_if_needed<InputType>(args)...);
 
             // Note: Need to do this in one line. If the operator is called after the make_shared,
             //  any situations where broadcast errors would be thrown will instead crash the program.

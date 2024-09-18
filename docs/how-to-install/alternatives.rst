@@ -73,16 +73,21 @@ NumSharp
 
 **Pro**
 
-- Well integrated in the C# ecosystem: no gdextension needed.
+- Well integrated in the C# ecosystem.
+- No gdextension needed.
 - Reasonable binary size (~20mb).
 - Good coverage of NumPy API.
 
 **Con**
 
-- You may prefer gdscript over C#.
-- No interoperability with Godot types.
-- No in-place operations, slowing down repeated computation due to repeated allocation.
-- No SIMD acceleration (benchmarks needed).
+- Cannot use this API from gdscript.
+- No built-in interoperability with Godot types.
+- Some performance features missing (though it may be fast enough for your needs):
+
+    - No in-place operations, slowing down repeated computation due to repeated allocation.
+
+    - No SIMD acceleration, implementation is native C#.
+
 - Fairly small ecosystem.
-- No online documentation.
+- No online documentation (granted it's very close to the NumPy API).
 - No way to reduce binary size.

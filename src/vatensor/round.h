@@ -3,12 +3,13 @@
 
 #include "varray.h"
 
+
 namespace va {
-    VArray ceil(const VArray& array);
-    VArray floor(const VArray& array);
-    VArray trunc(const VArray& array);
-    VArray round(const VArray& array);
-    VArray nearbyint(const VArray& array);
+    void ceil(VArrayTarget target, const VArray& array);
+    void floor(VArrayTarget target, const VArray& array);
+    void trunc(VArrayTarget target, const VArray& array);
+    void round(VArrayTarget target, const VArray& array);
+    void nearbyint(VArrayTarget target, const VArray& array);
 }
 
 #endif //ROUND_H

@@ -3,13 +3,13 @@
 #include "varray.h"
 
 namespace va {
-    VArray sum(const VArray& array, const Axes& axes);
-    VArray prod(const VArray& array, const Axes& axes);
-    VArray mean(const VArray& array, const Axes& axes);
-    VArray var(const VArray& array, const Axes& axes);
-    VArray std(const VArray& array, const Axes& axes);
-    VArray max(const VArray& array, const Axes& axes);
-    VArray min(const VArray& array, const Axes& axes);
+    void sum(VArrayTarget target, const VArray& array, const Axes& axes);
+    void prod(VArrayTarget target, const VArray& array, const Axes& axes);
+    void mean(VArrayTarget target, const VArray& array, const Axes& axes);
+    void var(VArrayTarget target, const VArray& array, const Axes& axes);
+    void std(VArrayTarget target, const VArray& array, const Axes& axes);
+    void max(VArrayTarget target, const VArray& array, const Axes& axes);
+    void min(VArrayTarget target, const VArray& array, const Axes& axes);
 }
 
 #endif //REDUCE_H

@@ -49,7 +49,7 @@ void va::VArray::fill(VConstant value) const {
     }, to_compute_variant(), value);
 }
 
-void va::VArray::set_with_array(const VArray &value) const {
+void va::VArray::set_with_array(const VArray& value) const {
     return std::visit([](auto&& carray, auto&& cvalue) {
         using T = typename std::decay_t<decltype(carray)>::value_type;
         // Cast first to reduce number of combinations down the line.

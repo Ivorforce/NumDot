@@ -4,24 +4,24 @@
 #include "varray.h"
 
 namespace va {
-    VArray add(const VArray& a, const VArray& b);
-    VArray subtract(const VArray& a, const VArray& b);
-    VArray multiply(const VArray& a, const VArray& b);
-    VArray divide(const VArray& a, const VArray& b);
-    VArray remainder(const VArray& a, const VArray& b);
-    VArray pow(const VArray& a, const VArray& b);
+    void add(VArrayTarget target, const VArray& a, const VArray& b);
+    void subtract(VArrayTarget target, const VArray& a, const VArray& b);
+    void multiply(VArrayTarget target, const VArray& a, const VArray& b);
+    void divide(VArrayTarget target, const VArray& a, const VArray& b);
+    void remainder(VArrayTarget target, const VArray& a, const VArray& b);
+    void pow(VArrayTarget target, const VArray& a, const VArray& b);
 
-    VArray minimum(const VArray& a, const VArray& b);
-    VArray maximum(const VArray& a, const VArray& b);
+    void minimum(VArrayTarget target, const VArray& a, const VArray& b);
+    void maximum(VArrayTarget target, const VArray& a, const VArray& b);
 
-    VArray sign(const VArray& array);
-    VArray abs(const VArray& array);
-    VArray sqrt(const VArray& array);
-    VArray exp(const VArray& array);
-    VArray log(const VArray& array);
+    void sign(VArrayTarget target, const VArray& array);
+    void abs(VArrayTarget target, const VArray& array);
+    void sqrt(VArrayTarget target, const VArray& array);
+    void exp(VArrayTarget target, const VArray& array);
+    void log(VArrayTarget target, const VArray& array);
 
-    VArray rad2deg(const VArray& array);
-    VArray deg2rad(const VArray& array);
+    void rad2deg(VArrayTarget target, const VArray& array);
+    void deg2rad(VArrayTarget target, const VArray& array);
 }
 
 #endif //MATH_H

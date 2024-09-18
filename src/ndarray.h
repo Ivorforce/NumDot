@@ -67,7 +67,73 @@ public:
 	[[nodiscard]] PackedInt32Array to_packed_int32_array() const;
 	[[nodiscard]] PackedInt64Array to_packed_int64_array() const;
 
-	[[nodiscard]] Array to_godot_array() const;
+    [[nodiscard]] Array to_godot_array() const;
+
+	// Basic math functions.
+	void assign_add(Variant a, Variant b) const;
+	void assign_subtract(Variant a, Variant b) const;
+	void assign_multiply(Variant a, Variant b) const;
+	void assign_divide(Variant a, Variant b) const;
+	void assign_remainder(Variant a, Variant b) const;
+	void assign_pow(Variant a, Variant b) const;
+
+	void assign_minimum(Variant a, Variant b) const;
+	void assign_maximum(Variant a, Variant b) const;
+
+	void assign_sign(Variant a) const;
+	void assign_abs(Variant a) const;
+	void assign_sqrt(Variant a) const;
+
+	void assign_exp(Variant a) const;
+	void assign_log(Variant a) const;
+
+	void assign_rad2deg(Variant a) const;
+	void assign_deg2rad(Variant a) const;
+	
+	// Trigonometric functions.
+	void assign_sin(Variant a) const;
+	void assign_cos(Variant a) const;
+	void assign_tan(Variant a) const;
+	void assign_asin(Variant a) const;
+	void assign_acos(Variant a) const;
+	void assign_atan(Variant a) const;
+	void assign_atan2(Variant x1, Variant x2) const;
+
+	void assign_sinh(Variant a) const;
+	void assign_cosh(Variant a) const;
+	void assign_tanh(Variant a) const;
+	void assign_asinh(Variant a) const;
+	void assign_acosh(Variant a) const;
+	void assign_atanh(Variant a) const;
+
+	// Reductions.
+	void assign_sum(Variant a, Variant axes) const;
+	void assign_prod(Variant a, Variant axes) const;
+	void assign_mean(Variant a, Variant axes) const;
+	void assign_var(Variant a, Variant axes) const;
+	void assign_std(Variant a, Variant axes) const;
+	void assign_max(Variant a, Variant axes) const;
+	void assign_min(Variant a, Variant axes) const;
+
+	// Rounding.
+	void assign_floor(Variant a) const;
+	void assign_ceil(Variant a) const;
+	void assign_round(Variant a) const;
+	void assign_trunc(Variant a) const;
+	void assign_rint(Variant a) const;
+
+	// Comparisons.
+	void assign_equal(Variant a, Variant b) const;
+	void assign_not_equal(Variant a, Variant b) const;
+	void assign_greater(Variant a, Variant b) const;
+	void assign_greater_equal(Variant a, Variant b) const;
+	void assign_less(Variant a, Variant b) const;
+	void assign_less_equal(Variant a, Variant b) const;
+
+	// Logical.
+	void assign_logical_and(Variant a, Variant b) const;
+	void assign_logical_or(Variant a, Variant b) const;
+	void assign_logical_not(Variant a) const;
 };
 
 #endif

@@ -1,5 +1,6 @@
 #include "conversion_range.h"
 
+#include <cstddef>                        // for ptrdiff_t
 #include <cstdint>                        // for int64_t
 #include <stdexcept>                      // for runtime_error
 #include "godot_cpp/variant/variant.hpp"  // for Variant

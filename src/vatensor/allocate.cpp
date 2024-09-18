@@ -33,7 +33,7 @@ VArray va::empty(DType dtype, shape_type shape) {
     return ::empty(dtype, std::move(shape));
 }
 
-VArray va::copy_as_dtype(const VArray &other, DType dtype) {
+VArray va::copy_as_dtype(const VArray& other, DType dtype) {
     return std::visit([](auto t, auto carray) -> VArray {
         using T = decltype(t);
         // Cast first to reduce number of combinations down the line.

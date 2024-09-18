@@ -3,6 +3,24 @@
 
 namespace va {
     namespace promote {
+        template<typename NeededType, typename Type>
+        auto promote_compute_case_if_needed(const compute_case<Type> &arg) {
+            if constexpr (std::is_same_v<Type, NeededType>) {
+                // Most common situation: the argument we need is the same as the argument that's given.
+                return arg;
+            } else {
+                // Casting can considerably increase performance (from a small test, it was 25%).
+                // However, this is only relevant for operations that even need casting.
+                // The cost for casting instead of copying is a much larger binary size (100% increase).
+                // Most people will probably prefer the small binary, and accept less optimized wrong dtype operations.
+#ifdef NUMDOT_CAST_INSTEAD_OF_COPY_FOR_ARGUMENTS
+                return xt::cast<NeededType>(arg);
+#else
+                return xt::xarray<NeededType>(arg);
+#endif
+            }
+        }
+
         template<typename Arg>
         using int64_if_bool_else_id = typename std::conditional<
             std::is_same_v<Arg, bool>,
@@ -14,7 +32,7 @@ namespace va {
         //  I think it may be faster to not cast beforehand, but it's possible it does it later down the line anyway.
         //  That should be tested.
         // Also, mixed-type input ops can really increase binary size, so it should be used with care if at all.
-        
+
         template<typename OutputType>
         struct common_num_in_x_out {
             template<typename... Args>
@@ -30,7 +48,7 @@ namespace va {
         template<typename FN>
         struct num_function_result {
             template<typename... Args>
-            using input_type = decltype(std::declval<FN>()(std::declval<int64_if_bool_else_id<Args>>()...));
+            using input_type = decltype(std::declval<FN>()(std::declval<int64_if_bool_else_id<Args> >()...));
 
             template<typename InputType>
             using output_type = InputType;
@@ -47,10 +65,10 @@ namespace va {
         struct num_at_least_int32 {
             template<typename Arg>
             using input_type = typename std::conditional<
-                (std::numeric_limits<int64_if_bool_else_id<Arg>>::digits >= std::numeric_limits<int32_t>::digits),
+                (std::numeric_limits<int64_if_bool_else_id<Arg> >::digits >= std::numeric_limits<int32_t>::digits),
                 int64_if_bool_else_id<Arg>,
                 typename std::conditional<
-                    std::is_signed<int64_if_bool_else_id<Arg>>::value,
+                    std::is_signed<int64_if_bool_else_id<Arg> >::value,
                     int32_t,
                     uint32_t
                 >::type

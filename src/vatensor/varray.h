@@ -7,6 +7,7 @@
 #include <functional>                   // for multiplies
 #include <memory>                       // for shared_ptr
 #include <numeric>                      // for accumulate
+#include <optional>                     // for optional
 #include <utility>                      // for move, forward
 #include <variant>                      // for variant, visit
 #include <vector>                       // for vector
@@ -119,6 +120,11 @@ namespace va {
 
         [[nodiscard]] VConstant to_single_value() const;
     };
+
+    // For all functions returning an or assigning to an array.
+    // The first case will place the array in the optional.
+    // The second case will assign to the compute variant.
+    using VArrayTarget = std::variant<std::optional<VArray>*, ComputeVariant*>;
 
     template <typename T>
     static auto to_compute_variant(const store_case<T>& store, const VArray& varray) {

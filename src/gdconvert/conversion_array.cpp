@@ -208,7 +208,7 @@ va::VArray variant_as_array(const Variant& array) {
     throw std::runtime_error("Unsupported type");
 }
 
-Array varray_to_godot_array(const va::VArray &array) {
+Array varray_to_godot_array(const va::VArray& array) {
     Array godot_array = Array();
 
     // TODO Non-flat

@@ -6,7 +6,7 @@ How to Install
 Asset Library (recommended)
 ---------------------------
 
-The easiest way to install NumDot is through the asset library. Simply search for ``NumDot`` and click ``Download``.
+The easiest way to install NumDot is through the asset library. In the Editor, click the ``AssetLib`` tab at the top. Search for ``NumDot`` and click ``Download``.
 
 You can also find the entry online: `NumDot on the Godot Asset Library <https://godotengine.org/asset-library/asset/3351>`_.
 

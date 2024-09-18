@@ -29,7 +29,7 @@ This library: A NumPy-like tensor math library made for Godot.
 NumPy
 -----
 
-`NumPy <https://numpy.org>`_ is the most popular tensor math solution. If the the most mature ecosystem is your biggest concern, this is your best option.
+`NumPy <https://numpy.org>`_ is the most popular tensor math solution. If using the most mature ecosystem is your biggest concern, this is your best option.
 
 **Pro**
 
@@ -41,7 +41,7 @@ NumPy
 **Con**
 
 - Requires another language as gdextension (python), increasing complexity.
-- Requires the full python interpreter, and the large NumPy binary (150+mb).
+- Requires the full python interpreter, and the large NumPy binary (100+mb).
 - No interoperability with Godot types.
 
 Note: You may want to consider `TensorFlow <https://www.tensorflow.org>`_ for extreme projects, which can run on the GPU. Getting it to run can be difficult though.

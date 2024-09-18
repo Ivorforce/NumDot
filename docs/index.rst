@@ -27,7 +27,7 @@ Table of Contents
 
 .. toctree::
    :maxdepth: 2
-   :caption: How to Install
+   :caption: Setup and Resources
    :name: sec-learn
 
    how-to-install/how-to-install

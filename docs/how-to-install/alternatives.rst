@@ -29,7 +29,7 @@ This library: A NumPy-like tensor math library made for Godot.
 NumPy
 -----
 
-`NumPy <https://numpy.org>`_ is the most popular tensor math solution.
+`NumPy <https://numpy.org>`_ is the most popular tensor math solution. If the the most mature ecosystem is your biggest concern, this is your best option.
 
 **Pro**
 
@@ -49,9 +49,7 @@ Note: You may want to consider `TensorFlow <https://www.tensorflow.org>`_ for ex
 xtensor
 -------
 
-`xtensor <https://github.com/xtensor-stack/xtensor>`_ is a numpy-like library made for C++ developers.
-
-NumDot uses xtensor under the hood. If you want to use xtensor, consider forking or extending NumDot instead, using a :ref:`manual build<doc_how_to_install_manual_build>`.
+`xtensor <https://github.com/xtensor-stack/xtensor>`_ is a numpy-like library made for C++ developers. NumDot uses xtensor under the hood. If you want to use xtensor, consider forking or extending NumDot instead, using a :ref:`manual build<doc_how_to_install_manual_build>`.
 
 **Pro**
 
@@ -70,6 +68,7 @@ NumSharp
 -------
 
 `NumSharp <https://github.com/SciSharp/NumSharp>`_ is a NumPy port for the C# ecosystem.
+If you are mainly using C#, and want a more general option than NumDot, this is a good contender.
 
 **Pro**
 

@@ -22,7 +22,9 @@ You don't need to be proficient with all of these technologies to help! Check ou
 
 ## Making a contribution
 
-1) Set up the project:
+### Setup
+
+Set up the project:
 ```bash
 # Clone the repository
 git clone https://github.com/YourUsername/NumDot
@@ -30,47 +32,63 @@ cd numdot
 
 # Need to do this once at the start
 cd godot-cpp
-# Replace Use the fitting platform name of [macos, windows, linux]
+# Replace platform with one of [macos, windows, linux]
 scons platform=<platform> custom_api_file=../extension_api.json
 cd ..
 
-# Actually build the project.
-scons platform=macos
+# Make a branch for your changes
+git checkout -b my-new-feature
 ```
 
-**For Windows users:** It is recommended to use [MinGW](https://www.mingw-w64.org/) to compile the project as the build process currently invokes gcc-specific compiler flags that will **not** be recognized by [MSVC](https://visualstudio.microsoft.com/vs/features/cplusplus/). In this case, MinGW must be added to PATH and specified to scons like so:
+### Building
+
+You can build the project as such:
+```bash
+# Replace platform with one of [macos, windows, linux]
+scons platform=<platform>
+```
+**For Windows Users:** It is recommended to use [MinGW](https://www.mingw-w64.org/) to compile the project, as it more closely mimics Unix build semantics than MSVC. MinGW must be added to `PATH`, and specified in the build command like so:
 
 ```bash
 scons platform=windows use-mingw=yes
 ```
 
-2) Make a branch for your changes:
-```bash
-git checkout -b my-new-feature
+### Include Policy
+
+[include-what-you-use](https://github.com/include-what-you-use/include-what-you-use/) should be used to keep the includes tidy and explicit. This workflow is needed because code that works with one compiler can break down with another, due to differences in intrinsic headers. If you can't run it, don't worry, we can always fix includes post merge.
+
 ```
-Make your changes using a code editor (I use [VSCode](https://code.visualstudio.com)). Test your changes in the demo project. Generate empty documentation for new code:
+# Run the tool, dump the results into iwyu.txt.
+iwyu_tool.py -p . src > iwyu.txt
+```
+
+The resulting txt is _very_ explicit. Drop xsimd and intrinsics specific files you are offered, but most of the rest can be copied over as-is.
+
+### Documentation
+
+If you changed NumDot's public API, you should also update its documentation. Start by running the doctool:
 
 ```bash
 cd demo && godot --doctool ../ --gdextension-docs
 ```
 
-[include-what-you-use](https://github.com/include-what-you-use/include-what-you-use/) should be used to keep the includes tidy and explicit. This workflow is needed because code that works with one compiler can break down with another, due to differences in intrinsic headers. If you can't run it, don't worry, we can always fix includes post merge.
-```
-# Run the tool, dump the results into iwyu.txt.
-iwyu_tool.py -p . src > iwyu.txt
-```
-The resulting txt is _very_ explicit. Drop xsimd and intrinsics specific files you are offered, but most of the rest can be copied over as-is.
+Edit the new entries in `./doc_classes/` ([see the godot docs for more information](https://docs.godotengine.org/en/stable/tutorials/scripting/gdextension/gdextension_docs_system.html)).
 
-Edit the new entries in `./doc_classes/` ([see the godot docs for more information](https://docs.godotengine.org/en/stable/tutorials/scripting/gdextension/gdextension_docs_system.html)). Make a commit:
+### Proposing your changes
+
+When you're done, edit the changelog page under the 'Latest (Unstable)' heading in `/docs/setup/changelog`.
+
+Make a commit:
 ```bash
-git status
-# If everything seems ok
+# Check your changes first.
+git diff
+# If everything seems ok:
 git add .
 git commit -m "My change message."
 git push
 ```
 
-3) Finally, [make a Pull Request (PR)](https://github.com/Ivorforce/NumDot/compare). We will check your changes, make suggestions, and finally integrate your code into the project. Try to make sure you don't include any accidental changes, like editing the test file.
+Finally, [make a Pull Request (PR)](https://github.com/Ivorforce/NumDot/compare). We will check your changes, make suggestions, and finally integrate your code into the project. Try to make sure you don't include any accidental changes, like editing the test file.
 
 ## Any Problems?
 

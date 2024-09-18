@@ -30,9 +30,9 @@ Table of Contents
    :caption: Setup and Resources
    :name: sec-learn
 
-   how-to-install/how-to-install
-   how-to-install/changelog
-   how-to-install/alternatives
+   setup/how-to-install
+   setup/changelog
+   setup/alternatives
 
 .. toctree::
    :maxdepth: 2

@@ -119,6 +119,16 @@
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
+		<method name="assign_clip">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="min" type="Variant" />
+			<param index="2" name="max" type="Variant" />
+			<description>
+				In-place version of nd.clip.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
+			</description>
+		</method>
 		<method name="assign_cos">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />

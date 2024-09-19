@@ -58,6 +58,8 @@ Methods
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`assign_ceil<class_NDArray_method_assign_ceil>`\ (\ a\: ``Variant``\ )                                                          |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>` | :ref:`assign_clip<class_NDArray_method_assign_clip>`\ (\ a\: ``Variant``, min\: ``Variant``, max\: ``Variant``\ )                    |
+   +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`assign_cos<class_NDArray_method_assign_cos>`\ (\ a\: ``Variant``\ )                                                            |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`assign_cosh<class_NDArray_method_assign_cosh>`\ (\ a\: ``Variant``\ )                                                          |
@@ -371,6 +373,20 @@ Assigns the result to this array, and returns it. The shape of the result must b
 :ref:`NDArray<class_NDArray>` **assign_ceil**\ (\ a\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_ceil>`
 
 In-place version of nd.ceil.
+
+Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_assign_clip:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **assign_clip**\ (\ a\: ``Variant``, min\: ``Variant``, max\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_clip>`
+
+In-place version of nd.clip.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 

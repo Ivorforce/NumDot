@@ -60,6 +60,8 @@ Methods
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`ceil<class_nd_method_ceil>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                                      |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>` | :ref:`clip<class_nd_method_clip>`\ (\ a\: ``Variant``, min\: ``Variant``, max\: ``Variant``\ ) |static|                                                                                                |
+   +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`cos<class_nd_method_cos>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                                        |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`cosh<class_nd_method_cosh>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                                      |
@@ -476,6 +478,24 @@ Inverse hyperbolic tangent element-wise.
 Return the ceiling of the input, element-wise.
 
 The ceil of the scalar x is the smallest integer i, such that i >= x.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_clip:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **clip**\ (\ a\: ``Variant``, min\: ``Variant``, max\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_clip>`
+
+Clip (limit) the values in an array.
+
+Given an interval, values outside the interval are clipped to the interval edges. For example, if an interval of ``0, 1`` is specified, values smaller than 0 become 0, and values larger than 1 become 1.
+
+Equivalent to but faster than nd.minimum(a_max, nd.maximum(a, a_min)).
+
+No check is performed to ensure a_min < a_max.
 
 .. rst-class:: classref-item-separator
 

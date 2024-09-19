@@ -13,6 +13,7 @@ namespace va {
 
     void minimum(VArrayTarget target, const VArray& a, const VArray& b);
     void maximum(VArrayTarget target, const VArray& a, const VArray& b);
+    void clip(VArrayTarget target, const VArray& a, const VArray& lo, const VArray& hi);
 
     void sign(VArrayTarget target, const VArray& array);
     void abs(VArrayTarget target, const VArray& array);

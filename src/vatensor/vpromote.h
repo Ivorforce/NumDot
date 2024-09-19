@@ -91,6 +91,14 @@ namespace va {
             using output_type = InputType;
         };
 
+        struct common_in_common_out {
+            template<typename... Args>
+            using input_type = std::common_type_t<Args...>;
+
+            template<typename InputType>
+            using output_type = InputType;
+        };
+
         struct common_in_bool_out {
             template<typename... Args>
             using input_type = std::common_type_t<Args...>;

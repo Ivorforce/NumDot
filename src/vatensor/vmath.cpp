@@ -66,7 +66,7 @@ void va::pow(VArrayTarget target, const VArray& a, const VArray& b) {
 }
 
 void va::minimum(VArrayTarget target, const VArray& a, const VArray& b) {
-    va::xoperation_inplace<promote::num_function_result<xt::math::minimum<void>>>(
+    va::xoperation_inplace<promote::common_in_common_out>(
         XFunction<xt::math::minimum<void>> {},
         target,
         a.to_compute_variant(),
@@ -75,11 +75,21 @@ void va::minimum(VArrayTarget target, const VArray& a, const VArray& b) {
 }
 
 void va::maximum(VArrayTarget target, const VArray& a, const VArray& b) {
-    va::xoperation_inplace<promote::num_function_result<xt::math::maximum<void>>>(
+    va::xoperation_inplace<promote::common_in_common_out>(
         XFunction<xt::math::maximum<void>> {},
         target,
         a.to_compute_variant(),
         b.to_compute_variant()
+    );
+}
+
+void va::clip(VArrayTarget target, const VArray& a, const VArray& lo, const VArray& hi) {
+    va::xoperation_inplace<promote::common_in_common_out>(
+        XFunction<xt::math::clamp_fun> {},
+        target,
+        a.to_compute_variant(),
+        lo.to_compute_variant(),
+        hi.to_compute_variant()
     );
 }
 

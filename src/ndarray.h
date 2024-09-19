@@ -79,6 +79,7 @@ public:
 
 	Ref<NDArray> assign_minimum(Variant a, Variant b);
 	Ref<NDArray> assign_maximum(Variant a, Variant b);
+	Ref<NDArray> assign_clip(Variant a, Variant min, Variant max);
 
 	Ref<NDArray> assign_sign(Variant a);
 	Ref<NDArray> assign_abs(Variant a);

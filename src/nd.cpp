@@ -86,6 +86,7 @@ void nd::_bind_methods() {
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("minimum", "a", "b"), &nd::minimum);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("maximum", "a", "b"), &nd::maximum);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("clip", "a", "min", "max"), &nd::clip);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("sign", "a"), &nd::sign);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("abs", "a"), &nd::abs);
@@ -192,6 +193,11 @@ inline Ref<NDArray> reduction(std::function<void(const va::VArrayTarget target, 
 	map_variants_as_arrays_with_target([](const va::VArrayTarget target, const va::VArray& a, const va::VArray& b) {\
         va::func(target, a, b);\
     }, (varray1), (varray2))
+
+#define TERNARY_MAP(func, varray1, varray2, varray3) \
+	map_variants_as_arrays_with_target([](const va::VArrayTarget target, const va::VArray& a, const va::VArray& b, const va::VArray& c) {\
+        va::func(target, a, b, c);\
+    }, (varray1), (varray2), (varray3))
 
 #define REDUCTION(func, varray1, axes1) \
 	reduction([](const va::VArrayTarget target, const va::VArray& array, const va::Axes& axes) {\
@@ -449,6 +455,10 @@ Ref<NDArray> nd::minimum(Variant a, Variant b) {
 
 Ref<NDArray> nd::maximum(Variant a, Variant b) {
 	return BINARY_MAP(maximum, a, b);
+}
+
+Ref<NDArray> nd::clip(Variant a, Variant min, Variant max) {
+	return TERNARY_MAP(clip, a, min, max);
 }
 
 Ref<NDArray> nd::sign(Variant a) {

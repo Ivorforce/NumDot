@@ -70,6 +70,7 @@ public:
 
 	static Ref<NDArray> minimum(Variant a, Variant b);
 	static Ref<NDArray> maximum(Variant a, Variant b);
+	static Ref<NDArray> clip(Variant a, Variant min, Variant max);
 
 	static Ref<NDArray> sign(Variant a);
 	static Ref<NDArray> abs(Variant a);

@@ -130,6 +130,18 @@
 				The ceil of the scalar x is the smallest integer i, such that i &gt;= x.
 			</description>
 		</method>
+		<method name="clip" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="min" type="Variant" />
+			<param index="2" name="max" type="Variant" />
+			<description>
+				Clip (limit) the values in an array.
+				Given an interval, values outside the interval are clipped to the interval edges. For example, if an interval of [0, 1] is specified, values smaller than 0 become 0, and values larger than 1 become 1.
+				Equivalent to but faster than nd.minimum(a_max, nd.maximum(a, a_min)).
+				No check is performed to ensure a_min &lt; a_max.
+			</description>
+		</method>
 		<method name="cos" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />

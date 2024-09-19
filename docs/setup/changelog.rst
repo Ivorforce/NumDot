@@ -20,6 +20,7 @@ Upcoming Changes (master branch)
 - Added the ``logical_xor`` function.
 - Added the ``any`` and ``all`` functions.
 - Added the ``square`` function.
+- Added the ``clip`` function.
 - ``nd.array`` can now interpret multi-dimensional boolean arrays.
 
 **Changed**

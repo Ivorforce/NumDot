@@ -287,6 +287,16 @@
 				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
+		<method name="assign_norm" qualifiers="const">
+			<return type="void" />
+			<param index="0" name="a" type="Variant" default="null" />
+			<param index="1" name="ord" type="Variant" default="2" />
+			<param index="2" name="axes" type="Variant" default="null" />
+			<description>
+				In-place version of nd.norm.
+				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+			</description>
+		</method>
 		<method name="assign_not_equal" qualifiers="const">
 			<return type="void" />
 			<param index="0" name="a" type="Variant" />

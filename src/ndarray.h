@@ -114,6 +114,7 @@ public:
 	void assign_std(Variant a, Variant axes) const;
 	void assign_max(Variant a, Variant axes) const;
 	void assign_min(Variant a, Variant axes) const;
+	void assign_norm(Variant a, Variant ord, Variant axes) const;
 
 	// Rounding.
 	void assign_floor(Variant a) const;

@@ -119,6 +119,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("std", "a", "axes"), &nd::std, DEFVAL(nullptr), DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("max", "a", "axes"), &nd::max, DEFVAL(nullptr), DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("min", "a", "axes"), &nd::min, DEFVAL(nullptr), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("norm", "a", "ord", "axes"), &nd::norm, DEFVAL(nullptr), DEFVAL(2), DEFVAL(nullptr));
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("floor", "a"), &nd::floor);
     godot::ClassDB::bind_static_method("nd", D_METHOD("ceil", "a"), &nd::ceil);
@@ -554,6 +555,30 @@ Ref<NDArray> nd::max(Variant a, Variant axes) {
 
 Ref<NDArray> nd::min(Variant a, Variant axes) {
 	return REDUCTION(min, a, axes);
+}
+
+Ref<NDArray> nd::norm(Variant a, Variant ord, Variant axes) {
+	switch (ord.get_type()) {
+		case Variant::INT:
+			switch (static_cast<int64_t>(ord)) {
+				case 0:
+					return REDUCTION(norm_l0, a, axes);
+				case 1:
+					return REDUCTION(norm_l1, a, axes);
+				case 2:
+					return REDUCTION(norm_l2, a, axes);
+				default:
+					break;
+			}
+		case Variant::FLOAT:
+			if (std::isinf(static_cast<double_t>(ord))) {
+				return REDUCTION(norm_linf, a, axes);
+			}
+		default:
+			break;
+	}
+
+	ERR_FAIL_V_MSG({}, "This norm is currently not supported");
 }
 
 Ref<NDArray> nd::floor(Variant a) {

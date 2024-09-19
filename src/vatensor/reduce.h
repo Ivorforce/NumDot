@@ -10,6 +10,11 @@ namespace va {
     void std(VArrayTarget target, const VArray& array, const Axes& axes);
     void max(VArrayTarget target, const VArray& array, const Axes& axes);
     void min(VArrayTarget target, const VArray& array, const Axes& axes);
+
+    void norm_l0(VArrayTarget target, const VArray& array, const Axes& axes);
+    void norm_l1(VArrayTarget target, const VArray& array, const Axes& axes);
+    void norm_l2(VArrayTarget target, const VArray& array, const Axes& axes);
+    void norm_linf(VArrayTarget target, const VArray& array, const Axes& axes);
 }
 
 #endif //REDUCE_H

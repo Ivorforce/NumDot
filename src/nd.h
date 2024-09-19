@@ -105,6 +105,7 @@ public:
 	static Ref<NDArray> std(Variant a, Variant axes);
 	static Ref<NDArray> max(Variant a, Variant axes);
 	static Ref<NDArray> min(Variant a, Variant axes);
+	static Ref<NDArray> norm(Variant a, Variant ord, Variant axes);
 
 	// Rounding.
 	static Ref<NDArray> floor(Variant a);

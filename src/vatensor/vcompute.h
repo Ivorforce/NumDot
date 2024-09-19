@@ -84,18 +84,18 @@ namespace va {
     }
 
     template<typename PromotionRule, typename FX, typename Axes, typename... Args>
-    static inline void xreduction_inplace(FX &&fx, Axes &&axes, VArrayTarget target, Args &&... args) {
-        std::visit([fx = std::forward<FX>(fx), target](auto axes, auto&&... stores) {
+    static inline void xreduction_inplace(FX &&fx, Axes &&axes, VArrayTarget target, Args&&... args) {
+        std::visit([fx = std::forward<FX>(fx), target](auto& axes, auto&&... stores) {
             using AxesType = std::decay_t<decltype(axes)>;
 
             // TODO I think we can perfect forward better, but for now I can't get it to work.
             if constexpr (std::is_same_v<AxesType, std::nullptr_t>) {
-                make_varrayfunction_inplace<PromotionRule>([fx](auto... inner_args) {
-                    return fx(inner_args...);
+                make_varrayfunction_inplace<PromotionRule>([fx](auto&&... inner_args) {
+                    return fx(std::forward<std::decay_t<decltype(inner_args)>>(inner_args)...);
                 }, target)(stores...);
             } else {
-                make_varrayfunction_inplace<PromotionRule>([fx, axes](auto... inner_args) {
-                    return fx(axes, inner_args...);
+                make_varrayfunction_inplace<PromotionRule>([fx, &axes](auto&&... inner_args) {
+                    return fx(axes, std::forward<std::decay_t<decltype(inner_args)>>(inner_args)...);
                 }, target)(stores...);
             }
         }, std::forward<Axes>(axes), std::forward<Args>(args)...);

@@ -14,7 +14,7 @@ Version 0.2 - 2024-09-19
 -----------------
 **Added**
 
-- Added an in-place to API :ref:`NDArray <class_NDArray>` objects, mirroring the :ref:`nd <class_nd>` API. In-place functions can substantially improve performance for small arrays, because creation of intermediate types is avoided.
+- Added an in-place API to :ref:`NDArray <class_NDArray>` objects, mirroring the :ref:`nd <class_nd>` API. In-place functions can substantially improve performance for small arrays, because creation of intermediate types is avoided.
 - Added the ``NUMDOT_ASSIGN_INPLACE_DIRECTLY_INSTEAD_OF_COPYING_FIRST`` compiler flag, which improves performance of same-type assignment while increasing the binary size.
 - Added the ``norm`` function (l0, l1, l2 and linf supported).
 - Added the ``logical_xor`` function.

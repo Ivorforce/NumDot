@@ -10,7 +10,7 @@ Here you will find the release notes for each version of the library. Each secti
    :local:
    :backlinks: none
 
-Latest (Unstable)
+Upcoming Changes (master branch)
 -----------------
 **Added**
 

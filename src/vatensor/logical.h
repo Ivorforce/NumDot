@@ -6,6 +6,7 @@
 namespace va {
     void logical_and(VArrayTarget target, const VArray& a, const VArray& b);
     void logical_or(VArrayTarget target, const VArray& a, const VArray& b);
+    void logical_xor(VArrayTarget target, const VArray& a, const VArray& b);
     void logical_not(VArrayTarget target, const VArray& a);
 }
 

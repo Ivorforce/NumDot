@@ -134,7 +134,10 @@ public:
 	// Logical.
 	Ref<NDArray> assign_logical_and(Variant a, Variant b);
 	Ref<NDArray> assign_logical_or(Variant a, Variant b);
+	Ref<NDArray> assign_logical_xor(Variant a, Variant b);
 	Ref<NDArray> assign_logical_not(Variant a);
+    Ref<NDArray> assign_all(Variant a, Variant axes);
+    Ref<NDArray> assign_any(Variant a, Variant axes);
 };
 
 #endif

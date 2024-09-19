@@ -15,6 +15,9 @@ namespace va {
     void norm_l1(VArrayTarget target, const VArray& array, const Axes& axes);
     void norm_l2(VArrayTarget target, const VArray& array, const Axes& axes);
     void norm_linf(VArrayTarget target, const VArray& array, const Axes& axes);
+
+    void all(VArrayTarget target, const VArray& array, const Axes& axes);
+    void any(VArrayTarget target, const VArray& array, const Axes& axes);
 }
 
 #endif //REDUCE_H

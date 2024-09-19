@@ -39,6 +39,24 @@
 				Add arguments element-wise.
 			</description>
 		</method>
+		<method name="all" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" default="null" />
+			<param index="1" name="axes" type="Variant" default="null" />
+			<description>
+				Test whether all array elements along a given axis evaluate to True.
+				Returns a 0-dimension boolean if axis is null.
+			</description>
+		</method>
+		<method name="any" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" default="null" />
+			<param index="1" name="axes" type="Variant" default="null" />
+			<description>
+				Test whether any array element along a given axis evaluates to True.
+				Returns a 0-dimension boolean if axis is null.
+			</description>
+		</method>
 		<method name="arange" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="start_or_stop" type="Variant" default="0" />

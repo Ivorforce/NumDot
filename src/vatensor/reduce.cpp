@@ -9,47 +9,58 @@
 #include "xtensor/xlayout.hpp"                          // for layout_type
 #include "xtensor/xmath.hpp"                            // for amax, amin, mean
 #include "xtensor/xnorm.hpp"                            // for norms
+#include "xtensor/xtensor_forward.hpp"                            // for xtensor_fixed
 #include "xtl/xiterator_base.hpp"                       // for operator!=
 
 using namespace va;
 
 // TODO Passing EVS is required because norms don't support it without it, we should make a PR (though it's not bad to explicitly make it lazy).
-#define Reducer(Name, fun_name)\
-	Name() = default;\
-	Name(const Name&) = default;\
-	Name(Name&&) noexcept = default;\
-	Name& operator=(const Name&) = default;\
-	Name& operator=(Name&&) noexcept = default;\
-	~Name() = default;\
-\
+#define Reducer(Name, fun_name_axes, fun_name_no_axes)\
 	template <typename GivenAxes, typename A>\
 	auto operator()(GivenAxes&& axes, A&& a) const {\
-		return xt::fun_name(std::forward<A>(a), std::forward<GivenAxes>(axes), std::tuple<xt::evaluation_strategy::lazy_type>());\
+		return fun_name_axes(std::forward<A>(a), std::forward<GivenAxes>(axes), std::tuple<xt::evaluation_strategy::lazy_type>());\
 	}\
 \
 	template <typename A>\
 	auto operator()(A&& a) const {\
-		return xt::fun_name(std::forward<A>(a), std::tuple<xt::evaluation_strategy::lazy_type>());\
+		return fun_name_no_axes(std::forward<A>(a), std::tuple<xt::evaluation_strategy::lazy_type>());\
 	}
 
-struct Sum { Reducer(Sum, sum) };
+// To be able to use xt::all and xt::any, the second function needs special treatment.
+// For one, it can't get EVS as parameter.
+// Second, the return type is bool, so it needs to be converted to a temp tensor.
+#define ReducerAnyAll(Name, fun_name_axes, fun_name_no_axes)\
+	template <typename GivenAxes, typename A>\
+	auto operator()(GivenAxes&& axes, A&& a) const {\
+		return fun_name_axes(std::forward<A>(a), std::forward<GivenAxes>(axes), std::tuple<xt::evaluation_strategy::lazy_type>());\
+	}\
+\
+	template <typename A>\
+	auto operator()(A&& a) const {\
+		return xt::xtensor_fixed<bool, xshape<>>(fun_name_no_axes(std::forward<A>(a)));\
+	}
 
-struct Prod { Reducer(Prod, prod) };
+struct Sum { Reducer(Sum, xt::sum, xt::sum) };
+struct Prod { Reducer(Prod, xt::prod, xt::prod) };
+struct Mean { Reducer(Mean, xt::mean, xt::mean) };
+struct Variance { Reducer(Variance, xt::variance, xt::variance) };
+struct Std { Reducer(Std, xt::stddev, xt::stddev) };
 
-struct Mean { Reducer(Mean, mean) };
+struct Amax { Reducer(Amax, xt::amax, xt::amax) };
+struct Amin { Reducer(Amin, xt::amin, xt::amin) };
 
-struct Variance { Reducer(Variance, variance) };
+struct NormL0 { Reducer(NormL0, xt::norm_l0, xt::norm_l0) };
+struct NormL1 { Reducer(NormL1, xt::norm_l1, xt::norm_l1) };
+struct NormL2 { Reducer(NormL2, xt::norm_l2, xt::norm_l2) };
+struct NormLInf { Reducer(NormLInf, xt::norm_linf, xt::norm_linf) };
 
-struct Std { Reducer(Std, stddev) };
+// FIXME These don't support axes yet, see https://github.com/xtensor-stack/xtensor/issues/1555
+using namespace xt;
+XTENSOR_REDUCER_FUNCTION(va_any, xt::detail::logical_or, bool, true)
+XTENSOR_REDUCER_FUNCTION(va_all, xt::detail::logical_and, bool, false)
 
-struct Amax { Reducer(Amax, amax) };
-
-struct Amin { Reducer(Amin, amin) };
-
-struct NormL0 { Reducer(NormL0, norm_l0) };
-struct NormL1 { Reducer(NormL1, norm_l1) };
-struct NormL2 { Reducer(NormL2, norm_l2) };
-struct NormLInf { Reducer(NormLInf, norm_linf) };
+struct All { ReducerAnyAll(All, va_all, xt::all) };
+struct Any { ReducerAnyAll(Any, va_any, xt::any) };
 
 void va::sum(VArrayTarget target, const VArray& array, const Axes &axes) {
 	va::xreduction_inplace<promote::num_common_type>(
@@ -114,5 +125,17 @@ void va::norm_l2(VArrayTarget target, const VArray &array, const Axes &axes) {
 void va::norm_linf(VArrayTarget target, const VArray &array, const Axes &axes) {
 	va::xreduction_inplace<promote::num_matching_float_or_default<double_t>>(
 		NormLInf{}, axes, target, array.to_compute_variant()
+	);
+}
+
+void va::all(VArrayTarget target, const VArray &array, const Axes &axes) {
+	va::xreduction_inplace<promote::bool_in_bool_out>(
+		All{}, axes, target, array.to_compute_variant()
+	);
+}
+
+void va::any(VArrayTarget target, const VArray &array, const Axes &axes) {
+	va::xreduction_inplace<promote::bool_in_bool_out>(
+		Any{}, axes, target, array.to_compute_variant()
 	);
 }

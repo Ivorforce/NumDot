@@ -89,7 +89,7 @@ void NDArray::_bind_methods() {
 	godot::ClassDB::bind_method(D_METHOD("assign_atanh", "a"), &NDArray::assign_atanh);
 
 	godot::ClassDB::bind_method(D_METHOD("assign_sum", "a", "axes"), &NDArray::assign_sum, DEFVAL(nullptr), DEFVAL(nullptr));
-	godot::ClassDB::bind_method(D_METHOD("assign_prod", "a", "axes"), &NDArray::assign_sum, DEFVAL(nullptr), DEFVAL(nullptr));
+	godot::ClassDB::bind_method(D_METHOD("assign_prod", "a", "axes"), &NDArray::assign_prod, DEFVAL(nullptr), DEFVAL(nullptr));
 	godot::ClassDB::bind_method(D_METHOD("assign_mean", "a", "axes"), &NDArray::assign_mean, DEFVAL(nullptr), DEFVAL(nullptr));
 	godot::ClassDB::bind_method(D_METHOD("assign_var", "a", "axes"), &NDArray::assign_var, DEFVAL(nullptr), DEFVAL(nullptr));
 	godot::ClassDB::bind_method(D_METHOD("assign_std", "a", "axes"), &NDArray::assign_std, DEFVAL(nullptr), DEFVAL(nullptr));
@@ -112,7 +112,10 @@ void NDArray::_bind_methods() {
 
 	godot::ClassDB::bind_method(D_METHOD("assign_logical_and", "a", "b"), &NDArray::assign_logical_and);
 	godot::ClassDB::bind_method(D_METHOD("assign_logical_or", "a", "b"), &NDArray::assign_logical_or);
+	godot::ClassDB::bind_method(D_METHOD("assign_logical_xor", "a", "b"), &NDArray::assign_logical_xor);
 	godot::ClassDB::bind_method(D_METHOD("assign_logical_not", "a"), &NDArray::assign_logical_not);
+    godot::ClassDB::bind_method(D_METHOD("assign_all", "a", "axes"), &NDArray::assign_all, DEFVAL(nullptr), DEFVAL(nullptr));
+    godot::ClassDB::bind_method(D_METHOD("assign_any", "a", "axes"), &NDArray::assign_any, DEFVAL(nullptr), DEFVAL(nullptr));
 }
 
 NDArray::NDArray() = default;
@@ -514,6 +517,18 @@ Ref<NDArray> NDArray::assign_logical_or(Variant a, Variant b) {
 	BINARY_MAP(logical_or, a, b);
 }
 
+Ref<NDArray> NDArray::assign_logical_xor(Variant a, Variant b) {
+	BINARY_MAP(logical_xor, a, b);
+}
+
 Ref<NDArray> NDArray::assign_logical_not(Variant a) {
 	UNARY_MAP(logical_not, a);
+}
+
+Ref<NDArray> NDArray::assign_all(Variant a, Variant axes) {
+    REDUCTION(all, a, axes);
+}
+
+Ref<NDArray> NDArray::assign_any(Variant a, Variant axes) {
+    REDUCTION(any, a, axes);
 }

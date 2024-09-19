@@ -113,7 +113,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("atanh", "a"), &nd::atanh);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("sum", "a", "axes"), &nd::sum, DEFVAL(nullptr), DEFVAL(nullptr));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("prod", "a", "axes"), &nd::sum, DEFVAL(nullptr), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("prod", "a", "axes"), &nd::prod, DEFVAL(nullptr), DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("mean", "a", "axes"), &nd::mean, DEFVAL(nullptr), DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("var", "a", "axes"), &nd::var, DEFVAL(nullptr), DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("std", "a", "axes"), &nd::std, DEFVAL(nullptr), DEFVAL(nullptr));
@@ -137,6 +137,8 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("logical_and", "a", "b"), &nd::logical_and);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("logical_or", "a", "b"), &nd::logical_or);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("logical_not", "a"), &nd::logical_not);
+    godot::ClassDB::bind_static_method("nd", D_METHOD("all", "a", "axes"), &nd::min, DEFVAL(nullptr), DEFVAL(nullptr));
+    godot::ClassDB::bind_static_method("nd", D_METHOD("any", "a", "axes"), &nd::min, DEFVAL(nullptr), DEFVAL(nullptr));
 }
 
 nd::nd() = default;
@@ -634,6 +636,18 @@ Ref<NDArray> nd::logical_or(Variant a, Variant b) {
 	return BINARY_MAP(logical_or, a, b);
 }
 
+Ref<NDArray> nd::logical_xor(Variant a, Variant b) {
+    return BINARY_MAP(logical_xor, a, b);
+}
+
 Ref<NDArray> nd::logical_not(Variant a) {
 	return UNARY_MAP(logical_not, a);
+}
+
+Ref<NDArray> nd::all(Variant a, Variant axes) {
+    return REDUCTION(all, a, axes);
+}
+
+Ref<NDArray> nd::any(Variant a, Variant axes) {
+    return REDUCTION(any, a, axes);
 }

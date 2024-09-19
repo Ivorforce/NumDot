@@ -27,6 +27,15 @@ void va::logical_or(VArrayTarget target, const VArray& a, const VArray& b) {
     );
 }
 
+void va::logical_xor(VArrayTarget target, const VArray& a, const VArray& b) {
+    va::xoperation_inplace<promote::bool_in_bool_out>(
+        XFunction<xt::detail::not_equal_to> {},
+        target,
+        a.to_compute_variant(),
+        b.to_compute_variant()
+    );
+}
+
 void va::logical_not(VArrayTarget target, const VArray& a) {
     va::xoperation_inplace<promote::bool_in_bool_out>(
         XFunction<xt::detail::logical_not> {},

@@ -30,7 +30,7 @@ VArray va::full(const VConstant fill_value, shape_type shape) {
 }
 
 VArray va::empty(DType dtype, shape_type shape) {
-    return ::empty(dtype, std::move(shape));
+    return ::empty(dtype_to_variant(dtype), std::move(shape));
 }
 
 VArray va::copy_as_dtype(const VArray& other, DType dtype) {

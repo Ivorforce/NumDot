@@ -115,6 +115,9 @@ va::VArray array_as_varray(const Array& array) {
             case Variant::INT:
                 varray.slice(idx).fill(static_cast<int64_t>(var));
                 break;
+            case Variant::BOOL:
+                varray.slice(idx).fill(static_cast<bool>(var));
+                break;
             default:
                 throw std::runtime_error("unsupported array type");
         }

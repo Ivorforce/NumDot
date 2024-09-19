@@ -19,6 +19,7 @@ Upcoming Changes (master branch)
 - Added the ``norm`` function (l0, l1, l2 and linf supported).
 - Added the ``logical_xor`` function.
 - Added the ``any`` and ``all`` functions.
+- ``nd.array`` can now interpret multi-dimensional boolean arrays.
 
 **Changed**
 
@@ -27,6 +28,8 @@ Upcoming Changes (master branch)
 **Fixed**
 
 - Reduction functions now behave properly when casting (they used to crash or produce meaningless results).
+- Array creation could often lead to the wrong dtype.
+- ``nd.prod`` erroneously evaluated as ``nd.sum``.
 
 Version 0.1 - 2024-09-17
 ------------------------

@@ -2,13 +2,13 @@
 
 A tensor math and scientific computation library for the [Godot](https://godotengine.org) game engine. The project is still in its early stages. [Contributions are welcome](https://github.com/Ivorforce/NumDot/blob/main/CONTRIBUTING.md)!
 
-NumDot is inspired by the python tensor math library, [NumPy](https://numpy.org), and uses [xtensor](https://github.com/xtensor-stack/xtensor) under the hood.
+NumDot is inspired by the Python tensor math library, [NumPy](https://numpy.org), and uses [xtensor](https://github.com/xtensor-stack/xtensor) under the hood ([read up on differences here](https://numdot.readthedocs.io/en/latest/how-to-use/numpy-xtensor-numdot.html)).
 
 **Quick Start:**
 - [Motivation (why use NumDot?)](https://numdot.readthedocs.io/en/latest/index.html#motivation)
-- [How to install](https://numdot.readthedocs.io/en/latest/how-to-install/how-to-install.html)
+- [How to install](https://numdot.readthedocs.io/en/latest/setup/how-to-install.html)
 - [Getting Started](https://numdot.readthedocs.io/en/latest/how-to-use/getting_started.html)
-- [NumPy, xtensor and NumDot](https://numdot.readthedocs.io/en/latest/how-to-use/numpy-xtensor-numdot.html)
+- [Changelog](https://numdot.readthedocs.io/en/latest/setup/changelog.html)
 - [Class Reference](https://numdot.readthedocs.io/en/latest/classes/index.html)
 - [How to contribute](https://github.com/Ivorforce/NumDot/blob/main/CONTRIBUTING.md)
 

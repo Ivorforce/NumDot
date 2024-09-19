@@ -22,6 +22,10 @@ Latest (Unstable)
 
 - Reduced the binary size by half. In exchange, decrease performance of operations that need a cast before running by ~25%. The C define ``NUMDOT_CAST_INSTEAD_OF_COPY_FOR_ARGUMENTS`` lets you revert to the old behavior.
 
+**Fixed**
+
+- Reduction functions now behave properly when casting (they used to crash or produce meaningless results).
+
 Version 0.1 - 2024-09-17
 ------------------------
 Initial release.

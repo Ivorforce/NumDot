@@ -70,71 +70,71 @@ public:
     [[nodiscard]] Array to_godot_array() const;
 
 	// Basic math functions.
-	void assign_add(Variant a, Variant b) const;
-	void assign_subtract(Variant a, Variant b) const;
-	void assign_multiply(Variant a, Variant b) const;
-	void assign_divide(Variant a, Variant b) const;
-	void assign_remainder(Variant a, Variant b) const;
-	void assign_pow(Variant a, Variant b) const;
+	Ref<NDArray> assign_add(Variant a, Variant b);
+	Ref<NDArray> assign_subtract(Variant a, Variant b);
+	Ref<NDArray> assign_multiply(Variant a, Variant b);
+	Ref<NDArray> assign_divide(Variant a, Variant b);
+	Ref<NDArray> assign_remainder(Variant a, Variant b);
+	Ref<NDArray> assign_pow(Variant a, Variant b);
 
-	void assign_minimum(Variant a, Variant b) const;
-	void assign_maximum(Variant a, Variant b) const;
+	Ref<NDArray> assign_minimum(Variant a, Variant b);
+	Ref<NDArray> assign_maximum(Variant a, Variant b);
 
-	void assign_sign(Variant a) const;
-	void assign_abs(Variant a) const;
-	void assign_sqrt(Variant a) const;
+	Ref<NDArray> assign_sign(Variant a);
+	Ref<NDArray> assign_abs(Variant a);
+	Ref<NDArray> assign_sqrt(Variant a);
 
-	void assign_exp(Variant a) const;
-	void assign_log(Variant a) const;
+	Ref<NDArray> assign_exp(Variant a);
+	Ref<NDArray> assign_log(Variant a);
 
-	void assign_rad2deg(Variant a) const;
-	void assign_deg2rad(Variant a) const;
+	Ref<NDArray> assign_rad2deg(Variant a);
+	Ref<NDArray> assign_deg2rad(Variant a);
 	
 	// Trigonometric functions.
-	void assign_sin(Variant a) const;
-	void assign_cos(Variant a) const;
-	void assign_tan(Variant a) const;
-	void assign_asin(Variant a) const;
-	void assign_acos(Variant a) const;
-	void assign_atan(Variant a) const;
-	void assign_atan2(Variant x1, Variant x2) const;
+	Ref<NDArray> assign_sin(Variant a);
+	Ref<NDArray> assign_cos(Variant a);
+	Ref<NDArray> assign_tan(Variant a);
+	Ref<NDArray> assign_asin(Variant a);
+	Ref<NDArray> assign_acos(Variant a);
+	Ref<NDArray> assign_atan(Variant a);
+	Ref<NDArray> assign_atan2(Variant x1, Variant x2);
 
-	void assign_sinh(Variant a) const;
-	void assign_cosh(Variant a) const;
-	void assign_tanh(Variant a) const;
-	void assign_asinh(Variant a) const;
-	void assign_acosh(Variant a) const;
-	void assign_atanh(Variant a) const;
+	Ref<NDArray> assign_sinh(Variant a);
+	Ref<NDArray> assign_cosh(Variant a);
+	Ref<NDArray> assign_tanh(Variant a);
+	Ref<NDArray> assign_asinh(Variant a);
+	Ref<NDArray> assign_acosh(Variant a);
+	Ref<NDArray> assign_atanh(Variant a);
 
 	// Reductions.
-	void assign_sum(Variant a, Variant axes) const;
-	void assign_prod(Variant a, Variant axes) const;
-	void assign_mean(Variant a, Variant axes) const;
-	void assign_var(Variant a, Variant axes) const;
-	void assign_std(Variant a, Variant axes) const;
-	void assign_max(Variant a, Variant axes) const;
-	void assign_min(Variant a, Variant axes) const;
-	void assign_norm(Variant a, Variant ord, Variant axes) const;
+	Ref<NDArray> assign_sum(Variant a, Variant axes);
+	Ref<NDArray> assign_prod(Variant a, Variant axes);
+	Ref<NDArray> assign_mean(Variant a, Variant axes);
+	Ref<NDArray> assign_var(Variant a, Variant axes);
+	Ref<NDArray> assign_std(Variant a, Variant axes);
+	Ref<NDArray> assign_max(Variant a, Variant axes);
+	Ref<NDArray> assign_min(Variant a, Variant axes);
+	Ref<NDArray> assign_norm(Variant a, Variant ord, Variant axes);
 
 	// Rounding.
-	void assign_floor(Variant a) const;
-	void assign_ceil(Variant a) const;
-	void assign_round(Variant a) const;
-	void assign_trunc(Variant a) const;
-	void assign_rint(Variant a) const;
+	Ref<NDArray> assign_floor(Variant a);
+	Ref<NDArray> assign_ceil(Variant a);
+	Ref<NDArray> assign_round(Variant a);
+	Ref<NDArray> assign_trunc(Variant a);
+	Ref<NDArray> assign_rint(Variant a);
 
 	// Comparisons.
-	void assign_equal(Variant a, Variant b) const;
-	void assign_not_equal(Variant a, Variant b) const;
-	void assign_greater(Variant a, Variant b) const;
-	void assign_greater_equal(Variant a, Variant b) const;
-	void assign_less(Variant a, Variant b) const;
-	void assign_less_equal(Variant a, Variant b) const;
+	Ref<NDArray> assign_equal(Variant a, Variant b);
+	Ref<NDArray> assign_not_equal(Variant a, Variant b);
+	Ref<NDArray> assign_greater(Variant a, Variant b);
+	Ref<NDArray> assign_greater_equal(Variant a, Variant b);
+	Ref<NDArray> assign_less(Variant a, Variant b);
+	Ref<NDArray> assign_less_equal(Variant a, Variant b);
 
 	// Logical.
-	void assign_logical_and(Variant a, Variant b) const;
-	void assign_logical_or(Variant a, Variant b) const;
-	void assign_logical_not(Variant a) const;
+	Ref<NDArray> assign_logical_and(Variant a, Variant b);
+	Ref<NDArray> assign_logical_or(Variant a, Variant b);
+	Ref<NDArray> assign_logical_not(Variant a);
 };
 
 #endif

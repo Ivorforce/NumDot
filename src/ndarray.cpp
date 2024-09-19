@@ -279,238 +279,241 @@ inline void reduction_inplace(std::function<void(const va::VArray&, const va::Ax
 	map_variants_as_arrays_inplace([this](const va::VArray& varray) {\
 		auto compute_variant = array.to_compute_variant();\
         va::func(&compute_variant, varray);\
-    }, (varray1))
+    }, (varray1));\
+    return {this}
 
 #define BINARY_MAP(func, varray1, varray2) \
 	map_variants_as_arrays_inplace([this](const va::VArray& a, const va::VArray& b) {\
 		auto compute_variant = array.to_compute_variant();\
         va::func(&compute_variant, a, b);\
-    }, (varray1), (varray2))
+    }, (varray1), (varray2));\
+    return {this}
 
 #define REDUCTION(func, varray1, axes1) \
 	reduction_inplace([this](const va::VArray& array, const va::Axes& axes) {\
 		auto compute_variant = array.to_compute_variant();\
 		va::func(&compute_variant, array, axes1);\
-	}, (varray1), (axes1))
+	}, (varray1), (axes1));\
+	return {this}
 
-void NDArray::assign_add(Variant a, Variant b) const {
+Ref<NDArray> NDArray::assign_add(Variant a, Variant b) {
 	// godot::UtilityFunctions::print(value);
 	BINARY_MAP(add, a, b);
 }
 
-void NDArray::assign_subtract(Variant a, Variant b) const {
+Ref<NDArray> NDArray::assign_subtract(Variant a, Variant b) {
 	BINARY_MAP(subtract, a, b);
 }
 
-void NDArray::assign_multiply(Variant a, Variant b) const {
+Ref<NDArray> NDArray::assign_multiply(Variant a, Variant b) {
 	BINARY_MAP(multiply, a, b);
 }
 
-void NDArray::assign_divide(Variant a, Variant b) const {
+Ref<NDArray> NDArray::assign_divide(Variant a, Variant b) {
 	BINARY_MAP(divide, a, b);
 }
 
-void NDArray::assign_remainder(Variant a, Variant b) const {
+Ref<NDArray> NDArray::assign_remainder(Variant a, Variant b) {
 	BINARY_MAP(remainder, a, b);
 }
 
-void NDArray::assign_pow(Variant a, Variant b) const {
+Ref<NDArray> NDArray::assign_pow(Variant a, Variant b) {
 	BINARY_MAP(pow, a, b);
 }
 
-void NDArray::assign_minimum(Variant a, Variant b) const {
+Ref<NDArray> NDArray::assign_minimum(Variant a, Variant b) {
 	BINARY_MAP(minimum, a, b);
 }
 
-void NDArray::assign_maximum(Variant a, Variant b) const {
+Ref<NDArray> NDArray::assign_maximum(Variant a, Variant b) {
 	BINARY_MAP(maximum, a, b);
 }
 
-void NDArray::assign_sign(Variant a) const {
+Ref<NDArray> NDArray::assign_sign(Variant a) {
 	UNARY_MAP(sign, a);
 }
 
-void NDArray::assign_abs(Variant a) const {
+Ref<NDArray> NDArray::assign_abs(Variant a) {
 	UNARY_MAP(abs, a);
 }
 
-void NDArray::assign_sqrt(Variant a) const {
+Ref<NDArray> NDArray::assign_sqrt(Variant a) {
 	UNARY_MAP(sqrt, a);
 }
 
-void NDArray::assign_exp(Variant a) const {
+Ref<NDArray> NDArray::assign_exp(Variant a) {
 	UNARY_MAP(exp, a);
 }
 
-void NDArray::assign_log(Variant a) const {
+Ref<NDArray> NDArray::assign_log(Variant a) {
 	UNARY_MAP(log, a);
 }
 
-void NDArray::assign_rad2deg(Variant a) const {
+Ref<NDArray> NDArray::assign_rad2deg(Variant a) {
 	UNARY_MAP(rad2deg, a);
 }
 
-void NDArray::assign_deg2rad(Variant a) const {
+Ref<NDArray> NDArray::assign_deg2rad(Variant a) {
 	UNARY_MAP(deg2rad, a);
 }
 
-void NDArray::assign_sin(Variant a) const {
+Ref<NDArray> NDArray::assign_sin(Variant a) {
 	UNARY_MAP(sin, a);
 }
 
-void NDArray::assign_cos(Variant a) const {
+Ref<NDArray> NDArray::assign_cos(Variant a) {
 	UNARY_MAP(cos, a);
 }
 
-void NDArray::assign_tan(Variant a) const {
+Ref<NDArray> NDArray::assign_tan(Variant a) {
 	UNARY_MAP(tan, a);
 }
 
-void NDArray::assign_asin(Variant a) const {
+Ref<NDArray> NDArray::assign_asin(Variant a) {
 	UNARY_MAP(asin, a);
 }
 
-void NDArray::assign_acos(Variant a) const {
+Ref<NDArray> NDArray::assign_acos(Variant a) {
 	UNARY_MAP(acos, a);
 }
 
-void NDArray::assign_atan(Variant a) const {
+Ref<NDArray> NDArray::assign_atan(Variant a) {
 	UNARY_MAP(atan, a);
 }
 
-void NDArray::assign_atan2(Variant x1, Variant x2) const {
+Ref<NDArray> NDArray::assign_atan2(Variant x1, Variant x2) {
 	BINARY_MAP(atan2, x1, x2);
 }
 
-void NDArray::assign_sinh(Variant a) const {
+Ref<NDArray> NDArray::assign_sinh(Variant a) {
 	UNARY_MAP(sinh, a);
 }
 
-void NDArray::assign_cosh(Variant a) const {
+Ref<NDArray> NDArray::assign_cosh(Variant a) {
 	UNARY_MAP(cosh, a);
 }
 
-void NDArray::assign_tanh(Variant a) const {
+Ref<NDArray> NDArray::assign_tanh(Variant a) {
 	UNARY_MAP(tanh, a);
 }
 
-void NDArray::assign_asinh(Variant a) const {
+Ref<NDArray> NDArray::assign_asinh(Variant a) {
 	UNARY_MAP(asinh, a);
 }
 
-void NDArray::assign_acosh(Variant a) const {
+Ref<NDArray> NDArray::assign_acosh(Variant a) {
 	UNARY_MAP(acosh, a);
 }
 
-void NDArray::assign_atanh(Variant a) const {
+Ref<NDArray> NDArray::assign_atanh(Variant a) {
 	UNARY_MAP(atanh, a);
 }
 
-void NDArray::assign_sum(Variant a, Variant axes) const {
+Ref<NDArray> NDArray::assign_sum(Variant a, Variant axes) {
 	REDUCTION(sum, a, axes);
 }
 
-void NDArray::assign_prod(Variant a, Variant axes) const {
+Ref<NDArray> NDArray::assign_prod(Variant a, Variant axes) {
 	REDUCTION(prod, a, axes);
 }
 
-void NDArray::assign_mean(Variant a, Variant axes) const {
+Ref<NDArray> NDArray::assign_mean(Variant a, Variant axes) {
 	REDUCTION(mean, a, axes);
 }
 
-void NDArray::assign_var(Variant a, Variant axes) const {
+Ref<NDArray> NDArray::assign_var(Variant a, Variant axes) {
 	REDUCTION(var, a, axes);
 }
 
-void NDArray::assign_std(Variant a, Variant axes) const {
+Ref<NDArray> NDArray::assign_std(Variant a, Variant axes) {
 	REDUCTION(std, a, axes);
 }
 
-void NDArray::assign_max(Variant a, Variant axes) const {
+Ref<NDArray> NDArray::assign_max(Variant a, Variant axes) {
 	REDUCTION(max, a, axes);
 }
 
-void NDArray::assign_min(Variant a, Variant axes) const {
+Ref<NDArray> NDArray::assign_min(Variant a, Variant axes) {
 	REDUCTION(min, a, axes);
 }
 
-void NDArray::assign_norm(Variant a, Variant ord, Variant axes) const {
+Ref<NDArray> NDArray::assign_norm(Variant a, Variant ord, Variant axes) {
 	switch (ord.get_type()) {
 		case Variant::INT:
 			switch (static_cast<int64_t>(ord)) {
 				case 0:
-					return REDUCTION(norm_l0, a, axes);
+					REDUCTION(norm_l0, a, axes);
 				case 1:
-					return REDUCTION(norm_l1, a, axes);
+					REDUCTION(norm_l1, a, axes);
 				case 2:
-					return REDUCTION(norm_l2, a, axes);
+					REDUCTION(norm_l2, a, axes);
 				default:
 					break;
 			}
 		case Variant::FLOAT:
 			if (std::isinf(static_cast<double_t>(ord))) {
-				return REDUCTION(norm_linf, a, axes);
+				REDUCTION(norm_linf, a, axes);
 			}
 		default:
 			break;
 	}
 
-	ERR_FAIL_MSG("This norm is currently not supported");
+	ERR_FAIL_V_MSG({this}, "This norm is currently not supported");
 }
 
-void NDArray::assign_floor(Variant a) const {
+Ref<NDArray> NDArray::assign_floor(Variant a) {
 	UNARY_MAP(floor, a);
 }
 
-void NDArray::assign_ceil(Variant a) const {
+Ref<NDArray> NDArray::assign_ceil(Variant a) {
 	UNARY_MAP(ceil, a);
 }
 
-void NDArray::assign_round(Variant a) const {
+Ref<NDArray> NDArray::assign_round(Variant a) {
 	UNARY_MAP(round, a);
 }
 
-void NDArray::assign_trunc(Variant a) const {
+Ref<NDArray> NDArray::assign_trunc(Variant a) {
 	UNARY_MAP(trunc, a);
 }
 
-void NDArray::assign_rint(Variant a) const {
+Ref<NDArray> NDArray::assign_rint(Variant a) {
 	// Actually uses nearbyint because rint can throw, which is undesirable in our case, and unlike numpy's behavior.
 	UNARY_MAP(nearbyint, a);
 }
 
-void NDArray::assign_equal(Variant a, Variant b) const {
+Ref<NDArray> NDArray::assign_equal(Variant a, Variant b) {
 	BINARY_MAP(equal_to, a, b);
 }
 
-void NDArray::assign_not_equal(Variant a, Variant b) const {
+Ref<NDArray> NDArray::assign_not_equal(Variant a, Variant b) {
 	BINARY_MAP(not_equal_to, a, b);
 }
 
-void NDArray::assign_greater(Variant a, Variant b) const {
+Ref<NDArray> NDArray::assign_greater(Variant a, Variant b) {
 	BINARY_MAP(greater, a, b);
 }
 
-void NDArray::assign_greater_equal(Variant a, Variant b) const {
+Ref<NDArray> NDArray::assign_greater_equal(Variant a, Variant b) {
 	BINARY_MAP(greater_equal, a, b);
 }
 
-void NDArray::assign_less(Variant a, Variant b) const {
+Ref<NDArray> NDArray::assign_less(Variant a, Variant b) {
 	BINARY_MAP(less, a, b);
 }
 
-void NDArray::assign_less_equal(Variant a, Variant b) const {
+Ref<NDArray> NDArray::assign_less_equal(Variant a, Variant b) {
 	BINARY_MAP(less_equal, a, b);
 }
 
-void NDArray::assign_logical_and(Variant a, Variant b) const {
+Ref<NDArray> NDArray::assign_logical_and(Variant a, Variant b) {
 	BINARY_MAP(logical_and, a, b);
 }
 
-void NDArray::assign_logical_or(Variant a, Variant b) const {
+Ref<NDArray> NDArray::assign_logical_or(Variant a, Variant b) {
 	BINARY_MAP(logical_or, a, b);
 }
 
-void NDArray::assign_logical_not(Variant a) const {
+Ref<NDArray> NDArray::assign_logical_not(Variant a) {
 	UNARY_MAP(logical_not, a);
 }

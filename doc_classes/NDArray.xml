@@ -23,430 +23,430 @@
 				Convert to an array of the given type, but avoid copying data if possible.
 			</description>
 		</method>
-		<method name="assign_abs" qualifiers="const">
-			<return type="void" />
+		<method name="assign_abs">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
 				In-place version of nd.abs.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_acos" qualifiers="const">
-			<return type="void" />
+		<method name="assign_acos">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
 				In-place version of nd.acos.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_acosh" qualifiers="const">
-			<return type="void" />
+		<method name="assign_acosh">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
 				In-place version of nd.acosh.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_add" qualifiers="const">
-			<return type="void" />
+		<method name="assign_add">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
 				In-place version of nd.add.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_asin" qualifiers="const">
-			<return type="void" />
+		<method name="assign_asin">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
 				In-place version of nd.asin.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_asinh" qualifiers="const">
-			<return type="void" />
+		<method name="assign_asinh">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
 				In-place version of nd.asinh.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_atan" qualifiers="const">
-			<return type="void" />
+		<method name="assign_atan">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
 				In-place version of nd.atan.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_atan2" qualifiers="const">
-			<return type="void" />
+		<method name="assign_atan2">
+			<return type="NDArray" />
 			<param index="0" name="x1" type="Variant" />
 			<param index="1" name="x2" type="Variant" />
 			<description>
 				In-place version of nd.atan2.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_atanh" qualifiers="const">
-			<return type="void" />
+		<method name="assign_atanh">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
 				In-place version of nd.atanh.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_ceil" qualifiers="const">
-			<return type="void" />
+		<method name="assign_ceil">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
 				In-place version of nd.ceil.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_cos" qualifiers="const">
-			<return type="void" />
+		<method name="assign_cos">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
 				In-place version of nd.cos.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_cosh" qualifiers="const">
-			<return type="void" />
+		<method name="assign_cosh">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
 				In-place version of nd.cosh.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_deg2rad" qualifiers="const">
-			<return type="void" />
+		<method name="assign_deg2rad">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
 				In-place version of nd.deg2rad.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_divide" qualifiers="const">
-			<return type="void" />
+		<method name="assign_divide">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
 				In-place version of nd.divide.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_equal" qualifiers="const">
-			<return type="void" />
+		<method name="assign_equal">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
 				In-place version of nd.equal.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_exp" qualifiers="const">
-			<return type="void" />
+		<method name="assign_exp">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
 				In-place version of nd.exp.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_floor" qualifiers="const">
-			<return type="void" />
+		<method name="assign_floor">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
 				In-place version of nd.floor.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_greater" qualifiers="const">
-			<return type="void" />
+		<method name="assign_greater">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
 				In-place version of nd.greater.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_greater_equal" qualifiers="const">
-			<return type="void" />
+		<method name="assign_greater_equal">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
 				In-place version of nd.greater_equal.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_less" qualifiers="const">
-			<return type="void" />
+		<method name="assign_less">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
 				In-place version of nd.less.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_less_equal" qualifiers="const">
-			<return type="void" />
+		<method name="assign_less_equal">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
 				In-place version of nd.less_equal.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_log" qualifiers="const">
-			<return type="void" />
+		<method name="assign_log">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
 				In-place version of nd.log.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_logical_and" qualifiers="const">
-			<return type="void" />
+		<method name="assign_logical_and">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
 				In-place version of nd.logical_and.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_logical_not" qualifiers="const">
-			<return type="void" />
+		<method name="assign_logical_not">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
 				In-place version of nd.logical_not.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_logical_or" qualifiers="const">
-			<return type="void" />
+		<method name="assign_logical_or">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
 				In-place version of nd.logical_or.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_max" qualifiers="const">
-			<return type="void" />
+		<method name="assign_max">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" default="null" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				In-place version of nd.max.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_maximum" qualifiers="const">
-			<return type="void" />
+		<method name="assign_maximum">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
 				In-place version of nd.maximum.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_mean" qualifiers="const">
-			<return type="void" />
+		<method name="assign_mean">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" default="null" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				In-place version of nd.mean.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_min" qualifiers="const">
-			<return type="void" />
+		<method name="assign_min">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" default="null" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				In-place version of nd.min.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_minimum" qualifiers="const">
-			<return type="void" />
+		<method name="assign_minimum">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
 				In-place version of nd.minimum.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_multiply" qualifiers="const">
-			<return type="void" />
+		<method name="assign_multiply">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
 				In-place version of nd.multiply.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_norm" qualifiers="const">
-			<return type="void" />
+		<method name="assign_norm">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" default="null" />
 			<param index="1" name="ord" type="Variant" default="2" />
 			<param index="2" name="axes" type="Variant" default="null" />
 			<description>
 				In-place version of nd.norm.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_not_equal" qualifiers="const">
-			<return type="void" />
+		<method name="assign_not_equal">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
 				In-place version of nd.not_equal.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_pow" qualifiers="const">
-			<return type="void" />
+		<method name="assign_pow">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
 				In-place version of nd.pow.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_prod" qualifiers="const">
-			<return type="void" />
+		<method name="assign_prod">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" default="null" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				In-place version of nd.prod.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_rad2deg" qualifiers="const">
-			<return type="void" />
+		<method name="assign_rad2deg">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
 				In-place version of nd.rad2deg.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_remainder" qualifiers="const">
-			<return type="void" />
+		<method name="assign_remainder">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
 				In-place version of nd.remainder.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_rint" qualifiers="const">
-			<return type="void" />
+		<method name="assign_rint">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
 				In-place version of nd.rint.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_round" qualifiers="const">
-			<return type="void" />
+		<method name="assign_round">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
 				In-place version of nd.round.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_sign" qualifiers="const">
-			<return type="void" />
+		<method name="assign_sign">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
 				In-place version of nd.sign.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_sin" qualifiers="const">
-			<return type="void" />
+		<method name="assign_sin">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
 				In-place version of nd.sin.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_sinh" qualifiers="const">
-			<return type="void" />
+		<method name="assign_sinh">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
 				In-place version of nd.sinh.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_sqrt" qualifiers="const">
-			<return type="void" />
+		<method name="assign_sqrt">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
 				In-place version of nd.sqrt.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_std" qualifiers="const">
-			<return type="void" />
+		<method name="assign_std">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" default="null" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				In-place version of nd.std.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_subtract" qualifiers="const">
-			<return type="void" />
+		<method name="assign_subtract">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
 				In-place version of nd.subtract.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_sum" qualifiers="const">
-			<return type="void" />
+		<method name="assign_sum">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" default="null" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				In-place version of nd.sum.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_tan" qualifiers="const">
-			<return type="void" />
+		<method name="assign_tan">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
 				In-place version of nd.tan.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_tanh" qualifiers="const">
-			<return type="void" />
+		<method name="assign_tanh">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
 				In-place version of nd.tanh.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_trunc" qualifiers="const">
-			<return type="void" />
+		<method name="assign_trunc">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
 				In-place version of nd.trunc.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="assign_var" qualifiers="const">
-			<return type="void" />
+		<method name="assign_var">
+			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" default="null" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				In-place version of nd.var.
-				Assigns the result to this array. The shape of the result must be broadcastable to this array's shape.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
 		<method name="dtype" qualifiers="const">

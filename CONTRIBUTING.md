@@ -102,3 +102,11 @@ To get CLion support, run this:
 ```bash
 scons compiledb=yes compile_commands.json
 ```
+
+## For Maintainers
+
+### Releasing a Version
+
+First, edit the changelog to reflect that the upcoming changes are now in the latest version. Commit to git, and tag the commit with `release/x.x.x`. GitHub will automatically build the release.
+
+Download the resulting file from the runner. Rename and upload to the releases. Update the [asset store entry](https://godotengine.org/asset-library/asset/3351) to point to the latest release.

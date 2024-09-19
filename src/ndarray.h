@@ -82,6 +82,7 @@ public:
 
 	Ref<NDArray> assign_sign(Variant a);
 	Ref<NDArray> assign_abs(Variant a);
+	Ref<NDArray> assign_square(Variant a);
 	Ref<NDArray> assign_sqrt(Variant a);
 
 	Ref<NDArray> assign_exp(Variant a);

@@ -73,6 +73,7 @@ public:
 
 	static Ref<NDArray> sign(Variant a);
 	static Ref<NDArray> abs(Variant a);
+	static Ref<NDArray> square(Variant a);
 	static Ref<NDArray> sqrt(Variant a);
 
 	static Ref<NDArray> exp(Variant a);

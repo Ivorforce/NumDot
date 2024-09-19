@@ -99,6 +99,14 @@ void va::abs(VArrayTarget target, const VArray& array) {
     );
 }
 
+void va::square(VArrayTarget target, const VArray& array) {
+    xoperation_inplace<promote::num_function_result<xt::math::sqrt_fun>>(
+        va::XFunction<xt::square_fct> {},
+        target,
+        array.to_compute_variant()
+    );
+}
+
 void va::sqrt(VArrayTarget target, const VArray& array) {
     xoperation_inplace<promote::num_function_result<xt::math::sqrt_fun>>(
         va::XFunction<xt::math::sqrt_fun> {},

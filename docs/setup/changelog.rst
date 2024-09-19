@@ -19,6 +19,7 @@ Upcoming Changes (master branch)
 - Added the ``norm`` function (l0, l1, l2 and linf supported).
 - Added the ``logical_xor`` function.
 - Added the ``any`` and ``all`` functions.
+- Added the ``square`` function.
 - ``nd.array`` can now interpret multi-dimensional boolean arrays.
 
 **Changed**

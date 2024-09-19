@@ -495,6 +495,13 @@
 				Return the non-negative square-root of an array, element-wise.
 			</description>
 		</method>
+		<method name="square" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				Return the element-wise square of the input.
+			</description>
+		</method>
 		<method name="std" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" default="null" />

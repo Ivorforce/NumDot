@@ -126,6 +126,8 @@ Methods
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`assign_sqrt<class_NDArray_method_assign_sqrt>`\ (\ a\: ``Variant``\ )                                                          |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>` | :ref:`assign_square<class_NDArray_method_assign_square>`\ (\ a\: ``Variant``\ )                                                      |
+   +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`assign_std<class_NDArray_method_assign_std>`\ (\ a\: ``Variant`` = null, axes\: ``Variant`` = null\ )                          |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`assign_subtract<class_NDArray_method_assign_subtract>`\ (\ a\: ``Variant``, b\: ``Variant``\ )                                 |
@@ -845,6 +847,20 @@ Assigns the result to this array, and returns it. The shape of the result must b
 :ref:`NDArray<class_NDArray>` **assign_sqrt**\ (\ a\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_sqrt>`
 
 In-place version of nd.sqrt.
+
+Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_assign_square:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **assign_square**\ (\ a\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_square>`
+
+In-place version of nd.square.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 

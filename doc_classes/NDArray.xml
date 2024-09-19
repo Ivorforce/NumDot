@@ -410,6 +410,14 @@
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
+		<method name="assign_square">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				In-place version of nd.square.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
+			</description>
+		</method>
 		<method name="assign_std">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" default="null" />

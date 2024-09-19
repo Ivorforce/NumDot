@@ -150,6 +150,8 @@ Methods
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`sqrt<class_nd_method_sqrt>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                                      |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>` | :ref:`square<class_nd_method_square>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                                  |
+   +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`std<class_nd_method_std>`\ (\ a\: ``Variant`` = null, axes\: ``Variant`` = null\ ) |static|                                                                                                      |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`subtract<class_nd_method_subtract>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                             |
@@ -1050,6 +1052,18 @@ Size of a single element of an array using the dtype.
 :ref:`NDArray<class_NDArray>` **sqrt**\ (\ a\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_sqrt>`
 
 Return the non-negative square-root of an array, element-wise.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_square:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **square**\ (\ a\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_square>`
+
+Return the element-wise square of the input.
 
 .. rst-class:: classref-item-separator
 

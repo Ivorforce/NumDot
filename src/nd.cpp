@@ -89,6 +89,7 @@ void nd::_bind_methods() {
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("sign", "a"), &nd::sign);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("abs", "a"), &nd::abs);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("square", "a"), &nd::square);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("sqrt", "a"), &nd::sqrt);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("exp", "a"), &nd::exp);
@@ -456,6 +457,10 @@ Ref<NDArray> nd::sign(Variant a) {
 
 Ref<NDArray> nd::abs(Variant a) {
 	return UNARY_MAP(abs, a);
+}
+
+Ref<NDArray> nd::square(Variant a) {
+	return UNARY_MAP(square, a);
 }
 
 Ref<NDArray> nd::sqrt(Variant a) {

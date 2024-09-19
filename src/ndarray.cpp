@@ -65,6 +65,7 @@ void NDArray::_bind_methods() {
 
 	godot::ClassDB::bind_method(D_METHOD("assign_sign", "a"), &NDArray::assign_sign);
 	godot::ClassDB::bind_method(D_METHOD("assign_abs", "a"), &NDArray::assign_abs);
+	godot::ClassDB::bind_method(D_METHOD("assign_square", "a"), &NDArray::assign_square);
 	godot::ClassDB::bind_method(D_METHOD("assign_sqrt", "a"), &NDArray::assign_sqrt);
 
 	godot::ClassDB::bind_method(D_METHOD("assign_exp", "a"), &NDArray::assign_exp);
@@ -338,6 +339,10 @@ Ref<NDArray> NDArray::assign_sign(Variant a) {
 
 Ref<NDArray> NDArray::assign_abs(Variant a) {
 	UNARY_MAP(abs, a);
+}
+
+Ref<NDArray> NDArray::assign_square(Variant a) {
+	UNARY_MAP(square, a);
 }
 
 Ref<NDArray> NDArray::assign_sqrt(Variant a) {

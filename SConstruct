@@ -2,99 +2,92 @@
 import os
 import sys
 
-from methods import print_error
+from methods import print_error, print_warning
 
-
-def normalize_path(val, env):
-    return val if os.path.isabs(val) else os.path.join(env.Dir("#").abspath, val)
-
-
-def validate_parent_dir(key, val, env):
-    if not os.path.isdir(normalize_path(os.path.dirname(val), env)):
-        raise UserError("'%s' is not a directory: %s" % (key, os.path.dirname(val)))
-
-
-libname = "numdot"
-projectdir = "demo"
-
-localEnv = Environment(tools=["default"], PLATFORM="")
-
-customs = ["custom.py"]
-customs = [os.path.abspath(path) for path in customs]
-
-opts = Variables(customs, ARGUMENTS)
-opts.Add(
-    BoolVariable(
-        key="compiledb",
-        help="Generate compilation DB (`compile_commands.json`) for external tools",
-        default=localEnv.get("compiledb", False),
-    )
-)
-opts.Add(
-    PathVariable(
-        key="compiledb_file",
-        help="Path to a custom `compile_commands.json` file",
-        default=localEnv.get("compiledb_file", "compile_commands.json"),
-        validator=validate_parent_dir,
-    )
-)
-opts.Update(localEnv)
-
-Help(opts.GenerateHelpText(localEnv))
-
-env = localEnv.Clone()
-# To read up on why exceptions must be enabled, read further below.
-env['disable_exceptions'] = False
-env["compiledb"] = False
-
-env.Tool("compilation_db")
-compilation_db = env.CompilationDatabase(
-    normalize_path(localEnv["compiledb_file"], localEnv)
-)
-env.Alias("compiledb", compilation_db)
-
-submodule_initialized = False
-dir_name = 'godot-cpp'
-if os.path.isdir(dir_name):
-    if os.listdir(dir_name):
-        submodule_initialized = True
-
-if not submodule_initialized:
-    print_error("""godot-cpp is not available within this folder, as Git submodules haven't been initialized.
+if not (os.path.isdir("godot-cpp") and os.listdir("godot-cpp")):
+    print_error("""godot-cpp is not available within this folder, as Git submodules haven"t been initialized.
 Run the following command to download godot-cpp:
 
     git submodule update --init --recursive""")
     sys.exit(1)
 
+# ============================= Project Setup =============================
+
+libname = "numdot"
+projectdir = "demo"
+
+env = Environment(tools=["default"], PLATFORM="")
+
+# Load variables from custom.py, in case someone wants to store their own arguments.
+customs = ["custom.py"]
+customs = [os.path.abspath(path) for path in customs]
+opts = Variables(customs, ARGUMENTS)
+
+# ============================= Change defaults of godot-cpp =============================
+
+# To read up on why exceptions should be enabled, read further below.
+if ARGUMENTS.get("disable_exceptions", None):
+    raise ValueError("NumDot does not currently support compiling without exceptions.")
+ARGUMENTS["disable_exceptions"] = False
+
+target = ARGUMENTS.get("target", "template_debug")
+is_release = target == "template_release"
+
+if ARGUMENTS.get("optimize", None) is None:
+    # The default godot-cpp optimizes for speed
+    if not is_release:
+        # In dev, prioritize fast builds.
+        # Godot-cpp defaults to optimizing speed (wat?).
+        ARGUMENTS["optimize"] = "none"
+    else:
+        # On release, prioritize binary size. Most speed gains will be from vectorization, not regular code.
+        ARGUMENTS["optimize"] = "size"
+
+# env["debug_symbols"] == False will strip debug symbols.
+# It is False by default, unless dev_build is True.
+# dev_build is a flag that should only be used by engine developers (supposedly).
+
+# Load godot-cpp
 env = SConscript("godot-cpp/SConstruct", {"env": env, "customs": customs})
 
-# Web "requires target feature 'simd128'", we should solve that but for now let's just disable simd on web.
+# ============================= Change flags based on setup =============================
+
+is_msvc = "is_msvc" in env and env["is_msvc"]
+assert is_release == (env["target"] == "template_release")
+
+# Web "requires target feature "simd128"", we should solve that but for now let"s just disable simd on web.
 if env["platform"] not in ["web"]:
-    env.Append(CPPFLAGS=[
+    env.Append(CCFLAGS=[
         # See https://xtensor.readthedocs.io/en/latest/build-options.html
         # See https://github.com/xtensor-stack/xsimd for supported list of simd extensions.
         # Choosing more will make your program faster, but also more incompatible to older machines.
-        '-DXTENSOR_USE_XSIMD=1',
+        "-DXTENSOR_USE_XSIMD=1",
     ])
 
-if env["platform"] in ["macos", "ios"]:
-    env.Append(CPPFLAGS=[
-        # Simd extensions
-        # For now let's keep it blank because some SIMD extensions should be available by default anyway.
-#         '-msse2', '-msse3', '-msse4.1', '-msse4.2', '-mavx'
-    ])
-if env["platform"] in ["windows"]:
-    # bigobj is needed because we have very large functions due to templates:
-    # C1128: "number of sections exceeded object file format limit : compile with /bigobj
-    if "msvc" in env["TOOLS"]:
-        env.Append(CPPFLAGS=['/bigobj'])
+if env["platform"] == "windows":
+    # At least the github runner needs bigobj to be enabled (otherwise it crashes).
+    # is_msvc is set by godot-cpp.
+    if is_msvc:
+        env.Append(CCFLAGS=["/bigobj"])
     else:
-        # Supposedly it should be -Wa,-mbigobj but -bigobj has worked more reliably.
-        env.Append(CPPFLAGS=['-bigobj'])
+        env.Append(CCFLAGS=["-Wa,-mbigobj"])
 
-# You can also use '-march=native' instead, which will enable everything your computer has.
+# TODO Figure out MSVC equivalents
+if is_release:
+    # Enable link-time optimization.
+    # This further lets the compiler optimize, reduce binary size (~.5mb) or inline functions (possibly improving speeds).
+    if is_msvc:
+        env.Append(CCFLAGS=["/GL"])
+        env.Append(LINKFLAGS=["/LTCG"])
+    else:
+        env.Append(CCFLAGS=["-flto"])
+        env.Append(LINKFLAGS=["-flto"])
+
+# You can also use "-march=native", which should enable all simd architectures your computer supports.
 # Keep in mind the resulting binary will likely not work on many other computers.
-#env.Append(CPPFLAGS=['-march=native'])
+#env.Append(CCFLAGS=["-march=native"])
+
+# ============================= Actual source and lib setup =============================
 
 env.Append(CPPPATH=["xtl/include", "xsimd/include", "xtensor/include"])
 
@@ -124,6 +117,4 @@ library = env.SharedLibrary(
 copy = env.Install("{}/addons/{}/{}/{}".format(projectdir, libname, env["platform"], filepath), library),
 
 default_args = [library, copy]
-if localEnv.get("compiledb", False):
-    default_args += [compilation_db]
 Default(*default_args)

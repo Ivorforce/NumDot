@@ -106,20 +106,19 @@ if env["target"] in ["editor", "template_debug", "template_release"]:
     except AttributeError:
         print("Not including class reference as we're targeting a pre-4.3 baseline.")
 
-lib_filename = "{}{}{}{}".format(env.subst("$SHLIBPREFIX"), libname, env["suffix"], env.subst("$SHLIBSUFFIX"))
+# Filename of the library.
+lib_filename = f"{env.subst('$SHLIBPREFIX')}{libname}.{env['platform']}.{env['arch']}{env.subst('$SHLIBSUFFIX')}"
+# Build releases into build/, and debug into demo/.
+lib_basepath = "build/" if env["target"] == "template_release" else f"{projectdir}/"
 lib_filepath = ""
 
 if env["platform"] == "macos" or env["platform"] == "ios":
     # For signing, the dylibs need to be in a folder, along with the plist files.
     lib_filepath = "{}-{}.framework/".format(libname, env["platform"])
 
-libraryfile = "build/addons/{}/{}/{}{}".format(libname, env["platform"], lib_filepath, lib_filename)
 library = env.SharedLibrary(
-    libraryfile,
+    f"{lib_basepath}addons/{libname}/{env['platform']}/{lib_filepath}{lib_filename}",
     source=sources,
 )
 
-copy = env.Install("{}/addons/{}/{}/{}".format(projectdir, libname, env["platform"], lib_filepath), library),
-
-default_args = [library, copy]
-Default(*default_args)
+Default(library)

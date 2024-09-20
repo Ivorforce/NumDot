@@ -10,7 +10,7 @@ Here you will find the release notes for each version of the library. Each secti
    :local:
    :backlinks: none
 
-Version 0.2 - 2024-09-19
+Version 0.2 - 2024-09-20
 -----------------
 **Added**
 

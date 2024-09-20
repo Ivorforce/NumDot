@@ -40,8 +40,13 @@ if ARGUMENTS.get("optimize", None) is None:
         # Godot-cpp defaults to optimizing speed (wat?).
         ARGUMENTS["optimize"] = "none"
     else:
-        # On release, prioritize binary size. Most speed gains will be from vectorization, not regular code.
-        ARGUMENTS["optimize"] = "size"
+        # On release, optimize by default.
+        if env["platform"] == "web":
+            # For web, optimize binary size, can shrink by ~30%.
+            ARGUMENTS["optimize"] = "size"
+        else:
+            # For download, optimize performance, can increase by 2% to 30%.
+            ARGUMENTS["optimize"] = "speed"
 
 # env["debug_symbols"] == False will strip debug symbols.
 # It is False by default, unless dev_build is True.

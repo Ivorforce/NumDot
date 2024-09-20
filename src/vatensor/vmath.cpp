@@ -109,9 +109,18 @@ void va::abs(VArrayTarget target, const VArray& array) {
     );
 }
 
+// TODO xt::square uses xt::square_fct, which is hidden behind an ifdef.
+//  This function is rather harmless, so no idea why, but we can just re-declare it.
+struct square_fun {
+    template <class T>
+    auto operator()(T x) const -> decltype(x * x) {
+        return x * x;
+    }
+};
+
 void va::square(VArrayTarget target, const VArray& array) {
     xoperation_inplace<promote::num_function_result<xt::math::sqrt_fun>>(
-        va::XFunction<xt::square_fct> {},
+        va::XFunction<square_fun> {},
         target,
         array.to_compute_variant()
     );

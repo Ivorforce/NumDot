@@ -64,7 +64,7 @@ jobs:
           APPLE_CERT_BASE64: ${{ secrets.APPLE_CERT_BASE64 }}
         uses: godotengine/godot-cpp-template/.github/actions/sign@main
         with:
-          FRAMEWORK_PATH: addons/numdot/macos/numdot-macos.framework
+          FRAMEWORK_PATH: build/addons/numdot/macos/numdot-macos.framework
           APPLE_CERT_BASE64: ${{ secrets.APPLE_CERT_BASE64 }}
           APPLE_CERT_PASSWORD: ${{ secrets.APPLE_CERT_PASSWORD }}
           APPLE_DEV_PASSWORD: ${{ secrets.APPLE_DEV_PASSWORD }}
@@ -76,7 +76,7 @@ jobs:
         with:
           name: GDExtension-${{ matrix.platform }}-${{ matrix.arch }}
           path: |
-            ${{ github.workspace }}/addons/numdot/**
+            ${{ github.workspace }}/build/**
   merge:
     runs-on: ubuntu-latest
     needs: build

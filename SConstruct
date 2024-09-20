@@ -113,7 +113,7 @@ if env["platform"] == "macos" or env["platform"] == "ios":
     # For signing, the dylibs need to be in a folder, along with the plist files.
     lib_filepath = "{}-{}.framework/".format(libname, env["platform"])
 
-libraryfile = "addons/{}/{}/{}{}".format(libname, env["platform"], lib_filepath, lib_filename)
+libraryfile = "build/addons/{}/{}/{}{}".format(libname, env["platform"], lib_filepath, lib_filename)
 library = env.SharedLibrary(
     libraryfile,
     source=sources,

@@ -43,5 +43,10 @@ __pycache__
 .scons_node_count
 
 # Scons generated
-compile_commands.json
-src/gen
+/compile_commands.json
+/src/gen
+
+# Build
+/build/addons/numdot/**/*
+!build/addons/numdot/**/
+!build/addons/numdot/**/*.plist

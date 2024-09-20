@@ -12,11 +12,11 @@ macos.release = "macos/numdot-macos.framework/libnumdot.macos.template_release"
 ios.debug = "ios/numdot-ios.framework/libnumdot.ios.template_debug"
 ios.release = "ios/numdot-ios.framework/libnumdot.ios.template_release"
 
-windows.debug.x86_32 = "windows/libnumdot.windows.template_debug.x86_32.dll"
-windows.release.x86_32 = "windows/libnumdot.windows.template_release.x86_32.dll"
+windows.debug.x86_32 = "windows/numdot.windows.template_debug.x86_32.dll"
+windows.release.x86_32 = "windows/numdot.windows.template_release.x86_32.dll"
 
-windows.debug.x86_64 = "windows/libnumdot.windows.template_debug.x86_64.dll"
-windows.release.x86_64 = "windows/libnumdot.windows.template_release.x86_64.dll"
+windows.debug.x86_64 = "windows/numdot.windows.template_debug.x86_64.dll"
+windows.release.x86_64 = "windows/numdot.windows.template_release.x86_64.dll"
 
 linux.debug.x86_64 = "linux/libnumdot.linux.template_debug.x86_64.so"
 linux.release.x86_64 = "linux/libnumdot.linux.template_release.x86_64.so"

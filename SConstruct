@@ -41,7 +41,7 @@ if ARGUMENTS.get("optimize", None) is None:
         ARGUMENTS["optimize"] = "none"
     else:
         # On release, optimize by default.
-        if env["platform"] == "web":
+        if ARGUMENTS["platform"] == "web":
             # For web, optimize binary size, can shrink by ~30%.
             ARGUMENTS["optimize"] = "size"
         else:

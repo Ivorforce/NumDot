@@ -22,6 +22,7 @@ Version 0.2 - 2024-09-19
 - Added the ``square`` function.
 - Added the ``clip`` function.
 - ``nd.array`` can now interpret multi-dimensional boolean arrays.
+- Documentation is now available in the editor.
 
 **Changed**
 

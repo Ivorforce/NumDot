@@ -99,7 +99,7 @@ env.Append(CPPPATH=["xtl/include", "xsimd/include", "xtensor/include"])
 env.Append(CPPPATH=["src/"])
 sources = Glob("src/*.cpp") + Glob("src/*/*.cpp")
 
-if env["target"] in ["editor", "template_debug"]:
+if env["target"] in ["editor", "template_debug", "template_release"]:
     try:
         doc_data = env.GodotCPPDocData("src/gen/doc_data.gen.cpp", source=Glob("doc_classes/*.xml"))
         sources.append(doc_data)

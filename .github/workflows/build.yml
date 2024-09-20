@@ -56,8 +56,8 @@ jobs:
           arch: ${{ matrix.arch }}
           float-precision: single
           build-target-type: template_release
-          godot-cpp_folder: 'godot-cpp'
-          gdextension_folder: '.'
+          godot-cpp_folder: 'godot-cpp/'
+          gdextension_folder: ''
       - name: Mac Sign
         if: ${{ matrix.platform == 'macos' && env.APPLE_CERT_BASE64 }}
         env:

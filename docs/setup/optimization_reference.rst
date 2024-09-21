@@ -18,7 +18,7 @@ That being said, here is some information about the most interesting options:
 
 - ``optimize`` (``size``, ``speed`` or ``speed_trace``):
 
-    - Sets compiler flags ``-Os``, ``-O3`` or ``-O2``, respectively. You can achieve up to 50% decrease in binary size, or increase of performance, with different values.
+    - Sets compiler flags ``-Os``, ``-O3`` or ``-O2``, respectively. You can achieve up to 50% decrease in binary size, or increase of performance, with different values. ``speed_trace`` is a slightly weaker version of ``speed`` and not recommended.
 
 - ``define=NUMDOT_ASSIGN_INPLACE_DIRECTLY_INSTEAD_OF_COPYING_FIRST``
 
@@ -26,7 +26,7 @@ That being said, here is some information about the most interesting options:
 
 - ``define=NUMDOT_CAST_INSTEAD_OF_COPY_FOR_ARGUMENTS``
 
-    - Optimize wrong-type argument conversion (e.g. ``nd.sqrt(5)``, which is automatically promoted to ``float64``). This improves their performance, but also increases binary size a lot.
+    - Optimize wrong-type argument conversion (e.g. ``nd.sqrt``, which promotes int arguments to ``float64``). The argument improves performance of cross datatype conversions, but also increases binary size.
 
 **Note:** You can have as many ``define=[...]`` arguments as you wish.
 

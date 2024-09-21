@@ -3,16 +3,16 @@
 Custom Builds
 =============
 
-To build NumDot yourself, you will need basic proficiency with the command line. You will also need to have developer tools installed.
+To build NumDot yourself, you will need basic proficiency with ``git`` and the command line. You will also need to have `Scons <https://scons.org>`_ installed.
 
 Beyond that, your level of expertise defines the amount of things you can change: Some optimizations are very accessible, with no programming knowledge needed, while some may require you to dive into the code yourself.
 
 Setup Considerations
 --------------------
 
-Godot is a multi-platform project. That means making custom builds involve building on multiple platforms. Usually, this is very difficult, but Continuous Integration makes this *very easy* by comparison.
+Godot is a multi-platform project. That means making custom builds involve building on multiple platforms. Usually, this is very difficult, but continuous integration (CI) a lot easier.
 
-NumDot already has Continuous Integration configured. To make use of it, you just need fork the repository, and make your changes. This means that: To do that, make an account on `GitHub <https://github.com>`_. Visit the `NumDot Repository <https://github.com/Ivorforce/NumDot>`_, and at the top, click "Fork".
+NumDot already has CI configured. To make use of it, you need fork the repository, make your changes, and tag a release. To start, make an account on `GitHub <https://github.com>`_. Visit the `NumDot Repository <https://github.com/Ivorforce/NumDot>`_, and at the top, click "Fork".
 
 Then, continue with the setup.
 
@@ -38,7 +38,7 @@ To set up the codebase, you need to build godot-cpp once:
 Building NumDot locally
 -----------------------
 
-You should test your changes locally before submitting anything. The 'demo' project exists for this reason. You can make a local build like so:
+You should test your changes locally before submitting anything. The ``demo`` project exists for this reason. You can make a local build like so:
 
 .. code-block:: bash
 
@@ -61,7 +61,7 @@ You've set up your repository, and you've managed to test NumDot in the demo. Gr
 Making a cross-platform build
 -----------------------------
 
-If you've forked the repository, all you need to do is tag a release:
+If you've forked the repository before, all you need to do now is tag a release:
 
 .. code-block:: bash
 

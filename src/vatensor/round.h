@@ -1,8 +1,8 @@
 #ifndef ROUND_H
 #define ROUND_H
 
+#include "auto_defines.h"
 #include "varray.h"
-
 
 namespace va {
     void ceil(VArrayTarget target, const VArray& array);

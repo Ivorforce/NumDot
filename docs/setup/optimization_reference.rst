@@ -41,6 +41,28 @@ You can test building with these options locally. To get them to be permanent, e
         env.Append(CPPDEFINES=["NUMDOT_XXX"])  # For all C macros (``define=``).
 
 
+Disabling Features
+------------------
+
+One of the easiest ways to save space is to disable features you don't need. Any disabled functions will error when they are called, instead of evaluating. To disable a feature, pass its macro into a ``define`` argument, like above, e.g.:
+
+``define=NUMDOT_DISABLE_ALL_OPTIONAL_FUNCTIONS``
+
+**Toggleable features:**
+
+- ``NUMDOT_DISABLE_ALL_OPTIONAL_FUNCTIONS``: Same as passing all flags below individually. Brings the binary size to ~15% (~1.5mb).
+
+    - One reason to pass this flag may be to use the NumDot codebase to interface with xtensor directly, or to 're-enable' needed functions by removing their disable macros in-code.
+
+- ``NUMDOT_DISABLE_ALLOCATION_FUNCTIONS``
+- ``NUMDOT_DISABLE_COMPARISON_FUNCTIONS``
+- ``NUMDOT_DISABLE_LOGICAL_FUNCTIONS``
+- ``NUMDOT_DISABLE_REDUCTION_FUNCTIONS``
+- ``NUMDOT_DISABLE_ROUNDING_FUNCTIONS``
+- ``NUMDOT_DISABLE_TRIGONOMETRY_FUNCTIONS``
+- ``NUMDOT_DISABLE_MATH_FUNCTIONS``
+- ``NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS``
+
 Editing Code
 ------------
 

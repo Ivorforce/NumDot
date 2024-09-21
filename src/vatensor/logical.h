@@ -1,6 +1,7 @@
 #ifndef LOGICAL_H
 #define LOGICAL_H
 
+#include "auto_defines.h"
 #include "varray.h"
 
 namespace va {

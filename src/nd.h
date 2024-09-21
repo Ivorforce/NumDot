@@ -1,6 +1,7 @@
 #ifndef NUMDOT_ND_H
 #define NUMDOT_ND_H
 
+#include "vatensor/auto_defines.h"
 #include <cstdint>                            // for int64_t, uint64_t
 #include <godot_cpp/classes/ref.hpp>          // for Ref
 #include <godot_cpp/core/binder_common.hpp>   // for VARIANT_ENUM_CAST

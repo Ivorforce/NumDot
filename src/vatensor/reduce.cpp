@@ -63,79 +63,131 @@ struct All { ReducerAnyAll(All, va_all, xt::all) };
 struct Any { ReducerAnyAll(Any, va_any, xt::any) };
 
 void va::sum(VArrayTarget target, const VArray& array, const Axes &axes) {
+#ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
+	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
+#else
 	va::xreduction_inplace<promote::num_common_type>(
 		Sum{}, axes, target, array.to_compute_variant()
 	);
+#endif
 }
 
 void va::prod(VArrayTarget target, const VArray& array, const Axes &axes) {
+#ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
+	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
+#else
 	va::xreduction_inplace<promote::num_at_least_int32>(
 		Prod{}, axes, target, array.to_compute_variant()
 	);
+#endif
 }
 
 void va::mean(VArrayTarget target, const VArray& array, const Axes &axes) {
+#ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
+	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
+#else
 	va::xreduction_inplace<promote::num_matching_float_or_default<double_t>>(
 		Mean{}, axes, target, array.to_compute_variant()
 	);
+#endif
 }
 
 void va::var(VArrayTarget target, const VArray& array, const Axes &axes) {
+#ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
+	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
+#else
 	va::xreduction_inplace<promote::num_matching_float_or_default<double_t>>(
 		Variance{}, axes, target, array.to_compute_variant()
 	);
+#endif
 }
 
 void va::std(VArrayTarget target, const VArray& array, const Axes &axes) {
+#ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
+	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
+#else
 	va::xreduction_inplace<promote::num_matching_float_or_default<double_t>>(
 		Std{}, axes, target, array.to_compute_variant()
 	);
+#endif
 }
 
 void va::max(VArrayTarget target, const VArray& array, const Axes &axes) {
+#ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
+	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
+#else
 	va::xreduction_inplace<promote::num_common_type>(
 		Amax{}, axes, target, array.to_compute_variant()
 	);
+#endif
 }
 
 void va::min(VArrayTarget target, const VArray& array, const Axes &axes) {
+#ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
+	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
+#else
 	va::xreduction_inplace<promote::num_common_type>(
 		Amin{}, axes, target, array.to_compute_variant()
 	);
+#endif
 }
 
 void va::norm_l0(VArrayTarget target, const VArray &array, const Axes &axes) {
+#ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
+	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
+#else
 	va::xreduction_inplace<promote::num_matching_float_or_default<double_t>>(
 		NormL0{}, axes, target, array.to_compute_variant()
 	);
+#endif
 }
 
 void va::norm_l1(VArrayTarget target, const VArray &array, const Axes &axes) {
+#ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
+	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
+#else
 	va::xreduction_inplace<promote::num_matching_float_or_default<double_t>>(
 		NormL1{}, axes, target, array.to_compute_variant()
 	);
+#endif
 }
 
 void va::norm_l2(VArrayTarget target, const VArray &array, const Axes &axes) {
+#ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
+	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
+#else
 	va::xreduction_inplace<promote::num_matching_float_or_default<double_t>>(
 		NormL2{}, axes, target, array.to_compute_variant()
 	);
+#endif
 }
 
 void va::norm_linf(VArrayTarget target, const VArray &array, const Axes &axes) {
+#ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
+	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
+#else
 	va::xreduction_inplace<promote::num_matching_float_or_default<double_t>>(
 		NormLInf{}, axes, target, array.to_compute_variant()
 	);
+#endif
 }
 
 void va::all(VArrayTarget target, const VArray &array, const Axes &axes) {
+#ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
+	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
+#else
 	va::xreduction_inplace<promote::bool_in_bool_out>(
 		All{}, axes, target, array.to_compute_variant()
 	);
+#endif
 }
 
 void va::any(VArrayTarget target, const VArray &array, const Axes &axes) {
+#ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
+	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
+#else
 	va::xreduction_inplace<promote::bool_in_bool_out>(
 		Any{}, axes, target, array.to_compute_variant()
 	);
+#endif
 }

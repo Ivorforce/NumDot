@@ -1,6 +1,7 @@
 #ifndef TRIGONOMETRY_H
 #define TRIGONOMETRY_H
 
+#include "auto_defines.h"
 #include "varray.h"
 
 namespace va {

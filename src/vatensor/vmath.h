@@ -1,6 +1,7 @@
 #ifndef VMATH_H
 #define VMATH_H
 
+#include "auto_defines.h"
 #include "varray.h"
 
 namespace va {

@@ -212,6 +212,9 @@ va::VArray variant_as_array(const Variant& array) {
 }
 
 Array varray_to_godot_array(const va::VArray& array) {
+#ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
+    throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
+#else
     Array godot_array = Array();
 
     // TODO Non-flat
@@ -225,4 +228,5 @@ Array varray_to_godot_array(const va::VArray& array) {
     }, array.to_compute_variant());
 
     return godot_array;
+#endif
 }

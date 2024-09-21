@@ -326,6 +326,9 @@ Ref<NDArray> nd::ones(Variant shape, nd::DType dtype) {
 }
 
 Ref<NDArray> nd::linspace(Variant start, Variant stop, int64_t num, bool endpoint, DType dtype) {
+#ifdef NUMDOT_DISABLE_ALLOCATION_FUNCTIONS
+	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_ALLOCATION_FUNCTIONS to enable it.");
+#else
 	if (dtype == DType::DTypeMax) {
 		dtype = start.get_type() == Variant::FLOAT || stop.get_type() == Variant::FLOAT
 			? nd::DType::Float64
@@ -350,9 +353,13 @@ Ref<NDArray> nd::linspace(Variant start, Variant stop, int64_t num, bool endpoin
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
 	}
+#endif
 }
 
 Ref<NDArray> nd::arange(Variant start_or_stop, Variant stop, Variant step, DType dtype) {
+#ifdef NUMDOT_DISABLE_ALLOCATION_FUNCTIONS
+	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_ALLOCATION_FUNCTIONS to enable it.");
+#else
 	if (dtype == DType::DTypeMax) {
 		dtype = start_or_stop.get_type() == Variant::FLOAT || stop.get_type() == Variant::FLOAT || step.get_type() == Variant::FLOAT
 			? nd::DType::Float64
@@ -383,6 +390,7 @@ Ref<NDArray> nd::arange(Variant start_or_stop, Variant stop, Variant step, DType
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
 	}
+#endif
 }
 
 Ref<NDArray> nd::transpose(Variant a, Variant permutation) {

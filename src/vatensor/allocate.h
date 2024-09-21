@@ -1,6 +1,7 @@
 #ifndef ALLOCATE_H
 #define ALLOCATE_H
 
+#include "auto_defines.h"
 #include "varray.h"
 
 namespace va {

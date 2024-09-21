@@ -1,5 +1,7 @@
 #ifndef REDUCE_H
 #define REDUCE_H
+
+#include "auto_defines.h"
 #include "varray.h"
 
 namespace va {

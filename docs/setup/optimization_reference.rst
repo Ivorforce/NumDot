@@ -51,9 +51,6 @@ One of the easiest ways to save space is to disable features you don't need. Any
 **Toggleable features:**
 
 - ``NUMDOT_DISABLE_ALL_OPTIONAL_FUNCTIONS``: Same as passing all flags below individually. Brings the binary size to ~15% (~1.5mb).
-
-    - One reason to pass this flag may be to use the NumDot codebase to interface with xtensor directly, or to 're-enable' needed functions by removing their disable macros in-code.
-
 - ``NUMDOT_DISABLE_ALLOCATION_FUNCTIONS``
 - ``NUMDOT_DISABLE_COMPARISON_FUNCTIONS``
 - ``NUMDOT_DISABLE_LOGICAL_FUNCTIONS``
@@ -62,6 +59,18 @@ One of the easiest ways to save space is to disable features you don't need. Any
 - ``NUMDOT_DISABLE_TRIGONOMETRY_FUNCTIONS``
 - ``NUMDOT_DISABLE_MATH_FUNCTIONS``
 - ``NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS``
+
+You can also pass ``NUMDOT_DISABLE_ALL_OPTIONAL_FUNCTIONS`` to disable all functions, and only enable those you need. Enable macros have precedence over disable macros.
+
+- ``NUMDOT_ENABLE_ALLOCATION_FUNCTIONS``
+- ``NUMDOT_ENABLE_COMPARISON_FUNCTIONS``
+- ``NUMDOT_ENABLE_LOGICAL_FUNCTIONS``
+- ``NUMDOT_ENABLE_REDUCTION_FUNCTIONS``
+- ``NUMDOT_ENABLE_ROUNDING_FUNCTIONS``
+- ``NUMDOT_ENABLE_TRIGONOMETRY_FUNCTIONS``
+- ``NUMDOT_ENABLE_MATH_FUNCTIONS``
+- ``NUMDOT_ENABLE_GODOT_CONVERSION_FUNCTIONS``
+
 
 Editing Code
 ------------

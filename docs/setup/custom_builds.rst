@@ -23,7 +23,7 @@ First, clone the repository:
 
 .. code-block:: bash
 
-    git clone https://github.com/YourName/NumDot
+    git clone --recurse-submodules https://github.com/YourName/NumDot
     cd NumDot
 
 To set up the codebase, you need to build godot-cpp once:

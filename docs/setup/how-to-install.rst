@@ -25,6 +25,6 @@ You may want to manually build NumDot, for example to:
 
 - **Reduce Build Size:** The default NumDot build is fairly large. You can compile it with fewer features to reduce the binary size.
 - **Adjust Optimization Options:** You can optimize your build for different targets, e.g. speed, size and compatibility.
-- **Custom Extension:** You can extend NumDot's functionality by interfacing with `xtensor <http://xtensor.readthedocs.io>`__ directly, substantially improving performance of individual computations.
+- **Custom Extensions:** You can extend NumDot's functionality by interfacing with `xtensor <http://xtensor.readthedocs.io>`__ directly, substantially improving performance of individual computations.
 
 To get started with manual builds, continue reading: :ref:`Custom Builds<doc_custom_builds>`

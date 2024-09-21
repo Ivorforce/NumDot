@@ -75,6 +75,8 @@ You can also pass ``NUMDOT_DISABLE_ALL_OPTIONAL_FUNCTIONS`` to disable all funct
 Editing Code
 ------------
 
-The most powerful way to get more out of NumDot is to edit its code.
+The most powerful way to get more out of NumDot is to edit its code. For example, you could add functions that interface with ``xtensor`` directly, performing a specific operation you need. This operation will be both extremely fast *and* have a small binary size, so in some cases it may be worth it to go this far.
 
-You're on your own here, but you'll need decent knowledge of C++ to make it work. See `Contributing.md <https://github.com/Ivorforce/NumDot/blob/main/CONTRIBUTING.md>`_ for a short introduction into its architecture.
+You'll need decent knowledge of C++ to make it work. See `Contributing.md <https://github.com/Ivorforce/NumDot/blob/main/CONTRIBUTING.md>`_ for a short introduction into its architecture.
+
+If you need any help, we're happy to assist. Come by our `Discord Server <https://discord.gg/hxuWcAXF>`_ and have a chat.

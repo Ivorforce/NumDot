@@ -22,36 +22,9 @@ You don't need to be proficient with all of these technologies to help! Check ou
 
 ## Making a contribution
 
-### Setup
+Setting up the project is covered on the docs: [Custom Builds](https://numdot.readthedocs.io/en/latest/setup/custom_builds.html)
 
-Set up the project:
-```bash
-# Clone the repository
-git clone https://github.com/YourUsername/NumDot
-cd numdot
-
-# Need to do this once at the start
-cd godot-cpp
-# Replace platform with one of [macos, windows, linux]
-scons platform=<platform> custom_api_file=../extension_api.json
-cd ..
-
-# Make a branch for your changes
-git checkout -b my-new-feature
-```
-
-### Building
-
-You can build the project as such:
-```bash
-# Replace platform with one of [macos, windows, linux]
-scons platform=<platform> build_dir=demo
-```
-**For Windows Users:** It is recommended to use [MinGW](https://www.mingw-w64.org/) to compile the project, as it more closely mimics Unix build semantics than MSVC. MinGW must be added to `PATH`, and specified in the build command like so:
-
-```bash
-scons platform=windows build_dir=demo use-mingw=yes
-```
+Additionally, please make sure you adhere to code style guideline, and update documentation, as described below.
 
 ### Include Policy
 
@@ -96,17 +69,3 @@ Finally, [make a Pull Request (PR)](https://github.com/Ivorforce/NumDot/compare)
 ## Any Problems?
 
 Please [come by our Discord and have a chat with us](https://discord.gg/hxuWcAXF). We are happy you want to help, and should be able to help you make a contribution.
-
-## CLion Support
-To get CLion support, run this:
-```bash
-scons compiledb=yes compile_commands.json
-```
-
-## For Maintainers
-
-### Releasing a Version
-
-First, edit the changelog to reflect that the upcoming changes are now in the latest version. Commit to git, and tag the commit with `release/x.x.x`. GitHub will automatically build the release.
-
-Download the resulting file from the runner. Rename and upload to the releases. Update the [asset store entry](https://godotengine.org/asset-library/asset/3351) to point to the latest release.

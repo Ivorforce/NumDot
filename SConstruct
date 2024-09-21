@@ -15,7 +15,13 @@ Run the following command to download godot-cpp:
 
 libname = "numdot"
 
-env = Environment(tools=["default"], PLATFORM="")
+# Allow additional defines, see https://scons.org/doc/production/HTML/scons-user/ch10s02.html
+cppdefines = []
+for key, value in ARGLIST:
+    if key == 'define':
+        cppdefines.append(value)
+
+env = Environment(tools=["default"], PLATFORM="", CPPDEFINES=cppdefines)
 
 # Load variables from custom.py, in case someone wants to store their own arguments.
 customs = ["custom.py"]
@@ -30,6 +36,10 @@ opts.Add(
 )
 opts.Update(env)
 
+# TODO If we don't delete our own arguments, the godot-cpp SConscript will complain.
+# There must be a better way?
+ARGUMENTS.pop("build_dir", None)
+ARGUMENTS.pop("define", None)
 
 # ============================= Change defaults of godot-cpp =============================
 
@@ -59,6 +69,12 @@ if ARGUMENTS.get("optimize", None) is None:
 # env["debug_symbols"] == False will strip debug symbols.
 # It is False by default, unless dev_build is True.
 # dev_build is a flag that should only be used by engine developers (supposedly).
+
+# CUSTOM BUILD FLAGS
+# Add your build flags here:
+# if is_release:
+#     ARGUMENTS["optimize"] = "speed"  # For normal flags, like optimize
+#     env.Append(CPPDEFINES=["NUMDOT_XXX"])  # For all C macros (``define=``).
 
 # Load godot-cpp
 env = SConscript("godot-cpp/SConstruct", {"env": env, "customs": customs})

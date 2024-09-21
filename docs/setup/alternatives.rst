@@ -49,7 +49,7 @@ Note: You may want to consider `TensorFlow <https://www.tensorflow.org>`_ for ex
 xtensor
 -------
 
-`xtensor <https://github.com/xtensor-stack/xtensor>`_ is a numpy-like library made for C++ developers. NumDot uses xtensor under the hood. If you want to use xtensor, consider forking or extending NumDot instead, using a :ref:`manual build<doc_how_to_install_manual_build>`.
+`xtensor <https://github.com/xtensor-stack/xtensor>`_ is a numpy-like library made for C++ developers. NumDot uses xtensor under the hood. If you want to use xtensor, consider forking or extending NumDot instead, using a :ref:`custom build<doc_custom_builds>`.
 
 **Pro**
 

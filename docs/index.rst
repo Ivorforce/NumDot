@@ -32,6 +32,8 @@ Table of Contents
 
    setup/how-to-install
    setup/changelog
+   setup/custom_builds
+   setup/optimization_reference
    setup/alternatives
 
 .. toctree::

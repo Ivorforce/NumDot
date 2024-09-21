@@ -17,7 +17,7 @@ This library: A NumPy-like tensor math library made for Godot.
 - Easy to install (through the asset library).
 - Accessible documentation.
 - Developed for games, with according priorities.
-- (Ability to tweak binary size, WIP).
+- Ability to optimize for binary size vs performance.
 - (Ability to run operations in-place on godot types, WIP).
 
 **Con**

@@ -6,7 +6,7 @@ Godot Interoperability
 Explicit Adaptations
 --------------------
 
-NumDot can adapt most `Variant <https://docs.godotengine.org/en/stable/classes/class_variant.html>`__ objects explicitly. The objects are copied on conversion:
+NumDot can adapt most `Variant <https://docs.godotengine.org/en/stable/classes/class_variant.html>`__ objects implicitly. You can explicitly convert back to godot types:
 
 .. code-block:: gdscript
 

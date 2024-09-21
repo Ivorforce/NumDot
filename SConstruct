@@ -14,7 +14,6 @@ Run the following command to download godot-cpp:
 # ============================= Project Setup =============================
 
 libname = "numdot"
-projectdir = "demo"
 
 env = Environment(tools=["default"], PLATFORM="")
 
@@ -22,6 +21,15 @@ env = Environment(tools=["default"], PLATFORM="")
 customs = ["custom.py"]
 customs = [os.path.abspath(path) for path in customs]
 opts = Variables(customs, ARGUMENTS)
+opts.Add(
+    PathVariable(
+        key="build_dir",
+        help="Target location of the binary (./build by default)",
+        default=env.get("build-folder", "build"),
+    )
+)
+opts.Update(env)
+
 
 # ============================= Change defaults of godot-cpp =============================
 
@@ -109,7 +117,6 @@ if env["target"] in ["editor", "template_debug", "template_release"]:
 # Filename of the library.
 lib_filename = f"{env.subst('$SHLIBPREFIX')}{libname}.{env['platform']}.{env['arch']}{env.subst('$SHLIBSUFFIX')}"
 # Build releases into build/, and debug into demo/.
-lib_basepath = "build/" if env["target"] == "template_release" else f"{projectdir}/"
 lib_filepath = ""
 
 if env["platform"] == "macos" or env["platform"] == "ios":
@@ -117,7 +124,7 @@ if env["platform"] == "macos" or env["platform"] == "ios":
     lib_filepath = "{}-{}.framework/".format(libname, env["platform"])
 
 library = env.SharedLibrary(
-    f"{lib_basepath}addons/{libname}/{env['platform']}/{lib_filepath}{lib_filename}",
+    os.path.join(env["build_dir"], f"addons/{libname}/{env['platform']}/{lib_filepath}{lib_filename}"),
     source=sources,
 )
 

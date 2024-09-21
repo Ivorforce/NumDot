@@ -45,12 +45,12 @@ git checkout -b my-new-feature
 You can build the project as such:
 ```bash
 # Replace platform with one of [macos, windows, linux]
-scons platform=<platform>
+scons platform=<platform> build_dir=demo
 ```
 **For Windows Users:** It is recommended to use [MinGW](https://www.mingw-w64.org/) to compile the project, as it more closely mimics Unix build semantics than MSVC. MinGW must be added to `PATH`, and specified in the build command like so:
 
 ```bash
-scons platform=windows use-mingw=yes
+scons platform=windows build_dir=demo use-mingw=yes
 ```
 
 ### Include Policy

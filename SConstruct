@@ -75,7 +75,7 @@ if env["platform"] == "windows":
     if is_msvc:
         env.Append(CCFLAGS=["/bigobj"])
     else:
-        env.Append(CCFLAGS=["-Wa,-mbigobj"])
+        env.Append(CCFLAGS=["-Wa,-mbig-obj"])
 
 # TODO Figure out MSVC equivalents
 if is_release:

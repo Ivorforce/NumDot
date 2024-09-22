@@ -10,7 +10,7 @@
 NDArray
 =======
 
-**Inherits:** 
+**Inherits:** ``RefCounted``
 
 A NumDot tensor object.
 

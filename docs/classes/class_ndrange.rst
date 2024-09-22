@@ -10,7 +10,7 @@
 NDRange
 =======
 
-**Inherits:** 
+**Inherits:** ``RefCounted``
 
 A NumDot range object.
 

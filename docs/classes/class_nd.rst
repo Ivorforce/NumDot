@@ -10,7 +10,7 @@
 nd
 ==
 
-**Inherits:** 
+**Inherits:** ``Object``
 
 Contains NumDot functions.
 
@@ -497,7 +497,7 @@ The ceil of the scalar x is the smallest integer i, such that i >= x.
 
 Clip (limit) the values in an array.
 
-Given an interval, values outside the interval are clipped to the interval edges. For example, if an interval of ``0, 1`` is specified, values smaller than 0 become 0, and values larger than 1 become 1.
+Given an interval, values outside the interval are clipped to the interval edges. For example, if an interval of \[0, 1\] is specified, values smaller than 0 become 0, and values larger than 1 become 1.
 
 Equivalent to but faster than nd.minimum(a_max, nd.maximum(a, a_min)).
 
@@ -737,7 +737,7 @@ Return (x1 <= x2) element-wise.
 
 Return evenly spaced numbers over a specified interval.
 
-Returns num evenly spaced samples, calculated over the interval ``start, stop``.
+Returns num evenly spaced samples, calculated over the interval \[start, stop\].
 
 The endpoint of the interval can optionally be excluded.
 
@@ -999,11 +999,11 @@ Convert angles from radians to degrees.
 
 Create a range. arange can be called with a varying number of positional arguments:
 
-arange(stop): Values are generated within the half-open interval [0, stop) (in other words, the interval including start but excluding stop).
+arange(stop): Values are generated within the half-open interval \[0, stop) (in other words, the interval including start but excluding stop).
 
-arange(start, stop): Values are generated within the half-open interval [start, stop).
+arange(start, stop): Values are generated within the half-open interval \[start, stop).
 
-arange(start, stop, step) Values are generated within the half-open interval [start, stop), with spacing between values given by step.
+arange(start, stop, step) Values are generated within the half-open interval \[start, stop), with spacing between values given by step.
 
 .. rst-class:: classref-item-separator
 

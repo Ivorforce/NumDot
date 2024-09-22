@@ -20,6 +20,10 @@ That being said, here is some information about the most interesting options:
 
     - Sets compiler flags ``-Os``, ``-O3`` or ``-O2``, respectively. You can achieve up to 50% decrease in binary size, or increase of performance, with different values. ``speed_trace`` is a slightly weaker version of ``speed`` and not recommended.
 
+- ``use_xsimd`` (``yes``, ``no`` or ``auto``):
+
+    - Whether to use `xsimd <https://xsimd.readthedocs.io/en/latest/>`_ to accelerate contiguous memory operations. Defaults to 'no' on web (unsupported as of yet) and yes elsewhere.
+
 - ``define=NUMDOT_ASSIGN_INPLACE_DIRECTLY_INSTEAD_OF_COPYING_FIRST``
 
     - Optimize in-place operations (e.g. ``array.assign_add(a, b)``. This substantially improves their performance, but can also increase the binary size but up to 100%.

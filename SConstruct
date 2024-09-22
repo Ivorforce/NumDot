@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import os
 import sys
+from SCons.Variables.BoolVariable import _text2bool
 
 from methods import print_error, print_warning
 
@@ -31,15 +32,28 @@ opts.Add(
     PathVariable(
         key="build_dir",
         help="Target location of the binary (./build by default)",
-        default=env.get("build-folder", "build"),
+        default=env.get("build_dir", "build"),
     )
 )
+opts.Add(
+    "use_xsimd",
+    "Whether to use xsimd, accelerating contiguous memory computation. Defaults to no on web and yes elsewhere.",
+    "auto"
+)
 opts.Update(env)
+
+use_xsimd = env["use_xsimd"]
+if ARGUMENTS.get("use_xsimd", "auto") == "auto":
+    # Web "requires target feature "simd128"", we should solve that but for now let"s just disable simd on web.
+    use_xsimd = ARGUMENTS["platform"] != "web"
+else:
+    use_xsimd = _text2bool(use_xsimd)
 
 # TODO If we don't delete our own arguments, the godot-cpp SConscript will complain.
 # There must be a better way?
 ARGUMENTS.pop("build_dir", None)
 ARGUMENTS.pop("define", None)
+ARGUMENTS.pop("use_xsimd", None)
 
 # ============================= Change defaults of godot-cpp =============================
 
@@ -84,8 +98,7 @@ env = SConscript("godot-cpp/SConstruct", {"env": env, "customs": customs})
 is_msvc = "is_msvc" in env and env["is_msvc"]
 assert is_release == (env["target"] == "template_release")
 
-# Web "requires target feature "simd128"", we should solve that but for now let"s just disable simd on web.
-if env["platform"] not in ["web"]:
+if use_xsimd:
     env.Append(CCFLAGS=[
         # See https://xtensor.readthedocs.io/en/latest/build-options.html
         # See https://github.com/xtensor-stack/xsimd for supported list of simd extensions.

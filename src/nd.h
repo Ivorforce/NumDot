@@ -60,6 +60,8 @@ public:
 	static Ref<NDArray> swapaxes(Variant v, int64_t a, int64_t b);
 	static Ref<NDArray> moveaxis(Variant v, int64_t src, int64_t dst);
 	static Ref<NDArray> flip(Variant v, int64_t axis);
+	static Ref<NDArray> stack(Variant v, int64_t axis);
+	static Ref<NDArray> unstack(Variant v, int64_t axis);
 
 	// Basic math functions.
 	static Ref<NDArray> add(Variant a, Variant b);

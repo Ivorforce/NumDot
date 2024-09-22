@@ -77,6 +77,8 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("swapaxes", "v", "a", "b"), &nd::swapaxes);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("moveaxis", "v", "src", "dst"), &nd::moveaxis);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("flip", "v", "axis"), &nd::flip);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("stack", "v", "axis"), &nd::stack, DEFVAL(nullptr), 0);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("unstack", "v", "axis"), &nd::unstack, DEFVAL(nullptr), 0);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("add", "a", "b"), &nd::add);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("subtract", "a", "b"), &nd::subtract);
@@ -436,6 +438,18 @@ Ref<NDArray> nd::moveaxis(Variant v, int64_t src, int64_t dst) {
 
 Ref<NDArray> nd::flip(Variant v, int64_t axis) {
 	return map_variants_as_arrays([axis](const va::VArray& v) { return va::flip(v, axis); }, v);
+}
+
+Ref<NDArray> nd::stack(Variant v, int64_t axis) {
+	return map_variants_as_arrays([axis](const va::VArray& v) {
+		return va::moveaxis(v, 0, axis);
+	}, v);
+}
+
+Ref<NDArray> nd::unstack(Variant v, int64_t axis) {
+	return map_variants_as_arrays([axis](const va::VArray& v) {
+		return va::moveaxis(v, axis, 0);
+	}, v);
 }
 
 Ref<NDArray> nd::add(Variant a, Variant b) {

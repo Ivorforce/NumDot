@@ -160,6 +160,8 @@ Methods
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`square<class_nd_method_square>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                                  |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>` | :ref:`stack<class_nd_method_stack>`\ (\ v\: ``Variant`` = null, axis\: ``int`` = 0\ ) |static|                                                                                                         |
+   +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`std<class_nd_method_std>`\ (\ a\: ``Variant`` = null, axes\: ``Variant`` = null\ ) |static|                                                                                                      |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`subtract<class_nd_method_subtract>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                             |
@@ -177,6 +179,8 @@ Methods
    | :ref:`NDArray<class_NDArray>` | :ref:`transpose<class_nd_method_transpose>`\ (\ a\: ``Variant``, permutation\: ``Variant``\ ) |static|                                                                                                 |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`trunc<class_nd_method_trunc>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                                    |
+   +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>` | :ref:`unstack<class_nd_method_unstack>`\ (\ v\: ``Variant`` = null, axis\: ``int`` = 0\ ) |static|                                                                                                     |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`var<class_nd_method_var>`\ (\ a\: ``Variant`` = null, axes\: ``Variant`` = null\ ) |static|                                                                                                      |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1151,6 +1155,22 @@ Return the element-wise square of the input.
 
 ----
 
+.. _class_nd_method_stack:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **stack**\ (\ v\: ``Variant`` = null, axis\: ``int`` = 0\ ) |static| :ref:`🔗<class_nd_method_stack>`
+
+Join a sequence of arrays along a new axis.
+
+The axis parameter specifies the index of the new axis in the dimensions of the result. For example, if axis=0 it will be the first dimension and if axis=-1 it will be the last dimension.
+
+Equivalent to ``nd.moveaxis(nd.array(v), 0, axis)``.
+
+.. rst-class:: classref-item-separator
+
+----
+
 .. _class_nd_method_std:
 
 .. rst-class:: classref-method
@@ -1262,6 +1282,20 @@ Returns an array with axes transposed.
 Return the truncated value of the input, element-wise.
 
 The truncated value of the scalar x is the nearest integer i which is closer to zero than x is. In short, the fractional part of the signed number x is discarded.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_unstack:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **unstack**\ (\ v\: ``Variant`` = null, axis\: ``int`` = 0\ ) |static| :ref:`🔗<class_nd_method_unstack>`
+
+Unpacks the given dimension of a rank-R tensor into a sequence of R-1 tensors. Opposite of ``nd.stack``.
+
+Equivalent to ``nd.moveaxis(array, axis, 0)``.
 
 .. rst-class:: classref-item-separator
 

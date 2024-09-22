@@ -183,7 +183,7 @@
 				If both a and b are 2-D arrays, it is matrix multiplication, but using nd.matmul is preferred.
 				If either a or b is 0-D (scalar), it is equivalent to multiply and using nd.multiply(a, b) or a * b is preferred.
 				If a is an N-D array and b is a 1-D array, it is a sum product over the last axis of a and b.
-				If a is an N-D array and b is an M-D array (where M>=2), it currently fails.
+				If a is an N-D array and b is an M-D array (where M&gt;=2), it currently fails.
 			</description>
 		</method>
 		<method name="ellipsis" qualifiers="static">
@@ -549,6 +549,16 @@
 				Return the element-wise square of the input.
 			</description>
 		</method>
+		<method name="stack" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="v" type="Variant" default="null" />
+			<param index="1" name="axis" type="int" default="0" />
+			<description>
+				Join a sequence of arrays along a new axis.
+				The axis parameter specifies the index of the new axis in the dimensions of the result. For example, if axis=0 it will be the first dimension and if axis=-1 it will be the last dimension.
+				Equivalent to ``nd.moveaxis(nd.array(v), 0, axis)``.
+			</description>
+		</method>
 		<method name="std" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" default="null" />
@@ -620,6 +630,15 @@
 			<description>
 				Return the truncated value of the input, element-wise.
 				The truncated value of the scalar x is the nearest integer i which is closer to zero than x is. In short, the fractional part of the signed number x is discarded.
+			</description>
+		</method>
+		<method name="unstack" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="v" type="Variant" default="null" />
+			<param index="1" name="axis" type="int" default="0" />
+			<description>
+				Unpacks the given dimension of a rank-R tensor into a sequence of R-1 tensors. Opposite of ``nd.stack``.
+				Equivalent to ``nd.moveaxis(array, axis, 0)``.
 			</description>
 		</method>
 		<method name="var" qualifiers="static">

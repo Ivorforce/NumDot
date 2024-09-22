@@ -16,6 +16,8 @@ Upcoming Changes (master branch)
 
 - Added the ``dot`` and ``reduce_dot`` functions.
 - Added the ``matmul`` function.
+- ``nd.array([...])`` can now handle more complex array inputs, e.g. an array of ``Vector2i``.
+- Added the ``stack`` and ``unstack`` functions.
 
 Version 0.2 - 2024-09-20
 -----------------

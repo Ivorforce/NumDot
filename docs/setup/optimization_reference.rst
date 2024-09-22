@@ -16,11 +16,11 @@ The most accessible way to re-optimize NumDot is through the options offered by 
 
 That being said, here is some information about the most interesting options:
 
-- ``optimize`` (``size``, ``speed`` or ``speed_trace``):
+- ``optimize``, one of [``size`` ``speed`` ``speed_trace`` ``none``]:
 
     - Sets compiler flags ``-Os``, ``-O3`` or ``-O2``, respectively. You can achieve up to 50% decrease in binary size, or increase of performance, with different values. ``speed_trace`` is a slightly weaker version of ``speed`` and not recommended.
 
-- ``use_xsimd`` (``yes``, ``no`` or ``auto``):
+- ``use_xsimd``, one of [``yes`` ``no`` ``auto``]:
 
     - Whether to use `xsimd <https://xsimd.readthedocs.io/en/latest/>`_ to accelerate contiguous memory operations. Defaults to 'no' on web (unsupported as of yet) and yes elsewhere.
 

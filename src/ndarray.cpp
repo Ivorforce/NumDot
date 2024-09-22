@@ -121,7 +121,8 @@ void NDArray::_bind_methods() {
     godot::ClassDB::bind_method(D_METHOD("assign_all", "a", "axes"), &NDArray::assign_all, DEFVAL(nullptr), DEFVAL(nullptr));
     godot::ClassDB::bind_method(D_METHOD("assign_any", "a", "axes"), &NDArray::assign_any, DEFVAL(nullptr), DEFVAL(nullptr));
 
-	godot::ClassDB::bind_method(D_METHOD("assign_dot", "a", "b", "axes"), &NDArray::assign_dot, DEFVAL(nullptr), DEFVAL(nullptr), DEFVAL(nullptr));
+	godot::ClassDB::bind_method(D_METHOD("assign_dot", "a", "b"), &NDArray::assign_dot);
+	godot::ClassDB::bind_method(D_METHOD("assign_reduce_dot", "a", "b", "axes"), &NDArray::assign_reduce_dot, DEFVAL(nullptr), DEFVAL(nullptr), DEFVAL(nullptr));
 	godot::ClassDB::bind_method(D_METHOD("assign_matmul", "a", "b"), &NDArray::assign_matmul);
 }
 
@@ -575,10 +576,14 @@ Ref<NDArray> NDArray::assign_any(Variant a, Variant axes) {
     REDUCTION(any, a, axes);
 }
 
-Ref<NDArray> NDArray::assign_dot(Variant a, Variant b, Variant axes) {
+Ref<NDArray> NDArray::assign_dot(Variant a, Variant b) {
+	BINARY_MAP(dot, a, b);
+}
+
+Ref<NDArray> NDArray::assign_reduce_dot(Variant a, Variant b, Variant axes) {
 	reduction_inplace([this](const va::Axes& axes, const va::VArray& a, const va::VArray& b) {
 		auto compute_variant = array.to_compute_variant();\
-		va::dot(&compute_variant, a, b, axes);
+		va::reduce_dot(&compute_variant, a, b, axes);
 	}, axes, a, b);
 	return {this};
 }

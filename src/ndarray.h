@@ -143,7 +143,8 @@ public:
     Ref<NDArray> assign_any(Variant a, Variant axes);
 
 	// Linalg.
-	Ref<NDArray> assign_dot(Variant a, Variant b, Variant axes);
+	Ref<NDArray> assign_dot(Variant a, Variant b);
+	Ref<NDArray> assign_reduce_dot(Variant a, Variant b, Variant axes);
 	Ref<NDArray> assign_matmul(Variant a, Variant b);
 };
 

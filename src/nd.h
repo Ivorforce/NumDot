@@ -134,7 +134,8 @@ public:
     static Ref<NDArray> any(Variant a, Variant axes);
 
 	// Linalg.
-	static Ref<NDArray> dot(Variant a, Variant b, Variant axes);
+	static Ref<NDArray> dot(Variant a, Variant b);
+	static Ref<NDArray> reduce_dot(Variant a, Variant b, Variant axes);
 	static Ref<NDArray> matmul(Variant a, Variant b);
 };
 

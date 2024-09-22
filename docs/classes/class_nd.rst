@@ -70,7 +70,7 @@ Methods
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`divide<class_nd_method_divide>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                                 |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`NDArray<class_NDArray>` | :ref:`dot<class_nd_method_dot>`\ (\ a\: ``Variant`` = null, b\: ``Variant`` = null, axes\: ``Variant`` = null\ ) |static|                                                                              |
+   | :ref:`NDArray<class_NDArray>` | :ref:`dot<class_nd_method_dot>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                                       |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``StringName``                | :ref:`ellipsis<class_nd_method_ellipsis>`\ (\ ) |static|                                                                                                                                               |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -137,6 +137,8 @@ Methods
    | :ref:`NDArray<class_NDArray>` | :ref:`rad2deg<class_nd_method_rad2deg>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                                |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDRange<class_NDRange>` | :ref:`range<class_nd_method_range>`\ (\ start_or_stop\: ``Variant`` = 0, stop\: ``Variant`` = null, step\: ``Variant`` = null\ ) |static|                                                              |
+   +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>` | :ref:`reduce_dot<class_nd_method_reduce_dot>`\ (\ a\: ``Variant`` = null, b\: ``Variant`` = null, axes\: ``Variant`` = null\ ) |static|                                                                |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`remainder<class_nd_method_remainder>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                           |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -559,11 +561,21 @@ Divide arguments element-wise.
 
 .. rst-class:: classref-method
 
-:ref:`NDArray<class_NDArray>` **dot**\ (\ a\: ``Variant`` = null, b\: ``Variant`` = null, axes\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_dot>`
+:ref:`NDArray<class_NDArray>` **dot**\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_dot>`
 
-Dot product of two arrays along the given axis.
+Dot product of two arrays. Specifically,
 
-Equal to nd.sum(nd.multiply(a, b), axes).
+
+
+If both a and b are 1-D arrays, it is inner product of vectors (without complex conjugation).
+
+If both a and b are 2-D arrays, it is matrix multiplication, but using nd.matmul is preferred.
+
+If either a or b is 0-D (scalar), it is equivalent to multiply and using nd.multiply(a, b) or a \* b is preferred.
+
+If a is an N-D array and b is a 1-D array, it is a sum product over the last axis of a and b.
+
+If a is an N-D array and b is an M-D array (where M>=2), it currently fails.
 
 .. rst-class:: classref-item-separator
 
@@ -992,6 +1004,20 @@ arange(stop): Values are generated within the half-open interval [0, stop) (in o
 arange(start, stop): Values are generated within the half-open interval [start, stop).
 
 arange(start, stop, step) Values are generated within the half-open interval [start, stop), with spacing between values given by step.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_reduce_dot:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **reduce_dot**\ (\ a\: ``Variant`` = null, b\: ``Variant`` = null, axes\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_reduce_dot>`
+
+Dot product of two arrays along the given axis.
+
+Equivalent to nd.sum(nd.multiply(a, b), axes).
 
 .. rst-class:: classref-item-separator
 

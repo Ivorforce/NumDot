@@ -168,9 +168,8 @@
 		</method>
 		<method name="assign_dot">
 			<return type="NDArray" />
-			<param index="0" name="a" type="Variant" default="null" />
-			<param index="1" name="b" type="Variant" default="null" />
-			<param index="2" name="axes" type="Variant" default="null" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
 			<description>
 				In-place version of nd.dot.
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
@@ -385,6 +384,16 @@
 			<param index="0" name="a" type="Variant" />
 			<description>
 				In-place version of nd.rad2deg.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
+			</description>
+		</method>
+		<method name="assign_reduce_dot">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" default="null" />
+			<param index="1" name="b" type="Variant" default="null" />
+			<param index="2" name="axes" type="Variant" default="null" />
+			<description>
+				In-place version of nd.reduce_dot.
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>

@@ -174,12 +174,16 @@
 		</method>
 		<method name="dot" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="a" type="Variant" default="null" />
-			<param index="1" name="b" type="Variant" default="null" />
-			<param index="2" name="axes" type="Variant" default="null" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
 			<description>
-				Dot product of two arrays along the given axis.
-				Equal to nd.sum(nd.multiply(a, b), axes).
+				Dot product of two arrays. Specifically,
+
+				If both a and b are 1-D arrays, it is inner product of vectors (without complex conjugation).
+				If both a and b are 2-D arrays, it is matrix multiplication, but using nd.matmul is preferred.
+				If either a or b is 0-D (scalar), it is equivalent to multiply and using nd.multiply(a, b) or a * b is preferred.
+				If a is an N-D array and b is a 1-D array, it is a sum product over the last axis of a and b.
+				If a is an N-D array and b is an M-D array (where M>=2), it currently fails.
 			</description>
 		</method>
 		<method name="ellipsis" qualifiers="static">
@@ -328,7 +332,7 @@
 				Matrix multiplication of two arrays.
 				The behavior depends on the arguments in the following way:
 					If both arguments are 2-D they are multiplied like conventional matrices.
-					If either argument is N-D, N > 2, it is treated as a stack of matrices residing in the last two indexes and broadcast accordingly.
+					If either argument is N-D, N &gt; 2, it is treated as a stack of matrices residing in the last two indexes and broadcast accordingly.
 			</description>
 		</method>
 		<method name="max" qualifiers="static">
@@ -457,6 +461,16 @@
 				arange(stop): Values are generated within the half-open interval [0, stop) (in other words, the interval including start but excluding stop).
 				arange(start, stop): Values are generated within the half-open interval [start, stop).
 				arange(start, stop, step) Values are generated within the half-open interval [start, stop), with spacing between values given by step.
+			</description>
+		</method>
+		<method name="reduce_dot" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" default="null" />
+			<param index="1" name="b" type="Variant" default="null" />
+			<param index="2" name="axes" type="Variant" default="null" />
+			<description>
+				Dot product of two arrays along the given axis.
+				Equivalent to nd.sum(nd.multiply(a, b), axes).
 			</description>
 		</method>
 		<method name="remainder" qualifiers="static">

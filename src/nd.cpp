@@ -143,7 +143,8 @@ void nd::_bind_methods() {
     godot::ClassDB::bind_static_method("nd", D_METHOD("all", "a", "axes"), &nd::all, DEFVAL(nullptr), DEFVAL(nullptr));
     godot::ClassDB::bind_static_method("nd", D_METHOD("any", "a", "axes"), &nd::any, DEFVAL(nullptr), DEFVAL(nullptr));
 
-	godot::ClassDB::bind_static_method("nd", D_METHOD("dot", "a", "b", "axes"), &nd::dot, DEFVAL(nullptr), DEFVAL(nullptr), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("dot", "a", "b"), &nd::dot);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("reduce_dot", "a", "b", "axes"), &nd::reduce_dot, DEFVAL(nullptr), DEFVAL(nullptr), DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("matmul", "a", "b"), &nd::matmul);
 }
 
@@ -678,9 +679,13 @@ Ref<NDArray> nd::any(Variant a, Variant axes) {
     return REDUCTION(any, a, axes);
 }
 
-Ref<NDArray> nd::dot(Variant a, Variant b, Variant axes) {
+Ref<NDArray> nd::dot(Variant a, Variant b) {
+    return BINARY_MAP(dot, a, b);
+}
+
+Ref<NDArray> nd::reduce_dot(Variant a, Variant b, Variant axes) {
 	return reduction([](const va::VArrayTarget target, const va::Axes& axes, const va::VArray& a, const va::VArray& b) {
-		va::dot(target, a, b, axes);
+		va::reduce_dot(target, a, b, axes);
 	}, axes, a, b);
 }
 

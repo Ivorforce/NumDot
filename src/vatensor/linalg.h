@@ -5,7 +5,8 @@
 #include "varray.h"
 
 namespace va {
-    void dot(VArrayTarget target, const VArray& a, const VArray& b, const Axes& axes);
+    void reduce_dot(VArrayTarget target, const VArray &a, const VArray &b, const Axes& axes);
+    void dot(VArrayTarget target, const VArray& a, const VArray& b);
     void matmul(VArrayTarget target, const VArray& a, const VArray& b);
 }
 

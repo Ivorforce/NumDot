@@ -207,7 +207,7 @@ html_logo = "img/docs_logo.svg"
 # These folders are copied to the documentation's HTML output
 html_static_path = ["godot-docs/_static"]
 
-html_extra_path = ["robots.txt"]
+html_extra_path = ["robots.txt", "google7747f782ed971a55.html"]
 
 # These paths are either relative to html_static_path
 # or fully qualified paths (e.g. https://...)

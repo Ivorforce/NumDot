@@ -68,6 +68,8 @@ Methods
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`assign_divide<class_NDArray_method_assign_divide>`\ (\ a\: ``Variant``, b\: ``Variant``\ )                                     |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>` | :ref:`assign_dot<class_NDArray_method_assign_dot>`\ (\ a\: ``Variant`` = null, b\: ``Variant`` = null, axes\: ``Variant`` = null\ )  |
+   +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`assign_equal<class_NDArray_method_assign_equal>`\ (\ a\: ``Variant``, b\: ``Variant``\ )                                       |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`assign_exp<class_NDArray_method_assign_exp>`\ (\ a\: ``Variant``\ )                                                            |
@@ -443,6 +445,20 @@ Assigns the result to this array, and returns it. The shape of the result must b
 :ref:`NDArray<class_NDArray>` **assign_divide**\ (\ a\: ``Variant``, b\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_divide>`
 
 In-place version of nd.divide.
+
+Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_assign_dot:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **assign_dot**\ (\ a\: ``Variant`` = null, b\: ``Variant`` = null, axes\: ``Variant`` = null\ ) :ref:`🔗<class_NDArray_method_assign_dot>`
+
+In-place version of nd.dot.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 

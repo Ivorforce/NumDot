@@ -62,13 +62,16 @@ namespace va {
             using output_type = InputType;
         };
 
-        struct num_at_least_int32 {
-            template<typename Arg>
+        struct num_common_at_least_int32 {
+            template<typename... Args>
+            using common_type = std::common_type_t<int64_if_bool_else_id<Args>...>;
+
+            template<typename... Args>
             using input_type = typename std::conditional<
-                (std::numeric_limits<int64_if_bool_else_id<Arg> >::digits >= std::numeric_limits<int32_t>::digits),
-                int64_if_bool_else_id<Arg>,
+                (std::numeric_limits<common_type<Args...>>::digits >= std::numeric_limits<int32_t>::digits),
+                common_type<Args...>,
                 typename std::conditional<
-                    std::is_signed<int64_if_bool_else_id<Arg> >::value,
+                    std::is_signed<common_type<Args...>>::value,
                     int32_t,
                     uint32_t
                 >::type

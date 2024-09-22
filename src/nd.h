@@ -132,6 +132,9 @@ public:
 	static Ref<NDArray> logical_not(Variant a);
     static Ref<NDArray> all(Variant a, Variant axes);
     static Ref<NDArray> any(Variant a, Variant axes);
+
+	// Linalg.
+	static Ref<NDArray> dot(Variant a, Variant b, Variant axes);
 };
 
 VARIANT_ENUM_CAST(nd::DType);

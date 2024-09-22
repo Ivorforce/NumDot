@@ -76,7 +76,7 @@ void va::prod(VArrayTarget target, const VArray& array, const Axes &axes) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
-	va::xreduction_inplace<promote::num_at_least_int32>(
+	va::xreduction_inplace<promote::num_common_at_least_int32>(
 		Prod{}, axes, target, array.to_compute_variant()
 	);
 #endif

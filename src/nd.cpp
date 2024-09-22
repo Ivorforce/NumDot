@@ -16,6 +16,7 @@
 #include <utility>                          // for move
 #include <variant>                          // for visit, variant
 #include <vector>                           // for vector
+#include <vatensor/linalg.h>
 #include "gdconvert/conversion_array.h"     // for variant_as_array
 #include "gdconvert/conversion_axes.h"      // for variant_to_axes
 #include "gdconvert/conversion_range.h"     // for to_range_part
@@ -141,6 +142,8 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("logical_not", "a"), &nd::logical_not);
     godot::ClassDB::bind_static_method("nd", D_METHOD("all", "a", "axes"), &nd::all, DEFVAL(nullptr), DEFVAL(nullptr));
     godot::ClassDB::bind_static_method("nd", D_METHOD("any", "a", "axes"), &nd::any, DEFVAL(nullptr), DEFVAL(nullptr));
+
+	godot::ClassDB::bind_static_method("nd", D_METHOD("dot", "a", "b", "axes"), &nd::dot, DEFVAL(nullptr), DEFVAL(nullptr), DEFVAL(nullptr));
 }
 
 nd::nd() = default;
@@ -169,13 +172,13 @@ Ref<NDArray> map_variants_as_arrays_with_target(Visitor visitor, Args... args) {
 	}
 }
 
-inline Ref<NDArray> reduction(std::function<void(const va::VArrayTarget target, const va::VArray&, const va::Axes&)> visitor, Variant a, Variant axes) {
+template <typename Visitor, typename... Args>
+inline Ref<NDArray> reduction(Visitor visitor, Variant axes, Args... args) {
 	try {
 		const auto axes_ = variant_to_axes(axes);
-		const auto a_ = variant_as_array(a);
 
 		std::optional<va::VArray> result;
-		visitor(&result, a_, axes_);
+		visitor(&result, axes_, variant_as_array(args)...);
 
 		return {memnew(NDArray(result.value()))};
 	}
@@ -200,9 +203,9 @@ inline Ref<NDArray> reduction(std::function<void(const va::VArrayTarget target, 
     }, (varray1), (varray2), (varray3))
 
 #define REDUCTION(func, varray1, axes1) \
-	reduction([](const va::VArrayTarget target, const va::VArray& array, const va::Axes& axes) {\
-		va::func(target, array, axes1);\
-	}, (varray1), (axes1))
+	reduction([](const va::VArrayTarget target, const va::Axes& axes, const va::VArray& array) {\
+		va::func(target, array, axes);\
+	}, axes, (varray1))
 
 StringName nd::newaxis() {
 	return ::newaxis();
@@ -672,4 +675,10 @@ Ref<NDArray> nd::all(Variant a, Variant axes) {
 
 Ref<NDArray> nd::any(Variant a, Variant axes) {
     return REDUCTION(any, a, axes);
+}
+
+Ref<NDArray> nd::dot(Variant a, Variant b, Variant axes) {
+	return reduction([](const va::VArrayTarget target, const va::Axes& axes, const va::VArray& a, const va::VArray& b) {
+		va::dot(target, a, b, axes);
+	}, axes, a, b);
 }

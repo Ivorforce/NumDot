@@ -141,6 +141,9 @@ public:
 	Ref<NDArray> assign_logical_not(Variant a);
     Ref<NDArray> assign_all(Variant a, Variant axes);
     Ref<NDArray> assign_any(Variant a, Variant axes);
+
+	// Linalg.
+	Ref<NDArray> assign_dot(Variant a, Variant b, Variant axes);
 };
 
 #endif

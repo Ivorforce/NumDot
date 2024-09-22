@@ -1,0 +1,32 @@
+#include "linalg.h"
+
+#include "reduce.h"
+#include "vcompute.h"
+#include "vmath.h"
+
+// struct Dot {
+// 	template <typename GivenAxes, typename A, typename B>
+// 	auto operator()(GivenAxes&& axes, A&& a, B&& b) const {
+// 		auto prod = std::forward<A>(a) * std::forward<B>(b);
+// 		return xt::sum(prod, std::forward<GivenAxes>(axes), std::tuple<xt::evaluation_strategy::lazy_type>());
+// 	}
+//
+// 	template <typename A, typename B>
+// 	inline auto operator()(A&& a, B&& b) const {
+// 		auto prod = std::forward<A>(a) * std::forward<B>(b);
+// 		return xt::sum(prod, std::tuple<xt::evaluation_strategy::lazy_type>());
+// 	}
+// };
+
+void va::dot(VArrayTarget target, const VArray &a, const VArray &b, const Axes &axes) {
+	std::optional<va::VArray> prod_cache;
+    va::multiply(&prod_cache, a, b);
+	va::sum(target, prod_cache.value(), axes);
+
+	// TODO This doesn't work because prod or a and b are lost, either way it crashes.
+	// The upside to the above implementation is that no additional code is generated.
+	// But it's also a bit slower than if it was fully lazy and accelerated, probably.
+	// va::xreduction_inplace<promote::num_matching_float_or_default<double_t>>(
+	// 	NormL0{}, axes, target, array.to_compute_variant()
+	// );
+}

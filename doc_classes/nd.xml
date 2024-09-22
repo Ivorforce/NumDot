@@ -172,6 +172,16 @@
 				Divide arguments element-wise.
 			</description>
 		</method>
+		<method name="dot" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" default="null" />
+			<param index="1" name="b" type="Variant" default="null" />
+			<param index="2" name="axes" type="Variant" default="null" />
+			<description>
+				Dot product of two arrays along the given axis.
+				Equal to nd.sum(nd.multiply(a, b), axes).
+			</description>
+		</method>
 		<method name="ellipsis" qualifiers="static">
 			<return type="StringName" />
 			<description>

@@ -70,6 +70,8 @@ Methods
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`divide<class_nd_method_divide>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                                 |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>` | :ref:`dot<class_nd_method_dot>`\ (\ a\: ``Variant`` = null, b\: ``Variant`` = null, axes\: ``Variant`` = null\ ) |static|                                                                              |
+   +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``StringName``                | :ref:`ellipsis<class_nd_method_ellipsis>`\ (\ ) |static|                                                                                                                                               |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`empty<class_nd_method_empty>`\ (\ shape\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 2\ ) |static|                                                                                |
@@ -546,6 +548,20 @@ Convert angles from degrees to radians.
 :ref:`NDArray<class_NDArray>` **divide**\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_divide>`
 
 Divide arguments element-wise.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_dot:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **dot**\ (\ a\: ``Variant`` = null, b\: ``Variant`` = null, axes\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_dot>`
+
+Dot product of two arrays along the given axis.
+
+Equal to nd.sum(nd.multiply(a, b), axes).
 
 .. rst-class:: classref-item-separator
 

@@ -320,6 +320,17 @@
 				Compute the truth value of x1 OR x2 element-wise.
 			</description>
 		</method>
+		<method name="matmul" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+				Matrix multiplication of two arrays.
+				The behavior depends on the arguments in the following way:
+					If both arguments are 2-D they are multiplied like conventional matrices.
+					If either argument is N-D, N > 2, it is treated as a stack of matrices residing in the last two indexes and broadcast accordingly.
+			</description>
+		</method>
 		<method name="max" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" default="null" />

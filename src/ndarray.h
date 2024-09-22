@@ -144,6 +144,7 @@ public:
 
 	// Linalg.
 	Ref<NDArray> assign_dot(Variant a, Variant b, Variant axes);
+	Ref<NDArray> assign_matmul(Variant a, Variant b);
 };
 
 #endif

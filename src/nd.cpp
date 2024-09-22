@@ -144,6 +144,7 @@ void nd::_bind_methods() {
     godot::ClassDB::bind_static_method("nd", D_METHOD("any", "a", "axes"), &nd::any, DEFVAL(nullptr), DEFVAL(nullptr));
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("dot", "a", "b", "axes"), &nd::dot, DEFVAL(nullptr), DEFVAL(nullptr), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("matmul", "a", "b"), &nd::matmul);
 }
 
 nd::nd() = default;
@@ -681,4 +682,8 @@ Ref<NDArray> nd::dot(Variant a, Variant b, Variant axes) {
 	return reduction([](const va::VArrayTarget target, const va::Axes& axes, const va::VArray& a, const va::VArray& b) {
 		va::dot(target, a, b, axes);
 	}, axes, a, b);
+}
+
+Ref<NDArray> nd::matmul(Variant a, Variant b) {
+	return BINARY_MAP(matmul, a, b);
 }

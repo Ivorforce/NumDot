@@ -94,6 +94,8 @@ Methods
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`assign_logical_xor<class_NDArray_method_assign_logical_xor>`\ (\ a\: ``Variant``, b\: ``Variant``\ )                           |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>` | :ref:`assign_matmul<class_NDArray_method_assign_matmul>`\ (\ a\: ``Variant``, b\: ``Variant``\ )                                     |
+   +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`assign_max<class_NDArray_method_assign_max>`\ (\ a\: ``Variant`` = null, axes\: ``Variant`` = null\ )                          |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`assign_maximum<class_NDArray_method_assign_maximum>`\ (\ a\: ``Variant``, b\: ``Variant``\ )                                   |
@@ -627,6 +629,20 @@ Assigns the result to this array, and returns it. The shape of the result must b
 :ref:`NDArray<class_NDArray>` **assign_logical_xor**\ (\ a\: ``Variant``, b\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_logical_xor>`
 
 In-place version of nd.logical_xor.
+
+Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_assign_matmul:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **assign_matmul**\ (\ a\: ``Variant``, b\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_matmul>`
+
+In-place version of nd.matmul.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 

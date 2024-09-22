@@ -135,6 +135,7 @@ public:
 
 	// Linalg.
 	static Ref<NDArray> dot(Variant a, Variant b, Variant axes);
+	static Ref<NDArray> matmul(Variant a, Variant b);
 };
 
 VARIANT_ENUM_CAST(nd::DType);

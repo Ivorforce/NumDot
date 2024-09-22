@@ -106,6 +106,8 @@ Methods
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`logical_or<class_nd_method_logical_or>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                         |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>` | :ref:`matmul<class_nd_method_matmul>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                                 |
+   +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`max<class_nd_method_max>`\ (\ a\: ``Variant`` = null, axes\: ``Variant`` = null\ ) |static|                                                                                                      |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`maximum<class_nd_method_maximum>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                               |
@@ -776,6 +778,24 @@ Compute the truth value of NOT x element-wise.
 :ref:`NDArray<class_NDArray>` **logical_or**\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_logical_or>`
 
 Compute the truth value of x1 OR x2 element-wise.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_matmul:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **matmul**\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_matmul>`
+
+Matrix multiplication of two arrays.
+
+The behavior depends on the arguments in the following way:
+
+If both arguments are 2-D they are multiplied like conventional matrices.
+
+If either argument is N-D, N > 2, it is treated as a stack of matrices residing in the last two indexes and broadcast accordingly.
 
 .. rst-class:: classref-item-separator
 

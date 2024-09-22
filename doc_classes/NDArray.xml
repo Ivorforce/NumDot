@@ -280,6 +280,15 @@
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
+		<method name="assign_matmul">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+				In-place version of nd.matmul.
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
+			</description>
+		</method>
 		<method name="assign_max">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" default="null" />

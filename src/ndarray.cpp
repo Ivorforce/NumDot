@@ -122,6 +122,7 @@ void NDArray::_bind_methods() {
     godot::ClassDB::bind_method(D_METHOD("assign_any", "a", "axes"), &NDArray::assign_any, DEFVAL(nullptr), DEFVAL(nullptr));
 
 	godot::ClassDB::bind_method(D_METHOD("assign_dot", "a", "b", "axes"), &NDArray::assign_dot, DEFVAL(nullptr), DEFVAL(nullptr), DEFVAL(nullptr));
+	godot::ClassDB::bind_method(D_METHOD("assign_matmul", "a", "b"), &NDArray::assign_matmul);
 }
 
 NDArray::NDArray() = default;
@@ -580,4 +581,8 @@ Ref<NDArray> NDArray::assign_dot(Variant a, Variant b, Variant axes) {
 		va::dot(&compute_variant, a, b, axes);
 	}, axes, a, b);
 	return {this};
+}
+
+Ref<NDArray> NDArray::assign_matmul(Variant a, Variant b) {
+	BINARY_MAP(matmul, a, b);
 }

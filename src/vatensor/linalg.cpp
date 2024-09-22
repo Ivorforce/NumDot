@@ -30,3 +30,10 @@ void va::dot(VArrayTarget target, const VArray &a, const VArray &b, const Axes &
 	// 	NormL0{}, axes, target, array.to_compute_variant()
 	// );
 }
+
+void va::matmul(VArrayTarget target, const VArray &a, const VArray &b) {
+	const VArray a_broadcast = a.slice({ xt::ellipsis(), xt::newaxis() });
+	const VArray b_broadcast = b.slice({ xt::ellipsis(), xt::newaxis(), xt::all(), xt::all() });
+
+	dot(target, a_broadcast, b_broadcast, std::vector {static_cast<std::ptrdiff_t>(-2)});
+}

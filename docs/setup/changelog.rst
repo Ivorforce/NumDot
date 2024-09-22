@@ -15,6 +15,7 @@ Upcoming Changes (master branch)
 **Added**
 
 - Added the ``dot`` function.
+- Added the ``matmul`` function.
 
 Version 0.2 - 2024-09-20
 -----------------

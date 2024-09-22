@@ -1,7 +1,7 @@
 #ifndef NUMDOT_AS_ARRAY_H
 #define NUMDOT_AS_ARRAY_H
 
-#include "auto_defines.h"
+#include "vatensor/auto_defines.h"
 #include <godot_cpp/variant/variant.hpp>  // for Variant
 #include <variant>                        // for visit
 #include "godot_cpp/variant/array.hpp"    // for Array

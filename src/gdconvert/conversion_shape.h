@@ -17,7 +17,7 @@ Sh packed_as_shape(const T& shape_array) {
 	return sh;
 }
 
-std::vector<size_t> variant_as_shape(Variant shape);
-va::strides_type variant_as_strides(Variant shape);
+std::vector<size_t> variant_as_shape(const Variant &shape);
+va::strides_type variant_as_strides(const Variant &shape);
 
 #endif

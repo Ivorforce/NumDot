@@ -44,10 +44,10 @@ T variant_as_ints_(const Variant& shape) {
     throw std::runtime_error("Unsupported type");
 }
 
-std::vector<size_t> variant_as_uints(const Variant &shape) {
+std::vector<size_t> variant_as_shape(const Variant &shape) {
     return variant_as_ints_<size_t, std::vector<size_t>>(shape);
 }
 
-va::strides_type variant_as_ints(const Variant &shape) {
+va::strides_type variant_as_strides(const Variant &shape) {
     return variant_as_ints_<std::ptrdiff_t, va::strides_type>(shape);
 }

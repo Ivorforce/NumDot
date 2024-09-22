@@ -57,5 +57,5 @@ void va::matmul(VArrayTarget target, const VArray &a, const VArray &b) {
 	const VArray a_broadcast = a.slice({ xt::ellipsis(), xt::newaxis() });
 	const VArray b_broadcast = b.slice({ xt::ellipsis(), xt::newaxis(), xt::all(), xt::all() });
 
-	reduce_dot(target, a_broadcast, b_broadcast, std::vector {static_cast<std::ptrdiff_t>(-2)});
+	reduce_dot(target, a_broadcast, b_broadcast, std::vector<std::ptrdiff_t> { -2 });
 }

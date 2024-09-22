@@ -53,4 +53,6 @@ Table of Contents
    :caption: Class Reference
    :name: sec-class-ref
 
-   classes/index
+   classes/class_nd
+   classes/class_ndarray
+   classes/class_ndrange

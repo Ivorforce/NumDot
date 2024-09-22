@@ -289,7 +289,7 @@ Ref<NDArray> nd::array(Variant array, nd::DType dtype) {
 
 Ref<NDArray> nd::empty(Variant shape, nd::DType dtype) {
 	try {
-		std::vector<size_t> shape_array = variant_as_shape<size_t, std::vector<size_t>>(shape);
+		const auto shape_array = variant_as_shape(shape);
 
 		return {memnew(NDArray(va::empty(dtype, shape_array)))};
 	}
@@ -300,7 +300,7 @@ Ref<NDArray> nd::empty(Variant shape, nd::DType dtype) {
 
 Ref<NDArray> _full(Variant shape, va::VConstant value) {
 	try {
-		std::vector<size_t> shape_array = variant_as_shape<size_t, std::vector<size_t>>(shape);
+		const auto shape_array = variant_as_shape(shape);
 
 		return {memnew(NDArray(va::full(value, shape_array)))};
 	}
@@ -403,7 +403,7 @@ Ref<NDArray> nd::transpose(Variant a, Variant permutation) {
 		va::VArray a_ = variant_as_array(a);
 		// TODO It's not exactly a shape, but 'int array' is close enough.
 		//  We should probably decouple them when we add better shape checks.
-		auto permutation_ = variant_as_shape<std::ptrdiff_t, va::strides_type>(permutation);
+		const auto permutation_ = variant_as_strides(permutation);
 
 		return {memnew(NDArray(va::transpose(a_, permutation_)))};
 	}
@@ -417,7 +417,7 @@ Ref<NDArray> nd::reshape(Variant a, Variant shape) {
 		va::VArray a_ = variant_as_array(a);
 		// TODO It's not exactly a shape, but 'int array' is close enough.
 		//  We should probably decouple them when we add better shape checks.
-		auto new_shape_ = variant_as_shape<std::ptrdiff_t, va::strides_type>(shape);
+		const auto new_shape_ = variant_as_strides(shape);
 
 		return {memnew(NDArray(va::reshape(a_, new_shape_)))};
 	}

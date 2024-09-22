@@ -93,33 +93,33 @@ va::VArray array_as_varray(const Array& array) {
     if (dtype == va::DTypeMax) dtype = va::Float64; // Default dtype
 
     va::VArray varray = va::empty(dtype, shape);
-    std::vector<std::tuple<xt::xstrided_slice_vector, Variant>> next = { std::make_tuple(xt::xstrided_slice_vector {}, array) };
+    std::vector<std::tuple<xt::xstrided_slice_vector, Array>> next = { std::make_tuple(xt::xstrided_slice_vector {}, array) };
 
     while (!next.empty()) {
-        auto [idx, var] = std::move(next.back());
+        const auto [array_base_idx, array] = std::move(next.back());
         next.pop_back();
 
-        switch (var.get_type()) {
-            case Variant::ARRAY: {
-                const Array array = var;
-                for (size_t i = 0; i < array.size(); ++i) {
-                    auto new_idx = idx;
-                    new_idx.emplace_back(i);
-                    next.push_back({new_idx, array[i]});
-                }
-                break;
+        for (size_t i = 0; i < array.size(); ++i) {
+            auto element_idx = array_base_idx;
+            element_idx.emplace_back(i);
+
+            const auto& array_element = array[i];
+            switch (array_element.get_type()) {
+                case Variant::ARRAY:
+                    next.push_back({element_idx, static_cast<Array>(array_element)});
+                    break;
+                case Variant::FLOAT:
+                    varray.slice(element_idx).fill(static_cast<double_t>(array_element));
+                    break;
+                case Variant::INT:
+                    varray.slice(element_idx).fill(static_cast<int64_t>(array_element));
+                    break;
+                case Variant::BOOL:
+                    varray.slice(element_idx).fill(static_cast<bool>(array_element));
+                    break;
+                default:
+                    throw std::runtime_error("unsupported array type");
             }
-            case Variant::FLOAT:
-                varray.slice(idx).fill(static_cast<double_t>(var));
-                break;
-            case Variant::INT:
-                varray.slice(idx).fill(static_cast<int64_t>(var));
-                break;
-            case Variant::BOOL:
-                varray.slice(idx).fill(static_cast<bool>(var));
-                break;
-            default:
-                throw std::runtime_error("unsupported array type");
         }
     }
 

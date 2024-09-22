@@ -74,9 +74,7 @@ void add_size_at_idx(va::shape_type& shape, const std::size_t idx, const std::si
     }
 }
 
-va::VArray array_as_varray(const Array& input_array) {
-    va::shape_type shape;
-    va::DType dtype = va::DTypeMax;
+void find_shape_and_dtype(va::shape_type& shape, va::DType &dtype, const Array& input_array) {
     std::vector<Array> current_dim_arrays = { input_array };
 
     for (size_t current_dim_idx = 0; true; ++current_dim_idx) {
@@ -179,6 +177,13 @@ va::VArray array_as_varray(const Array& input_array) {
 
         current_dim_arrays = std::move(next_dim_arrays);
     }
+}
+
+va::VArray array_as_varray(const Array& input_array) {
+    va::shape_type shape;
+    va::DType dtype = va::DTypeMax;
+
+    find_shape_and_dtype(shape, dtype, input_array);
 
     if (dtype == va::DTypeMax) dtype = va::Float64; // Default dtype
 
@@ -382,14 +387,14 @@ Array varray_to_godot_array(const va::VArray& array) {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
-    Array godot_array = Array();
+    auto godot_array = Array();
 
     // TODO Non-flat
     std::visit([&godot_array](auto carray){
         godot_array.resize(carray.size());
         auto start = carray.begin();
 
-        for (size_t i = 0; i < carray.size(); ++i) {
+        for (int64_t i = 0; i < carray.size(); ++i) {
             godot_array[i] = *(start + i);
         }
     }, array.to_compute_variant());

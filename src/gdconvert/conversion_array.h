@@ -26,6 +26,7 @@ P varray_to_packed(const va::VArray& array) {
 	}, array.to_compute_variant());
 }
 
+void find_shape_and_dtype(va::shape_type& shape, va::DType &dtype, const Array& input_array);
 Array varray_to_godot_array(const va::VArray& array);
 
 #endif

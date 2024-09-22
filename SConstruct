@@ -45,7 +45,7 @@ opts.Update(env)
 use_xsimd = env["use_xsimd"]
 if ARGUMENTS.get("use_xsimd", "auto") == "auto":
     # Web "requires target feature "simd128"", we should solve that but for now let"s just disable simd on web.
-    use_xsimd = ARGUMENTS["platform"] != "web"
+    use_xsimd = ARGUMENTS.get("platform", None) != "web"
 else:
     use_xsimd = _text2bool(use_xsimd)
 

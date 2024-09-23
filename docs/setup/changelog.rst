@@ -23,7 +23,7 @@ Upcoming Changes (master branch)
 
 **Fixed**
 
-- :ref:`NDArray <class_NDArray>` ``set`` didn't honor the index parameters.
+- :ref:`NDArray <class_NDArray>` ``set`` didn't honor the index parameters, and didn't broadcast.
 
 Version 0.2 - 2024-09-20
 -----------------

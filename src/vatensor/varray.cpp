@@ -5,6 +5,7 @@
 #include <type_traits>                     // for decay_t
 #include "xtensor/xoperation.hpp"          // for cast
 #include "xtensor/xstrided_view_base.hpp"  // for strided_view_args
+#include "vassign.h"
 
 va::DType va::VArray::dtype() const {
     return DType(store.index());
@@ -42,19 +43,14 @@ va::VArray va::VArray::slice(const xt::xstrided_slice_vector &slices) const {
 }
 
 void va::VArray::fill(VConstant value) {
-    std::visit([](auto carray, const auto value) {
-        // Cast first to reduce number of combinations down the line.
-        using T = typename std::decay_t<decltype(carray)>::value_type;
-        carray.fill(static_cast<T>(value));
-    }, to_compute_variant(), value);
+    auto compute_variant = to_compute_variant();
+    va::assign(compute_variant, value);
 }
 
 void va::VArray::set_with_array(const VArray& value) {
-    std::visit([](auto carray, const auto cvalue) {
-        using T = typename std::decay_t<decltype(carray)>::value_type;
-        // Cast first to reduce number of combinations down the line.
-        carray.computed_assign(xt::cast<T>(cvalue));
-    }, to_compute_variant(), value.to_compute_variant());
+    auto compute_variant = to_compute_variant();
+    auto vcompute_variant = value.to_compute_variant();
+    va::assign(compute_variant, vcompute_variant);
 }
 
 va::ComputeVariant va::VArray::to_compute_variant() const {

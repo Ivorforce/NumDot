@@ -98,6 +98,20 @@ namespace va {
         store_case<uint64_t>
     >;
 
+    using ArrayVariant = std::variant<
+        array_case<bool>,
+        array_case<float_t>,
+        array_case<double_t>,
+        array_case<int8_t>,
+        array_case<int16_t>,
+        array_case<int32_t>,
+        array_case<int64_t>,
+        array_case<uint8_t>,
+        array_case<uint16_t>,
+        array_case<uint32_t>,
+        array_case<uint64_t>
+    >;
+
     class VArray {
     public:
         StoreVariant store;

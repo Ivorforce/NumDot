@@ -3,6 +3,7 @@
 
 #include "varray.h"
 #include "vpromote.h"
+#include "vassign.h"
 
 namespace va {
     template<typename FX>
@@ -24,23 +25,28 @@ namespace va {
 
             if constexpr (std::is_same_v<PtrType, ComputeVariant *>) {
                 // Assign to compute case, broadcasting and casting if necessary.
-                std::visit([&result](auto &&ctarget) {
-                    using T = typename std::decay_t<decltype(ctarget)>::value_type;
 #ifdef NUMDOT_ASSIGN_INPLACE_DIRECTLY_INSTEAD_OF_COPYING_FIRST
+                if (std::visit([&result](auto&& ctarget) {
+                    using T = typename std::decay_t<decltype(ctarget)>::value_type;
 
                     // About 30% of binary size is the first case, because assignment to a compute case can be difficult.
                     // Another 20% is the two cases combined, which are inlined because they both assign directly to a new xarray.
-                    if constexpr (std::is_same_v<T, R>) {
-                        // TODO Could use assign_xexpression if there is no aliasing, aka overlap of target and inputs.
-                        ctarget.computed_assign(result);
-                    } else
-#endif
-                    {
-                        // Make a copy, similar as in promote_compute_case_if_needed.
-                        // After copying we can be sure no aliasing is taking place, so we can assign with assign_xexpression.
-                        ctarget.assign_xexpression(xt::xarray<R>(result));
+                    if constexpr (!std::is_same_v<T, R>) {
+                        // We need to cast, just give up here.
+                        return false;
                     }
-                }, *target);
+
+                    // TODO Could use assign_xexpression if there is no aliasing, aka overlap of target and inputs.
+                    ctarget.computed_assign(result);
+                    return true;
+                })) {
+                    // Ran accelerated assign, we don't need to do the regular one.
+                    return;
+                }
+#endif
+                // Make a copy, similar as in promote_compute_case_if_needed.
+                // After copying we can be sure no aliasing is taking place, so we can assign with assign_xexpression.
+                va::assign(*target, xt::xarray<R>(result));
             } else {
                 // Create new array, assign to our target pointer.
                 // OutputType may be different from R, if we want different behavior than xtensor for computation.

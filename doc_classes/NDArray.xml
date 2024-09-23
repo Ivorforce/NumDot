@@ -534,6 +534,13 @@
 				Indexes into the array, and return the resulting tensor.
 			</description>
 		</method>
+		<method name="get_bool" qualifiers="const vararg">
+			<return type="bool" />
+			<description>
+				Indexes into the array, and return the resulting value as bool.
+				Errors if the index does not yield a single value.
+			</description>
+		</method>
 		<method name="get_float" qualifiers="const vararg">
 			<return type="float" />
 			<description>
@@ -571,6 +578,13 @@
 			<return type="int" />
 			<description>
 				Number of elements in the array. Equal to nd.prod(a.shape()), i.e., the product of the array’s dimensions.
+			</description>
+		</method>
+		<method name="to_bool" qualifiers="const">
+			<return type="bool" />
+			<description>
+				Convert this tensor to a single bool.
+				Errors if size() is not 1.
 			</description>
 		</method>
 		<method name="to_float" qualifiers="const">

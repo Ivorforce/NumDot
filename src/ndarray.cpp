@@ -40,13 +40,15 @@ void NDArray::_bind_methods() {
 
 	ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "set", &NDArray::set);
 	ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "get", &NDArray::get);
-	ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "get_float", &NDArray::get_float);
+	ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "get_bool", &NDArray::get_bool);
 	ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "get_int", &NDArray::get_int);
+	ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "get_float", &NDArray::get_float);
 
 	godot::ClassDB::bind_method(D_METHOD("as_type", "type"), &NDArray::as_type);
 
-	godot::ClassDB::bind_method(D_METHOD("to_float"), &NDArray::to_float);
+	godot::ClassDB::bind_method(D_METHOD("to_bool"), &NDArray::to_bool);
 	godot::ClassDB::bind_method(D_METHOD("to_int"), &NDArray::to_int);
+	godot::ClassDB::bind_method(D_METHOD("to_float"), &NDArray::to_float);
 
 	godot::ClassDB::bind_method(D_METHOD("to_packed_float32_array"), &NDArray::to_packed_float32_array);
 	godot::ClassDB::bind_method(D_METHOD("to_packed_float64_array"), &NDArray::to_packed_float64_array);
@@ -166,22 +168,26 @@ void NDArray::set(const Variant **args, GDExtensionInt arg_count, GDExtensionCal
 	try {
 		const Variant &value = *args[0];
 		// todo don't need slices if arg_count == 1
-		auto slices = variants_as_slice_vector(args + 1, arg_count - 1, error);
-		va::VArray sliced = arg_count == 1 ? array : array.slice(slices);
+		va::VArray sliced = arg_count == 1
+			? array
+			: array.slice(variants_as_slice_vector(args + 1, arg_count - 1, error));
 
 		switch (value.get_type()) {
+			case Variant::BOOL:
+				sliced.fill(static_cast<bool>(value));
+				return;
 			case Variant::INT:
-				array.fill(static_cast<int64_t>(value));
+				sliced.fill(static_cast<int64_t>(value));
 				return;
 			case Variant::FLOAT:
-				array.fill(static_cast<double_t>(value));
+				sliced.fill(static_cast<double_t>(value));
 				return;
 			// TODO We could optimize more assignments of literals.
 			//  Just need to figure out how, ideally without duplicating code - as_array already does much type checking work.
 			default:
-				va::VArray a_ = variant_as_array(value);
+				const va::VArray a_ = variant_as_array(value);
 
-				array.set_with_array(a_);
+				sliced.set_with_array(a_);
 				return;
 		}
 	}
@@ -202,10 +208,10 @@ Ref<NDArray> NDArray::get(const Variant **args, GDExtensionInt arg_count, GDExte
 	}
 }
 
-double_t NDArray::get_float(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
+bool NDArray::get_bool(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
 	try {
 		xt::xstrided_slice_vector sv = variants_as_slice_vector(args, arg_count, error);
-		return va::constant_to_type<double_t>(array.slice(sv).to_single_value());
+		return va::constant_to_type<bool>(array.slice(sv).to_single_value());
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG(0, error.what());
@@ -222,9 +228,19 @@ int64_t NDArray::get_int(const Variant **args, GDExtensionInt arg_count, GDExten
 	}
 }
 
-double_t NDArray::to_float() const {
+double_t NDArray::get_float(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
 	try {
-		return va::constant_to_type<double_t>(array.to_single_value());
+		xt::xstrided_slice_vector sv = variants_as_slice_vector(args, arg_count, error);
+		return va::constant_to_type<double_t>(array.slice(sv).to_single_value());
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG(0, error.what());
+	}
+}
+
+bool NDArray::to_bool() const {
+	try {
+		return va::constant_to_type<bool>(array.to_single_value());
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG(0, error.what());
@@ -234,6 +250,15 @@ double_t NDArray::to_float() const {
 int64_t NDArray::to_int() const {
 	try {
 		return va::constant_to_type<int64_t>(array.to_single_value());
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG(0, error.what());
+	}
+}
+
+double_t NDArray::to_float() const {
+	try {
+		return va::constant_to_type<double_t>(array.to_single_value());
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG(0, error.what());

@@ -13,7 +13,7 @@ T variant_as_ints_(const Variant& shape) {
             }
         break;
         case Variant::INT:
-            return { C(int64_t(shape)) };
+            return { C(static_cast<int64_t>(shape)) };
         case Variant::PACKED_BYTE_ARRAY:
             return packed_as_shape<T>(PackedByteArray(shape));
         case Variant::PACKED_INT32_ARRAY:

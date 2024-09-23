@@ -18,6 +18,12 @@ Upcoming Changes (master branch)
 - Added the ``matmul`` function.
 - ``nd.array([...])`` can now handle more complex array inputs, e.g. an array of ``Vector2i``.
 - Added the ``stack`` and ``unstack`` functions.
+- Added :ref:`NDArray <class_NDArray>` ``to_bool`` and ``get_bool`` functions.
+- ``nd.full`` now supports bool input.
+
+**Fixed**
+
+- :ref:`NDArray <class_NDArray>` ``set`` didn't honor the index parameters.
 
 Version 0.2 - 2024-09-20
 -----------------

@@ -154,6 +154,8 @@ Methods
    +-------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`get<class_NDArray_method_get>`\ (\ ...\ ) |const| |vararg|                                                                                  |
    +-------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``                      | :ref:`get_bool<class_NDArray_method_get_bool>`\ (\ ...\ ) |const| |vararg|                                                                        |
+   +-------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``float``                     | :ref:`get_float<class_NDArray_method_get_float>`\ (\ ...\ ) |const| |vararg|                                                                      |
    +-------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``int``                       | :ref:`get_int<class_NDArray_method_get_int>`\ (\ ...\ ) |const| |vararg|                                                                          |
@@ -165,6 +167,8 @@ Methods
    | ``PackedInt64Array``          | :ref:`shape<class_NDArray_method_shape>`\ (\ ) |const|                                                                                            |
    +-------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``int``                       | :ref:`size<class_NDArray_method_size>`\ (\ ) |const|                                                                                              |
+   +-------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``                      | :ref:`to_bool<class_NDArray_method_to_bool>`\ (\ ) |const|                                                                                        |
    +-------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``float``                     | :ref:`to_float<class_NDArray_method_to_float>`\ (\ ) |const|                                                                                      |
    +-------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1054,6 +1058,20 @@ Indexes into the array, and return the resulting tensor.
 
 ----
 
+.. _class_NDArray_method_get_bool:
+
+.. rst-class:: classref-method
+
+``bool`` **get_bool**\ (\ ...\ ) |const| |vararg| :ref:`🔗<class_NDArray_method_get_bool>`
+
+Indexes into the array, and return the resulting value as bool.
+
+Errors if the index does not yield a single value.
+
+.. rst-class:: classref-item-separator
+
+----
+
 .. _class_NDArray_method_get_float:
 
 .. rst-class:: classref-method
@@ -1127,6 +1145,20 @@ Array of array dimensions.
 ``int`` **size**\ (\ ) |const| :ref:`🔗<class_NDArray_method_size>`
 
 Number of elements in the array. Equal to nd.prod(a.shape()), i.e., the product of the array’s dimensions.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_to_bool:
+
+.. rst-class:: classref-method
+
+``bool`` **to_bool**\ (\ ) |const| :ref:`🔗<class_NDArray_method_to_bool>`
+
+Convert this tensor to a single bool.
+
+Errors if size() is not 1.
 
 .. rst-class:: classref-item-separator
 

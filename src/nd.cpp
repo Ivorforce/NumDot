@@ -313,6 +313,9 @@ Ref<NDArray> _full(Variant shape, va::VConstant value) {
 
 Ref<NDArray> nd::full(const Variant& shape, const Variant& fill_value, nd::DType dtype) {
 	switch (fill_value.get_type()) {
+		case Variant::BOOL:
+			if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Bool;
+			return _full(shape, va::constant_to_dtype(static_cast<bool>(fill_value), dtype));
 		case Variant::INT:
 			if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Int64;
 			return _full(shape, va::constant_to_dtype(static_cast<int64_t>(fill_value), dtype));

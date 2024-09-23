@@ -46,7 +46,8 @@ namespace va {
 #endif
                 // Make a copy, similar as in promote_compute_case_if_needed.
                 // After copying we can be sure no aliasing is taking place, so we can assign with assign_xexpression.
-                va::assign_nonoverlapping(*target, (const ArrayVariant&) xt::xarray<R>(result));
+                const ArrayVariant variant = xt::xarray<R>(result);
+                va::assign_nonoverlapping(*target, variant);
             } else {
                 // Create new array, assign to our target pointer.
                 // OutputType may be different from R, if we want different behavior than xtensor for computation.

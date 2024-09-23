@@ -17,10 +17,10 @@ namespace va {
     };
 
     template<typename OutputType, typename Result>
-    void assign_to_target(VArrayTarget target, Result&& result) {
+    void assign_to_target(VArrayTarget target, Result result) {
         using R = typename std::decay_t<decltype(result)>::value_type;
 
-        std::visit([&result](auto&& target) {
+        std::visit([result](auto&& target) {
             using PtrType = std::decay_t<decltype(target)>;
 
             if constexpr (std::is_same_v<PtrType, ComputeVariant *>) {
@@ -37,7 +37,7 @@ namespace va {
                     }
 
                     // TODO Could use assign_xexpression if there is no aliasing, aka overlap of target and inputs.
-                    ctarget.computed_assign(result);
+                    va::broadcasting_assign(ctarget, result);
                     return true;
                 })) {
                     // Ran accelerated assign, we don't need to do the regular one.
@@ -46,7 +46,7 @@ namespace va {
 #endif
                 // Make a copy, similar as in promote_compute_case_if_needed.
                 // After copying we can be sure no aliasing is taking place, so we can assign with assign_xexpression.
-                va::assign(*target, xt::xarray<R>(result));
+                va::assign_nonoverlapping(*target, (const ArrayVariant&) xt::xarray<R>(result));
             } else {
                 // Create new array, assign to our target pointer.
                 // OutputType may be different from R, if we want different behavior than xtensor for computation.

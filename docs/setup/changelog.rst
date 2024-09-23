@@ -19,7 +19,7 @@ Upcoming Changes (master branch)
 - ``nd.array([...])`` can now handle more complex array inputs, e.g. an array of ``Vector2i``.
 - Added the ``stack`` and ``unstack`` functions.
 - Added :ref:`NDArray <class_NDArray>` ``to_bool`` and ``get_bool`` functions.
-- ``nd.full`` now supports bool input.
+- ``nd.full`` now supports bools and arrays for the fill value.
 
 **Fixed**
 

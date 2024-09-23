@@ -41,19 +41,19 @@ va::VArray va::VArray::slice(const xt::xstrided_slice_vector &slices) const {
     }, store);
 }
 
-void va::VArray::fill(VConstant value) const {
-    return std::visit([](auto&& carray, auto value) {
+void va::VArray::fill(VConstant value) {
+    std::visit([](auto carray, const auto value) {
         // Cast first to reduce number of combinations down the line.
         using T = typename std::decay_t<decltype(carray)>::value_type;
         carray.fill(static_cast<T>(value));
     }, to_compute_variant(), value);
 }
 
-void va::VArray::set_with_array(const VArray& value) const {
-    return std::visit([](auto&& carray, auto&& cvalue) {
+void va::VArray::set_with_array(const VArray& value) {
+    std::visit([](auto carray, const auto cvalue) {
         using T = typename std::decay_t<decltype(carray)>::value_type;
         // Cast first to reduce number of combinations down the line.
-        carray.computed_assign(xt::cast<T>(std::forward<decltype(cvalue)>(cvalue)));
+        carray.computed_assign(xt::cast<T>(cvalue));
     }, to_compute_variant(), value.to_compute_variant());
 }
 

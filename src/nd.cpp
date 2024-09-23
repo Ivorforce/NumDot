@@ -300,39 +300,46 @@ Ref<NDArray> nd::empty(Variant shape, nd::DType dtype) {
 	}
 }
 
-Ref<NDArray> _full(Variant shape, va::VConstant value) {
+Ref<NDArray> nd::full(const Variant& shape, const Variant& fill_value, nd::DType dtype) {
 	try {
 		const auto shape_array = variant_as_shape(shape);
 
-		return {memnew(NDArray(va::full(value, shape_array)))};
+		switch (fill_value.get_type()) {
+			case Variant::BOOL: {
+				if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Bool;
+				const auto value = va::constant_to_dtype(static_cast<bool>(fill_value), dtype);
+				return {memnew(NDArray(va::full(value, shape_array)))};
+			}
+			case Variant::INT: {
+				if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Int64;
+				const auto value = va::constant_to_dtype(static_cast<int64_t>(fill_value), dtype);
+				return {memnew(NDArray(va::full(value, shape_array)))};
+			}
+			case Variant::FLOAT: {
+				if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Float64;
+				const auto value = va::constant_to_dtype(static_cast<double_t>(fill_value), dtype);
+				return {memnew(NDArray(va::full(value, shape_array)))};
+			}
+			default: {
+				va::VArray result = va::empty(dtype, shape_array);
+				result.set_with_array(variant_as_array(fill_value));
+				return {memnew(NDArray(result))};
+			}
+		}
+
+		ERR_FAIL_V_MSG({}, "The fill value must be a number literal (for now).");
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
 	}
 }
 
-Ref<NDArray> nd::full(const Variant& shape, const Variant& fill_value, nd::DType dtype) {
-	switch (fill_value.get_type()) {
-		case Variant::BOOL:
-			if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Bool;
-			return _full(shape, va::constant_to_dtype(static_cast<bool>(fill_value), dtype));
-		case Variant::INT:
-			if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Int64;
-			return _full(shape, va::constant_to_dtype(static_cast<int64_t>(fill_value), dtype));
-		case Variant::FLOAT:
-			if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Float64;
-			return _full(shape, va::constant_to_dtype(static_cast<double_t>(fill_value), dtype));
-		default:
-			ERR_FAIL_V_MSG({}, "The fill value must be a number literal (for now).");
-	}
-}
-
 Ref<NDArray> nd::zeros(Variant shape, nd::DType dtype) {
-	return _full(std::move(shape), va::constant_to_dtype(0, dtype));
+	return full(shape, 0, dtype);
 }
 
 Ref<NDArray> nd::ones(Variant shape, nd::DType dtype) {
-	return _full(std::move(shape), va::constant_to_dtype(1, dtype));
+	return full(shape, 1, dtype);
 }
 
 Ref<NDArray> nd::linspace(Variant start, Variant stop, int64_t num, bool endpoint, DType dtype) {

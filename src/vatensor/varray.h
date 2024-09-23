@@ -112,8 +112,8 @@ namespace va {
 
         // TODO Can probably change these to subscript syntax
         [[nodiscard]] VArray slice(const xt::xstrided_slice_vector& slices) const;
-        void fill(VConstant value) const;
-        void set_with_array(const VArray& value) const;
+        void fill(VConstant value);
+        void set_with_array(const VArray& value);
 
         [[nodiscard]] ComputeVariant to_compute_variant() const;
         [[nodiscard]] size_t size_of_array_in_bytes() const;

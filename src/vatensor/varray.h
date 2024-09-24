@@ -53,12 +53,7 @@ namespace va {
         uint64_t
     >;
 
-    using GivenAxes = std::vector<std::ptrdiff_t>;
-
-    using Axes = std::variant<
-        std::nullptr_t,
-        GivenAxes
-    >;
+    using Axes = std::vector<std::ptrdiff_t>;
 
     template <typename T>
     using array_case = xt::xarray<T>;
@@ -174,6 +169,19 @@ namespace va {
             xt::layout_type::dynamic
         };
     }
+
+    template <typename V>
+    static VArray from_constant(const V value) {
+        return {
+            std::make_shared<xt::xarray<V>>(value),
+            {},
+            {},
+            0,
+            xt::layout_type::dynamic
+        };
+    }
+
+    VArray from_constant_variant(VConstant constant);
 
     template <typename V, typename S>
     static VArray from_surrogate(V&& store, const S& surrogate) {

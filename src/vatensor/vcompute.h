@@ -85,26 +85,32 @@ namespace va {
         );
     }
 
-    template<typename PromotionRule, typename FX>
-    static VArrayFunctionInplace<PromotionRule, FX> make_varrayfunction_inplace(FX fx, VArrayTarget target) {
-        return VArrayFunctionInplace<PromotionRule, FX>{fx, target};
-    }
+    template<typename PromotionRule, typename ReturnType, typename Visitor>
+    struct VArrayReduction {
+        const Visitor visitor;
 
-    template<typename PromotionRule, typename FX, typename Axes, typename... Args>
-    static inline void xreduction_inplace(FX &&fx, Axes &&axes, VArrayTarget target, Args&&... args) {
-        std::visit([fx = std::forward<FX>(fx), target](auto& axes, auto&&... stores) {
-            using AxesType = std::decay_t<decltype(axes)>;
+        explicit VArrayReduction(const Visitor visitor)
+            : visitor(std::move(visitor)) {
+        }
 
-            if constexpr (std::is_same_v<AxesType, std::nullptr_t>) {
-                make_varrayfunction_inplace<PromotionRule>([fx](auto&&... inner_args) {
-                    return fx(std::forward<decltype(inner_args)>(inner_args)...);
-                }, target)(std::forward<decltype(stores)>(stores)...);
-            } else {
-                make_varrayfunction_inplace<PromotionRule>([fx, &axes](auto&&... inner_args) {
-                    return fx(axes, std::forward<decltype(inner_args)>(inner_args)...);
-                }, target)(std::forward<decltype(stores)>(stores)...);
-            }
-        }, std::forward<Axes>(axes), std::forward<Args>(args)...);
+        template<typename... Args>
+        ReturnType operator()(const compute_case<Args>&... args) const {
+            using InputType = typename PromotionRule::template input_type<Args...>;
+            using OutputType = typename PromotionRule::template output_type<InputType>;
+
+            // Result of visitor invocation
+            // TODO Some xt functions support passing the output type. That would be FAR better than casting it afterwards as here.
+            OutputType result = visitor(promote::promote_compute_case_if_needed<InputType>(args)...);
+            return static_cast<ReturnType>(result);
+        }
+    };
+
+    template<typename PromotionRule, typename ReturnType, typename FX, typename... Args>
+    static ReturnType vreduce(FX&& fx, const Args&... args) {
+        return std::visit(
+            VArrayReduction<PromotionRule, ReturnType, FX>{std::forward<FX>(fx) },
+            args...
+        );
     }
 }
 

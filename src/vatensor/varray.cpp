@@ -65,6 +65,12 @@ size_t va::VArray::size_of_array_in_bytes() const {
     }, to_compute_variant());
 }
 
+va::VArray va::from_constant_variant(VConstant constant) {
+    return std::visit([](auto cconstant){
+        return from_constant(cconstant);
+    }, constant);
+}
+
 va::VConstant va::dtype_to_variant(const DType dtype) {
     switch (dtype) {
         case DType::Bool:

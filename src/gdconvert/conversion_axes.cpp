@@ -13,8 +13,6 @@ va::Axes variant_to_axes(const Variant& variant) {
     const auto type = variant.get_type();
 
     switch (type) {
-        case Variant::NIL:
-            return nullptr;
         case Variant::INT:
             return std::vector { static_cast<std::ptrdiff_t>(static_cast<int64_t>(variant)) };
         case Variant::PACKED_INT32_ARRAY:

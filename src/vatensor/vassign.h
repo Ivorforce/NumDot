@@ -16,6 +16,8 @@ namespace va {
     void assign(ComputeVariant& array, const ComputeVariant& value);
     void assign_nonoverlapping(ComputeVariant& array, const ArrayVariant& value);
     void assign(ComputeVariant& array, VConstant value);
+
+    void assign(VArrayTarget target, VConstant value);
 }
 
 #endif //NUMDOT_VASSIGN_H

@@ -26,3 +26,14 @@ void va::assign(ComputeVariant& array, VConstant value) {
         carray.fill(static_cast<T>(cvalue));
     }, array, value);
 }
+
+void va::assign(VArrayTarget target, VConstant value) {
+	std::visit([value](auto target) {
+		if constexpr (std::is_same_v<decltype(target), ComputeVariant*>) {
+			va::assign(*target, value);
+		}
+		else {
+			*target = from_constant_variant(value);
+		}
+	}, target);
+}

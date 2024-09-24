@@ -11,6 +11,7 @@
 #include <stdexcept>                               // for runtime_error
 #include <variant>                                 // for visit
 #include <vatensor/linalg.h>
+#include <vatensor/vassign.h>
 
 #include "gdconvert/conversion_array.h"            // for varray_to_packed
 #include "gdconvert/conversion_slice.h"            // for variants_as_slice_...
@@ -319,12 +320,19 @@ void map_variants_as_arrays_inplace(Visitor visitor, Args... args) {
     }
 }
 
-template <typename Visitor, typename... Args>
-inline void reduction_inplace(Visitor visitor, Variant axes, Args... args) {
+template <typename Visitor, typename VisitorNoaxes, typename... Args>
+inline void reduction_inplace(Visitor visitor, VisitorNoaxes visitor_noaxes, va::VArray& target, Variant& axes, Args&... args) {
 	try {
-		const auto axes_ = variant_to_axes(axes);
+		if (axes.get_type() == Variant::NIL) {
+			const auto result = visitor_noaxes(variant_as_array(args)...);
+			target.fill(result);
+			return;
+		}
 
-		visitor(axes_, variant_as_array(args)...);
+		const auto axes_ = variant_to_axes(axes);
+		auto compute_variant = target.to_compute_variant();
+
+		visitor(&compute_variant, axes_, variant_as_array(args)...);
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_MSG(error.what());
@@ -352,11 +360,20 @@ inline void reduction_inplace(Visitor visitor, Variant axes, Args... args) {
     }, (varray1), (varray2), (varray3));\
     return {this}
 
-#define REDUCTION(func, varray1, axes1) \
-	reduction_inplace([this](const va::Axes& axes, const va::VArray& array) {\
-		auto compute_variant = array.to_compute_variant();\
-		va::func(&compute_variant, array, axes);\
-	}, (axes1), (varray1));\
+#define REDUCTION1(func, varray1, axes1) \
+	reduction_inplace([this](va::VArrayTarget target, const va::Axes& axes, const va::VArray& array) {\
+		va::func(target, array, axes);\
+	}, [this](const va::VArray& array) {\
+		return va::func(array);\
+	}, this->array, (axes1), (varray1));\
+	return {this}
+
+#define REDUCTION2(func, varray1, varray2, axes1) \
+	reduction_inplace([this](va::VArrayTarget target, const va::Axes& axes, const va::VArray& carray1, const va::VArray& carray2) {\
+		va::func(target, carray1, carray2, axes);\
+	}, [this](const va::VArray& carray1, const va::VArray& carray2) {\
+		return va::func(carray1, carray2);\
+	}, this->array, (axes1), (varray1), (varray2));\
 	return {this}
 
 Ref<NDArray> NDArray::assign_add(Variant a, Variant b) {
@@ -481,31 +498,31 @@ Ref<NDArray> NDArray::assign_atanh(Variant a) {
 }
 
 Ref<NDArray> NDArray::assign_sum(Variant a, Variant axes) {
-	REDUCTION(sum, a, axes);
+	REDUCTION1(sum, a, axes);
 }
 
 Ref<NDArray> NDArray::assign_prod(Variant a, Variant axes) {
-	REDUCTION(prod, a, axes);
+	REDUCTION1(prod, a, axes);
 }
 
 Ref<NDArray> NDArray::assign_mean(Variant a, Variant axes) {
-	REDUCTION(mean, a, axes);
+	REDUCTION1(mean, a, axes);
 }
 
 Ref<NDArray> NDArray::assign_var(Variant a, Variant axes) {
-	REDUCTION(var, a, axes);
+	REDUCTION1(var, a, axes);
 }
 
 Ref<NDArray> NDArray::assign_std(Variant a, Variant axes) {
-	REDUCTION(std, a, axes);
+	REDUCTION1(std, a, axes);
 }
 
 Ref<NDArray> NDArray::assign_max(Variant a, Variant axes) {
-	REDUCTION(max, a, axes);
+	REDUCTION1(max, a, axes);
 }
 
 Ref<NDArray> NDArray::assign_min(Variant a, Variant axes) {
-	REDUCTION(min, a, axes);
+	REDUCTION1(min, a, axes);
 }
 
 Ref<NDArray> NDArray::assign_norm(Variant a, Variant ord, Variant axes) {
@@ -513,17 +530,17 @@ Ref<NDArray> NDArray::assign_norm(Variant a, Variant ord, Variant axes) {
 		case Variant::INT:
 			switch (static_cast<int64_t>(ord)) {
 				case 0:
-					REDUCTION(norm_l0, a, axes);
+					REDUCTION1(norm_l0, a, axes);
 				case 1:
-					REDUCTION(norm_l1, a, axes);
+					REDUCTION1(norm_l1, a, axes);
 				case 2:
-					REDUCTION(norm_l2, a, axes);
+					REDUCTION1(norm_l2, a, axes);
 				default:
 					break;
 			}
 		case Variant::FLOAT:
 			if (std::isinf(static_cast<double_t>(ord))) {
-				REDUCTION(norm_linf, a, axes);
+				REDUCTION1(norm_linf, a, axes);
 			}
 		default:
 			break;
@@ -594,11 +611,11 @@ Ref<NDArray> NDArray::assign_logical_not(Variant a) {
 }
 
 Ref<NDArray> NDArray::assign_all(Variant a, Variant axes) {
-    REDUCTION(all, a, axes);
+    REDUCTION1(all, a, axes);
 }
 
 Ref<NDArray> NDArray::assign_any(Variant a, Variant axes) {
-    REDUCTION(any, a, axes);
+    REDUCTION1(any, a, axes);
 }
 
 Ref<NDArray> NDArray::assign_dot(Variant a, Variant b) {
@@ -606,11 +623,7 @@ Ref<NDArray> NDArray::assign_dot(Variant a, Variant b) {
 }
 
 Ref<NDArray> NDArray::assign_reduce_dot(Variant a, Variant b, Variant axes) {
-	reduction_inplace([this](const va::Axes& axes, const va::VArray& a, const va::VArray& b) {
-		auto compute_variant = array.to_compute_variant();\
-		va::reduce_dot(&compute_variant, a, b, axes);
-	}, axes, a, b);
-	return {this};
+	REDUCTION2(reduce_dot, a, b, axes);
 }
 
 Ref<NDArray> NDArray::assign_matmul(Variant a, Variant b) {

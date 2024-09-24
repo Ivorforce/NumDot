@@ -18,6 +18,12 @@
 // 	}
 // };
 
+va::VConstant va::reduce_dot(const VArray &a, const VArray &b) {
+	std::optional<va::VArray> prod_cache;
+	va::multiply(&prod_cache, a, b);
+	return sum(prod_cache.value());
+}
+
 void va::reduce_dot(VArrayTarget target, const VArray &a, const VArray &b, const Axes& axes) {
 	std::optional<va::VArray> prod_cache;
 	va::multiply(&prod_cache, a, b);
@@ -35,7 +41,7 @@ void va::dot(VArrayTarget target, const VArray &a, const VArray &b) {
 	if (a.dimension() == 1 && b.dimension() == 1) {
 		std::optional<va::VArray> prod_cache;
 		va::multiply(&prod_cache, a, b);
-		va::sum(target, prod_cache.value(), nullptr);
+		va::assign(target, va::sum(prod_cache.value()));
 	}
 	else if (a.dimension() == 2 && b.dimension() == 2) {
 		return va::matmul(target, a, b);

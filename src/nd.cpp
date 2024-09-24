@@ -176,9 +176,20 @@ Ref<NDArray> map_variants_as_arrays_with_target(Visitor visitor, Args... args) {
 	}
 }
 
-template <typename Visitor, typename... Args>
-inline Ref<NDArray> reduction(Visitor visitor, Variant axes, Args... args) {
+template <typename Visitor, typename VisitorNoaxes, typename... Args>
+inline Ref<NDArray> reduction(Visitor visitor, VisitorNoaxes visitor_noaxes, Variant& axes, Args&... args) {
 	try {
+		if (axes.get_type() == Variant::NIL) {
+			const auto result = visitor_noaxes(variant_as_array(args)...);
+
+			if constexpr (std::is_same_v<std::decay_t<decltype(result)>, va::VConstant>) {
+				return { memnew(NDArray(va::from_constant_variant(result))) };
+			}
+			else {
+				return { memnew(NDArray(va::from_constant(result))) };
+			}
+		}
+
 		const auto axes_ = variant_to_axes(axes);
 
 		std::optional<va::VArray> result;
@@ -206,10 +217,17 @@ inline Ref<NDArray> reduction(Visitor visitor, Variant axes, Args... args) {
         va::func(target, a, b, c);\
     }, (varray1), (varray2), (varray3))
 
-#define REDUCTION(func, varray1, axes1) \
+#define REDUCTION1(func, varray1, axes1) \
 	reduction([](const va::VArrayTarget target, const va::Axes& axes, const va::VArray& array) {\
 		va::func(target, array, axes);\
-	}, axes, (varray1))
+	}, [](const va::VArray& array) { return va::func(array); }, axes, (varray1))
+
+#define REDUCTION2(func, varray1, varray2, axes1) \
+	reduction([](const va::VArrayTarget target, const va::Axes& axes, const va::VArray& carray1, const va::VArray& carray2) {\
+		va::func(target, carray1, carray2, axes);\
+	}, [](const va::VArray& carray1, const va::VArray& carray2) {\
+		return va::func(carray1, carray2);\
+	}, axes, (varray1), (varray2))
 
 StringName nd::newaxis() {
 	return ::newaxis();
@@ -583,31 +601,31 @@ Ref<NDArray> nd::atanh(Variant a) {
 }
 
 Ref<NDArray> nd::sum(Variant a, Variant axes) {
-	return REDUCTION(sum, a, axes);
+	return REDUCTION1(sum, a, axes);
 }
 
 Ref<NDArray> nd::prod(Variant a, Variant axes) {
-	return REDUCTION(prod, a, axes);
+	return REDUCTION1(prod, a, axes);
 }
 
 Ref<NDArray> nd::mean(Variant a, Variant axes) {
-	return REDUCTION(mean, a, axes);
+	return REDUCTION1(mean, a, axes);
 }
 
 Ref<NDArray> nd::var(Variant a, Variant axes) {
-	return REDUCTION(var, a, axes);
+	return REDUCTION1(var, a, axes);
 }
 
 Ref<NDArray> nd::std(Variant a, Variant axes) {
-	return REDUCTION(std, a, axes);
+	return REDUCTION1(std, a, axes);
 }
 
 Ref<NDArray> nd::max(Variant a, Variant axes) {
-	return REDUCTION(max, a, axes);
+	return REDUCTION1(max, a, axes);
 }
 
 Ref<NDArray> nd::min(Variant a, Variant axes) {
-	return REDUCTION(min, a, axes);
+	return REDUCTION1(min, a, axes);
 }
 
 Ref<NDArray> nd::norm(Variant a, Variant ord, Variant axes) {
@@ -615,17 +633,17 @@ Ref<NDArray> nd::norm(Variant a, Variant ord, Variant axes) {
 		case Variant::INT:
 			switch (static_cast<int64_t>(ord)) {
 				case 0:
-					return REDUCTION(norm_l0, a, axes);
+					return REDUCTION1(norm_l0, a, axes);
 				case 1:
-					return REDUCTION(norm_l1, a, axes);
+					return REDUCTION1(norm_l1, a, axes);
 				case 2:
-					return REDUCTION(norm_l2, a, axes);
+					return REDUCTION1(norm_l2, a, axes);
 				default:
 					break;
 			}
 		case Variant::FLOAT:
 			if (std::isinf(static_cast<double_t>(ord))) {
-				return REDUCTION(norm_linf, a, axes);
+				return REDUCTION1(norm_linf, a, axes);
 			}
 		default:
 			break;
@@ -696,11 +714,11 @@ Ref<NDArray> nd::logical_not(Variant a) {
 }
 
 Ref<NDArray> nd::all(Variant a, Variant axes) {
-    return REDUCTION(all, a, axes);
+    return REDUCTION1(all, a, axes);
 }
 
 Ref<NDArray> nd::any(Variant a, Variant axes) {
-    return REDUCTION(any, a, axes);
+    return REDUCTION1(any, a, axes);
 }
 
 Ref<NDArray> nd::dot(Variant a, Variant b) {
@@ -708,9 +726,7 @@ Ref<NDArray> nd::dot(Variant a, Variant b) {
 }
 
 Ref<NDArray> nd::reduce_dot(Variant a, Variant b, Variant axes) {
-	return reduction([](const va::VArrayTarget target, const va::Axes& axes, const va::VArray& a, const va::VArray& b) {
-		va::reduce_dot(target, a, b, axes);
-	}, axes, a, b);
+	return REDUCTION2(reduce_dot, a, b, axes);
 }
 
 Ref<NDArray> nd::matmul(Variant a, Variant b) {

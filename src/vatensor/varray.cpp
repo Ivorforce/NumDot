@@ -8,7 +8,7 @@
 #include "vassign.h"
 
 va::DType va::VArray::dtype() const {
-    return DType(store.index());
+    return static_cast<DType>(store.index());
 }
 
 size_t va::VArray::size() const {
@@ -42,15 +42,14 @@ va::VArray va::VArray::slice(const xt::xstrided_slice_vector &slices) const {
     }, store);
 }
 
-void va::VArray::fill(VConstant value) {
+void va::VArray::fill(const VConstant value) {
     auto compute_variant = to_compute_variant();
     va::assign(compute_variant, value);
 }
 
 void va::VArray::set_with_array(const VArray& value) {
     auto compute_variant = to_compute_variant();
-    auto vcompute_variant = value.to_compute_variant();
-    va::assign(compute_variant, vcompute_variant);
+    va::assign(compute_variant, value.to_compute_variant());
 }
 
 va::ComputeVariant va::VArray::to_compute_variant() const {
@@ -66,7 +65,7 @@ size_t va::VArray::size_of_array_in_bytes() const {
     }, to_compute_variant());
 }
 
-va::VConstant va::dtype_to_variant(DType dtype) {
+va::VConstant va::dtype_to_variant(const DType dtype) {
     switch (dtype) {
         case DType::Bool:
             return bool();
@@ -95,29 +94,29 @@ va::VConstant va::dtype_to_variant(DType dtype) {
     }
 }
 
-va::DType va::variant_to_dtype(VConstant dtype) {
+va::DType va::variant_to_dtype(const VConstant dtype) {
     return static_cast<DType>(dtype.index());
 }
 
-size_t va::size_of_dtype_in_bytes(DType dtype) {
-    return std::visit([](auto dtype){
+size_t va::size_of_dtype_in_bytes(const DType dtype) {
+    return std::visit([]([[maybe_unused]] auto dtype){
         return sizeof(dtype);
     }, dtype_to_variant(dtype));
 }
 
-va::VConstant va::constant_to_dtype(VConstant v, DType dtype) {
+va::VConstant va::constant_to_dtype(const VConstant v, const DType dtype) {
     return std::visit([](auto v, const auto t) -> va::VConstant {
         using T = std::decay_t<decltype(t)>;
         return static_cast<T>(v);
     }, v, dtype_to_variant(dtype));
 }
 
-va::DType va::dtype_common_type(DType a, DType b) {
+va::DType va::dtype_common_type(const DType a, const DType b) {
     if (a == DTypeMax) return b;
     if (b == DTypeMax) return a;
 
     return std::visit(
-        [](auto a, auto b) { return variant_to_dtype(std::common_type_t<decltype(a), decltype(b)>()); },
+        []([[maybe_unused]] auto a, [[maybe_unused]] auto b) { return variant_to_dtype(std::common_type_t<decltype(a), decltype(b)>()); },
         dtype_to_variant(a),
         dtype_to_variant(b)
     );

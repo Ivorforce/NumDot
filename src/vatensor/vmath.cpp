@@ -166,7 +166,7 @@ void va::square(VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
 #else
-    xoperation_inplace<promote::num_function_result<xt::math::sqrt_fun>>(
+    xoperation_inplace<promote::num_common_type>(
         va::XFunction<square_fun> {},
         target,
         array.to_compute_variant()

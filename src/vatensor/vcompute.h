@@ -50,7 +50,7 @@ namespace va {
         // (as incompatible types COULD be less than the supported ones, prompting us to upcast), but it's good enough for now.
         using RNatural = typename std::decay_t<decltype(result)>::value_type;
         using RStorable = compatible_type_or_64_bit_t<RNatural, VConstant>;
-        using O = compatible_type_or_64_bit_t<OutputType, VConstant>;
+        using OStorable = compatible_type_or_64_bit_t<OutputType, VConstant>;
 
         std::visit([&result](auto& target) {
             using PtrType = std::decay_t<decltype(target)>;
@@ -85,7 +85,7 @@ namespace va {
             } else {
                 // Create new array, assign to our target pointer.
                 // OutputType may be different from R, if we want different behavior than xtensor for computation.
-                *target = from_store(std::make_shared<xt::xarray<O>>(result));
+                *target = from_store(std::make_shared<xt::xarray<OStorable>>(result));
             }
         }, target);
     }

@@ -154,7 +154,7 @@ nd::nd() = default;
 nd::~nd() = default;
 
 template <typename Visitor, typename... Args>
-Ref<NDArray> map_variants_as_arrays(Visitor visitor, Args... args) {
+Ref<NDArray> map_variants_as_arrays(Visitor visitor, const Args&... args) {
 	try {
 		const auto result = visitor(variant_as_array(args)...);
 		return { memnew(NDArray(result)) };
@@ -165,7 +165,7 @@ Ref<NDArray> map_variants_as_arrays(Visitor visitor, Args... args) {
 }
 
 template <typename Visitor, typename... Args>
-Ref<NDArray> map_variants_as_arrays_with_target(Visitor visitor, Args... args) {
+Ref<NDArray> map_variants_as_arrays_with_target(Visitor visitor, const Args&... args) {
 	try {
 		std::optional<va::VArray> result;
 		visitor(&result, variant_as_array(args)...);
@@ -177,7 +177,7 @@ Ref<NDArray> map_variants_as_arrays_with_target(Visitor visitor, Args... args) {
 }
 
 template <typename Visitor, typename VisitorNoaxes, typename... Args>
-inline Ref<NDArray> reduction(Visitor visitor, VisitorNoaxes visitor_noaxes, Variant& axes, Args&... args) {
+inline Ref<NDArray> reduction(Visitor visitor, VisitorNoaxes visitor_noaxes, const Variant& axes, const Args&... args) {
 	try {
 		if (axes.get_type() == Variant::NIL) {
 			const auto result = visitor_noaxes(variant_as_array(args)...);
@@ -253,7 +253,7 @@ Ref<NDRange> nd::to(int64_t stop) {
 	))};
 }
 
-Ref<NDRange> nd::range(Variant start_or_stop, Variant stop, Variant step) {
+Ref<NDRange> nd::range(const Variant &start_or_stop, const Variant &stop, const Variant &step) {
 	try {
 		if (stop.get_type() == Variant::Type::NIL && step.get_type() == Variant::Type::NIL) {
 			return {memnew(NDRange(0, to_range_part(start_or_stop), xt::placeholders::xtuph{}))};
@@ -270,16 +270,16 @@ Ref<NDRange> nd::range(Variant start_or_stop, Variant stop, Variant step) {
 	}
 }
 
-uint64_t nd::size_of_dtype_in_bytes(DType dtype) {
+uint64_t nd::size_of_dtype_in_bytes(const DType dtype) {
 	return va::size_of_dtype_in_bytes(dtype);
 }
 
-Ref<NDArray> nd::as_array(Variant array, nd::DType dtype) {
-	auto type = array.get_type();
+Ref<NDArray> nd::as_array(const Variant &array, const nd::DType dtype) {
+	const auto type = array.get_type();
 
 	// Can we take a view?
 	if (type == Variant::OBJECT) {
-		if (auto ndarray = dynamic_cast<NDArray*>(static_cast<Object *>(array))) {
+		if (const auto ndarray = dynamic_cast<NDArray*>(static_cast<Object *>(array))) {
 			if (dtype == nd::DType::DTypeMax || ndarray->dtype() == dtype) {
 				return array;
 			}
@@ -290,7 +290,7 @@ Ref<NDArray> nd::as_array(Variant array, nd::DType dtype) {
 	return nd::array(array, dtype);
 }
 
-Ref<NDArray> nd::array(Variant array, nd::DType dtype) {
+Ref<NDArray> nd::array(const Variant &array, nd::DType dtype) {
 	try {
 		va::VArray existing_array = variant_as_array(array);
 
@@ -307,7 +307,7 @@ Ref<NDArray> nd::array(Variant array, nd::DType dtype) {
 	}
 }
 
-Ref<NDArray> nd::empty(Variant shape, nd::DType dtype) {
+Ref<NDArray> nd::empty(const Variant &shape, const nd::DType dtype) {
 	try {
 		const auto shape_array = variant_as_shape(shape);
 
@@ -352,15 +352,15 @@ Ref<NDArray> nd::full(const Variant& shape, const Variant& fill_value, nd::DType
 	}
 }
 
-Ref<NDArray> nd::zeros(Variant shape, nd::DType dtype) {
+Ref<NDArray> nd::zeros(const Variant &shape, const nd::DType dtype) {
 	return full(shape, 0, dtype);
 }
 
-Ref<NDArray> nd::ones(Variant shape, nd::DType dtype) {
+auto nd::ones(const Variant &shape, const nd::DType dtype) -> Ref<NDArray> {
 	return full(shape, 1, dtype);
 }
 
-Ref<NDArray> nd::linspace(Variant start, Variant stop, int64_t num, bool endpoint, DType dtype) {
+Ref<NDArray> nd::linspace(const Variant &start, const Variant &stop, const int64_t num, const bool endpoint, DType dtype) {
 #ifdef NUMDOT_DISABLE_ALLOCATION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_ALLOCATION_FUNCTIONS to enable it.");
 #else
@@ -371,7 +371,7 @@ Ref<NDArray> nd::linspace(Variant start, Variant stop, int64_t num, bool endpoin
 	}
 
 	try {
-		auto result = std::visit([start, stop, num, endpoint](auto t) {
+		const auto result = std::visit([start, stop, num, endpoint](auto t) {
 			using T = std::decay_t<decltype(t)>;
 
 			if constexpr (std::is_floating_point_v<T>) {
@@ -391,7 +391,7 @@ Ref<NDArray> nd::linspace(Variant start, Variant stop, int64_t num, bool endpoin
 #endif
 }
 
-Ref<NDArray> nd::arange(Variant start_or_stop, Variant stop, Variant step, DType dtype) {
+Ref<NDArray> nd::arange(const Variant &start_or_stop, const Variant &stop, const Variant &step, DType dtype) {
 #ifdef NUMDOT_DISABLE_ALLOCATION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_ALLOCATION_FUNCTIONS to enable it.");
 #else
@@ -400,23 +400,21 @@ Ref<NDArray> nd::arange(Variant start_or_stop, Variant stop, Variant step, DType
 			? nd::DType::Float64
 			: nd::DType::Int64;
 	}
-
-	// Support arange(x) syntax
-	if (stop.get_type() == Variant::NIL) {
-		stop = start_or_stop;
-		start_or_stop = 0;
-	}
+	static const Variant zero = 0;
+	const Variant& start_ = stop.get_type() == Variant::NIL ? zero : start_or_stop;
+	const Variant& stop_ = stop.get_type() == Variant::NIL ? start_or_stop : nullptr;
+	const Variant& step_ = step;
 
 	try {
-		auto result = std::visit([start_or_stop, stop, step](auto t) {
+		const auto result = std::visit([start_, stop_, step_](auto t) {
 			using T = std::decay_t<decltype(t)>;
 
 			if constexpr (std::is_floating_point_v<T>) {
-				auto store = std::make_shared<xt::xarray<T>>(xt::arange(static_cast<double_t>(start_or_stop), static_cast<double_t>(stop), static_cast<double_t>(step)));
+				const auto store = std::make_shared<xt::xarray<T>>(xt::arange(static_cast<double_t>(start_), static_cast<double_t>(stop_), static_cast<double_t>(step_)));
 				return va::from_store(store);
 			}
 			else {
-				auto store = std::make_shared<xt::xarray<T>>(xt::arange(static_cast<int64_t>(start_or_stop), static_cast<int64_t>(stop), static_cast<int64_t>(step)));
+				const auto store = std::make_shared<xt::xarray<T>>(xt::arange(static_cast<int64_t>(start_), static_cast<int64_t>(stop_), static_cast<int64_t>(step_)));
 				return va::from_store(store);
 			}
 		}, va::dtype_to_variant(dtype));
@@ -428,7 +426,7 @@ Ref<NDArray> nd::arange(Variant start_or_stop, Variant stop, Variant step, DType
 #endif
 }
 
-Ref<NDArray> nd::transpose(Variant a, Variant permutation) {
+Ref<NDArray> nd::transpose(const Variant &a, const Variant &permutation) {
 	try {
 		va::VArray a_ = variant_as_array(a);
 		// TODO It's not exactly a shape, but 'int array' is close enough.
@@ -442,7 +440,7 @@ Ref<NDArray> nd::transpose(Variant a, Variant permutation) {
 	}
 }
 
-Ref<NDArray> nd::reshape(Variant a, Variant shape) {
+Ref<NDArray> nd::reshape(const Variant &a, const Variant &shape) {
 	try {
 		va::VArray a_ = variant_as_array(a);
 		// TODO It's not exactly a shape, but 'int array' is close enough.
@@ -456,179 +454,179 @@ Ref<NDArray> nd::reshape(Variant a, Variant shape) {
 	}
 }
 
-Ref<NDArray> nd::swapaxes(Variant v, int64_t a, int64_t b) {
+Ref<NDArray> nd::swapaxes(const Variant& v, const int64_t a, const int64_t b) {
 	return map_variants_as_arrays([a, b](const va::VArray& v) { return va::swapaxes(v, a, b); }, v);
 }
 
-Ref<NDArray> nd::moveaxis(Variant v, int64_t src, int64_t dst) {
+Ref<NDArray> nd::moveaxis(const Variant& v, int64_t src, int64_t dst) {
 	return map_variants_as_arrays([src, dst](const va::VArray& v) { return va::moveaxis(v, src, dst); }, v);
 }
 
-Ref<NDArray> nd::flip(Variant v, int64_t axis) {
+Ref<NDArray> nd::flip(const Variant& v, int64_t axis) {
 	return map_variants_as_arrays([axis](const va::VArray& v) { return va::flip(v, axis); }, v);
 }
 
-Ref<NDArray> nd::stack(Variant v, int64_t axis) {
+Ref<NDArray> nd::stack(const Variant& v, int64_t axis) {
 	return map_variants_as_arrays([axis](const va::VArray& v) {
 		return va::moveaxis(v, 0, axis);
 	}, v);
 }
 
-Ref<NDArray> nd::unstack(Variant v, int64_t axis) {
+Ref<NDArray> nd::unstack(const Variant& v, int64_t axis) {
 	return map_variants_as_arrays([axis](const va::VArray& v) {
 		return va::moveaxis(v, axis, 0);
 	}, v);
 }
 
-Ref<NDArray> nd::add(Variant a, Variant b) {
+Ref<NDArray> nd::add(const Variant& a, const Variant& b) {
 	return BINARY_MAP(add, a, b);
 }
 
-Ref<NDArray> nd::subtract(Variant a, Variant b) {
+Ref<NDArray> nd::subtract(const Variant& a, const Variant& b) {
 	return BINARY_MAP(subtract, a, b);
 }
 
-Ref<NDArray> nd::multiply(Variant a, Variant b) {
+Ref<NDArray> nd::multiply(const Variant& a, const Variant& b) {
 	return BINARY_MAP(multiply, a, b);
 }
 
-Ref<NDArray> nd::divide(Variant a, Variant b) {
+Ref<NDArray> nd::divide(const Variant& a, const Variant& b) {
 	return BINARY_MAP(divide, a, b);
 }
 
-Ref<NDArray> nd::remainder(Variant a, Variant b) {
+Ref<NDArray> nd::remainder(const Variant& a, const Variant& b) {
 	return BINARY_MAP(remainder, a, b);
 }
 
-Ref<NDArray> nd::pow(Variant a, Variant b) {
+Ref<NDArray> nd::pow(const Variant& a, const Variant& b) {
 	return BINARY_MAP(pow, a, b);
 }
 
-Ref<NDArray> nd::minimum(Variant a, Variant b) {
+Ref<NDArray> nd::minimum(const Variant& a, const Variant& b) {
 	return BINARY_MAP(minimum, a, b);
 }
 
-Ref<NDArray> nd::maximum(Variant a, Variant b) {
+Ref<NDArray> nd::maximum(const Variant& a, const Variant& b) {
 	return BINARY_MAP(maximum, a, b);
 }
 
-Ref<NDArray> nd::clip(Variant a, Variant min, Variant max) {
+Ref<NDArray> nd::clip(const Variant& a, const Variant& min, const Variant& max) {
 	return TERNARY_MAP(clip, a, min, max);
 }
 
-Ref<NDArray> nd::sign(Variant a) {
+Ref<NDArray> nd::sign(const Variant& a) {
 	return UNARY_MAP(sign, a);
 }
 
-Ref<NDArray> nd::abs(Variant a) {
+Ref<NDArray> nd::abs(const Variant& a) {
 	return UNARY_MAP(abs, a);
 }
 
-Ref<NDArray> nd::square(Variant a) {
+Ref<NDArray> nd::square(const Variant& a) {
 	return UNARY_MAP(square, a);
 }
 
-Ref<NDArray> nd::sqrt(Variant a) {
+Ref<NDArray> nd::sqrt(const Variant& a) {
 	return UNARY_MAP(sqrt, a);
 }
 
-Ref<NDArray> nd::exp(Variant a) {
+Ref<NDArray> nd::exp(const Variant& a) {
 	return UNARY_MAP(exp, a);
 }
 
-Ref<NDArray> nd::log(Variant a) {
+Ref<NDArray> nd::log(const Variant& a) {
 	return UNARY_MAP(log, a);
 }
 
-Ref<NDArray> nd::rad2deg(Variant a) {
+Ref<NDArray> nd::rad2deg(const Variant& a) {
 	return UNARY_MAP(rad2deg, a);
 }
 
-Ref<NDArray> nd::deg2rad(Variant a) {
+Ref<NDArray> nd::deg2rad(const Variant& a) {
 	return UNARY_MAP(deg2rad, a);
 }
 
-Ref<NDArray> nd::sin(Variant a) {
+Ref<NDArray> nd::sin(const Variant& a) {
 	return UNARY_MAP(sin, a);
 }
 
-Ref<NDArray> nd::cos(Variant a) {
+Ref<NDArray> nd::cos(const Variant& a) {
 	return UNARY_MAP(cos, a);
 }
 
-Ref<NDArray> nd::tan(Variant a) {
+Ref<NDArray> nd::tan(const Variant& a) {
 	return UNARY_MAP(tan, a);
 }
 
-Ref<NDArray> nd::asin(Variant a) {
+Ref<NDArray> nd::asin(const Variant& a) {
 	return UNARY_MAP(asin, a);
 }
 
-Ref<NDArray> nd::acos(Variant a) {
+Ref<NDArray> nd::acos(const Variant& a) {
 	return UNARY_MAP(acos, a);
 }
 
-Ref<NDArray> nd::atan(Variant a) {
+Ref<NDArray> nd::atan(const Variant& a) {
 	return UNARY_MAP(atan, a);
 }
 
-Ref<NDArray> nd::atan2(Variant x1, Variant x2) {
+Ref<NDArray> nd::atan2(const Variant& x1, const Variant& x2) {
 	return BINARY_MAP(atan2, x1, x2);
 }
 
-Ref<NDArray> nd::sinh(Variant a) {
+Ref<NDArray> nd::sinh(const Variant& a) {
 	return UNARY_MAP(sinh, a);
 }
 
-Ref<NDArray> nd::cosh(Variant a) {
+Ref<NDArray> nd::cosh(const Variant& a) {
 	return UNARY_MAP(cosh, a);
 }
 
-Ref<NDArray> nd::tanh(Variant a) {
+Ref<NDArray> nd::tanh(const Variant& a) {
 	return UNARY_MAP(tanh, a);
 }
 
-Ref<NDArray> nd::asinh(Variant a) {
+Ref<NDArray> nd::asinh(const Variant& a) {
 	return UNARY_MAP(asinh, a);
 }
 
-Ref<NDArray> nd::acosh(Variant a) {
+Ref<NDArray> nd::acosh(const Variant& a) {
 	return UNARY_MAP(acosh, a);
 }
 
-Ref<NDArray> nd::atanh(Variant a) {
+Ref<NDArray> nd::atanh(const Variant& a) {
 	return UNARY_MAP(atanh, a);
 }
 
-Ref<NDArray> nd::sum(Variant a, Variant axes) {
+Ref<NDArray> nd::sum(const Variant& a, const Variant& axes) {
 	return REDUCTION1(sum, a, axes);
 }
 
-Ref<NDArray> nd::prod(Variant a, Variant axes) {
+Ref<NDArray> nd::prod(const Variant& a, const Variant& axes) {
 	return REDUCTION1(prod, a, axes);
 }
 
-Ref<NDArray> nd::mean(Variant a, Variant axes) {
+Ref<NDArray> nd::mean(const Variant& a, const Variant& axes) {
 	return REDUCTION1(mean, a, axes);
 }
 
-Ref<NDArray> nd::var(Variant a, Variant axes) {
+Ref<NDArray> nd::var(const Variant& a, const Variant& axes) {
 	return REDUCTION1(var, a, axes);
 }
 
-Ref<NDArray> nd::std(Variant a, Variant axes) {
+Ref<NDArray> nd::std(const Variant& a, const Variant& axes) {
 	return REDUCTION1(std, a, axes);
 }
 
-Ref<NDArray> nd::max(Variant a, Variant axes) {
+Ref<NDArray> nd::max(const Variant& a, const Variant& axes) {
 	return REDUCTION1(max, a, axes);
 }
 
-Ref<NDArray> nd::min(Variant a, Variant axes) {
+Ref<NDArray> nd::min(const Variant& a, const Variant& axes) {
 	return REDUCTION1(min, a, axes);
 }
 
-Ref<NDArray> nd::norm(Variant a, Variant ord, Variant axes) {
+Ref<NDArray> nd::norm(const Variant& a, const Variant& ord, const Variant& axes) {
 	switch (ord.get_type()) {
 		case Variant::INT:
 			switch (static_cast<int64_t>(ord)) {
@@ -652,83 +650,83 @@ Ref<NDArray> nd::norm(Variant a, Variant ord, Variant axes) {
 	ERR_FAIL_V_MSG({}, "This norm is currently not supported");
 }
 
-Ref<NDArray> nd::floor(Variant a) {
+Ref<NDArray> nd::floor(const Variant& a) {
 	return UNARY_MAP(floor, a);
 }
 
-Ref<NDArray> nd::ceil(Variant a) {
+Ref<NDArray> nd::ceil(const Variant& a) {
 	return UNARY_MAP(ceil, a);
 }
 
-Ref<NDArray> nd::round(Variant a) {
+Ref<NDArray> nd::round(const Variant& a) {
 	return UNARY_MAP(round, a);
 }
 
-Ref<NDArray> nd::trunc(Variant a) {
+Ref<NDArray> nd::trunc(const Variant& a) {
 	return UNARY_MAP(trunc, a);
 }
 
-Ref<NDArray> nd::rint(Variant a) {
+Ref<NDArray> nd::rint(const Variant& a) {
 	// Actually uses nearbyint because rint can throw, which is undesirable in our case, and unlike numpy's behavior.
 	return UNARY_MAP(nearbyint, a);
 }
 
-Ref<NDArray> nd::equal(Variant a, Variant b) {
+Ref<NDArray> nd::equal(const Variant& a, const Variant& b) {
 	return BINARY_MAP(equal_to, a, b);
 }
 
-Ref<NDArray> nd::not_equal(Variant a, Variant b) {
+Ref<NDArray> nd::not_equal(const Variant& a, const Variant& b) {
 	return BINARY_MAP(not_equal_to, a, b);
 }
 
-Ref<NDArray> nd::greater(Variant a, Variant b) {
+Ref<NDArray> nd::greater(const Variant& a, const Variant& b) {
 	return BINARY_MAP(greater, a, b);
 }
 
-Ref<NDArray> nd::greater_equal(Variant a, Variant b) {
+Ref<NDArray> nd::greater_equal(const Variant& a, const Variant& b) {
 	return BINARY_MAP(greater_equal, a, b);
 }
 
-Ref<NDArray> nd::less(Variant a, Variant b) {
+Ref<NDArray> nd::less(const Variant& a, const Variant& b) {
 	return BINARY_MAP(less, a, b);
 }
 
-Ref<NDArray> nd::less_equal(Variant a, Variant b) {
+Ref<NDArray> nd::less_equal(const Variant& a, const Variant& b) {
 	return BINARY_MAP(less_equal, a, b);
 }
 
-Ref<NDArray> nd::logical_and(Variant a, Variant b) {
+Ref<NDArray> nd::logical_and(const Variant& a, const Variant& b) {
 	return BINARY_MAP(logical_and, a, b);
 }
 
-Ref<NDArray> nd::logical_or(Variant a, Variant b) {
+Ref<NDArray> nd::logical_or(const Variant& a, const Variant& b) {
 	return BINARY_MAP(logical_or, a, b);
 }
 
-Ref<NDArray> nd::logical_xor(Variant a, Variant b) {
+Ref<NDArray> nd::logical_xor(const Variant& a, const Variant& b) {
     return BINARY_MAP(logical_xor, a, b);
 }
 
-Ref<NDArray> nd::logical_not(Variant a) {
+Ref<NDArray> nd::logical_not(const Variant& a) {
 	return UNARY_MAP(logical_not, a);
 }
 
-Ref<NDArray> nd::all(Variant a, Variant axes) {
+Ref<NDArray> nd::all(const Variant& a, const Variant& axes) {
     return REDUCTION1(all, a, axes);
 }
 
-Ref<NDArray> nd::any(Variant a, Variant axes) {
+Ref<NDArray> nd::any(const Variant& a, const Variant& axes) {
     return REDUCTION1(any, a, axes);
 }
 
-Ref<NDArray> nd::dot(Variant a, Variant b) {
+Ref<NDArray> nd::dot(const Variant& a, const Variant& b) {
     return BINARY_MAP(dot, a, b);
 }
 
-Ref<NDArray> nd::reduce_dot(Variant a, Variant b, Variant axes) {
+Ref<NDArray> nd::reduce_dot(const Variant& a, const Variant& b, const Variant& axes) {
 	return REDUCTION2(reduce_dot, a, b, axes);
 }
 
-Ref<NDArray> nd::matmul(Variant a, Variant b) {
+Ref<NDArray> nd::matmul(const Variant& a, const Variant& b) {
 	return BINARY_MAP(matmul, a, b);
 }

@@ -48,25 +48,28 @@ namespace va {
         // Some functions (or compilers) may offer 128 bit types as results from functions.
         // We may not be able to store them. This is not the best way to go about it
         // (as incompatible types COULD be less than the supported ones, prompting us to upcast), but it's good enough for now.
-        using RCurrent = typename std::decay_t<decltype(result)>::value_type;
-        using RStorable = compatible_type_or_64_bit_t<RCurrent, VConstant>;
+        using RNatural = typename std::decay_t<decltype(result)>::value_type;
+        using RStorable = compatible_type_or_64_bit_t<RNatural, VConstant>;
         using O = compatible_type_or_64_bit_t<OutputType, VConstant>;
 
         std::visit([&result](auto& target) {
             using PtrType = std::decay_t<decltype(target)>;
 
+#ifndef NUMDOT_COPY_FOR_ALL_INPLACE_OPERATIONS
             if constexpr (std::is_same_v<PtrType, ComputeVariant *>) {
                 // Assign to compute case, broadcasting and casting if necessary.
-#ifdef NUMDOT_ASSIGN_INPLACE_DIRECTLY_INSTEAD_OF_COPYING_FIRST
                 if (std::visit([&result](auto& ctarget) {
                     using T = typename std::decay_t<decltype(ctarget)>::value_type;
 
-                    // About 30% of binary size is the first case, because assignment to a compute case can be difficult.
-                    // Another 20% is the two cases combined, which are inlined because they both assign directly to a new xarray.
-                    if constexpr (!std::is_same_v<T, RCurrent>) {
+#ifndef NUMDOT_OPTIMIZE_ALL_INPLACE_OPERATIONS
+                    // If the target type is the same as the natural operation type,
+                    // we can just assign. It's just one operation, and it's the most important one!
+                    // Otherwise, we may want to avoid it because it generates a lot of code (nxm).
+                    if constexpr (!std::is_same_v<T, RNatural>) {
                         // We need to cast, just give up here.
                         return false;
                     }
+#endif
 
                     // TODO Could use assign_xexpression if there is no aliasing, aka overlap of target and inputs.
                     va::broadcasting_assign(ctarget, result);

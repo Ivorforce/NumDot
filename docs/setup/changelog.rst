@@ -10,8 +10,8 @@ Here you will find the release notes for each version of the library. Each secti
    :local:
    :backlinks: none
 
-Upcoming Changes (master branch)
---------------------------------
+Version 0.3 - 2024-09-25
+------------------------
 **Added**
 
 - Added the ``dot`` and ``reduce_dot`` functions.
@@ -34,7 +34,7 @@ Upcoming Changes (master branch)
 - :ref:`NDArray <class_NDArray>` ``set`` didn't honor the index parameters, and didn't broadcast.
 
 Version 0.2 - 2024-09-20
------------------
+------------------------
 **Added**
 
 - Added an in-place API to :ref:`NDArray <class_NDArray>` objects, mirroring the :ref:`nd <class_nd>` API. In-place functions can substantially improve performance for small arrays, because creation of intermediate types is avoided.

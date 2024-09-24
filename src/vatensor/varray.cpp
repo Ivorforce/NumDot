@@ -105,7 +105,7 @@ va::DType va::variant_to_dtype(const VConstant dtype) {
 }
 
 size_t va::size_of_dtype_in_bytes(const DType dtype) {
-    return std::visit([]([[maybe_unused]] auto dtype){
+    return std::visit([](auto dtype){
         return sizeof(dtype);
     }, dtype_to_variant(dtype));
 }
@@ -122,7 +122,7 @@ va::DType va::dtype_common_type(const DType a, const DType b) {
     if (b == DTypeMax) return a;
 
     return std::visit(
-        []([[maybe_unused]] auto a, [[maybe_unused]] auto b) { return variant_to_dtype(std::common_type_t<decltype(a), decltype(b)>()); },
+        [](auto a, auto b) { return variant_to_dtype(std::common_type_t<decltype(a), decltype(b)>()); },
         dtype_to_variant(a),
         dtype_to_variant(b)
     );

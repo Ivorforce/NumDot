@@ -14,7 +14,7 @@ T variant_as_ints_(const Variant& variant) {
 
                     switch (carray.dimension()) {
                         case 0:
-                            return T { C(carray(0)) };
+                            return T { C(*carray.data()) };
                         case 1: {
                             T ints;
                             ints.resize(carray.size());

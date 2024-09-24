@@ -6,16 +6,16 @@ reloadable = true
 
 [libraries]
 
-macos = "macos/numdot-macos.framework/libnumdot.universal.dylib"
+macos = "macos/numdot-macos.framework/libnumdot.macos.universal.dylib"
 
-ios = "ios/numdot-ios.framework/libnumdot.universal.dylib"
+ios = "ios/numdot-ios.framework/libnumdot.ios.universal.dylib"
 
-windows.x86_32 = "windows/numdot.x86_32.dll"
-windows.x86_64 = "windows/numdot.x86_64.dll"
+windows.x86_32 = "windows/numdot.windows.x86_32.dll"
+windows.x86_64 = "windows/numdot.windows.x86_64.dll"
 
-linux.x86_64 = "linux/libnumdot.x86_64.so"
-linux.arm64 = "linux/libnumdot.arm64.so"
-linux.rv64 = "linux/libnumdot.rv64.so"
+linux.x86_64 = "linux/libnumdot.linux.x86_64.so"
+linux.arm64 = "linux/libnumdot.linux.arm64.so"
+linux.rv64 = "linux/libnumdot.linux.rv64.so"
 
-android.x86_64 = "android/libnumdot.x86_64.so"
-android.arm64 = "android/libnumdot.arm64.so"
+android.x86_64 = "android/libnumdot.android.x86_64.so"
+android.arm64 = "android/libnumdot.android.arm64.so"

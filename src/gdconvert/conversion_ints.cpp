@@ -70,6 +70,6 @@ va::shape_type variant_to_shape(const Variant &variant) {
     return variant_as_ints_<size_t, std::vector<size_t>>(variant);
 }
 
-va::strides_type variant_to_strides(const Variant &variant) {
+va::strides_type variant_to_axes(const Variant &variant) {
     return variant_as_ints_<std::ptrdiff_t, va::strides_type>(variant);
 }

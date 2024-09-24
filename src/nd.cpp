@@ -429,7 +429,7 @@ Ref<NDArray> nd::transpose(const Variant &a, const Variant &permutation) {
 		va::VArray a_ = variant_as_array(a);
 		// TODO It's not exactly a shape, but 'int array' is close enough.
 		//  We should probably decouple them when we add better shape checks.
-		const auto permutation_ = variant_to_strides(permutation);
+		const auto permutation_ = variant_to_axes(permutation);
 
 		return {memnew(NDArray(va::transpose(a_, permutation_)))};
 	}
@@ -443,7 +443,7 @@ Ref<NDArray> nd::reshape(const Variant &a, const Variant &shape) {
 		va::VArray a_ = variant_as_array(a);
 		// TODO It's not exactly a shape, but 'int array' is close enough.
 		//  We should probably decouple them when we add better shape checks.
-		const auto new_shape_ = variant_to_strides(shape);
+		const auto new_shape_ = variant_to_axes(shape);
 
 		return {memnew(NDArray(va::reshape(a_, new_shape_)))};
 	}

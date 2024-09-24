@@ -20,6 +20,10 @@ Upcoming Changes (master branch)
 - Added the ``stack`` and ``unstack`` functions.
 - Added :ref:`NDArray <class_NDArray>` ``to_bool`` and ``get_bool`` functions.
 - ``nd.full`` now supports bools and arrays for the fill value.
+- Axes, shape and permutation parameters now have support for more different argument types (including NDArrays).
+
+**Changed**
+- The binary is now even smaller.
 
 **Fixed**
 

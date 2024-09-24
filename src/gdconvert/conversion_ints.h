@@ -18,8 +18,6 @@ T packed_as_array(Packed packed) {
 }
 
 va::shape_type variant_to_shape(const Variant &variant);
-va::strides_type variant_to_strides(const Variant &variant);
-// alias
-inline va::strides_type (*variant_to_axes)(const Variant &variant) = &variant_to_strides;
+va::axes_type variant_to_axes(const Variant &variant);
 
 #endif

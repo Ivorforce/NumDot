@@ -17,8 +17,9 @@ T packed_as_array(Packed packed) {
     return axes;
 }
 
-std::vector<size_t> variant_to_shape(const Variant &variant);
+va::shape_type variant_to_shape(const Variant &variant);
 va::strides_type variant_to_strides(const Variant &variant);
-va::Axes variant_to_axes(const Variant &variant);
+// alias
+inline va::strides_type (*variant_to_axes)(const Variant &variant) = &variant_to_strides;
 
 #endif

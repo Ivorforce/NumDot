@@ -216,12 +216,12 @@ inline Ref<NDArray> reduction(Visitor visitor, VisitorNoaxes visitor_noaxes, con
     }, (varray1), (varray2), (varray3))
 
 #define REDUCTION1(func, varray1, axes1) \
-	reduction([](const va::VArrayTarget target, const va::Axes& axes, const va::VArray& array) {\
+	reduction([](const va::VArrayTarget target, const va::axes_type& axes, const va::VArray& array) {\
 		va::func(target, array, axes);\
 	}, [](const va::VArray& array) { return va::func(array); }, axes, (varray1))
 
 #define REDUCTION2(func, varray1, varray2, axes1) \
-	reduction([](const va::VArrayTarget target, const va::Axes& axes, const va::VArray& carray1, const va::VArray& carray2) {\
+	reduction([](const va::VArrayTarget target, const va::axes_type& axes, const va::VArray& carray1, const va::VArray& carray2) {\
 		va::func(target, carray1, carray2, axes);\
 	}, [](const va::VArray& carray1, const va::VArray& carray2) {\
 		return va::func(carray1, carray2);\

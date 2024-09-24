@@ -22,6 +22,7 @@
 namespace va {
     using shape_type = xt::dynamic_shape<std::size_t>;
     using strides_type = xt::dynamic_shape<std::ptrdiff_t>;
+    using axes_type = strides_type;
     using size_type = std::size_t;
 
     enum DType {
@@ -52,8 +53,6 @@ namespace va {
         uint32_t,
         uint64_t
     >;
-
-    using Axes = std::vector<std::ptrdiff_t>;
 
     template <typename T>
     using array_case = xt::xarray<T>;

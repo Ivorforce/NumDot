@@ -360,7 +360,7 @@ inline void reduction_inplace(Visitor visitor, VisitorNoaxes visitor_noaxes, va:
     return {this}
 
 #define REDUCTION1(func, varray1, axes1) \
-	reduction_inplace([this](va::VArrayTarget target, const va::Axes& axes, const va::VArray& array) {\
+	reduction_inplace([this](va::VArrayTarget target, const va::axes_type& axes, const va::VArray& array) {\
 		va::func(target, array, axes);\
 	}, [this](const va::VArray& array) {\
 		return va::func(array);\
@@ -368,7 +368,7 @@ inline void reduction_inplace(Visitor visitor, VisitorNoaxes visitor_noaxes, va:
 	return {this}
 
 #define REDUCTION2(func, varray1, varray2, axes1) \
-	reduction_inplace([this](va::VArrayTarget target, const va::Axes& axes, const va::VArray& carray1, const va::VArray& carray2) {\
+	reduction_inplace([this](va::VArrayTarget target, const va::axes_type& axes, const va::VArray& carray1, const va::VArray& carray2) {\
 		va::func(target, carray1, carray2, axes);\
 	}, [this](const va::VArray& carray1, const va::VArray& carray2) {\
 		return va::func(carray1, carray2);\

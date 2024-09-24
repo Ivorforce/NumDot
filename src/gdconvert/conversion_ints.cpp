@@ -4,10 +4,27 @@ template <typename C, typename T>
 T variant_as_ints_(const Variant& variant) {
     switch (variant.get_type()) {
         case Variant::OBJECT: {
-            if (auto ndarray = Object::cast_to<NDArray>(variant)) {
-                // TODO
-                // target = ndarray->array;
-                throw std::runtime_error("Unsupported type");
+            if (const auto ndarray = Object::cast_to<NDArray>(variant)) {
+                return std::visit([](const auto& carray) -> T {
+                    using V = typename std::decay_t<decltype(carray)>::value_type;
+
+                    if constexpr (!std::is_integral_v<V>) {
+                        throw std::runtime_error("incompatible dtype; must be int");
+                    }
+
+                    switch (carray.dimension()) {
+                        case 0:
+                            return T { C(carray(0)) };
+                        case 1: {
+                            T ints;
+                            ints.resize(carray.size());
+                            std::copy(carray.cbegin(), carray.cend(), ints.begin());
+                            return ints;
+                        }
+                        default:
+                            throw std::runtime_error("array must be zero-dimensional or one-dimensional");
+                    }
+                }, ndarray->array.to_compute_variant());
             }
             break;
         }
@@ -49,14 +66,10 @@ T variant_as_ints_(const Variant& variant) {
     throw std::runtime_error("Unsupported type");
 }
 
-std::vector<size_t> variant_to_shape(const Variant &variant) {
+va::shape_type variant_to_shape(const Variant &variant) {
     return variant_as_ints_<size_t, std::vector<size_t>>(variant);
 }
 
 va::strides_type variant_to_strides(const Variant &variant) {
     return variant_as_ints_<std::ptrdiff_t, va::strides_type>(variant);
-}
-
-va::Axes variant_to_axes(const Variant &variant) {
-    return variant_as_ints_<std::ptrdiff_t, va::Axes>(variant);
 }

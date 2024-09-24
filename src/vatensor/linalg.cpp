@@ -24,7 +24,7 @@ va::VConstant va::reduce_dot(const VArray &a, const VArray &b) {
 	return sum(prod_cache.value());
 }
 
-void va::reduce_dot(VArrayTarget target, const VArray &a, const VArray &b, const Axes& axes) {
+void va::reduce_dot(VArrayTarget target, const VArray &a, const VArray &b, const axes_type& axes) {
 	std::optional<va::VArray> prod_cache;
 	va::multiply(&prod_cache, a, b);
 	va::sum(target, prod_cache.value(), axes);

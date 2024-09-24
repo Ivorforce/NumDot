@@ -44,25 +44,26 @@ namespace va {
     };
 
     template<typename OutputType, typename Result>
-    void assign_to_target(VArrayTarget target, Result result) {
+    void assign_to_target(VArrayTarget target, Result& result) {
         // Some functions (or compilers) may offer 128 bit types as results from functions.
         // We may not be able to store them. This is not the best way to go about it
         // (as incompatible types COULD be less than the supported ones, prompting us to upcast), but it's good enough for now.
-        using R = compatible_type_or_64_bit_t<typename std::decay_t<decltype(result)>::value_type, VConstant>;
+        using RCurrent = typename std::decay_t<decltype(result)>::value_type;
+        using RStorable = compatible_type_or_64_bit_t<RCurrent, VConstant>;
         using O = compatible_type_or_64_bit_t<OutputType, VConstant>;
 
-        std::visit([result](auto&& target) {
+        std::visit([&result](auto& target) {
             using PtrType = std::decay_t<decltype(target)>;
 
             if constexpr (std::is_same_v<PtrType, ComputeVariant *>) {
                 // Assign to compute case, broadcasting and casting if necessary.
 #ifdef NUMDOT_ASSIGN_INPLACE_DIRECTLY_INSTEAD_OF_COPYING_FIRST
-                if (std::visit([&result](auto&& ctarget) {
+                if (std::visit([&result](auto& ctarget) {
                     using T = typename std::decay_t<decltype(ctarget)>::value_type;
 
                     // About 30% of binary size is the first case, because assignment to a compute case can be difficult.
                     // Another 20% is the two cases combined, which are inlined because they both assign directly to a new xarray.
-                    if constexpr (!std::is_same_v<T, R>) {
+                    if constexpr (!std::is_same_v<T, RCurrent>) {
                         // We need to cast, just give up here.
                         return false;
                     }
@@ -70,14 +71,14 @@ namespace va {
                     // TODO Could use assign_xexpression if there is no aliasing, aka overlap of target and inputs.
                     va::broadcasting_assign(ctarget, result);
                     return true;
-                })) {
+                }, *target)) {
                     // Ran accelerated assign, we don't need to do the regular one.
                     return;
                 }
 #endif
                 // Make a copy, similar as in promote_compute_case_if_needed.
                 // After copying we can be sure no aliasing is taking place, so we can assign with assign_xexpression.
-                va::assign_nonoverlapping(*target, xt::xarray<R>(result));
+                va::assign_nonoverlapping(*target, xt::xarray<RStorable>(result));
             } else {
                 // Create new array, assign to our target pointer.
                 // OutputType may be different from R, if we want different behavior than xtensor for computation.

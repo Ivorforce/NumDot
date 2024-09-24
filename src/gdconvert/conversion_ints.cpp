@@ -49,14 +49,14 @@ T variant_as_ints_(const Variant& variant) {
     throw std::runtime_error("Unsupported type");
 }
 
-std::vector<size_t> variant_to_shape(const Variant &shape) {
-    return variant_as_ints_<size_t, std::vector<size_t>>(shape);
+std::vector<size_t> variant_to_shape(const Variant &variant) {
+    return variant_as_ints_<size_t, std::vector<size_t>>(variant);
 }
 
-va::strides_type variant_to_strides(const Variant &shape) {
-    return variant_as_ints_<std::ptrdiff_t, va::strides_type>(shape);
+va::strides_type variant_to_strides(const Variant &variant) {
+    return variant_as_ints_<std::ptrdiff_t, va::strides_type>(variant);
 }
 
-va::Axes variant_to_axes(const Variant &shape) {
-    return variant_as_ints_<std::ptrdiff_t, va::Axes>(shape);
+va::Axes variant_to_axes(const Variant &variant) {
+    return variant_as_ints_<std::ptrdiff_t, va::Axes>(variant);
 }

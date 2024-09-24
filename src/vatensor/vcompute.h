@@ -6,6 +6,33 @@
 #include "vassign.h"
 
 namespace va {
+    // Type trait to check if T is in std::variant<Args...>
+    template <typename T, typename Variant>
+    struct is_in_variant;
+
+    template <typename T, typename... Ts>
+    struct is_in_variant<T, std::variant<Ts...>> : std::disjunction<std::is_same<T, Ts>...> {};
+
+    // Helper variable template
+    template <typename T, typename Variant>
+    inline constexpr bool is_in_variant_v = is_in_variant<T, Variant>::value;
+
+    template <typename T>
+    struct to_64_bit {
+        using type = std::conditional_t<std::is_floating_point_v<T>, double_t, int64_t>;
+    };
+
+    template <typename T>
+    using to_64_bit_t = typename to_64_bit<T>::type;
+
+    template <typename T, typename Variant>
+    struct compatible_type_or_64_bit {
+        using type = std::conditional_t<is_in_variant_v<T, Variant>, T, to_64_bit_t<T>>;
+    };
+
+    template <typename T, typename Variant>
+    using compatible_type_or_64_bit_t = typename compatible_type_or_64_bit<T, Variant>::type;
+
     template<typename FX>
     struct XFunction {
         // This is analogous to xt::add etc., with the main difference that in our setup it's easier to use this function with the
@@ -18,7 +45,11 @@ namespace va {
 
     template<typename OutputType, typename Result>
     void assign_to_target(VArrayTarget target, Result result) {
-        using R = typename std::decay_t<decltype(result)>::value_type;
+        // Some functions (or compilers) may offer 128 bit types as results from functions.
+        // We may not be able to store them. This is not the best way to go about it
+        // (as incompatible types COULD be less than the supported ones, prompting us to upcast), but it's good enough for now.
+        using R = compatible_type_or_64_bit_t<typename std::decay_t<decltype(result)>::value_type, VConstant>;
+        using O = compatible_type_or_64_bit_t<OutputType, VConstant>;
 
         std::visit([result](auto&& target) {
             using PtrType = std::decay_t<decltype(target)>;
@@ -46,12 +77,11 @@ namespace va {
 #endif
                 // Make a copy, similar as in promote_compute_case_if_needed.
                 // After copying we can be sure no aliasing is taking place, so we can assign with assign_xexpression.
-                const ArrayVariant variant = ArrayVariant(xt::xarray<R>(result));
-                va::assign_nonoverlapping(*target, variant);
+                va::assign_nonoverlapping(*target, xt::xarray<R>(result));
             } else {
                 // Create new array, assign to our target pointer.
                 // OutputType may be different from R, if we want different behavior than xtensor for computation.
-                *target = from_store(std::make_shared<xt::xarray<OutputType>>(result));
+                *target = from_store(std::make_shared<xt::xarray<O>>(result));
             }
         }, target);
     }

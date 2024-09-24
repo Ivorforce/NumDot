@@ -57,6 +57,6 @@ va::strides_type variant_to_strides(const Variant &shape) {
     return variant_as_ints_<std::ptrdiff_t, va::strides_type>(shape);
 }
 
-va::Axes variant_as_axes(const Variant &shape) {
+va::Axes variant_to_axes(const Variant &shape) {
     return variant_as_ints_<std::ptrdiff_t, va::Axes>(shape);
 }

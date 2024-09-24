@@ -254,13 +254,13 @@ Ref<NDRange> nd::to(int64_t stop) {
 Ref<NDRange> nd::range(const Variant &start_or_stop, const Variant &stop, const Variant &step) {
 	try {
 		if (stop.get_type() == Variant::Type::NIL && step.get_type() == Variant::Type::NIL) {
-			return {memnew(NDRange(0, to_range_part(start_or_stop), xt::placeholders::xtuph{}))};
+			return {memnew(NDRange(0, variant_to_range_part(start_or_stop), xt::placeholders::xtuph{}))};
 		}
 		else if (step.get_type() == Variant::Type::NIL) {
-			return {memnew(NDRange(to_range_part(start_or_stop), to_range_part(stop), xt::placeholders::xtuph{}))};
+			return {memnew(NDRange(variant_to_range_part(start_or_stop), variant_to_range_part(stop), xt::placeholders::xtuph{}))};
 		}
 		else {
-			return {memnew(NDRange(to_range_part(start_or_stop), to_range_part(stop), to_range_part(step)))};
+			return {memnew(NDRange(variant_to_range_part(start_or_stop), variant_to_range_part(stop), variant_to_range_part(step)))};
 		}
 	}
 	catch (std::runtime_error& error) {

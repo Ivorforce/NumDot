@@ -44,7 +44,7 @@ namespace va {
     };
 
     template<typename OutputType, typename Result>
-    void assign_to_target(VArrayTarget target, Result& result) {
+    void assign_to_target(VArrayTarget target, const Result& result) {
         // Some functions (or compilers) may offer 128 bit types as results from functions.
         // We may not be able to store them. This is not the best way to go about it
         // (as incompatible types COULD be less than the supported ones, prompting us to upcast), but it's good enough for now.
@@ -105,7 +105,7 @@ namespace va {
             using OutputType = typename PromotionRule::template output_type<InputType>;
 
             // Result of visitor invocation
-            const auto result = visitor(promote::promote_compute_case_if_needed<InputType>(args)...);
+            const auto result = visitor(promote::promote_xexpression_if_needed<InputType>(args)...);
 
             assign_to_target<OutputType>(target, result);
         }
@@ -134,7 +134,7 @@ namespace va {
 
             // Result of visitor invocation
             // TODO Some xt functions support passing the output type. That would be FAR better than casting it afterwards as here.
-            OutputType result = OutputType(visitor(promote::promote_compute_case_if_needed<InputType>(args)...));
+            const auto result = OutputType(visitor(promote::promote_xexpression_if_needed<InputType>(args)...));
             return static_cast<ReturnType>(result);
         }
     };

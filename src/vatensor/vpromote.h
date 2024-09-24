@@ -3,20 +3,22 @@
 
 namespace va {
     namespace promote {
-        template<typename NeededType, typename Type>
-        auto promote_compute_case_if_needed(const compute_case<Type> &arg) {
-            if constexpr (std::is_same_v<Type, NeededType>) {
+        template<typename NeededType, typename T>
+        auto promote_xexpression_if_needed(T&& arg) {
+            using V = typename std::decay_t<decltype(arg)>::value_type;
+
+            if constexpr (std::is_same_v<V, NeededType>) {
                 // Most common situation: the argument we need is the same as the argument that's given.
-                return arg;
+                return std::forward<T>(arg);
             } else {
                 // Casting can considerably increase performance (from a small test, it was 25%).
                 // However, this is only relevant for operations that even need casting.
                 // The cost for casting instead of copying is a much larger binary size (100% increase).
                 // Most people will probably prefer the small binary, and accept less optimized wrong dtype operations.
 #ifdef NUMDOT_CAST_INSTEAD_OF_COPY_FOR_ARGUMENTS
-                return xt::cast<NeededType>(arg);
+                return xt::cast<NeededType>(std::forward<T>(arg));
 #else
-                return xt::xarray<NeededType>(arg);
+                return xt::xarray<NeededType>(std::forward<T>(arg));
 #endif
             }
         }

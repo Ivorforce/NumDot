@@ -18,9 +18,7 @@
 #include <vector>                           // for vector
 #include <vatensor/linalg.h>
 #include "gdconvert/conversion_array.h"     // for variant_as_array
-#include "gdconvert/conversion_axes.h"      // for variant_to_axes
-#include "gdconvert/conversion_range.h"     // for to_range_part
-#include "gdconvert/conversion_shape.h"     // for variant_as_shape
+#include "gdconvert/conversion_ints.h"     // for variant_as_shape
 #include "gdconvert/conversion_slice.h"     // for ellipsis, newaxis
 #include "godot_cpp/classes/ref.hpp"        // for Ref
 #include "godot_cpp/core/error_macros.hpp"  // for ERR_FAIL_V_MSG
@@ -309,7 +307,7 @@ Ref<NDArray> nd::array(const Variant &array, nd::DType dtype) {
 
 Ref<NDArray> nd::empty(const Variant &shape, const nd::DType dtype) {
 	try {
-		const auto shape_array = variant_as_shape(shape);
+		const auto shape_array = variant_to_shape(shape);
 
 		return {memnew(NDArray(va::empty(dtype, shape_array)))};
 	}
@@ -320,7 +318,7 @@ Ref<NDArray> nd::empty(const Variant &shape, const nd::DType dtype) {
 
 Ref<NDArray> nd::full(const Variant& shape, const Variant& fill_value, nd::DType dtype) {
 	try {
-		const auto shape_array = variant_as_shape(shape);
+		const auto shape_array = variant_to_shape(shape);
 
 		switch (fill_value.get_type()) {
 			case Variant::BOOL: {
@@ -431,7 +429,7 @@ Ref<NDArray> nd::transpose(const Variant &a, const Variant &permutation) {
 		va::VArray a_ = variant_as_array(a);
 		// TODO It's not exactly a shape, but 'int array' is close enough.
 		//  We should probably decouple them when we add better shape checks.
-		const auto permutation_ = variant_as_strides(permutation);
+		const auto permutation_ = variant_to_strides(permutation);
 
 		return {memnew(NDArray(va::transpose(a_, permutation_)))};
 	}
@@ -445,7 +443,7 @@ Ref<NDArray> nd::reshape(const Variant &a, const Variant &shape) {
 		va::VArray a_ = variant_as_array(a);
 		// TODO It's not exactly a shape, but 'int array' is close enough.
 		//  We should probably decouple them when we add better shape checks.
-		const auto new_shape_ = variant_as_strides(shape);
+		const auto new_shape_ = variant_to_strides(shape);
 
 		return {memnew(NDArray(va::reshape(a_, new_shape_)))};
 	}

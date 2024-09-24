@@ -29,7 +29,7 @@ StringName ellipsis() {
     return ellipsis;
 }
 
-xt::xstrided_slice<std::ptrdiff_t> variant_as_slice_part(const Variant& variant)  {
+xt::xstrided_slice<std::ptrdiff_t> variant_to_slice_part(const Variant& variant)  {
     auto type = variant.get_type();
 
     switch (type) {
@@ -57,10 +57,21 @@ xt::xstrided_slice<std::ptrdiff_t> variant_as_slice_part(const Variant& variant)
     throw std::runtime_error("Variant cannot be converted to a slice.");
 }
 
-xt::xstrided_slice_vector variants_as_slice_vector(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
+xt::xstrided_slice_vector variants_to_slice_vector(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
     xt::xstrided_slice_vector sv(arg_count);
     for (int i = 0; i < arg_count; i++) {
-        sv[i] = variant_as_slice_part(*args[i]);
+        sv[i] = variant_to_slice_part(*args[i]);
     }
     return sv;
+}
+
+range_part variant_to_range_part(const Variant& variant) {
+    switch (variant.get_type()) {
+        case Variant::INT:
+            return static_cast<std::ptrdiff_t>(static_cast<int64_t>(variant));
+        case Variant::NIL:
+            return xt::placeholders::xtuph{};
+        default:
+            throw std::runtime_error("Invalid type for range.");
+    }
 }

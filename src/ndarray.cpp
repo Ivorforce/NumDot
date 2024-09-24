@@ -1,6 +1,5 @@
 #include "ndarray.h"
 
-#include <gdconvert/conversion_axes.h>             // for variant_to_axes
 #include <vatensor/comparison.h>                   // for equal_to, greater
 #include <vatensor/logical.h>                      // for logical_and, logic...
 #include <vatensor/reduce.h>                       // for max, mean, min, prod
@@ -10,9 +9,9 @@
 #include <functional>                              // for function
 #include <stdexcept>                               // for runtime_error
 #include <variant>                                 // for visit
+#include <gdconvert/conversion_ints.h>
 #include <vatensor/linalg.h>
 #include <vatensor/vassign.h>
-
 #include "gdconvert/conversion_array.h"            // for varray_to_packed
 #include "gdconvert/conversion_slice.h"            // for variants_as_slice_...
 #include "gdconvert/conversion_string.h"           // for xt_to_string
@@ -171,7 +170,7 @@ void NDArray::set(const Variant **args, GDExtensionInt arg_count, GDExtensionCal
 		// todo don't need slices if arg_count == 1
 		va::VArray sliced = arg_count == 1
 			? array
-			: array.slice(variants_as_slice_vector(args + 1, arg_count - 1, error));
+			: array.slice(variants_to_slice_vector(args + 1, arg_count - 1, error));
 
 		switch (value.get_type()) {
 			case Variant::BOOL:
@@ -199,7 +198,7 @@ void NDArray::set(const Variant **args, GDExtensionInt arg_count, GDExtensionCal
 
 Ref<NDArray> NDArray::get(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
 	try {
-		xt::xstrided_slice_vector sv = variants_as_slice_vector(args, arg_count, error);
+		xt::xstrided_slice_vector sv = variants_to_slice_vector(args, arg_count, error);
 
 		auto result = array.slice(sv);
 		return {memnew(NDArray(result))};
@@ -211,7 +210,7 @@ Ref<NDArray> NDArray::get(const Variant **args, GDExtensionInt arg_count, GDExte
 
 bool NDArray::get_bool(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
 	try {
-		xt::xstrided_slice_vector sv = variants_as_slice_vector(args, arg_count, error);
+		xt::xstrided_slice_vector sv = variants_to_slice_vector(args, arg_count, error);
 		return va::constant_to_type<bool>(array.slice(sv).to_single_value());
 	}
 	catch (std::runtime_error& error) {
@@ -221,7 +220,7 @@ bool NDArray::get_bool(const Variant **args, GDExtensionInt arg_count, GDExtensi
 
 int64_t NDArray::get_int(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
 	try {
-		xt::xstrided_slice_vector sv = variants_as_slice_vector(args, arg_count, error);
+		xt::xstrided_slice_vector sv = variants_to_slice_vector(args, arg_count, error);
 		return va::constant_to_type<int64_t>(array.slice(sv).to_single_value());
 	}
 	catch (std::runtime_error& error) {
@@ -231,7 +230,7 @@ int64_t NDArray::get_int(const Variant **args, GDExtensionInt arg_count, GDExten
 
 double_t NDArray::get_float(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
 	try {
-		xt::xstrided_slice_vector sv = variants_as_slice_vector(args, arg_count, error);
+		xt::xstrided_slice_vector sv = variants_to_slice_vector(args, arg_count, error);
 		return va::constant_to_type<double_t>(array.slice(sv).to_single_value());
 	}
 	catch (std::runtime_error& error) {

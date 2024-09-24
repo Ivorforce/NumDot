@@ -73,81 +73,81 @@ public:
     [[nodiscard]] Array to_godot_array() const;
 
 	// Basic math functions.
-	Ref<NDArray> assign_add(Variant a, Variant b);
-	Ref<NDArray> assign_subtract(Variant a, Variant b);
-	Ref<NDArray> assign_multiply(Variant a, Variant b);
-	Ref<NDArray> assign_divide(Variant a, Variant b);
-	Ref<NDArray> assign_remainder(Variant a, Variant b);
-	Ref<NDArray> assign_pow(Variant a, Variant b);
+	Ref<NDArray> assign_add(const Variant &a, const Variant &b);
+	Ref<NDArray> assign_subtract(const Variant& a, const Variant& b);
+	Ref<NDArray> assign_multiply(const Variant& a, const Variant &b);
+	Ref<NDArray> assign_divide(const Variant& a, const Variant& b);
+	Ref<NDArray> assign_remainder(const Variant& a, const Variant& b);
+	Ref<NDArray> assign_pow(const Variant& a, const Variant& b);
 
-	Ref<NDArray> assign_minimum(Variant a, Variant b);
-	Ref<NDArray> assign_maximum(Variant a, Variant b);
-	Ref<NDArray> assign_clip(Variant a, Variant min, Variant max);
+	Ref<NDArray> assign_minimum(const Variant& a, const Variant& b);
+	Ref<NDArray> assign_maximum(const Variant& a, const Variant& b);
+	Ref<NDArray> assign_clip(const Variant& a, const Variant& min, const Variant& max);
 
-	Ref<NDArray> assign_sign(Variant a);
-	Ref<NDArray> assign_abs(Variant a);
-	Ref<NDArray> assign_square(Variant a);
-	Ref<NDArray> assign_sqrt(Variant a);
+	Ref<NDArray> assign_sign(const Variant& a);
+	Ref<NDArray> assign_abs(const Variant& a);
+	Ref<NDArray> assign_square(const Variant& a);
+	Ref<NDArray> assign_sqrt(const Variant& a);
 
-	Ref<NDArray> assign_exp(Variant a);
-	Ref<NDArray> assign_log(Variant a);
+	Ref<NDArray> assign_exp(const Variant& a);
+	Ref<NDArray> assign_log(const Variant& a);
 
-	Ref<NDArray> assign_rad2deg(Variant a);
-	Ref<NDArray> assign_deg2rad(Variant a);
+	Ref<NDArray> assign_rad2deg(const Variant& a);
+	Ref<NDArray> assign_deg2rad(const Variant& a);
 	
 	// Trigonometric functions.
-	Ref<NDArray> assign_sin(Variant a);
-	Ref<NDArray> assign_cos(Variant a);
-	Ref<NDArray> assign_tan(Variant a);
-	Ref<NDArray> assign_asin(Variant a);
-	Ref<NDArray> assign_acos(Variant a);
-	Ref<NDArray> assign_atan(Variant a);
-	Ref<NDArray> assign_atan2(Variant x1, Variant x2);
+	Ref<NDArray> assign_sin(const Variant& a);
+	Ref<NDArray> assign_cos(const Variant& a);
+	Ref<NDArray> assign_tan(const Variant& a);
+	Ref<NDArray> assign_asin(const Variant& a);
+	Ref<NDArray> assign_acos(const Variant& a);
+	Ref<NDArray> assign_atan(const Variant& a);
+	Ref<NDArray> assign_atan2(const Variant& x1, const Variant& x2);
 
-	Ref<NDArray> assign_sinh(Variant a);
-	Ref<NDArray> assign_cosh(Variant a);
-	Ref<NDArray> assign_tanh(Variant a);
-	Ref<NDArray> assign_asinh(Variant a);
-	Ref<NDArray> assign_acosh(Variant a);
-	Ref<NDArray> assign_atanh(Variant a);
+	Ref<NDArray> assign_sinh(const Variant& a);
+	Ref<NDArray> assign_cosh(const Variant& a);
+	Ref<NDArray> assign_tanh(const Variant& a);
+	Ref<NDArray> assign_asinh(const Variant& a);
+	Ref<NDArray> assign_acosh(const Variant& a);
+	Ref<NDArray> assign_atanh(const Variant& a);
 
 	// Reductions.
-	Ref<NDArray> assign_sum(Variant a, Variant axes);
-	Ref<NDArray> assign_prod(Variant a, Variant axes);
-	Ref<NDArray> assign_mean(Variant a, Variant axes);
-	Ref<NDArray> assign_var(Variant a, Variant axes);
-	Ref<NDArray> assign_std(Variant a, Variant axes);
-	Ref<NDArray> assign_max(Variant a, Variant axes);
-	Ref<NDArray> assign_min(Variant a, Variant axes);
-	Ref<NDArray> assign_norm(Variant a, Variant ord, Variant axes);
+	Ref<NDArray> assign_sum(const Variant& a, const Variant& axes);
+	Ref<NDArray> assign_prod(const Variant& a, const Variant& axes);
+	Ref<NDArray> assign_mean(const Variant& a, const Variant& axes);
+	Ref<NDArray> assign_var(const Variant& a, const Variant& axes);
+	Ref<NDArray> assign_std(const Variant& a, const Variant& axes);
+	Ref<NDArray> assign_max(const Variant& a, const Variant& axes);
+	Ref<NDArray> assign_min(const Variant& a, const Variant& axes);
+	Ref<NDArray> assign_norm(const Variant& a, const Variant& ord, const Variant& axes);
 
 	// Rounding.
-	Ref<NDArray> assign_floor(Variant a);
-	Ref<NDArray> assign_ceil(Variant a);
-	Ref<NDArray> assign_round(Variant a);
-	Ref<NDArray> assign_trunc(Variant a);
-	Ref<NDArray> assign_rint(Variant a);
+	Ref<NDArray> assign_floor(const Variant& a);
+	Ref<NDArray> assign_ceil(const Variant& a);
+	Ref<NDArray> assign_round(const Variant& a);
+	Ref<NDArray> assign_trunc(const Variant& a);
+	Ref<NDArray> assign_rint(const Variant& a);
 
 	// Comparisons.
-	Ref<NDArray> assign_equal(Variant a, Variant b);
-	Ref<NDArray> assign_not_equal(Variant a, Variant b);
-	Ref<NDArray> assign_greater(Variant a, Variant b);
-	Ref<NDArray> assign_greater_equal(Variant a, Variant b);
-	Ref<NDArray> assign_less(Variant a, Variant b);
-	Ref<NDArray> assign_less_equal(Variant a, Variant b);
+	Ref<NDArray> assign_equal(const Variant& a, const Variant& b);
+	Ref<NDArray> assign_not_equal(const Variant& a, const Variant& b);
+	Ref<NDArray> assign_greater(const Variant& a, const Variant& b);
+	Ref<NDArray> assign_greater_equal(const Variant& a, const Variant& b);
+	Ref<NDArray> assign_less(const Variant& a, const Variant& b);
+	Ref<NDArray> assign_less_equal(const Variant& a, const Variant& b);
 
 	// Logical.
-	Ref<NDArray> assign_logical_and(Variant a, Variant b);
-	Ref<NDArray> assign_logical_or(Variant a, Variant b);
-	Ref<NDArray> assign_logical_xor(Variant a, Variant b);
-	Ref<NDArray> assign_logical_not(Variant a);
-    Ref<NDArray> assign_all(Variant a, Variant axes);
-    Ref<NDArray> assign_any(Variant a, Variant axes);
+	Ref<NDArray> assign_logical_and(const Variant& a, const Variant& b);
+	Ref<NDArray> assign_logical_or(const Variant& a, const Variant& b);
+	Ref<NDArray> assign_logical_xor(const Variant& a, const Variant& b);
+	Ref<NDArray> assign_logical_not(const Variant& a);
+    Ref<NDArray> assign_all(const Variant& a, const Variant& axes);
+    Ref<NDArray> assign_any(const Variant& a, const Variant& axes);
 
 	// Linalg.
-	Ref<NDArray> assign_dot(Variant a, Variant b);
-	Ref<NDArray> assign_reduce_dot(Variant a, Variant b, Variant axes);
-	Ref<NDArray> assign_matmul(Variant a, Variant b);
+	Ref<NDArray> assign_dot(const Variant& a, const Variant& b);
+	Ref<NDArray> assign_reduce_dot(const Variant& a, const Variant& b, const Variant& axes);
+	Ref<NDArray> assign_matmul(const Variant& a, const Variant& b);
 };
 
 #endif

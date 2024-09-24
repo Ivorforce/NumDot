@@ -152,9 +152,9 @@ nd::nd() = default;
 nd::~nd() = default;
 
 template <typename Visitor, typename... Args>
-Ref<NDArray> map_variants_as_arrays(Visitor visitor, const Args&... args) {
+Ref<NDArray> map_variants_as_arrays(Visitor&& visitor, const Args&... args) {
 	try {
-		const auto result = visitor(variant_as_array(args)...);
+		const auto result = std::forward<Visitor>(visitor)(variant_as_array(args)...);
 		return { memnew(NDArray(result)) };
 	}
 	catch (std::runtime_error& error) {
@@ -163,10 +163,10 @@ Ref<NDArray> map_variants_as_arrays(Visitor visitor, const Args&... args) {
 }
 
 template <typename Visitor, typename... Args>
-Ref<NDArray> map_variants_as_arrays_with_target(Visitor visitor, const Args&... args) {
+Ref<NDArray> map_variants_as_arrays_with_target(Visitor&& visitor, const Args&... args) {
 	try {
 		std::optional<va::VArray> result;
-		visitor(&result, variant_as_array(args)...);
+		std::forward<Visitor>(visitor)(&result, variant_as_array(args)...);
 		return { memnew(NDArray(result.value())) };
 	}
 	catch (std::runtime_error& error) {
@@ -175,10 +175,10 @@ Ref<NDArray> map_variants_as_arrays_with_target(Visitor visitor, const Args&... 
 }
 
 template <typename Visitor, typename VisitorNoaxes, typename... Args>
-inline Ref<NDArray> reduction(Visitor visitor, VisitorNoaxes visitor_noaxes, const Variant& axes, const Args&... args) {
+inline Ref<NDArray> reduction(Visitor&& visitor, VisitorNoaxes&& visitor_noaxes, const Variant& axes, const Args&... args) {
 	try {
 		if (axes.get_type() == Variant::NIL) {
-			const auto result = visitor_noaxes(variant_as_array(args)...);
+			const auto result = std::forward<VisitorNoaxes>(visitor_noaxes)(variant_as_array(args)...);
 
 			if constexpr (std::is_same_v<std::decay_t<decltype(result)>, va::VConstant>) {
 				return { memnew(NDArray(va::from_constant_variant(result))) };
@@ -191,7 +191,7 @@ inline Ref<NDArray> reduction(Visitor visitor, VisitorNoaxes visitor_noaxes, con
 		const auto axes_ = variant_to_axes(axes);
 
 		std::optional<va::VArray> result;
-		visitor(&result, axes_, variant_as_array(args)...);
+		std::forward<Visitor>(visitor)(&result, axes_, variant_as_array(args)...);
 
 		return {memnew(NDArray(result.value()))};
 	}
@@ -200,17 +200,17 @@ inline Ref<NDArray> reduction(Visitor visitor, VisitorNoaxes visitor_noaxes, con
 	}
 }
 
-#define UNARY_MAP(func, varray1) \
+#define VARRAY_MAP1(func, varray1) \
 	map_variants_as_arrays_with_target([](const va::VArrayTarget target, const va::VArray& varray) {\
         va::func(target, varray);\
     }, (varray1))
 
-#define BINARY_MAP(func, varray1, varray2) \
+#define VARRAY_MAP2(func, varray1, varray2) \
 	map_variants_as_arrays_with_target([](const va::VArrayTarget target, const va::VArray& a, const va::VArray& b) {\
         va::func(target, a, b);\
     }, (varray1), (varray2))
 
-#define TERNARY_MAP(func, varray1, varray2, varray3) \
+#define VARRAY_MAP3(func, varray1, varray2, varray3) \
 	map_variants_as_arrays_with_target([](const va::VArrayTarget target, const va::VArray& a, const va::VArray& b, const va::VArray& c) {\
         va::func(target, a, b, c);\
     }, (varray1), (varray2), (varray3))
@@ -477,123 +477,123 @@ Ref<NDArray> nd::unstack(const Variant& v, int64_t axis) {
 }
 
 Ref<NDArray> nd::add(const Variant& a, const Variant& b) {
-	return BINARY_MAP(add, a, b);
+	return VARRAY_MAP2(add, a, b);
 }
 
 Ref<NDArray> nd::subtract(const Variant& a, const Variant& b) {
-	return BINARY_MAP(subtract, a, b);
+	return VARRAY_MAP2(subtract, a, b);
 }
 
 Ref<NDArray> nd::multiply(const Variant& a, const Variant& b) {
-	return BINARY_MAP(multiply, a, b);
+	return VARRAY_MAP2(multiply, a, b);
 }
 
 Ref<NDArray> nd::divide(const Variant& a, const Variant& b) {
-	return BINARY_MAP(divide, a, b);
+	return VARRAY_MAP2(divide, a, b);
 }
 
 Ref<NDArray> nd::remainder(const Variant& a, const Variant& b) {
-	return BINARY_MAP(remainder, a, b);
+	return VARRAY_MAP2(remainder, a, b);
 }
 
 Ref<NDArray> nd::pow(const Variant& a, const Variant& b) {
-	return BINARY_MAP(pow, a, b);
+	return VARRAY_MAP2(pow, a, b);
 }
 
 Ref<NDArray> nd::minimum(const Variant& a, const Variant& b) {
-	return BINARY_MAP(minimum, a, b);
+	return VARRAY_MAP2(minimum, a, b);
 }
 
 Ref<NDArray> nd::maximum(const Variant& a, const Variant& b) {
-	return BINARY_MAP(maximum, a, b);
+	return VARRAY_MAP2(maximum, a, b);
 }
 
 Ref<NDArray> nd::clip(const Variant& a, const Variant& min, const Variant& max) {
-	return TERNARY_MAP(clip, a, min, max);
+	return VARRAY_MAP3(clip, a, min, max);
 }
 
 Ref<NDArray> nd::sign(const Variant& a) {
-	return UNARY_MAP(sign, a);
+	return VARRAY_MAP1(sign, a);
 }
 
 Ref<NDArray> nd::abs(const Variant& a) {
-	return UNARY_MAP(abs, a);
+	return VARRAY_MAP1(abs, a);
 }
 
 Ref<NDArray> nd::square(const Variant& a) {
-	return UNARY_MAP(square, a);
+	return VARRAY_MAP1(square, a);
 }
 
 Ref<NDArray> nd::sqrt(const Variant& a) {
-	return UNARY_MAP(sqrt, a);
+	return VARRAY_MAP1(sqrt, a);
 }
 
 Ref<NDArray> nd::exp(const Variant& a) {
-	return UNARY_MAP(exp, a);
+	return VARRAY_MAP1(exp, a);
 }
 
 Ref<NDArray> nd::log(const Variant& a) {
-	return UNARY_MAP(log, a);
+	return VARRAY_MAP1(log, a);
 }
 
 Ref<NDArray> nd::rad2deg(const Variant& a) {
-	return UNARY_MAP(rad2deg, a);
+	return VARRAY_MAP1(rad2deg, a);
 }
 
 Ref<NDArray> nd::deg2rad(const Variant& a) {
-	return UNARY_MAP(deg2rad, a);
+	return VARRAY_MAP1(deg2rad, a);
 }
 
 Ref<NDArray> nd::sin(const Variant& a) {
-	return UNARY_MAP(sin, a);
+	return VARRAY_MAP1(sin, a);
 }
 
 Ref<NDArray> nd::cos(const Variant& a) {
-	return UNARY_MAP(cos, a);
+	return VARRAY_MAP1(cos, a);
 }
 
 Ref<NDArray> nd::tan(const Variant& a) {
-	return UNARY_MAP(tan, a);
+	return VARRAY_MAP1(tan, a);
 }
 
 Ref<NDArray> nd::asin(const Variant& a) {
-	return UNARY_MAP(asin, a);
+	return VARRAY_MAP1(asin, a);
 }
 
 Ref<NDArray> nd::acos(const Variant& a) {
-	return UNARY_MAP(acos, a);
+	return VARRAY_MAP1(acos, a);
 }
 
 Ref<NDArray> nd::atan(const Variant& a) {
-	return UNARY_MAP(atan, a);
+	return VARRAY_MAP1(atan, a);
 }
 
 Ref<NDArray> nd::atan2(const Variant& x1, const Variant& x2) {
-	return BINARY_MAP(atan2, x1, x2);
+	return VARRAY_MAP2(atan2, x1, x2);
 }
 
 Ref<NDArray> nd::sinh(const Variant& a) {
-	return UNARY_MAP(sinh, a);
+	return VARRAY_MAP1(sinh, a);
 }
 
 Ref<NDArray> nd::cosh(const Variant& a) {
-	return UNARY_MAP(cosh, a);
+	return VARRAY_MAP1(cosh, a);
 }
 
 Ref<NDArray> nd::tanh(const Variant& a) {
-	return UNARY_MAP(tanh, a);
+	return VARRAY_MAP1(tanh, a);
 }
 
 Ref<NDArray> nd::asinh(const Variant& a) {
-	return UNARY_MAP(asinh, a);
+	return VARRAY_MAP1(asinh, a);
 }
 
 Ref<NDArray> nd::acosh(const Variant& a) {
-	return UNARY_MAP(acosh, a);
+	return VARRAY_MAP1(acosh, a);
 }
 
 Ref<NDArray> nd::atanh(const Variant& a) {
-	return UNARY_MAP(atanh, a);
+	return VARRAY_MAP1(atanh, a);
 }
 
 Ref<NDArray> nd::sum(const Variant& a, const Variant& axes) {
@@ -649,64 +649,64 @@ Ref<NDArray> nd::norm(const Variant& a, const Variant& ord, const Variant& axes)
 }
 
 Ref<NDArray> nd::floor(const Variant& a) {
-	return UNARY_MAP(floor, a);
+	return VARRAY_MAP1(floor, a);
 }
 
 Ref<NDArray> nd::ceil(const Variant& a) {
-	return UNARY_MAP(ceil, a);
+	return VARRAY_MAP1(ceil, a);
 }
 
 Ref<NDArray> nd::round(const Variant& a) {
-	return UNARY_MAP(round, a);
+	return VARRAY_MAP1(round, a);
 }
 
 Ref<NDArray> nd::trunc(const Variant& a) {
-	return UNARY_MAP(trunc, a);
+	return VARRAY_MAP1(trunc, a);
 }
 
 Ref<NDArray> nd::rint(const Variant& a) {
 	// Actually uses nearbyint because rint can throw, which is undesirable in our case, and unlike numpy's behavior.
-	return UNARY_MAP(nearbyint, a);
+	return VARRAY_MAP1(nearbyint, a);
 }
 
 Ref<NDArray> nd::equal(const Variant& a, const Variant& b) {
-	return BINARY_MAP(equal_to, a, b);
+	return VARRAY_MAP2(equal_to, a, b);
 }
 
 Ref<NDArray> nd::not_equal(const Variant& a, const Variant& b) {
-	return BINARY_MAP(not_equal_to, a, b);
+	return VARRAY_MAP2(not_equal_to, a, b);
 }
 
 Ref<NDArray> nd::greater(const Variant& a, const Variant& b) {
-	return BINARY_MAP(greater, a, b);
+	return VARRAY_MAP2(greater, a, b);
 }
 
 Ref<NDArray> nd::greater_equal(const Variant& a, const Variant& b) {
-	return BINARY_MAP(greater_equal, a, b);
+	return VARRAY_MAP2(greater_equal, a, b);
 }
 
 Ref<NDArray> nd::less(const Variant& a, const Variant& b) {
-	return BINARY_MAP(less, a, b);
+	return VARRAY_MAP2(less, a, b);
 }
 
 Ref<NDArray> nd::less_equal(const Variant& a, const Variant& b) {
-	return BINARY_MAP(less_equal, a, b);
+	return VARRAY_MAP2(less_equal, a, b);
 }
 
 Ref<NDArray> nd::logical_and(const Variant& a, const Variant& b) {
-	return BINARY_MAP(logical_and, a, b);
+	return VARRAY_MAP2(logical_and, a, b);
 }
 
 Ref<NDArray> nd::logical_or(const Variant& a, const Variant& b) {
-	return BINARY_MAP(logical_or, a, b);
+	return VARRAY_MAP2(logical_or, a, b);
 }
 
 Ref<NDArray> nd::logical_xor(const Variant& a, const Variant& b) {
-    return BINARY_MAP(logical_xor, a, b);
+    return VARRAY_MAP2(logical_xor, a, b);
 }
 
 Ref<NDArray> nd::logical_not(const Variant& a) {
-	return UNARY_MAP(logical_not, a);
+	return VARRAY_MAP1(logical_not, a);
 }
 
 Ref<NDArray> nd::all(const Variant& a, const Variant& axes) {
@@ -718,7 +718,7 @@ Ref<NDArray> nd::any(const Variant& a, const Variant& axes) {
 }
 
 Ref<NDArray> nd::dot(const Variant& a, const Variant& b) {
-    return BINARY_MAP(dot, a, b);
+    return VARRAY_MAP2(dot, a, b);
 }
 
 Ref<NDArray> nd::reduce_dot(const Variant& a, const Variant& b, const Variant& axes) {
@@ -726,5 +726,5 @@ Ref<NDArray> nd::reduce_dot(const Variant& a, const Variant& b, const Variant& a
 }
 
 Ref<NDArray> nd::matmul(const Variant& a, const Variant& b) {
-	return BINARY_MAP(matmul, a, b);
+	return VARRAY_MAP2(matmul, a, b);
 }

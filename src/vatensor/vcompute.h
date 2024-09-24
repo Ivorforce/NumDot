@@ -46,7 +46,7 @@ namespace va {
 #endif
                 // Make a copy, similar as in promote_compute_case_if_needed.
                 // After copying we can be sure no aliasing is taking place, so we can assign with assign_xexpression.
-                const ArrayVariant variant = xt::xarray<R>(result);
+                const ArrayVariant variant = ArrayVariant(xt::xarray<R>(result));
                 va::assign_nonoverlapping(*target, variant);
             } else {
                 // Create new array, assign to our target pointer.
@@ -100,7 +100,7 @@ namespace va {
 
             // Result of visitor invocation
             // TODO Some xt functions support passing the output type. That would be FAR better than casting it afterwards as here.
-            OutputType result = visitor(promote::promote_compute_case_if_needed<InputType>(args)...);
+            OutputType result = OutputType(visitor(promote::promote_compute_case_if_needed<InputType>(args)...));
             return static_cast<ReturnType>(result);
         }
     };

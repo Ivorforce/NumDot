@@ -24,9 +24,13 @@ That being said, here is some information about the most interesting options:
 
     - Whether to use `xsimd <https://xsimd.readthedocs.io/en/latest/>`_ to accelerate contiguous memory operations. Defaults to 'no' on web (unsupported as of yet) and yes elsewhere.
 
-- ``define=NUMDOT_ASSIGN_INPLACE_DIRECTLY_INSTEAD_OF_COPYING_FIRST``
+- ``define=NUMDOT_COPY_FOR_ALL_INPLACE_OPERATIONS``
 
-    - Optimize in-place operations (e.g. ``array.assign_add(a, b)``. This substantially improves their performance, but can also increase the binary size but up to 100%.
+    - Don't optimize in-place operations (e.g. ``array.assign_add(a, b)``, even those of optimal type. This reduces their performance, but reduces the binary size.
+
+- ``define=NUMDOT_OPTIMIZE_ALL_INPLACE_OPERATIONS``
+
+    - Optimize all in-place operations (e.g. ``array.assign_add(a, b)``, even those of non-optimal type. This improves the performance of these inplace non-optimal type operations, but increases the binary size by a lot.
 
 - ``define=NUMDOT_CAST_INSTEAD_OF_COPY_FOR_ARGUMENTS``
 

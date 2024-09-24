@@ -12,7 +12,7 @@ Setup Considerations
 
 Godot is a multi-platform project. That means making custom builds involve building on multiple platforms. Usually, this is very difficult, but continuous integration (CI) a lot easier.
 
-NumDot already has CI configured. To make use of it, you need fork the repository, make your changes, and tag a release. To start, make an account on `GitHub <https://github.com>`_. Visit the `NumDot Repository <https://github.com/Ivorforce/NumDot>`_, and at the top, click "Fork".
+NumDot already has CI configured. To make use of it, you need fork the repository, make your changes, and trigger a build. To start, make an account on `GitHub <https://github.com>`_. Visit the `NumDot Repository <https://github.com/Ivorforce/NumDot>`_, and at the top, click "Fork".
 
 Then, continue with the setup.
 
@@ -61,15 +61,7 @@ You've set up your repository, and you've managed to test NumDot in the demo. Gr
 Making a cross-platform build
 -----------------------------
 
-If you've forked the repository before, all you need to do now is tag a release:
-
-.. code-block:: bash
-
-    # Change <version> accordingly
-    git tag release/custom/<version>
-    git push --tags
-
-The `GitHub Runner <https://github.com/Ivorforce/NumDot/blob/main/.github/workflows/build.yml>`__ will then make a build. It should complete within 10 minutes. On the ``Actions`` tab in your GitHub repository page (e.g. ``https://github.com/YourName/NumDot/actions``), you should see your release. Click it, and download the zip file offered at the bottom. All you need to do now is extract it into your game project.
+If you've forked the repository before, all you need to do now is trigger a build. Click on the ``Actions`` tab in your GitHub repository page (e.g. ``https://github.com/YourName/NumDot/actions``), and navigate to ``Build GDExtension``. Click the button ``Run workflow``, and wait for it to complete. Click the finished workflow, and download the zip file offered at the bottom. All you need to do now is extract its contents into your game project.
 
 CLion Support
 -------------

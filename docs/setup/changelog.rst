@@ -21,10 +21,11 @@ Upcoming Changes (master branch)
 - Added :ref:`NDArray <class_NDArray>` ``to_bool`` and ``get_bool`` functions.
 - ``nd.full`` now supports bools and arrays for the fill value.
 - Axes, shape and permutation parameters now have support for more different argument types (including NDArrays).
-- Added ``NUMDOT_COPY_FOR_ALL_INPLACE_OPERATIONS`` flag. This flag allows custom builds to de-optimize in-place operations even for optimal types, which may save some space.
+- Added ``NUMDOT_COPY_FOR_ALL_INPLACE_OPERATIONS`` flag. This flag allows custom builds to de-optimize in-place operations even for optimal types. This reduces the binary size.
 - Added ``NUMDOT_OPTIMIZE_ALL_INPLACE_OPERATIONS`` flag. This flag allows custom builds to optimize all in-place operations, even for non-optimal target types. This increases the binary size a lot and is not recommended.
 
 **Changed**
+
 - In-place operations with optimal destination types are now optimized by default.
 - Removed ``NUMDOT_ASSIGN_INPLACE_DIRECTLY_INSTEAD_OF_COPYING_FIRST`` compile flag.
 

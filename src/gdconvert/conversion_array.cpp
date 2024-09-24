@@ -50,7 +50,7 @@ va::VArray packed_as_xarray(const T shape_array) {
 
 void add_size_at_idx(va::shape_type& shape, const std::size_t idx, const std::size_t value) {
     if (shape.size() > idx) {
-        auto current_dim_size = shape[idx];
+        const auto current_dim_size = shape[idx];
 
         // Sizes are the same.
         if (current_dim_size == value) return;
@@ -90,9 +90,8 @@ void find_shape_and_dtype(va::shape_type& shape, va::DType &dtype, const Array& 
                 switch (array_element.get_type()) {
                     case Variant::OBJECT: {
                         if (const auto ndarray = Object::cast_to<NDArray>(array_element)) {
-                            auto& varray = ndarray->array;
                             auto varray_dim_idx = current_dim_idx;
-                            for (auto size : varray.shape) {
+                            for (const auto size : ndarray->array.shape) {
                                 add_size_at_idx(shape, varray_dim_idx, size);
                                 varray_dim_idx++;
                             }
@@ -207,10 +206,10 @@ va::VArray array_as_varray(const Array& input_array) {
                     }
                 }
                 case Variant::ARRAY:
-                    next.push_back({element_idx, static_cast<Array>(array_element)});
+                    next.emplace_back(element_idx, static_cast<Array>(array_element));
                     continue;
                 case Variant::BOOL:
-                    // TODO We should use element assign rather than slice - fill for all these.
+                    // TODO If we're on the last dimension, we should use element assign rather than slice - fill for all these.
                     varray.slice(element_idx).fill(static_cast<bool>(array_element));
                     continue;
                 case Variant::INT:

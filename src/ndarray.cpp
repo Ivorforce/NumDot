@@ -686,3 +686,24 @@ Ref<NDArray> NDArray::assign_reduce_dot(const Variant& a, const Variant& b, cons
 Ref<NDArray> NDArray::assign_matmul(const Variant& a, const Variant& b) {
 	VARRAY_MAP2(matmul, a, b);
 }
+
+#define CONVERT_TO_SCALAR(type)\
+try {\
+	const auto value = array.to_single_value();\
+	return va::constant_to_type<type>(value);\
+}\
+catch (std::runtime_error& error) {\
+	ERR_FAIL_V_MSG(false, error.what());\
+}
+
+NDArray::operator bool() const { CONVERT_TO_SCALAR(bool); }
+NDArray::operator int64_t() const { CONVERT_TO_SCALAR(int64_t); }
+NDArray::operator int32_t() const { CONVERT_TO_SCALAR(int32_t); }
+NDArray::operator int16_t() const { CONVERT_TO_SCALAR(int16_t); }
+NDArray::operator int8_t() const { CONVERT_TO_SCALAR(int8_t); }
+NDArray::operator uint64_t() const { CONVERT_TO_SCALAR(uint64_t); }
+NDArray::operator uint32_t() const { CONVERT_TO_SCALAR(uint32_t); }
+NDArray::operator uint16_t() const { CONVERT_TO_SCALAR(uint16_t); }
+NDArray::operator uint8_t() const { CONVERT_TO_SCALAR(uint8_t); }
+NDArray::operator double() const { CONVERT_TO_SCALAR(double); }
+NDArray::operator float() const { CONVERT_TO_SCALAR(float); }

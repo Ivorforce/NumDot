@@ -152,6 +152,19 @@ public:
 	Ref<NDArray> assign_dot(const Variant& a, const Variant& b);
 	Ref<NDArray> assign_reduce_dot(const Variant& a, const Variant& b, const Variant& axes);
 	Ref<NDArray> assign_matmul(const Variant& a, const Variant& b);
+
+	// Conversion to other types.
+	explicit operator bool() const;
+	explicit operator int64_t() const;
+	explicit operator int32_t() const;
+	explicit operator int16_t() const;
+	explicit operator int8_t() const;
+	explicit operator uint64_t() const;
+	explicit operator uint32_t() const;
+	explicit operator uint16_t() const;
+	explicit operator uint8_t() const;
+	explicit operator double() const;
+	explicit operator float() const;
 };
 
 #endif

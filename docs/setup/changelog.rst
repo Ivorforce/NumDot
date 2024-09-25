@@ -10,6 +10,12 @@ Here you will find the release notes for each version of the library. Each secti
    :local:
    :backlinks: none
 
+Upcoming Changes (main branch)
+------------------------------
+**Changed**
+
+- ``nd.array`` and ``nd.as_array`` are now up to 2x faster.
+
 Version 0.3 - 2024-09-25
 ------------------------
 **Added**

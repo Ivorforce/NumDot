@@ -16,6 +16,7 @@ Upcoming Changes (main branch)
 
 - ``nd.array`` and ``nd.as_array`` are now up to 2x faster.
 - ``NDArray.to_godot_array`` now slices into the outermost dimension instead of flattening the array. To get floats and ints directly, use ``.to_packedxxx``.
+- ``NDArray.to_packed_xxx`` now require 0D or 1D arrays to work. If the array is 2D, the conversion is not trivial, and a reshape should be used first.
 
 Version 0.3 - 2024-09-25
 ------------------------

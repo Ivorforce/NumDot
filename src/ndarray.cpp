@@ -269,6 +269,7 @@ PackedFloat32Array NDArray::to_packed_float32_array() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
+	ERR_FAIL_COND_V_MSG(array.dimension() > 1, {}, "flatten the array before converting to packed");
 	return varray_to_packed<PackedFloat32Array>(array);
 #endif
 }
@@ -277,6 +278,7 @@ PackedFloat64Array NDArray::to_packed_float64_array() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
+	ERR_FAIL_COND_V_MSG(array.dimension() > 1, {}, "flatten the array before converting to packed");
 	return varray_to_packed<PackedFloat64Array>(array);
 #endif
 }
@@ -285,6 +287,7 @@ PackedByteArray NDArray::to_packed_byte_array() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
+	ERR_FAIL_COND_V_MSG(array.dimension() > 1, {}, "flatten the array before converting to packed");
 	return varray_to_packed<PackedByteArray>(array);
 #endif
 }
@@ -293,6 +296,7 @@ PackedInt32Array NDArray::to_packed_int32_array() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
+	ERR_FAIL_COND_V_MSG(array.dimension() > 1, {}, "flatten the array before converting to packed");
 	return varray_to_packed<PackedInt32Array>(array);
 #endif
 }
@@ -301,6 +305,7 @@ PackedInt64Array NDArray::to_packed_int64_array() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
+	ERR_FAIL_COND_V_MSG(array.dimension() > 1, {}, "flatten the array before converting to packed");
 	return varray_to_packed<PackedInt64Array>(array);
 #endif
 }

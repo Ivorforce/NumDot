@@ -273,31 +273,18 @@ uint64_t nd::size_of_dtype_in_bytes(const DType dtype) {
 }
 
 Ref<NDArray> nd::as_array(const Variant &array, const nd::DType dtype) {
-	const auto type = array.get_type();
-
-	// Can we take a view?
-	if (type == Variant::OBJECT) {
-		if (const auto ndarray = dynamic_cast<NDArray*>(static_cast<Object *>(array))) {
-			if (dtype == nd::DType::DTypeMax || ndarray->dtype() == dtype) {
-				return array;
-			}
-		}
+	try {
+		const auto result = variant_as_array(array, dtype, false);
+		return {memnew(NDArray(result))};
 	}
-
-	// Ok, we need a copy of the data.
-	return nd::array(array, dtype);
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
 }
 
 Ref<NDArray> nd::array(const Variant &array, nd::DType dtype) {
 	try {
-		va::VArray existing_array = variant_as_array(array);
-
-		// Default value.
-		if (dtype == nd::DType::DTypeMax) {
-			dtype = existing_array.dtype();
-		}
-
-		auto result = va::copy_as_dtype(existing_array, dtype);
+		const auto result = variant_as_array(array, dtype, true);
 		return {memnew(NDArray(result))};
 	}
 	catch (std::runtime_error& error) {

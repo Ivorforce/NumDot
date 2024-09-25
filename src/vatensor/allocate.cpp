@@ -45,10 +45,18 @@ VArray va::copy_as_dtype(const VArray& other, DType dtype) {
 #ifdef NUMDOT_DISABLE_ALLOCATION_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_ALLOCATION_FUNCTIONS to enable it.");
 #else
+    if (dtype == DTypeMax) dtype = other.dtype();
+
     return std::visit([](auto t, auto carray) -> VArray {
-        using T = decltype(t);
+        using TWeWanted = decltype(t);
+        using TWeGot = typename decltype(carray)::value_type;
+
+        if constexpr (std::is_same_v<TWeWanted, TWeGot>) {
+            return from_store(std::make_shared<xt::xarray<TWeWanted>>(carray));
+        }
+
         // Cast first to reduce number of combinations down the line.
-        return from_store(std::make_shared<xt::xarray<T>>(xt::cast<T>(carray)));
+        return from_store(std::make_shared<xt::xarray<TWeWanted>>(xt::cast<TWeWanted>(carray)));
     }, dtype_to_variant(dtype), other.to_compute_variant());
 #endif
 }

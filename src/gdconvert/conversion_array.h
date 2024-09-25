@@ -10,6 +10,7 @@
 using namespace godot;
 
 va::VArray variant_as_array(const Variant& array);
+va::VArray variant_as_array(const Variant& array, va::DType dtype, bool copy);
 
 template <typename P, typename A>
 P packed_from_sequence(A& a) {

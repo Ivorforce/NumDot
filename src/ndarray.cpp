@@ -305,8 +305,16 @@ PackedInt64Array NDArray::to_packed_int64_array() const {
 #endif
 }
 
-Array NDArray::to_godot_array() const {
-	return varray_to_godot_array(array);
+TypedArray<NDArray> NDArray::to_godot_array() const {
+	ERR_FAIL_COND_V_MSG(array.dimension() == 0, {}, "can't slice a 0-dimension vector");
+
+	auto godot_array = TypedArray<NDArray>();
+	const size_t size = array.size();
+	godot_array.resize(static_cast<int64_t>(size));
+	for (size_t i = 0; i < size; i++) {
+		godot_array[static_cast<int64_t>(i)] = {memnew(NDArray(array.slice({i})))};
+	}
+	return godot_array;
 }
 
 template <typename Visitor, typename... Args>

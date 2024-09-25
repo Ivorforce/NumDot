@@ -403,23 +403,3 @@ va::VArray variant_as_array(const Variant &array, const va::DType dtype, const b
     else
         return va::copy_as_dtype(varray, dtype);
 }
-
-Array varray_to_godot_array(const va::VArray& array) {
-#ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
-    throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
-#else
-    auto godot_array = Array();
-
-    // TODO Non-flat
-    std::visit([&godot_array](auto carray){
-        godot_array.resize(carray.size());
-        auto start = carray.begin();
-
-        for (int64_t i = 0; i < carray.size(); ++i) {
-            godot_array[i] = *(start + i);
-        }
-    }, array.to_compute_variant());
-
-    return godot_array;
-#endif
-}

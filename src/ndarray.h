@@ -70,7 +70,7 @@ public:
 	[[nodiscard]] PackedInt32Array to_packed_int32_array() const;
 	[[nodiscard]] PackedInt64Array to_packed_int64_array() const;
 
-    [[nodiscard]] Array to_godot_array() const;
+    [[nodiscard]] TypedArray<NDArray> to_godot_array() const;
 
 	// Basic math functions.
 	Ref<NDArray> assign_add(const Variant &a, const Variant &b);

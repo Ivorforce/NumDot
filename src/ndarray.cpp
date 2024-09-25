@@ -38,6 +38,10 @@ void NDArray::_bind_methods() {
 	godot::ClassDB::bind_method(D_METHOD("array_size_in_bytes"), &NDArray::array_size_in_bytes);
 	godot::ClassDB::bind_method(D_METHOD("ndim"), &NDArray::ndim);
 
+	ClassDB::bind_method(D_METHOD("_iter_init"), &NDArray::_iter_init);
+	ClassDB::bind_method(D_METHOD("_iter_get"), &NDArray::_iter_get);
+	ClassDB::bind_method(D_METHOD("_iter_next"), &NDArray::_iter_next);
+
 	ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "set", &NDArray::set);
 	ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "get", &NDArray::get);
 	ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "get_bool", &NDArray::get_bool);
@@ -156,6 +160,49 @@ uint64_t NDArray::ndim() const {
 	return array.dimension();
 }
 
+Variant NDArray::_iter_init(const Array &p_iter) {
+	ERR_FAIL_COND_V_MSG(array.shape.empty(), false, "iteration over a 0-d array");
+
+	Array ref = p_iter;
+	ERR_FAIL_COND_V_MSG(ref.size() != 1, false, "size of iterator cache must be 1");
+
+	if (array.shape[0] == 0) {
+		return false;
+	}
+
+	ref[0] = 0;
+	return true;
+}
+
+Variant NDArray::_iter_next(const Array &p_iter) {
+	ERR_FAIL_COND_V_MSG(array.shape.empty(), false, "iteration over a 0-d array");
+
+	Array ref = p_iter;
+	ERR_FAIL_COND_V_MSG(ref.size() != 1, false, "size of iterator cache must be 1");
+
+	const auto size = array.shape[0];
+	int pos = ref[0];
+	ERR_FAIL_COND_V_MSG(pos < 0 || pos >= size, false, "iterator out of bounds");
+
+	pos += 1;
+	ref[0] = pos;
+
+	return pos != size;
+}
+
+Variant NDArray::_iter_get(const Variant &p_iter) {
+	ERR_FAIL_COND_V_MSG(array.shape.empty(), false, "iteration over a 0-d array");
+
+	int pos = p_iter;
+	const auto size = array.shape[0];
+	if (pos < 0 || pos >= size) { return {}; }
+	ERR_FAIL_COND_V_MSG(pos < 0 || pos >= size, false, "iterator out of bounds");
+
+	// We checked for the shape size, the next should not fail.
+	const auto result = array.slice({pos});
+	return {memnew(NDArray(result))};
+}
+
 Variant NDArray::as_type(va::DType dtype) const {
 	return nd::as_array(this, dtype);
 }
@@ -200,7 +247,7 @@ Ref<NDArray> NDArray::get(const Variant **args, GDExtensionInt arg_count, GDExte
 	try {
 		xt::xstrided_slice_vector sv = variants_to_slice_vector(args, arg_count, error);
 
-		auto result = array.slice(sv);
+		const auto result = array.slice(sv);
 		return {memnew(NDArray(result))};
 	}
 	catch (std::runtime_error& error) {

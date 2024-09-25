@@ -595,7 +595,7 @@
 			</description>
 		</method>
 		<method name="to_godot_array" qualifiers="const">
-			<return type="Array" />
+			<return type="NDArray[]" />
 			<description>
 				Convert this tensor to a Godot array. For now, the resulting array is flat.
 			</description>

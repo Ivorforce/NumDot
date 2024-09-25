@@ -12,6 +12,10 @@ Here you will find the release notes for each version of the library. Each secti
 
 Upcoming Changes (main branch)
 ------------------------------
+**Added**
+
+- ``NDArray`` is now iterable over the outermost dimension.
+
 **Changed**
 
 - ``nd.array`` and ``nd.as_array`` are now up to 2x faster.

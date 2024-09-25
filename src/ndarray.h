@@ -48,7 +48,11 @@ public:
 	[[nodiscard]] uint64_t size() const;
 	[[nodiscard]] uint64_t array_size_in_bytes() const;
 	[[nodiscard]] uint64_t ndim() const;
-	
+
+	Variant _iter_init(const Array &p_iter);
+	Variant _iter_next(const Array &p_iter);
+	Variant _iter_get(const Variant &p_iter);
+
 	// Subscript not available, i think. See object's set_bind / get_bind:
 	// I think godot assumes that all [] accesses are keypaths.
 	// https://github.com/godotengine/godot/blob/514c564a8c855d798ec6b5a52860e5bca8d57bc9/core/object/object.h#L643

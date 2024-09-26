@@ -17,7 +17,8 @@ void va::assign_nonoverlapping(ComputeVariant& array, const ArrayVariant& value)
 
 void va::assign(ComputeVariant& array, VConstant value) {
     std::visit([](auto& carray, const auto cvalue) {
-        carray.fill(cvalue);
+        using V = typename std::decay_t<decltype(carray)>::value_type;
+        carray.fill(static_cast<V>(cvalue));
     }, array, value);
 }
 

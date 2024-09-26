@@ -208,9 +208,7 @@ Variant NDArray::as_type(va::DType dtype) const {
 }
 
 void NDArray::set(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
-	if (arg_count < 1) {
-		ERR_FAIL_MSG("First argument (value) must be set. Ignoring assignment.");
-	}
+	ERR_FAIL_COND_MSG(arg_count < 1, "At least one argument must be passed to NDArray.set(). Ignoring assignment.");
 
 	try {
 		const Variant &value = *args[0];

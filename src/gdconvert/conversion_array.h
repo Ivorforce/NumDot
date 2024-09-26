@@ -12,19 +12,11 @@ using namespace godot;
 va::VArray variant_as_array(const Variant& array);
 va::VArray variant_as_array(const Variant& array, va::DType dtype, bool copy);
 
-template <typename P, typename A>
-P packed_from_sequence(A& a) {
-	P p;
-	p.resize(a.size());
-	std::copy(a.begin(), a.end(), p.ptrw());
-	return p;
-}
-
-template <typename P>
-P varray_to_packed(const va::VArray& array) {
-	return std::visit([](auto carray){
-		return packed_from_sequence<P>(carray);
-	}, array.to_compute_variant());
+template <typename T>
+void fill_c_array_flat(T* target, const va::ComputeVariant &array) {
+    std::visit([target](auto &carray) {
+        std::copy(carray.begin(), carray.end(), target);
+    }, array);
 }
 
 void find_shape_and_dtype(va::shape_type& shape, va::DType &dtype, const Array& input_array);

@@ -73,6 +73,10 @@ public:
 	[[nodiscard]] PackedByteArray to_packed_byte_array() const;
 	[[nodiscard]] PackedInt32Array to_packed_int32_array() const;
 	[[nodiscard]] PackedInt64Array to_packed_int64_array() const;
+	[[nodiscard]] PackedVector2Array to_packed_vector2_array() const;
+	[[nodiscard]] PackedVector3Array to_packed_vector3_array() const;
+	[[nodiscard]] PackedVector4Array to_packed_vector4_array() const;
+	[[nodiscard]] PackedColorArray to_packed_color_array() const;
 
     [[nodiscard]] TypedArray<NDArray> to_godot_array() const;
 

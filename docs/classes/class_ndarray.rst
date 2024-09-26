@@ -178,6 +178,8 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``PackedByteArray``                                        | :ref:`to_packed_byte_array<class_NDArray_method_to_packed_byte_array>`\ (\ ) |const|                                                              |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``PackedColorArray``                                       | :ref:`to_packed_color_array<class_NDArray_method_to_packed_color_array>`\ (\ ) |const|                                                            |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``PackedFloat32Array``                                     | :ref:`to_packed_float32_array<class_NDArray_method_to_packed_float32_array>`\ (\ ) |const|                                                        |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``PackedFloat64Array``                                     | :ref:`to_packed_float64_array<class_NDArray_method_to_packed_float64_array>`\ (\ ) |const|                                                        |
@@ -185,6 +187,12 @@ Methods
    | ``PackedInt32Array``                                       | :ref:`to_packed_int32_array<class_NDArray_method_to_packed_int32_array>`\ (\ ) |const|                                                            |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``PackedInt64Array``                                       | :ref:`to_packed_int64_array<class_NDArray_method_to_packed_int64_array>`\ (\ ) |const|                                                            |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``PackedVector2Array``                                     | :ref:`to_packed_vector2_array<class_NDArray_method_to_packed_vector2_array>`\ (\ ) |const|                                                        |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``PackedVector3Array``                                     | :ref:`to_packed_vector3_array<class_NDArray_method_to_packed_vector3_array>`\ (\ ) |const|                                                        |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``PackedVector4Array``                                     | :ref:`to_packed_vector4_array<class_NDArray_method_to_packed_vector4_array>`\ (\ ) |const|                                                        |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
 
 .. rst-class:: classref-section-separator
@@ -1210,7 +1218,19 @@ Errors if size() is not 1.
 
 ``PackedByteArray`` **to_packed_byte_array**\ (\ ) |const| :ref:`🔗<class_NDArray_method_to_packed_byte_array>`
 
-Convert a flat version of this tensor to a PackedByteArray.
+If 1D, converts this tensor to a PackedByteArray.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_to_packed_color_array:
+
+.. rst-class:: classref-method
+
+``PackedColorArray`` **to_packed_color_array**\ (\ ) |const| :ref:`🔗<class_NDArray_method_to_packed_color_array>`
+
+If shape is ``?, 4``, converts this tensor to a PackedColorArray.
 
 .. rst-class:: classref-item-separator
 
@@ -1222,7 +1242,7 @@ Convert a flat version of this tensor to a PackedByteArray.
 
 ``PackedFloat32Array`` **to_packed_float32_array**\ (\ ) |const| :ref:`🔗<class_NDArray_method_to_packed_float32_array>`
 
-Convert a flat version of this tensor to a PackedFloat32Array.
+If 1D, converts this tensor to a PackedFloat32Array.
 
 .. rst-class:: classref-item-separator
 
@@ -1234,7 +1254,7 @@ Convert a flat version of this tensor to a PackedFloat32Array.
 
 ``PackedFloat64Array`` **to_packed_float64_array**\ (\ ) |const| :ref:`🔗<class_NDArray_method_to_packed_float64_array>`
 
-Convert a flat version of this tensor to a PackedFloat64Array.
+If 1D, converts this tensor to a PackedFloat64Array.
 
 .. rst-class:: classref-item-separator
 
@@ -1246,7 +1266,7 @@ Convert a flat version of this tensor to a PackedFloat64Array.
 
 ``PackedInt32Array`` **to_packed_int32_array**\ (\ ) |const| :ref:`🔗<class_NDArray_method_to_packed_int32_array>`
 
-Convert a flat version of this tensor to a PackedInt32Array.
+If 1D, converts this tensor to a PackedInt32Array.
 
 .. rst-class:: classref-item-separator
 
@@ -1258,7 +1278,43 @@ Convert a flat version of this tensor to a PackedInt32Array.
 
 ``PackedInt64Array`` **to_packed_int64_array**\ (\ ) |const| :ref:`🔗<class_NDArray_method_to_packed_int64_array>`
 
-Convert a flat version of this tensor to a PackedInt64Array.
+If 1D, converts this tensor to a PackedInt64Array.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_to_packed_vector2_array:
+
+.. rst-class:: classref-method
+
+``PackedVector2Array`` **to_packed_vector2_array**\ (\ ) |const| :ref:`🔗<class_NDArray_method_to_packed_vector2_array>`
+
+If shape is ``?, 2``, converts this tensor to a PackedVector2Array.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_to_packed_vector3_array:
+
+.. rst-class:: classref-method
+
+``PackedVector3Array`` **to_packed_vector3_array**\ (\ ) |const| :ref:`🔗<class_NDArray_method_to_packed_vector3_array>`
+
+If shape is ``?, 3``, converts this tensor to a PackedVector3Array.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_to_packed_vector4_array:
+
+.. rst-class:: classref-method
+
+``PackedVector4Array`` **to_packed_vector4_array**\ (\ ) |const| :ref:`🔗<class_NDArray_method_to_packed_vector4_array>`
+
+If shape is ``?, 4``, converts this tensor to a PackedVector4Array.
 
 .. |virtual| replace:: :abbr:`virtual (This method should typically be overridden by the user to have any effect.)`
 .. |const| replace:: :abbr:`const (This method has no side effects. It doesn't modify any of the instance's member variables.)`

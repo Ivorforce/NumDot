@@ -15,6 +15,7 @@ Upcoming Changes (main branch)
 **Added**
 
 - ``NDArray`` is now iterable over the outermost dimension.
+- ``NDArray`` conversion functions to ``PackedVector2Array``, ``PackedVector3Array``, ``PackedVector4Array`` and ``PackedColorArray``.
 
 **Changed**
 

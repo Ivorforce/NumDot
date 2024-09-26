@@ -16,7 +16,7 @@ size_t va::VArray::size() const {
 }
 
 size_t va::VArray::dimension() const {
-    return std::visit([](auto&& carray) { return carray.dimension(); }, to_compute_variant());
+    return shape.size();
 }
 
 va::VArray va::VArray::slice(const xt::xstrided_slice_vector &slices) const {

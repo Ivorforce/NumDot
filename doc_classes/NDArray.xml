@@ -610,31 +610,55 @@
 		<method name="to_packed_byte_array" qualifiers="const">
 			<return type="PackedByteArray" />
 			<description>
-				Convert a flat version of this tensor to a PackedByteArray.
+				If 1D, converts this tensor to a PackedByteArray.
+			</description>
+		</method>
+		<method name="to_packed_color_array" qualifiers="const">
+			<return type="PackedColorArray" />
+			<description>
+				If shape is [?, 4], converts this tensor to a PackedColorArray.
 			</description>
 		</method>
 		<method name="to_packed_float32_array" qualifiers="const">
 			<return type="PackedFloat32Array" />
 			<description>
-				Convert a flat version of this tensor to a PackedFloat32Array.
+				If 1D, converts this tensor to a PackedFloat32Array.
 			</description>
 		</method>
 		<method name="to_packed_float64_array" qualifiers="const">
 			<return type="PackedFloat64Array" />
 			<description>
-				Convert a flat version of this tensor to a PackedFloat64Array.
+				If 1D, converts this tensor to a PackedFloat64Array.
 			</description>
 		</method>
 		<method name="to_packed_int32_array" qualifiers="const">
 			<return type="PackedInt32Array" />
 			<description>
-				Convert a flat version of this tensor to a PackedInt32Array.
+				If 1D, converts this tensor to a PackedInt32Array.
 			</description>
 		</method>
 		<method name="to_packed_int64_array" qualifiers="const">
 			<return type="PackedInt64Array" />
 			<description>
-				Convert a flat version of this tensor to a PackedInt64Array.
+				If 1D, converts this tensor to a PackedInt64Array.
+			</description>
+		</method>
+		<method name="to_packed_vector2_array" qualifiers="const">
+			<return type="PackedVector2Array" />
+			<description>
+				If shape is [?, 2], converts this tensor to a PackedVector2Array.
+			</description>
+		</method>
+		<method name="to_packed_vector3_array" qualifiers="const">
+			<return type="PackedVector3Array" />
+			<description>
+				If shape is [?, 3], converts this tensor to a PackedVector3Array.
+			</description>
+		</method>
+		<method name="to_packed_vector4_array" qualifiers="const">
+			<return type="PackedVector4Array" />
+			<description>
+				If shape is [?, 4], converts this tensor to a PackedVector4Array.
 			</description>
 		</method>
 	</methods>

@@ -25,7 +25,8 @@ func run_numdot(
 	var angle_delta := nd.linspace(0, PI * 2, num_sides, nd.DType.Float32)
 	
 	# TODO Would be better as a PackedVector2Array backed NDArray
-	# because it could immediately return after the math.
+	#  because it could immediately return after the math, rather than needing
+	#  another copy.
 	var polygon := nd.empty([num_sides, 2])
 	
 	polygon.get(null, 0).assign_sin(angle_delta)
@@ -35,26 +36,27 @@ func run_numdot(
 
 	# In this test we count conversion to the packed array
 	#  as part of the test, because that's what we'd need to pass to godot.
-	
-	# TODO needs to_packed_vector2_array()
-	var polygon_packed := PackedVector2Array()
-	polygon_packed.resize(num_sides)
-	for i in num_sides:
-		polygon_packed[i] = Vector2(polygon.get_float(i, 0), polygon.get_float(i, 1))
-	return polygon_packed
+	return polygon.to_packed_vector2_array()
 
 func _ready():
 	const RADIUS := 1.0
-	const NUM_SIDES := 7_0000
+	const NUM_SIDES := 20000000
 	const POSITION := Vector2(0.0, 0.0)
-	
-	# In this test, GDScript speed currently wins.
-	# This is because of the two above mentioned ToDos.
-	# With both implemented, the result should somewhat favor NumDot
-	# (2600 gdscript vs 2500 NumDot)
-	# It should be able to reach speeds even faster than this, but
-	#  i don't know what the next bottleneck is.
-	
+
+	# Examples from my computer:
+	# n=200            26 GDScript
+	#                  92 NumDot
+	# n=2000          115 GDScript
+	#                 144 NumDot
+	# n=20000         789 GDScript
+	#                 910 NumDot
+	# n=200000       8014 GDScript
+	#                7116 NumDot
+	# n=2000000     84384 GDScript
+	#               91861 NumDot
+	# n=20000000   804691 GDScript
+	#              795497 NumDot
+
 	var start_time: int
 	print("Generate polygon with sides=" + str(NUM_SIDES))
 

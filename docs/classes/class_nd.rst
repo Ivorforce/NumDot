@@ -1009,6 +1009,8 @@ arange(start, stop): Values are generated within the half-open interval \[start,
 
 arange(start, stop, step) Values are generated within the half-open interval \[start, stop), with spacing between values given by step.
 
+Note that ranges are represented as Vector4i(mask, start, stop, step).
+
 .. rst-class:: classref-item-separator
 
 ----

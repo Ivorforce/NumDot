@@ -14,8 +14,8 @@
 // TODO Somehow, I can't manage to make this a lambda function visitor.
 struct ToRangeVisitor {
     template <typename T1, typename T2, typename T3>
-    xt::xstrided_slice<std::ptrdiff_t> operator()(T1 a, T2 b, T3 c) {
-        return xt::range(a, b, c);
+    xt::xstrided_slice<std::ptrdiff_t> operator()(T1&& a, T2&& b, T3&& c) {
+        return xt::range(std::forward<T1>(a), std::forward<T2>(b), std::forward<T3>(c));
     }
 };
 
@@ -34,7 +34,7 @@ xt::xstrided_slice<std::ptrdiff_t> variant_to_slice_part(const Variant& variant)
 
     switch (type) {
         case Variant::OBJECT:
-            if (auto ndrange = Object::cast_to<NDRange>(variant)) {
+            if (const auto ndrange = Object::cast_to<NDRange>(variant)) {
                 return std::visit(ToRangeVisitor{}, ndrange->start, ndrange->stop, ndrange->step);
             }
         break;

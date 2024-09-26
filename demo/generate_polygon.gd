@@ -40,7 +40,7 @@ func run_numdot(
 
 func _ready():
 	const RADIUS := 1.0
-	const NUM_SIDES := 20000000
+	const NUM_SIDES := 20000
 	const POSITION := Vector2(0.0, 0.0)
 
 	# Examples from my computer:

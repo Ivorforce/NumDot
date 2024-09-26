@@ -1,6 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://bdiwjirqot411"]
+[gd_scene load_steps=3 format=3 uid="uid://bdiwjirqot411"]
 
 [ext_resource type="Script" path="res://example_math.gd" id="1_lejsv"]
+[ext_resource type="Script" path="res://sieve_of_eratosthenes.gd" id="2_kujve"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_lejsv")
+
+[node name="SieveOfEratosthenes" type="Node" parent="."]
+script = ExtResource("2_kujve")

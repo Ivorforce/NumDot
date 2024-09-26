@@ -139,3 +139,15 @@ va::VConstant va::VArray::to_single_value() const {
         // return V(array[slice]);
     }, to_compute_variant());
 }
+
+va::VArray::operator bool() const { return va::constant_to_type<bool>(to_single_value()); }
+va::VArray::operator int64_t() const { return va::constant_to_type<int64_t>(to_single_value()); }
+va::VArray::operator int32_t() const { return va::constant_to_type<int32_t>(to_single_value()); }
+va::VArray::operator int16_t() const { return va::constant_to_type<int16_t>(to_single_value()); }
+va::VArray::operator int8_t() const { return va::constant_to_type<int8_t>(to_single_value()); }
+va::VArray::operator uint64_t() const { return va::constant_to_type<uint64_t>(to_single_value()); }
+va::VArray::operator uint32_t() const { return va::constant_to_type<uint32_t>(to_single_value()); }
+va::VArray::operator uint16_t() const { return va::constant_to_type<uint16_t>(to_single_value()); }
+va::VArray::operator uint8_t() const { return va::constant_to_type<uint8_t>(to_single_value()); }
+va::VArray::operator double() const { return va::constant_to_type<double>(to_single_value()); }
+va::VArray::operator float() const { return va::constant_to_type<float>(to_single_value()); }

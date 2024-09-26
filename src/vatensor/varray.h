@@ -127,6 +127,18 @@ namespace va {
         [[nodiscard]] size_t size_of_array_in_bytes() const;
 
         [[nodiscard]] VConstant to_single_value() const;
+
+        explicit operator bool() const;
+        explicit operator int64_t() const;
+        explicit operator int32_t() const;
+        explicit operator int16_t() const;
+        explicit operator int8_t() const;
+        explicit operator uint64_t() const;
+        explicit operator uint32_t() const;
+        explicit operator uint16_t() const;
+        explicit operator uint8_t() const;
+        explicit operator double() const;
+        explicit operator float() const;
     };
 
     // For all functions returning an or assigning to an array.

@@ -257,8 +257,8 @@ Ref<NDArray> NDArray::get(const Variant **args, GDExtensionInt arg_count, GDExte
 
 bool NDArray::get_bool(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
 	try {
-		xt::xstrided_slice_vector sv = variants_to_slice_vector(args, arg_count, error);
-		return va::constant_to_type<bool>(array.slice(sv).to_single_value());
+		const xt::xstrided_slice_vector sv = variants_to_slice_vector(args, arg_count, error);
+		return static_cast<bool>(array.slice(sv));
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG(0, error.what());
@@ -267,8 +267,8 @@ bool NDArray::get_bool(const Variant **args, GDExtensionInt arg_count, GDExtensi
 
 int64_t NDArray::get_int(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
 	try {
-		xt::xstrided_slice_vector sv = variants_to_slice_vector(args, arg_count, error);
-		return va::constant_to_type<int64_t>(array.slice(sv).to_single_value());
+		const xt::xstrided_slice_vector sv = variants_to_slice_vector(args, arg_count, error);
+		return static_cast<int64_t>(array.slice(sv));
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG(0, error.what());
@@ -277,40 +277,17 @@ int64_t NDArray::get_int(const Variant **args, GDExtensionInt arg_count, GDExten
 
 double_t NDArray::get_float(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
 	try {
-		xt::xstrided_slice_vector sv = variants_to_slice_vector(args, arg_count, error);
-		return va::constant_to_type<double_t>(array.slice(sv).to_single_value());
+		const xt::xstrided_slice_vector sv = variants_to_slice_vector(args, arg_count, error);
+		return static_cast<double_t>(array.slice(sv));
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG(0, error.what());
 	}
 }
 
-bool NDArray::to_bool() const {
-	try {
-		return va::constant_to_type<bool>(array.to_single_value());
-	}
-	catch (std::runtime_error& error) {
-		ERR_FAIL_V_MSG(0, error.what());
-	}
-}
-
-int64_t NDArray::to_int() const {
-	try {
-		return va::constant_to_type<int64_t>(array.to_single_value());
-	}
-	catch (std::runtime_error& error) {
-		ERR_FAIL_V_MSG(0, error.what());
-	}
-}
-
-double_t NDArray::to_float() const {
-	try {
-		return va::constant_to_type<double_t>(array.to_single_value());
-	}
-	catch (std::runtime_error& error) {
-		ERR_FAIL_V_MSG(0, error.what());
-	}
-}
+bool NDArray::to_bool() const { return static_cast<bool>(*this);}
+int64_t NDArray::to_int() const { return static_cast<int64_t>(*this); }
+double_t NDArray::to_float() const { return static_cast<double_t>(*this); }
 
 PackedFloat32Array NDArray::to_packed_float32_array() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
@@ -689,8 +666,7 @@ Ref<NDArray> NDArray::assign_matmul(const Variant& a, const Variant& b) {
 
 #define CONVERT_TO_SCALAR(type)\
 try {\
-	const auto value = array.to_single_value();\
-	return va::constant_to_type<type>(value);\
+	return static_cast<type>(array);\
 }\
 catch (std::runtime_error& error) {\
 	ERR_FAIL_V_MSG(false, error.what());\

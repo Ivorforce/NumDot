@@ -31,7 +31,7 @@ func run_gdscript(n: int) -> PackedByteArray:
 
 func _ready() -> void:
 	# Same test as https://www.youtube.com/watch?v=qDXomV7Ojko
-	var n := 20000000
+	var n := 2000000
 	var start_time: int
 	print("Sieve of Eratosthenes with n=" + str(n))
 	
@@ -42,11 +42,11 @@ func _ready() -> void:
 	#                  60 NumDot
 	# n=20000        1100 GDScript
 	#                 130 NumDot
-	# n=20000       13000 GDScript
+	# n=200000      13000 GDScript
 	#                 780 NumDot
-	# n=200000     150000 GDScript
+	# n=2000000    150000 GDScript
 	#                9300 NumDot
-	# n=2000000   1600000 GDScript
+	# n=20000000  1600000 GDScript
 	#              110000 NumDot
 
 	start_time = Time.get_ticks_usec()

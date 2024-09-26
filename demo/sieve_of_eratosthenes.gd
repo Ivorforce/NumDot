@@ -31,7 +31,7 @@ func run_gdscript(n: int) -> PackedByteArray:
 
 func _ready() -> void:
 	# Same test as https://www.youtube.com/watch?v=qDXomV7Ojko
-	var n := 2000000
+	var n := 2_000_000
 	var start_time: int
 	print("Sieve of Eratosthenes with n=" + str(n))
 	

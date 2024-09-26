@@ -1,6 +1,6 @@
 extends Node
 
-func numdot(n: int) -> NDArray:
+func run_numdot(n: int) -> NDArray:
 	var is_prime := nd.ones(n, nd.DType.Bool)
 	is_prime.set(false, nd.to(2))
 	
@@ -12,7 +12,7 @@ func numdot(n: int) -> NDArray:
 	return is_prime
 
 # From https://www.geeksforgeeks.org/python-program-for-sieve-of-eratosthenes/
-func gdscript(n: int) -> PackedByteArray:
+func run_gdscript(n: int) -> PackedByteArray:
 	var is_prime := PackedByteArray()
 	is_prime.resize(n)
 	
@@ -31,19 +31,30 @@ func gdscript(n: int) -> PackedByteArray:
 
 func _ready() -> void:
 	# Same test as https://www.youtube.com/watch?v=qDXomV7Ojko
-	# n=2,000,000
-	var n := 2000000
+	var n := 20000000
 	var start_time: int
 	print("Sieve of Eratosthenes with n=" + str(n))
 	
-	# On my computer, this takes about 150,000us
+	# Examples from my computer:
+	# n=200            25 GDScript
+	#                  50 NumDot
+	# n=2000          100 GDScript
+	#                  60 NumDot
+	# n=20000        1100 GDScript
+	#                 130 NumDot
+	# n=20000       13000 GDScript
+	#                 780 NumDot
+	# n=200000     150000 GDScript
+	#                9300 NumDot
+	# n=2000000   1600000 GDScript
+	#              110000 NumDot
+
 	start_time = Time.get_ticks_usec()
-	var result_gd := gdscript(n)
+	var result_gd := run_gdscript(n)
 	print("GDScript: " + str(Time.get_ticks_usec() - start_time))
 
-	# On my computer, this takes about 75,000us
 	start_time = Time.get_ticks_usec()
-	var result_nd := numdot(n)
+	var result_nd := run_numdot(n)
 	print("NumDot: " + str(Time.get_ticks_usec() - start_time))
 
 	assert(result_gd == result_nd.to_packed_byte_array())

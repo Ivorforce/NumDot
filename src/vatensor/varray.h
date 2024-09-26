@@ -177,7 +177,7 @@ namespace va {
             store->shape(),
             store->strides(),
             0,
-            xt::layout_type::dynamic
+            store->layout()
         };
     }
 
@@ -188,7 +188,7 @@ namespace va {
             {},
             {},
             0,
-            xt::layout_type::dynamic
+            xt::layout_type::row_major
         };
     }
 

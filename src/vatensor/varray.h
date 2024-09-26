@@ -55,7 +55,7 @@ namespace va {
     >;
 
     template <typename T>
-    using array_case = xt::xarray<T>;
+    using array_case = xt::xarray<T, xt::layout_type::row_major>;
 
     // P&& pointer, typename A::size_type size, O ownership, SC&& shape, SS&& strides, const A& alloc = A()
     template <typename T>

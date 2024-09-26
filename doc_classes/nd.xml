@@ -233,7 +233,7 @@
 			</description>
 		</method>
 		<method name="from" qualifiers="static">
-			<return type="NDRange" />
+			<return type="Vector4i" />
 			<param index="0" name="start" type="int" />
 			<description>
 				Create a range that starts at the given index.
@@ -452,7 +452,7 @@
 			</description>
 		</method>
 		<method name="range" qualifiers="static">
-			<return type="NDRange" />
+			<return type="Vector4i" />
 			<param index="0" name="start_or_stop" type="Variant" default="0" />
 			<param index="1" name="stop" type="Variant" default="null" />
 			<param index="2" name="step" type="Variant" default="null" />
@@ -461,6 +461,7 @@
 				arange(stop): Values are generated within the half-open interval [lb]0, stop) (in other words, the interval including start but excluding stop).
 				arange(start, stop): Values are generated within the half-open interval [lb]start, stop).
 				arange(start, stop, step) Values are generated within the half-open interval [lb]start, stop), with spacing between values given by step.
+				Note that ranges are represented as Vector4i(mask, start, stop, step).
 			</description>
 		</method>
 		<method name="reduce_dot" qualifiers="static">
@@ -610,7 +611,7 @@
 			</description>
 		</method>
 		<method name="to" qualifiers="static">
-			<return type="NDRange" />
+			<return type="Vector4i" />
 			<param index="0" name="stop" type="int" />
 			<description>
 				Create a range that starts at 0, and stops at the given index (exclusive).

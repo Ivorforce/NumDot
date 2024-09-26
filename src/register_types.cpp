@@ -6,7 +6,6 @@
 #include "godot_cpp/core/class_db.hpp"  // for GDREGISTER_CLASS
 #include "nd.h"                         // for nd
 #include "ndarray.h"                    // for NDArray
-#include "ndrange.h"                    // for NDRange
 
 using namespace godot;
 
@@ -17,7 +16,6 @@ void initialize_numdot_module(ModuleInitializationLevel p_level) {
 
 	GDREGISTER_CLASS(nd);
 	GDREGISTER_CLASS(NDArray);
-	GDREGISTER_CLASS(NDRange);
 }
 
 void uninitialize_numdot_module(ModuleInitializationLevel p_level) {

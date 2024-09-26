@@ -24,7 +24,6 @@
 #include "godot_cpp/core/error_macros.hpp"  // for ERR_FAIL_V_MSG
 #include "godot_cpp/core/memory.hpp"        // for _post_initialize, memnew
 #include "ndarray.h"                        // for NDArray
-#include "ndrange.h"                        // for NDRange
 #include "vatensor/allocate.h"              // for empty, full, copy_as_dtype
 #include "vatensor/rearrange.h"             // for reshape, transpose, flip
 #include "vatensor/varray.h"                // for VArrayTarget, DType, VArray
@@ -235,37 +234,38 @@ StringName nd::ellipsis() {
 	return ::ellipsis();
 }
 
-Ref<NDRange> nd::from(int64_t start) {
-	return {memnew(NDRange(
-		static_cast<std::ptrdiff_t>(start),
-		xt::placeholders::xtuph{},
-		xt::placeholders::xtuph{}
-	))};
+Vector4i nd::from(int32_t start) {
+	return Vector4i(0b100, start, 0, 0);
 }
 
-Ref<NDRange> nd::to(int64_t stop) {
-	return {memnew(NDRange(
-		xt::placeholders::xtuph{},
-		static_cast<std::ptrdiff_t>(stop),
-		xt::placeholders::xtuph{}
-	))};
+Vector4i nd::to(int32_t stop) {
+	return Vector4i(0b010, 0, stop, 0);
 }
 
-Ref<NDRange> nd::range(const Variant &start_or_stop, const Variant &stop, const Variant &step) {
-	try {
-		if (stop.get_type() == Variant::Type::NIL && step.get_type() == Variant::Type::NIL) {
-			return {memnew(NDRange(0, variant_to_range_part(start_or_stop), xt::placeholders::xtuph{}))};
-		}
-		else if (step.get_type() == Variant::Type::NIL) {
-			return {memnew(NDRange(variant_to_range_part(start_or_stop), variant_to_range_part(stop), xt::placeholders::xtuph{}))};
-		}
-		else {
-			return {memnew(NDRange(variant_to_range_part(start_or_stop), variant_to_range_part(stop), variant_to_range_part(step)))};
-		}
+Vector4i nd::range(const Variant &start_or_stop, const Variant &stop, const Variant &step) {
+	const auto type1 = start_or_stop.get_type();
+	const auto type2 = stop.get_type();
+	const auto type3 = step.get_type();
+	ERR_FAIL_COND_V_MSG(
+		(type1 != Variant::NIL && type1 != Variant::INT) || (type2 != Variant::NIL && type2 != Variant::INT) || (type3 != Variant::NIL && type3 != Variant::INT),
+		Vector4i(),
+		"All arguments to range must be ints or nil."
+	);
+
+	const auto mask = (0b100 * (type1 == Variant::INT)) | (0b010 * (type2 == Variant::INT)) | (0b001 * (type3 == Variant::INT));
+	if (mask == 0b100) {
+		// Special case: nd.range(x)
+		// TODO presumably! No real way to check....
+		return Vector4i(0b010, 0, static_cast<int32_t>(start_or_stop), 0);
 	}
-	catch (std::runtime_error& error) {
-		ERR_FAIL_V_MSG(nullptr, error.what());
-	}
+
+	return Vector4i(
+		mask,
+		// These default to 0 when type is NIL
+		static_cast<int32_t>(start_or_stop),
+		static_cast<int32_t>(stop),
+		static_cast<int32_t>(step)
+	);
 }
 
 uint64_t nd::size_of_dtype_in_bytes(const DType dtype) {

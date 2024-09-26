@@ -20,5 +20,4 @@ Variant types
     class_variant
     class_nd
     class_ndarray
-    class_ndrange
 

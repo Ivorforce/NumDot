@@ -84,7 +84,7 @@ Methods
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`floor<class_nd_method_floor>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                                    |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`NDRange<class_NDRange>` | :ref:`from<class_nd_method_from>`\ (\ start\: ``int``\ ) |static|                                                                                                                                      |
+   | ``Vector4i``                  | :ref:`from<class_nd_method_from>`\ (\ start\: ``int``\ ) |static|                                                                                                                                      |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`full<class_nd_method_full>`\ (\ shape\: ``Variant`` = null, fill_value\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 2\ ) |static|                                                 |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -136,7 +136,7 @@ Methods
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`rad2deg<class_nd_method_rad2deg>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                                |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`NDRange<class_NDRange>` | :ref:`range<class_nd_method_range>`\ (\ start_or_stop\: ``Variant`` = 0, stop\: ``Variant`` = null, step\: ``Variant`` = null\ ) |static|                                                              |
+   | ``Vector4i``                  | :ref:`range<class_nd_method_range>`\ (\ start_or_stop\: ``Variant`` = 0, stop\: ``Variant`` = null, step\: ``Variant`` = null\ ) |static|                                                              |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`reduce_dot<class_nd_method_reduce_dot>`\ (\ a\: ``Variant`` = null, b\: ``Variant`` = null, axes\: ``Variant`` = null\ ) |static|                                                                |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -174,7 +174,7 @@ Methods
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`tanh<class_nd_method_tanh>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                                      |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`NDRange<class_NDRange>` | :ref:`to<class_nd_method_to>`\ (\ stop\: ``int``\ ) |static|                                                                                                                                           |
+   | ``Vector4i``                  | :ref:`to<class_nd_method_to>`\ (\ stop\: ``int``\ ) |static|                                                                                                                                           |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`transpose<class_nd_method_transpose>`\ (\ a\: ``Variant``, permutation\: ``Variant``\ ) |static|                                                                                                 |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -665,7 +665,7 @@ The floor of the scalar x is the largest integer i, such that i <= x.
 
 .. rst-class:: classref-method
 
-:ref:`NDRange<class_NDRange>` **from**\ (\ start\: ``int``\ ) |static| :ref:`🔗<class_nd_method_from>`
+``Vector4i`` **from**\ (\ start\: ``int``\ ) |static| :ref:`🔗<class_nd_method_from>`
 
 Create a range that starts at the given index.
 
@@ -999,7 +999,7 @@ Convert angles from radians to degrees.
 
 .. rst-class:: classref-method
 
-:ref:`NDRange<class_NDRange>` **range**\ (\ start_or_stop\: ``Variant`` = 0, stop\: ``Variant`` = null, step\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_range>`
+``Vector4i`` **range**\ (\ start_or_stop\: ``Variant`` = 0, stop\: ``Variant`` = null, step\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_range>`
 
 Create a range. arange can be called with a varying number of positional arguments:
 
@@ -1253,7 +1253,7 @@ Equivalent to nd.sinh(x) / nd.cosh(x).
 
 .. rst-class:: classref-method
 
-:ref:`NDRange<class_NDRange>` **to**\ (\ stop\: ``int``\ ) |static| :ref:`🔗<class_nd_method_to>`
+``Vector4i`` **to**\ (\ stop\: ``int``\ ) |static| :ref:`🔗<class_nd_method_to>`
 
 Create a range that starts at 0, and stops at the given index (exclusive).
 

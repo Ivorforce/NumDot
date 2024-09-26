@@ -7,17 +7,7 @@
 #include "godot_cpp/core/object.hpp"          // for Object::cast_to
 #include "godot_cpp/variant/string_name.hpp"  // for StringName
 #include "godot_cpp/variant/variant.hpp"      // for Variant
-#include "ndrange.h"                          // for NDRange
 #include "xtensor/xslice.hpp"                 // for xall_tag, xellipsis_tag
-
-
-// TODO Somehow, I can't manage to make this a lambda function visitor.
-struct ToRangeVisitor {
-    template <typename T1, typename T2, typename T3>
-    xt::xstrided_slice<std::ptrdiff_t> operator()(T1&& a, T2&& b, T3&& c) {
-        return xt::range(std::forward<T1>(a), std::forward<T2>(b), std::forward<T3>(c));
-    }
-};
 
 StringName newaxis() {
     const StringName newaxis = StringName("newaxis");
@@ -29,15 +19,27 @@ StringName ellipsis() {
     return ellipsis;
 }
 
+using xtuph = xt::placeholders::xtuph;
+
 xt::xstrided_slice<std::ptrdiff_t> variant_to_slice_part(const Variant& variant)  {
-    auto type = variant.get_type();
+    const auto type = variant.get_type();
 
     switch (type) {
-        case Variant::OBJECT:
-            if (const auto ndrange = Object::cast_to<NDRange>(variant)) {
-                return std::visit(ToRangeVisitor{}, ndrange->start, ndrange->stop, ndrange->step);
+        case Variant::VECTOR4I: {
+            const auto vector = static_cast<Vector4i>(variant);
+            switch (vector.x) {
+                case 0b000: return {xt::xrange_adaptor {xtuph{}, xtuph{}, xtuph{}}};
+                case 0b001: return {xt::xrange_adaptor {xtuph{}, xtuph{}, static_cast<std::ptrdiff_t>(vector.w)}};
+                case 0b010: return {xt::xrange_adaptor {xtuph{}, static_cast<std::ptrdiff_t>(vector.z), xtuph{}}};
+                case 0b011: return {xt::xrange_adaptor {xtuph{}, static_cast<std::ptrdiff_t>(vector.z), static_cast<std::ptrdiff_t>(vector.w)}};
+                case 0b100: return {xt::xrange_adaptor {static_cast<std::ptrdiff_t>(vector.y), xtuph{}, xtuph{}}};
+                case 0b101: return {xt::xrange_adaptor {static_cast<std::ptrdiff_t>(vector.y), xtuph{}, static_cast<std::ptrdiff_t>(vector.w)}};
+                case 0b110: return {xt::xrange_adaptor {static_cast<std::ptrdiff_t>(vector.y), static_cast<std::ptrdiff_t>(vector.z), xtuph{}}};
+                case 0b111: return {xt::xrange_adaptor {static_cast<std::ptrdiff_t>(vector.y), static_cast<std::ptrdiff_t>(vector.z), static_cast<std::ptrdiff_t>(vector.w)}};
+                default: break;
             }
-        break;
+            break;
+        }
         case Variant::NIL:
             return xt::all();
         case Variant::INT:
@@ -63,15 +65,4 @@ xt::xstrided_slice_vector variants_to_slice_vector(const Variant **args, GDExten
         sv[i] = variant_to_slice_part(*args[i]);
     }
     return sv;
-}
-
-range_part variant_to_range_part(const Variant& variant) {
-    switch (variant.get_type()) {
-        case Variant::INT:
-            return static_cast<std::ptrdiff_t>(static_cast<int64_t>(variant));
-        case Variant::NIL:
-            return xt::placeholders::xtuph{};
-        default:
-            throw std::runtime_error("Invalid type for range.");
-    }
 }

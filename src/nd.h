@@ -11,7 +11,6 @@
 #include "godot_cpp/variant/string_name.hpp"  // for StringName
 #include "godot_cpp/variant/variant.hpp"      // for Variant
 #include "ndarray.h"                          // for NDArray
-#include "ndrange.h"                          // for NDRange
 #include "vatensor/varray.h"                           // for DType
 
 
@@ -35,9 +34,9 @@ public:
 	static StringName ellipsis();
 
 	// Range.
-	static Ref<NDRange> range(const Variant &start_or_stop = static_cast<int64_t>(0), const Variant &stop = nullptr, const Variant &step = DEFVAL(nullptr));
-	static Ref<NDRange> from(int64_t start);
-	static Ref<NDRange> to(int64_t stop);
+	static Vector4i range(const Variant &start_or_stop = static_cast<int32_t>(0), const Variant &stop = nullptr, const Variant &step = DEFVAL(nullptr));
+	static Vector4i from(int32_t start);
+	static Vector4i to(int32_t stop);
 
 	// Property access.
 	static uint64_t size_of_dtype_in_bytes(DType dtype);

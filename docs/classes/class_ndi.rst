@@ -12,9 +12,14 @@ ndi
 
 **Inherits:** ``Object``
 
-.. container:: contribute
+Contains NumDot functions returning 64-bit signed integers.
 
-	There is currently no description for this class. Please help us by :ref:`contributing one <doc_updating_the_class_reference>`!
+.. rst-class:: classref-introduction-group
+
+Description
+-----------
+
+All mathematical functions in this namespace return 64-bit signed integers. If you're planning to use the result of reductions in further tensor computations, use :ref:`nd<class_nd>` instead. Using this namespace may unintentionally promote the prevalent data type of computations.
 
 .. rst-class:: classref-reftable-group
 

@@ -12,9 +12,14 @@ ndb
 
 **Inherits:** ``Object``
 
-.. container:: contribute
+Contains NumDot functions returning booleans.
 
-	There is currently no description for this class. Please help us by :ref:`contributing one <doc_updating_the_class_reference>`!
+.. rst-class:: classref-introduction-group
+
+Description
+-----------
+
+All mathematical functions in this namespace return booleans. If you're planning to use the result of reductions in further tensor computations, consider using :ref:`nd<class_nd>` instead.
 
 .. rst-class:: classref-reftable-group
 

@@ -26,3 +26,19 @@ In the future, we want to support in-place modification without copying. This is
     var a := nd.as_array(packed)
     a.add(a, 5)
     print(packed)  # [6, 7, 8]
+
+Godot-Native Reductions
+-----------------------
+
+When you're performing no-axis reductions, and are planning to use the results in scalar computation, you can use the appropriate APIs (:ref:`ndb <class_ndb>`, :ref:`ndf <class_ndf>` and :ref:`ndi <class_ndi>`).
+
+.. code-block:: gdscript
+
+    if ndb.all(tensor):
+        print("All")
+
+    if ndf.mean(tensor) > 0.2:
+        print("mean > 0.2")
+
+    if ndi.sum(tensor) > 10:
+        print("sum > 10")

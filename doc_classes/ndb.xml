@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <class name="ndb" inherits="Object" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
 	<brief_description>
+		Contains NumDot functions returning booleans.
 	</brief_description>
 	<description>
+		All mathematical functions in this namespace return booleans. If you're planning to use the result of reductions in further tensor computations, consider using [nd] instead.
 	</description>
 	<tutorials>
 	</tutorials>

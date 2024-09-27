@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <class name="nd" inherits="Object" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
 	<brief_description>
-		Contains NumDot functions.
+		Contains NumDot functions returning tensors.
 	</brief_description>
 	<description>
 		The base namespace for NumDot functions.
+		All mathematical functions in this namespace return tensors. For reduction results further computed in GDScript, consider using [ndb], [ndf] and [ndi] instead.
 	</description>
 	<tutorials>
 	</tutorials>

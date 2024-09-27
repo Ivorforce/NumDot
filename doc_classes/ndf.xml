@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <class name="ndf" inherits="Object" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
 	<brief_description>
+		Contains NumDot functions returning 64-bit floats.
 	</brief_description>
 	<description>
+		All mathematical functions in this namespace return 64-bit floats. If you're planning to use the result of reductions in further tensor computations, use [nd] instead. Using this namespace may unintentionally promote the prevalent data type of computations.
 	</description>
 	<tutorials>
 	</tutorials>

@@ -99,7 +99,18 @@ Godot Conversions
     # Fast: Conversion is accelerated.
     var packed := array.to_float32_array()
 
-In the future, NumDot will have an API for accelerated full-tensor reductions (like ``ndf.mean(array)``).
+NumDot can also avoid creating tensors for no-axis reductions:
+
+.. code-block:: gdscript
+
+    if ndb.all(tensor):
+        print("All")
+
+    if ndf.mean(tensor) > 0.2:
+        print("mean > 0.2")
+
+    if ndi.sum(tensor) > 10:
+        print("sum > 10")
 
 Unintentional Promotions
 ^^^^^^^^^^^^^^^^^^^^^^^^

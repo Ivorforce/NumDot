@@ -587,6 +587,12 @@
 				Errors if size() is not 1.
 			</description>
 		</method>
+		<method name="to_color" qualifiers="const">
+			<return type="Color" />
+			<description>
+				If shape is [4], converts this tensor to a Color.
+			</description>
+		</method>
 		<method name="to_float" qualifiers="const">
 			<return type="float" />
 			<description>
@@ -659,6 +665,42 @@
 			<return type="PackedVector4Array" />
 			<description>
 				If shape is [?, 4], converts this tensor to a PackedVector4Array.
+			</description>
+		</method>
+		<method name="to_vector2" qualifiers="const">
+			<return type="Vector2" />
+			<description>
+				If shape is [2], converts this tensor to a Vector2.
+			</description>
+		</method>
+		<method name="to_vector2i" qualifiers="const">
+			<return type="Vector2i" />
+			<description>
+				If shape is [2], converts this tensor to a Vector2i.
+			</description>
+		</method>
+		<method name="to_vector3" qualifiers="const">
+			<return type="Vector3" />
+			<description>
+				If shape is [3], converts this tensor to a Vector3.
+			</description>
+		</method>
+		<method name="to_vector3i" qualifiers="const">
+			<return type="Vector3i" />
+			<description>
+				If shape is [3], converts this tensor to a Vector3i.
+			</description>
+		</method>
+		<method name="to_vector4" qualifiers="const">
+			<return type="Vector4" />
+			<description>
+				If shape is [4], converts this tensor to a Vector4.
+			</description>
+		</method>
+		<method name="to_vector4i" qualifiers="const">
+			<return type="Vector4i" />
+			<description>
+				If shape is [4], converts this tensor to a Vector4.
 			</description>
 		</method>
 	</methods>

@@ -61,6 +61,7 @@ void NDArray::_bind_methods() {
     godot::ClassDB::bind_method(D_METHOD("to_vector2i"), &NDArray::to_vector2i);
     godot::ClassDB::bind_method(D_METHOD("to_vector3i"), &NDArray::to_vector3i);
     godot::ClassDB::bind_method(D_METHOD("to_vector4i"), &NDArray::to_vector4i);
+    godot::ClassDB::bind_method(D_METHOD("to_color"), &NDArray::to_color);
 
 	godot::ClassDB::bind_method(D_METHOD("to_packed_float32_array"), &NDArray::to_packed_float32_array);
 	godot::ClassDB::bind_method(D_METHOD("to_packed_float64_array"), &NDArray::to_packed_float64_array);
@@ -304,7 +305,7 @@ Vector2 NDArray::to_vector2() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
-    ERR_FAIL_COND_V_MSG(array.dimension() != 1, {}, "flatten the array before converting to packed");
+    ERR_FAIL_COND_V_MSG(array.dimension() != 1, {}, "flatten the array before converting to vector");
     ERR_FAIL_COND_V_MSG(array.shape[0] != 2, {}, "array dimension must be size 2");
 
     Vector2 vector;
@@ -319,7 +320,7 @@ Vector3 NDArray::to_vector3() const{
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
-    ERR_FAIL_COND_V_MSG(array.dimension() != 1, {}, "flatten the array before converting to packed");
+    ERR_FAIL_COND_V_MSG(array.dimension() != 1, {}, "flatten the array before converting to vector");
     ERR_FAIL_COND_V_MSG(array.shape[0] != 3, {}, "array dimension must be size 3");
 
     Vector3 vector;
@@ -334,7 +335,7 @@ Vector4 NDArray::to_vector4() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
-    ERR_FAIL_COND_V_MSG(array.dimension() != 1, {}, "flatten the array before converting to packed");
+    ERR_FAIL_COND_V_MSG(array.dimension() != 1, {}, "flatten the array before converting to vector");
     ERR_FAIL_COND_V_MSG(array.shape[0] != 4, {}, "array dimension must be size 4");
 
     Vector4 vector;
@@ -349,7 +350,7 @@ Vector2i NDArray::to_vector2i() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
-    ERR_FAIL_COND_V_MSG(array.dimension() != 1, {}, "flatten the array before converting to packed");
+    ERR_FAIL_COND_V_MSG(array.dimension() != 1, {}, "flatten the array before converting to vector");
     ERR_FAIL_COND_V_MSG(array.shape[0] != 2, {}, "array dimension must be size 2");
 
     Vector2i vector;
@@ -364,7 +365,7 @@ Vector3i NDArray::to_vector3i() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
-    ERR_FAIL_COND_V_MSG(array.dimension() != 1, {}, "flatten the array before converting to packed");
+    ERR_FAIL_COND_V_MSG(array.dimension() != 1, {}, "flatten the array before converting to vector");
     ERR_FAIL_COND_V_MSG(array.shape[0] != 3, {}, "array dimension must be size 3");
 
     Vector3i vector;
@@ -379,12 +380,27 @@ Vector4i NDArray::to_vector4i() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
-    ERR_FAIL_COND_V_MSG(array.dimension() != 1, {}, "flatten the array before converting to packed");
+    ERR_FAIL_COND_V_MSG(array.dimension() != 1, {}, "flatten the array before converting to vector");
     ERR_FAIL_COND_V_MSG(array.shape[0] != 4, {}, "array dimension must be size 4");
 
     Vector4i vector;
     const auto compute_variant = array.to_compute_variant();
     fill_c_array_flat(&vector.coord[0], compute_variant);
+
+    return vector;
+#endif
+}
+
+Color NDArray::to_color() const {
+#ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
+    throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
+#else
+    ERR_FAIL_COND_V_MSG(array.dimension() != 1, {}, "flatten the array before converting to color");
+    ERR_FAIL_COND_V_MSG(array.shape[0] != 4, {}, "array dimension must be size 4");
+
+    Color vector;
+    const auto compute_variant = array.to_compute_variant();
+    fill_c_array_flat(&vector.components[0], compute_variant);
 
     return vector;
 #endif

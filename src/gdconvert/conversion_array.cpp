@@ -180,6 +180,10 @@ void find_shape_and_dtype(va::shape_type& shape, va::DType &dtype, const Array& 
                         dtype = va::dtype_common_type(dtype, va::variant_to_dtype(real_t()));
                         add_size_at_idx(shape, current_dim_idx + 1, 4);
                         continue;
+                    case Variant::COLOR:
+                        dtype = va::dtype_common_type(dtype, va::variant_to_dtype(float_t()));
+                        add_size_at_idx(shape, current_dim_idx + 1, 4);
+                        continue;
                     default:
                         break;
                 }
@@ -191,6 +195,19 @@ void find_shape_and_dtype(va::shape_type& shape, va::DType &dtype, const Array& 
         if (next_dim_arrays.empty()) break;
 
         current_dim_arrays = std::move(next_dim_arrays);
+    }
+}
+
+template <typename VectorType>
+void varray_assign_cvector(const VectorType& coord, xt::xstrided_slice_vector& element_idx, va::VArray& varray) {
+    element_idx.emplace_back(0);
+    auto compute = varray.to_compute_variant(element_idx);
+    va::assign(compute, coord[0]);
+
+    for (size_t i = 1; i < std::size(coord); i++) {
+        element_idx.back() = i;
+        compute = varray.to_compute_variant(element_idx);
+        va::assign(compute, coord[i]);
     }
 }
 
@@ -326,101 +343,37 @@ va::VArray array_as_varray(const Array& input_array) {
                 }
                 case Variant::VECTOR2I: {
                     const Vector2i vector = array_element;
-
-                    element_idx.emplace_back(0);
-                    auto compute = varray.to_compute_variant(element_idx);
-                    va::assign(compute, vector.x);
-
-                    element_idx.back() = 1;
-                    compute = varray.to_compute_variant(element_idx);
-                    va::assign(compute, vector.y);
+                    varray_assign_cvector(vector.coord, element_idx, varray);
                     continue;
                 }
                 case Variant::VECTOR3I: {
                     const Vector3i vector = array_element;
-
-                    element_idx.emplace_back(0);
-                    auto compute = varray.to_compute_variant(element_idx);
-                    va::assign(compute, vector.x);
-
-                    element_idx.back() = 1;
-                    compute = varray.to_compute_variant(element_idx);
-                    va::assign(compute, vector.y);
-
-                    element_idx.back() = 2;
-                    compute = varray.to_compute_variant(element_idx);
-                    va::assign(compute, vector.z);
+                    varray_assign_cvector(vector.coord, element_idx, varray);
                     continue;
                 }
                 case Variant::VECTOR4I: {
                     const Vector4i vector = array_element;
-
-                    element_idx.emplace_back(0);
-                    auto compute = varray.to_compute_variant(element_idx);
-                    va::assign(compute, vector.x);
-
-                    element_idx.back() = 1;
-                    compute = varray.to_compute_variant(element_idx);
-                    va::assign(compute, vector.y);
-
-                    element_idx.back() = 2;
-                    compute = varray.to_compute_variant(element_idx);
-                    va::assign(compute, vector.z);
-
-                    element_idx.back() = 3;
-                    compute = varray.to_compute_variant(element_idx);
-                    va::assign(compute, vector.w);
+                    varray_assign_cvector(vector.coord, element_idx, varray);
                     continue;
                 }
                 case Variant::VECTOR2: {
                     const Vector2 vector = array_element;
-
-                    element_idx.emplace_back(0);
-                    auto compute = varray.to_compute_variant(element_idx);
-                    va::assign(compute, vector.x);
-
-                    element_idx.back() = 1;
-                    compute = varray.to_compute_variant(element_idx);
-                    va::assign(compute, vector.y);
-
+                    varray_assign_cvector(vector.coord, element_idx, varray);
                     continue;
                 }
                 case Variant::VECTOR3: {
                     const Vector3 vector = array_element;
-
-                    element_idx.emplace_back(0);
-                    auto compute = varray.to_compute_variant(element_idx);
-                    va::assign(compute, vector.x);
-
-                    element_idx.back() = 1;
-                    compute = varray.to_compute_variant(element_idx);
-                    va::assign(compute, vector.y);
-
-                    element_idx.back() = 2;
-                    compute = varray.to_compute_variant(element_idx);
-                    va::assign(compute, vector.z);
-
+                    varray_assign_cvector(vector.coord, element_idx, varray);
                     continue;
                 }
                 case Variant::VECTOR4: {
                     const Vector4 vector = array_element;
-
-                    element_idx.emplace_back(0);
-                    auto compute = varray.to_compute_variant(element_idx);
-                    va::assign(compute, vector.x);
-
-                    element_idx.back() = 1;
-                    compute = varray.to_compute_variant(element_idx);
-                    va::assign(compute, vector.y);
-
-                    element_idx.back() = 2;
-                    compute = varray.to_compute_variant(element_idx);
-                    va::assign(compute, vector.z);
-
-                    element_idx.back() = 3;
-                    compute = varray.to_compute_variant(element_idx);
-                    va::assign(compute, vector.w);
-
+                    varray_assign_cvector(vector.components, element_idx, varray);
+                    continue;
+                }
+                case Variant::COLOR: {
+                    const Color vector = array_element;
+                    varray_assign_cvector(vector.components, element_idx, varray);
                     continue;
                 }
                 default:
@@ -542,6 +495,12 @@ va::VArray variant_as_array(const Variant& array) {
             auto vector = Vector4(array);
             return va::from_store(std::make_shared<xt::xarray<real_t>>(xt::xarray<real_t>(
                 { vector.x, vector.y, vector.z, vector.w }
+            )));
+        }
+        case Variant::COLOR: {
+            auto vector = Color(array);
+            return va::from_store(std::make_shared<xt::xarray<float_t>>(xt::xarray<float_t>(
+                { vector.r, vector.g, vector.b, vector.a }
             )));
         }
         default:

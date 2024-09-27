@@ -74,6 +74,7 @@ public:
     [[nodiscard]] Vector2i to_vector2i() const;
     [[nodiscard]] Vector3i to_vector3i() const;
     [[nodiscard]] Vector4i to_vector4i() const;
+    [[nodiscard]] Color to_color() const;
 
 	[[nodiscard]] PackedFloat32Array to_packed_float32_array() const;
 	[[nodiscard]] PackedFloat64Array to_packed_float64_array() const;

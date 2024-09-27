@@ -120,6 +120,8 @@ Methods
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`logical_or<class_nd_method_logical_or>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                         |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>` | :ref:`logical_xor<class_nd_method_logical_xor>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                       |
+   +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`matmul<class_nd_method_matmul>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                                 |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`max<class_nd_method_max>`\ (\ a\: ``Variant`` = null, axes\: ``Variant`` = null\ ) |static|                                                                                                      |
@@ -379,7 +381,7 @@ Add arguments element-wise.
 
 Test whether all array elements along a given axis evaluate to True.
 
-Returns a 0-dimension boolean if axis is null.
+Returns a 0-dimension boolean if axes is null. In that case, :ref:`ndb.all<class_ndb_method_all>` is preferred.
 
 .. rst-class:: classref-item-separator
 
@@ -393,7 +395,7 @@ Returns a 0-dimension boolean if axis is null.
 
 Test whether any array element along a given axis evaluates to True.
 
-Returns a 0-dimension boolean if axis is null.
+Returns a 0-dimension boolean if axes is null. In that case, :ref:`ndb.any<class_ndb_method_any>` is preferred.
 
 .. rst-class:: classref-item-separator
 
@@ -611,7 +613,7 @@ If both a and b are 1-D arrays, it is inner product of vectors (without complex 
 
 If both a and b are 2-D arrays, it is matrix multiplication, but using nd.matmul is preferred.
 
-If either a or b is 0-D (scalar), it is equivalent to multiply and using nd.multiply(a, b) or a \* b is preferred.
+If either a or b is 0-D (scalar), it is equivalent to multiply and using :ref:`multiply<class_nd_method_multiply>` or a \* b is preferred.
 
 If a is an N-D array and b is a 1-D array, it is a sum product over the last axis of a and b.
 
@@ -919,6 +921,20 @@ Compute the truth value of x1 OR x2 element-wise.
 
 ----
 
+.. _class_nd_method_logical_xor:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **logical_xor**\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_logical_xor>`
+
+Compute the truth value of x1 XOR x2 element-wise.
+
+Similar to :ref:`not_equal<class_nd_method_not_equal>`, but converts all arguments to boolean before computation.
+
+.. rst-class:: classref-item-separator
+
+----
+
 .. _class_nd_method_matmul:
 
 .. rst-class:: classref-method
@@ -944,6 +960,8 @@ If either argument is N-D, N > 2, it is treated as a stack of matrices residing 
 :ref:`NDArray<class_NDArray>` **max**\ (\ a\: ``Variant`` = null, axes\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_max>`
 
 Return the maximum of an array or maximum along an axis.
+
+Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.max<class_ndf_method_max>` or :ref:`ndi.max<class_ndi_method_max>`.
 
 .. rst-class:: classref-item-separator
 
@@ -971,7 +989,7 @@ Compare two arrays and return a new array containing the element-wise maxima. If
 
 Compute the arithmetic mean along the specified axis.
 
-Returns the average of the array elements. The average is taken over the flattened array by default, otherwise over the specified axis.
+Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.mean<class_ndf_method_mean>`.
 
 .. rst-class:: classref-item-separator
 
@@ -984,6 +1002,8 @@ Returns the average of the array elements. The average is taken over the flatten
 :ref:`NDArray<class_NDArray>` **min**\ (\ a\: ``Variant`` = null, axes\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_min>`
 
 Return the minimum of an array or minimum along an axis.
+
+Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.min<class_ndf_method_min>` or :ref:`ndi.min<class_ndi_method_min>`.
 
 .. rst-class:: classref-item-separator
 
@@ -1051,6 +1071,8 @@ Vector norm.
 
 This function is able to return one of 4 different vector norms, depending on the value of the ord parameter (L0, L1, L2 and LInf).
 
+Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.norm<class_ndf_method_norm>` or :ref:`ndi.norm<class_ndi_method_norm>`.
+
 .. rst-class:: classref-item-separator
 
 ----
@@ -1099,6 +1121,8 @@ First array elements raised to powers from second array, element-wise.
 
 Return the product of array elements over a given axis.
 
+Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.prod<class_ndf_method_prod>` or :ref:`ndi.prod<class_ndi_method_prod>`.
+
 .. rst-class:: classref-item-separator
 
 ----
@@ -1144,6 +1168,8 @@ Note that ranges are represented as Vector4i(mask, start, stop, step).
 Dot product of two arrays along the given axis.
 
 Equivalent to nd.sum(nd.multiply(a, b), axes).
+
+Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.reduce_dot<class_ndf_method_reduce_dot>` or :ref:`ndi.reduce_dot<class_ndi_method_reduce_dot>`.
 
 .. rst-class:: classref-item-separator
 
@@ -1303,6 +1329,8 @@ Compute the standard deviation along the specified axis.
 
 Returns the standard deviation, a measure of the spread of a distribution, of the array elements. The standard deviation is computed for the flattened array by default, otherwise over the specified axis.
 
+Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.std<class_ndf_method_std>`.
+
 .. rst-class:: classref-item-separator
 
 ----
@@ -1326,6 +1354,8 @@ Subtract arguments, element-wise.
 :ref:`NDArray<class_NDArray>` **sum**\ (\ a\: ``Variant`` = null, axes\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_sum>`
 
 Sum of array elements over a given axis.
+
+Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.sum<class_ndf_method_sum>` or :ref:`ndi.sum<class_ndi_method_sum>`.
 
 .. rst-class:: classref-item-separator
 
@@ -1471,7 +1501,7 @@ Equivalent to ``nd.as_array(array, nd.DType.UInt64)``.
 
 :ref:`NDArray<class_NDArray>` **unstack**\ (\ v\: ``Variant`` = null, axis\: ``int`` = 0\ ) |static| :ref:`🔗<class_nd_method_unstack>`
 
-Unpacks the given dimension of a rank-R tensor into a sequence of R-1 tensors. Opposite of ``nd.stack``.
+Unpacks the given dimension of a rank-R tensor into a sequence of R-1 tensors. Opposite of :ref:`stack<class_nd_method_stack>`.
 
 Equivalent to ``nd.moveaxis(array, axis, 0)``.
 
@@ -1488,6 +1518,8 @@ Equivalent to ``nd.moveaxis(array, axis, 0)``.
 Compute the variance along the specified axis.
 
 Returns the variance of the array elements, a measure of the spread of a distribution. The variance is computed for the flattened array by default, otherwise over the specified axis.
+
+Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.var<class_ndf_method_var>`.
 
 .. rst-class:: classref-item-separator
 

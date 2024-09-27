@@ -250,7 +250,7 @@ Convert to an array of the given type, but avoid copying data if possible.
 
 :ref:`NDArray<class_NDArray>` **assign_abs**\ (\ a\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_abs>`
 
-In-place version of nd.abs.
+In-place version of :ref:`nd.abs<class_nd_method_abs>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -264,7 +264,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_acos**\ (\ a\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_acos>`
 
-In-place version of nd.acos.
+In-place version of :ref:`nd.acos<class_nd_method_acos>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -278,7 +278,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_acosh**\ (\ a\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_acosh>`
 
-In-place version of nd.acosh.
+In-place version of :ref:`nd.acosh<class_nd_method_acosh>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -292,7 +292,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_add**\ (\ a\: ``Variant``, b\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_add>`
 
-In-place version of nd.add.
+In-place version of :ref:`nd.add<class_nd_method_add>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -306,7 +306,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_all**\ (\ a\: ``Variant`` = null, axes\: ``Variant`` = null\ ) :ref:`🔗<class_NDArray_method_assign_all>`
 
-In-place version of nd.all.
+In-place version of :ref:`nd.all<class_nd_method_all>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -320,7 +320,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_any**\ (\ a\: ``Variant`` = null, axes\: ``Variant`` = null\ ) :ref:`🔗<class_NDArray_method_assign_any>`
 
-In-place version of nd.any.
+In-place version of :ref:`nd.any<class_nd_method_any>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -334,7 +334,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_asin**\ (\ a\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_asin>`
 
-In-place version of nd.asin.
+In-place version of :ref:`nd.asin<class_nd_method_asin>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -348,7 +348,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_asinh**\ (\ a\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_asinh>`
 
-In-place version of nd.asinh.
+In-place version of :ref:`nd.asinh<class_nd_method_asinh>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -362,7 +362,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_atan**\ (\ a\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_atan>`
 
-In-place version of nd.atan.
+In-place version of :ref:`nd.atan<class_nd_method_atan>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -376,7 +376,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_atan2**\ (\ x1\: ``Variant``, x2\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_atan2>`
 
-In-place version of nd.atan2.
+In-place version of :ref:`nd.atan2<class_nd_method_atan2>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -390,7 +390,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_atanh**\ (\ a\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_atanh>`
 
-In-place version of nd.atanh.
+In-place version of :ref:`nd.atanh<class_nd_method_atanh>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -404,7 +404,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_ceil**\ (\ a\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_ceil>`
 
-In-place version of nd.ceil.
+In-place version of :ref:`nd.ceil<class_nd_method_ceil>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -418,7 +418,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_clip**\ (\ a\: ``Variant``, min\: ``Variant``, max\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_clip>`
 
-In-place version of nd.clip.
+In-place version of :ref:`nd.clip<class_nd_method_clip>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -432,7 +432,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_cos**\ (\ a\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_cos>`
 
-In-place version of nd.cos.
+In-place version of :ref:`nd.cos<class_nd_method_cos>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -446,7 +446,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_cosh**\ (\ a\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_cosh>`
 
-In-place version of nd.cosh.
+In-place version of :ref:`nd.cosh<class_nd_method_cosh>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -460,7 +460,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_deg2rad**\ (\ a\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_deg2rad>`
 
-In-place version of nd.deg2rad.
+In-place version of :ref:`nd.deg2rad<class_nd_method_deg2rad>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -474,7 +474,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_divide**\ (\ a\: ``Variant``, b\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_divide>`
 
-In-place version of nd.divide.
+In-place version of :ref:`nd.divide<class_nd_method_divide>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -488,7 +488,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_dot**\ (\ a\: ``Variant``, b\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_dot>`
 
-In-place version of nd.dot.
+In-place version of :ref:`nd.dot<class_nd_method_dot>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -502,7 +502,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_equal**\ (\ a\: ``Variant``, b\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_equal>`
 
-In-place version of nd.equal.
+In-place version of :ref:`nd.equal<class_nd_method_equal>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -516,7 +516,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_exp**\ (\ a\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_exp>`
 
-In-place version of nd.exp.
+In-place version of :ref:`nd.exp<class_nd_method_exp>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -530,7 +530,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_floor**\ (\ a\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_floor>`
 
-In-place version of nd.floor.
+In-place version of :ref:`nd.floor<class_nd_method_floor>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -544,7 +544,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_greater**\ (\ a\: ``Variant``, b\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_greater>`
 
-In-place version of nd.greater.
+In-place version of :ref:`nd.greater<class_nd_method_greater>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -558,7 +558,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_greater_equal**\ (\ a\: ``Variant``, b\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_greater_equal>`
 
-In-place version of nd.greater_equal.
+In-place version of :ref:`nd.greater_equal<class_nd_method_greater_equal>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -572,7 +572,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_less**\ (\ a\: ``Variant``, b\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_less>`
 
-In-place version of nd.less.
+In-place version of :ref:`nd.less<class_nd_method_less>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -586,7 +586,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_less_equal**\ (\ a\: ``Variant``, b\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_less_equal>`
 
-In-place version of nd.less_equal.
+In-place version of :ref:`nd.less_equal<class_nd_method_less_equal>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -600,7 +600,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_log**\ (\ a\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_log>`
 
-In-place version of nd.log.
+In-place version of :ref:`nd.log<class_nd_method_log>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -614,7 +614,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_logical_and**\ (\ a\: ``Variant``, b\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_logical_and>`
 
-In-place version of nd.logical_and.
+In-place version of :ref:`nd.logical_and<class_nd_method_logical_and>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -628,7 +628,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_logical_not**\ (\ a\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_logical_not>`
 
-In-place version of nd.logical_not.
+In-place version of :ref:`nd.logical_not<class_nd_method_logical_not>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -642,7 +642,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_logical_or**\ (\ a\: ``Variant``, b\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_logical_or>`
 
-In-place version of nd.logical_or.
+In-place version of :ref:`nd.logical_or<class_nd_method_logical_or>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -656,7 +656,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_logical_xor**\ (\ a\: ``Variant``, b\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_logical_xor>`
 
-In-place version of nd.logical_xor.
+In-place version of :ref:`nd.logical_xor<class_nd_method_logical_xor>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -670,7 +670,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_matmul**\ (\ a\: ``Variant``, b\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_matmul>`
 
-In-place version of nd.matmul.
+In-place version of :ref:`nd.matmul<class_nd_method_matmul>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -684,7 +684,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_max**\ (\ a\: ``Variant`` = null, axes\: ``Variant`` = null\ ) :ref:`🔗<class_NDArray_method_assign_max>`
 
-In-place version of nd.max.
+In-place version of :ref:`nd.max<class_nd_method_max>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -698,7 +698,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_maximum**\ (\ a\: ``Variant``, b\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_maximum>`
 
-In-place version of nd.maximum.
+In-place version of :ref:`nd.maximum<class_nd_method_maximum>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -712,7 +712,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_mean**\ (\ a\: ``Variant`` = null, axes\: ``Variant`` = null\ ) :ref:`🔗<class_NDArray_method_assign_mean>`
 
-In-place version of nd.mean.
+In-place version of :ref:`nd.mean<class_nd_method_mean>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -726,7 +726,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_min**\ (\ a\: ``Variant`` = null, axes\: ``Variant`` = null\ ) :ref:`🔗<class_NDArray_method_assign_min>`
 
-In-place version of nd.min.
+In-place version of :ref:`nd.min<class_nd_method_min>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -740,7 +740,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_minimum**\ (\ a\: ``Variant``, b\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_minimum>`
 
-In-place version of nd.minimum.
+In-place version of :ref:`nd.minimum<class_nd_method_minimum>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -754,7 +754,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_multiply**\ (\ a\: ``Variant``, b\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_multiply>`
 
-In-place version of nd.multiply.
+In-place version of :ref:`nd.multiply<class_nd_method_multiply>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -768,7 +768,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_norm**\ (\ a\: ``Variant`` = null, ord\: ``Variant`` = 2, axes\: ``Variant`` = null\ ) :ref:`🔗<class_NDArray_method_assign_norm>`
 
-In-place version of nd.norm.
+In-place version of :ref:`nd.norm<class_nd_method_norm>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -782,7 +782,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_not_equal**\ (\ a\: ``Variant``, b\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_not_equal>`
 
-In-place version of nd.not_equal.
+In-place version of :ref:`nd.not_equal<class_nd_method_not_equal>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -796,7 +796,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_pow**\ (\ a\: ``Variant``, b\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_pow>`
 
-In-place version of nd.pow.
+In-place version of :ref:`nd.pow<class_nd_method_pow>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -810,7 +810,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_prod**\ (\ a\: ``Variant`` = null, axes\: ``Variant`` = null\ ) :ref:`🔗<class_NDArray_method_assign_prod>`
 
-In-place version of nd.prod.
+In-place version of :ref:`nd.prod<class_nd_method_prod>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -824,7 +824,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_rad2deg**\ (\ a\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_rad2deg>`
 
-In-place version of nd.rad2deg.
+In-place version of :ref:`nd.rad2deg<class_nd_method_rad2deg>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -838,7 +838,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_reduce_dot**\ (\ a\: ``Variant`` = null, b\: ``Variant`` = null, axes\: ``Variant`` = null\ ) :ref:`🔗<class_NDArray_method_assign_reduce_dot>`
 
-In-place version of nd.reduce_dot.
+In-place version of :ref:`nd.reduce_dot<class_nd_method_reduce_dot>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -852,7 +852,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_remainder**\ (\ a\: ``Variant``, b\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_remainder>`
 
-In-place version of nd.remainder.
+In-place version of :ref:`nd.remainder<class_nd_method_remainder>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -866,7 +866,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_rint**\ (\ a\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_rint>`
 
-In-place version of nd.rint.
+In-place version of :ref:`nd.rint<class_nd_method_rint>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -880,7 +880,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_round**\ (\ a\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_round>`
 
-In-place version of nd.round.
+In-place version of :ref:`nd.round<class_nd_method_round>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -894,7 +894,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_sign**\ (\ a\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_sign>`
 
-In-place version of nd.sign.
+In-place version of :ref:`nd.sign<class_nd_method_sign>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -908,7 +908,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_sin**\ (\ a\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_sin>`
 
-In-place version of nd.sin.
+In-place version of :ref:`nd.sin<class_nd_method_sin>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -922,7 +922,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_sinh**\ (\ a\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_sinh>`
 
-In-place version of nd.sinh.
+In-place version of :ref:`nd.sinh<class_nd_method_sinh>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -936,7 +936,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_sqrt**\ (\ a\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_sqrt>`
 
-In-place version of nd.sqrt.
+In-place version of :ref:`nd.sqrt<class_nd_method_sqrt>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -950,7 +950,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_square**\ (\ a\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_square>`
 
-In-place version of nd.square.
+In-place version of :ref:`nd.square<class_nd_method_square>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -964,7 +964,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_std**\ (\ a\: ``Variant`` = null, axes\: ``Variant`` = null\ ) :ref:`🔗<class_NDArray_method_assign_std>`
 
-In-place version of nd.std.
+In-place version of :ref:`nd.std<class_nd_method_std>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -978,7 +978,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_subtract**\ (\ a\: ``Variant``, b\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_subtract>`
 
-In-place version of nd.subtract.
+In-place version of :ref:`nd.subtract<class_nd_method_subtract>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -992,7 +992,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_sum**\ (\ a\: ``Variant`` = null, axes\: ``Variant`` = null\ ) :ref:`🔗<class_NDArray_method_assign_sum>`
 
-In-place version of nd.sum.
+In-place version of :ref:`nd.sum<class_nd_method_sum>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -1006,7 +1006,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_tan**\ (\ a\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_tan>`
 
-In-place version of nd.tan.
+In-place version of :ref:`nd.tan<class_nd_method_tan>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -1020,7 +1020,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_tanh**\ (\ a\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_tanh>`
 
-In-place version of nd.tanh.
+In-place version of :ref:`nd.tanh<class_nd_method_tanh>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -1034,7 +1034,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_trunc**\ (\ a\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_trunc>`
 
-In-place version of nd.trunc.
+In-place version of :ref:`nd.trunc<class_nd_method_trunc>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 
@@ -1048,7 +1048,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_var**\ (\ a\: ``Variant`` = null, axes\: ``Variant`` = null\ ) :ref:`🔗<class_NDArray_method_assign_var>`
 
-In-place version of nd.var.
+In-place version of :ref:`nd.var<class_nd_method_var>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="ndi" inherits="Object" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="max" qualifiers="static">
+			<return type="int" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				No-axis equivalent of [method nd.max] that returns an int.
+			</description>
+		</method>
+		<method name="min" qualifiers="static">
+			<return type="int" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				No-axis equivalent of [method nd.min] that returns an int.
+			</description>
+		</method>
+		<method name="norm" qualifiers="static">
+			<return type="int" />
+			<param index="0" name="a" type="Variant" default="null" />
+			<param index="1" name="ord" type="Variant" default="2" />
+			<description>
+				No-axis equivalent of [method nd.norm] that returns an int.
+			</description>
+		</method>
+		<method name="prod" qualifiers="static">
+			<return type="int" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				No-axis equivalent of [method nd.prod] that returns an int.
+			</description>
+		</method>
+		<method name="reduce_dot" qualifiers="static">
+			<return type="int" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+				No-axis equivalent of [method nd.reduce_dot] that returns an int.
+			</description>
+		</method>
+		<method name="sum" qualifiers="static">
+			<return type="int" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				No-axis equivalent of [method nd.sum] that returns an int.
+			</description>
+		</method>
+	</methods>
+</class>

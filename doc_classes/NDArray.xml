@@ -27,7 +27,7 @@
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
-				In-place version of nd.abs.
+				In-place version of [method nd.abs].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -35,7 +35,7 @@
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
-				In-place version of nd.acos.
+				In-place version of [method nd.acos].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -43,7 +43,7 @@
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
-				In-place version of nd.acosh.
+				In-place version of [method nd.acosh].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -52,7 +52,7 @@
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
-				In-place version of nd.add.
+				In-place version of [method nd.add].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -61,7 +61,7 @@
 			<param index="0" name="a" type="Variant" default="null" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
-				In-place version of nd.all.
+				In-place version of [method nd.all].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -70,7 +70,7 @@
 			<param index="0" name="a" type="Variant" default="null" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
-				In-place version of nd.any.
+				In-place version of [method nd.any].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -78,7 +78,7 @@
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
-				In-place version of nd.asin.
+				In-place version of [method nd.asin].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -86,7 +86,7 @@
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
-				In-place version of nd.asinh.
+				In-place version of [method nd.asinh].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -94,7 +94,7 @@
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
-				In-place version of nd.atan.
+				In-place version of [method nd.atan].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -103,7 +103,7 @@
 			<param index="0" name="x1" type="Variant" />
 			<param index="1" name="x2" type="Variant" />
 			<description>
-				In-place version of nd.atan2.
+				In-place version of [method nd.atan2].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -111,7 +111,7 @@
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
-				In-place version of nd.atanh.
+				In-place version of [method nd.atanh].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -119,7 +119,7 @@
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
-				In-place version of nd.ceil.
+				In-place version of [method nd.ceil].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -129,7 +129,7 @@
 			<param index="1" name="min" type="Variant" />
 			<param index="2" name="max" type="Variant" />
 			<description>
-				In-place version of nd.clip.
+				In-place version of [method nd.clip].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -137,7 +137,7 @@
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
-				In-place version of nd.cos.
+				In-place version of [method nd.cos].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -145,7 +145,7 @@
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
-				In-place version of nd.cosh.
+				In-place version of [method nd.cosh].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -153,7 +153,7 @@
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
-				In-place version of nd.deg2rad.
+				In-place version of [method nd.deg2rad].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -162,7 +162,7 @@
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
-				In-place version of nd.divide.
+				In-place version of [method nd.divide].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -171,7 +171,7 @@
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
-				In-place version of nd.dot.
+				In-place version of [method nd.dot].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -180,7 +180,7 @@
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
-				In-place version of nd.equal.
+				In-place version of [method nd.equal].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -188,7 +188,7 @@
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
-				In-place version of nd.exp.
+				In-place version of [method nd.exp].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -196,7 +196,7 @@
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
-				In-place version of nd.floor.
+				In-place version of [method nd.floor].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -205,7 +205,7 @@
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
-				In-place version of nd.greater.
+				In-place version of [method nd.greater].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -214,7 +214,7 @@
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
-				In-place version of nd.greater_equal.
+				In-place version of [method nd.greater_equal].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -223,7 +223,7 @@
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
-				In-place version of nd.less.
+				In-place version of [method nd.less].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -232,7 +232,7 @@
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
-				In-place version of nd.less_equal.
+				In-place version of [method nd.less_equal].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -240,7 +240,7 @@
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
-				In-place version of nd.log.
+				In-place version of [method nd.log].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -249,7 +249,7 @@
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
-				In-place version of nd.logical_and.
+				In-place version of [method nd.logical_and].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -257,7 +257,7 @@
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
-				In-place version of nd.logical_not.
+				In-place version of [method nd.logical_not].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -266,7 +266,7 @@
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
-				In-place version of nd.logical_or.
+				In-place version of [method nd.logical_or].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -275,7 +275,7 @@
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
-				In-place version of nd.logical_xor.
+				In-place version of [method nd.logical_xor].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -284,7 +284,7 @@
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
-				In-place version of nd.matmul.
+				In-place version of [method nd.matmul].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -293,7 +293,7 @@
 			<param index="0" name="a" type="Variant" default="null" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
-				In-place version of nd.max.
+				In-place version of [method nd.max].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -302,7 +302,7 @@
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
-				In-place version of nd.maximum.
+				In-place version of [method nd.maximum].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -311,7 +311,7 @@
 			<param index="0" name="a" type="Variant" default="null" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
-				In-place version of nd.mean.
+				In-place version of [method nd.mean].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -320,7 +320,7 @@
 			<param index="0" name="a" type="Variant" default="null" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
-				In-place version of nd.min.
+				In-place version of [method nd.min].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -329,7 +329,7 @@
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
-				In-place version of nd.minimum.
+				In-place version of [method nd.minimum].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -338,7 +338,7 @@
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
-				In-place version of nd.multiply.
+				In-place version of [method nd.multiply].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -348,7 +348,7 @@
 			<param index="1" name="ord" type="Variant" default="2" />
 			<param index="2" name="axes" type="Variant" default="null" />
 			<description>
-				In-place version of nd.norm.
+				In-place version of [method nd.norm].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -357,7 +357,7 @@
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
-				In-place version of nd.not_equal.
+				In-place version of [method nd.not_equal].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -366,7 +366,7 @@
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
-				In-place version of nd.pow.
+				In-place version of [method nd.pow].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -375,7 +375,7 @@
 			<param index="0" name="a" type="Variant" default="null" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
-				In-place version of nd.prod.
+				In-place version of [method nd.prod].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -383,7 +383,7 @@
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
-				In-place version of nd.rad2deg.
+				In-place version of [method nd.rad2deg].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -393,7 +393,7 @@
 			<param index="1" name="b" type="Variant" default="null" />
 			<param index="2" name="axes" type="Variant" default="null" />
 			<description>
-				In-place version of nd.reduce_dot.
+				In-place version of [method nd.reduce_dot].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -402,7 +402,7 @@
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
-				In-place version of nd.remainder.
+				In-place version of [method nd.remainder].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -410,7 +410,7 @@
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
-				In-place version of nd.rint.
+				In-place version of [method nd.rint].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -418,7 +418,7 @@
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
-				In-place version of nd.round.
+				In-place version of [method nd.round].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -426,7 +426,7 @@
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
-				In-place version of nd.sign.
+				In-place version of [method nd.sign].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -434,7 +434,7 @@
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
-				In-place version of nd.sin.
+				In-place version of [method nd.sin].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -442,7 +442,7 @@
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
-				In-place version of nd.sinh.
+				In-place version of [method nd.sinh].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -450,7 +450,7 @@
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
-				In-place version of nd.sqrt.
+				In-place version of [method nd.sqrt].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -458,7 +458,7 @@
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
-				In-place version of nd.square.
+				In-place version of [method nd.square].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -467,7 +467,7 @@
 			<param index="0" name="a" type="Variant" default="null" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
-				In-place version of nd.std.
+				In-place version of [method nd.std].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -476,7 +476,7 @@
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
-				In-place version of nd.subtract.
+				In-place version of [method nd.subtract].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -485,7 +485,7 @@
 			<param index="0" name="a" type="Variant" default="null" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
-				In-place version of nd.sum.
+				In-place version of [method nd.sum].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -493,7 +493,7 @@
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
-				In-place version of nd.tan.
+				In-place version of [method nd.tan].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -501,7 +501,7 @@
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
-				In-place version of nd.tanh.
+				In-place version of [method nd.tanh].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -509,7 +509,7 @@
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<description>
-				In-place version of nd.trunc.
+				In-place version of [method nd.trunc].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
@@ -518,7 +518,7 @@
 			<param index="0" name="a" type="Variant" default="null" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
-				In-place version of nd.var.
+				In-place version of [method nd.var].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>

@@ -20,4 +20,7 @@ Variant types
     class_variant
     class_nd
     class_ndarray
+    class_ndb
+    class_ndf
+    class_ndi
 

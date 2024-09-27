@@ -17,6 +17,8 @@ Upcoming Changes (main branch)
 - ``NDArray`` is now iterable over the outermost dimension.
 - ``NDArray`` conversion functions to and from ``Color``, ``Vector2``, ``Vector3``, ``Vector4``, ``Vector2i``, ``Vector3i``, ``Vector4i``, ``PackedVector2Array``, ``PackedVector3Array``, ``PackedVector4Array`` and ``PackedColorArray``.
 - ``nd.as_array`` shorthands for each data type, e.g. ``nd.float32``.
+- (Now really) added the ``logical_xor`` function.
+- Added new namespaces :ref:`ndb <class_ndb>`, :ref:`ndf <class_ndf>` and :ref:`ndi <class_ndi>`, for full tensor reductions to ``bool``, ``float`` and ``int``, respectively.
 
 **Changed**
 

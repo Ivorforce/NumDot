@@ -5,6 +5,9 @@
 #include <godot_cpp/godot.hpp>          // for ModuleInitializationLevel
 #include "godot_cpp/core/class_db.hpp"  // for GDREGISTER_CLASS
 #include "nd.h"                         // for nd
+#include "ndf.h"                         // for ndf
+#include "ndb.h"                         // for ndb
+#include "ndi.h"                         // for ndi
 #include "ndarray.h"                    // for NDArray
 
 using namespace godot;
@@ -15,6 +18,9 @@ void initialize_numdot_module(ModuleInitializationLevel p_level) {
 	}
 
 	GDREGISTER_CLASS(nd);
+	GDREGISTER_CLASS(ndf);
+	GDREGISTER_CLASS(ndi);
+	GDREGISTER_CLASS(ndb);
 	GDREGISTER_CLASS(NDArray);
 }
 

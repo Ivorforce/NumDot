@@ -151,6 +151,7 @@ void nd::_bind_methods() {
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("logical_and", "a", "b"), &nd::logical_and);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("logical_or", "a", "b"), &nd::logical_or);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("logical_xor", "a", "b"), &nd::logical_xor);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("logical_not", "a"), &nd::logical_not);
     godot::ClassDB::bind_static_method("nd", D_METHOD("all", "a", "axes"), &nd::all, DEFVAL(nullptr), DEFVAL(nullptr));
     godot::ClassDB::bind_static_method("nd", D_METHOD("any", "a", "axes"), &nd::any, DEFVAL(nullptr), DEFVAL(nullptr));

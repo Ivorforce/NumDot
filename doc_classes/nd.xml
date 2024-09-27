@@ -45,7 +45,7 @@
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				Test whether all array elements along a given axis evaluate to True.
-				Returns a 0-dimension boolean if axis is null.
+				Returns a 0-dimension boolean if axes is null. In that case, [method ndb.all] is preferred.
 			</description>
 		</method>
 		<method name="any" qualifiers="static">
@@ -54,7 +54,7 @@
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				Test whether any array element along a given axis evaluates to True.
-				Returns a 0-dimension boolean if axis is null.
+				Returns a 0-dimension boolean if axes is null. In that case, [method ndb.any] is preferred.
 			</description>
 		</method>
 		<method name="arange" qualifiers="static">
@@ -189,7 +189,7 @@
 
 				If both a and b are 1-D arrays, it is inner product of vectors (without complex conjugation).
 				If both a and b are 2-D arrays, it is matrix multiplication, but using nd.matmul is preferred.
-				If either a or b is 0-D (scalar), it is equivalent to multiply and using nd.multiply(a, b) or a * b is preferred.
+				If either a or b is 0-D (scalar), it is equivalent to multiply and using [method nd.multiply] or a * b is preferred.
 				If a is an N-D array and b is a 1-D array, it is a sum product over the last axis of a and b.
 				If a is an N-D array and b is an M-D array (where M&gt;=2), it currently fails.
 			</description>
@@ -380,6 +380,15 @@
 				Compute the truth value of x1 OR x2 element-wise.
 			</description>
 		</method>
+		<method name="logical_xor" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+				Compute the truth value of x1 XOR x2 element-wise.
+				Similar to [method not_equal], but converts all arguments to boolean before computation.
+			</description>
+		</method>
 		<method name="matmul" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
@@ -397,6 +406,7 @@
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				Return the maximum of an array or maximum along an axis.
+				Returns a 0-dimension scalar if axes is null. In that case, consider [method ndf.max] or [method ndi.max].
 			</description>
 		</method>
 		<method name="maximum" qualifiers="static">
@@ -414,7 +424,7 @@
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				Compute the arithmetic mean along the specified axis.
-				Returns the average of the array elements. The average is taken over the flattened array by default, otherwise over the specified axis.
+				Returns a 0-dimension scalar if axes is null. In that case, consider [method ndf.mean].
 			</description>
 		</method>
 		<method name="min" qualifiers="static">
@@ -423,6 +433,7 @@
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				Return the minimum of an array or minimum along an axis.
+				Returns a 0-dimension scalar if axes is null. In that case, consider [method ndf.min] or [method ndi.min].
 			</description>
 		</method>
 		<method name="minimum" qualifiers="static">
@@ -466,6 +477,7 @@
 			<description>
 				Vector norm.
 				This function is able to return one of 4 different vector norms, depending on the value of the ord parameter (L0, L1, L2 and LInf).
+				Returns a 0-dimension scalar if axes is null. In that case, consider [method ndf.norm] or [method ndi.norm].
 			</description>
 		</method>
 		<method name="not_equal" qualifiers="static">
@@ -498,6 +510,7 @@
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				Return the product of array elements over a given axis.
+				Returns a 0-dimension scalar if axes is null. In that case, consider [method ndf.prod] or [method ndi.prod].
 			</description>
 		</method>
 		<method name="rad2deg" qualifiers="static">
@@ -528,6 +541,7 @@
 			<description>
 				Dot product of two arrays along the given axis.
 				Equivalent to nd.sum(nd.multiply(a, b), axes).
+				Returns a 0-dimension scalar if axes is null. In that case, consider [method ndf.reduce_dot] or [method ndi.reduce_dot].
 			</description>
 		</method>
 		<method name="remainder" qualifiers="static">
@@ -623,6 +637,7 @@
 			<description>
 				Compute the standard deviation along the specified axis.
 				Returns the standard deviation, a measure of the spread of a distribution, of the array elements. The standard deviation is computed for the flattened array by default, otherwise over the specified axis.
+				Returns a 0-dimension scalar if axes is null. In that case, consider [method ndf.std].
 			</description>
 		</method>
 		<method name="subtract" qualifiers="static">
@@ -639,6 +654,7 @@
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				Sum of array elements over a given axis.
+				Returns a 0-dimension scalar if axes is null. In that case, consider [method ndf.sum] or [method ndi.sum].
 			</description>
 		</method>
 		<method name="swapaxes" qualifiers="static">
@@ -726,7 +742,7 @@
 			<param index="0" name="v" type="Variant" default="null" />
 			<param index="1" name="axis" type="int" default="0" />
 			<description>
-				Unpacks the given dimension of a rank-R tensor into a sequence of R-1 tensors. Opposite of [code]nd.stack[/code].
+				Unpacks the given dimension of a rank-R tensor into a sequence of R-1 tensors. Opposite of [method stack].
 				Equivalent to [code]nd.moveaxis(array, axis, 0)[/code].
 			</description>
 		</method>
@@ -737,6 +753,7 @@
 			<description>
 				Compute the variance along the specified axis.
 				Returns the variance of the array elements, a measure of the spread of a distribution. The variance is computed for the flattened array by default, otherwise over the specified axis.
+				Returns a 0-dimension scalar if axes is null. In that case, consider [method ndf.var].
 			</description>
 		</method>
 		<method name="zeros" qualifiers="static">

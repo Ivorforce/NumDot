@@ -128,6 +128,34 @@ void find_shape_and_dtype(va::shape_type& shape, va::DType &dtype, const Array& 
                         add_size_at_idx(shape, current_dim_idx + 1, packed.size());
                         continue;
                     }
+                    case Variant::PACKED_VECTOR2_ARRAY: {
+                        dtype = va::dtype_common_type(dtype, va::variant_to_dtype(real_t()));
+                        PackedVector2Array packed = array_element;
+                        add_size_at_idx(shape, current_dim_idx + 1, packed.size());
+                        add_size_at_idx(shape, current_dim_idx + 2, 2);
+                        continue;
+                    }
+                    case Variant::PACKED_VECTOR3_ARRAY: {
+                        dtype = va::dtype_common_type(dtype, va::variant_to_dtype(real_t()));
+                        PackedVector3Array packed = array_element;
+                        add_size_at_idx(shape, current_dim_idx + 1, packed.size());
+                        add_size_at_idx(shape, current_dim_idx + 2, 3);
+                        continue;
+                    }
+                    case Variant::PACKED_VECTOR4_ARRAY: {
+                        dtype = va::dtype_common_type(dtype, va::variant_to_dtype(real_t()));
+                        PackedVector4Array packed = array_element;
+                        add_size_at_idx(shape, current_dim_idx + 1, packed.size());
+                        add_size_at_idx(shape, current_dim_idx + 2, 4);
+                        continue;
+                    }
+                    case Variant::PACKED_COLOR_ARRAY: {
+                        dtype = va::dtype_common_type(dtype, va::variant_to_dtype(float_t()));
+                        PackedColorArray packed = array_element;
+                        add_size_at_idx(shape, current_dim_idx + 1, packed.size());
+                        add_size_at_idx(shape, current_dim_idx + 2, 4);
+                        continue;
+                    }
                     case Variant::VECTOR2I:
                         dtype = va::dtype_common_type(dtype, va::variant_to_dtype(int64_t()));
                         add_size_at_idx(shape, current_dim_idx + 1, 2);
@@ -257,6 +285,42 @@ va::VArray array_as_varray(const Array& input_array) {
                     va::assign(
                         compute,
                         adapt_c_array(reinterpret_cast<double*>(packed.ptrw()), { static_cast<std::size_t>(packed.size()) })
+                    );
+                    continue;
+                }
+                case Variant::PACKED_VECTOR2_ARRAY: {
+                    auto compute = varray.to_compute_variant(element_idx);
+                    auto packed = PackedVector2Array(array_element);
+                    va::assign(
+                        compute,
+                        adapt_c_array(reinterpret_cast<double*>(packed.ptrw()), { static_cast<std::size_t>(packed.size()), 2 })
+                    );
+                    continue;
+                }
+                case Variant::PACKED_VECTOR3_ARRAY: {
+                    auto compute = varray.to_compute_variant(element_idx);
+                    auto packed = PackedVector3Array(array_element);
+                    va::assign(
+                        compute,
+                        adapt_c_array(reinterpret_cast<double*>(packed.ptrw()), { static_cast<std::size_t>(packed.size()), 3 })
+                    );
+                    continue;
+                }
+                case Variant::PACKED_VECTOR4_ARRAY: {
+                    auto compute = varray.to_compute_variant(element_idx);
+                    auto packed = PackedVector4Array(array_element);
+                    va::assign(
+                        compute,
+                        adapt_c_array(reinterpret_cast<double*>(packed.ptrw()), { static_cast<std::size_t>(packed.size()), 4 })
+                    );
+                    continue;
+                }
+                case Variant::PACKED_COLOR_ARRAY: {
+                    auto compute = varray.to_compute_variant(element_idx);
+                    auto packed = PackedColorArray(array_element);
+                    va::assign(
+                        compute,
+                        adapt_c_array(reinterpret_cast<double*>(packed.ptrw()), { static_cast<std::size_t>(packed.size()), 4 })
                     );
                     continue;
                 }
@@ -392,25 +456,25 @@ va::VArray variant_as_array(const Variant& array) {
         }
         case Variant::PACKED_BYTE_ARRAY: {
             const auto packed = PackedByteArray(array);
-            return va::from_store(std::make_shared<xt::xarray<double_t>>(xt::xarray<double_t>(
+            return va::from_store(std::make_shared<xt::xarray<uint8_t>>(xt::xarray<uint8_t>(
                 adapt_c_array(packed.ptr(), { static_cast<std::size_t>(packed.size()) })
             )));
         }
         case Variant::PACKED_INT32_ARRAY: {
             const auto packed = PackedInt32Array(array);
-            return va::from_store(std::make_shared<xt::xarray<double_t>>(xt::xarray<double_t>(
+            return va::from_store(std::make_shared<xt::xarray<int32_t>>(xt::xarray<int32_t>(
                 adapt_c_array(packed.ptr(), { static_cast<std::size_t>(packed.size()) })
             )));
         }
         case Variant::PACKED_INT64_ARRAY: {
             const auto packed = PackedInt64Array(array);
-            return va::from_store(std::make_shared<xt::xarray<double_t>>(xt::xarray<double_t>(
+            return va::from_store(std::make_shared<xt::xarray<int64_t>>(xt::xarray<int64_t>(
                 adapt_c_array(packed.ptr(), { static_cast<std::size_t>(packed.size()) })
             )));
         }
         case Variant::PACKED_FLOAT32_ARRAY: {
             const auto packed = PackedFloat32Array(array);
-            return va::from_store(std::make_shared<xt::xarray<double_t>>(xt::xarray<double_t>(
+            return va::from_store(std::make_shared<xt::xarray<float_t>>(xt::xarray<float_t>(
                 adapt_c_array(packed.ptr(), { static_cast<std::size_t>(packed.size()) })
             )));
         }
@@ -418,6 +482,30 @@ va::VArray variant_as_array(const Variant& array) {
             const auto packed = PackedFloat64Array(array);
             return va::from_store(std::make_shared<xt::xarray<double_t>>(xt::xarray<double_t>(
                 adapt_c_array(packed.ptr(), { static_cast<std::size_t>(packed.size()) })
+            )));
+        }
+        case Variant::PACKED_VECTOR2_ARRAY: {
+            const auto packed = PackedVector2Array(array);
+            return va::from_store(std::make_shared<xt::xarray<real_t>>(xt::xarray<real_t>(
+                adapt_c_array(&packed.ptr()[0].coord[0], { static_cast<std::size_t>(packed.size()), 2 })
+            )));
+        }
+        case Variant::PACKED_VECTOR3_ARRAY: {
+            const auto packed = PackedVector3Array(array);
+            return va::from_store(std::make_shared<xt::xarray<real_t>>(xt::xarray<real_t>(
+                adapt_c_array(&packed.ptr()[0].coord[0], { static_cast<std::size_t>(packed.size()), 3 })
+            )));
+        }
+        case Variant::PACKED_VECTOR4_ARRAY: {
+            const auto packed = PackedVector4Array(array);
+            return va::from_store(std::make_shared<xt::xarray<real_t>>(xt::xarray<real_t>(
+                adapt_c_array(&packed.ptr()[0].components[0], { static_cast<std::size_t>(packed.size()), 4 })
+            )));
+        }
+        case Variant::PACKED_COLOR_ARRAY: {
+            const auto packed = PackedColorArray(array);
+            return va::from_store(std::make_shared<xt::xarray<float_t>>(xt::xarray<float_t>(
+                adapt_c_array(&packed.ptr()[0].components[0], { static_cast<std::size_t>(packed.size()), 4 })
             )));
         }
         case Variant::VECTOR2I: {

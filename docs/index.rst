@@ -55,5 +55,8 @@ Table of Contents
    :name: sec-class-ref
 
    classes/class_nd
+   classes/class_ndb
+   classes/class_ndf
+   classes/class_ndi
    classes/class_ndarray
    classes/class_ndrange

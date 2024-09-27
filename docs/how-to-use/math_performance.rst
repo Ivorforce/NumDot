@@ -15,9 +15,6 @@ If you find your mathematical operation is running too slow, consider these step
 
 3) **Custom Build:** When you're sure you optimized everything you can, you can substantially speed up your algorithm by implementing it in C++, interfacing with ``xtensor`` directly. This is documented in the articles for :ref:`Custom Builds<doc_custom_build_setup>`.
 
-Optimizing NumDot Use
----------------------
-
 .. contents:: Table of Contents
    :depth: 2
    :local:

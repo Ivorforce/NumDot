@@ -98,3 +98,52 @@ Godot Conversions
     var packed := array.to_float32_array()
 
 In the future, NumDot will have an API for accelerated full-tensor reductions (like ``ndf.mean(array)``).
+
+Unintentional Promotions
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+GDScript's standard ``int`` and ``float`` types are fairly powerful (64 bits). Operations on 32-bit types may lead to faster execution times. However, it may happen that you unintentionally promote a type:
+
+.. code-block:: gdscript
+
+    var array := nd.ones([2, 5], nd.DType.Float32)
+
+    # Unintentional promotion to 64 bit
+    var result = array.multiply(array, 2.5)
+
+    # Result stays 32-bit
+    var result = array.multiply(array, nd.array(2.5, nd.DType.Float32))
+
+Cache Constants
+^^^^^^^^^^^^^^^
+
+When operations run every frame, avoid unnecessarily re-creating constants:
+
+.. code-block:: gdscript
+
+    var positions: NDArray
+
+    func _ready():
+        # TODO Use random when we have it
+        positions = nd.zeros([1000, 2])
+
+    func _update():
+        # Intermediate tensor created every frame
+        positions = nd.add(positions, Vector2(5, 6))
+
+Consider storing the constant tensor:
+
+.. code-block:: gdscript
+
+    var positions: NDArray
+    var velocity := nd.array(Vector2(5, 6))
+
+    func _ready():
+        # TODO Use random when we have it
+        positions = nd.zeros([1000, 2])
+
+    func _update():
+        # Use of existing tensor accelerates the call.
+        positions = nd.add(positions, velocity)
+
+In extreme situations, this may apply even to calls to ``nd.range`` and similar!

@@ -15,7 +15,8 @@ Upcoming Changes (main branch)
 **Added**
 
 - ``NDArray`` is now iterable over the outermost dimension.
-- ``NDArray`` conversion functions to and from ``Color``, ``Vector2``, ``Vector3``, ``Vector4``, ``Vector2i``, ``Vector3i`, ``Vector4i``, ``PackedVector2Array``, ``PackedVector3Array``, ``PackedVector4Array`` and ``PackedColorArray``.
+- ``NDArray`` conversion functions to and from ``Color``, ``Vector2``, ``Vector3``, ``Vector4``, ``Vector2i``, ``Vector3i``, ``Vector4i``, ``PackedVector2Array``, ``PackedVector3Array``, ``PackedVector4Array`` and ``PackedColorArray``.
+- ``nd.as_array`` shorthands for each data type, e.g. ``nd.float32``.
 
 **Changed**
 

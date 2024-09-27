@@ -63,6 +63,18 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("as_array", "array", "dtype"), &nd::as_array, DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("array", "array", "dtype"), &nd::array, DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax));
 
+	godot::ClassDB::bind_static_method("nd", D_METHOD("bool_", "array"), &nd::bool_);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("float32", "array"), &nd::float32);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("float64", "array"), &nd::float64);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("int8", "array"), &nd::int8);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("int16", "array"), &nd::int16);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("int32", "array"), &nd::int32);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("int64", "array"), &nd::int64);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("uint8", "array"), &nd::uint8);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("uint16", "array"), &nd::uint16);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("uint32", "array"), &nd::uint32);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("uint64", "array"), &nd::uint64);
+
 	godot::ClassDB::bind_static_method("nd", D_METHOD("empty", "shape", "dtype"), &nd::empty, DEFVAL(nullptr), DEFVAL(nd::DType::Float64));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("full", "shape", "fill_value", "dtype"), &nd::full, DEFVAL(nullptr), DEFVAL(nullptr), DEFVAL(nd::DType::Float64));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("zeros", "shape", "dtype"), &nd::zeros, DEFVAL(nullptr), DEFVAL(nd::DType::Float64));
@@ -292,6 +304,18 @@ Ref<NDArray> nd::array(const Variant &array, nd::DType dtype) {
 		ERR_FAIL_V_MSG({}, error.what());
 	}
 }
+
+Ref<NDArray> nd::bool_(const Variant &array) { return nd::as_array(array, DType::Bool); }
+Ref<NDArray> nd::float32(const Variant &array) { return nd::as_array(array, DType::Float32); }
+Ref<NDArray> nd::float64(const Variant &array) { return nd::as_array(array, DType::Float64); }
+Ref<NDArray> nd::int8(const Variant &array) { return nd::as_array(array, DType::Int8); }
+Ref<NDArray> nd::int16(const Variant &array) { return nd::as_array(array, DType::Int16); }
+Ref<NDArray> nd::int32(const Variant &array) { return nd::as_array(array, DType::Int32); }
+Ref<NDArray> nd::int64(const Variant &array) { return nd::as_array(array, DType::Int64); }
+Ref<NDArray> nd::uint8(const Variant &array) { return nd::as_array(array, DType::UInt8); }
+Ref<NDArray> nd::uint16(const Variant &array) { return nd::as_array(array, DType::UInt16); }
+Ref<NDArray> nd::uint32(const Variant &array) { return nd::as_array(array, DType::UInt32); }
+Ref<NDArray> nd::uint64(const Variant &array) { return nd::as_array(array, DType::UInt64); }
 
 Ref<NDArray> nd::empty(const Variant &shape, const nd::DType dtype) {
 	try {

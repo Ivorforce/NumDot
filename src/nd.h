@@ -45,6 +45,18 @@ public:
 	static Ref<NDArray> as_array(const Variant &array, DType dtype = DType::DTypeMax);
 	static Ref<NDArray> array(const Variant &array, DType dtype = DType::DTypeMax);
 
+	static Ref<NDArray> bool_(const Variant &array);
+	static Ref<NDArray> float32(const Variant &array);
+	static Ref<NDArray> float64(const Variant &array);
+	static Ref<NDArray> int8(const Variant &array);
+	static Ref<NDArray> int16(const Variant &array);
+	static Ref<NDArray> int32(const Variant &array);
+	static Ref<NDArray> int64(const Variant &array);
+	static Ref<NDArray> uint8(const Variant &array);
+	static Ref<NDArray> uint16(const Variant &array);
+	static Ref<NDArray> uint32(const Variant &array);
+	static Ref<NDArray> uint64(const Variant &array);
+
 	// Array creation.
 	static Ref<NDArray> empty(const Variant &shape, DType dtype = DType::Float64);
 	static Ref<NDArray> full(const Variant& shape, const Variant& fill_value, DType dtype = DType::Float64);

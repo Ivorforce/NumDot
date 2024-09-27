@@ -590,7 +590,7 @@
 		<method name="to_color" qualifiers="const">
 			<return type="Color" />
 			<description>
-				If shape is [4], converts this tensor to a Color.
+				If shape is [lb]4[rb], converts this tensor to a Color.
 			</description>
 		</method>
 		<method name="to_float" qualifiers="const">
@@ -622,7 +622,7 @@
 		<method name="to_packed_color_array" qualifiers="const">
 			<return type="PackedColorArray" />
 			<description>
-				If shape is [?, 4], converts this tensor to a PackedColorArray.
+				If shape is [lb]?, 4[rb], converts this tensor to a PackedColorArray.
 			</description>
 		</method>
 		<method name="to_packed_float32_array" qualifiers="const">
@@ -652,55 +652,55 @@
 		<method name="to_packed_vector2_array" qualifiers="const">
 			<return type="PackedVector2Array" />
 			<description>
-				If shape is [?, 2], converts this tensor to a PackedVector2Array.
+				If shape is [lb]?, 2[rb], converts this tensor to a PackedVector2Array.
 			</description>
 		</method>
 		<method name="to_packed_vector3_array" qualifiers="const">
 			<return type="PackedVector3Array" />
 			<description>
-				If shape is [?, 3], converts this tensor to a PackedVector3Array.
+				If shape is [lb]?, 3[rb], converts this tensor to a PackedVector3Array.
 			</description>
 		</method>
 		<method name="to_packed_vector4_array" qualifiers="const">
 			<return type="PackedVector4Array" />
 			<description>
-				If shape is [?, 4], converts this tensor to a PackedVector4Array.
+				If shape is [lb]?, 4[rb], converts this tensor to a PackedVector4Array.
 			</description>
 		</method>
 		<method name="to_vector2" qualifiers="const">
 			<return type="Vector2" />
 			<description>
-				If shape is [2], converts this tensor to a Vector2.
+				If shape is [lb]2[rb], converts this tensor to a Vector2.
 			</description>
 		</method>
 		<method name="to_vector2i" qualifiers="const">
 			<return type="Vector2i" />
 			<description>
-				If shape is [2], converts this tensor to a Vector2i.
+				If shape is [lb]2[rb], converts this tensor to a Vector2i.
 			</description>
 		</method>
 		<method name="to_vector3" qualifiers="const">
 			<return type="Vector3" />
 			<description>
-				If shape is [3], converts this tensor to a Vector3.
+				If shape is [lb]3[rb], converts this tensor to a Vector3.
 			</description>
 		</method>
 		<method name="to_vector3i" qualifiers="const">
 			<return type="Vector3i" />
 			<description>
-				If shape is [3], converts this tensor to a Vector3i.
+				If shape is [lb]3[rb], converts this tensor to a Vector3i.
 			</description>
 		</method>
 		<method name="to_vector4" qualifiers="const">
 			<return type="Vector4" />
 			<description>
-				If shape is [4], converts this tensor to a Vector4.
+				If shape is [lb]4[rb], converts this tensor to a Vector4.
 			</description>
 		</method>
 		<method name="to_vector4i" qualifiers="const">
 			<return type="Vector4i" />
 			<description>
-				If shape is [4], converts this tensor to a Vector4.
+				If shape is [lb]4[rb], converts this tensor to a Vector4.
 			</description>
 		</method>
 	</methods>

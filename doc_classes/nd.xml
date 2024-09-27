@@ -122,6 +122,14 @@
 				Inverse hyperbolic tangent element-wise.
 			</description>
 		</method>
+		<method name="bool_" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="array" type="Variant" />
+			<description>
+				Convert to a bool dtype tensor.
+				Equivalent to [code]nd.as_array(array, nd.DType.Bool)[/code].
+			</description>
+		</method>
 		<method name="ceil" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
@@ -224,6 +232,22 @@
 				The shape of the array is preserved, but the elements are reordered.
 			</description>
 		</method>
+		<method name="float32" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="array" type="Variant" />
+			<description>
+				Convert to a float32 dtype tensor.
+				Equivalent to [code]nd.as_array(array, nd.DType.Float32)[/code].
+			</description>
+		</method>
+		<method name="float64" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="array" type="Variant" />
+			<description>
+				Convert to a float64 dtype tensor.
+				Equivalent to [code]nd.as_array(array, nd.DType.Float64)[/code].
+			</description>
+		</method>
 		<method name="floor" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
@@ -262,6 +286,38 @@
 			<param index="1" name="b" type="Variant" />
 			<description>
 				Return (x1 &gt;= x2) element-wise.
+			</description>
+		</method>
+		<method name="int8" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="array" type="Variant" />
+			<description>
+				Convert to an int8 dtype tensor.
+				Equivalent to [code]nd.as_array(array, nd.DType.Int8)[/code].
+			</description>
+		</method>
+		<method name="int16" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="array" type="Variant" />
+			<description>
+				Convert to an int16 dtype tensor.
+				Equivalent to [code]nd.as_array(array, nd.DType.Int16)[/code].
+			</description>
+		</method>
+		<method name="int32" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="array" type="Variant" />
+			<description>
+				Convert to an int32 dtype tensor.
+				Equivalent to [code]nd.as_array(array, nd.DType.Int32)[/code].
+			</description>
+		</method>
+		<method name="int64" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="array" type="Variant" />
+			<description>
+				Convert to an int64 dtype tensor.
+				Equivalent to [code]nd.as_array(array, nd.DType.Int64)[/code].
 			</description>
 		</method>
 		<method name="less" qualifiers="static">
@@ -631,6 +687,38 @@
 			<description>
 				Return the truncated value of the input, element-wise.
 				The truncated value of the scalar x is the nearest integer i which is closer to zero than x is. In short, the fractional part of the signed number x is discarded.
+			</description>
+		</method>
+		<method name="uint8" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="array" type="Variant" />
+			<description>
+				Convert to a uint8 dtype tensor.
+				Equivalent to [code]nd.as_array(array, nd.DType.UInt8)[/code].
+			</description>
+		</method>
+		<method name="uint16" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="array" type="Variant" />
+			<description>
+				Convert to a uint16 dtype tensor.
+				Equivalent to [code]nd.as_array(array, nd.DType.UInt16)[/code].
+			</description>
+		</method>
+		<method name="uint32" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="array" type="Variant" />
+			<description>
+				Convert to a uint32 dtype tensor.
+				Equivalent to [code]nd.as_array(array, nd.DType.UInt32)[/code].
+			</description>
+		</method>
+		<method name="uint64" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="array" type="Variant" />
+			<description>
+				Convert to a uint64 dtype tensor.
+				Equivalent to [code]nd.as_array(array, nd.DType.UInt64)[/code].
 			</description>
 		</method>
 		<method name="unstack" qualifiers="static">

@@ -21,7 +21,7 @@ Description
 
 The base namespace for NumDot functions.
 
-All mathematical functions in this namespace return tensors. For reduction results further computed in GDScript, consider using :ref:`ndb<class_ndb>`, :ref:`ndf<class_ndf>` and :ref:`ndi<class_ndi>` instead.
+All mathematical functions in this namespace return tensors. For reduction results further used in scalar computation, consider using :ref:`ndb<class_ndb>`, :ref:`ndf<class_ndf>` and :ref:`ndi<class_ndi>` instead.
 
 .. rst-class:: classref-reftable-group
 

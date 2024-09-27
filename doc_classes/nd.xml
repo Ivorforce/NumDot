@@ -5,7 +5,7 @@
 	</brief_description>
 	<description>
 		The base namespace for NumDot functions.
-		All mathematical functions in this namespace return tensors. For reduction results further computed in GDScript, consider using [ndb], [ndf] and [ndi] instead.
+		All mathematical functions in this namespace return tensors. For reduction results further used in scalar computation, consider using [ndb], [ndf] and [ndi] instead.
 	</description>
 	<tutorials>
 	</tutorials>

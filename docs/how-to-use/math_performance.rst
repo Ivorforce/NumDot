@@ -13,7 +13,7 @@ If you find your mathematical operation is running too slow, consider these step
 
 2) **Optimize NumDot Use:** You may be able to speed up your algorithm by using specific tricks to speed up your algorithm, documented in this article.
 
-3) **Custom Build:** When you're sure you optimized everything you can, you can substantially speed up your algorithm by implementing it in C++, interfacing with ``xtensor`` directly. This is documented in the articles for :ref:`Custom Builds<_doc_custom_build_setup>`.
+3) **Custom Build:** When you're sure you optimized everything you can, you can substantially speed up your algorithm by implementing it in C++, interfacing with ``xtensor`` directly. This is documented in the articles for :ref:`Custom Builds<doc_custom_build_setup>`.
 
 Optimizing NumDot Use
 ---------------------

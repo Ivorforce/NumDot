@@ -94,7 +94,7 @@ T variant_as_ints_(const Variant &variant) {
 }
 
 va::shape_type variant_to_shape(const Variant &variant) {
-    return variant_as_ints_<size_t, std::vector<size_t> >(variant);
+    return variant_as_ints_<std::size_t, std::vector<std::size_t> >(variant);
 }
 
 va::strides_type variant_to_axes(const Variant &variant) {

@@ -65,7 +65,7 @@ void add_size_at_idx(va::shape_type& shape, const std::size_t idx, const std::si
 void find_shape_and_dtype(va::shape_type& shape, va::DType &dtype, const Array& input_array) {
     std::vector<Array> current_dim_arrays = { input_array };
 
-    for (size_t current_dim_idx = 0; true; ++current_dim_idx) {
+    for (std::size_t current_dim_idx = 0; true; ++current_dim_idx) {
         for (const auto& array : current_dim_arrays) {
             add_size_at_idx(shape, current_dim_idx, array.size());
         }
@@ -213,7 +213,7 @@ va::VArray array_as_varray(const Array& input_array) {
         const auto [array_base_idx, array] = std::move(next.back());
         next.pop_back();
 
-        for (size_t i = 0; i < array.size(); ++i) {
+        for (std::size_t i = 0; i < array.size(); ++i) {
             auto element_idx = array_base_idx;
             element_idx.emplace_back(i);
 

@@ -40,7 +40,7 @@ VArray va::moveaxis(const VArray& varray, std::ptrdiff_t src, std::ptrdiff_t dst
     }, varray);
 }
 
-VArray va::flip(const VArray& varray, size_t axis) {
+VArray va::flip(const VArray& varray, std::size_t axis) {
     return map([axis](auto& array) {
         return xt::flip(array, axis);
     }, varray);

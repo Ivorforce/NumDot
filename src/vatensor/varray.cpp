@@ -12,11 +12,11 @@ va::DType va::VArray::dtype() const {
     return static_cast<DType>(store.index());
 }
 
-size_t va::VArray::size() const {
+std::size_t va::VArray::size() const {
     return std::accumulate(shape.begin(), shape.end(), 1, std::multiplies<>());;
 }
 
-size_t va::VArray::dimension() const {
+std::size_t va::VArray::dimension() const {
     return shape.size();
 }
 
@@ -80,7 +80,7 @@ va::VWrite va::VArray::compute_write(const xt::xstrided_slice_vector &slices) co
     }, store);
 }
 
-size_t va::VArray::size_of_array_in_bytes() const {
+std::size_t va::VArray::size_of_array_in_bytes() const {
     return std::visit([](auto&& carray){
         using V = typename std::decay_t<decltype(carray)>::value_type;
         return carray.size() * sizeof(V);
@@ -126,7 +126,7 @@ va::DType va::variant_to_dtype(const VScalar dtype) {
     return static_cast<DType>(dtype.index());
 }
 
-size_t va::size_of_dtype_in_bytes(const DType dtype) {
+std::size_t va::size_of_dtype_in_bytes(const DType dtype) {
     return std::visit([](auto dtype){
         return sizeof(dtype);
     }, dtype_to_variant(dtype));

@@ -19,7 +19,7 @@ namespace va {
     VArray reshape(const VArray& varray, strides_type new_shape);
     VArray swapaxes(const VArray& varray, std::ptrdiff_t a, std::ptrdiff_t b);
     VArray moveaxis(const VArray& varray, std::ptrdiff_t src, std::ptrdiff_t dst);
-    VArray flip(const VArray& varray, size_t axis);
+    VArray flip(const VArray& varray, std::size_t axis);
 }
 
 #endif //XV_H

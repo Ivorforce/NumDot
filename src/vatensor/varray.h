@@ -138,8 +138,8 @@ namespace va {
         xt::layout_type layout;
 
         [[nodiscard]] DType dtype() const;
-        [[nodiscard]] size_t size() const;
-        [[nodiscard]] size_t dimension() const;
+        [[nodiscard]] std::size_t size() const;
+        [[nodiscard]] std::size_t dimension() const;
 
         // TODO Can probably change these to subscript syntax
         [[nodiscard]] VArray slice(const xt::xstrided_slice_vector& slices) const;
@@ -149,7 +149,7 @@ namespace va {
         [[nodiscard]] VRead compute_read(const xt::xstrided_slice_vector& slices) const;
         [[nodiscard]] VWrite compute_write() const;
         [[nodiscard]] VWrite compute_write(const xt::xstrided_slice_vector& slices) const;
-        [[nodiscard]] size_t size_of_array_in_bytes() const;
+        [[nodiscard]] std::size_t size_of_array_in_bytes() const;
 
         [[nodiscard]] VScalar to_single_value() const;
 
@@ -175,7 +175,7 @@ namespace va {
     static compute_case<V> to_compute_variant(T& store, const VArray& varray) {
         auto shape = varray.shape;
         auto strides = varray.strides;
-        auto size_ = std::accumulate(shape.begin(), shape.end(), static_cast<size_t>(1), std::multiplies());
+        auto size_ = std::accumulate(shape.begin(), shape.end(), static_cast<std::size_t>(1), std::multiplies());
 
         // return xt::adapt(store->data(), store->size(), xt::no_ownership(), store->shape(), store->strides());
         return xt::adapt<V>(store->data() + varray.offset, size_, xt::no_ownership(), shape, strides);
@@ -192,7 +192,7 @@ namespace va {
             slices
         );
 
-        auto size_ = std::accumulate(args.new_shape.begin(), args.new_shape.end(), static_cast<size_t>(1), std::multiplies());
+        auto size_ = std::accumulate(args.new_shape.begin(), args.new_shape.end(), static_cast<std::size_t>(1), std::multiplies());
 
         // return xt::adapt(store->data(), store->size(), xt::no_ownership(), store->shape(), store->strides());
         return xt::adapt<V>(store->data() + args.new_offset, size_, xt::no_ownership(), args.new_shape, args.new_strides);
@@ -250,7 +250,7 @@ namespace va {
     VScalar dtype_to_variant(DType dtype);
     DType variant_to_dtype(VScalar dtype);
 
-    size_t size_of_dtype_in_bytes(DType dtype);
+    std::size_t size_of_dtype_in_bytes(DType dtype);
 
     VScalar scalar_to_dtype(VScalar v, DType dtype);
 

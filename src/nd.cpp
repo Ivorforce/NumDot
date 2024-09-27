@@ -17,6 +17,7 @@
 #include <variant>                          // for visit, variant
 #include <vector>                           // for vector
 #include <vatensor/linalg.h>
+#include <vatensor/vassign.h>
 #include "gdconvert/conversion_array.h"     // for variant_as_array
 #include "gdconvert/conversion_ints.h"     // for variant_as_shape
 #include "gdconvert/conversion_slice.h"     // for ellipsis, newaxis
@@ -325,7 +326,8 @@ Ref<NDArray> nd::full(const Variant& shape, const Variant& fill_value, nd::DType
 			}
 			default: {
 				va::VArray result = va::empty(dtype, shape_array);
-				result.set_with_array(variant_as_array(fill_value));
+				auto compute = result.to_compute_variant();
+				va::assign(compute, variant_as_array(fill_value).to_compute_variant());
 				return {memnew(NDArray(result))};
 			}
 		}

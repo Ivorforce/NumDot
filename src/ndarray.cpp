@@ -6,6 +6,7 @@
 #include <vatensor/trigonometry.h>                 // for acos, acosh, asin
 #include <vatensor/vmath.h>                        // for abs, add, deg2rad
 #include <algorithm>                               // for copy
+#include <array>
 #include <functional>                              // for function
 #include <stdexcept>                               // for runtime_error
 #include <variant>                                 // for visit
@@ -221,26 +222,26 @@ void NDArray::set(const Variant **args, GDExtensionInt arg_count, GDExtensionCal
 	try {
 		const Variant &value = *args[0];
 		// todo don't need slices if arg_count == 1
-		va::VArray sliced = arg_count == 1
-			? array
-			: array.slice(variants_to_slice_vector(args + 1, arg_count - 1, error));
+		auto compute = arg_count == 1
+			? array.to_compute_variant()
+			: array.to_compute_variant(variants_to_slice_vector(args + 1, arg_count - 1, error));
 
 		switch (value.get_type()) {
 			case Variant::BOOL:
-				sliced.fill(static_cast<bool>(value));
+				va::assign(compute, static_cast<bool>(value));
 				return;
 			case Variant::INT:
-				sliced.fill(static_cast<int64_t>(value));
+				va::assign(compute, static_cast<int64_t>(value));
 				return;
 			case Variant::FLOAT:
-				sliced.fill(static_cast<double_t>(value));
+				va::assign(compute, static_cast<double_t>(value));
 				return;
 			// TODO We could optimize more assignments of literals.
 			//  Just need to figure out how, ideally without duplicating code - as_array already does much type checking work.
 			default:
-				const va::VArray a_ = variant_as_array(value);
+				const auto a_ = variant_as_array(value).to_compute_variant();
 
-				sliced.set_with_array(a_);
+				va::assign(compute, a_);
 				return;
 		}
 	}
@@ -462,8 +463,9 @@ template <typename Visitor, typename VisitorNoaxes, typename... Args>
 inline void reduction_inplace(Visitor&& visitor, VisitorNoaxes&& visitor_noaxes, va::VArray& target, const Variant& axes, const Args&... args) {
 	try {
 		if (axes.get_type() == Variant::NIL) {
-			const auto result = std::forward<VisitorNoaxes>(visitor_noaxes)(variant_as_array(args)...);
-			target.fill(result);
+			const va::VScalar result = std::forward<VisitorNoaxes>(visitor_noaxes)(variant_as_array(args)...);
+			auto compute = target.to_compute_variant();
+			va::assign(compute, result);
 			return;
 		}
 

@@ -121,10 +121,9 @@ namespace va {
         // TODO Can probably change these to subscript syntax
         [[nodiscard]] VArray slice(const xt::xstrided_slice_vector& slices) const;
         [[nodiscard]] VScalar get_scalar(const axes_type& index) const;
-        void fill(VScalar value);
-        void set_with_array(const VArray& value);
 
         [[nodiscard]] ComputeVariant to_compute_variant() const;
+        [[nodiscard]] ComputeVariant to_compute_variant(const xt::xstrided_slice_vector& slices) const;
         [[nodiscard]] size_t size_of_array_in_bytes() const;
 
         [[nodiscard]] VScalar to_single_value() const;
@@ -155,6 +154,23 @@ namespace va {
 
         // return xt::adapt(store->data(), store->size(), xt::no_ownership(), store->shape(), store->strides());
         return xt::adapt(store->data() + varray.offset, size_, xt::no_ownership(), shape, strides);
+    }
+
+    template <typename T>
+    static auto to_compute_variant(const store_case<T>& store, const VArray& varray, const xt::xstrided_slice_vector& slices) {
+        xt::detail::strided_view_args<xt::detail::no_adj_strides_policy> args;
+        args.fill_args(
+            varray.shape,
+            varray.strides,
+            varray.offset,
+            varray.layout,
+            slices
+        );
+
+        auto size_ = std::accumulate(args.new_shape.begin(), args.new_shape.end(), static_cast<size_t>(1), std::multiplies());
+
+        // return xt::adapt(store->data(), store->size(), xt::no_ownership(), store->shape(), store->strides());
+        return xt::adapt(store->data() + args.new_offset, size_, xt::no_ownership(), args.new_shape, args.new_strides);
     }
 
     template <typename T>

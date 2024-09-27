@@ -9,6 +9,7 @@
 #include <tuple>                                       // for tuple
 #include <utility>                                     // for move
 #include <vector>                                      // for vector
+#include <vatensor/vassign.h>
 #include "godot_cpp/classes/object.hpp"                // for Object
 #include "godot_cpp/core/defs.hpp"                     // for real_t
 #include "godot_cpp/core/object.hpp"                   // for Object::cast_to
@@ -201,101 +202,154 @@ va::VArray array_as_varray(const Array& input_array) {
             switch (array_element.get_type()) {
                 case Variant::OBJECT: {
                     if (const auto ndarray = Object::cast_to<NDArray>(array_element)) {
-                        varray.slice(element_idx).set_with_array(ndarray->array);
+                        auto compute = varray.to_compute_variant(element_idx);
+                        va::assign(compute, ndarray->array.to_compute_variant());
                         continue;
                     }
                 }
                 case Variant::ARRAY:
                     next.emplace_back(element_idx, static_cast<Array>(array_element));
                     continue;
-                case Variant::BOOL:
+                case Variant::BOOL: {
+                    auto compute = varray.to_compute_variant(element_idx);
                     // TODO If we're on the last dimension, we should use element assign rather than slice - fill for all these.
-                    varray.slice(element_idx).fill(static_cast<bool>(array_element));
+                    va::assign(compute, static_cast<bool>(array_element));
                     continue;
-                case Variant::INT:
-                    varray.slice(element_idx).fill(static_cast<int64_t>(array_element));
+                }
+                case Variant::INT:{
+                    auto compute = varray.to_compute_variant(element_idx);
+                    // TODO If we're on the last dimension, we should use element assign rather than slice - fill for all these.
+                    va::assign(compute, static_cast<int64_t>(array_element));
                     continue;
-                case Variant::FLOAT:
-                    varray.slice(element_idx).fill(static_cast<double_t>(array_element));
+                }
+                case Variant::FLOAT:{
+                    auto compute = varray.to_compute_variant(element_idx);
+                    // TODO If we're on the last dimension, we should use element assign rather than slice - fill for all these.
+                    va::assign(compute, static_cast<double_t>(array_element));
                     continue;
+                }
                 case Variant::PACKED_BYTE_ARRAY: {
-                    varray.slice(element_idx).set_with_array(packed_as_xarray<uint8_t>(PackedByteArray(array_element)));
+                    auto compute = varray.to_compute_variant(element_idx);
+                    va::assign(compute, packed_as_xarray<uint8_t>(PackedByteArray(array_element)).to_compute_variant());
                     continue;
                 }
                 case Variant::PACKED_INT32_ARRAY: {
-                    varray.slice(element_idx).set_with_array(packed_as_xarray<uint8_t>(PackedInt32Array(array_element)));
+                    auto compute = varray.to_compute_variant(element_idx);
+                    va::assign(compute, packed_as_xarray<uint8_t>(PackedInt32Array(array_element)).to_compute_variant());
                     continue;
                 }
                 case Variant::PACKED_INT64_ARRAY: {
-                    varray.slice(element_idx).set_with_array(packed_as_xarray<uint8_t>(PackedInt64Array(array_element)));
+                    auto compute = varray.to_compute_variant(element_idx);
+                    va::assign(compute, packed_as_xarray<uint8_t>(PackedInt64Array(array_element)).to_compute_variant());
                     continue;
                 }
                 case Variant::PACKED_FLOAT32_ARRAY: {
-                    varray.slice(element_idx).set_with_array(packed_as_xarray<uint8_t>(PackedFloat32Array(array_element)));
+                    auto compute = varray.to_compute_variant(element_idx);
+                    va::assign(compute, packed_as_xarray<uint8_t>(PackedFloat32Array(array_element)).to_compute_variant());
                     continue;
                 }
                 case Variant::PACKED_FLOAT64_ARRAY: {
-                    varray.slice(element_idx).set_with_array(packed_as_xarray<uint8_t>(PackedFloat64Array(array_element)));
+                    auto compute = varray.to_compute_variant(element_idx);
+                    va::assign(compute, packed_as_xarray<uint8_t>(PackedFloat64Array(array_element)).to_compute_variant());
                     continue;
                 }
                 case Variant::VECTOR2I: {
                     const Vector2i vector = array_element;
+
                     element_idx.emplace_back(0);
-                    varray.slice(element_idx).fill(vector.x);
+                    auto compute = varray.to_compute_variant(element_idx);
+                    va::assign(compute, vector.x);
+
                     element_idx.back() = 1;
-                    varray.slice(element_idx).fill(vector.y);
+                    compute = varray.to_compute_variant(element_idx);
+                    va::assign(compute, vector.y);
                     continue;
                 }
                 case Variant::VECTOR3I: {
                     const Vector3i vector = array_element;
+
                     element_idx.emplace_back(0);
-                    varray.slice(element_idx).fill(vector.x);
+                    auto compute = varray.to_compute_variant(element_idx);
+                    va::assign(compute, vector.x);
+
                     element_idx.back() = 1;
-                    varray.slice(element_idx).fill(vector.y);
+                    compute = varray.to_compute_variant(element_idx);
+                    va::assign(compute, vector.y);
+
                     element_idx.back() = 2;
-                    varray.slice(element_idx).fill(vector.z);
+                    compute = varray.to_compute_variant(element_idx);
+                    va::assign(compute, vector.z);
                     continue;
                 }
                 case Variant::VECTOR4I: {
                     const Vector4i vector = array_element;
+
                     element_idx.emplace_back(0);
-                    varray.slice(element_idx).fill(vector.x);
+                    auto compute = varray.to_compute_variant(element_idx);
+                    va::assign(compute, vector.x);
+
                     element_idx.back() = 1;
-                    varray.slice(element_idx).fill(vector.y);
+                    compute = varray.to_compute_variant(element_idx);
+                    va::assign(compute, vector.y);
+
                     element_idx.back() = 2;
-                    varray.slice(element_idx).fill(vector.z);
+                    compute = varray.to_compute_variant(element_idx);
+                    va::assign(compute, vector.z);
+
                     element_idx.back() = 3;
-                    varray.slice(element_idx).fill(vector.w);
+                    compute = varray.to_compute_variant(element_idx);
+                    va::assign(compute, vector.w);
                     continue;
                 }
                 case Variant::VECTOR2: {
                     const Vector2 vector = array_element;
+
                     element_idx.emplace_back(0);
-                    varray.slice(element_idx).fill(vector.x);
+                    auto compute = varray.to_compute_variant(element_idx);
+                    va::assign(compute, vector.x);
+
                     element_idx.back() = 1;
-                    varray.slice(element_idx).fill(vector.y);
+                    compute = varray.to_compute_variant(element_idx);
+                    va::assign(compute, vector.y);
+
                     continue;
                 }
                 case Variant::VECTOR3: {
                     const Vector3 vector = array_element;
+
                     element_idx.emplace_back(0);
-                    varray.slice(element_idx).fill(vector.x);
+                    auto compute = varray.to_compute_variant(element_idx);
+                    va::assign(compute, vector.x);
+
                     element_idx.back() = 1;
-                    varray.slice(element_idx).fill(vector.y);
+                    compute = varray.to_compute_variant(element_idx);
+                    va::assign(compute, vector.y);
+
                     element_idx.back() = 2;
-                    varray.slice(element_idx).fill(vector.z);
+                    compute = varray.to_compute_variant(element_idx);
+                    va::assign(compute, vector.z);
+
                     continue;
                 }
                 case Variant::VECTOR4: {
                     const Vector4 vector = array_element;
+
                     element_idx.emplace_back(0);
-                    varray.slice(element_idx).fill(vector.x);
+                    auto compute = varray.to_compute_variant(element_idx);
+                    va::assign(compute, vector.x);
+
                     element_idx.back() = 1;
-                    varray.slice(element_idx).fill(vector.y);
+                    compute = varray.to_compute_variant(element_idx);
+                    va::assign(compute, vector.y);
+
                     element_idx.back() = 2;
-                    varray.slice(element_idx).fill(vector.z);
+                    compute = varray.to_compute_variant(element_idx);
+                    va::assign(compute, vector.z);
+
                     element_idx.back() = 3;
-                    varray.slice(element_idx).fill(vector.w);
+                    compute = varray.to_compute_variant(element_idx);
+                    va::assign(compute, vector.w);
+
                     continue;
                 }
                 default:

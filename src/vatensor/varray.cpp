@@ -52,19 +52,15 @@ va::VScalar va::VArray::get_scalar(const axes_type &index) const {
     }, to_compute_variant());
 }
 
-void va::VArray::fill(const VScalar value) {
-    auto compute_variant = to_compute_variant();
-    va::assign(compute_variant, value);
-}
-
-void va::VArray::set_with_array(const VArray& value) {
-    auto compute_variant = to_compute_variant();
-    va::assign(compute_variant, value.to_compute_variant());
-}
-
 va::ComputeVariant va::VArray::to_compute_variant() const {
     return std::visit([this](const auto& store) -> ComputeVariant {
         return va::to_compute_variant(store, *this);
+    }, store);
+}
+
+va::ComputeVariant va::VArray::to_compute_variant(const xt::xstrided_slice_vector &slices) const {
+    return std::visit([this, slices](const auto& store) -> ComputeVariant {
+        return va::to_compute_variant(store, *this, slices);
     }, store);
 }
 

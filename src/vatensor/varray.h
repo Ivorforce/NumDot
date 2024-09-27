@@ -177,7 +177,7 @@ namespace va {
             store,
             store->shape(),
             store->strides(),
-            0,
+            store->data_offset(),  // Should be 0, but you know...
             store->layout()
         };
     }

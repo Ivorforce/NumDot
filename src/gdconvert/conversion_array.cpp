@@ -284,7 +284,7 @@ va::VArray array_as_varray(const Array& input_array) {
                     auto packed = PackedFloat64Array(array_element);
                     va::assign(
                         compute,
-                        adapt_c_array(reinterpret_cast<double*>(packed.ptrw()), { static_cast<std::size_t>(packed.size()) })
+                        adapt_c_array(packed.ptrw(), { static_cast<std::size_t>(packed.size()) })
                     );
                     continue;
                 }
@@ -293,7 +293,7 @@ va::VArray array_as_varray(const Array& input_array) {
                     auto packed = PackedVector2Array(array_element);
                     va::assign(
                         compute,
-                        adapt_c_array(reinterpret_cast<double*>(packed.ptrw()), { static_cast<std::size_t>(packed.size()), 2 })
+                        adapt_c_array(&packed.ptrw()[0].coord[0], { static_cast<std::size_t>(packed.size()), 2 })
                     );
                     continue;
                 }
@@ -302,7 +302,7 @@ va::VArray array_as_varray(const Array& input_array) {
                     auto packed = PackedVector3Array(array_element);
                     va::assign(
                         compute,
-                        adapt_c_array(reinterpret_cast<double*>(packed.ptrw()), { static_cast<std::size_t>(packed.size()), 3 })
+                        adapt_c_array(&packed.ptrw()[0].coord[0], { static_cast<std::size_t>(packed.size()), 3 })
                     );
                     continue;
                 }
@@ -311,7 +311,7 @@ va::VArray array_as_varray(const Array& input_array) {
                     auto packed = PackedVector4Array(array_element);
                     va::assign(
                         compute,
-                        adapt_c_array(reinterpret_cast<double*>(packed.ptrw()), { static_cast<std::size_t>(packed.size()), 4 })
+                        adapt_c_array(&packed.ptrw()[0].components[0], { static_cast<std::size_t>(packed.size()), 4 })
                     );
                     continue;
                 }
@@ -320,7 +320,7 @@ va::VArray array_as_varray(const Array& input_array) {
                     auto packed = PackedColorArray(array_element);
                     va::assign(
                         compute,
-                        adapt_c_array(reinterpret_cast<double*>(packed.ptrw()), { static_cast<std::size_t>(packed.size()), 4 })
+                        adapt_c_array(&packed.ptrw()[0].components[0], { static_cast<std::size_t>(packed.size()), 4 })
                     );
                     continue;
                 }

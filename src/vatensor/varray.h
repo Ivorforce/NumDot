@@ -40,7 +40,7 @@ namespace va {
         DTypeMax
     };
 
-    using VConstant = std::variant<
+    using VScalar = std::variant<
         bool,
         float_t,
         double_t,
@@ -120,13 +120,14 @@ namespace va {
 
         // TODO Can probably change these to subscript syntax
         [[nodiscard]] VArray slice(const xt::xstrided_slice_vector& slices) const;
-        void fill(VConstant value);
+        [[nodiscard]] VScalar get_scalar(const axes_type& index) const;
+        void fill(VScalar value);
         void set_with_array(const VArray& value);
 
         [[nodiscard]] ComputeVariant to_compute_variant() const;
         [[nodiscard]] size_t size_of_array_in_bytes() const;
 
-        [[nodiscard]] VConstant to_single_value() const;
+        [[nodiscard]] VScalar to_single_value() const;
 
         explicit operator bool() const;
         explicit operator int64_t() const;
@@ -182,7 +183,7 @@ namespace va {
     }
 
     template <typename V>
-    static VArray from_constant(const V value) {
+    static VArray from_scalar(const V value) {
         return {
             std::make_shared<xt::xarray<V>>(value),
             {},
@@ -192,7 +193,7 @@ namespace va {
         };
     }
 
-    VArray from_constant_variant(VConstant constant);
+    VArray from_scalar_variant(VScalar scalar);
 
     template <typename V, typename S>
     static VArray from_surrogate(V&& store, const S& surrogate) {
@@ -205,18 +206,18 @@ namespace va {
         };
     }
 
-    VConstant dtype_to_variant(DType dtype);
-    DType variant_to_dtype(VConstant dtype);
+    VScalar dtype_to_variant(DType dtype);
+    DType variant_to_dtype(VScalar dtype);
 
     size_t size_of_dtype_in_bytes(DType dtype);
 
-    VConstant constant_to_dtype(VConstant v, DType dtype);
+    VScalar scalar_to_dtype(VScalar v, DType dtype);
 
     DType dtype_common_type(DType a, DType b);
 
     // TODO Can probably just be static_cast override or some such.
     template <typename V>
-    V constant_to_type(VConstant v) {
+    V scalar_to_type(VScalar v) {
         return std::visit([](auto v) { return static_cast<V>(v); }, v);
     }
 }

@@ -18,7 +18,7 @@
 // 	}
 // };
 
-va::VConstant va::reduce_dot(const VArray &a, const VArray &b) {
+va::VScalar va::reduce_dot(const VArray &a, const VArray &b) {
 	std::optional<va::VArray> prod_cache;
 	va::multiply(&prod_cache, a, b);
 	return sum(prod_cache.value());

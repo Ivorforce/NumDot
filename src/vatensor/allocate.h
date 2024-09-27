@@ -5,7 +5,7 @@
 #include "varray.h"
 
 namespace va {
-    VArray full(VConstant fill_value, shape_type shape);
+    VArray full(VScalar fill_value, shape_type shape);
     VArray empty(DType dtype, shape_type shape);
 
     VArray copy_as_dtype(const VArray& other, DType dtype);

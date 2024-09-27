@@ -49,8 +49,8 @@ namespace va {
         // We may not be able to store them. This is not the best way to go about it
         // (as incompatible types COULD be less than the supported ones, prompting us to upcast), but it's good enough for now.
         using RNatural = typename std::decay_t<decltype(result)>::value_type;
-        using RStorable = compatible_type_or_64_bit_t<RNatural, VConstant>;
-        using OStorable = compatible_type_or_64_bit_t<OutputType, VConstant>;
+        using RStorable = compatible_type_or_64_bit_t<RNatural, VScalar>;
+        using OStorable = compatible_type_or_64_bit_t<OutputType, VScalar>;
 
         std::visit([&result](auto& target) {
             using PtrType = std::decay_t<decltype(target)>;

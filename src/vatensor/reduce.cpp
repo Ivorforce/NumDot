@@ -24,11 +24,11 @@ using namespace xt;
 XTENSOR_REDUCER_FUNCTION(va_any, xt::detail::logical_or, bool, true)
 XTENSOR_REDUCER_FUNCTION(va_all, xt::detail::logical_and, bool, false)
 
-VConstant va::sum(const VArray &array) {
+VScalar va::sum(const VArray &array) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
-	return vreduce<promote::num_common_type, VConstant>(
+	return vreduce<promote::num_common_type, VScalar>(
 		REDUCER_LAMBDA(xt::sum),
 		array.to_compute_variant()
 	);
@@ -46,11 +46,11 @@ void va::sum(VArrayTarget target, const VArray& array, const axes_type &axes) {
 #endif
 }
 
-VConstant va::prod(const VArray &array) {
+VScalar va::prod(const VArray &array) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
-	return vreduce<promote::num_common_at_least_int32, VConstant>(
+	return vreduce<promote::num_common_at_least_int32, VScalar>(
 		REDUCER_LAMBDA(xt::prod),
 		array.to_compute_variant()
 	);
@@ -68,11 +68,11 @@ void va::prod(VArrayTarget target, const VArray& array, const axes_type &axes) {
 #endif
 }
 
-VConstant va::mean(const VArray &array) {
+VScalar va::mean(const VArray &array) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
-	return vreduce<promote::num_matching_float_or_default<double_t>, VConstant>(
+	return vreduce<promote::num_matching_float_or_default<double_t>, VScalar>(
 		REDUCER_LAMBDA(xt::mean),
 		array.to_compute_variant()
 	);
@@ -90,11 +90,11 @@ void va::mean(VArrayTarget target, const VArray& array, const axes_type &axes) {
 #endif
 }
 
-VConstant va::var(const VArray &array) {
+VScalar va::var(const VArray &array) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
-	return vreduce<promote::num_matching_float_or_default<double_t>, VConstant>(
+	return vreduce<promote::num_matching_float_or_default<double_t>, VScalar>(
 		REDUCER_LAMBDA(xt::variance),
 		array.to_compute_variant()
 	);
@@ -112,11 +112,11 @@ void va::var(VArrayTarget target, const VArray& array, const axes_type &axes) {
 #endif
 }
 
-VConstant va::std(const VArray &array) {
+VScalar va::std(const VArray &array) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
-	return vreduce<promote::num_matching_float_or_default<double_t>, VConstant>(
+	return vreduce<promote::num_matching_float_or_default<double_t>, VScalar>(
 		REDUCER_LAMBDA(xt::stddev),
 		array.to_compute_variant()
 	);
@@ -134,11 +134,11 @@ void va::std(VArrayTarget target, const VArray& array, const axes_type &axes) {
 #endif
 }
 
-VConstant va::max(const VArray &array) {
+VScalar va::max(const VArray &array) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
-	return vreduce<promote::num_common_type, VConstant>(
+	return vreduce<promote::num_common_type, VScalar>(
 		REDUCER_LAMBDA(xt::amax),
 		array.to_compute_variant()
 	);
@@ -156,11 +156,11 @@ void va::max(VArrayTarget target, const VArray& array, const axes_type &axes) {
 #endif
 }
 
-VConstant va::min(const VArray &array) {
+VScalar va::min(const VArray &array) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
-	return vreduce<promote::num_common_type, VConstant>(
+	return vreduce<promote::num_common_type, VScalar>(
 		REDUCER_LAMBDA(xt::amin),
 		array.to_compute_variant()
 	);
@@ -178,11 +178,11 @@ void va::min(VArrayTarget target, const VArray& array, const axes_type &axes) {
 #endif
 }
 
-VConstant va::norm_l0(const VArray &array) {
+VScalar va::norm_l0(const VArray &array) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
-	return vreduce<promote::num_matching_float_or_default<double_t>, VConstant>(
+	return vreduce<promote::num_matching_float_or_default<double_t>, VScalar>(
 		REDUCER_LAMBDA(xt::norm_l0),
 		array.to_compute_variant()
 	);
@@ -200,11 +200,11 @@ void va::norm_l0(VArrayTarget target, const VArray &array, const axes_type &axes
 #endif
 }
 
-VConstant va::norm_l1(const VArray &array) {
+VScalar va::norm_l1(const VArray &array) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
-	return vreduce<promote::num_matching_float_or_default<double_t>, VConstant>(
+	return vreduce<promote::num_matching_float_or_default<double_t>, VScalar>(
 		REDUCER_LAMBDA(xt::norm_l1),
 		array.to_compute_variant()
 	);
@@ -222,11 +222,11 @@ void va::norm_l1(VArrayTarget target, const VArray &array, const axes_type &axes
 #endif
 }
 
-VConstant va::norm_l2(const VArray &array) {
+VScalar va::norm_l2(const VArray &array) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
-	return vreduce<promote::num_matching_float_or_default<double_t>, VConstant>(
+	return vreduce<promote::num_matching_float_or_default<double_t>, VScalar>(
 		REDUCER_LAMBDA(xt::norm_l2),
 		array.to_compute_variant()
 	);
@@ -244,11 +244,11 @@ void va::norm_l2(VArrayTarget target, const VArray &array, const axes_type &axes
 #endif
 }
 
-VConstant va::norm_linf(const VArray &array) {
+VScalar va::norm_linf(const VArray &array) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
-	return vreduce<promote::num_matching_float_or_default<double_t>, VConstant>(
+	return vreduce<promote::num_matching_float_or_default<double_t>, VScalar>(
 		REDUCER_LAMBDA(xt::norm_linf),
 		array.to_compute_variant()
 	);

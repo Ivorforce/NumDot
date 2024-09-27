@@ -263,8 +263,7 @@ Ref<NDArray> NDArray::get(const Variant **args, GDExtensionInt arg_count, GDExte
 
 bool NDArray::get_bool(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
 	try {
-		const xt::xstrided_slice_vector sv = variants_to_slice_vector(args, arg_count, error);
-		return static_cast<bool>(array.slice(sv));
+		return va::scalar_to_type<bool>(array.get_scalar(variants_to_axes(args, arg_count, error)));
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG(0, error.what());
@@ -273,8 +272,7 @@ bool NDArray::get_bool(const Variant **args, GDExtensionInt arg_count, GDExtensi
 
 int64_t NDArray::get_int(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
 	try {
-		const xt::xstrided_slice_vector sv = variants_to_slice_vector(args, arg_count, error);
-		return static_cast<int64_t>(array.slice(sv));
+		return va::scalar_to_type<int64_t>(array.get_scalar(variants_to_axes(args, arg_count, error)));
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG(0, error.what());
@@ -283,8 +281,7 @@ int64_t NDArray::get_int(const Variant **args, GDExtensionInt arg_count, GDExten
 
 double_t NDArray::get_float(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
 	try {
-		const xt::xstrided_slice_vector sv = variants_to_slice_vector(args, arg_count, error);
-		return static_cast<double_t>(array.slice(sv));
+		return va::scalar_to_type<double_t>(array.get_scalar(variants_to_axes(args, arg_count, error)));
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG(0, error.what());

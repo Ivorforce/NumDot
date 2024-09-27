@@ -11,7 +11,7 @@
 
 using namespace va;
 
-VArray empty(VConstant type, shape_type shape) {
+VArray empty(VScalar type, shape_type shape) {
 #ifdef NUMDOT_DISABLE_ALLOCATION_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_ALLOCATION_FUNCTIONS to enable it.");
 #else
@@ -23,7 +23,7 @@ VArray empty(VConstant type, shape_type shape) {
 #endif
 }
 
-VArray va::full(const VConstant fill_value, shape_type shape) {
+VArray va::full(const VScalar fill_value, shape_type shape) {
 #ifdef NUMDOT_DISABLE_ALLOCATION_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_ALLOCATION_FUNCTIONS to enable it.");
 #else

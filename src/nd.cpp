@@ -179,11 +179,11 @@ inline Ref<NDArray> reduction(Visitor&& visitor, VisitorNoaxes&& visitor_noaxes,
 		if (axes.get_type() == Variant::NIL) {
 			const auto result = std::forward<VisitorNoaxes>(visitor_noaxes)(variant_as_array(args)...);
 
-			if constexpr (std::is_same_v<std::decay_t<decltype(result)>, va::VConstant>) {
-				return { memnew(NDArray(va::from_constant_variant(result))) };
+			if constexpr (std::is_same_v<std::decay_t<decltype(result)>, va::VScalar>) {
+				return { memnew(NDArray(va::from_scalar_variant(result))) };
 			}
 			else {
-				return { memnew(NDArray(va::from_constant(result))) };
+				return { memnew(NDArray(va::from_scalar(result))) };
 			}
 		}
 
@@ -310,17 +310,17 @@ Ref<NDArray> nd::full(const Variant& shape, const Variant& fill_value, nd::DType
 		switch (fill_value.get_type()) {
 			case Variant::BOOL: {
 				if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Bool;
-				const auto value = va::constant_to_dtype(static_cast<bool>(fill_value), dtype);
+				const auto value = va::scalar_to_dtype(static_cast<bool>(fill_value), dtype);
 				return {memnew(NDArray(va::full(value, shape_array)))};
 			}
 			case Variant::INT: {
 				if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Int64;
-				const auto value = va::constant_to_dtype(static_cast<int64_t>(fill_value), dtype);
+				const auto value = va::scalar_to_dtype(static_cast<int64_t>(fill_value), dtype);
 				return {memnew(NDArray(va::full(value, shape_array)))};
 			}
 			case Variant::FLOAT: {
 				if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Float64;
-				const auto value = va::constant_to_dtype(static_cast<double_t>(fill_value), dtype);
+				const auto value = va::scalar_to_dtype(static_cast<double_t>(fill_value), dtype);
 				return {memnew(NDArray(va::full(value, shape_array)))};
 			}
 			default: {

@@ -198,19 +198,6 @@ void find_shape_and_dtype(va::shape_type& shape, va::DType &dtype, const Array& 
     }
 }
 
-template <typename VectorType>
-void varray_assign_cvector(const VectorType& coord, xt::xstrided_slice_vector& element_idx, va::VArray& varray) {
-    element_idx.emplace_back(0);
-    auto compute = varray.to_compute_variant(element_idx);
-    va::assign(compute, coord[0]);
-
-    for (size_t i = 1; i < std::size(coord); i++) {
-        element_idx.back() = i;
-        compute = varray.to_compute_variant(element_idx);
-        va::assign(compute, coord[i]);
-    }
-}
-
 va::VArray array_as_varray(const Array& input_array) {
     va::shape_type shape;
     va::DType dtype = va::DTypeMax;
@@ -342,38 +329,66 @@ va::VArray array_as_varray(const Array& input_array) {
                     continue;
                 }
                 case Variant::VECTOR2I: {
-                    const Vector2i vector = array_element;
-                    varray_assign_cvector(vector.coord, element_idx, varray);
+                    auto compute = varray.to_compute_variant(element_idx);
+                    Vector2i vector = array_element;
+                    va::assign(
+                        compute,
+                        adapt_c_array(&vector.coord[0], { std::size(vector.coord) })
+                    );
                     continue;
                 }
                 case Variant::VECTOR3I: {
-                    const Vector3i vector = array_element;
-                    varray_assign_cvector(vector.coord, element_idx, varray);
+                    auto compute = varray.to_compute_variant(element_idx);
+                    Vector3i vector = array_element;
+                    va::assign(
+                        compute,
+                        adapt_c_array(&vector.coord[0], { std::size(vector.coord) })
+                    );
                     continue;
                 }
                 case Variant::VECTOR4I: {
-                    const Vector4i vector = array_element;
-                    varray_assign_cvector(vector.coord, element_idx, varray);
+                    auto compute = varray.to_compute_variant(element_idx);
+                    Vector4i vector = array_element;
+                    va::assign(
+                        compute,
+                        adapt_c_array(&vector.coord[0], { std::size(vector.coord) })
+                    );
                     continue;
                 }
                 case Variant::VECTOR2: {
-                    const Vector2 vector = array_element;
-                    varray_assign_cvector(vector.coord, element_idx, varray);
+                    auto compute = varray.to_compute_variant(element_idx);
+                    Vector2 vector = array_element;
+                    va::assign(
+                        compute,
+                        adapt_c_array(&vector.coord[0], { std::size(vector.coord) })
+                    );
                     continue;
                 }
                 case Variant::VECTOR3: {
-                    const Vector3 vector = array_element;
-                    varray_assign_cvector(vector.coord, element_idx, varray);
+                    auto compute = varray.to_compute_variant(element_idx);
+                    Vector3 vector = array_element;
+                    va::assign(
+                        compute,
+                        adapt_c_array(&vector.coord[0], { std::size(vector.coord) })
+                    );
                     continue;
                 }
                 case Variant::VECTOR4: {
-                    const Vector4 vector = array_element;
-                    varray_assign_cvector(vector.components, element_idx, varray);
+                    auto compute = varray.to_compute_variant(element_idx);
+                    Vector4 vector = array_element;
+                    va::assign(
+                        compute,
+                        adapt_c_array(&vector.components[0], { std::size(vector.components) })
+                    );
                     continue;
                 }
                 case Variant::COLOR: {
-                    const Color vector = array_element;
-                    varray_assign_cvector(vector.components, element_idx, varray);
+                    auto compute = varray.to_compute_variant(element_idx);
+                    Color vector = array_element;
+                    va::assign(
+                        compute,
+                        adapt_c_array(&vector.components[0], { std::size(vector.components) })
+                    );
                     continue;
                 }
                 default:

@@ -18,6 +18,11 @@ If you find your mathematical operation is running too slow, consider these step
 Optimizing NumDot Use
 ---------------------
 
+.. contents:: Table of Contents
+   :depth: 2
+   :local:
+   :backlinks: none
+
 Vectorization
 ^^^^^^^^^^^^^
 

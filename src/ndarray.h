@@ -68,6 +68,13 @@ public:
 	[[nodiscard]] int64_t to_int() const;
 	[[nodiscard]] double_t to_float() const;
 
+    [[nodiscard]] Vector2 to_vector2() const;
+    [[nodiscard]] Vector3 to_vector3() const;
+    [[nodiscard]] Vector4 to_vector4() const;
+    [[nodiscard]] Vector2i to_vector2i() const;
+    [[nodiscard]] Vector3i to_vector3i() const;
+    [[nodiscard]] Vector4i to_vector4i() const;
+
 	[[nodiscard]] PackedFloat32Array to_packed_float32_array() const;
 	[[nodiscard]] PackedFloat64Array to_packed_float64_array() const;
 	[[nodiscard]] PackedByteArray to_packed_byte_array() const;

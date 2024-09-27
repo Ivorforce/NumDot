@@ -18,12 +18,17 @@
 #include "xtensor/xshape.hpp"           // for dynamic_shape
 #include "xtensor/xstrided_view.hpp"    // for strided_view, xstrided_slice_...
 #include "xtensor/xtensor_forward.hpp"  // for xarray
+#include "xtensor/xutils.hpp"  // for get_strides_t
 
 namespace va {
-    using shape_type = xt::dynamic_shape<std::size_t>;
-    using strides_type = xt::dynamic_shape<std::ptrdiff_t>;
-    using axes_type = strides_type;
+    // We should be using the same default types as xarray does, so we know for sure the ones we create /
+    //  pass around are the ones we need in the end.
     using size_type = std::size_t;
+    // Refer to xarray
+    using shape_type = xt::dynamic_shape<size_type>;
+    // Refer to xarray xcontainer_inner_types.
+    using strides_type = xt::get_strides_t<shape_type>;
+    using axes_type = strides_type;
 
     enum DType {
         Bool,
@@ -59,7 +64,11 @@ namespace va {
 
     // P&& pointer, typename A::size_type size, O ownership, SC&& shape, SS&& strides, const A& alloc = A()
     template <typename T>
-    using compute_case = xt::xarray_adaptor<xt::xbuffer_adaptor<T*>, xt::layout_type::dynamic>;
+    using compute_case = xt::xarray_adaptor<
+        xt::xbuffer_adaptor<T*, xt::no_ownership>,
+        xt::layout_type::dynamic,
+        shape_type
+    >;
 
     using ComputeVariant = std::variant<
         compute_case<bool>,

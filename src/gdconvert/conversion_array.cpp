@@ -36,19 +36,6 @@
 #include "xtensor/xtensor_forward.hpp"                 // for xarray
 #include "xtl/xiterator_base.hpp"                      // for operator+
 
-template <typename C, typename T>
-va::VArray packed_as_xarray(const T shape_array) {
-    auto size = static_cast<std::size_t>(shape_array.size());
-
-    xt::static_shape<std::size_t, 1> shape_of_shape = { size };
-
-    auto store = std::make_shared<xt::xarray<C>>(
-        xt::xarray<C>(xt::adapt(shape_array.ptr(), size, xt::no_ownership(), shape_of_shape))
-    );
-
-    return va::from_store(store);
-}
-
 void add_size_at_idx(va::shape_type& shape, const std::size_t idx, const std::size_t value) {
     if (shape.size() > idx) {
         const auto current_dim_size = shape[idx];
@@ -230,27 +217,47 @@ va::VArray array_as_varray(const Array& input_array) {
                 }
                 case Variant::PACKED_BYTE_ARRAY: {
                     auto compute = varray.to_compute_variant(element_idx);
-                    va::assign(compute, packed_as_xarray<uint8_t>(PackedByteArray(array_element)).to_compute_variant());
+                    auto packed = PackedByteArray(array_element);
+                    va::assign(
+                        compute,
+                        adapt_c_array(packed.ptrw(), { static_cast<std::size_t>(packed.size()) })
+                    );
                     continue;
                 }
                 case Variant::PACKED_INT32_ARRAY: {
                     auto compute = varray.to_compute_variant(element_idx);
-                    va::assign(compute, packed_as_xarray<uint8_t>(PackedInt32Array(array_element)).to_compute_variant());
+                    auto packed = PackedInt32Array(array_element);
+                    va::assign(
+                        compute,
+                        adapt_c_array(packed.ptrw(), { static_cast<std::size_t>(packed.size()) })
+                    );
                     continue;
                 }
                 case Variant::PACKED_INT64_ARRAY: {
                     auto compute = varray.to_compute_variant(element_idx);
-                    va::assign(compute, packed_as_xarray<uint8_t>(PackedInt64Array(array_element)).to_compute_variant());
+                    auto packed = PackedInt64Array(array_element);
+                    va::assign(
+                        compute,
+                        adapt_c_array(packed.ptrw(), { static_cast<std::size_t>(packed.size()) })
+                    );
                     continue;
                 }
                 case Variant::PACKED_FLOAT32_ARRAY: {
                     auto compute = varray.to_compute_variant(element_idx);
-                    va::assign(compute, packed_as_xarray<uint8_t>(PackedFloat32Array(array_element)).to_compute_variant());
+                    auto packed = PackedFloat32Array(array_element);
+                    va::assign(
+                        compute,
+                        adapt_c_array(packed.ptrw(), { static_cast<std::size_t>(packed.size()) })
+                    );
                     continue;
                 }
                 case Variant::PACKED_FLOAT64_ARRAY: {
                     auto compute = varray.to_compute_variant(element_idx);
-                    va::assign(compute, packed_as_xarray<uint8_t>(PackedFloat64Array(array_element)).to_compute_variant());
+                    auto packed = PackedFloat64Array(array_element);
+                    va::assign(
+                        compute,
+                        adapt_c_array(reinterpret_cast<double*>(packed.ptrw()), { static_cast<std::size_t>(packed.size()) })
+                    );
                     continue;
                 }
                 case Variant::VECTOR2I: {
@@ -383,16 +390,36 @@ va::VArray variant_as_array(const Variant& array) {
         case Variant::FLOAT: {
             return va::from_store(std::make_shared<xt::xarray<double_t>>(xt::xarray<double_t>(array)));
         }
-        case Variant::PACKED_BYTE_ARRAY:
-            return packed_as_xarray<uint8_t>(PackedByteArray(array));
-        case Variant::PACKED_INT32_ARRAY:
-            return packed_as_xarray<int32_t>(PackedInt32Array(array));
-        case Variant::PACKED_INT64_ARRAY:
-            return packed_as_xarray<int64_t>(PackedInt64Array(array));
-        case Variant::PACKED_FLOAT32_ARRAY:
-            return packed_as_xarray<float_t>(PackedFloat32Array(array));
-        case Variant::PACKED_FLOAT64_ARRAY:
-            return packed_as_xarray<double_t>(PackedFloat64Array(array));
+        case Variant::PACKED_BYTE_ARRAY: {
+            const auto packed = PackedByteArray(array);
+            return va::from_store(std::make_shared<xt::xarray<double_t>>(xt::xarray<double_t>(
+                adapt_c_array(packed.ptr(), { static_cast<std::size_t>(packed.size()) })
+            )));
+        }
+        case Variant::PACKED_INT32_ARRAY: {
+            const auto packed = PackedInt32Array(array);
+            return va::from_store(std::make_shared<xt::xarray<double_t>>(xt::xarray<double_t>(
+                adapt_c_array(packed.ptr(), { static_cast<std::size_t>(packed.size()) })
+            )));
+        }
+        case Variant::PACKED_INT64_ARRAY: {
+            const auto packed = PackedInt64Array(array);
+            return va::from_store(std::make_shared<xt::xarray<double_t>>(xt::xarray<double_t>(
+                adapt_c_array(packed.ptr(), { static_cast<std::size_t>(packed.size()) })
+            )));
+        }
+        case Variant::PACKED_FLOAT32_ARRAY: {
+            const auto packed = PackedFloat32Array(array);
+            return va::from_store(std::make_shared<xt::xarray<double_t>>(xt::xarray<double_t>(
+                adapt_c_array(packed.ptr(), { static_cast<std::size_t>(packed.size()) })
+            )));
+        }
+        case Variant::PACKED_FLOAT64_ARRAY: {
+            const auto packed = PackedFloat64Array(array);
+            return va::from_store(std::make_shared<xt::xarray<double_t>>(xt::xarray<double_t>(
+                adapt_c_array(packed.ptr(), { static_cast<std::size_t>(packed.size()) })
+            )));
+        }
         case Variant::VECTOR2I: {
             auto vector = Vector2i(array);
             return va::from_store(std::make_shared<xt::xarray<int32_t>>(xt::xarray<int32_t>(

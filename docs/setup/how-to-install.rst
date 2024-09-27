@@ -27,4 +27,4 @@ You may want to manually build NumDot, for example to:
 - **Adjust Optimization Options:** You can optimize your build for different targets, e.g. speed, size and compatibility.
 - **Custom Extensions:** You can extend NumDot's functionality by interfacing with `xtensor <http://xtensor.readthedocs.io>`__ directly, substantially improving performance of individual computations.
 
-To get started with manual builds, continue reading: :ref:`Custom Builds<doc_custom_builds>`
+To get started with manual builds, continue reading: :ref:`Custom Builds<doc_custom_build_setup>`

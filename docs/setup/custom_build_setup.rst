@@ -1,7 +1,7 @@
-.. _doc_custom_builds:
+.. _doc_custom_build_setup:
 
-Custom Builds
-=============
+Custom Build Setup Guide
+===========================
 
 To build NumDot yourself, you will need basic proficiency with ``git`` and the command line. You will also need to have `Scons <https://scons.org>`_ installed.
 
@@ -56,7 +56,7 @@ You should now be able to open the Demo project (``demo`` in the repository) in 
 Making changes
 --------------
 
-You've set up your repository, and you've managed to test NumDot in the demo. Great! Now comes the most interesting part: Making changes. This is documented in :ref:`Optimization Reference<doc_optimization_reference>`
+You've set up your repository, and you've managed to test NumDot in the demo. Great! Now comes the most interesting part: Making changes. This is documented in :ref:`Custom Build Reference<doc_custom_build_reference>`
 
 Making a cross-platform build
 -----------------------------

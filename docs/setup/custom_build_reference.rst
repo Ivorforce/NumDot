@@ -1,9 +1,9 @@
-.. _doc_optimization_reference:
+.. _doc_custom_build_reference:
 
-Optimization Reference
+Custom Build Reference
 ======================
 
-This article describes the ways you can change the NumDot to optimize it differently. If you're here to make a :ref:`custom build<doc_custom_builds>`, please read that article first.
+This article describes the ways you can change the NumDot to optimize it differently. If you're here to make a :ref:`custom build<doc_custom_build_setup>`, please read that article first.
 
 Scons Options
 -------------

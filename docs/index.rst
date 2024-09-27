@@ -34,8 +34,8 @@ Table of Contents
 
    setup/how-to-install
    setup/changelog
-   setup/custom_builds
-   setup/optimization_reference
+   setup/custom_build_setup
+   setup/custom_build_reference
    setup/alternatives
 
 .. toctree::
@@ -47,6 +47,7 @@ Table of Contents
    how-to-use/tensors
    how-to-use/godot-interop
    how-to-use/numpy-xtensor-numdot
+   how-to-use/math_performance
 
 .. toctree::
    :maxdepth: 2

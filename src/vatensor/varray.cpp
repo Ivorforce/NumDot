@@ -45,7 +45,7 @@ va::VArray va::VArray::slice(const xt::xstrided_slice_vector &slices) const {
 
 va::VScalar va::VArray::get_scalar(const axes_type &index) const {
     // xtensor actually checks later, too, but it just pads with 0 rather than throwing.
-    if (index.size() != dimension()) throw std::invalid_argument("invalid dimension for index");
+    if (index.size() != dimension()) throw std::runtime_error("invalid dimension for index");
 
     return std::visit([&index](auto&& carray) -> VScalar {
         return std::forward<decltype(carray)>(carray)[index];

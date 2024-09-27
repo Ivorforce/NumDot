@@ -70,7 +70,7 @@ void add_size_at_idx(va::shape_type& shape, const std::size_t idx, const std::si
         shape.push_back(value);
     }
     else {
-        throw std::invalid_argument("index out of range");
+        throw std::runtime_error("index out of range");
     }
 }
 

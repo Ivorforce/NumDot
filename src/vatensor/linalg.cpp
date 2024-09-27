@@ -33,7 +33,7 @@ void va::reduce_dot(VArrayTarget target, const VArray &a, const VArray &b, const
 	// The upside to the above implementation is that no additional code is generated.
 	// But it's also a bit slower than if it was fully lazy and accelerated, probably.
 	// va::xreduction_inplace<promote::num_matching_float_or_default<double_t>>(
-	// 	NormL0{}, axes, target, array.to_compute_variant()
+	// 	NormL0{}, axes, target, array.compute_read()
 	// );
 }
 

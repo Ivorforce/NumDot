@@ -13,7 +13,7 @@ va::VArray variant_as_array(const Variant& array);
 va::VArray variant_as_array(const Variant& array, va::DType dtype, bool copy);
 
 template <typename T>
-void fill_c_array_flat(T* target, const va::ComputeVariant &array) {
+void fill_c_array_flat(T* target, const va::VRead &array) {
     std::visit([target](auto &carray) {
         std::copy(carray.begin(), carray.end(), target);
     }, array);

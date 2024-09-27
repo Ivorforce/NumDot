@@ -326,8 +326,8 @@ Ref<NDArray> nd::full(const Variant& shape, const Variant& fill_value, nd::DType
 			}
 			default: {
 				va::VArray result = va::empty(dtype, shape_array);
-				auto compute = result.to_compute_variant();
-				va::assign(compute, variant_as_array(fill_value).to_compute_variant());
+				auto compute = result.compute_write();
+				va::assign(compute, variant_as_array(fill_value).compute_read());
 				return {memnew(NDArray(result))};
 			}
 		}

@@ -30,7 +30,7 @@ VScalar va::sum(const VArray &array) {
 #else
 	return vreduce<promote::num_common_type, VScalar>(
 		REDUCER_LAMBDA(xt::sum),
-		array.to_compute_variant()
+		array.compute_read()
 	);
 #endif
 }
@@ -41,7 +41,7 @@ void va::sum(VArrayTarget target, const VArray& array, const axes_type &axes) {
 #else
 	va::xoperation_inplace<promote::num_common_type>(
 		REDUCER_LAMBDA_AXES(axes, xt::sum),
-		target, array.to_compute_variant()
+		target, array.compute_read()
 	);
 #endif
 }
@@ -52,7 +52,7 @@ VScalar va::prod(const VArray &array) {
 #else
 	return vreduce<promote::num_common_at_least_int32, VScalar>(
 		REDUCER_LAMBDA(xt::prod),
-		array.to_compute_variant()
+		array.compute_read()
 	);
 #endif
 }
@@ -63,7 +63,7 @@ void va::prod(VArrayTarget target, const VArray& array, const axes_type &axes) {
 #else
 	va::xoperation_inplace<promote::num_common_at_least_int32>(
 		REDUCER_LAMBDA_AXES(axes, xt::prod),
-		target, array.to_compute_variant()
+		target, array.compute_read()
 	);
 #endif
 }
@@ -74,7 +74,7 @@ VScalar va::mean(const VArray &array) {
 #else
 	return vreduce<promote::num_matching_float_or_default<double_t>, VScalar>(
 		REDUCER_LAMBDA(xt::mean),
-		array.to_compute_variant()
+		array.compute_read()
 	);
 #endif
 }
@@ -85,7 +85,7 @@ void va::mean(VArrayTarget target, const VArray& array, const axes_type &axes) {
 #else
 	va::xoperation_inplace<promote::num_matching_float_or_default<double_t>>(
 		REDUCER_LAMBDA_AXES(axes, xt::mean),
-		target, array.to_compute_variant()
+		target, array.compute_read()
 	);
 #endif
 }
@@ -96,7 +96,7 @@ VScalar va::var(const VArray &array) {
 #else
 	return vreduce<promote::num_matching_float_or_default<double_t>, VScalar>(
 		REDUCER_LAMBDA(xt::variance),
-		array.to_compute_variant()
+		array.compute_read()
 	);
 #endif
 }
@@ -107,7 +107,7 @@ void va::var(VArrayTarget target, const VArray& array, const axes_type &axes) {
 #else
 	va::xoperation_inplace<promote::num_matching_float_or_default<double_t>>(
 		REDUCER_LAMBDA_AXES(axes, xt::variance),
-		target, array.to_compute_variant()
+		target, array.compute_read()
 	);
 #endif
 }
@@ -118,7 +118,7 @@ VScalar va::std(const VArray &array) {
 #else
 	return vreduce<promote::num_matching_float_or_default<double_t>, VScalar>(
 		REDUCER_LAMBDA(xt::stddev),
-		array.to_compute_variant()
+		array.compute_read()
 	);
 #endif
 }
@@ -129,7 +129,7 @@ void va::std(VArrayTarget target, const VArray& array, const axes_type &axes) {
 #else
 	va::xoperation_inplace<promote::num_matching_float_or_default<double_t>>(
 		REDUCER_LAMBDA_AXES(axes, xt::stddev),
-		target, array.to_compute_variant()
+		target, array.compute_read()
 	);
 #endif
 }
@@ -140,7 +140,7 @@ VScalar va::max(const VArray &array) {
 #else
 	return vreduce<promote::num_common_type, VScalar>(
 		REDUCER_LAMBDA(xt::amax),
-		array.to_compute_variant()
+		array.compute_read()
 	);
 #endif
 }
@@ -151,7 +151,7 @@ void va::max(VArrayTarget target, const VArray& array, const axes_type &axes) {
 #else
 	va::xoperation_inplace<promote::num_common_type>(
 		REDUCER_LAMBDA_AXES(axes, xt::amax),
-		target, array.to_compute_variant()
+		target, array.compute_read()
 	);
 #endif
 }
@@ -162,7 +162,7 @@ VScalar va::min(const VArray &array) {
 #else
 	return vreduce<promote::num_common_type, VScalar>(
 		REDUCER_LAMBDA(xt::amin),
-		array.to_compute_variant()
+		array.compute_read()
 	);
 #endif
 }
@@ -173,7 +173,7 @@ void va::min(VArrayTarget target, const VArray& array, const axes_type &axes) {
 #else
 	va::xoperation_inplace<promote::num_common_type>(
 		REDUCER_LAMBDA_AXES(axes, xt::amin),
-		target, array.to_compute_variant()
+		target, array.compute_read()
 	);
 #endif
 }
@@ -184,7 +184,7 @@ VScalar va::norm_l0(const VArray &array) {
 #else
 	return vreduce<promote::num_matching_float_or_default<double_t>, VScalar>(
 		REDUCER_LAMBDA(xt::norm_l0),
-		array.to_compute_variant()
+		array.compute_read()
 	);
 #endif
 }
@@ -195,7 +195,7 @@ void va::norm_l0(VArrayTarget target, const VArray &array, const axes_type &axes
 #else
 	va::xoperation_inplace<promote::num_matching_float_or_default<double_t>>(
 		REDUCER_LAMBDA_AXES(axes, xt::norm_l0),
-		target, array.to_compute_variant()
+		target, array.compute_read()
 	);
 #endif
 }
@@ -206,7 +206,7 @@ VScalar va::norm_l1(const VArray &array) {
 #else
 	return vreduce<promote::num_matching_float_or_default<double_t>, VScalar>(
 		REDUCER_LAMBDA(xt::norm_l1),
-		array.to_compute_variant()
+		array.compute_read()
 	);
 #endif
 }
@@ -217,7 +217,7 @@ void va::norm_l1(VArrayTarget target, const VArray &array, const axes_type &axes
 #else
 	va::xoperation_inplace<promote::num_matching_float_or_default<double_t>>(
 		REDUCER_LAMBDA_AXES(axes, xt::norm_l1),
-		target, array.to_compute_variant()
+		target, array.compute_read()
 	);
 #endif
 }
@@ -228,7 +228,7 @@ VScalar va::norm_l2(const VArray &array) {
 #else
 	return vreduce<promote::num_matching_float_or_default<double_t>, VScalar>(
 		REDUCER_LAMBDA(xt::norm_l2),
-		array.to_compute_variant()
+		array.compute_read()
 	);
 #endif
 }
@@ -239,7 +239,7 @@ void va::norm_l2(VArrayTarget target, const VArray &array, const axes_type &axes
 #else
 	va::xoperation_inplace<promote::num_matching_float_or_default<double_t>>(
 		REDUCER_LAMBDA_AXES(axes, xt::norm_l2),
-		target, array.to_compute_variant()
+		target, array.compute_read()
 	);
 #endif
 }
@@ -250,7 +250,7 @@ VScalar va::norm_linf(const VArray &array) {
 #else
 	return vreduce<promote::num_matching_float_or_default<double_t>, VScalar>(
 		REDUCER_LAMBDA(xt::norm_linf),
-		array.to_compute_variant()
+		array.compute_read()
 	);
 #endif
 }
@@ -261,7 +261,7 @@ void va::norm_linf(VArrayTarget target, const VArray &array, const axes_type &ax
 #else
 	va::xoperation_inplace<promote::num_matching_float_or_default<double_t>>(
 		REDUCER_LAMBDA_AXES(axes, xt::norm_linf),
-		target, array.to_compute_variant()
+		target, array.compute_read()
 	);
 #endif
 }
@@ -272,7 +272,7 @@ bool va::all(const VArray &array) {
 #else
 	return vreduce<promote::bool_in_bool_out, bool>(
 		REDUCER_LAMBDA_NOECS(xt::all),
-		array.to_compute_variant()
+		array.compute_read()
 	);
 #endif
 }
@@ -283,7 +283,7 @@ void va::all(VArrayTarget target, const VArray &array, const axes_type &axes) {
 #else
 	va::xoperation_inplace<promote::bool_in_bool_out>(
 		REDUCER_LAMBDA_AXES(axes, va_all),
-		target, array.to_compute_variant()
+		target, array.compute_read()
 	);
 #endif
 }
@@ -294,7 +294,7 @@ bool va::any(const VArray &array) {
 #else
 	return vreduce<promote::bool_in_bool_out, bool>(
 		REDUCER_LAMBDA_NOECS(xt::any),
-		array.to_compute_variant()
+		array.compute_read()
 	);
 #endif
 }
@@ -305,7 +305,7 @@ void va::any(VArrayTarget target, const VArray &array, const axes_type &axes) {
 #else
 	va::xoperation_inplace<promote::bool_in_bool_out>(
 		REDUCER_LAMBDA_AXES(axes, va_any),
-		target, array.to_compute_variant()
+		target, array.compute_read()
 	);
 #endif
 }

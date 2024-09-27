@@ -56,7 +56,7 @@ namespace va {
             using PtrType = std::decay_t<decltype(target)>;
 
 #ifndef NUMDOT_COPY_FOR_ALL_INPLACE_OPERATIONS
-            if constexpr (std::is_same_v<PtrType, ComputeVariant *>) {
+            if constexpr (std::is_same_v<PtrType, VWrite *>) {
                 // Assign to compute case, broadcasting and casting if necessary.
                 if (std::visit([&result](auto& ctarget) {
                     using T = typename std::decay_t<decltype(ctarget)>::value_type;
@@ -100,8 +100,8 @@ namespace va {
         }
 
         template<typename... Args>
-        void operator()(const compute_case<Args>&... args) const {
-            using InputType = typename PromotionRule::template input_type<Args...>;
+        void operator()(const Args&... args) const {
+            using InputType = typename PromotionRule::template input_type<typename std::decay_t<Args>::value_type...>;
             using OutputType = typename PromotionRule::template output_type<InputType>;
 
             // Result of visitor invocation
@@ -128,8 +128,8 @@ namespace va {
         }
 
         template<typename... Args>
-        ReturnType operator()(const compute_case<Args>&... args) const {
-            using InputType = typename PromotionRule::template input_type<Args...>;
+        ReturnType operator()(const Args&... args) const {
+            using InputType = typename PromotionRule::template input_type<typename std::decay_t<Args>::value_type...>;
             using OutputType = typename PromotionRule::template output_type<InputType>;
 
             // Result of visitor invocation

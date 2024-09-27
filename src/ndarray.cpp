@@ -151,7 +151,7 @@ NDArray::NDArray() = default;
 NDArray::~NDArray() = default;
 
 String NDArray::_to_string() const {
-	return std::visit([](auto&& arg){ return xt_to_string(arg); }, array.to_compute_variant());
+	return std::visit([](auto&& arg){ return xt_to_string(arg); }, array.compute_read());
 }
 
 va::DType NDArray::dtype() const {
@@ -231,8 +231,8 @@ void NDArray::set(const Variant **args, GDExtensionInt arg_count, GDExtensionCal
 		const Variant &value = *args[0];
 		// todo don't need slices if arg_count == 1
 		auto compute = arg_count == 1
-			? array.to_compute_variant()
-			: array.to_compute_variant(variants_to_slice_vector(args + 1, arg_count - 1, error));
+			? array.compute_write()
+			: array.compute_write(variants_to_slice_vector(args + 1, arg_count - 1, error));
 
 		switch (value.get_type()) {
 			case Variant::BOOL:
@@ -247,7 +247,7 @@ void NDArray::set(const Variant **args, GDExtensionInt arg_count, GDExtensionCal
 			// TODO We could optimize more assignments of literals.
 			//  Just need to figure out how, ideally without duplicating code - as_array already does much type checking work.
 			default:
-				const auto a_ = variant_as_array(value).to_compute_variant();
+				const auto a_ = variant_as_array(value).compute_read();
 
 				va::assign(compute, a_);
 				return;
@@ -309,8 +309,7 @@ Vector2 NDArray::to_vector2() const {
     ERR_FAIL_COND_V_MSG(array.shape[0] != 2, {}, "array dimension must be size 2");
 
     Vector2 vector;
-    const auto compute_variant = array.to_compute_variant();
-    fill_c_array_flat(&vector.coord[0], compute_variant);
+    fill_c_array_flat(&vector.coord[0], array.compute_read());
 
     return vector;
 #endif
@@ -324,8 +323,7 @@ Vector3 NDArray::to_vector3() const{
     ERR_FAIL_COND_V_MSG(array.shape[0] != 3, {}, "array dimension must be size 3");
 
     Vector3 vector;
-    const auto compute_variant = array.to_compute_variant();
-    fill_c_array_flat(&vector.coord[0], compute_variant);
+    fill_c_array_flat(&vector.coord[0], array.compute_read());
 
     return vector;
 #endif
@@ -339,8 +337,7 @@ Vector4 NDArray::to_vector4() const {
     ERR_FAIL_COND_V_MSG(array.shape[0] != 4, {}, "array dimension must be size 4");
 
     Vector4 vector;
-    const auto compute_variant = array.to_compute_variant();
-    fill_c_array_flat(&vector.components[0], compute_variant);
+    fill_c_array_flat(&vector.components[0], array.compute_read());
 
     return vector;
 #endif
@@ -354,8 +351,7 @@ Vector2i NDArray::to_vector2i() const {
     ERR_FAIL_COND_V_MSG(array.shape[0] != 2, {}, "array dimension must be size 2");
 
     Vector2i vector;
-    const auto compute_variant = array.to_compute_variant();
-    fill_c_array_flat(&vector.coord[0], compute_variant);
+    fill_c_array_flat(&vector.coord[0], array.compute_read());
 
     return vector;
 #endif
@@ -369,8 +365,7 @@ Vector3i NDArray::to_vector3i() const {
     ERR_FAIL_COND_V_MSG(array.shape[0] != 3, {}, "array dimension must be size 3");
 
     Vector3i vector;
-    const auto compute_variant = array.to_compute_variant();
-    fill_c_array_flat(&vector.coord[0], compute_variant);
+    fill_c_array_flat(&vector.coord[0], array.compute_read());
 
     return vector;
 #endif
@@ -384,8 +379,7 @@ Vector4i NDArray::to_vector4i() const {
     ERR_FAIL_COND_V_MSG(array.shape[0] != 4, {}, "array dimension must be size 4");
 
     Vector4i vector;
-    const auto compute_variant = array.to_compute_variant();
-    fill_c_array_flat(&vector.coord[0], compute_variant);
+    fill_c_array_flat(&vector.coord[0], array.compute_read());
 
     return vector;
 #endif
@@ -399,8 +393,7 @@ Color NDArray::to_color() const {
     ERR_FAIL_COND_V_MSG(array.shape[0] != 4, {}, "array dimension must be size 4");
 
     Color vector;
-    const auto compute_variant = array.to_compute_variant();
-    fill_c_array_flat(&vector.components[0], compute_variant);
+    fill_c_array_flat(&vector.components[0], array.compute_read());
 
     return vector;
 #endif
@@ -414,8 +407,7 @@ PackedFloat32Array NDArray::to_packed_float32_array() const {
 
 	PackedFloat32Array packed;
 	packed.resize(static_cast<int64_t>(array.shape[0]));
-	const auto compute_variant = array.to_compute_variant();
-	fill_c_array_flat(packed.ptrw(), compute_variant);
+	fill_c_array_flat(packed.ptrw(), array.compute_read());
 
 	return packed;
 #endif
@@ -429,8 +421,7 @@ PackedFloat64Array NDArray::to_packed_float64_array() const {
 
 	PackedFloat64Array packed;
 	packed.resize(static_cast<int64_t>(array.shape[0]));
-	const auto compute_variant = array.to_compute_variant();
-	fill_c_array_flat(packed.ptrw(), compute_variant);
+	fill_c_array_flat(packed.ptrw(), array.compute_read());
 
 	return packed;
 #endif
@@ -444,8 +435,7 @@ PackedByteArray NDArray::to_packed_byte_array() const {
 
 	PackedByteArray packed;
 	packed.resize(static_cast<int64_t>(array.shape[0]));
-	const auto compute_variant = array.to_compute_variant();
-	fill_c_array_flat(packed.ptrw(), compute_variant);
+	fill_c_array_flat(packed.ptrw(), array.compute_read());
 
 	return packed;
 #endif
@@ -459,8 +449,7 @@ PackedInt32Array NDArray::to_packed_int32_array() const {
 
 	PackedInt32Array packed;
 	packed.resize(static_cast<int64_t>(array.shape[0]));
-	const auto compute_variant = array.to_compute_variant();
-	fill_c_array_flat(packed.ptrw(), compute_variant);
+	fill_c_array_flat(packed.ptrw(), array.compute_read());
 
 	return packed;
 #endif
@@ -474,8 +463,7 @@ PackedInt64Array NDArray::to_packed_int64_array() const {
 
 	PackedInt64Array packed;
 	packed.resize(static_cast<int64_t>(array.shape[0]));
-	const auto compute_variant = array.to_compute_variant();
-	fill_c_array_flat(packed.ptrw(), compute_variant);
+	fill_c_array_flat(packed.ptrw(), array.compute_read());
 
 	return packed;
 #endif
@@ -491,8 +479,7 @@ PackedVector2Array NDArray::to_packed_vector2_array() const {
 
 	PackedVector2Array packed;
 	packed.resize(static_cast<int64_t>(array.shape[0] * 2));
-	const auto compute_variant = array.to_compute_variant();
-	fill_c_array_flat(&packed.ptrw()->coord[0], compute_variant);
+	fill_c_array_flat(&packed.ptrw()->coord[0], array.compute_read());
 
 	return packed;
 #endif
@@ -508,8 +495,7 @@ PackedVector3Array NDArray::to_packed_vector3_array() const {
 
 	PackedVector3Array packed;
 	packed.resize(static_cast<int64_t>(array.shape[0] * 3));
-	const auto compute_variant = array.to_compute_variant();
-	fill_c_array_flat(&packed.ptrw()->coord[0], compute_variant);
+	fill_c_array_flat(&packed.ptrw()->coord[0], array.compute_read());
 
 	return packed;
 #endif
@@ -525,8 +511,7 @@ PackedVector4Array NDArray::to_packed_vector4_array() const {
 
 	PackedVector4Array packed;
 	packed.resize(static_cast<int64_t>(array.shape[0] * 3));
-	const auto compute_variant = array.to_compute_variant();
-	fill_c_array_flat(&packed.ptrw()->components[0], compute_variant);
+	fill_c_array_flat(&packed.ptrw()->components[0], array.compute_read());
 
 	return packed;
 #endif
@@ -542,8 +527,7 @@ PackedColorArray NDArray::to_packed_color_array() const {
 
 	PackedColorArray packed;
 	packed.resize(static_cast<int64_t>(array.shape[0] * 3));
-	const auto compute_variant = array.to_compute_variant();
-	fill_c_array_flat(&packed.ptrw()->components[0], compute_variant);
+	fill_c_array_flat(&packed.ptrw()->components[0], array.compute_read());
 
 	return packed;
 #endif
@@ -564,7 +548,7 @@ TypedArray<NDArray> NDArray::to_godot_array() const {
 template <typename Visitor, typename... Args>
 void map_variants_as_arrays_inplace(Visitor&& visitor, va::VArray& target, const Args&... args) {
     try {
-		auto compute_variant = target.to_compute_variant();
+		auto compute_variant = target.compute_write();
         std::forward<Visitor>(visitor)(&compute_variant, variant_as_array(args)...);
     }
     catch (std::runtime_error& error) {
@@ -577,13 +561,13 @@ inline void reduction_inplace(Visitor&& visitor, VisitorNoaxes&& visitor_noaxes,
 	try {
 		if (axes.get_type() == Variant::NIL) {
 			const va::VScalar result = std::forward<VisitorNoaxes>(visitor_noaxes)(variant_as_array(args)...);
-			auto compute = target.to_compute_variant();
+			auto compute = target.compute_write();
 			va::assign(compute, result);
 			return;
 		}
 
 		const auto axes_ = variant_to_axes(axes);
-		auto compute_variant = target.to_compute_variant();
+		auto compute_variant = target.compute_write();
 
 		std::forward<Visitor>(visitor)(&compute_variant, axes_, variant_as_array(args)...);
 	}

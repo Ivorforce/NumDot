@@ -65,29 +65,43 @@ namespace va {
     // P&& pointer, typename A::size_type size, O ownership, SC&& shape, SS&& strides, const A& alloc = A()
     template <typename T>
     using compute_case = xt::xarray_adaptor<
-        xt::xbuffer_adaptor<T*, xt::no_ownership>,
+        xt::xbuffer_adaptor<T, xt::no_ownership, xt::detail::default_allocator_for_ptr_t<T>>,
         xt::layout_type::dynamic,
         shape_type
     >;
 
-    using ComputeVariant = std::variant<
-        compute_case<bool>,
-        compute_case<float_t>,
-        compute_case<double_t>,
-        compute_case<int8_t>,
-        compute_case<int16_t>,
-        compute_case<int32_t>,
-        compute_case<int64_t>,
-        compute_case<uint8_t>,
-        compute_case<uint16_t>,
-        compute_case<uint32_t>,
-        compute_case<uint64_t>
+    using VWrite = std::variant<
+        compute_case<bool*>,
+        compute_case<float_t*>,
+        compute_case<double_t*>,
+        compute_case<int8_t*>,
+        compute_case<int16_t*>,
+        compute_case<int32_t*>,
+        compute_case<int64_t*>,
+        compute_case<uint8_t*>,
+        compute_case<uint16_t*>,
+        compute_case<uint32_t*>,
+        compute_case<uint64_t*>
+    >;
+
+    using VRead = std::variant<
+        compute_case<const bool*>,
+        compute_case<const float_t*>,
+        compute_case<const double_t*>,
+        compute_case<const int8_t*>,
+        compute_case<const int16_t*>,
+        compute_case<const int32_t*>,
+        compute_case<const int64_t*>,
+        compute_case<const uint8_t*>,
+        compute_case<const uint16_t*>,
+        compute_case<const uint32_t*>,
+        compute_case<const uint64_t*>
     >;
 
     template <typename T>
     using store_case = std::shared_ptr<array_case<T>>;
 
-    using StoreVariant = std::variant<
+    using VStore = std::variant<
         store_case<bool>,
         store_case<float_t>,
         store_case<double_t>,
@@ -117,7 +131,7 @@ namespace va {
 
     class VArray {
     public:
-        StoreVariant store;
+        VStore store;
         shape_type shape;
         strides_type strides;
         size_type offset;
@@ -131,8 +145,10 @@ namespace va {
         [[nodiscard]] VArray slice(const xt::xstrided_slice_vector& slices) const;
         [[nodiscard]] VScalar get_scalar(const axes_type& index) const;
 
-        [[nodiscard]] ComputeVariant to_compute_variant() const;
-        [[nodiscard]] ComputeVariant to_compute_variant(const xt::xstrided_slice_vector& slices) const;
+        [[nodiscard]] VRead compute_read() const;
+        [[nodiscard]] VRead compute_read(const xt::xstrided_slice_vector& slices) const;
+        [[nodiscard]] VWrite compute_write() const;
+        [[nodiscard]] VWrite compute_write(const xt::xstrided_slice_vector& slices) const;
         [[nodiscard]] size_t size_of_array_in_bytes() const;
 
         [[nodiscard]] VScalar to_single_value() const;
@@ -153,20 +169,20 @@ namespace va {
     // For all functions returning an or assigning to an array.
     // The first case will place the array in the optional.
     // The second case will assign to the compute variant.
-    using VArrayTarget = std::variant<std::optional<VArray>*, ComputeVariant*>;
+    using VArrayTarget = std::variant<std::optional<VArray>*, VWrite*>;
 
-    template <typename T>
-    static auto to_compute_variant(const store_case<T>& store, const VArray& varray) {
+    template <typename V, typename T>
+    static compute_case<V> to_compute_variant(T& store, const VArray& varray) {
         auto shape = varray.shape;
         auto strides = varray.strides;
         auto size_ = std::accumulate(shape.begin(), shape.end(), static_cast<size_t>(1), std::multiplies());
 
         // return xt::adapt(store->data(), store->size(), xt::no_ownership(), store->shape(), store->strides());
-        return xt::adapt(store->data() + varray.offset, size_, xt::no_ownership(), shape, strides);
+        return xt::adapt<V>(store->data() + varray.offset, size_, xt::no_ownership(), shape, strides);
     }
 
-    template <typename T>
-    static auto to_compute_variant(const store_case<T>& store, const VArray& varray, const xt::xstrided_slice_vector& slices) {
+    template <typename V, typename T>
+    static compute_case<V> to_compute_variant(T& store, const VArray& varray, const xt::xstrided_slice_vector& slices) {
         xt::detail::strided_view_args<xt::detail::no_adj_strides_policy> args;
         args.fill_args(
             varray.shape,
@@ -179,7 +195,7 @@ namespace va {
         auto size_ = std::accumulate(args.new_shape.begin(), args.new_shape.end(), static_cast<size_t>(1), std::multiplies());
 
         // return xt::adapt(store->data(), store->size(), xt::no_ownership(), store->shape(), store->strides());
-        return xt::adapt(store->data() + args.new_offset, size_, xt::no_ownership(), args.new_shape, args.new_strides);
+        return xt::adapt<V>(store->data() + args.new_offset, size_, xt::no_ownership(), args.new_shape, args.new_strides);
     }
 
     template <typename T>

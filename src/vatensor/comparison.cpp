@@ -16,8 +16,8 @@ void va::equal_to(VArrayTarget target, const VArray& a, const VArray& b) {
     va::xoperation_inplace<promote::common_in_bool_out>(
         va::XFunction<xt::detail::equal_to> {},
         target,
-        a.to_compute_variant(),
-        b.to_compute_variant()
+        a.compute_read(),
+        b.compute_read()
     );
 #endif
 }
@@ -29,8 +29,8 @@ void va::not_equal_to(VArrayTarget target, const VArray& a, const VArray& b) {
     va::xoperation_inplace<promote::common_in_bool_out>(
         va::XFunction<xt::detail::not_equal_to> {},
         target,
-        a.to_compute_variant(),
-        b.to_compute_variant()
+        a.compute_read(),
+        b.compute_read()
     );
 #endif
 }
@@ -42,8 +42,8 @@ void va::greater(VArrayTarget target, const VArray& a, const VArray& b) {
     va::xoperation_inplace<promote::common_num_in_x_out<bool>>(
         va::XFunction<xt::detail::greater> {},
         target,
-        a.to_compute_variant(),
-        b.to_compute_variant()
+        a.compute_read(),
+        b.compute_read()
     );
 #endif
 }
@@ -55,8 +55,8 @@ void va::greater_equal(VArrayTarget target, const VArray& a, const VArray& b) {
     va::xoperation_inplace<promote::common_num_in_x_out<bool>>(
         va::XFunction<xt::detail::greater_equal> {},
         target,
-        a.to_compute_variant(),
-        b.to_compute_variant()
+        a.compute_read(),
+        b.compute_read()
     );
 #endif
 }
@@ -68,8 +68,8 @@ void va::less(VArrayTarget target, const VArray& a, const VArray& b) {
     va::xoperation_inplace<promote::common_num_in_x_out<bool>>(
         va::XFunction<xt::detail::less> {},
         target,
-        a.to_compute_variant(),
-        b.to_compute_variant()
+        a.compute_read(),
+        b.compute_read()
     );
 #endif
 }
@@ -81,8 +81,8 @@ void va::less_equal(VArrayTarget target, const VArray& a, const VArray& b) {
     va::xoperation_inplace<promote::common_num_in_x_out<bool>>(
         va::XFunction<xt::detail::less_equal> {},
         target,
-        a.to_compute_variant(),
-        b.to_compute_variant()
+        a.compute_read(),
+        b.compute_read()
     );
 #endif
 }

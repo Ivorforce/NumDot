@@ -49,18 +49,34 @@ va::VScalar va::VArray::get_scalar(const axes_type &index) const {
 
     return std::visit([&index](auto&& carray) -> VScalar {
         return std::forward<decltype(carray)>(carray)[index];
-    }, to_compute_variant());
+    }, compute_read());
 }
 
-va::ComputeVariant va::VArray::to_compute_variant() const {
-    return std::visit([this](const auto& store) -> ComputeVariant {
-        return va::to_compute_variant(store, *this);
+va::VRead va::VArray::compute_read() const {
+    return std::visit([this](auto& store) -> VRead {
+        using V = typename std::decay_t<decltype(store)>::element_type::value_type;
+        return va::to_compute_variant<const V*>(store, *this);
     }, store);
 }
 
-va::ComputeVariant va::VArray::to_compute_variant(const xt::xstrided_slice_vector &slices) const {
-    return std::visit([this, slices](const auto& store) -> ComputeVariant {
-        return va::to_compute_variant(store, *this, slices);
+va::VRead va::VArray::compute_read(const xt::xstrided_slice_vector &slices) const {
+    return std::visit([this, slices](auto& store) -> VRead {
+        using V = typename std::decay_t<decltype(store)>::element_type::value_type;
+        return va::to_compute_variant<const V*>(store, *this, slices);
+    }, store);
+}
+
+va::VWrite va::VArray::compute_write() const {
+    return std::visit([this](auto& store) -> VWrite {
+        using V = typename std::decay_t<decltype(store)>::element_type::value_type;
+        return va::to_compute_variant<V*>(store, *this);
+    }, store);
+}
+
+va::VWrite va::VArray::compute_write(const xt::xstrided_slice_vector &slices) const {
+    return std::visit([this, slices](auto& store) -> VWrite {
+        using V = typename std::decay_t<decltype(store)>::element_type::value_type;
+        return va::to_compute_variant<V*>(store, *this, slices);
     }, store);
 }
 
@@ -68,7 +84,7 @@ size_t va::VArray::size_of_array_in_bytes() const {
     return std::visit([](auto&& carray){
         using V = typename std::decay_t<decltype(carray)>::value_type;
         return carray.size() * sizeof(V);
-    }, to_compute_variant());
+    }, compute_read());
 }
 
 va::VArray va::from_scalar_variant(VScalar scalar) {
@@ -143,7 +159,7 @@ va::VScalar va::VArray::to_single_value() const {
         // TODO I expected this to work, but it doesn't. See https://xtensor.readthedocs.io/en/latest/indices.html#operator
         // But at least the above is a view, so no copy is made.
         // return V(array[slice]);
-    }, to_compute_variant());
+    }, compute_read());
 }
 
 va::VArray::operator bool() const { return va::scalar_to_type<bool>(to_single_value()); }

@@ -428,6 +428,16 @@
 				Returns a 0-dimension scalar if axes is null. In that case, consider [method ndf.mean].
 			</description>
 		</method>
+		<method name="median" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" default="null" />
+			<param index="1" name="axes" type="Variant" default="null" />
+			<description>
+				Compute the median along the specified axis. The median is the middle value when you sort the values.
+				Returns a 0-dimension scalar if axes is null. In that case, consider [method ndf.median] or [method ndi.median].
+				Note that median with given axes is not yet implemented.
+			</description>
+		</method>
 		<method name="min" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" default="null" />

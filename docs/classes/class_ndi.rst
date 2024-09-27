@@ -32,6 +32,8 @@ Methods
    +---------+--------------------------------------------------------------------------------------------------+
    | ``int`` | :ref:`max<class_ndi_method_max>`\ (\ a\: ``Variant``\ ) |static|                                 |
    +---------+--------------------------------------------------------------------------------------------------+
+   | ``int`` | :ref:`median<class_ndi_method_median>`\ (\ a\: ``Variant``\ ) |static|                           |
+   +---------+--------------------------------------------------------------------------------------------------+
    | ``int`` | :ref:`min<class_ndi_method_min>`\ (\ a\: ``Variant``\ ) |static|                                 |
    +---------+--------------------------------------------------------------------------------------------------+
    | ``int`` | :ref:`norm<class_ndi_method_norm>`\ (\ a\: ``Variant`` = null, ord\: ``Variant`` = 2\ ) |static| |
@@ -59,6 +61,18 @@ Method Descriptions
 ``int`` **max**\ (\ a\: ``Variant``\ ) |static| :ref:`🔗<class_ndi_method_max>`
 
 No-axis equivalent of :ref:`nd.max<class_nd_method_max>` that returns an int.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ndi_method_median:
+
+.. rst-class:: classref-method
+
+``int`` **median**\ (\ a\: ``Variant``\ ) |static| :ref:`🔗<class_ndi_method_median>`
+
+No-axis equivalent of :ref:`nd.median<class_nd_method_median>` that returns an int.
 
 .. rst-class:: classref-item-separator
 

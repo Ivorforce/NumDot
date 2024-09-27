@@ -16,6 +16,13 @@
 				No-axis equivalent of [method nd.max] that returns an int.
 			</description>
 		</method>
+		<method name="median" qualifiers="static">
+			<return type="int" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				No-axis equivalent of [method nd.median] that returns an int.
+			</description>
+		</method>
 		<method name="min" qualifiers="static">
 			<return type="int" />
 			<param index="0" name="a" type="Variant" />

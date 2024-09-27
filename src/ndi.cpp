@@ -29,6 +29,7 @@ using namespace godot;
 void ndi::_bind_methods() {
 	godot::ClassDB::bind_static_method("ndi", D_METHOD("sum", "a"), &ndi::sum);
 	godot::ClassDB::bind_static_method("ndi", D_METHOD("prod", "a"), &ndi::prod);
+	godot::ClassDB::bind_static_method("ndi", D_METHOD("median", "a"), &ndi::median);
 	godot::ClassDB::bind_static_method("ndi", D_METHOD("max", "a"), &ndi::max);
 	godot::ClassDB::bind_static_method("ndi", D_METHOD("min", "a"), &ndi::min);
 	godot::ClassDB::bind_static_method("ndi", D_METHOD("norm", "a", "ord"), &ndi::norm, DEFVAL(nullptr), DEFVAL(2));
@@ -68,6 +69,10 @@ int64_t ndi::sum(const Variant& a) {
 
 int64_t ndi::prod(const Variant& a) {
 	return REDUCTION1(prod, a);
+}
+
+int64_t ndi::median(const Variant &a) {
+	return REDUCTION1(median, a);
 }
 
 int64_t ndi::max(const Variant& a) {

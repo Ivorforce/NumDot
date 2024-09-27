@@ -132,6 +132,8 @@ Methods
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`mean<class_nd_method_mean>`\ (\ a\: ``Variant`` = null, axes\: ``Variant`` = null\ ) |static|                                                                                                    |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>` | :ref:`median<class_nd_method_median>`\ (\ a\: ``Variant`` = null, axes\: ``Variant`` = null\ ) |static|                                                                                                |
+   +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`min<class_nd_method_min>`\ (\ a\: ``Variant`` = null, axes\: ``Variant`` = null\ ) |static|                                                                                                      |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`minimum<class_nd_method_minimum>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                               |
@@ -992,6 +994,22 @@ Compare two arrays and return a new array containing the element-wise maxima. If
 Compute the arithmetic mean along the specified axis.
 
 Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.mean<class_ndf_method_mean>`.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_median:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **median**\ (\ a\: ``Variant`` = null, axes\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_median>`
+
+Compute the median along the specified axis. The median is the middle value when you sort the values.
+
+Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.median<class_ndf_method_median>` or :ref:`ndi.median<class_ndi_method_median>`.
+
+Note that median with given axes is not yet implemented.
 
 .. rst-class:: classref-item-separator
 

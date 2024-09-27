@@ -14,6 +14,9 @@ namespace va {
     VScalar mean(const VArray& array);
     void mean(VArrayTarget target, const VArray& array, const axes_type& axes);
 
+    VScalar median(const VArray& array);
+    void median(VArrayTarget target, const VArray& array, const axes_type& axes);
+
     VScalar var(const VArray& array);
     void var(VArrayTarget target, const VArray& array, const axes_type& axes);
 

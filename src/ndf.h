@@ -30,6 +30,7 @@ public:
 	static double_t sum(const Variant& a);
 	static double_t prod(const Variant& a);
 	static double_t mean(const Variant& a);
+	static double_t median(const Variant& a);
 	static double_t var(const Variant& a);
 	static double_t std(const Variant& a);
 	static double_t max(const Variant& a);

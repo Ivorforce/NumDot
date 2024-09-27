@@ -20,6 +20,7 @@ namespace va {
     VArray swapaxes(const VArray& varray, std::ptrdiff_t a, std::ptrdiff_t b);
     VArray moveaxis(const VArray& varray, std::ptrdiff_t src, std::ptrdiff_t dst);
     VArray flip(const VArray& varray, std::size_t axis);
+    VArray join_axes_into_last_dimension(const VArray& varray, axes_type axes);
 }
 
 #endif //XV_H

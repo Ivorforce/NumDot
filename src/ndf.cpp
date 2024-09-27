@@ -30,6 +30,7 @@ void ndf::_bind_methods() {
 	godot::ClassDB::bind_static_method("ndf", D_METHOD("sum", "a"), &ndf::sum);
 	godot::ClassDB::bind_static_method("ndf", D_METHOD("prod", "a"), &ndf::prod);
 	godot::ClassDB::bind_static_method("ndf", D_METHOD("mean", "a"), &ndf::mean);
+	godot::ClassDB::bind_static_method("ndf", D_METHOD("median", "a"), &ndf::median);
 	godot::ClassDB::bind_static_method("ndf", D_METHOD("var", "a"), &ndf::var);
 	godot::ClassDB::bind_static_method("ndf", D_METHOD("std", "a"), &ndf::std);
 	godot::ClassDB::bind_static_method("ndf", D_METHOD("max", "a"), &ndf::max);
@@ -75,6 +76,10 @@ double_t ndf::prod(const Variant& a) {
 
 double_t ndf::mean(const Variant& a) {
 	return REDUCTION1(mean, a);
+}
+
+double_t ndf::median(const Variant &a) {
+	return REDUCTION1(median, a);
 }
 
 double_t ndf::var(const Variant& a) {

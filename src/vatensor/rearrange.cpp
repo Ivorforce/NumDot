@@ -4,6 +4,7 @@
 
 #include "rearrange.h"
 
+#include <set>
 #include "xtensor/xlayout.hpp"        // for layout_type
 #include "xtensor/xmanipulation.hpp"  // for flip, full, moveaxis, swapaxes
 #include "xtensor/xstrided_view.hpp"  // for reshape_view
@@ -43,5 +44,42 @@ VArray va::moveaxis(const VArray& varray, std::ptrdiff_t src, std::ptrdiff_t dst
 VArray va::flip(const VArray& varray, std::size_t axis) {
     return map([axis](auto& array) {
         return xt::flip(array, axis);
+    }, varray);
+}
+
+template <typename T, typename I>
+void move_indices_to_back(T& vec, const I& indices) {
+    using ValueType = typename T::value_type;
+    std::set<ValueType> indexSet(indices.begin(), indices.end());
+
+    std::stable_partition(vec.begin(), vec.end(), [&indexSet](const ValueType& value) {
+        // .contains is C++20
+        return indexSet.find(value) == indexSet.end();
+    });
+}
+
+VArray va::join_axes_into_last_dimension(const VArray &varray, axes_type axes) {
+    const auto reduction_count = axes.size();
+
+    if (reduction_count == 0) {
+        return varray;
+    }
+
+    auto permutation = axes_type(varray.dimension());
+
+    std::iota(permutation.begin(), permutation.end(), 0);
+    move_indices_to_back(permutation, axes);
+
+    return map([permutation, reduction_count](auto& carray) {
+        auto transposed = xt::transpose(
+            carray,
+            permutation,
+            xt::check_policy::full{}
+        );
+        shape_type new_shape = transposed.shape();
+        auto reduction_begin = new_shape.end() - reduction_count;
+        *reduction_begin = std::accumulate(reduction_begin, new_shape.end(), static_cast<std::size_t>(1), std::multiplies());
+        new_shape.erase(reduction_begin + 1, new_shape.end());
+        return xt::reshape_view(transposed, new_shape);
     }, varray);
 }

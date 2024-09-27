@@ -29,6 +29,7 @@ public:
 	// Reductions.
 	static int64_t sum(const Variant& a);
 	static int64_t prod(const Variant& a);
+	static int64_t median(const Variant& a);
 	static int64_t max(const Variant& a);
 	static int64_t min(const Variant& a);
 	static int64_t norm(const Variant& a, const Variant& ord);

@@ -34,6 +34,8 @@ Methods
    +-----------+--------------------------------------------------------------------------------------------------+
    | ``float`` | :ref:`mean<class_ndf_method_mean>`\ (\ a\: ``Variant``\ ) |static|                               |
    +-----------+--------------------------------------------------------------------------------------------------+
+   | ``float`` | :ref:`median<class_ndf_method_median>`\ (\ a\: ``Variant``\ ) |static|                           |
+   +-----------+--------------------------------------------------------------------------------------------------+
    | ``float`` | :ref:`min<class_ndf_method_min>`\ (\ a\: ``Variant``\ ) |static|                                 |
    +-----------+--------------------------------------------------------------------------------------------------+
    | ``float`` | :ref:`norm<class_ndf_method_norm>`\ (\ a\: ``Variant`` = null, ord\: ``Variant`` = 2\ ) |static| |
@@ -77,6 +79,18 @@ No-axis equivalent of :ref:`nd.max<class_nd_method_max>` that returns a float.
 ``float`` **mean**\ (\ a\: ``Variant``\ ) |static| :ref:`🔗<class_ndf_method_mean>`
 
 No-axis equivalent of :ref:`nd.mean<class_nd_method_mean>` that returns a float.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ndf_method_median:
+
+.. rst-class:: classref-method
+
+``float`` **median**\ (\ a\: ``Variant``\ ) |static| :ref:`🔗<class_ndf_method_median>`
+
+No-axis equivalent of :ref:`nd.median<class_nd_method_median>` that returns a float.
 
 .. rst-class:: classref-item-separator
 

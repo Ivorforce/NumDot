@@ -23,6 +23,13 @@
 				No-axis equivalent of [method nd.mean] that returns a float.
 			</description>
 		</method>
+		<method name="median" qualifiers="static">
+			<return type="float" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				No-axis equivalent of [method nd.median] that returns a float.
+			</description>
+		</method>
 		<method name="min" qualifiers="static">
 			<return type="float" />
 			<param index="0" name="a" type="Variant" />

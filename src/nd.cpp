@@ -130,6 +130,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("sum", "a", "axes"), &nd::sum, DEFVAL(nullptr), DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("prod", "a", "axes"), &nd::prod, DEFVAL(nullptr), DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("mean", "a", "axes"), &nd::mean, DEFVAL(nullptr), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("median", "a", "axes"), &nd::median, DEFVAL(nullptr), DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("var", "a", "axes"), &nd::var, DEFVAL(nullptr), DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("std", "a", "axes"), &nd::std, DEFVAL(nullptr), DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("max", "a", "axes"), &nd::max, DEFVAL(nullptr), DEFVAL(nullptr));
@@ -620,6 +621,10 @@ Ref<NDArray> nd::prod(const Variant& a, const Variant& axes) {
 
 Ref<NDArray> nd::mean(const Variant& a, const Variant& axes) {
 	return REDUCTION1(mean, a, axes);
+}
+
+Ref<NDArray> nd::median(const Variant& a, const Variant& axes) {
+	return REDUCTION1(median, a, axes);
 }
 
 Ref<NDArray> nd::var(const Variant& a, const Variant& axes) {

@@ -117,6 +117,7 @@ public:
 	static Ref<NDArray> sum(const Variant& a, const Variant& axes);
 	static Ref<NDArray> prod(const Variant& a, const Variant& axes);
 	static Ref<NDArray> mean(const Variant& a, const Variant& axes);
+	static Ref<NDArray> median(const Variant& a, const Variant& axes);
 	static Ref<NDArray> var(const Variant& a, const Variant& axes);
 	static Ref<NDArray> std(const Variant& a, const Variant& axes);
 	static Ref<NDArray> max(const Variant& a, const Variant& axes);

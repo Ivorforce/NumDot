@@ -2,10 +2,18 @@
 #define NUMDOT_AS_ARRAY_H
 
 #include "vatensor/auto_defines.h"
+
+#include <cstddef>                        // for size_t
+#include <functional>                     // for multiplies
 #include <godot_cpp/variant/variant.hpp>  // for Variant
+#include <numeric>                        // for accumulate
+#include <utility>                        // for forward
 #include <variant>                        // for visit
 #include "godot_cpp/variant/array.hpp"    // for Array
-#include "vatensor/varray.h"              // for VArray
+#include "vatensor/varray.h"              // for shape_type, DType, VArray
+#include "xtensor/xadapt.hpp"             // for adapt
+#include "xtensor/xbuffer_adaptor.hpp"    // for no_ownership
+#include "xtensor/xlayout.hpp"            // for layout_type
 
 using namespace godot;
 

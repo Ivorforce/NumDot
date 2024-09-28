@@ -2,10 +2,8 @@
 
 #include <cstddef>                         // for size_t
 #include <stdexcept>                       // for runtime_error
-#include <type_traits>                     // for decay_t
-#include "xtensor/xoperation.hpp"          // for cast
+#include <type_traits>                     // for decay_t, common_type_t
 #include "xtensor/xstrided_view_base.hpp"  // for strided_view_args
-#include "vassign.h"
 
 va::DType va::VArray::dtype() const {
     // TODO this is true now, but may not be in the future!
@@ -85,12 +83,6 @@ std::size_t va::VArray::size_of_array_in_bytes() const {
         using V = typename std::decay_t<decltype(carray)>::value_type;
         return carray.size() * sizeof(V);
     }, compute_read());
-}
-
-va::VArray va::from_scalar_variant(VScalar scalar) {
-    return std::visit([](auto cscalar){
-        return from_scalar(cscalar);
-    }, scalar);
 }
 
 va::VScalar va::dtype_to_variant(const DType dtype) {

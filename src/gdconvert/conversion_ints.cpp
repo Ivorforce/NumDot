@@ -1,5 +1,27 @@
 #include "conversion_ints.h"
 
+#include <cstdint>                                  // for int64_t
+#include <algorithm>                                 // for copy
+#include <cstddef>                                   // for ptrdiff_t, size_t
+#include <stdexcept>                                 // for runtime_error
+#include <type_traits>                               // for decay_t
+#include <variant>                                   // for visit
+#include <vector>                                    // for vector
+#include "godot_cpp/classes/object.hpp"              // for Object
+#include "godot_cpp/core/object.hpp"                 // for Object::cast_to
+#include "godot_cpp/variant/array.hpp"               // for Array
+#include "godot_cpp/variant/packed_byte_array.hpp"   // for PackedByteArray
+#include "godot_cpp/variant/packed_int32_array.hpp"  // for PackedInt32Array
+#include "godot_cpp/variant/packed_int64_array.hpp"  // for PackedInt64Array
+#include "godot_cpp/variant/variant.hpp"             // for Variant
+#include "godot_cpp/variant/vector2i.hpp"            // for Vector2i
+#include "godot_cpp/variant/vector3i.hpp"            // for Vector3i
+#include "godot_cpp/variant/vector4i.hpp"            // for Vector4i
+#include "ndarray.h"                                 // for NDArray
+#include "xtensor/xiterator.hpp"                     // for operator==
+#include "xtensor/xlayout.hpp"                       // for layout_type
+#include "xtl/xiterator_base.hpp"                    // for operator!=
+
 template <typename C>
 C variant_as_int_strict(const Variant &variant) {
     switch (variant.get_type()) {

@@ -1,8 +1,14 @@
 #include "linalg.h"
 
-#include "reduce.h"
-#include "vcompute.h"
-#include "vmath.h"
+#include <cstddef>                // for ptrdiff_t
+#include <optional>               // for optional
+#include <stdexcept>              // for runtime_error
+#include <vector>                 // for vector
+#include "reduce.h"               // for sum
+#include "vatensor/varray.h"      // for VArray, VArrayTarget, VScalar, axes...
+#include "vatensor/vassign.h"     // for assign
+#include "vmath.h"                // for multiply
+#include "xtensor/xslice.hpp"     // for all, ellipsis, newaxis, xall_tag
 
 // struct Dot {
 // 	template <typename GivenAxes, typename A, typename B>

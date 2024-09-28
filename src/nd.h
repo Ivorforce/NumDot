@@ -10,6 +10,7 @@
 #include "godot_cpp/core/class_db.hpp"        // for ClassDB (ptr only), DEFVAL
 #include "godot_cpp/variant/string_name.hpp"  // for StringName
 #include "godot_cpp/variant/variant.hpp"      // for Variant
+#include "godot_cpp/variant/vector4i.hpp"     // for Vector4i
 #include "ndarray.h"                          // for NDArray
 #include "vatensor/varray.h"                           // for DType
 

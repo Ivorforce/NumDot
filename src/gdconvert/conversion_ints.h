@@ -1,12 +1,9 @@
 #ifndef NUMDOT_AS_SHAPE_H
 #define NUMDOT_AS_SHAPE_H
 
-#include <godot_cpp/godot.hpp>
-#include <godot_cpp/variant/variant.hpp>
-#include <godot_cpp/classes/object.hpp>
-#include <godot_cpp/variant/utility_functions.hpp>
-
-#include "ndarray.h"
+#include <godot_cpp/variant/variant.hpp>  // for Variant
+#include "gdextension_interface.h"        // for GDExtensionCallError, GDExt...
+#include "vatensor/varray.h"              // for axes_type, shape_type
 
 using namespace godot;
 

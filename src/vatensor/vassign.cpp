@@ -1,5 +1,8 @@
 #include "vassign.h"
-#include "xtensor/xassign.hpp"
+
+#include <type_traits>                                  // for decay_t
+#include <variant>                                      // for visit
+#include "vatensor/varray.h"                            // for VWrite, VScalar
 
 using namespace va;
 

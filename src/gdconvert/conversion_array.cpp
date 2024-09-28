@@ -1,23 +1,28 @@
 #include "conversion_array.h"
 
-#include <vatensor/allocate.h>                         // for empty
+#include <vatensor/allocate.h>                         // for copy_as_dtype
+#include <vatensor/vassign.h>                          // for assign
 #include <cmath>                                       // for double_t, float_t
 #include <cstddef>                                     // for size_t
-#include <cstdint>                                     // for int32_t, int64_t
-#include <memory>                                      // for allocator, sha...
+#include <cstdint>                                     // for int64_t, int32_t
+#include <iterator>                                    // for size
 #include <stdexcept>                                   // for runtime_error
-#include <tuple>                                       // for tuple
+#include <tuple>                                       // for tuple, make_tuple
 #include <utility>                                     // for move
-#include <vector>                                      // for vector
-#include <vatensor/vassign.h>
+#include <vector>                                      // for allocator, vector
 #include "godot_cpp/classes/object.hpp"                // for Object
 #include "godot_cpp/core/defs.hpp"                     // for real_t
 #include "godot_cpp/core/object.hpp"                   // for Object::cast_to
+#include "godot_cpp/variant/color.hpp"                 // for Color
 #include "godot_cpp/variant/packed_byte_array.hpp"     // for PackedByteArray
+#include "godot_cpp/variant/packed_color_array.hpp"    // for PackedColorArray
 #include "godot_cpp/variant/packed_float32_array.hpp"  // for PackedFloat32A...
 #include "godot_cpp/variant/packed_float64_array.hpp"  // for PackedFloat64A...
 #include "godot_cpp/variant/packed_int32_array.hpp"    // for PackedInt32Array
 #include "godot_cpp/variant/packed_int64_array.hpp"    // for PackedInt64Array
+#include "godot_cpp/variant/packed_vector2_array.hpp"  // for PackedVector2A...
+#include "godot_cpp/variant/packed_vector3_array.hpp"  // for PackedVector3A...
+#include "godot_cpp/variant/packed_vector4_array.hpp"  // for PackedVector4A...
 #include "godot_cpp/variant/variant.hpp"               // for Variant
 #include "godot_cpp/variant/vector2.hpp"               // for Vector2
 #include "godot_cpp/variant/vector2i.hpp"              // for Vector2i
@@ -26,15 +31,11 @@
 #include "godot_cpp/variant/vector4.hpp"               // for Vector4
 #include "godot_cpp/variant/vector4i.hpp"              // for Vector4i
 #include "ndarray.h"                                   // for NDArray
-#include "xtensor/xadapt.hpp"                          // for adapt
-#include "xtensor/xarray.hpp"                          // for xarray_container
-#include "xtensor/xbuffer_adaptor.hpp"                 // for no_ownership
+#include "xtensor/xarray.hpp"                          // for xarray_adaptor
+#include "xtensor/xbuffer_adaptor.hpp"                 // for xbuffer_adaptor
 #include "xtensor/xlayout.hpp"                         // for layout_type
-#include "xtensor/xshape.hpp"                          // for static_shape
 #include "xtensor/xstorage.hpp"                        // for svector, uvector
 #include "xtensor/xstrided_view.hpp"                   // for xstrided_slice...
-#include "xtensor/xtensor_forward.hpp"                 // for xarray
-#include "xtl/xiterator_base.hpp"                      // for operator+
 
 void add_size_at_idx(va::shape_type& shape, const std::size_t idx, const std::size_t value) {
     if (shape.size() > idx) {
@@ -414,109 +415,109 @@ va::VArray variant_as_array(const Variant& array) {
             return array_as_varray(array);
         }
         case Variant::BOOL: {
-            return va::from_store(std::make_shared<xt::xarray<bool>>(xt::xarray<bool>(array)));
+            return va::from_scalar<bool>(array);
         }
         case Variant::INT: {
-            return va::from_store(std::make_shared<xt::xarray<int64_t>>(xt::xarray<int64_t>(array)));
+            return va::from_scalar<int64_t>(array);
         }
         case Variant::FLOAT: {
-            return va::from_store(std::make_shared<xt::xarray<double_t>>(xt::xarray<double_t>(array)));
+            return va::from_scalar<double_t>(array);
         }
         case Variant::PACKED_BYTE_ARRAY: {
             const auto packed = PackedByteArray(array);
-            return va::from_store(std::make_shared<xt::xarray<uint8_t>>(xt::xarray<uint8_t>(
+            return va::from_store(va::make_store(
                 adapt_c_array(packed.ptr(), { static_cast<std::size_t>(packed.size()) })
-            )));
+            ));
         }
         case Variant::PACKED_INT32_ARRAY: {
             const auto packed = PackedInt32Array(array);
-            return va::from_store(std::make_shared<xt::xarray<int32_t>>(xt::xarray<int32_t>(
+            return va::from_store(va::make_store(
                 adapt_c_array(packed.ptr(), { static_cast<std::size_t>(packed.size()) })
-            )));
+            ));
         }
         case Variant::PACKED_INT64_ARRAY: {
             const auto packed = PackedInt64Array(array);
-            return va::from_store(std::make_shared<xt::xarray<int64_t>>(xt::xarray<int64_t>(
+            return va::from_store(va::make_store(
                 adapt_c_array(packed.ptr(), { static_cast<std::size_t>(packed.size()) })
-            )));
+            ));
         }
         case Variant::PACKED_FLOAT32_ARRAY: {
             const auto packed = PackedFloat32Array(array);
-            return va::from_store(std::make_shared<xt::xarray<float_t>>(xt::xarray<float_t>(
+            return va::from_store(va::make_store(
                 adapt_c_array(packed.ptr(), { static_cast<std::size_t>(packed.size()) })
-            )));
+            ));
         }
         case Variant::PACKED_FLOAT64_ARRAY: {
             const auto packed = PackedFloat64Array(array);
-            return va::from_store(std::make_shared<xt::xarray<double_t>>(xt::xarray<double_t>(
+            return va::from_store(va::make_store(
                 adapt_c_array(packed.ptr(), { static_cast<std::size_t>(packed.size()) })
-            )));
+            ));
         }
         case Variant::PACKED_VECTOR2_ARRAY: {
             const auto packed = PackedVector2Array(array);
-            return va::from_store(std::make_shared<xt::xarray<real_t>>(xt::xarray<real_t>(
+            return va::from_store(va::make_store(
                 adapt_c_array(&packed.ptr()[0].coord[0], { static_cast<std::size_t>(packed.size()), 2 })
-            )));
+            ));
         }
         case Variant::PACKED_VECTOR3_ARRAY: {
             const auto packed = PackedVector3Array(array);
-            return va::from_store(std::make_shared<xt::xarray<real_t>>(xt::xarray<real_t>(
+            return va::from_store(va::make_store(
                 adapt_c_array(&packed.ptr()[0].coord[0], { static_cast<std::size_t>(packed.size()), 3 })
-            )));
+            ));
         }
         case Variant::PACKED_VECTOR4_ARRAY: {
             const auto packed = PackedVector4Array(array);
-            return va::from_store(std::make_shared<xt::xarray<real_t>>(xt::xarray<real_t>(
+            return va::from_store(va::make_store(
                 adapt_c_array(&packed.ptr()[0].components[0], { static_cast<std::size_t>(packed.size()), 4 })
-            )));
+            ));
         }
         case Variant::PACKED_COLOR_ARRAY: {
             const auto packed = PackedColorArray(array);
-            return va::from_store(std::make_shared<xt::xarray<float_t>>(xt::xarray<float_t>(
+            return va::from_store(va::make_store(
                 adapt_c_array(&packed.ptr()[0].components[0], { static_cast<std::size_t>(packed.size()), 4 })
-            )));
+            ));
         }
         case Variant::VECTOR2I: {
             auto vector = Vector2i(array);
-            return va::from_store(std::make_shared<xt::xarray<int32_t>>(xt::xarray<int32_t>(
+            return va::from_store(va::make_store(
                 { vector.x, vector.y }
-            )));
+            ));
         }
         case Variant::VECTOR3I: {
             auto vector = Vector3i(array);
-            return va::from_store(std::make_shared<xt::xarray<int32_t>>(xt::xarray<int32_t>(
+            return va::from_store(va::make_store(
                 { vector.x, vector.y, vector.z }
-            )));
+            ));
         }
         case Variant::VECTOR4I: {
             auto vector = Vector4i(array);
-            return va::from_store(std::make_shared<xt::xarray<int32_t>>(xt::xarray<int32_t>(
+            return va::from_store(va::make_store(
                 { vector.x, vector.y, vector.z, vector.w }
-            )));
+            ));
         }
         case Variant::VECTOR2: {
             auto vector = Vector2(array);
-            return va::from_store(std::make_shared<xt::xarray<real_t>>(xt::xarray<real_t>(
+            return va::from_store(va::make_store(
                 { vector.x, vector.y }
-            )));
+            ));
         }
         case Variant::VECTOR3: {
             auto vector = Vector3(array);
-            return va::from_store(std::make_shared<xt::xarray<real_t>>(xt::xarray<real_t>(
+            return va::from_store(va::make_store(
                 { vector.x, vector.y, vector.z }
-            )));
+            ));
         }
         case Variant::VECTOR4: {
             auto vector = Vector4(array);
-            return va::from_store(std::make_shared<xt::xarray<real_t>>(xt::xarray<real_t>(
+            return va::from_store(va::make_store(
                 { vector.x, vector.y, vector.z, vector.w }
-            )));
+            ));
         }
         case Variant::COLOR: {
             auto vector = Color(array);
-            return va::from_store(std::make_shared<xt::xarray<float_t>>(xt::xarray<float_t>(
+            return va::from_store(va::make_store(
                 { vector.r, vector.g, vector.b, vector.a }
-            )));
+            ));
         }
         default:
             break;

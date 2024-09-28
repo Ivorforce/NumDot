@@ -2,16 +2,19 @@
 #define VA_H
 
 #include "auto_defines.h"
-#include <cstddef>   // for ptrdiff_t, size_t
-#include <variant>   // for visit
-#include "varray.h"  // for VArray, strides_type, from_surrogate, to_strided
+
+#include <cstddef>      // for ptrdiff_t, size_t
+#include <type_traits>  // for decay_t
+#include <variant>      // for visit
+#include "varray.h"     // for VArray, strides_type, axes_type, from_surrogate
 
 namespace va {
     template <typename Visitor>
     static VArray map(const Visitor& visitor, const VArray& varray) {
         return std::visit([visitor, varray](auto& store) -> VArray {
-            auto strided = to_strided(store, varray);
-            return from_surrogate(store, visitor(strided));
+        using V = typename std::decay_t<decltype(store)>::element_type::value_type;
+            auto read = to_compute_variant<const V*>(store, varray);
+            return from_surrogate(store, visitor(read));
         }, varray.store);
     }
 

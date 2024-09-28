@@ -1,19 +1,21 @@
 #include "reduce.h"
 
-#include <cmath>                                       // for double_t
-#include <utility>                                      // for forward
-
 #include "rearrange.h"
-#include "vatensor/varray.h"                            // for VArray, Axes
-#include "vcompute.h"
-#include "vpromote.h"                                    // for promote
+#include <cmath>                                        // for double_t
+#include <stdexcept>                                    // for runtime_error
+#include <tuple>                                        // for tuple
+#include <utility>                                      // for forward, move
+#include "vatensor/varray.h"                            // for VArray, axes_...
+#include "vcompute.h"                                   // for vreduce, xope...
+#include "vpromote.h"                                   // for num_matching_...
 #include "xtensor/xiterator.hpp"                        // for operator==
 #include "xtensor/xlayout.hpp"                          // for layout_type
-#include "xtensor/xmath.hpp"                            // for amax, amin, mean
-#include "xtensor/xnorm.hpp"                            // for norms
+#include "xtensor/xmath.hpp"                            // for XTENSOR_REDUC...
+#include "xtensor/xnorm.hpp"                            // for norm_l0, norm_l1
+#include "xtensor/xoperation.hpp"                       // for logical_and
 #include "xtensor/xsort.hpp"                            // for median
-#include "xtensor/xtensor_forward.hpp"                            // for xtensor_fixed
 #include "xtl/xiterator_base.hpp"                       // for operator!=
+namespace xt { namespace evaluation_strategy { struct lazy_type; } }
 
 using namespace va;
 

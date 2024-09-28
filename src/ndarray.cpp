@@ -1,32 +1,30 @@
 #include "ndarray.h"
 
+#include <gdconvert/conversion_ints.h>             // for variants_to_axes
 #include <vatensor/comparison.h>                   // for equal_to, greater
+#include <vatensor/linalg.h>                       // for reduce_dot, dot
 #include <vatensor/logical.h>                      // for logical_and, logic...
-#include <vatensor/reduce.h>                       // for max, mean, min, prod
+#include <vatensor/reduce.h>                       // for all, any, max, mean
 #include <vatensor/trigonometry.h>                 // for acos, acosh, asin
-#include <vatensor/vmath.h>                        // for abs, add, deg2rad
+#include <vatensor/vassign.h>                      // for assign
+#include <vatensor/vmath.h>                        // for abs, add, clip
 #include <algorithm>                               // for copy
-#include <array>
-#include <functional>                              // for function
+#include <cstddef>                                 // for size_t
 #include <stdexcept>                               // for runtime_error
 #include <variant>                                 // for visit
-#include <gdconvert/conversion_ints.h>
-#include <vatensor/linalg.h>
-#include <vatensor/vassign.h>
-#include "gdconvert/conversion_array.h"            // for varray_to_packed
-#include "gdconvert/conversion_slice.h"            // for variants_as_slice_...
+#include "gdconvert/conversion_array.h"            // for fill_c_array_flat
+#include "gdconvert/conversion_slice.h"            // for variants_to_slice_...
 #include "gdconvert/conversion_string.h"           // for xt_to_string
 #include "godot_cpp/classes/global_constants.hpp"  // for MethodFlags
 #include "godot_cpp/core/class_db.hpp"             // for D_METHOD, ClassDB
-#include "godot_cpp/core/error_macros.hpp"         // for ERR_FAIL_V_MSG
+#include "godot_cpp/core/error_macros.hpp"         // for ERR_FAIL_COND_V_MSG
 #include "godot_cpp/core/memory.hpp"               // for _post_initialize
 #include "godot_cpp/variant/string_name.hpp"       // for StringName
 #include "godot_cpp/variant/variant.hpp"           // for Variant
 #include "nd.h"                                    // for nd
 #include "vatensor/round.h"                        // for ceil, floor, nearb...
-#include "vatensor/varray.h"                       // for VArray, Axes, cons...
+#include "vatensor/varray.h"                       // for VArray, VArrayTarget
 #include "xtensor/xiterator.hpp"                   // for operator==
-#include "xtensor/xlayout.hpp"                     // for layout_type
 #include "xtensor/xstrided_view.hpp"               // for xstrided_slice_vector
 #include "xtl/xiterator_base.hpp"                  // for operator!=
 

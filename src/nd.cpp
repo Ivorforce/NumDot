@@ -1,37 +1,33 @@
 #include "nd.h"
 
 #include <vatensor/comparison.h>            // for equal_to, greater, greate...
+#include "nd.h"
+#include <vatensor/comparison.h>            // for equal_to, greater, greate...
+#include <vatensor/linalg.h>                // for reduce_dot, dot, matmul
 #include <vatensor/logical.h>               // for logical_and, logical_not
-#include <vatensor/reduce.h>                // for max, mean, min, prod, std
+#include <vatensor/reduce.h>                // for all, any, max, mean, median
 #include <vatensor/round.h>                 // for ceil, floor, nearbyint
 #include <vatensor/trigonometry.h>          // for acos, acosh, asin, asinh
-#include <vatensor/vmath.h>                 // for abs, add, deg2rad, divide
-#include <cmath>                            // for double_t
-#include <cstddef>                          // for ptrdiff_t, size_t
-#include <functional>                       // for function
-#include <memory>                           // for make_shared
+#include <vatensor/vassign.h>               // for assign
+#include <vatensor/vmath.h>                 // for abs, add, clip, deg2rad
+#include <cmath>                            // for double_t, isinf
 #include <optional>                         // for optional
 #include <stdexcept>                        // for runtime_error
 #include <type_traits>                      // for decay_t
-#include <utility>                          // for move
-#include <variant>                          // for visit, variant
-#include <vector>                           // for vector
-#include <vatensor/linalg.h>
-#include <vatensor/vassign.h>
+#include <utility>                          // for forward
+#include <variant>                          // for visit
 #include "gdconvert/conversion_array.h"     // for variant_as_array
-#include "gdconvert/conversion_ints.h"     // for variant_as_shape
+#include "gdconvert/conversion_ints.h"      // for variant_to_axes, variant_...
 #include "gdconvert/conversion_slice.h"     // for ellipsis, newaxis
 #include "godot_cpp/classes/ref.hpp"        // for Ref
-#include "godot_cpp/core/error_macros.hpp"  // for ERR_FAIL_V_MSG
+#include "godot_cpp/core/error_macros.hpp"  // for ERR_FAIL_V_MSG, ERR_FAIL_...
 #include "godot_cpp/core/memory.hpp"        // for _post_initialize, memnew
 #include "ndarray.h"                        // for NDArray
-#include "vatensor/allocate.h"              // for empty, full, copy_as_dtype
-#include "vatensor/rearrange.h"             // for reshape, transpose, flip
-#include "vatensor/varray.h"                // for VArrayTarget, DType, VArray
+#include "vatensor/allocate.h"              // for full, empty
+#include "vatensor/rearrange.h"             // for moveaxis, reshape, transpose
+#include "vatensor/varray.h"                // for VArrayTarget, axes_type
 #include "xtensor/xbuilder.hpp"             // for arange, linspace
 #include "xtensor/xlayout.hpp"              // for layout_type
-#include "xtensor/xslice.hpp"               // for xtuph
-#include "xtensor/xtensor_forward.hpp"      // for xarray
 
 
 using namespace godot;
@@ -388,11 +384,11 @@ Ref<NDArray> nd::linspace(const Variant &start, const Variant &stop, const int64
 			using T = std::decay_t<decltype(t)>;
 
 			if constexpr (std::is_floating_point_v<T>) {
-				auto store = std::make_shared<xt::xarray<T>>(xt::linspace(static_cast<double_t>(start), static_cast<double_t>(stop), num, endpoint));
+				auto store = va::make_store<T>(xt::linspace(static_cast<double_t>(start), static_cast<double_t>(stop), num, endpoint));
 				return va::from_store(store);
 			}
 			else {
-				auto store = std::make_shared<xt::xarray<T>>(xt::linspace(static_cast<int64_t>(start), static_cast<int64_t>(stop), num, endpoint));
+				auto store = va::make_store<T>(xt::linspace(static_cast<int64_t>(start), static_cast<int64_t>(stop), num, endpoint));
 				return va::from_store(store);
 			}
 		}, va::dtype_to_variant(dtype));
@@ -423,11 +419,11 @@ Ref<NDArray> nd::arange(const Variant &start_or_stop, const Variant &stop, const
 			using T = std::decay_t<decltype(t)>;
 
 			if constexpr (std::is_floating_point_v<T>) {
-				const auto store = std::make_shared<xt::xarray<T>>(xt::arange(static_cast<double_t>(start_), static_cast<double_t>(stop_), static_cast<double_t>(step_)));
+				const auto store = va::make_store<T>(xt::arange(static_cast<double_t>(start_), static_cast<double_t>(stop_), static_cast<double_t>(step_)));
 				return va::from_store(store);
 			}
 			else {
-				const auto store = std::make_shared<xt::xarray<T>>(xt::arange(static_cast<int64_t>(start_), static_cast<int64_t>(stop_), static_cast<int64_t>(step_)));
+				const auto store = va::make_store<T>(xt::arange(static_cast<int64_t>(start_), static_cast<int64_t>(stop_), static_cast<int64_t>(step_)));
 				return va::from_store(store);
 			}
 		}, va::dtype_to_variant(dtype));

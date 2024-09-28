@@ -1,27 +1,16 @@
 #include "ndi.h"
 
-#include <vatensor/reduce.h>                // for max, mean, min, prod, std
-#include <cmath>                            // for int64_t
-#include <cstddef>                          // for ptrdiff_t, size_t
-#include <functional>                       // for function
-#include <memory>                           // for make_shared
-#include <optional>                         // for optional
-#include <stdexcept>                        // for runtime_error
-#include <type_traits>                      // for decay_t
-#include <utility>                          // for move
-#include <variant>                          // for visit, variant
-#include <vector>                           // for vector
-#include <vatensor/linalg.h>
-#include <vatensor/vassign.h>
-#include "gdconvert/conversion_array.h"     // for variant_as_array
-#include "gdconvert/conversion_ints.h"     // for variant_as_shape
-#include "gdconvert/conversion_slice.h"     // for ellipsis, newaxis
-#include "godot_cpp/core/error_macros.hpp"  // for ERR_FAIL_V_MSG
-#include "godot_cpp/core/memory.hpp"        // for _post_initialize, memnew
-#include "ndarray.h"                        // for NDArray
-#include "vatensor/varray.h"                // for VArrayTarget, DType, VArray
-#include "xtensor/xslice.hpp"               // for xtuph
-#include "xtensor/xtensor_forward.hpp"      // for xarray
+#include <vatensor/linalg.h>                  // for reduce_dot
+#include <vatensor/reduce.h>                  // for max, median, min, norm_l0
+#include <cmath>                              // for isinf
+#include <stdexcept>                          // for runtime_error
+#include <type_traits>                        // for decay_t
+#include <utility>                            // for forward
+#include "gdconvert/conversion_array.h"       // for variant_as_array
+#include "godot_cpp/core/class_db.hpp"        // for D_METHOD, ClassDB, Meth...
+#include "godot_cpp/core/error_macros.hpp"    // for ERR_FAIL_V_MSG
+#include "godot_cpp/variant/string_name.hpp"  // for StringName
+#include "vatensor/varray.h"                  // for VArray (ptr only), VScalar
 
 
 using namespace godot;

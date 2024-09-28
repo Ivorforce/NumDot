@@ -1,9 +1,19 @@
 #ifndef VCOMPUTE_INPLACE_H
 #define VCOMPUTE_INPLACE_H
 
-#include "varray.h"
-#include "vpromote.h"
-#include "vassign.h"
+#include <cmath>                       // for double_t
+#include <cstdint>                     // for int64_t
+#include <type_traits>                  // for decay_t, conditional_t, disju...
+#include <utility>                      // for forward
+#include <variant>                      // for visit, variant
+#include <vector>                       // for vector
+#include "varray.h"                     // for VArrayTarget, VScalar, VWrite
+#include "vassign.h"                    // for assign_nonoverlapping, broadc...
+#include "vpromote.h"                   // for promote_xexpression_if_needed
+#include "xtensor/xarray.hpp"           // for xarray_container
+#include "xtensor/xoperation.hpp"       // for xfunction_type_t
+#include "xtensor/xstorage.hpp"         // for uvector
+#include "xtensor/xtensor_forward.hpp"  // for xarray
 
 namespace va {
     // Type trait to check if T is in std::variant<Args...>
@@ -85,7 +95,7 @@ namespace va {
             } else {
                 // Create new array, assign to our target pointer.
                 // OutputType may be different from R, if we want different behavior than xtensor for computation.
-                *target = from_store(std::make_shared<xt::xarray<OStorable>>(result));
+                *target = from_store(make_store<OStorable>(result));
             }
         }, target);
     }

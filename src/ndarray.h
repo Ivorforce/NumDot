@@ -21,6 +21,18 @@
 #include "godot_cpp/variant/packed_int32_array.hpp"    // for PackedInt32Array
 #include "godot_cpp/variant/packed_int64_array.hpp"    // for PackedInt64Array
 #include "godot_cpp/variant/string.hpp"                // for String
+#include "godot_cpp/variant/color.hpp"                 // for Color
+#include "godot_cpp/variant/packed_color_array.hpp"    // for PackedColorArray
+#include "godot_cpp/variant/packed_vector2_array.hpp"  // for PackedVector2A...
+#include "godot_cpp/variant/packed_vector3_array.hpp"  // for PackedVector3A...
+#include "godot_cpp/variant/packed_vector4_array.hpp"  // for PackedVector4A...
+#include "godot_cpp/variant/typed_array.hpp"           // for TypedArray
+#include "godot_cpp/variant/vector2.hpp"               // for Vector2
+#include "godot_cpp/variant/vector2i.hpp"              // for Vector2i
+#include "godot_cpp/variant/vector3.hpp"               // for Vector3
+#include "godot_cpp/variant/vector3i.hpp"              // for Vector3i
+#include "godot_cpp/variant/vector4.hpp"               // for Vector4
+#include "godot_cpp/variant/vector4i.hpp"              // for Vector4i
 #include "vatensor/varray.h"                                    // for DType, VArray
 namespace godot { class ClassDB; }
 

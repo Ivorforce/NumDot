@@ -4,11 +4,14 @@
 
 #include "rearrange.h"
 
-#include <set>
+#include <algorithm>                  // for stable_partition
+#include <functional>                 // for multiplies
+#include <numeric>                    // for accumulate, iota
+#include <set>                        // for operator==, set
+#include "vatensor//varray.h"         // for VArray, strides_type, axes_type
 #include "xtensor/xlayout.hpp"        // for layout_type
-#include "xtensor/xmanipulation.hpp"  // for flip, full, moveaxis, swapaxes
+#include "xtensor/xmanipulation.hpp"  // for full, transpose, flip, moveaxis
 #include "xtensor/xstrided_view.hpp"  // for reshape_view
-#include "vatensor//varray.h"          // for VArray, strides_type
 
 using namespace va;
 

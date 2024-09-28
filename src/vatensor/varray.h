@@ -212,11 +212,17 @@ namespace va {
     template <typename V, typename T>
     static compute_case<V> to_compute_variant(T& store, const VArray& varray) {
         auto shape = varray.shape;
-        auto strides = varray.strides;
         auto size_ = std::accumulate(shape.begin(), shape.end(), static_cast<std::size_t>(1), std::multiplies());
 
-        // return xt::adapt(store->data(), store->size(), xt::no_ownership(), store->shape(), store->strides());
-        return xt::adapt<V>(store->data() + varray.offset, size_, xt::no_ownership(), shape, strides);
+        switch (varray.layout) {
+            case xt::layout_type::row_major:
+            case xt::layout_type::column_major:
+                return xt::adapt<xt::layout_type::dynamic, V>(store->data() + varray.offset, size_, xt::no_ownership(), shape, varray.layout);
+            default: {
+                auto strides = varray.strides;
+                return xt::adapt<V>(store->data() + varray.offset, size_, xt::no_ownership(), shape, strides);
+            }
+        }
     }
 
     template <typename V, typename T>
@@ -232,8 +238,15 @@ namespace va {
 
         auto size_ = std::accumulate(args.new_shape.begin(), args.new_shape.end(), static_cast<std::size_t>(1), std::multiplies());
 
-        // return xt::adapt(store->data(), store->size(), xt::no_ownership(), store->shape(), store->strides());
-        return xt::adapt<V>(store->data() + args.new_offset, size_, xt::no_ownership(), args.new_shape, args.new_strides);
+        switch (args.new_layout) {
+            case xt::layout_type::row_major:
+            case xt::layout_type::column_major:
+                return xt::adapt<xt::layout_type::dynamic, V>(store->data() + args.new_offset, size_, xt::no_ownership(), args.new_shape, args.new_layout);
+            default: {
+                auto strides = varray.strides;
+                return xt::adapt<V>(store->data() + args.new_offset, size_, xt::no_ownership(), args.new_shape, args.new_strides);
+            }
+        }
     }
 
     VScalar dtype_to_variant(DType dtype);

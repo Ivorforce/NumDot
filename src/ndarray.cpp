@@ -40,7 +40,9 @@ void NDArray::_bind_methods() {
 	godot::ClassDB::bind_method(D_METHOD("size"), &NDArray::size);
 	godot::ClassDB::bind_method(D_METHOD("array_size_in_bytes"), &NDArray::array_size_in_bytes);
 	godot::ClassDB::bind_method(D_METHOD("ndim"), &NDArray::ndim);
-	godot::ClassDB::bind_method(D_METHOD("layout"), &NDArray::layout);
+	godot::ClassDB::bind_method(D_METHOD("strides"), &NDArray::strides);
+	godot::ClassDB::bind_method(D_METHOD("strides_layout"), &NDArray::strides_layout);
+	godot::ClassDB::bind_method(D_METHOD("strides_offset"), &NDArray::strides_offset);
 
 	ClassDB::bind_method(D_METHOD("_iter_init"), &NDArray::_iter_init);
 	ClassDB::bind_method(D_METHOD("_iter_get"), &NDArray::_iter_get);
@@ -180,7 +182,14 @@ uint64_t NDArray::ndim() const {
 	return array.dimension();
 }
 
-NDArray::Layout NDArray::layout() const {
+PackedInt64Array NDArray::strides() const {
+	PackedInt64Array strides;
+	strides.resize(static_cast<int64_t>(array.strides.size()));
+	std::copy(array.strides.begin(), array.strides.end(), strides.ptrw());
+	return strides;
+}
+
+NDArray::Layout NDArray::strides_layout() const {
 	switch (array.layout) {
 		case xt::layout_type::row_major:
 			return NDArray::Layout::RowMajor;
@@ -193,6 +202,10 @@ NDArray::Layout NDArray::layout() const {
 		default: ;
 			ERR_FAIL_V_MSG(NDArray::Dynamic, "Unrecognized layout found.");
 	}
+}
+
+uint64_t NDArray::strides_offset() const {
+	return static_cast<uint64_t>(array.offset);
 }
 
 Variant NDArray::_iter_init(const Array &p_iter) {

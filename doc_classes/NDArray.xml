@@ -555,14 +555,6 @@
 				Errors if the index does not yield a single value.
 			</description>
 		</method>
-		<method name="layout" qualifiers="const">
-			<return type="int" enum="NDArray.Layout" />
-			<description>
-				The layout of the array.
-				Arrays with RowMajor and ColumnMajor layout may have improved performance to those with dynamic layout.
-				All arrays start with RowMajor layout, but rearranging (like [method nd.transpose]) can change the layout. To regain a consistent layout, consider making a copy of the array.
-			</description>
-		</method>
 		<method name="ndim" qualifiers="const">
 			<return type="int" />
 			<description>
@@ -586,6 +578,26 @@
 			<return type="int" />
 			<description>
 				Number of elements in the array. Equal to nd.prod(a.shape()), i.e., the product of the array’s dimensions.
+			</description>
+		</method>
+		<method name="strides" qualifiers="const">
+			<return type="PackedInt64Array" />
+			<description>
+				The strides of each dimension, in order, in the underlying data buffer.
+			</description>
+		</method>
+		<method name="strides_layout" qualifiers="const">
+			<return type="int" enum="NDArray.Layout" />
+			<description>
+				The layout of the strides into the underlying data buffer.
+				Arrays with RowMajor and ColumnMajor layout may have improved performance to those with dynamic layout.
+				All arrays start with RowMajor layout, but rearranging (like [method nd.transpose]) can change the layout. To regain a consistent layout, consider making a copy of the array.
+			</description>
+		</method>
+		<method name="strides_offset" qualifiers="const">
+			<return type="int" />
+			<description>
+				The offset of the first element in this array in the underlying data buffer.
 			</description>
 		</method>
 		<method name="to_bool" qualifiers="const">

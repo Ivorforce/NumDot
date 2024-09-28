@@ -160,8 +160,6 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``int``                                                    | :ref:`get_int<class_NDArray_method_get_int>`\ (\ ...\ ) |const| |vararg|                                                                          |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`Layout<enum_NDArray_Layout>`                         | :ref:`layout<class_NDArray_method_layout>`\ (\ ) |const|                                                                                          |
-   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``int``                                                    | :ref:`ndim<class_NDArray_method_ndim>`\ (\ ) |const|                                                                                              |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
    | |void|                                                     | :ref:`set<class_NDArray_method_set>`\ (\ ...\ ) |const| |vararg|                                                                                  |
@@ -169,6 +167,12 @@ Methods
    | ``PackedInt64Array``                                       | :ref:`shape<class_NDArray_method_shape>`\ (\ ) |const|                                                                                            |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``int``                                                    | :ref:`size<class_NDArray_method_size>`\ (\ ) |const|                                                                                              |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``PackedInt64Array``                                       | :ref:`strides<class_NDArray_method_strides>`\ (\ ) |const|                                                                                        |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`Layout<enum_NDArray_Layout>`                         | :ref:`strides_layout<class_NDArray_method_strides_layout>`\ (\ ) |const|                                                                          |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``int``                                                    | :ref:`strides_offset<class_NDArray_method_strides_offset>`\ (\ ) |const|                                                                          |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``bool``                                                   | :ref:`to_bool<class_NDArray_method_to_bool>`\ (\ ) |const|                                                                                        |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1163,22 +1167,6 @@ Errors if the index does not yield a single value.
 
 ----
 
-.. _class_NDArray_method_layout:
-
-.. rst-class:: classref-method
-
-:ref:`Layout<enum_NDArray_Layout>` **layout**\ (\ ) |const| :ref:`🔗<class_NDArray_method_layout>`
-
-The layout of the array.
-
-Arrays with RowMajor and ColumnMajor layout may have improved performance to those with dynamic layout.
-
-All arrays start with RowMajor layout, but rearranging (like :ref:`nd.transpose<class_nd_method_transpose>`) can change the layout. To regain a consistent layout, consider making a copy of the array.
-
-.. rst-class:: classref-item-separator
-
-----
-
 .. _class_NDArray_method_ndim:
 
 .. rst-class:: classref-method
@@ -1224,6 +1212,46 @@ Array of array dimensions.
 ``int`` **size**\ (\ ) |const| :ref:`🔗<class_NDArray_method_size>`
 
 Number of elements in the array. Equal to nd.prod(a.shape()), i.e., the product of the array’s dimensions.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_strides:
+
+.. rst-class:: classref-method
+
+``PackedInt64Array`` **strides**\ (\ ) |const| :ref:`🔗<class_NDArray_method_strides>`
+
+The strides of each dimension, in order, in the underlying data buffer.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_strides_layout:
+
+.. rst-class:: classref-method
+
+:ref:`Layout<enum_NDArray_Layout>` **strides_layout**\ (\ ) |const| :ref:`🔗<class_NDArray_method_strides_layout>`
+
+The layout of the strides into the underlying data buffer.
+
+Arrays with RowMajor and ColumnMajor layout may have improved performance to those with dynamic layout.
+
+All arrays start with RowMajor layout, but rearranging (like :ref:`nd.transpose<class_nd_method_transpose>`) can change the layout. To regain a consistent layout, consider making a copy of the array.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_strides_offset:
+
+.. rst-class:: classref-method
+
+``int`` **strides_offset**\ (\ ) |const| :ref:`🔗<class_NDArray_method_strides_offset>`
+
+The offset of the first element in this array in the underlying data buffer.
 
 .. rst-class:: classref-item-separator
 

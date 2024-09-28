@@ -20,7 +20,7 @@ Upcoming Changes (main branch)
 - (Now really) added the ``logical_xor`` function.
 - Add ``nd.median``. An axis version is not yet implemented.
 - Added new namespaces :ref:`ndb <class_ndb>`, :ref:`ndf <class_ndf>` and :ref:`ndi <class_ndi>`, for full tensor reductions to ``bool``, ``float`` and ``int``, respectively.
-- Added ``NDArray.layout()``, through which you can inspect if an array has consistent strides.
+- Added ``NDArray.strides()``, ``NDArray.strides_layout()``, and ``NDArray.strides_offset()``, through which you can inspect the strides properties of an ``NDArray`` / ``NDArray`` view.
 
 **Changed**
 

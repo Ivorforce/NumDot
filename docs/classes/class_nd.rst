@@ -1009,8 +1009,6 @@ Compute the median along the specified axis. The median is the middle value when
 
 Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.median<class_ndf_method_median>` or :ref:`ndi.median<class_ndi_method_median>`.
 
-Note that median with given axes is not yet implemented.
-
 .. rst-class:: classref-item-separator
 
 ----

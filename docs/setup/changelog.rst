@@ -18,7 +18,7 @@ Upcoming Changes (main branch)
 - ``NDArray`` conversion functions to and from ``Color``, ``Vector2``, ``Vector3``, ``Vector4``, ``Vector2i``, ``Vector3i``, ``Vector4i``, ``PackedVector2Array``, ``PackedVector3Array``, ``PackedVector4Array`` and ``PackedColorArray``.
 - ``nd.as_array`` shorthands for each data type, e.g. ``nd.float32``.
 - (Now really) added the ``logical_xor`` function.
-- Add ``nd.median``. An axis version is not yet implemented.
+- Added ``nd.median``.
 - Added new namespaces :ref:`ndb <class_ndb>`, :ref:`ndf <class_ndf>` and :ref:`ndi <class_ndi>`, for full tensor reductions to ``bool``, ``float`` and ``int``, respectively.
 - Added ``NDArray.strides()``, ``NDArray.strides_layout()``, and ``NDArray.strides_offset()``, through which you can inspect the strides properties of an ``NDArray`` / ``NDArray`` view.
 

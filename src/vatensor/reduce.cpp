@@ -5,6 +5,8 @@
 #include <stdexcept>                                    // for runtime_error
 #include <tuple>                                        // for tuple
 #include <utility>                                      // for forward, move
+
+#include "allocate.h"
 #include "vatensor/varray.h"                            // for VArray, axes_...
 #include "vcompute.h"                                   // for vreduce, xope...
 #include "vpromote.h"                                   // for num_matching_...
@@ -111,30 +113,34 @@ void va::median(VArrayTarget target, const VArray &array, const axes_type &axes)
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
-	throw std::runtime_error("median is not yet supported with a given axis.");
+	if (axes.size() == 1 && array.layout != xt::layout_type::dynamic) {
+		// Supported by xtensor.
+		auto axis = axes[0];
+		va::xoperation_inplace<promote::num_common_type>(
+			REDUCER_LAMBDA_AXES_NOECS(axis, xt::median),
+			target, array.compute_read()
+		);
+		return;
+	}
 
-	// TODO xtensor doesn't have median fully implemented yet.
-	//  It currently complains with 'unsupported layout' even when just one axis is given.
-	//  We have to figure out why even basic tensors are 'dynamic' layout right now.
-	//  Then we have to check if it's dynamic layout, and if so, make a row-major copy before calling median.
+	// Multi-axis (and dynamic layout) not supported by xtensor. Gotta join the requested axes into one first.
+	const auto joined = join_axes_into_last_dimension(array, axes);
+	constexpr auto axis = -1;
 
-	// if (axes.size() == 1) {
-	// 	// Supported by xtensor.
-	// 	auto axis = axes[0];
-	// 	va::xoperation_inplace<promote::num_common_type>(
-	// 		REDUCER_LAMBDA_AXES_NOECS(axis, xt::median),
-	// 		target, array.compute_read()
-	// 	);
-	// 	return;
-	// }
-
-	// Not supported by xtensor. Gotta join the requested axes.
-	// const auto joined = join_axes_into_last_dimension(array, axes);
-	// constexpr auto axis = -1;
-	// va::xoperation_inplace<promote::num_common_type>(
-	// 	REDUCER_LAMBDA_AXES_NOECS(axis, xt::median),
-	// 	target, joined.compute_read()
-	// );
+	if (joined.layout == xt::layout_type::dynamic) {
+		// xtensor does not support dynamic layout, so we need a copy first.
+		const auto joined_copy = copy_as_dtype(array, DTypeMax);
+		va::xoperation_inplace<promote::num_common_type>(
+			REDUCER_LAMBDA_AXES_NOECS(axis, xt::median),
+			target, joined_copy.compute_read()
+		);
+	}
+	else {
+		va::xoperation_inplace<promote::num_common_type>(
+			REDUCER_LAMBDA_AXES_NOECS(axis, xt::median),
+			target, joined.compute_read()
+		);
+	}
 #endif
 }
 

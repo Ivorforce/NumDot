@@ -156,41 +156,41 @@ NDArray::NDArray() = default;
 NDArray::~NDArray() = default;
 
 String NDArray::_to_string() const {
-	return std::visit([](auto&& arg){ return xt_to_string(arg); }, array.compute_read());
+	return std::visit([](auto&& arg){ return xt_to_string(arg); }, array->compute_read());
 }
 
 va::DType NDArray::dtype() const {
-	return array.dtype();
+	return array->dtype();
 }
 
 PackedInt64Array NDArray::shape() const {
 	PackedInt64Array shape;
-	shape.resize(static_cast<int64_t>(array.shape.size()));
-	std::copy(array.shape.begin(), array.shape.end(), shape.ptrw());
+	shape.resize(static_cast<int64_t>(array->shape.size()));
+	std::copy(array->shape.begin(), array->shape.end(), shape.ptrw());
 	return shape;
 }
 
 uint64_t NDArray::size() const {
-	return array.size();
+	return array->size();
 }
 
 uint64_t NDArray::array_size_in_bytes() const {
-	return array.size_of_array_in_bytes();
+	return array->size_of_array_in_bytes();
 }
 
 uint64_t NDArray::ndim() const {
-	return array.dimension();
+	return array->dimension();
 }
 
 PackedInt64Array NDArray::strides() const {
 	PackedInt64Array strides;
-	strides.resize(static_cast<int64_t>(array.strides.size()));
-	std::copy(array.strides.begin(), array.strides.end(), strides.ptrw());
+	strides.resize(static_cast<int64_t>(array->strides.size()));
+	std::copy(array->strides.begin(), array->strides.end(), strides.ptrw());
 	return strides;
 }
 
 NDArray::Layout NDArray::strides_layout() const {
-	switch (array.layout) {
+	switch (array->layout) {
 		case xt::layout_type::row_major:
 			return NDArray::Layout::RowMajor;
 		case xt::layout_type::column_major:
@@ -205,16 +205,16 @@ NDArray::Layout NDArray::strides_layout() const {
 }
 
 uint64_t NDArray::strides_offset() const {
-	return static_cast<uint64_t>(array.offset);
+	return static_cast<uint64_t>(array->offset);
 }
 
 Variant NDArray::_iter_init(const Array &p_iter) {
-	ERR_FAIL_COND_V_MSG(array.shape.empty(), false, "iteration over a 0-d array");
+	ERR_FAIL_COND_V_MSG(array->shape.empty(), false, "iteration over a 0-d array");
 
 	Array ref = p_iter;
 	ERR_FAIL_COND_V_MSG(ref.size() != 1, false, "size of iterator cache must be 1");
 
-	if (array.shape[0] == 0) {
+	if (array->shape[0] == 0) {
 		return false;
 	}
 
@@ -223,12 +223,12 @@ Variant NDArray::_iter_init(const Array &p_iter) {
 }
 
 Variant NDArray::_iter_next(const Array &p_iter) {
-	ERR_FAIL_COND_V_MSG(array.shape.empty(), false, "iteration over a 0-d array");
+	ERR_FAIL_COND_V_MSG(array->shape.empty(), false, "iteration over a 0-d array");
 
 	Array ref = p_iter;
 	ERR_FAIL_COND_V_MSG(ref.size() != 1, false, "size of iterator cache must be 1");
 
-	const auto size = array.shape[0];
+	const auto size = array->shape[0];
 	int pos = ref[0];
 	ERR_FAIL_COND_V_MSG(pos < 0 || pos >= size, false, "iterator out of bounds");
 
@@ -239,15 +239,15 @@ Variant NDArray::_iter_next(const Array &p_iter) {
 }
 
 Variant NDArray::_iter_get(const Variant &p_iter) {
-	ERR_FAIL_COND_V_MSG(array.shape.empty(), false, "iteration over a 0-d array");
+	ERR_FAIL_COND_V_MSG(array->shape.empty(), false, "iteration over a 0-d array");
 
 	int pos = p_iter;
-	const auto size = array.shape[0];
+	const auto size = array->shape[0];
 	if (pos < 0 || pos >= size) { return {}; }
 	ERR_FAIL_COND_V_MSG(pos < 0 || pos >= size, false, "iterator out of bounds");
 
 	// We checked for the shape size, the next should not fail.
-	const auto result = array.slice({pos});
+	const auto result = array->slice({pos});
 	return {memnew(NDArray(result))};
 }
 
@@ -256,14 +256,14 @@ Variant NDArray::as_type(va::DType dtype) const {
 }
 
 void NDArray::set(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
-	ERR_FAIL_COND_MSG(arg_count < 1, "At least one argument must be passed to NDArray.set(). Ignoring assignment.");
+	ERR_FAIL_COND_MSG(arg_count < 1, "At least one argument must be passed to NDarray->set(). Ignoring assignment.");
 
 	try {
 		const Variant &value = *args[0];
 		// todo don't need slices if arg_count == 1
 		auto compute = arg_count == 1
-			? array.compute_write()
-			: array.compute_write(variants_to_slice_vector(args + 1, arg_count - 1, error));
+			? array->compute_write()
+			: array->compute_write(variants_to_slice_vector(args + 1, arg_count - 1, error));
 
 		switch (value.get_type()) {
 			case Variant::BOOL:
@@ -278,7 +278,7 @@ void NDArray::set(const Variant **args, GDExtensionInt arg_count, GDExtensionCal
 			// TODO We could optimize more assignments of literals.
 			//  Just need to figure out how, ideally without duplicating code - as_array already does much type checking work.
 			default:
-				const auto a_ = variant_as_array(value).compute_read();
+				const auto a_ = variant_as_array(value)->compute_read();
 
 				va::assign(compute, a_);
 				return;
@@ -293,7 +293,7 @@ Ref<NDArray> NDArray::get(const Variant **args, GDExtensionInt arg_count, GDExte
 	try {
 		xt::xstrided_slice_vector sv = variants_to_slice_vector(args, arg_count, error);
 
-		const auto result = array.slice(sv);
+		const auto result = array->slice(sv);
 		return {memnew(NDArray(result))};
 	}
 	catch (std::runtime_error& error) {
@@ -303,7 +303,7 @@ Ref<NDArray> NDArray::get(const Variant **args, GDExtensionInt arg_count, GDExte
 
 bool NDArray::get_bool(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
 	try {
-		return va::scalar_to_type<bool>(array.get_scalar(variants_to_axes(args, arg_count, error)));
+		return va::scalar_to_type<bool>(array->get_scalar(variants_to_axes(args, arg_count, error)));
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG(0, error.what());
@@ -312,7 +312,7 @@ bool NDArray::get_bool(const Variant **args, GDExtensionInt arg_count, GDExtensi
 
 int64_t NDArray::get_int(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
 	try {
-		return va::scalar_to_type<int64_t>(array.get_scalar(variants_to_axes(args, arg_count, error)));
+		return va::scalar_to_type<int64_t>(array->get_scalar(variants_to_axes(args, arg_count, error)));
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG(0, error.what());
@@ -321,7 +321,7 @@ int64_t NDArray::get_int(const Variant **args, GDExtensionInt arg_count, GDExten
 
 double_t NDArray::get_float(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
 	try {
-		return va::scalar_to_type<double_t>(array.get_scalar(variants_to_axes(args, arg_count, error)));
+		return va::scalar_to_type<double_t>(array->get_scalar(variants_to_axes(args, arg_count, error)));
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG(0, error.what());
@@ -336,11 +336,11 @@ Vector2 NDArray::to_vector2() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
-    ERR_FAIL_COND_V_MSG(array.dimension() != 1, {}, "flatten the array before converting to vector");
-    ERR_FAIL_COND_V_MSG(array.shape[0] != 2, {}, "array dimension must be size 2");
+    ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to vector");
+    ERR_FAIL_COND_V_MSG(array->shape[0] != 2, {}, "array dimension must be size 2");
 
     Vector2 vector;
-    fill_c_array_flat(&vector.coord[0], array.compute_read());
+    fill_c_array_flat(&vector.coord[0], array->compute_read());
 
     return vector;
 #endif
@@ -350,11 +350,11 @@ Vector3 NDArray::to_vector3() const{
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
-    ERR_FAIL_COND_V_MSG(array.dimension() != 1, {}, "flatten the array before converting to vector");
-    ERR_FAIL_COND_V_MSG(array.shape[0] != 3, {}, "array dimension must be size 3");
+    ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to vector");
+    ERR_FAIL_COND_V_MSG(array->shape[0] != 3, {}, "array dimension must be size 3");
 
     Vector3 vector;
-    fill_c_array_flat(&vector.coord[0], array.compute_read());
+    fill_c_array_flat(&vector.coord[0], array->compute_read());
 
     return vector;
 #endif
@@ -364,11 +364,11 @@ Vector4 NDArray::to_vector4() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
-    ERR_FAIL_COND_V_MSG(array.dimension() != 1, {}, "flatten the array before converting to vector");
-    ERR_FAIL_COND_V_MSG(array.shape[0] != 4, {}, "array dimension must be size 4");
+    ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to vector");
+    ERR_FAIL_COND_V_MSG(array->shape[0] != 4, {}, "array dimension must be size 4");
 
     Vector4 vector;
-    fill_c_array_flat(&vector.components[0], array.compute_read());
+    fill_c_array_flat(&vector.components[0], array->compute_read());
 
     return vector;
 #endif
@@ -378,11 +378,11 @@ Vector2i NDArray::to_vector2i() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
-    ERR_FAIL_COND_V_MSG(array.dimension() != 1, {}, "flatten the array before converting to vector");
-    ERR_FAIL_COND_V_MSG(array.shape[0] != 2, {}, "array dimension must be size 2");
+    ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to vector");
+    ERR_FAIL_COND_V_MSG(array->shape[0] != 2, {}, "array dimension must be size 2");
 
     Vector2i vector;
-    fill_c_array_flat(&vector.coord[0], array.compute_read());
+    fill_c_array_flat(&vector.coord[0], array->compute_read());
 
     return vector;
 #endif
@@ -392,11 +392,11 @@ Vector3i NDArray::to_vector3i() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
-    ERR_FAIL_COND_V_MSG(array.dimension() != 1, {}, "flatten the array before converting to vector");
-    ERR_FAIL_COND_V_MSG(array.shape[0] != 3, {}, "array dimension must be size 3");
+    ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to vector");
+    ERR_FAIL_COND_V_MSG(array->shape[0] != 3, {}, "array dimension must be size 3");
 
     Vector3i vector;
-    fill_c_array_flat(&vector.coord[0], array.compute_read());
+    fill_c_array_flat(&vector.coord[0], array->compute_read());
 
     return vector;
 #endif
@@ -406,11 +406,11 @@ Vector4i NDArray::to_vector4i() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
-    ERR_FAIL_COND_V_MSG(array.dimension() != 1, {}, "flatten the array before converting to vector");
-    ERR_FAIL_COND_V_MSG(array.shape[0] != 4, {}, "array dimension must be size 4");
+    ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to vector");
+    ERR_FAIL_COND_V_MSG(array->shape[0] != 4, {}, "array dimension must be size 4");
 
     Vector4i vector;
-    fill_c_array_flat(&vector.coord[0], array.compute_read());
+    fill_c_array_flat(&vector.coord[0], array->compute_read());
 
     return vector;
 #endif
@@ -420,11 +420,11 @@ Color NDArray::to_color() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
-    ERR_FAIL_COND_V_MSG(array.dimension() != 1, {}, "flatten the array before converting to color");
-    ERR_FAIL_COND_V_MSG(array.shape[0] != 4, {}, "array dimension must be size 4");
+    ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to color");
+    ERR_FAIL_COND_V_MSG(array->shape[0] != 4, {}, "array dimension must be size 4");
 
     Color vector;
-    fill_c_array_flat(&vector.components[0], array.compute_read());
+    fill_c_array_flat(&vector.components[0], array->compute_read());
 
     return vector;
 #endif
@@ -434,11 +434,11 @@ PackedFloat32Array NDArray::to_packed_float32_array() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
-	ERR_FAIL_COND_V_MSG(array.dimension() != 1, {}, "flatten the array before converting to packed");
+	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to packed");
 
 	PackedFloat32Array packed;
-	packed.resize(static_cast<int64_t>(array.shape[0]));
-	fill_c_array_flat(packed.ptrw(), array.compute_read());
+	packed.resize(static_cast<int64_t>(array->shape[0]));
+	fill_c_array_flat(packed.ptrw(), array->compute_read());
 
 	return packed;
 #endif
@@ -448,11 +448,11 @@ PackedFloat64Array NDArray::to_packed_float64_array() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
-	ERR_FAIL_COND_V_MSG(array.dimension() != 1, {}, "flatten the array before converting to packed");
+	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to packed");
 
 	PackedFloat64Array packed;
-	packed.resize(static_cast<int64_t>(array.shape[0]));
-	fill_c_array_flat(packed.ptrw(), array.compute_read());
+	packed.resize(static_cast<int64_t>(array->shape[0]));
+	fill_c_array_flat(packed.ptrw(), array->compute_read());
 
 	return packed;
 #endif
@@ -462,11 +462,11 @@ PackedByteArray NDArray::to_packed_byte_array() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
-	ERR_FAIL_COND_V_MSG(array.dimension() != 1, {}, "flatten the array before converting to packed");
+	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to packed");
 
 	PackedByteArray packed;
-	packed.resize(static_cast<int64_t>(array.shape[0]));
-	fill_c_array_flat(packed.ptrw(), array.compute_read());
+	packed.resize(static_cast<int64_t>(array->shape[0]));
+	fill_c_array_flat(packed.ptrw(), array->compute_read());
 
 	return packed;
 #endif
@@ -476,11 +476,11 @@ PackedInt32Array NDArray::to_packed_int32_array() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
-	ERR_FAIL_COND_V_MSG(array.dimension() != 1, {}, "flatten the array before converting to packed");
+	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to packed");
 
 	PackedInt32Array packed;
-	packed.resize(static_cast<int64_t>(array.shape[0]));
-	fill_c_array_flat(packed.ptrw(), array.compute_read());
+	packed.resize(static_cast<int64_t>(array->shape[0]));
+	fill_c_array_flat(packed.ptrw(), array->compute_read());
 
 	return packed;
 #endif
@@ -490,11 +490,11 @@ PackedInt64Array NDArray::to_packed_int64_array() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
-	ERR_FAIL_COND_V_MSG(array.dimension() != 1, {}, "flatten the array before converting to packed");
+	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to packed");
 
 	PackedInt64Array packed;
-	packed.resize(static_cast<int64_t>(array.shape[0]));
-	fill_c_array_flat(packed.ptrw(), array.compute_read());
+	packed.resize(static_cast<int64_t>(array->shape[0]));
+	fill_c_array_flat(packed.ptrw(), array->compute_read());
 
 	return packed;
 #endif
@@ -504,13 +504,13 @@ PackedVector2Array NDArray::to_packed_vector2_array() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
-	ERR_FAIL_COND_V_MSG(array.dimension() != 2, {}, "flatten the array before converting to packed");
-	ERR_FAIL_COND_V_MSG(array.shape[1] != 2, {}, "final array dimension must be size 2");
+	ERR_FAIL_COND_V_MSG(array->dimension() != 2, {}, "flatten the array before converting to packed");
+	ERR_FAIL_COND_V_MSG(array->shape[1] != 2, {}, "final array dimension must be size 2");
 	// TODO Handle row major/minor? This still assumes it's normal row-major, i think.
 
 	PackedVector2Array packed;
-	packed.resize(static_cast<int64_t>(array.shape[0] * 2));
-	fill_c_array_flat(&packed.ptrw()->coord[0], array.compute_read());
+	packed.resize(static_cast<int64_t>(array->shape[0] * 2));
+	fill_c_array_flat(&packed.ptrw()->coord[0], array->compute_read());
 
 	return packed;
 #endif
@@ -520,13 +520,13 @@ PackedVector3Array NDArray::to_packed_vector3_array() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
-	ERR_FAIL_COND_V_MSG(array.dimension() != 3, {}, "flatten the array before converting to packed");
-	ERR_FAIL_COND_V_MSG(array.shape[1] != 3, {}, "final array dimension must be size 2");
+	ERR_FAIL_COND_V_MSG(array->dimension() != 3, {}, "flatten the array before converting to packed");
+	ERR_FAIL_COND_V_MSG(array->shape[1] != 3, {}, "final array dimension must be size 2");
 	// TODO Handle row major/minor? This still assumes it's normal row-major, i think.
 
 	PackedVector3Array packed;
-	packed.resize(static_cast<int64_t>(array.shape[0] * 3));
-	fill_c_array_flat(&packed.ptrw()->coord[0], array.compute_read());
+	packed.resize(static_cast<int64_t>(array->shape[0] * 3));
+	fill_c_array_flat(&packed.ptrw()->coord[0], array->compute_read());
 
 	return packed;
 #endif
@@ -536,13 +536,13 @@ PackedVector4Array NDArray::to_packed_vector4_array() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
-	ERR_FAIL_COND_V_MSG(array.dimension() != 3, {}, "flatten the array before converting to packed");
-	ERR_FAIL_COND_V_MSG(array.shape[1] != 3, {}, "final array dimension must be size 2");
+	ERR_FAIL_COND_V_MSG(array->dimension() != 3, {}, "flatten the array before converting to packed");
+	ERR_FAIL_COND_V_MSG(array->shape[1] != 3, {}, "final array dimension must be size 2");
 	// TODO Handle row major/minor? This still assumes it's normal row-major, i think.
 
 	PackedVector4Array packed;
-	packed.resize(static_cast<int64_t>(array.shape[0] * 3));
-	fill_c_array_flat(&packed.ptrw()->components[0], array.compute_read());
+	packed.resize(static_cast<int64_t>(array->shape[0] * 3));
+	fill_c_array_flat(&packed.ptrw()->components[0], array->compute_read());
 
 	return packed;
 #endif
@@ -552,26 +552,26 @@ PackedColorArray NDArray::to_packed_color_array() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
-	ERR_FAIL_COND_V_MSG(array.dimension() != 3, {}, "flatten the array before converting to packed");
-	ERR_FAIL_COND_V_MSG(array.shape[1] != 3, {}, "final array dimension must be size 2");
+	ERR_FAIL_COND_V_MSG(array->dimension() != 3, {}, "flatten the array before converting to packed");
+	ERR_FAIL_COND_V_MSG(array->shape[1] != 3, {}, "final array dimension must be size 2");
 	// TODO Handle row major/minor? This still assumes it's normal row-major, i think.
 
 	PackedColorArray packed;
-	packed.resize(static_cast<int64_t>(array.shape[0] * 3));
-	fill_c_array_flat(&packed.ptrw()->components[0], array.compute_read());
+	packed.resize(static_cast<int64_t>(array->shape[0] * 3));
+	fill_c_array_flat(&packed.ptrw()->components[0], array->compute_read());
 
 	return packed;
 #endif
 }
 
 TypedArray<NDArray> NDArray::to_godot_array() const {
-	ERR_FAIL_COND_V_MSG(array.dimension() == 0, {}, "can't slice a 0-dimension vector");
+	ERR_FAIL_COND_V_MSG(array->dimension() == 0, {}, "can't slice a 0-dimension vector");
 
 	auto godot_array = TypedArray<NDArray>();
-	const std::size_t size = array.size();
+	const std::size_t size = array->size();
 	godot_array.resize(static_cast<int64_t>(size));
 	for (std::size_t i = 0; i < size; i++) {
-		godot_array[static_cast<int64_t>(i)] = {memnew(NDArray(array.slice({i})))};
+		godot_array[static_cast<int64_t>(i)] = {memnew(NDArray(array->slice({i})))};
 	}
 	return godot_array;
 }
@@ -580,7 +580,7 @@ template <typename Visitor, typename... Args>
 void map_variants_as_arrays_inplace(Visitor&& visitor, va::VArray& target, const Args&... args) {
     try {
 		auto compute_variant = target.compute_write();
-        std::forward<Visitor>(visitor)(&compute_variant, variant_as_array(args)...);
+        std::forward<Visitor>(visitor)(&compute_variant, *variant_as_array(args)...);
     }
     catch (std::runtime_error& error) {
         ERR_FAIL_MSG(error.what());
@@ -591,7 +591,7 @@ template <typename Visitor, typename VisitorNoaxes, typename... Args>
 inline void reduction_inplace(Visitor&& visitor, VisitorNoaxes&& visitor_noaxes, va::VArray& target, const Variant& axes, const Args&... args) {
 	try {
 		if (axes.get_type() == Variant::NIL) {
-			const va::VScalar result = std::forward<VisitorNoaxes>(visitor_noaxes)(variant_as_array(args)...);
+			const va::VScalar result = std::forward<VisitorNoaxes>(visitor_noaxes)(*variant_as_array(args)...);
 			auto compute = target.compute_write();
 			va::assign(compute, result);
 			return;
@@ -600,7 +600,7 @@ inline void reduction_inplace(Visitor&& visitor, VisitorNoaxes&& visitor_noaxes,
 		const auto axes_ = variant_to_axes(axes);
 		auto compute_variant = target.compute_write();
 
-		std::forward<Visitor>(visitor)(&compute_variant, axes_, variant_as_array(args)...);
+		std::forward<Visitor>(visitor)(&compute_variant, axes_, *variant_as_array(args)...);
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_MSG(error.what());
@@ -610,19 +610,19 @@ inline void reduction_inplace(Visitor&& visitor, VisitorNoaxes&& visitor_noaxes,
 #define VARRAY_MAP1(func, varray1) \
 	map_variants_as_arrays_inplace([this](va::VArrayTarget target, const va::VArray& varray) {\
         va::func(target, varray);\
-    }, this->array, (varray1));\
+    }, *this->array, (varray1));\
     return {this}
 
 #define VARRAY_MAP2(func, varray1, varray2) \
 	map_variants_as_arrays_inplace([this](va::VArrayTarget target, const va::VArray& a, const va::VArray& b) {\
         va::func(target, a, b);\
-    }, this->array, (varray1), (varray2));\
+    }, *this->array, (varray1), (varray2));\
     return {this}
 
 #define VARRAY_MAP3(func, varray1, varray2, varray3) \
 	map_variants_as_arrays_inplace([this](va::VArrayTarget target, const va::VArray& a, const va::VArray& b, const va::VArray& c) {\
         va::func(target, a, b, c);\
-    }, this->array, (varray1), (varray2), (varray3));\
+    }, *this->array, (varray1), (varray2), (varray3));\
     return {this}
 
 #define REDUCTION1(func, varray1, axes1) \
@@ -630,7 +630,7 @@ inline void reduction_inplace(Visitor&& visitor, VisitorNoaxes&& visitor_noaxes,
 		va::func(target, array, axes);\
 	}, [this](const va::VArray& array) {\
 		return va::func(array);\
-	}, this->array, (axes1), (varray1));\
+	}, *this->array, (axes1), (varray1));\
 	return {this}
 
 #define REDUCTION2(func, varray1, varray2, axes1) \
@@ -638,7 +638,7 @@ inline void reduction_inplace(Visitor&& visitor, VisitorNoaxes&& visitor_noaxes,
 		va::func(target, carray1, carray2, axes);\
 	}, [this](const va::VArray& carray1, const va::VArray& carray2) {\
 		return va::func(carray1, carray2);\
-	}, this->array, (axes1), (varray1), (varray2));\
+	}, *this->array, (axes1), (varray1), (varray2));\
 	return {this}
 
 Ref<NDArray> NDArray::assign_add(const Variant &a, const Variant &b) {
@@ -897,7 +897,7 @@ Ref<NDArray> NDArray::assign_matmul(const Variant& a, const Variant& b) {
 
 #define CONVERT_TO_SCALAR(type)\
 try {\
-	return static_cast<type>(array);\
+	return static_cast<type>(*array);\
 }\
 catch (std::runtime_error& error) {\
 	ERR_FAIL_V_MSG(false, error.what());\

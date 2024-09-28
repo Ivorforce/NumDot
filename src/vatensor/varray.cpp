@@ -18,8 +18,8 @@ std::size_t va::VArray::dimension() const {
     return shape.size();
 }
 
-va::VArray va::VArray::slice(const xt::xstrided_slice_vector &slices) const {
-    return std::visit([slices, this](auto &store) -> VArray {
+std::shared_ptr<va::VArray> va::VArray::slice(const xt::xstrided_slice_vector &slices) const {
+    return std::visit([slices, this](auto &store) -> std::shared_ptr<VArray> {
         xt::detail::strided_view_args<xt::detail::no_adj_strides_policy> args;
         args.fill_args(
             shape,
@@ -29,15 +29,13 @@ va::VArray va::VArray::slice(const xt::xstrided_slice_vector &slices) const {
             slices
         );
 
-        auto result = VArray{
+        return std::make_shared<VArray>(VArray {
             store,  // Implicit copy
             std::move(args.new_shape),
             std::move(args.new_strides),
             args.new_offset,
             args.new_layout
-        };
-
-        return result;
+        });
     }, store);
 }
 
@@ -166,7 +164,7 @@ va::VArray::operator uint8_t() const { return va::scalar_to_type<uint8_t>(to_sin
 va::VArray::operator double() const { return va::scalar_to_type<double>(to_single_value()); }
 va::VArray::operator float() const { return va::scalar_to_type<float>(to_single_value()); }
 
-va::VArray va::from_scalar_variant(VScalar scalar) {
+std::shared_ptr<va::VArray> va::from_scalar_variant(VScalar scalar) {
     return std::visit([](auto cscalar){
         return from_scalar(cscalar);
     }, scalar);

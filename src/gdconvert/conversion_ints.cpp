@@ -40,7 +40,7 @@ C variant_as_int_strict(const Variant &variant) {
                         default:
                             throw std::runtime_error("array must be zero-dimensional or one-dimensional");
                     }
-                }, ndarray->array.compute_read());
+                }, ndarray->array->compute_read());
             };
         }
         case Variant::INT:
@@ -76,7 +76,7 @@ T variant_as_ints_(const Variant &variant) {
                         default:
                             throw std::runtime_error("array must be zero-dimensional or one-dimensional");
                     }
-                }, ndarray->array.compute_read());
+                }, ndarray->array->compute_read());
             }
             break;
         }

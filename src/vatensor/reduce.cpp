@@ -127,18 +127,18 @@ void va::median(VArrayTarget target, const VArray &array, const axes_type &axes)
 	const auto joined = join_axes_into_last_dimension(array, axes);
 	constexpr auto axis = -1;
 
-	if (joined.layout == xt::layout_type::dynamic) {
+	if (joined->layout == xt::layout_type::dynamic) {
 		// xtensor does not support dynamic layout, so we need a copy first.
 		const auto joined_copy = copy_as_dtype(array, DTypeMax);
 		va::xoperation_inplace<promote::num_common_type>(
 			REDUCER_LAMBDA_AXES_NOECS(axis, xt::median),
-			target, joined_copy.compute_read()
+			target, joined_copy->compute_read()
 		);
 	}
 	else {
 		va::xoperation_inplace<promote::num_common_type>(
 			REDUCER_LAMBDA_AXES_NOECS(axis, xt::median),
-			target, joined.compute_read()
+			target, joined->compute_read()
 		);
 	}
 #endif

@@ -35,7 +35,7 @@ ndf::~ndf() = default;
 template <typename Visitor, typename... Args>
 inline double_t reduction(Visitor&& visitor, const Args&... args) {
 	try {
-		const auto result = std::forward<Visitor>(visitor)(variant_as_array(args)...);
+		const auto result = std::forward<Visitor>(visitor)(*variant_as_array(args)...);
 
 		if constexpr (std::is_same_v<std::decay_t<decltype(result)>, va::VScalar>) {
 			return va::scalar_to_type<double_t>(result);

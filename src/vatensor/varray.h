@@ -145,7 +145,7 @@ namespace va {
         [[nodiscard]] std::size_t dimension() const;
 
         // TODO Can probably change these to subscript syntax
-        [[nodiscard]] VArray slice(const xt::xstrided_slice_vector& slices) const;
+        [[nodiscard]] std::shared_ptr<VArray> slice(const xt::xstrided_slice_vector& slices) const;
         [[nodiscard]] VScalar get_scalar(const axes_type& index) const;
 
         [[nodiscard]] VRead compute_read() const;
@@ -170,44 +170,44 @@ namespace va {
     };
 
     template <typename V>
-    static VArray from_scalar(const V value) {
-        return {
+    static std::shared_ptr<VArray> from_scalar(const V value) {
+        return std::make_shared<VArray>(VArray {
             std::make_shared<array_case<V>>(array_case<V>(value)),
             {},
             {},
             0,
             xt::layout_type::row_major
-        };
+        });
     }
 
-    VArray from_scalar_variant(VScalar scalar);
+    std::shared_ptr<VArray> from_scalar_variant(VScalar scalar);
 
     template <typename V, typename S>
-    static VArray from_surrogate(V&& store, const S& surrogate) {
-        return {
+    static std::shared_ptr<VArray> from_surrogate(V&& store, const S& surrogate) {
+        return std::make_shared<VArray>(VArray {
             std::forward<V>(store),
             surrogate.shape(),
             surrogate.strides(),
             surrogate.data_offset(),
             surrogate.layout()
-        };
+        });
     }
 
     template <typename V>
-    static VArray from_store(const V store) {
-        return {
+    static std::shared_ptr<VArray> from_store(const V store) {
+        return std::make_shared<VArray>(VArray {
             store,
             store->shape(),
             store->strides(),
             store->data_offset(),  // Should be 0, but you know...
             store->layout()
-        };
+        });
     }
 
     // For all functions returning an or assigning to an array.
     // The first case will place the array in the optional.
     // The second case will assign to the compute variant.
-    using VArrayTarget = std::variant<std::optional<VArray>*, VWrite*>;
+    using VArrayTarget = std::variant<std::shared_ptr<VArray>*, VWrite*>;
 
     template <typename V, typename T>
     static compute_case<V> to_compute_variant(T& store, const VArray& varray) {

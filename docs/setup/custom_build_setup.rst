@@ -32,7 +32,7 @@ To set up the codebase, you need to build godot-cpp once:
 
     cd godot-cpp
     # Replace platform with one of [macos, windows, linux]
-    scons platform=<platform> custom_api_file=../extension_api.json
+    scons platform=<platform>
     cd ..
 
 Building NumDot locally

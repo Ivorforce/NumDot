@@ -9,7 +9,7 @@
 
 using namespace va;
 
-VArray empty(VScalar type, shape_type shape) {
+std::shared_ptr<VArray> empty(VScalar type, shape_type shape) {
 #ifdef NUMDOT_DISABLE_ALLOCATION_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_ALLOCATION_FUNCTIONS to enable it.");
 #else
@@ -20,7 +20,7 @@ VArray empty(VScalar type, shape_type shape) {
 #endif
 }
 
-VArray va::full(const VScalar fill_value, shape_type shape) {
+std::shared_ptr<VArray> va::full(const VScalar fill_value, shape_type shape) {
 #ifdef NUMDOT_DISABLE_ALLOCATION_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_ALLOCATION_FUNCTIONS to enable it.");
 #else
@@ -34,17 +34,17 @@ VArray va::full(const VScalar fill_value, shape_type shape) {
 #endif
 }
 
-VArray va::empty(DType dtype, shape_type shape) {
+std::shared_ptr<VArray> va::empty(DType dtype, shape_type shape) {
     return ::empty(dtype_to_variant(dtype), std::move(shape));
 }
 
-VArray va::copy_as_dtype(const VArray& other, DType dtype) {
+std::shared_ptr<VArray> va::copy_as_dtype(const VArray& other, DType dtype) {
 #ifdef NUMDOT_DISABLE_ALLOCATION_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_ALLOCATION_FUNCTIONS to enable it.");
 #else
     if (dtype == DTypeMax) dtype = other.dtype();
 
-    return std::visit([](auto t, auto carray) -> VArray {
+    return std::visit([](auto t, auto carray) -> std::shared_ptr<VArray> {
         using TWeWanted = decltype(t);
         using TWeGot = typename decltype(carray)::value_type;
 

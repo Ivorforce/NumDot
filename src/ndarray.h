@@ -7,11 +7,12 @@
 
 #include "vatensor/auto_defines.h"
 
-#include <cmath>                                      // for Layout
-#include <cstdint>                                    // for uint64_t, int64_t
+#include <cmath>                                       // for Layout
+#include <cstdint>                                     // for uint64_t, int64_t
 #include <godot_cpp/classes/ref_counted.hpp>           // for RefCounted
 #include <godot_cpp/variant/variant.hpp>               // for Variant
 #include <utility>                                     // for move
+#include <memory>                                      // for make_shared, shared_ptr
 #include "gdextension_interface.h"                     // for GDExtensionCal...
 #include "godot_cpp/classes/ref.hpp"                   // for Ref
 #include "godot_cpp/classes/wrapped.hpp"               // for GDCLASS
@@ -56,10 +57,10 @@ public:
 	};
 
 	// We need a shared pointer because things like asarray can return either a view or an array
-	va::VArray array;
+	std::shared_ptr<va::VArray> array;
 
 	NDArray();
-	explicit NDArray(va::VArray array) : array(std::move(array)) {};
+	explicit NDArray(std::shared_ptr<va::VArray> array) : array(std::move(array)) {};
 	~NDArray() override;
 
 	[[nodiscard]] va::DType dtype() const;

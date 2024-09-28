@@ -13,6 +13,7 @@
 #include <cmath>                            // for double_t, isinf
 #include <optional>                         // for optional
 #include <stdexcept>                        // for runtime_error
+#include <memory>                           // shared_ptr
 #include <type_traits>                      // for decay_t
 #include <utility>                          // for forward
 #include <variant>                          // for visit
@@ -164,7 +165,7 @@ nd::~nd() = default;
 template <typename Visitor, typename... Args>
 Ref<NDArray> map_variants_as_arrays(Visitor&& visitor, const Args&... args) {
 	try {
-		const auto result = std::forward<Visitor>(visitor)(variant_as_array(args)...);
+		const std::shared_ptr<va::VArray> result = std::forward<Visitor>(visitor)(*variant_as_array(args)...);
 		return { memnew(NDArray(result)) };
 	}
 	catch (std::runtime_error& error) {
@@ -175,9 +176,9 @@ Ref<NDArray> map_variants_as_arrays(Visitor&& visitor, const Args&... args) {
 template <typename Visitor, typename... Args>
 Ref<NDArray> map_variants_as_arrays_with_target(Visitor&& visitor, const Args&... args) {
 	try {
-		std::optional<va::VArray> result;
-		std::forward<Visitor>(visitor)(&result, variant_as_array(args)...);
-		return { memnew(NDArray(result.value())) };
+		std::shared_ptr<va::VArray> result;
+		std::forward<Visitor>(visitor)(&result, *variant_as_array(args)...);
+		return { memnew(NDArray(result)) };
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
@@ -188,7 +189,7 @@ template <typename Visitor, typename VisitorNoaxes, typename... Args>
 inline Ref<NDArray> reduction(Visitor&& visitor, VisitorNoaxes&& visitor_noaxes, const Variant& axes, const Args&... args) {
 	try {
 		if (axes.get_type() == Variant::NIL) {
-			const auto result = std::forward<VisitorNoaxes>(visitor_noaxes)(variant_as_array(args)...);
+			const auto result = std::forward<VisitorNoaxes>(visitor_noaxes)(*variant_as_array(args)...);
 
 			if constexpr (std::is_same_v<std::decay_t<decltype(result)>, va::VScalar>) {
 				return { memnew(NDArray(va::from_scalar_variant(result))) };
@@ -200,10 +201,10 @@ inline Ref<NDArray> reduction(Visitor&& visitor, VisitorNoaxes&& visitor_noaxes,
 
 		const auto axes_ = variant_to_axes(axes);
 
-		std::optional<va::VArray> result;
-		std::forward<Visitor>(visitor)(&result, axes_, variant_as_array(args)...);
+		std::shared_ptr<va::VArray> result;
+		std::forward<Visitor>(visitor)(&result, axes_, *variant_as_array(args)...);
 
-		return {memnew(NDArray(result.value()))};
+		return {memnew(NDArray(result))};
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
@@ -347,9 +348,9 @@ Ref<NDArray> nd::full(const Variant& shape, const Variant& fill_value, nd::DType
 				return {memnew(NDArray(va::full(value, shape_array)))};
 			}
 			default: {
-				va::VArray result = va::empty(dtype, shape_array);
-				auto compute = result.compute_write();
-				va::assign(compute, variant_as_array(fill_value).compute_read());
+				std::shared_ptr<va::VArray> result = va::empty(dtype, shape_array);
+				auto compute = result->compute_write();
+				va::assign(compute, variant_as_array(fill_value)->compute_read());
 				return {memnew(NDArray(result))};
 			}
 		}
@@ -380,7 +381,7 @@ Ref<NDArray> nd::linspace(const Variant &start, const Variant &stop, const int64
 	}
 
 	try {
-		const auto result = std::visit([start, stop, num, endpoint](auto t) {
+		const auto result = std::visit([start, stop, num, endpoint](auto t) -> std::shared_ptr<va::VArray> {
 			using T = std::decay_t<decltype(t)>;
 
 			if constexpr (std::is_floating_point_v<T>) {
@@ -415,7 +416,7 @@ Ref<NDArray> nd::arange(const Variant &start_or_stop, const Variant &stop, const
 	const Variant& step_ = step;
 
 	try {
-		const auto result = std::visit([start_, stop_, step_](auto t) {
+		const auto result = std::visit([start_, stop_, step_](auto t) -> std::shared_ptr<va::VArray> {
 			using T = std::decay_t<decltype(t)>;
 
 			if constexpr (std::is_floating_point_v<T>) {
@@ -437,12 +438,12 @@ Ref<NDArray> nd::arange(const Variant &start_or_stop, const Variant &stop, const
 
 Ref<NDArray> nd::transpose(const Variant &a, const Variant &permutation) {
 	try {
-		va::VArray a_ = variant_as_array(a);
+        std::shared_ptr<va::VArray> a_ = variant_as_array(a);
 		// TODO It's not exactly a shape, but 'int array' is close enough.
 		//  We should probably decouple them when we add better shape checks.
 		const auto permutation_ = variant_to_axes(permutation);
 
-		return {memnew(NDArray(va::transpose(a_, permutation_)))};
+		return {memnew(NDArray(va::transpose(*a_, permutation_)))};
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
@@ -451,12 +452,12 @@ Ref<NDArray> nd::transpose(const Variant &a, const Variant &permutation) {
 
 Ref<NDArray> nd::reshape(const Variant &a, const Variant &shape) {
 	try {
-		va::VArray a_ = variant_as_array(a);
+        std::shared_ptr<va::VArray> a_ = variant_as_array(a);
 		// TODO It's not exactly a shape, but 'int array' is close enough.
 		//  We should probably decouple them when we add better shape checks.
 		const auto new_shape_ = variant_to_axes(shape);
 
-		return {memnew(NDArray(va::reshape(a_, new_shape_)))};
+		return {memnew(NDArray(va::reshape(*a_, new_shape_)))};
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());

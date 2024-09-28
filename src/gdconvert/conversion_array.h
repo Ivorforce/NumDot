@@ -7,6 +7,7 @@
 #include <functional>                     // for multiplies
 #include <godot_cpp/variant/variant.hpp>  // for Variant
 #include <numeric>                        // for accumulate
+#include <memory>                        // for shared_ptr
 #include <utility>                        // for forward
 #include <variant>                        // for visit
 #include "godot_cpp/variant/array.hpp"    // for Array
@@ -17,8 +18,8 @@
 
 using namespace godot;
 
-va::VArray variant_as_array(const Variant& array);
-va::VArray variant_as_array(const Variant& array, va::DType dtype, bool copy);
+std::shared_ptr<va::VArray> variant_as_array(const Variant& array);
+std::shared_ptr<va::VArray> variant_as_array(const Variant& array, va::DType dtype, bool copy);
 
 template <typename T>
 void fill_c_array_flat(T* target, const va::VRead &array) {

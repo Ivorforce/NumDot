@@ -80,7 +80,7 @@ void find_shape_and_dtype(va::shape_type& shape, va::DType &dtype, const Array& 
                     case Variant::OBJECT: {
                         if (const auto ndarray = Object::cast_to<NDArray>(array_element)) {
                             auto varray_dim_idx = current_dim_idx;
-                            for (const auto size : ndarray->array.shape) {
+                            for (const auto size : ndarray->array->shape) {
                                 add_size_at_idx(shape, varray_dim_idx, size);
                                 varray_dim_idx++;
                             }
@@ -199,7 +199,7 @@ void find_shape_and_dtype(va::shape_type& shape, va::DType &dtype, const Array& 
     }
 }
 
-va::VArray array_as_varray(const Array& input_array) {
+std::shared_ptr<va::VArray> array_as_varray(const Array& input_array) {
     va::shape_type shape;
     va::DType dtype = va::DTypeMax;
 
@@ -207,7 +207,7 @@ va::VArray array_as_varray(const Array& input_array) {
 
     if (dtype == va::DTypeMax) dtype = va::Float64; // Default dtype
 
-    va::VArray varray = va::empty(dtype, shape);
+    std::shared_ptr<va::VArray> varray = va::empty(dtype, shape);
     std::vector<std::tuple<xt::xstrided_slice_vector, Array>> next = { std::make_tuple(xt::xstrided_slice_vector {}, input_array) };
 
     while (!next.empty()) {
@@ -222,8 +222,8 @@ va::VArray array_as_varray(const Array& input_array) {
             switch (array_element.get_type()) {
                 case Variant::OBJECT: {
                     if (const auto ndarray = Object::cast_to<NDArray>(array_element)) {
-                        auto compute = varray.compute_write(element_idx);
-                        va::assign(compute, ndarray->array.compute_read());
+                        auto compute = varray->compute_write(element_idx);
+                        va::assign(compute, ndarray->array->compute_read());
                         continue;
                     }
                 }
@@ -231,25 +231,25 @@ va::VArray array_as_varray(const Array& input_array) {
                     next.emplace_back(element_idx, static_cast<Array>(array_element));
                     continue;
                 case Variant::BOOL: {
-                    auto compute = varray.compute_write(element_idx);
+                    auto compute = varray->compute_write(element_idx);
                     // TODO If we're on the last dimension, we should use element assign rather than slice - fill for all these.
                     va::assign(compute, static_cast<bool>(array_element));
                     continue;
                 }
                 case Variant::INT:{
-                    auto compute = varray.compute_write(element_idx);
+                    auto compute = varray->compute_write(element_idx);
                     // TODO If we're on the last dimension, we should use element assign rather than slice - fill for all these.
                     va::assign(compute, static_cast<int64_t>(array_element));
                     continue;
                 }
                 case Variant::FLOAT:{
-                    auto compute = varray.compute_write(element_idx);
+                    auto compute = varray->compute_write(element_idx);
                     // TODO If we're on the last dimension, we should use element assign rather than slice - fill for all these.
                     va::assign(compute, static_cast<double_t>(array_element));
                     continue;
                 }
                 case Variant::PACKED_BYTE_ARRAY: {
-                    auto compute = varray.compute_write(element_idx);
+                    auto compute = varray->compute_write(element_idx);
                     const auto packed = PackedByteArray(array_element);
                     va::assign(
                         compute,
@@ -258,7 +258,7 @@ va::VArray array_as_varray(const Array& input_array) {
                     continue;
                 }
                 case Variant::PACKED_INT32_ARRAY: {
-                    auto compute = varray.compute_write(element_idx);
+                    auto compute = varray->compute_write(element_idx);
                     const auto packed = PackedInt32Array(array_element);
                     va::assign(
                         compute,
@@ -267,7 +267,7 @@ va::VArray array_as_varray(const Array& input_array) {
                     continue;
                 }
                 case Variant::PACKED_INT64_ARRAY: {
-                    auto compute = varray.compute_write(element_idx);
+                    auto compute = varray->compute_write(element_idx);
                     const auto packed = PackedInt64Array(array_element);
                     va::assign(
                         compute,
@@ -276,7 +276,7 @@ va::VArray array_as_varray(const Array& input_array) {
                     continue;
                 }
                 case Variant::PACKED_FLOAT32_ARRAY: {
-                    auto compute = varray.compute_write(element_idx);
+                    auto compute = varray->compute_write(element_idx);
                     const auto packed = PackedFloat32Array(array_element);
                     va::assign(
                         compute,
@@ -285,7 +285,7 @@ va::VArray array_as_varray(const Array& input_array) {
                     continue;
                 }
                 case Variant::PACKED_FLOAT64_ARRAY: {
-                    auto compute = varray.compute_write(element_idx);
+                    auto compute = varray->compute_write(element_idx);
                     const auto packed = PackedFloat64Array(array_element);
                     va::assign(
                         compute,
@@ -294,7 +294,7 @@ va::VArray array_as_varray(const Array& input_array) {
                     continue;
                 }
                 case Variant::PACKED_VECTOR2_ARRAY: {
-                    auto compute = varray.compute_write(element_idx);
+                    auto compute = varray->compute_write(element_idx);
                     const auto packed = PackedVector2Array(array_element);
                     va::assign(
                         compute,
@@ -303,7 +303,7 @@ va::VArray array_as_varray(const Array& input_array) {
                     continue;
                 }
                 case Variant::PACKED_VECTOR3_ARRAY: {
-                    auto compute = varray.compute_write(element_idx);
+                    auto compute = varray->compute_write(element_idx);
                     const auto packed = PackedVector3Array(array_element);
                     va::assign(
                         compute,
@@ -312,7 +312,7 @@ va::VArray array_as_varray(const Array& input_array) {
                     continue;
                 }
                 case Variant::PACKED_VECTOR4_ARRAY: {
-                    auto compute = varray.compute_write(element_idx);
+                    auto compute = varray->compute_write(element_idx);
                     const auto packed = PackedVector4Array(array_element);
                     va::assign(
                         compute,
@@ -321,7 +321,7 @@ va::VArray array_as_varray(const Array& input_array) {
                     continue;
                 }
                 case Variant::PACKED_COLOR_ARRAY: {
-                    auto compute = varray.compute_write(element_idx);
+                    auto compute = varray->compute_write(element_idx);
                     const auto packed = PackedColorArray(array_element);
                     va::assign(
                         compute,
@@ -330,7 +330,7 @@ va::VArray array_as_varray(const Array& input_array) {
                     continue;
                 }
                 case Variant::VECTOR2I: {
-                    auto compute = varray.compute_write(element_idx);
+                    auto compute = varray->compute_write(element_idx);
                     const Vector2i vector = array_element;
                     va::assign(
                         compute,
@@ -339,7 +339,7 @@ va::VArray array_as_varray(const Array& input_array) {
                     continue;
                 }
                 case Variant::VECTOR3I: {
-                    auto compute = varray.compute_write(element_idx);
+                    auto compute = varray->compute_write(element_idx);
                     const Vector3i vector = array_element;
                     va::assign(
                         compute,
@@ -348,7 +348,7 @@ va::VArray array_as_varray(const Array& input_array) {
                     continue;
                 }
                 case Variant::VECTOR4I: {
-                    auto compute = varray.compute_write(element_idx);
+                    auto compute = varray->compute_write(element_idx);
                     const Vector4i vector = array_element;
                     va::assign(
                         compute,
@@ -357,7 +357,7 @@ va::VArray array_as_varray(const Array& input_array) {
                     continue;
                 }
                 case Variant::VECTOR2: {
-                    auto compute = varray.compute_write(element_idx);
+                    auto compute = varray->compute_write(element_idx);
                     const Vector2 vector = array_element;
                     va::assign(
                         compute,
@@ -366,7 +366,7 @@ va::VArray array_as_varray(const Array& input_array) {
                     continue;
                 }
                 case Variant::VECTOR3: {
-                    auto compute = varray.compute_write(element_idx);
+                    auto compute = varray->compute_write(element_idx);
                     const Vector3 vector = array_element;
                     va::assign(
                         compute,
@@ -375,7 +375,7 @@ va::VArray array_as_varray(const Array& input_array) {
                     continue;
                 }
                 case Variant::VECTOR4: {
-                    auto compute = varray.compute_write(element_idx);
+                    auto compute = varray->compute_write(element_idx);
                     const Vector4 vector = array_element;
                     va::assign(
                         compute,
@@ -384,7 +384,7 @@ va::VArray array_as_varray(const Array& input_array) {
                     continue;
                 }
                 case Variant::COLOR: {
-                    auto compute = varray.compute_write(element_idx);
+                    auto compute = varray->compute_write(element_idx);
                     const Color vector = array_element;
                     va::assign(
                         compute,
@@ -403,7 +403,7 @@ va::VArray array_as_varray(const Array& input_array) {
     return varray;
 }
 
-va::VArray variant_as_array(const Variant& array) {
+std::shared_ptr<va::VArray> variant_as_array(const Variant& array) {
     switch (array.get_type()) {
         case Variant::OBJECT: {
             if (const auto ndarray = Object::cast_to<NDArray>(array)) {
@@ -526,14 +526,14 @@ va::VArray variant_as_array(const Variant& array) {
     throw std::runtime_error("Unsupported type");
 }
 
-va::VArray variant_as_array(const Variant &array, const va::DType dtype, const bool copy) {
+std::shared_ptr<va::VArray> variant_as_array(const Variant &array, const va::DType dtype, const bool copy) {
     switch (array.get_type()) {
         case Variant::OBJECT: {
             if (const auto ndarray = Object::cast_to<NDArray>(array)) {
-                if (!copy && (dtype == va::DTypeMax || ndarray->array.dtype() == dtype))
+                if (!copy && (dtype == va::DTypeMax || ndarray->array->dtype() == dtype))
                     return ndarray->array;
                 else
-                    return va::copy_as_dtype(ndarray->array, dtype);
+                    return va::copy_as_dtype(*ndarray->array, dtype);
             }
         }
         default:
@@ -542,8 +542,8 @@ va::VArray variant_as_array(const Variant &array, const va::DType dtype, const b
 
     // Guaranteed to be a fresh array, because we handled non-fresh cases already.
     auto varray = variant_as_array(array);
-    if (dtype == va::DTypeMax || dtype == varray.dtype())
+    if (dtype == va::DTypeMax || dtype == varray->dtype())
         return varray;
     else
-        return va::copy_as_dtype(varray, dtype);
+        return va::copy_as_dtype(*varray, dtype);
 }

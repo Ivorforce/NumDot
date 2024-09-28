@@ -555,6 +555,14 @@
 				Errors if the index does not yield a single value.
 			</description>
 		</method>
+		<method name="layout" qualifiers="const">
+			<return type="int" enum="NDArray.Layout" />
+			<description>
+				The layout of the array.
+				Arrays with RowMajor and ColumnMajor layout may have improved performance to those with dynamic layout.
+				All arrays start with RowMajor layout, but rearranging (like [method nd.transpose]) can change the layout. To regain a consistent layout, consider making a copy of the array.
+			</description>
+		</method>
 		<method name="ndim" qualifiers="const">
 			<return type="int" />
 			<description>
@@ -704,4 +712,15 @@
 			</description>
 		</method>
 	</methods>
+	<constants>
+		<constant name="RowMajor" value="0" enum="Layout">
+			The array's strides increase consistently from the inner to the outer dimensions.
+		</constant>
+		<constant name="ColumnMajor" value="1" enum="Layout">
+			The array's strides increase consistently from the outer to the inner dimensions.
+		</constant>
+		<constant name="Dynamic" value="2" enum="Layout">
+			The array's strides are inconsistent in order.
+		</constant>
+	</constants>
 </class>

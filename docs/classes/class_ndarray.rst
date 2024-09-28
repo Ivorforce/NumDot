@@ -160,6 +160,8 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``int``                                                    | :ref:`get_int<class_NDArray_method_get_int>`\ (\ ...\ ) |const| |vararg|                                                                          |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`Layout<enum_NDArray_Layout>`                         | :ref:`layout<class_NDArray_method_layout>`\ (\ ) |const|                                                                                          |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``int``                                                    | :ref:`ndim<class_NDArray_method_ndim>`\ (\ ) |const|                                                                                              |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
    | |void|                                                     | :ref:`set<class_NDArray_method_set>`\ (\ ...\ ) |const| |vararg|                                                                                  |
@@ -208,6 +210,45 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``Vector4i``                                               | :ref:`to_vector4i<class_NDArray_method_to_vector4i>`\ (\ ) |const|                                                                                |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
+
+.. rst-class:: classref-section-separator
+
+----
+
+.. rst-class:: classref-descriptions-group
+
+Enumerations
+------------
+
+.. _enum_NDArray_Layout:
+
+.. rst-class:: classref-enumeration
+
+enum **Layout**: :ref:`🔗<enum_NDArray_Layout>`
+
+.. _class_NDArray_constant_RowMajor:
+
+.. rst-class:: classref-enumeration-constant
+
+:ref:`Layout<enum_NDArray_Layout>` **RowMajor** = ``0``
+
+The array's strides increase consistently from the inner to the outer dimensions.
+
+.. _class_NDArray_constant_ColumnMajor:
+
+.. rst-class:: classref-enumeration-constant
+
+:ref:`Layout<enum_NDArray_Layout>` **ColumnMajor** = ``1``
+
+The array's strides increase consistently from the outer to the inner dimensions.
+
+.. _class_NDArray_constant_Dynamic:
+
+.. rst-class:: classref-enumeration-constant
+
+:ref:`Layout<enum_NDArray_Layout>` **Dynamic** = ``2``
+
+The array's strides are inconsistent in order.
 
 .. rst-class:: classref-section-separator
 
@@ -1117,6 +1158,22 @@ Errors if the index does not yield a single value.
 Indexes into the array, and return the resulting value as int.
 
 Errors if the index does not yield a single value.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_layout:
+
+.. rst-class:: classref-method
+
+:ref:`Layout<enum_NDArray_Layout>` **layout**\ (\ ) |const| :ref:`🔗<class_NDArray_method_layout>`
+
+The layout of the array.
+
+Arrays with RowMajor and ColumnMajor layout may have improved performance to those with dynamic layout.
+
+All arrays start with RowMajor layout, but rearranging (like :ref:`nd.transpose<class_nd_method_transpose>`) can change the layout. To regain a consistent layout, consider making a copy of the array.
 
 .. rst-class:: classref-item-separator
 

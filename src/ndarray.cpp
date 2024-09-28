@@ -31,11 +31,16 @@
 using namespace godot;
 
 void NDArray::_bind_methods() {
+	BIND_ENUM_CONSTANT(RowMajor);
+	BIND_ENUM_CONSTANT(ColumnMajor);
+	BIND_ENUM_CONSTANT(Dynamic);
+
 	godot::ClassDB::bind_method(D_METHOD("dtype"), &NDArray::dtype);
 	godot::ClassDB::bind_method(D_METHOD("shape"), &NDArray::shape);
 	godot::ClassDB::bind_method(D_METHOD("size"), &NDArray::size);
 	godot::ClassDB::bind_method(D_METHOD("array_size_in_bytes"), &NDArray::array_size_in_bytes);
 	godot::ClassDB::bind_method(D_METHOD("ndim"), &NDArray::ndim);
+	godot::ClassDB::bind_method(D_METHOD("layout"), &NDArray::layout);
 
 	ClassDB::bind_method(D_METHOD("_iter_init"), &NDArray::_iter_init);
 	ClassDB::bind_method(D_METHOD("_iter_get"), &NDArray::_iter_get);
@@ -173,6 +178,21 @@ uint64_t NDArray::array_size_in_bytes() const {
 
 uint64_t NDArray::ndim() const {
 	return array.dimension();
+}
+
+NDArray::Layout NDArray::layout() const {
+	switch (array.layout) {
+		case xt::layout_type::row_major:
+			return NDArray::Layout::RowMajor;
+		case xt::layout_type::column_major:
+			return NDArray::Layout::ColumnMajor;
+		case xt::layout_type::dynamic:
+			return NDArray::Layout::Dynamic;
+		case xt::layout_type::any:
+			ERR_FAIL_V_MSG(NDArray::Dynamic, "Unrecognized 'any' layout found.");
+		default: ;
+			ERR_FAIL_V_MSG(NDArray::Dynamic, "Unrecognized layout found.");
+	}
 }
 
 Variant NDArray::_iter_init(const Array &p_iter) {

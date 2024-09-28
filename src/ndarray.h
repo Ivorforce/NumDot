@@ -6,7 +6,8 @@
 #endif
 
 #include "vatensor/auto_defines.h"
-#include <cmath>                                      // for double_t
+
+#include <cmath>                                      // for Layout
 #include <cstdint>                                    // for uint64_t, int64_t
 #include <godot_cpp/classes/ref_counted.hpp>           // for RefCounted
 #include <godot_cpp/variant/variant.hpp>               // for Variant
@@ -48,6 +49,12 @@ protected:
 	String _to_string() const;
 
 public:
+	enum Layout: int64_t {
+		RowMajor,
+		ColumnMajor,
+		Dynamic
+	};
+
 	// We need a shared pointer because things like asarray can return either a view or an array
 	va::VArray array;
 
@@ -60,6 +67,7 @@ public:
 	[[nodiscard]] uint64_t size() const;
 	[[nodiscard]] uint64_t array_size_in_bytes() const;
 	[[nodiscard]] uint64_t ndim() const;
+	[[nodiscard]] Layout layout() const;
 
 	Variant _iter_init(const Array &p_iter);
 	Variant _iter_next(const Array &p_iter);
@@ -190,5 +198,7 @@ public:
 	explicit operator double() const;
 	explicit operator float() const;
 };
+
+VARIANT_ENUM_CAST(NDArray::Layout);
 
 #endif

@@ -5,18 +5,42 @@
 #include <type_traits>                     // for decay_t, common_type_t
 #include "xtensor/xstrided_view_base.hpp"  // for strided_view_args
 
+const va::shape_type& va::VArray::shape() const {
+    return std::visit([](const auto& carray) -> const va::shape_type& {
+        return carray.shape();
+    }, read);
+}
+
+const va::strides_type& va::VArray::strides() const {
+    return std::visit([](const auto& carray) -> const va::strides_type& {
+        return carray.strides();
+    }, read);
+}
+
+va::size_type va::VArray::offset() const {
+    return std::visit([](const auto& carray) -> va::size_type {
+        return carray.data_offset();
+    }, read);
+}
+
+xt::layout_type va::VArray::layout() const {
+    return std::visit([](const auto& carray) -> xt::layout_type {
+        return carray.layout();
+    }, read);
+}
+
 va::DType va::VArray::dtype() const {
     return static_cast<DType>(read.index());
 }
 
 std::size_t va::VArray::size() const {
-    return std::visit([](auto& carray) -> std::size_t {
+    return std::visit([](const auto& carray) -> std::size_t {
         return carray.size();
     }, read);
 }
 
 std::size_t va::VArray::dimension() const {
-    return std::visit([](auto& carray) -> std::size_t {
+    return std::visit([](const auto& carray) -> std::size_t {
         return carray.dimension();
     }, read);
 }

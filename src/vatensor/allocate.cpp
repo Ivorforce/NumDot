@@ -54,6 +54,6 @@ std::shared_ptr<VArray> va::copy_as_dtype(const VArray& other, DType dtype) {
 
         // Cast first to reduce number of combinations down the line.
         return from_store(make_store<TWeWanted>(xt::cast<TWeWanted>(carray)));
-    }, dtype_to_variant(dtype), other.compute_read());
+    }, dtype_to_variant(dtype), other.read);
 #endif
 }

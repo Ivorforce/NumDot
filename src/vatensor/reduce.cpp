@@ -38,7 +38,7 @@ VScalar va::sum(const VArray &array) {
 #else
 	return vreduce<promote::num_common_type, VScalar>(
 		REDUCER_LAMBDA(xt::sum),
-		array.compute_read()
+		array.read
 	);
 #endif
 }
@@ -49,7 +49,7 @@ void va::sum(VArrayTarget target, const VArray& array, const axes_type &axes) {
 #else
 	va::xoperation_inplace<promote::num_common_type>(
 		REDUCER_LAMBDA_AXES(axes, xt::sum),
-		target, array.compute_read()
+		target, array.read
 	);
 #endif
 }
@@ -60,7 +60,7 @@ VScalar va::prod(const VArray &array) {
 #else
 	return vreduce<promote::num_common_at_least_int32, VScalar>(
 		REDUCER_LAMBDA(xt::prod),
-		array.compute_read()
+		array.read
 	);
 #endif
 }
@@ -71,7 +71,7 @@ void va::prod(VArrayTarget target, const VArray& array, const axes_type &axes) {
 #else
 	va::xoperation_inplace<promote::num_common_at_least_int32>(
 		REDUCER_LAMBDA_AXES(axes, xt::prod),
-		target, array.compute_read()
+		target, array.read
 	);
 #endif
 }
@@ -82,7 +82,7 @@ VScalar va::mean(const VArray &array) {
 #else
 	return vreduce<promote::num_matching_float_or_default<double_t>, VScalar>(
 		REDUCER_LAMBDA(xt::mean),
-		array.compute_read()
+		array.read
 	);
 #endif
 }
@@ -93,7 +93,7 @@ void va::mean(VArrayTarget target, const VArray& array, const axes_type &axes) {
 #else
 	va::xoperation_inplace<promote::num_matching_float_or_default<double_t>>(
 		REDUCER_LAMBDA_AXES(axes, xt::mean),
-		target, array.compute_read()
+		target, array.read
 	);
 #endif
 }
@@ -104,7 +104,7 @@ VScalar va::median(const VArray &array) {
 #else
 	return vreduce<promote::num_common_type, VScalar>(
 		REDUCER_LAMBDA_NOECS(xt::median),
-		array.compute_read()
+		array.read
 	);
 #endif
 }
@@ -113,12 +113,12 @@ void va::median(VArrayTarget target, const VArray &array, const axes_type &axes)
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
-	if (axes.size() == 1 && array.layout != xt::layout_type::dynamic) {
+	if (axes.size() == 1 && array.layout() != xt::layout_type::dynamic) {
 		// Supported by xtensor.
 		auto axis = axes[0];
 		va::xoperation_inplace<promote::num_common_type>(
 			REDUCER_LAMBDA_AXES_NOECS(axis, xt::median),
-			target, array.compute_read()
+			target, array.read
 		);
 		return;
 	}
@@ -127,18 +127,18 @@ void va::median(VArrayTarget target, const VArray &array, const axes_type &axes)
 	const auto joined = join_axes_into_last_dimension(array, axes);
 	constexpr auto axis = -1;
 
-	if (joined->layout == xt::layout_type::dynamic) {
+	if (joined->layout() == xt::layout_type::dynamic) {
 		// xtensor does not support dynamic layout, so we need a copy first.
 		const auto joined_copy = copy_as_dtype(array, DTypeMax);
 		va::xoperation_inplace<promote::num_common_type>(
 			REDUCER_LAMBDA_AXES_NOECS(axis, xt::median),
-			target, joined_copy->compute_read()
+			target, joined_copy->read
 		);
 	}
 	else {
 		va::xoperation_inplace<promote::num_common_type>(
 			REDUCER_LAMBDA_AXES_NOECS(axis, xt::median),
-			target, joined->compute_read()
+			target, joined->read
 		);
 	}
 #endif
@@ -150,7 +150,7 @@ VScalar va::var(const VArray &array) {
 #else
 	return vreduce<promote::num_matching_float_or_default<double_t>, VScalar>(
 		REDUCER_LAMBDA(xt::variance),
-		array.compute_read()
+		array.read
 	);
 #endif
 }
@@ -161,7 +161,7 @@ void va::var(VArrayTarget target, const VArray& array, const axes_type &axes) {
 #else
 	va::xoperation_inplace<promote::num_matching_float_or_default<double_t>>(
 		REDUCER_LAMBDA_AXES(axes, xt::variance),
-		target, array.compute_read()
+		target, array.read
 	);
 #endif
 }
@@ -172,7 +172,7 @@ VScalar va::std(const VArray &array) {
 #else
 	return vreduce<promote::num_matching_float_or_default<double_t>, VScalar>(
 		REDUCER_LAMBDA(xt::stddev),
-		array.compute_read()
+		array.read
 	);
 #endif
 }
@@ -183,7 +183,7 @@ void va::std(VArrayTarget target, const VArray& array, const axes_type &axes) {
 #else
 	va::xoperation_inplace<promote::num_matching_float_or_default<double_t>>(
 		REDUCER_LAMBDA_AXES(axes, xt::stddev),
-		target, array.compute_read()
+		target, array.read
 	);
 #endif
 }
@@ -194,7 +194,7 @@ VScalar va::max(const VArray &array) {
 #else
 	return vreduce<promote::num_common_type, VScalar>(
 		REDUCER_LAMBDA(xt::amax),
-		array.compute_read()
+		array.read
 	);
 #endif
 }
@@ -205,7 +205,7 @@ void va::max(VArrayTarget target, const VArray& array, const axes_type &axes) {
 #else
 	va::xoperation_inplace<promote::num_common_type>(
 		REDUCER_LAMBDA_AXES(axes, xt::amax),
-		target, array.compute_read()
+		target, array.read
 	);
 #endif
 }
@@ -216,7 +216,7 @@ VScalar va::min(const VArray &array) {
 #else
 	return vreduce<promote::num_common_type, VScalar>(
 		REDUCER_LAMBDA(xt::amin),
-		array.compute_read()
+		array.read
 	);
 #endif
 }
@@ -227,7 +227,7 @@ void va::min(VArrayTarget target, const VArray& array, const axes_type &axes) {
 #else
 	va::xoperation_inplace<promote::num_common_type>(
 		REDUCER_LAMBDA_AXES(axes, xt::amin),
-		target, array.compute_read()
+		target, array.read
 	);
 #endif
 }
@@ -238,7 +238,7 @@ VScalar va::norm_l0(const VArray &array) {
 #else
 	return vreduce<promote::num_matching_float_or_default<double_t>, VScalar>(
 		REDUCER_LAMBDA(xt::norm_l0),
-		array.compute_read()
+		array.read
 	);
 #endif
 }
@@ -249,7 +249,7 @@ void va::norm_l0(VArrayTarget target, const VArray &array, const axes_type &axes
 #else
 	va::xoperation_inplace<promote::num_matching_float_or_default<double_t>>(
 		REDUCER_LAMBDA_AXES(axes, xt::norm_l0),
-		target, array.compute_read()
+		target, array.read
 	);
 #endif
 }
@@ -260,7 +260,7 @@ VScalar va::norm_l1(const VArray &array) {
 #else
 	return vreduce<promote::num_matching_float_or_default<double_t>, VScalar>(
 		REDUCER_LAMBDA(xt::norm_l1),
-		array.compute_read()
+		array.read
 	);
 #endif
 }
@@ -271,7 +271,7 @@ void va::norm_l1(VArrayTarget target, const VArray &array, const axes_type &axes
 #else
 	va::xoperation_inplace<promote::num_matching_float_or_default<double_t>>(
 		REDUCER_LAMBDA_AXES(axes, xt::norm_l1),
-		target, array.compute_read()
+		target, array.read
 	);
 #endif
 }
@@ -282,7 +282,7 @@ VScalar va::norm_l2(const VArray &array) {
 #else
 	return vreduce<promote::num_matching_float_or_default<double_t>, VScalar>(
 		REDUCER_LAMBDA(xt::norm_l2),
-		array.compute_read()
+		array.read
 	);
 #endif
 }
@@ -293,7 +293,7 @@ void va::norm_l2(VArrayTarget target, const VArray &array, const axes_type &axes
 #else
 	va::xoperation_inplace<promote::num_matching_float_or_default<double_t>>(
 		REDUCER_LAMBDA_AXES(axes, xt::norm_l2),
-		target, array.compute_read()
+		target, array.read
 	);
 #endif
 }
@@ -304,7 +304,7 @@ VScalar va::norm_linf(const VArray &array) {
 #else
 	return vreduce<promote::num_matching_float_or_default<double_t>, VScalar>(
 		REDUCER_LAMBDA(xt::norm_linf),
-		array.compute_read()
+		array.read
 	);
 #endif
 }
@@ -315,7 +315,7 @@ void va::norm_linf(VArrayTarget target, const VArray &array, const axes_type &ax
 #else
 	va::xoperation_inplace<promote::num_matching_float_or_default<double_t>>(
 		REDUCER_LAMBDA_AXES(axes, xt::norm_linf),
-		target, array.compute_read()
+		target, array.read
 	);
 #endif
 }
@@ -326,7 +326,7 @@ bool va::all(const VArray &array) {
 #else
 	return vreduce<promote::bool_in_bool_out, bool>(
 		REDUCER_LAMBDA_NOECS(xt::all),
-		array.compute_read()
+		array.read
 	);
 #endif
 }
@@ -337,7 +337,7 @@ void va::all(VArrayTarget target, const VArray &array, const axes_type &axes) {
 #else
 	va::xoperation_inplace<promote::bool_in_bool_out>(
 		REDUCER_LAMBDA_AXES(axes, va_all),
-		target, array.compute_read()
+		target, array.read
 	);
 #endif
 }
@@ -348,7 +348,7 @@ bool va::any(const VArray &array) {
 #else
 	return vreduce<promote::bool_in_bool_out, bool>(
 		REDUCER_LAMBDA_NOECS(xt::any),
-		array.compute_read()
+		array.read
 	);
 #endif
 }
@@ -359,7 +359,7 @@ void va::any(VArrayTarget target, const VArray &array, const axes_type &axes) {
 #else
 	va::xoperation_inplace<promote::bool_in_bool_out>(
 		REDUCER_LAMBDA_AXES(axes, va_any),
-		target, array.compute_read()
+		target, array.read
 	);
 #endif
 }

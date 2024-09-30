@@ -349,8 +349,8 @@ Ref<NDArray> nd::full(const Variant& shape, const Variant& fill_value, nd::DType
 			}
 			default: {
 				std::shared_ptr<va::VArray> result = va::empty(dtype, shape_array);
-				auto compute = result->compute_write();
-				va::assign(compute, variant_as_array(fill_value)->compute_read());
+                result->prepare_write();
+				va::assign(result->write.value(), variant_as_array(fill_value)->read);
 				return {memnew(NDArray(result))};
 			}
 		}

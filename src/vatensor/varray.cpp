@@ -6,81 +6,85 @@
 #include "xtensor/xstrided_view_base.hpp"  // for strided_view_args
 
 va::DType va::VArray::dtype() const {
-    // TODO this is true now, but may not be in the future!
-    return static_cast<DType>(store.index());
+    return static_cast<DType>(read.index());
 }
 
 std::size_t va::VArray::size() const {
-    return std::accumulate(shape.begin(), shape.end(), 1, std::multiplies<>());;
+    return std::visit([](auto& carray) -> std::size_t {
+        return carray.size();
+    }, read);
 }
 
 std::size_t va::VArray::dimension() const {
-    return shape.size();
-}
-
-std::shared_ptr<va::VArray> va::VArray::slice(const xt::xstrided_slice_vector &slices) const {
-    return std::visit([slices, this](auto &store) -> std::shared_ptr<VArray> {
-        xt::detail::strided_view_args<xt::detail::no_adj_strides_policy> args;
-        args.fill_args(
-            shape,
-            strides,
-            offset,
-            layout,
-            slices
-        );
-
-        return std::make_shared<VArray>(VArray {
-            store,  // Implicit copy
-            std::move(args.new_shape),
-            std::move(args.new_strides),
-            args.new_offset,
-            args.new_layout
-        });
-    }, store);
+    return std::visit([](auto& carray) -> std::size_t {
+        return carray.dimension();
+    }, read);
 }
 
 va::VScalar va::VArray::get_scalar(const axes_type &index) const {
     // xtensor actually checks later, too, but it just pads with 0 rather than throwing.
     if (index.size() != dimension()) throw std::runtime_error("invalid dimension for index");
 
-    return std::visit([&index](auto&& carray) -> VScalar {
-        return std::forward<decltype(carray)>(carray)[index];
-    }, compute_read());
+    return std::visit([&index](auto& carray) -> VScalar {
+        return carray[index];
+    }, read);
 }
 
-va::VRead va::VArray::compute_read() const {
-    return std::visit([this](auto& store) -> VRead {
-        using V = typename std::decay_t<decltype(store)>::element_type::value_type;
-        return va::to_compute_variant<const V*>(store, *this);
-    }, store);
+void va::VArray::prepare_write() {
+    if (write.has_value()) {
+        return;
+    }
+
+    write = std::visit([](auto& store, const auto& read) -> VWrite {
+        using VTStore = typename std::decay_t<decltype(*store)>::value_type;
+        using VTRead = typename std::decay_t<decltype(read)>::value_type;
+
+        if constexpr (!std::is_same_v<VTStore, VTRead>) {
+            throw std::runtime_error("unexpected data type discrepancy between store and read");
+        }
+        else {
+            return make_vwrite<VTStore>(store, read);
+        }
+    }, store, read);
 }
 
-va::VRead va::VArray::compute_read(const xt::xstrided_slice_vector &slices) const {
-    return std::visit([this, slices](auto& store) -> VRead {
-        using V = typename std::decay_t<decltype(store)>::element_type::value_type;
-        return va::to_compute_variant<const V*>(store, *this, slices);
-    }, store);
+std::shared_ptr<va::VArray> va::VArray::sliced(const xt::xstrided_slice_vector &slices) const {
+    return std::visit([&slices](const auto& store, const auto& read) -> std::shared_ptr<VArray> {
+        using VTStore = typename std::decay_t<decltype(*store)>::value_type;
+        using VTRead = typename std::decay_t<decltype(read)>::value_type;
+
+        if constexpr (!std::is_same_v<VTStore, VTRead>) {
+            throw std::runtime_error("unexpected data type discrepancy between store and read");
+        }
+        else {
+            return std::make_shared<VArray>(VArray {
+                store,
+                slice_compute(read, slices),
+                {}
+            });
+        }
+    }, store, read);
 }
 
-va::VWrite va::VArray::compute_write() const {
-    return std::visit([this](auto& store) -> VWrite {
-        using V = typename std::decay_t<decltype(store)>::element_type::value_type;
-        return va::to_compute_variant<V*>(store, *this);
-    }, store);
+va::VRead va::VArray::sliced_read(const xt::xstrided_slice_vector& slices) const {
+    return std::visit([&slices](const auto& read) -> va::VRead {
+        return slice_compute(read, slices);
+    }, read);
 }
 
-va::VWrite va::VArray::compute_write(const xt::xstrided_slice_vector &slices) const {
-    return std::visit([this, slices](auto& store) -> VWrite {
-        using V = typename std::decay_t<decltype(store)>::element_type::value_type;
-        return va::to_compute_variant<V*>(store, *this, slices);
-    }, store);
+va::VWrite va::VArray::sliced_write(const xt::xstrided_slice_vector& slices) {
+    prepare_write();
+
+    return std::visit([&slices](auto& write) -> va::VWrite {
+        return slice_compute(write, slices);
+    }, write.value());
 }
 
 std::size_t va::VArray::size_of_array_in_bytes() const {
-    return std::visit([](auto&& carray){
+    return std::visit([](auto& carray){
         using V = typename std::decay_t<decltype(carray)>::value_type;
         return carray.size() * sizeof(V);
-    }, compute_read());
+    }, read);
 }
 
 va::VScalar va::dtype_to_variant(const DType dtype) {
@@ -149,7 +153,7 @@ va::VScalar va::VArray::to_single_value() const {
         // TODO I expected this to work, but it doesn't. See https://xtensor.readthedocs.io/en/latest/indices.html#operator
         // But at least the above is a view, so no copy is made.
         // return V(array[slice]);
-    }, compute_read());
+    }, read);
 }
 
 va::VArray::operator bool() const { return va::scalar_to_type<bool>(to_single_value()); }

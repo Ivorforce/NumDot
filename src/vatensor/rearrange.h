@@ -11,11 +11,16 @@
 namespace va {
     template <typename Visitor>
     static std::shared_ptr<VArray> map(const Visitor& visitor, const VArray& varray) {
-        return std::visit([visitor, varray](auto& store) -> std::shared_ptr<VArray> {
-        using V = typename std::decay_t<decltype(store)>::element_type::value_type;
-            auto read = to_compute_variant<const V*>(store, varray);
+        return std::visit([visitor](auto& store, auto& read) -> std::shared_ptr<VArray> {
+            using VTStore = typename std::decay_t<decltype(*store)>::value_type;
+            using VTRead = typename std::decay_t<decltype(read)>::value_type;
+
+            if constexpr (!std::is_same_v<VTStore, VTRead>) {
+                throw std::runtime_error("unexpected data type discrepancy between store and read");
+            }
+
             return from_surrogate(store, visitor(read));
-        }, varray.store);
+        }, varray.store, varray.read);
     }
 
     std::shared_ptr<VArray> transpose(const VArray& varray, strides_type permutation);

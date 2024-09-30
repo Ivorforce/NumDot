@@ -122,7 +122,7 @@ namespace va {
     };
 
     template<typename PromotionRule, typename FX, typename... Args>
-    static inline void xoperation_inplace(FX &&fx, VArrayTarget target, const Args&... args) {
+    static inline void xoperation_inplace(FX&& fx, VArrayTarget target, const Args&... args) {
         std::visit(
             VArrayFunctionInplace<PromotionRule, FX>{std::forward<FX>(fx), target },
             args...

@@ -39,7 +39,7 @@ void va::reduce_dot(VArrayTarget target, const VArray &a, const VArray &b, const
 	// The upside to the above implementation is that no additional code is generated.
 	// But it's also a bit slower than if it was fully lazy and accelerated, probably.
 	// va::xreduction_inplace<promote::num_matching_float_or_default<double_t>>(
-	// 	NormL0{}, axes, target, array.compute_read()
+	// 	NormL0{}, axes, target, array.read
 	// );
 }
 
@@ -66,8 +66,8 @@ void va::dot(VArrayTarget target, const VArray &a, const VArray &b) {
 }
 
 void va::matmul(VArrayTarget target, const VArray &a, const VArray &b) {
-	const std::shared_ptr<VArray> a_broadcast = a.slice({ xt::ellipsis(), xt::newaxis() });
-	const std::shared_ptr<VArray> b_broadcast = b.slice({ xt::ellipsis(), xt::newaxis(), xt::all(), xt::all() });
+	const std::shared_ptr<VArray> a_broadcast = a.sliced({ xt::ellipsis(), xt::newaxis() });
+	const std::shared_ptr<VArray> b_broadcast = b.sliced({ xt::ellipsis(), xt::newaxis(), xt::all(), xt::all() });
 
 	reduce_dot(target, *a_broadcast, *b_broadcast, std::vector<std::ptrdiff_t> { -2 });
 }

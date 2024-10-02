@@ -12,13 +12,11 @@
     </sourceRoots>
     <libraryRoots>
       <file path="$PROJECT_DIR$/docs/godot-docs" />
+      <file path="$PROJECT_DIR$/godot-cpp" />
       <file path="$PROJECT_DIR$/xsimd" />
       <file path="$PROJECT_DIR$/xtensor" />
       <file path="$PROJECT_DIR$/xtl" />
     </libraryRoots>
-    <excludeRoots>
-      <file path="$PROJECT_DIR$/godot-cpp" />
-    </excludeRoots>
   </component>
   <component name="CompDBSettings">
     <option name="linkedExternalProjectsSettings">

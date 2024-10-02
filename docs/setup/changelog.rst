@@ -10,20 +10,20 @@ Here you will find the release notes for each version of the library. Each secti
    :local:
    :backlinks: none
 
-Upcoming Changes (main branch)
-------------------------------
+Version 0.4 - 2024-10-03
+------------------------
 **Added**
 
+- Added :ref:`NDRandomGenerator <class_NDRandomGenerator>`, created by ``nd.default_rng``. It offers ``.random()`` for floats, ``.integers`` for ints and ``.spawn()`` for child generators.
+- Added new namespaces :ref:`ndb <class_ndb>`, :ref:`ndf <class_ndf>` and :ref:`ndi <class_ndi>`, for full tensor reductions to ``bool``, ``float`` and ``int``, respectively.
+- Added ``nd.median``.
 - ``NDArray`` is now iterable over the outermost dimension.
 - ``NDArray`` conversion functions to and from ``Color``, ``Vector2``, ``Vector3``, ``Vector4``, ``Vector2i``, ``Vector3i``, ``Vector4i``, ``PackedVector2Array``, ``PackedVector3Array``, ``PackedVector4Array`` and ``PackedColorArray``.
-- Added ``nd.as_array`` shorthands for each data type, e.g. ``nd.float32``.
+- Added ``nd.as_array`` shorthands for every data type, e.g. ``nd.float32``.
 - (Now really) added the ``logical_xor`` function.
-- Added ``nd.median``.
-- Added new namespaces :ref:`ndb <class_ndb>`, :ref:`ndf <class_ndf>` and :ref:`ndi <class_ndi>`, for full tensor reductions to ``bool``, ``float`` and ``int``, respectively.
-- Added ``NDArray.strides()``, ``NDArray.strides_layout()``, and ``NDArray.strides_offset()``, through which you can inspect the strides properties of an ``NDArray`` / ``NDArray`` view.
-- Added ``nd.empty_like``, ``nd.full_like``, ``nd.ones_like`` and ``nd.zeros_like``.
 - Added ``nd.eye``.
-- Added :ref:`ndb <class_NDRandomGenerator>`, created by ``nd.default_rng``. It offers ``.random()`` for floats, ``.integers`` for ints and ``.spawn()`` for child generators.
+- Added ``nd.empty_like``, ``nd.full_like``, ``nd.ones_like`` and ``nd.zeros_like``.
+- Added ``NDArray.strides()``, ``NDArray.strides_layout()``, and ``NDArray.strides_offset()``, through which you can inspect the strides properties of an ``NDArray`` / ``NDArray`` view.
 
 **Changed**
 

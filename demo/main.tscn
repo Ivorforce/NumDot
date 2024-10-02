@@ -1,14 +1,17 @@
-[gd_scene load_steps=4 format=3 uid="uid://bdiwjirqot411"]
+[gd_scene load_steps=2 format=3 uid="uid://bdiwjirqot411"]
 
-[ext_resource type="Script" path="res://example_math.gd" id="1_lejsv"]
-[ext_resource type="Script" path="res://sieve_of_eratosthenes.gd" id="2_kujve"]
-[ext_resource type="Script" path="res://generate_polygon.gd" id="3_1lu72"]
+[sub_resource type="GDScript" id="GDScript_ypyrl"]
+script/source = "extends Node
+
+func _ready():
+	# Create an instance of nd
+	var test_instance = nd.new()
+	print(\"nd instance created\")
+
+	# Attempt to destroy the instance
+	test_instance.free()
+	print(\"nd instance destroyed\")
+"
 
 [node name="Main" type="Node2D"]
-script = ExtResource("1_lejsv")
-
-[node name="SieveOfEratosthenes" type="Node" parent="."]
-script = ExtResource("2_kujve")
-
-[node name="GeneratePolygon" type="Node" parent="."]
-script = ExtResource("3_1lu72")
+script = SubResource("GDScript_ypyrl")

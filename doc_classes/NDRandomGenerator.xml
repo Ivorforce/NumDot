@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <class name="NDRandomGenerator" inherits="RefCounted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
 	<brief_description>
+		An object for generating random values.
 	</brief_description>
 	<description>
+		An object for generating random values. Given a specific seed, it is perfectly deterministic.
+		Create instances through [method nd.default_rng].
 	</description>
 	<tutorials>
 	</tutorials>

@@ -12,9 +12,16 @@ NDRandomGenerator
 
 **Inherits:** ``RefCounted``
 
-.. container:: contribute
+An object for generating random values.
 
-	There is currently no description for this class. Please help us by :ref:`contributing one <doc_updating_the_class_reference>`!
+.. rst-class:: classref-introduction-group
+
+Description
+-----------
+
+An object for generating random values. Given a specific seed, it is perfectly deterministic.
+
+Create instances through :ref:`nd.default_rng<class_nd_method_default_rng>`.
 
 .. rst-class:: classref-reftable-group
 

@@ -60,13 +60,13 @@ void NDArray::_bind_methods() {
 	godot::ClassDB::bind_method(D_METHOD("to_int"), &NDArray::to_int);
 	godot::ClassDB::bind_method(D_METHOD("to_float"), &NDArray::to_float);
 
-    godot::ClassDB::bind_method(D_METHOD("to_vector2"), &NDArray::to_vector2);
-    godot::ClassDB::bind_method(D_METHOD("to_vector3"), &NDArray::to_vector3);
-    godot::ClassDB::bind_method(D_METHOD("to_vector4"), &NDArray::to_vector4);
-    godot::ClassDB::bind_method(D_METHOD("to_vector2i"), &NDArray::to_vector2i);
-    godot::ClassDB::bind_method(D_METHOD("to_vector3i"), &NDArray::to_vector3i);
-    godot::ClassDB::bind_method(D_METHOD("to_vector4i"), &NDArray::to_vector4i);
-    godot::ClassDB::bind_method(D_METHOD("to_color"), &NDArray::to_color);
+	godot::ClassDB::bind_method(D_METHOD("to_vector2"), &NDArray::to_vector2);
+	godot::ClassDB::bind_method(D_METHOD("to_vector3"), &NDArray::to_vector3);
+	godot::ClassDB::bind_method(D_METHOD("to_vector4"), &NDArray::to_vector4);
+	godot::ClassDB::bind_method(D_METHOD("to_vector2i"), &NDArray::to_vector2i);
+	godot::ClassDB::bind_method(D_METHOD("to_vector3i"), &NDArray::to_vector3i);
+	godot::ClassDB::bind_method(D_METHOD("to_vector4i"), &NDArray::to_vector4i);
+	godot::ClassDB::bind_method(D_METHOD("to_color"), &NDArray::to_color);
 
 	godot::ClassDB::bind_method(D_METHOD("to_packed_float32_array"), &NDArray::to_packed_float32_array);
 	godot::ClassDB::bind_method(D_METHOD("to_packed_float64_array"), &NDArray::to_packed_float64_array);
@@ -127,9 +127,9 @@ void NDArray::_bind_methods() {
 	godot::ClassDB::bind_method(D_METHOD("assign_norm", "a", "ord", "axes"), &NDArray::assign_norm, DEFVAL(nullptr), DEFVAL(2), DEFVAL(nullptr));
 
 	godot::ClassDB::bind_method(D_METHOD("assign_floor", "a"), &NDArray::assign_floor);
-    godot::ClassDB::bind_method(D_METHOD("assign_ceil", "a"), &NDArray::assign_ceil);
-    godot::ClassDB::bind_method(D_METHOD("assign_round", "a"), &NDArray::assign_round);
-    godot::ClassDB::bind_method(D_METHOD("assign_trunc", "a"), &NDArray::assign_trunc);
+	godot::ClassDB::bind_method(D_METHOD("assign_ceil", "a"), &NDArray::assign_ceil);
+	godot::ClassDB::bind_method(D_METHOD("assign_round", "a"), &NDArray::assign_round);
+	godot::ClassDB::bind_method(D_METHOD("assign_trunc", "a"), &NDArray::assign_trunc);
 	godot::ClassDB::bind_method(D_METHOD("assign_rint", "a"), &NDArray::assign_rint);
 
 	godot::ClassDB::bind_method(D_METHOD("assign_equal", "a", "b"), &NDArray::assign_equal);
@@ -143,8 +143,8 @@ void NDArray::_bind_methods() {
 	godot::ClassDB::bind_method(D_METHOD("assign_logical_or", "a", "b"), &NDArray::assign_logical_or);
 	godot::ClassDB::bind_method(D_METHOD("assign_logical_xor", "a", "b"), &NDArray::assign_logical_xor);
 	godot::ClassDB::bind_method(D_METHOD("assign_logical_not", "a"), &NDArray::assign_logical_not);
-    godot::ClassDB::bind_method(D_METHOD("assign_all", "a", "axes"), &NDArray::assign_all, DEFVAL(nullptr), DEFVAL(nullptr));
-    godot::ClassDB::bind_method(D_METHOD("assign_any", "a", "axes"), &NDArray::assign_any, DEFVAL(nullptr), DEFVAL(nullptr));
+	godot::ClassDB::bind_method(D_METHOD("assign_all", "a", "axes"), &NDArray::assign_all, DEFVAL(nullptr), DEFVAL(nullptr));
+	godot::ClassDB::bind_method(D_METHOD("assign_any", "a", "axes"), &NDArray::assign_any, DEFVAL(nullptr), DEFVAL(nullptr));
 
 	godot::ClassDB::bind_method(D_METHOD("assign_dot", "a", "b"), &NDArray::assign_dot);
 	godot::ClassDB::bind_method(D_METHOD("assign_reduce_dot", "a", "b", "axes"), &NDArray::assign_reduce_dot, DEFVAL(nullptr), DEFVAL(nullptr), DEFVAL(nullptr));
@@ -156,7 +156,7 @@ NDArray::NDArray() = default;
 NDArray::~NDArray() = default;
 
 String NDArray::_to_string() const {
-	return std::visit([](auto&& arg){ return xt_to_string(arg); }, array->read);
+	return std::visit([](auto&& arg) { return xt_to_string(arg); }, array->read);
 }
 
 va::DType NDArray::dtype() const {
@@ -165,8 +165,8 @@ va::DType NDArray::dtype() const {
 
 PackedInt64Array NDArray::shape() const {
 	PackedInt64Array packed;
-    const auto& shape = array->shape();
-    packed.resize(static_cast<int64_t>(shape.size()));
+	const auto& shape = array->shape();
+	packed.resize(static_cast<int64_t>(shape.size()));
 	std::copy(shape.begin(), shape.end(), packed.ptrw());
 	return packed;
 }
@@ -185,8 +185,8 @@ uint64_t NDArray::ndim() const {
 
 PackedInt64Array NDArray::strides() const {
 	PackedInt64Array packed;
-    const auto& strides = array->strides();
-    packed.resize(static_cast<int64_t>(strides.size()));
+	const auto& strides = array->strides();
+	packed.resize(static_cast<int64_t>(strides.size()));
 	std::copy(strides.begin(), strides.end(), packed.ptrw());
 	return packed;
 }
@@ -210,7 +210,7 @@ uint64_t NDArray::strides_offset() const {
 	return static_cast<uint64_t>(array->offset());
 }
 
-Variant NDArray::_iter_init(const Array &p_iter) {
+Variant NDArray::_iter_init(const Array& p_iter) {
 	ERR_FAIL_COND_V_MSG(array->shape().empty(), false, "iteration over a 0-d array");
 
 	Array ref = p_iter;
@@ -224,7 +224,7 @@ Variant NDArray::_iter_init(const Array &p_iter) {
 	return true;
 }
 
-Variant NDArray::_iter_next(const Array &p_iter) {
+Variant NDArray::_iter_next(const Array& p_iter) {
 	ERR_FAIL_COND_V_MSG(array->shape().empty(), false, "iteration over a 0-d array");
 
 	Array ref = p_iter;
@@ -240,7 +240,7 @@ Variant NDArray::_iter_next(const Array &p_iter) {
 	return pos != size;
 }
 
-Variant NDArray::_iter_get(const Variant &p_iter) {
+Variant NDArray::_iter_get(const Variant& p_iter) {
 	ERR_FAIL_COND_V_MSG(array->shape().empty(), false, "iteration over a 0-d array");
 
 	int pos = p_iter;
@@ -249,24 +249,24 @@ Variant NDArray::_iter_get(const Variant &p_iter) {
 	ERR_FAIL_COND_V_MSG(pos < 0 || pos >= size, false, "iterator out of bounds");
 
 	// We checked for the shape size, the next should not fail.
-	const auto result = array->sliced({pos});
-	return {memnew(NDArray(result))};
+	const auto result = array->sliced({ pos });
+	return { memnew(NDArray(result)) };
 }
 
 Variant NDArray::as_type(va::DType dtype) const {
 	return nd::as_array(this, dtype);
 }
 
-void NDArray::set(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
+void NDArray::set(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {
 	ERR_FAIL_COND_MSG(arg_count < 1, "At least one argument must be passed to NDarray->set(). Ignoring assignment.");
 
 	try {
-		const Variant &value = *args[0];
+		const Variant& value = *args[0];
 		// todo don't need slices if arg_count == 1
-        array->prepare_write();
+		array->prepare_write();
 		auto compute = arg_count == 1
-			? array->write.value()
-			: array->sliced_write(variants_to_slice_vector(args + 1, arg_count - 1, error));
+		               ? array->write.value()
+		               : array->sliced_write(variants_to_slice_vector(args + 1, arg_count - 1, error));
 
 		switch (value.get_type()) {
 			case Variant::BOOL:
@@ -292,19 +292,19 @@ void NDArray::set(const Variant **args, GDExtensionInt arg_count, GDExtensionCal
 	}
 }
 
-Ref<NDArray> NDArray::get(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
+Ref<NDArray> NDArray::get(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {
 	try {
 		xt::xstrided_slice_vector sv = variants_to_slice_vector(args, arg_count, error);
 
 		const auto result = array->sliced(sv);
-		return {memnew(NDArray(result))};
+		return { memnew(NDArray(result)) };
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG(Ref<NDArray>(), error.what());
 	}
 }
 
-bool NDArray::get_bool(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
+bool NDArray::get_bool(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {
 	try {
 		return va::scalar_to_type<bool>(array->get_scalar(variants_to_axes(args, arg_count, error)));
 	}
@@ -313,7 +313,7 @@ bool NDArray::get_bool(const Variant **args, GDExtensionInt arg_count, GDExtensi
 	}
 }
 
-int64_t NDArray::get_int(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
+int64_t NDArray::get_int(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {
 	try {
 		return va::scalar_to_type<int64_t>(array->get_scalar(variants_to_axes(args, arg_count, error)));
 	}
@@ -322,7 +322,7 @@ int64_t NDArray::get_int(const Variant **args, GDExtensionInt arg_count, GDExten
 	}
 }
 
-double_t NDArray::get_float(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
+double_t NDArray::get_float(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {
 	try {
 		return va::scalar_to_type<double_t>(array->get_scalar(variants_to_axes(args, arg_count, error)));
 	}
@@ -331,7 +331,7 @@ double_t NDArray::get_float(const Variant **args, GDExtensionInt arg_count, GDEx
 	}
 }
 
-bool NDArray::to_bool() const { return static_cast<bool>(*this);}
+bool NDArray::to_bool() const { return static_cast<bool>(*this); }
 int64_t NDArray::to_int() const { return static_cast<int64_t>(*this); }
 double_t NDArray::to_float() const { return static_cast<double_t>(*this); }
 
@@ -339,27 +339,27 @@ Vector2 NDArray::to_vector2() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
-    ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to vector");
-    ERR_FAIL_COND_V_MSG(array->shape()[0] != 2, {}, "array dimension must be size 2");
+	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to vector");
+	ERR_FAIL_COND_V_MSG(array->shape()[0] != 2, {}, "array dimension must be size 2");
 
-    Vector2 vector;
-    fill_c_array_flat(&vector.coord[0], array->read);
+	Vector2 vector;
+	fill_c_array_flat(&vector.coord[0], array->read);
 
-    return vector;
+	return vector;
 #endif
 }
 
-Vector3 NDArray::to_vector3() const{
+Vector3 NDArray::to_vector3() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
-    ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to vector");
-    ERR_FAIL_COND_V_MSG(array->shape()[0] != 3, {}, "array dimension must be size 3");
+	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to vector");
+	ERR_FAIL_COND_V_MSG(array->shape()[0] != 3, {}, "array dimension must be size 3");
 
-    Vector3 vector;
-    fill_c_array_flat(&vector.coord[0], array->read);
+	Vector3 vector;
+	fill_c_array_flat(&vector.coord[0], array->read);
 
-    return vector;
+	return vector;
 #endif
 }
 
@@ -367,13 +367,13 @@ Vector4 NDArray::to_vector4() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
-    ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to vector");
-    ERR_FAIL_COND_V_MSG(array->shape()[0] != 4, {}, "array dimension must be size 4");
+	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to vector");
+	ERR_FAIL_COND_V_MSG(array->shape()[0] != 4, {}, "array dimension must be size 4");
 
-    Vector4 vector;
-    fill_c_array_flat(&vector.components[0], array->read);
+	Vector4 vector;
+	fill_c_array_flat(&vector.components[0], array->read);
 
-    return vector;
+	return vector;
 #endif
 }
 
@@ -381,13 +381,13 @@ Vector2i NDArray::to_vector2i() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
-    ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to vector");
-    ERR_FAIL_COND_V_MSG(array->shape()[0] != 2, {}, "array dimension must be size 2");
+	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to vector");
+	ERR_FAIL_COND_V_MSG(array->shape()[0] != 2, {}, "array dimension must be size 2");
 
-    Vector2i vector;
-    fill_c_array_flat(&vector.coord[0], array->read);
+	Vector2i vector;
+	fill_c_array_flat(&vector.coord[0], array->read);
 
-    return vector;
+	return vector;
 #endif
 }
 
@@ -395,13 +395,13 @@ Vector3i NDArray::to_vector3i() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
-    ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to vector");
-    ERR_FAIL_COND_V_MSG(array->shape()[0] != 3, {}, "array dimension must be size 3");
+	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to vector");
+	ERR_FAIL_COND_V_MSG(array->shape()[0] != 3, {}, "array dimension must be size 3");
 
-    Vector3i vector;
-    fill_c_array_flat(&vector.coord[0], array->read);
+	Vector3i vector;
+	fill_c_array_flat(&vector.coord[0], array->read);
 
-    return vector;
+	return vector;
 #endif
 }
 
@@ -409,13 +409,13 @@ Vector4i NDArray::to_vector4i() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
-    ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to vector");
-    ERR_FAIL_COND_V_MSG(array->shape()[0] != 4, {}, "array dimension must be size 4");
+	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to vector");
+	ERR_FAIL_COND_V_MSG(array->shape()[0] != 4, {}, "array dimension must be size 4");
 
-    Vector4i vector;
-    fill_c_array_flat(&vector.coord[0], array->read);
+	Vector4i vector;
+	fill_c_array_flat(&vector.coord[0], array->read);
 
-    return vector;
+	return vector;
 #endif
 }
 
@@ -423,13 +423,13 @@ Color NDArray::to_color() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
-    ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to color");
-    ERR_FAIL_COND_V_MSG(array->shape()[0] != 4, {}, "array dimension must be size 4");
+	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to color");
+	ERR_FAIL_COND_V_MSG(array->shape()[0] != 4, {}, "array dimension must be size 4");
 
-    Color vector;
-    fill_c_array_flat(&vector.components[0], array->read);
+	Color vector;
+	fill_c_array_flat(&vector.components[0], array->read);
 
-    return vector;
+	return vector;
 #endif
 }
 
@@ -574,26 +574,26 @@ TypedArray<NDArray> NDArray::to_godot_array() const {
 	const std::size_t size = array->size();
 	godot_array.resize(static_cast<int64_t>(size));
 	for (std::size_t i = 0; i < size; i++) {
-		godot_array[static_cast<int64_t>(i)] = {memnew(NDArray(array->sliced({i})))};
+		godot_array[static_cast<int64_t>(i)] = { memnew(NDArray(array->sliced({i}))) };
 	}
 	return godot_array;
 }
 
-template <typename Visitor, typename... Args>
+template<typename Visitor, typename... Args>
 void map_variants_as_arrays_inplace(Visitor&& visitor, va::VArray& target, const Args&... args) {
-    try {
-        target.prepare_write();
-        std::forward<Visitor>(visitor)(&target.write.value(), *variant_as_array(args)...);
-    }
-    catch (std::runtime_error& error) {
-        ERR_FAIL_MSG(error.what());
-    }
+	try {
+		target.prepare_write();
+		std::forward<Visitor>(visitor)(&target.write.value(), *variant_as_array(args)...);
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_MSG(error.what());
+	}
 }
 
-template <typename Visitor, typename VisitorNoaxes, typename... Args>
+template<typename Visitor, typename VisitorNoaxes, typename... Args>
 inline void reduction_inplace(Visitor&& visitor, VisitorNoaxes&& visitor_noaxes, va::VArray& target, const Variant& axes, const Args&... args) {
 	try {
-        target.prepare_write();
+		target.prepare_write();
 
 		if (axes.get_type() == Variant::NIL) {
 			const va::VScalar result = std::forward<VisitorNoaxes>(visitor_noaxes)(*variant_as_array(args)...);
@@ -644,7 +644,7 @@ inline void reduction_inplace(Visitor&& visitor, VisitorNoaxes&& visitor_noaxes,
 	}, *this->array, (axes1), (varray1), (varray2));\
 	return {this}
 
-Ref<NDArray> NDArray::assign_add(const Variant &a, const Variant &b) {
+Ref<NDArray> NDArray::assign_add(const Variant& a, const Variant& b) {
 	// godot::UtilityFunctions::print(value);
 	VARRAY_MAP2(add, a, b);
 }
@@ -653,7 +653,7 @@ Ref<NDArray> NDArray::assign_subtract(const Variant& a, const Variant& b) {
 	VARRAY_MAP2(subtract, a, b);
 }
 
-Ref<NDArray> NDArray::assign_multiply(const Variant& a, const Variant &b) {
+Ref<NDArray> NDArray::assign_multiply(const Variant& a, const Variant& b) {
 	VARRAY_MAP2(multiply, a, b);
 }
 
@@ -674,11 +674,11 @@ Ref<NDArray> NDArray::assign_minimum(const Variant& a, const Variant& b) {
 }
 
 Ref<NDArray> NDArray::assign_maximum(const Variant& a, const Variant& b) {
-    VARRAY_MAP2(maximum, a, b);
+	VARRAY_MAP2(maximum, a, b);
 }
 
 Ref<NDArray> NDArray::assign_clip(const Variant& a, const Variant& min, const Variant& max) {
-    VARRAY_MAP3(clip, a, min, max);
+	VARRAY_MAP3(clip, a, min, max);
 }
 
 Ref<NDArray> NDArray::assign_sign(const Variant& a) {
@@ -879,11 +879,11 @@ Ref<NDArray> NDArray::assign_logical_not(const Variant& a) {
 }
 
 Ref<NDArray> NDArray::assign_all(const Variant& a, const Variant& axes) {
-    REDUCTION1(all, a, axes);
+	REDUCTION1(all, a, axes);
 }
 
 Ref<NDArray> NDArray::assign_any(const Variant& a, const Variant& axes) {
-    REDUCTION1(any, a, axes);
+	REDUCTION1(any, a, axes);
 }
 
 Ref<NDArray> NDArray::assign_dot(const Variant& a, const Variant& b) {

@@ -4,7 +4,10 @@
 #include "godot_cpp/classes/object.hpp"   // for Object
 #include "godot_cpp/classes/wrapped.hpp"  // for GDCLASS
 #include "godot_cpp/variant/variant.hpp"  // for Variant
-namespace godot { class ClassDB; }
+
+namespace godot {
+	class ClassDB;
+}
 
 using namespace godot;
 

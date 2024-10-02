@@ -24,13 +24,13 @@
 // 	}
 // };
 
-va::VScalar va::reduce_dot(const VArray &a, const VArray &b) {
+va::VScalar va::reduce_dot(const VArray& a, const VArray& b) {
 	std::shared_ptr<va::VArray> prod_cache;
 	va::multiply(&prod_cache, a, b);
 	return sum(*prod_cache);
 }
 
-void va::reduce_dot(VArrayTarget target, const VArray &a, const VArray &b, const axes_type& axes) {
+void va::reduce_dot(VArrayTarget target, const VArray& a, const VArray& b, const axes_type& axes) {
 	std::shared_ptr<va::VArray> prod_cache;
 	va::multiply(&prod_cache, a, b);
 	va::sum(target, *prod_cache, axes);
@@ -43,7 +43,7 @@ void va::reduce_dot(VArrayTarget target, const VArray &a, const VArray &b, const
 	// );
 }
 
-void va::dot(VArrayTarget target, const VArray &a, const VArray &b) {
+void va::dot(VArrayTarget target, const VArray& a, const VArray& b) {
 	if (a.dimension() == 1 && b.dimension() == 1) {
 		std::shared_ptr<va::VArray> prod_cache;
 		va::multiply(&prod_cache, a, b);
@@ -58,14 +58,14 @@ void va::dot(VArrayTarget target, const VArray &a, const VArray &b) {
 	else if (b.dimension() == 1) {
 		std::shared_ptr<va::VArray> prod_cache;
 		va::multiply(&prod_cache, a, b);
-		va::sum(target, *prod_cache, std::vector {static_cast<std::ptrdiff_t>(-1)});
+		va::sum(target, *prod_cache, std::vector { static_cast<std::ptrdiff_t>(-1) });
 	}
 	else {
 		throw std::runtime_error("tensordot is not yet implemented");
 	}
 }
 
-void va::matmul(VArrayTarget target, const VArray &a, const VArray &b) {
+void va::matmul(VArrayTarget target, const VArray& a, const VArray& b) {
 	const std::shared_ptr<VArray> a_broadcast = a.sliced({ xt::ellipsis(), xt::newaxis() });
 	const std::shared_ptr<VArray> b_broadcast = b.sliced({ xt::ellipsis(), xt::newaxis(), xt::all(), xt::all() });
 

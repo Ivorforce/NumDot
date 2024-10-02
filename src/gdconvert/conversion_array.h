@@ -21,22 +21,24 @@ using namespace godot;
 std::shared_ptr<va::VArray> variant_as_array(const Variant& array);
 std::shared_ptr<va::VArray> variant_as_array(const Variant& array, va::DType dtype, bool copy);
 
-template <typename T>
-void fill_c_array_flat(T* target, const va::VRead &array) {
-    std::visit([target](auto &carray) {
-        std::copy(carray.begin(), carray.end(), target);
-    }, array);
+template<typename T>
+void fill_c_array_flat(T* target, const va::VRead& array) {
+	std::visit(
+		[target](auto& carray) {
+			std::copy(carray.begin(), carray.end(), target);
+		}, array
+	);
 }
 
-template <typename T>
+template<typename T>
 auto adapt_c_array(T&& ptr, const va::shape_type& shape) {
-    const auto size = std::accumulate(shape.begin(), shape.end(), static_cast<std::size_t>(1), std::multiplies<>());
-    return xt::adapt<xt::layout_type::dynamic, T, xt::no_ownership, va::shape_type>(
-        std::forward<T>(ptr), size, xt::no_ownership(), shape, xt::layout_type::row_major
-    );
+	const auto size = std::accumulate(shape.begin(), shape.end(), static_cast<std::size_t>(1), std::multiplies<>());
+	return xt::adapt<xt::layout_type::dynamic, T, xt::no_ownership, va::shape_type>(
+		std::forward<T>(ptr), size, xt::no_ownership(), shape, xt::layout_type::row_major
+	);
 }
 
-void find_shape_and_dtype(va::shape_type& shape, va::DType &dtype, const Variant& array);
+void find_shape_and_dtype(va::shape_type& shape, va::DType& dtype, const Variant& array);
 Array varray_to_godot_array(const va::VArray& array);
 
 #endif

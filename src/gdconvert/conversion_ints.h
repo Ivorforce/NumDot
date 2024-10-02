@@ -7,15 +7,15 @@
 
 using namespace godot;
 
-template <typename T, typename Packed>
+template<typename T, typename Packed>
 T packed_as_array(Packed packed) {
-    T axes;
-    axes.assign(packed.ptr(), packed.ptr() + packed.size());
-    return axes;
+	T axes;
+	axes.assign(packed.ptr(), packed.ptr() + packed.size());
+	return axes;
 }
 
-va::shape_type variant_to_shape(const Variant &variant);
-va::axes_type variant_to_axes(const Variant &variant);
-va::axes_type variants_to_axes(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
+va::shape_type variant_to_shape(const Variant& variant);
+va::axes_type variant_to_axes(const Variant& variant);
+va::axes_type variants_to_axes(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error);
 
 #endif

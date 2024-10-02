@@ -32,7 +32,7 @@ void ndf::_bind_methods() {
 ndf::ndf() = default;
 ndf::~ndf() = default;
 
-template <typename Visitor, typename... Args>
+template<typename Visitor, typename... Args>
 inline double_t reduction(Visitor&& visitor, const Args&... args) {
 	try {
 		const auto result = std::forward<Visitor>(visitor)(*variant_as_array(args)...);
@@ -67,7 +67,7 @@ double_t ndf::mean(const Variant& a) {
 	return REDUCTION1(mean, a);
 }
 
-double_t ndf::median(const Variant &a) {
+double_t ndf::median(const Variant& a) {
 	return REDUCTION1(median, a);
 }
 

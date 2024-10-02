@@ -5,7 +5,10 @@
 #include "godot_cpp/classes/object.hpp"   // for Object
 #include "godot_cpp/classes/wrapped.hpp"  // for GDCLASS
 #include "godot_cpp/variant/variant.hpp"  // for Variant
-namespace godot { class ClassDB; }
+
+namespace godot {
+	class ClassDB;
+}
 
 using namespace godot;
 
@@ -30,9 +33,9 @@ public:
 	static double_t min(const Variant& a);
 	static double_t norm(const Variant& a, const Variant& ord);
 
-//	// Logical.
-//	static bool all(const Variant& a);
-//	static bool any(const Variant& a);
+	//	// Logical.
+	//	static bool all(const Variant& a);
+	//	static bool any(const Variant& a);
 
 	// Linalg.
 	static double_t reduce_dot(const Variant& a, const Variant& b);

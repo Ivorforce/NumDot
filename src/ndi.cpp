@@ -29,7 +29,7 @@ void ndi::_bind_methods() {
 ndi::ndi() = default;
 ndi::~ndi() = default;
 
-template <typename Visitor, typename... Args>
+template<typename Visitor, typename... Args>
 inline int64_t reduction(Visitor&& visitor, const Args&... args) {
 	try {
 		const auto result = std::forward<Visitor>(visitor)(*variant_as_array(args)...);
@@ -60,7 +60,7 @@ int64_t ndi::prod(const Variant& a) {
 	return REDUCTION1(prod, a);
 }
 
-int64_t ndi::median(const Variant &a) {
+int64_t ndi::median(const Variant& a) {
 	return REDUCTION1(median, a);
 }
 

@@ -34,9 +34,10 @@ namespace va {
     using strides_type = xt::get_strides_t<shape_type>;
     using axes_type = strides_type;
 
-    template <typename T>using array_case = xt::xarray<T, xt::layout_type::row_major>;
+    template<typename T>
+    using array_case = xt::xarray<T, xt::layout_type::row_major>;
 
-    template <typename T>
+    template<typename T>
     using store_case = std::shared_ptr<array_case<T>>;
 
     using VStore = std::variant<
@@ -97,7 +98,7 @@ namespace va {
     >;
 
     // P&& pointer, typename A::size_type size, O ownership, SC&& shape, SS&& strides, const A& alloc = A()
-    template <typename T>
+    template<typename T>
     using compute_case = xt::xarray_adaptor<
         xt::xbuffer_adaptor<T, xt::no_ownership, xt::detail::default_allocator_for_ptr_t<T>>,
         xt::layout_type::dynamic,
@@ -171,23 +172,23 @@ namespace va {
     };
 
     // For explicit V
-    template <typename V, typename T>
+    template<typename V, typename T>
     static store_case<V> make_store(T&& data) {
         return std::make_shared<array_case<V>>(array_case<V>(std::forward<T>(data)));
     }
 
     // For deducted V, from xexpressions
-    template <typename T, typename V = typename std::decay_t<T>::value_type>
+    template<typename T, typename V = typename std::decay_t<T>::value_type>
     static store_case<V> make_store(T&& data) {
         return std::make_shared<array_case<V>>(array_case<V>(std::forward<T>(data)));
     }
 
-    template <typename V>
+    template<typename V>
     static store_case<V> make_store(std::initializer_list<V> data) {
         return std::make_shared<array_case<V>>(array_case<V>(data));
     }
 
-    template <typename V>
+    template<typename V>
     static compute_case<V> make_compute(V&& ptr, const shape_type& shape, const strides_type& strides, xt::layout_type layout) {
         auto size_ = std::accumulate(shape.begin(), shape.end(), static_cast<std::size_t>(1), std::multiplies());
 
@@ -202,13 +203,13 @@ namespace va {
     }
 
     // Need the store to request a write variant
-    template <typename V>
+    template<typename V>
     static compute_case<V*> make_vwrite(store_case<V>& store, const compute_case<const V*>& read) {
         auto offset = read.data() - store->data();
         return make_compute<V*>(store->data() + offset, read.shape(), read.strides(), read.layout());
     }
 
-    template <typename CC>
+    template<typename CC>
     static auto slice_compute(CC& compute, const xt::xstrided_slice_vector& slices) {
         xt::detail::strided_view_args<xt::detail::no_adj_strides_policy> args;
         args.fill_args(
@@ -222,36 +223,40 @@ namespace va {
         return make_compute(compute.data() + args.new_offset, args.new_shape, args.new_strides, args.new_layout);
     }
 
-    template <typename V, typename S>
+    template<typename V, typename S>
     static std::shared_ptr<VArray> from_surrogate(V store, const S& surrogate) {
         using VT = typename std::decay_t<decltype(*store)>::value_type;
-        return std::make_shared<VArray>(VArray {
-            store,
-            make_compute<const VT*>(
-                store->data() + surrogate.data_offset(),
-                surrogate.shape(),
-                surrogate.strides(),
-                surrogate.layout()
-            )
-        });
+        return std::make_shared<VArray>(
+            VArray {
+                store,
+                make_compute<const VT*>(
+                    store->data() + surrogate.data_offset(),
+                    surrogate.shape(),
+                    surrogate.strides(),
+                    surrogate.layout()
+                )
+            }
+        );
     }
 
-    template <typename V>
+    template<typename V>
     static std::shared_ptr<VArray> from_store(V store) {
         using VT = typename std::decay_t<decltype(*store)>::value_type;
-        return std::make_shared<VArray>(VArray {
-            store,
-            make_compute<const VT*>(
-                store->data() + store->data_offset(),  // Offset should be 0, but you know...
-                store->shape(),
-                store->strides(),
-                store->layout()
-            )
-        });
+        return std::make_shared<VArray>(
+            VArray {
+                store,
+                make_compute<const VT*>(
+                    store->data() + store->data_offset(),  // Offset should be 0, but you know...
+                    store->shape(),
+                    store->strides(),
+                    store->layout()
+                )
+            }
+        );
     }
 
 
-    template <typename V>
+    template<typename V>
     static std::shared_ptr<VArray> from_scalar(const V value) {
         return from_store(make_store<V>(value));
     }
@@ -262,7 +267,7 @@ namespace va {
     // The first case will place the array in the optional.
     // The second case will assign to the compute variant.
     using VArrayTarget = std::variant<std::shared_ptr<VArray>*, VWrite*>;
-    
+
     VScalar dtype_to_variant(DType dtype);
     DType variant_to_dtype(VScalar dtype);
 
@@ -273,7 +278,7 @@ namespace va {
     DType dtype_common_type(DType a, DType b);
 
     // TODO Can probably just be static_cast override or some such.
-    template <typename V>
+    template<typename V>
     V scalar_to_type(VScalar v) {
         return std::visit([](auto v) { return static_cast<V>(v); }, v);
     }

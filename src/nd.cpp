@@ -81,8 +81,8 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("ones", "shape", "dtype"), &nd::ones, DEFVAL(nullptr), DEFVAL(nd::DType::Float64));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("zeros_like", "model", "dtype", "shape"), &nd::zeros_like, DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax), DEFVAL(nullptr));
 
-    godot::ClassDB::bind_static_method("nd", D_METHOD("eye", "shape", "k", "dtype"), &nd::eye, DEFVAL(nullptr), DEFVAL(0), DEFVAL(nd::DType::Float64));
-    godot::ClassDB::bind_static_method("nd", D_METHOD("linspace", "start", "stop", "num", "endpoint", "dtype"), &nd::linspace, DEFVAL(0), DEFVAL(nullptr), DEFVAL(50), DEFVAL(true), DEFVAL(nd::DType::DTypeMax));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("eye", "shape", "k", "dtype"), &nd::eye, DEFVAL(nullptr), DEFVAL(0), DEFVAL(nd::DType::Float64));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("linspace", "start", "stop", "num", "endpoint", "dtype"), &nd::linspace, DEFVAL(0), DEFVAL(nullptr), DEFVAL(50), DEFVAL(true), DEFVAL(nd::DType::DTypeMax));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("arange", "start_or_stop", "stop", "step", "dtype"), &nd::arange, DEFVAL(0), DEFVAL(nullptr), DEFVAL(1), DEFVAL(nd::DType::DTypeMax));
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("transpose", "a", "permutation"), &nd::transpose);
@@ -141,9 +141,9 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("norm", "a", "ord", "axes"), &nd::norm, DEFVAL(nullptr), DEFVAL(2), DEFVAL(nullptr));
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("floor", "a"), &nd::floor);
-    godot::ClassDB::bind_static_method("nd", D_METHOD("ceil", "a"), &nd::ceil);
-    godot::ClassDB::bind_static_method("nd", D_METHOD("round", "a"), &nd::round);
-    godot::ClassDB::bind_static_method("nd", D_METHOD("trunc", "a"), &nd::trunc);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("ceil", "a"), &nd::ceil);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("round", "a"), &nd::round);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("trunc", "a"), &nd::trunc);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("rint", "a"), &nd::rint);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("equal", "a", "b"), &nd::equal);
@@ -157,8 +157,8 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("logical_or", "a", "b"), &nd::logical_or);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("logical_xor", "a", "b"), &nd::logical_xor);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("logical_not", "a"), &nd::logical_not);
-    godot::ClassDB::bind_static_method("nd", D_METHOD("all", "a", "axes"), &nd::all, DEFVAL(nullptr), DEFVAL(nullptr));
-    godot::ClassDB::bind_static_method("nd", D_METHOD("any", "a", "axes"), &nd::any, DEFVAL(nullptr), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("all", "a", "axes"), &nd::all, DEFVAL(nullptr), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("any", "a", "axes"), &nd::any, DEFVAL(nullptr), DEFVAL(nullptr));
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("dot", "a", "b"), &nd::dot);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("reduce_dot", "a", "b", "axes"), &nd::reduce_dot, DEFVAL(nullptr), DEFVAL(nullptr), DEFVAL(nullptr));
@@ -168,7 +168,7 @@ void nd::_bind_methods() {
 nd::nd() = default;
 nd::~nd() = default;
 
-template <typename Visitor, typename... Args>
+template<typename Visitor, typename... Args>
 Ref<NDArray> map_variants_as_arrays(Visitor&& visitor, const Args&... args) {
 	try {
 		const std::shared_ptr<va::VArray> result = std::forward<Visitor>(visitor)(*variant_as_array(args)...);
@@ -179,7 +179,7 @@ Ref<NDArray> map_variants_as_arrays(Visitor&& visitor, const Args&... args) {
 	}
 }
 
-template <typename Visitor, typename... Args>
+template<typename Visitor, typename... Args>
 Ref<NDArray> map_variants_as_arrays_with_target(Visitor&& visitor, const Args&... args) {
 	try {
 		std::shared_ptr<va::VArray> result;
@@ -191,7 +191,7 @@ Ref<NDArray> map_variants_as_arrays_with_target(Visitor&& visitor, const Args&..
 	}
 }
 
-template <typename Visitor, typename VisitorNoaxes, typename... Args>
+template<typename Visitor, typename VisitorNoaxes, typename... Args>
 inline Ref<NDArray> reduction(Visitor&& visitor, VisitorNoaxes&& visitor_noaxes, const Variant& axes, const Args&... args) {
 	try {
 		if (axes.get_type() == Variant::NIL) {
@@ -210,7 +210,7 @@ inline Ref<NDArray> reduction(Visitor&& visitor, VisitorNoaxes&& visitor_noaxes,
 		std::shared_ptr<va::VArray> result;
 		std::forward<Visitor>(visitor)(&result, axes_, *variant_as_array(args)...);
 
-		return {memnew(NDArray(result))};
+		return { memnew(NDArray(result)) };
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
@@ -218,25 +218,25 @@ inline Ref<NDArray> reduction(Visitor&& visitor, VisitorNoaxes&& visitor_noaxes,
 }
 
 template<typename Visitor>
-Ref<NDArray> like_visit(Visitor&& visitor, const Variant &model, nd::DType dtype, const Variant &shape) {
-    try {
-        va::shape_type shape_used;
-        va::DType dtype_used;
+Ref<NDArray> like_visit(Visitor&& visitor, const Variant& model, nd::DType dtype, const Variant& shape) {
+	try {
+		va::shape_type shape_used;
+		va::DType dtype_used;
 
-        if (dtype != nd::DType::DTypeMax || shape.get_type() != Variant::NIL)
-            find_shape_and_dtype(shape_used, dtype_used, model);
+		if (dtype != nd::DType::DTypeMax || shape.get_type() != Variant::NIL)
+			find_shape_and_dtype(shape_used, dtype_used, model);
 
-        if (dtype != nd::DType::DTypeMax)
-            dtype_used = dtype;
+		if (dtype != nd::DType::DTypeMax)
+			dtype_used = dtype;
 
-        if (shape.get_type() != Variant::NIL)
-            shape_used = variant_to_shape(shape);
+		if (shape.get_type() != Variant::NIL)
+			shape_used = variant_to_shape(shape);
 
-        return std::forward<Visitor>(visitor)(shape_used, dtype_used);
-    }
-    catch (std::runtime_error& error) {
-        ERR_FAIL_V_MSG({}, error.what());
-    }
+		return std::forward<Visitor>(visitor)(shape_used, dtype_used);
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
 }
 
 #define VARRAY_MAP1(func, varray1) \
@@ -282,7 +282,7 @@ Vector4i nd::to(int32_t stop) {
 	return Vector4i(0b010, 0, stop, 0);
 }
 
-Vector4i nd::range(const Variant &start_or_stop, const Variant &stop, const Variant &step) {
+Vector4i nd::range(const Variant& start_or_stop, const Variant& stop, const Variant& step) {
 	const auto type1 = start_or_stop.get_type();
 	const auto type2 = stop.get_type();
 	const auto type3 = step.get_type();
@@ -312,49 +312,51 @@ uint64_t nd::size_of_dtype_in_bytes(const DType dtype) {
 	return va::size_of_dtype_in_bytes(dtype);
 }
 
-Ref<NDArray> nd::as_array(const Variant &array, const nd::DType dtype) {
+Ref<NDArray> nd::as_array(const Variant& array, const nd::DType dtype) {
 	try {
 		const auto result = variant_as_array(array, dtype, false);
-		return {memnew(NDArray(result))};
+		return { memnew(NDArray(result)) };
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
 	}
 }
 
-Ref<NDArray> nd::array(const Variant &array, nd::DType dtype) {
+Ref<NDArray> nd::array(const Variant& array, nd::DType dtype) {
 	try {
 		const auto result = variant_as_array(array, dtype, true);
-		return {memnew(NDArray(result))};
+		return { memnew(NDArray(result)) };
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
 	}
 }
 
-Ref<NDArray> nd::bool_(const Variant &array) { return nd::as_array(array, DType::Bool); }
-Ref<NDArray> nd::float32(const Variant &array) { return nd::as_array(array, DType::Float32); }
-Ref<NDArray> nd::float64(const Variant &array) { return nd::as_array(array, DType::Float64); }
-Ref<NDArray> nd::int8(const Variant &array) { return nd::as_array(array, DType::Int8); }
-Ref<NDArray> nd::int16(const Variant &array) { return nd::as_array(array, DType::Int16); }
-Ref<NDArray> nd::int32(const Variant &array) { return nd::as_array(array, DType::Int32); }
-Ref<NDArray> nd::int64(const Variant &array) { return nd::as_array(array, DType::Int64); }
-Ref<NDArray> nd::uint8(const Variant &array) { return nd::as_array(array, DType::UInt8); }
-Ref<NDArray> nd::uint16(const Variant &array) { return nd::as_array(array, DType::UInt16); }
-Ref<NDArray> nd::uint32(const Variant &array) { return nd::as_array(array, DType::UInt32); }
-Ref<NDArray> nd::uint64(const Variant &array) { return nd::as_array(array, DType::UInt64); }
+Ref<NDArray> nd::bool_(const Variant& array) { return nd::as_array(array, DType::Bool); }
+Ref<NDArray> nd::float32(const Variant& array) { return nd::as_array(array, DType::Float32); }
+Ref<NDArray> nd::float64(const Variant& array) { return nd::as_array(array, DType::Float64); }
+Ref<NDArray> nd::int8(const Variant& array) { return nd::as_array(array, DType::Int8); }
+Ref<NDArray> nd::int16(const Variant& array) { return nd::as_array(array, DType::Int16); }
+Ref<NDArray> nd::int32(const Variant& array) { return nd::as_array(array, DType::Int32); }
+Ref<NDArray> nd::int64(const Variant& array) { return nd::as_array(array, DType::Int64); }
+Ref<NDArray> nd::uint8(const Variant& array) { return nd::as_array(array, DType::UInt8); }
+Ref<NDArray> nd::uint16(const Variant& array) { return nd::as_array(array, DType::UInt16); }
+Ref<NDArray> nd::uint32(const Variant& array) { return nd::as_array(array, DType::UInt32); }
+Ref<NDArray> nd::uint64(const Variant& array) { return nd::as_array(array, DType::UInt64); }
 
-Ref<NDArray> nd::empty_like(const Variant &model, nd::DType dtype, const Variant &shape) {
-    return like_visit([](va::shape_type& shape, nd::DType& dtype) -> Ref<NDArray> {
-        return {memnew(NDArray(va::empty(dtype, shape)))};
-    }, model, dtype, shape);
+Ref<NDArray> nd::empty_like(const Variant& model, nd::DType dtype, const Variant& shape) {
+	return like_visit(
+		[](va::shape_type& shape, nd::DType& dtype) -> Ref<NDArray> {
+			return { memnew(NDArray(va::empty(dtype, shape))) };
+		}, model, dtype, shape
+	);
 }
 
-Ref<NDArray> nd::empty(const Variant &shape, const nd::DType dtype) {
+Ref<NDArray> nd::empty(const Variant& shape, const nd::DType dtype) {
 	try {
 		const auto shape_array = variant_to_shape(shape);
 
-		return {memnew(NDArray(va::empty(dtype, shape_array)))};
+		return { memnew(NDArray(va::empty(dtype, shape_array))) };
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
@@ -362,103 +364,107 @@ Ref<NDArray> nd::empty(const Variant &shape, const nd::DType dtype) {
 }
 
 Ref<NDArray> full(const va::shape_type& shape, nd::DType dtype, const Variant& fill_value) {
-    switch (fill_value.get_type()) {
-        case Variant::BOOL: {
-            if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Bool;
-            const auto value = va::scalar_to_dtype(static_cast<bool>(fill_value), dtype);
-            return {memnew(NDArray(va::full(value, shape)))};
-        }
-        case Variant::INT: {
-            if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Int64;
-            const auto value = va::scalar_to_dtype(static_cast<int64_t>(fill_value), dtype);
-            return {memnew(NDArray(va::full(value, shape)))};
-        }
-        case Variant::FLOAT: {
-            if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Float64;
-            const auto value = va::scalar_to_dtype(static_cast<double_t>(fill_value), dtype);
-            return {memnew(NDArray(va::full(value, shape)))};
-        }
-        default: {
-            std::shared_ptr<va::VArray> result = va::empty(dtype, shape);
-            result->prepare_write();
-            va::assign(result->write.value(), variant_as_array(fill_value)->read);
-            return {memnew(NDArray(result))};
-        }
-    }
+	switch (fill_value.get_type()) {
+		case Variant::BOOL: {
+			if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Bool;
+			const auto value = va::scalar_to_dtype(static_cast<bool>(fill_value), dtype);
+			return { memnew(NDArray(va::full(value, shape))) };
+		}
+		case Variant::INT: {
+			if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Int64;
+			const auto value = va::scalar_to_dtype(static_cast<int64_t>(fill_value), dtype);
+			return { memnew(NDArray(va::full(value, shape))) };
+		}
+		case Variant::FLOAT: {
+			if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Float64;
+			const auto value = va::scalar_to_dtype(static_cast<double_t>(fill_value), dtype);
+			return { memnew(NDArray(va::full(value, shape))) };
+		}
+		default: {
+			std::shared_ptr<va::VArray> result = va::empty(dtype, shape);
+			result->prepare_write();
+			va::assign(result->write.value(), variant_as_array(fill_value)->read);
+			return { memnew(NDArray(result)) };
+		}
+	}
 
-    ERR_FAIL_V_MSG({}, "The fill value must be a number literal (for now).");
+	ERR_FAIL_V_MSG({}, "The fill value must be a number literal (for now).");
 }
 
 Ref<NDArray> nd::full(const Variant& shape, const Variant& fill_value, nd::DType dtype) {
 	try {
-        const auto shape_array = variant_to_shape(shape);
-        return ::full(shape_array, dtype, fill_value);
+		const auto shape_array = variant_to_shape(shape);
+		return ::full(shape_array, dtype, fill_value);
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
 	}
 }
 
-Ref<NDArray> nd::full_like(const Variant &model, const Variant &fill_value, nd::DType dtype, const Variant &shape) {
-    return like_visit([fill_value](va::shape_type& shape, nd::DType dtype) -> Ref<NDArray> {
-        return ::full(shape, dtype, fill_value);
-    }, model, dtype, shape);
+Ref<NDArray> nd::full_like(const Variant& model, const Variant& fill_value, nd::DType dtype, const Variant& shape) {
+	return like_visit(
+		[fill_value](va::shape_type& shape, nd::DType dtype) -> Ref<NDArray> {
+			return ::full(shape, dtype, fill_value);
+		}, model, dtype, shape
+	);
 }
 
-Ref<NDArray> nd::zeros(const Variant &shape, const nd::DType dtype) {
+Ref<NDArray> nd::zeros(const Variant& shape, const nd::DType dtype) {
 	return full(shape, 0, dtype);
 }
 
-Ref<NDArray> nd::zeros_like(const Variant &model, nd::DType dtype, const Variant &shape) {
-    return full_like(model, 0, dtype, shape);
+Ref<NDArray> nd::zeros_like(const Variant& model, nd::DType dtype, const Variant& shape) {
+	return full_like(model, 0, dtype, shape);
 }
 
-auto nd::ones(const Variant &shape, const nd::DType dtype) -> Ref<NDArray> {
+auto nd::ones(const Variant& shape, const nd::DType dtype) -> Ref<NDArray> {
 	return full(shape, 1, dtype);
 }
 
-Ref<NDArray> nd::ones_like(const Variant &model, nd::DType dtype, const Variant &shape) {
-    return full_like(model, 1, dtype, shape);
+Ref<NDArray> nd::ones_like(const Variant& model, nd::DType dtype, const Variant& shape) {
+	return full_like(model, 1, dtype, shape);
 }
 
-Ref<NDArray> nd::eye(const Variant &shape, int64_t k, nd::DType dtype) {
-    try {
-        va::shape_type used_shape = shape.get_type() == Variant::INT
-            ? va::shape_type { static_cast<va::size_type>(static_cast<int64_t>(shape)), static_cast<va::size_type>(static_cast<int64_t>(shape)) }
-            : variant_to_shape(shape);
+Ref<NDArray> nd::eye(const Variant& shape, int64_t k, nd::DType dtype) {
+	try {
+		va::shape_type used_shape = shape.get_type() == Variant::INT
+		                            ? va::shape_type { static_cast<va::size_type>(static_cast<int64_t>(shape)), static_cast<va::size_type>(static_cast<int64_t>(shape)) }
+		                            : variant_to_shape(shape);
 
-        auto result = va::eye(dtype, used_shape, k);
-        return {memnew(NDArray(result))};
-    }
-    catch (std::runtime_error& error) {
-        ERR_FAIL_V_MSG({}, error.what());
-    }
+		auto result = va::eye(dtype, used_shape, k);
+		return { memnew(NDArray(result)) };
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
 }
 
-Ref<NDArray> nd::linspace(const Variant &start, const Variant &stop, const int64_t num, const bool endpoint, DType dtype) {
+Ref<NDArray> nd::linspace(const Variant& start, const Variant& stop, const int64_t num, const bool endpoint, DType dtype) {
 #ifdef NUMDOT_DISABLE_ALLOCATION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_ALLOCATION_FUNCTIONS to enable it.");
 #else
 	if (dtype == DType::DTypeMax) {
 		dtype = start.get_type() == Variant::FLOAT || stop.get_type() == Variant::FLOAT
-			? nd::DType::Float64
-			: nd::DType::Float32;
+		        ? nd::DType::Float64
+		        : nd::DType::Float32;
 	}
 
 	try {
-		const auto result = std::visit([start, stop, num, endpoint](auto t) -> std::shared_ptr<va::VArray> {
-			using T = std::decay_t<decltype(t)>;
+		const auto result = std::visit(
+			[start, stop, num, endpoint](auto t) -> std::shared_ptr<va::VArray> {
+				using T = std::decay_t<decltype(t)>;
 
-			if constexpr (std::is_floating_point_v<T>) {
-				auto store = va::make_store<T>(xt::linspace(static_cast<double_t>(start), static_cast<double_t>(stop), num, endpoint));
-				return va::from_store(store);
-			}
-			else {
-				auto store = va::make_store<T>(xt::linspace(static_cast<int64_t>(start), static_cast<int64_t>(stop), num, endpoint));
-				return va::from_store(store);
-			}
-		}, va::dtype_to_variant(dtype));
-		return {memnew(NDArray(result))};
+				if constexpr (std::is_floating_point_v<T>) {
+					auto store = va::make_store<T>(xt::linspace(static_cast<double_t>(start), static_cast<double_t>(stop), num, endpoint));
+					return va::from_store(store);
+				}
+				else {
+					auto store = va::make_store<T>(xt::linspace(static_cast<int64_t>(start), static_cast<int64_t>(stop), num, endpoint));
+					return va::from_store(store);
+				}
+			}, va::dtype_to_variant(dtype)
+		);
+		return { memnew(NDArray(result)) };
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
@@ -466,14 +472,14 @@ Ref<NDArray> nd::linspace(const Variant &start, const Variant &stop, const int64
 #endif
 }
 
-Ref<NDArray> nd::arange(const Variant &start_or_stop, const Variant &stop, const Variant &step, DType dtype) {
+Ref<NDArray> nd::arange(const Variant& start_or_stop, const Variant& stop, const Variant& step, DType dtype) {
 #ifdef NUMDOT_DISABLE_ALLOCATION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_ALLOCATION_FUNCTIONS to enable it.");
 #else
 	if (dtype == DType::DTypeMax) {
 		dtype = start_or_stop.get_type() == Variant::FLOAT || stop.get_type() == Variant::FLOAT || step.get_type() == Variant::FLOAT
-			? nd::DType::Float64
-			: nd::DType::Int64;
+		        ? nd::DType::Float64
+		        : nd::DType::Int64;
 	}
 	static const Variant zero = 0;
 	const Variant& start_ = stop.get_type() == Variant::NIL ? zero : start_or_stop;
@@ -481,19 +487,21 @@ Ref<NDArray> nd::arange(const Variant &start_or_stop, const Variant &stop, const
 	const Variant& step_ = step;
 
 	try {
-		const auto result = std::visit([start_, stop_, step_](auto t) -> std::shared_ptr<va::VArray> {
-			using T = std::decay_t<decltype(t)>;
+		const auto result = std::visit(
+			[start_, stop_, step_](auto t) -> std::shared_ptr<va::VArray> {
+				using T = std::decay_t<decltype(t)>;
 
-			if constexpr (std::is_floating_point_v<T>) {
-				const auto store = va::make_store<T>(xt::arange(static_cast<double_t>(start_), static_cast<double_t>(stop_), static_cast<double_t>(step_)));
-				return va::from_store(store);
-			}
-			else {
-				const auto store = va::make_store<T>(xt::arange(static_cast<int64_t>(start_), static_cast<int64_t>(stop_), static_cast<int64_t>(step_)));
-				return va::from_store(store);
-			}
-		}, va::dtype_to_variant(dtype));
-		return {memnew(NDArray(result))};
+				if constexpr (std::is_floating_point_v<T>) {
+					const auto store = va::make_store<T>(xt::arange(static_cast<double_t>(start_), static_cast<double_t>(stop_), static_cast<double_t>(step_)));
+					return va::from_store(store);
+				}
+				else {
+					const auto store = va::make_store<T>(xt::arange(static_cast<int64_t>(start_), static_cast<int64_t>(stop_), static_cast<int64_t>(step_)));
+					return va::from_store(store);
+				}
+			}, va::dtype_to_variant(dtype)
+		);
+		return { memnew(NDArray(result)) };
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
@@ -501,28 +509,28 @@ Ref<NDArray> nd::arange(const Variant &start_or_stop, const Variant &stop, const
 #endif
 }
 
-Ref<NDArray> nd::transpose(const Variant &a, const Variant &permutation) {
+Ref<NDArray> nd::transpose(const Variant& a, const Variant& permutation) {
 	try {
-        std::shared_ptr<va::VArray> a_ = variant_as_array(a);
+		std::shared_ptr<va::VArray> a_ = variant_as_array(a);
 		// TODO It's not exactly a shape, but 'int array' is close enough.
 		//  We should probably decouple them when we add better shape checks.
 		const auto permutation_ = variant_to_axes(permutation);
 
-		return {memnew(NDArray(va::transpose(*a_, permutation_)))};
+		return { memnew(NDArray(va::transpose(*a_, permutation_))) };
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
 	}
 }
 
-Ref<NDArray> nd::reshape(const Variant &a, const Variant &shape) {
+Ref<NDArray> nd::reshape(const Variant& a, const Variant& shape) {
 	try {
-        std::shared_ptr<va::VArray> a_ = variant_as_array(a);
+		std::shared_ptr<va::VArray> a_ = variant_as_array(a);
 		// TODO It's not exactly a shape, but 'int array' is close enough.
 		//  We should probably decouple them when we add better shape checks.
 		const auto new_shape_ = variant_to_axes(shape);
 
-		return {memnew(NDArray(va::reshape(*a_, new_shape_)))};
+		return { memnew(NDArray(va::reshape(*a_, new_shape_))) };
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
@@ -530,21 +538,27 @@ Ref<NDArray> nd::reshape(const Variant &a, const Variant &shape) {
 }
 
 Ref<NDArray> nd::swapaxes(const Variant& v, const int64_t a, const int64_t b) {
-	return map_variants_as_arrays([a, b](const va::VArray& v) {
-        return va::swapaxes(v, a, b);
-    }, v);
+	return map_variants_as_arrays(
+		[a, b](const va::VArray& v) {
+			return va::swapaxes(v, a, b);
+		}, v
+	);
 }
 
 Ref<NDArray> nd::moveaxis(const Variant& v, int64_t src, int64_t dst) {
-	return map_variants_as_arrays([src, dst](const va::VArray& v) {
-        return va::moveaxis(v, src, dst);
-    }, v);
+	return map_variants_as_arrays(
+		[src, dst](const va::VArray& v) {
+			return va::moveaxis(v, src, dst);
+		}, v
+	);
 }
 
 Ref<NDArray> nd::flip(const Variant& v, int64_t axis) {
-	return map_variants_as_arrays([axis](const va::VArray& v) {
-        return va::flip(v, axis);
-    }, v);
+	return map_variants_as_arrays(
+		[axis](const va::VArray& v) {
+			return va::flip(v, axis);
+		}, v
+	);
 }
 
 Ref<NDArray> nd::stack(const Variant& v, int64_t axis) {
@@ -552,7 +566,7 @@ Ref<NDArray> nd::stack(const Variant& v, int64_t axis) {
 }
 
 Ref<NDArray> nd::unstack(const Variant& v, int64_t axis) {
-    return moveaxis(v, axis, 0);
+	return moveaxis(v, axis, 0);
 }
 
 Ref<NDArray> nd::add(const Variant& a, const Variant& b) {
@@ -785,7 +799,7 @@ Ref<NDArray> nd::logical_or(const Variant& a, const Variant& b) {
 }
 
 Ref<NDArray> nd::logical_xor(const Variant& a, const Variant& b) {
-    return VARRAY_MAP2(logical_xor, a, b);
+	return VARRAY_MAP2(logical_xor, a, b);
 }
 
 Ref<NDArray> nd::logical_not(const Variant& a) {
@@ -793,15 +807,15 @@ Ref<NDArray> nd::logical_not(const Variant& a) {
 }
 
 Ref<NDArray> nd::all(const Variant& a, const Variant& axes) {
-    return REDUCTION1(all, a, axes);
+	return REDUCTION1(all, a, axes);
 }
 
 Ref<NDArray> nd::any(const Variant& a, const Variant& axes) {
-    return REDUCTION1(any, a, axes);
+	return REDUCTION1(any, a, axes);
 }
 
 Ref<NDArray> nd::dot(const Variant& a, const Variant& b) {
-    return VARRAY_MAP2(dot, a, b);
+	return VARRAY_MAP2(dot, a, b);
 }
 
 Ref<NDArray> nd::reduce_dot(const Variant& a, const Variant& b, const Variant& axes) {

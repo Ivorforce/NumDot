@@ -21,7 +21,7 @@ void ndb::_bind_methods() {
 ndb::ndb() = default;
 ndb::~ndb() = default;
 
-template <typename Visitor, typename... Args>
+template<typename Visitor, typename... Args>
 inline bool reduction(Visitor&& visitor, const Args&... args) {
 	try {
 		const auto result = std::forward<Visitor>(visitor)(*variant_as_array(args)...);
@@ -45,9 +45,9 @@ inline bool reduction(Visitor&& visitor, const Args&... args) {
 	reduction([](const va::VArray& x1, const va::VArray& x2) { return va::func(x1, x2); }, (varray1), (varray2))
 
 bool ndb::all(const Variant& a) {
-    return REDUCTION1(all, a);
+	return REDUCTION1(all, a);
 }
 
 bool ndb::any(const Variant& a) {
-    return REDUCTION1(any, a);
+	return REDUCTION1(any, a);
 }

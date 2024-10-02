@@ -17,7 +17,12 @@
 #include "xtensor/xoperation.hpp"                       // for logical_and
 #include "xtensor/xsort.hpp"                            // for median
 #include "xtl/xiterator_base.hpp"                       // for operator!=
-namespace xt { namespace evaluation_strategy { struct lazy_type; } }
+
+namespace xt {
+	namespace evaluation_strategy {
+		struct lazy_type;
+	}
+}
 
 using namespace va;
 
@@ -32,7 +37,7 @@ using namespace xt;
 XTENSOR_REDUCER_FUNCTION(va_any, xt::detail::logical_or, bool, true)
 XTENSOR_REDUCER_FUNCTION(va_all, xt::detail::logical_and, bool, false)
 
-VScalar va::sum(const VArray &array) {
+VScalar va::sum(const VArray& array) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
@@ -43,7 +48,7 @@ VScalar va::sum(const VArray &array) {
 #endif
 }
 
-void va::sum(VArrayTarget target, const VArray& array, const axes_type &axes) {
+void va::sum(VArrayTarget target, const VArray& array, const axes_type& axes) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
@@ -54,7 +59,7 @@ void va::sum(VArrayTarget target, const VArray& array, const axes_type &axes) {
 #endif
 }
 
-VScalar va::prod(const VArray &array) {
+VScalar va::prod(const VArray& array) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
@@ -65,7 +70,7 @@ VScalar va::prod(const VArray &array) {
 #endif
 }
 
-void va::prod(VArrayTarget target, const VArray& array, const axes_type &axes) {
+void va::prod(VArrayTarget target, const VArray& array, const axes_type& axes) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
@@ -76,7 +81,7 @@ void va::prod(VArrayTarget target, const VArray& array, const axes_type &axes) {
 #endif
 }
 
-VScalar va::mean(const VArray &array) {
+VScalar va::mean(const VArray& array) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
@@ -87,7 +92,7 @@ VScalar va::mean(const VArray &array) {
 #endif
 }
 
-void va::mean(VArrayTarget target, const VArray& array, const axes_type &axes) {
+void va::mean(VArrayTarget target, const VArray& array, const axes_type& axes) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
@@ -98,7 +103,7 @@ void va::mean(VArrayTarget target, const VArray& array, const axes_type &axes) {
 #endif
 }
 
-VScalar va::median(const VArray &array) {
+VScalar va::median(const VArray& array) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
@@ -109,7 +114,7 @@ VScalar va::median(const VArray &array) {
 #endif
 }
 
-void va::median(VArrayTarget target, const VArray &array, const axes_type &axes) {
+void va::median(VArrayTarget target, const VArray& array, const axes_type& axes) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
@@ -144,7 +149,7 @@ void va::median(VArrayTarget target, const VArray &array, const axes_type &axes)
 #endif
 }
 
-VScalar va::var(const VArray &array) {
+VScalar va::var(const VArray& array) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
@@ -155,7 +160,7 @@ VScalar va::var(const VArray &array) {
 #endif
 }
 
-void va::var(VArrayTarget target, const VArray& array, const axes_type &axes) {
+void va::var(VArrayTarget target, const VArray& array, const axes_type& axes) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
@@ -166,7 +171,7 @@ void va::var(VArrayTarget target, const VArray& array, const axes_type &axes) {
 #endif
 }
 
-VScalar va::std(const VArray &array) {
+VScalar va::std(const VArray& array) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
@@ -177,7 +182,7 @@ VScalar va::std(const VArray &array) {
 #endif
 }
 
-void va::std(VArrayTarget target, const VArray& array, const axes_type &axes) {
+void va::std(VArrayTarget target, const VArray& array, const axes_type& axes) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
@@ -188,7 +193,7 @@ void va::std(VArrayTarget target, const VArray& array, const axes_type &axes) {
 #endif
 }
 
-VScalar va::max(const VArray &array) {
+VScalar va::max(const VArray& array) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
@@ -199,7 +204,7 @@ VScalar va::max(const VArray &array) {
 #endif
 }
 
-void va::max(VArrayTarget target, const VArray& array, const axes_type &axes) {
+void va::max(VArrayTarget target, const VArray& array, const axes_type& axes) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
@@ -210,7 +215,7 @@ void va::max(VArrayTarget target, const VArray& array, const axes_type &axes) {
 #endif
 }
 
-VScalar va::min(const VArray &array) {
+VScalar va::min(const VArray& array) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
@@ -221,7 +226,7 @@ VScalar va::min(const VArray &array) {
 #endif
 }
 
-void va::min(VArrayTarget target, const VArray& array, const axes_type &axes) {
+void va::min(VArrayTarget target, const VArray& array, const axes_type& axes) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
@@ -232,7 +237,7 @@ void va::min(VArrayTarget target, const VArray& array, const axes_type &axes) {
 #endif
 }
 
-VScalar va::norm_l0(const VArray &array) {
+VScalar va::norm_l0(const VArray& array) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
@@ -243,7 +248,7 @@ VScalar va::norm_l0(const VArray &array) {
 #endif
 }
 
-void va::norm_l0(VArrayTarget target, const VArray &array, const axes_type &axes) {
+void va::norm_l0(VArrayTarget target, const VArray& array, const axes_type& axes) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
@@ -254,7 +259,7 @@ void va::norm_l0(VArrayTarget target, const VArray &array, const axes_type &axes
 #endif
 }
 
-VScalar va::norm_l1(const VArray &array) {
+VScalar va::norm_l1(const VArray& array) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
@@ -265,7 +270,7 @@ VScalar va::norm_l1(const VArray &array) {
 #endif
 }
 
-void va::norm_l1(VArrayTarget target, const VArray &array, const axes_type &axes) {
+void va::norm_l1(VArrayTarget target, const VArray& array, const axes_type& axes) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
@@ -276,7 +281,7 @@ void va::norm_l1(VArrayTarget target, const VArray &array, const axes_type &axes
 #endif
 }
 
-VScalar va::norm_l2(const VArray &array) {
+VScalar va::norm_l2(const VArray& array) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
@@ -287,7 +292,7 @@ VScalar va::norm_l2(const VArray &array) {
 #endif
 }
 
-void va::norm_l2(VArrayTarget target, const VArray &array, const axes_type &axes) {
+void va::norm_l2(VArrayTarget target, const VArray& array, const axes_type& axes) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
@@ -298,7 +303,7 @@ void va::norm_l2(VArrayTarget target, const VArray &array, const axes_type &axes
 #endif
 }
 
-VScalar va::norm_linf(const VArray &array) {
+VScalar va::norm_linf(const VArray& array) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
@@ -309,7 +314,7 @@ VScalar va::norm_linf(const VArray &array) {
 #endif
 }
 
-void va::norm_linf(VArrayTarget target, const VArray &array, const axes_type &axes) {
+void va::norm_linf(VArrayTarget target, const VArray& array, const axes_type& axes) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
@@ -320,7 +325,7 @@ void va::norm_linf(VArrayTarget target, const VArray &array, const axes_type &ax
 #endif
 }
 
-bool va::all(const VArray &array) {
+bool va::all(const VArray& array) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
@@ -331,7 +336,7 @@ bool va::all(const VArray &array) {
 #endif
 }
 
-void va::all(VArrayTarget target, const VArray &array, const axes_type &axes) {
+void va::all(VArrayTarget target, const VArray& array, const axes_type& axes) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
@@ -342,7 +347,7 @@ void va::all(VArrayTarget target, const VArray &array, const axes_type &axes) {
 #endif
 }
 
-bool va::any(const VArray &array) {
+bool va::any(const VArray& array) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
@@ -353,7 +358,7 @@ bool va::any(const VArray &array) {
 #endif
 }
 
-void va::any(VArrayTarget target, const VArray &array, const axes_type &axes) {
+void va::any(VArrayTarget target, const VArray& array, const axes_type& axes) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else

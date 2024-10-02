@@ -13,6 +13,6 @@ StringName newaxis();
 StringName ellipsis();
 
 xt::xstrided_slice<std::ptrdiff_t> variant_to_slice_part(const Variant& variant);
-xt::xstrided_slice_vector variants_to_slice_vector(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
+xt::xstrided_slice_vector variants_to_slice_vector(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error);
 
 #endif

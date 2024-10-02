@@ -36,7 +36,10 @@
 #include "godot_cpp/variant/vector4.hpp"               // for Vector4
 #include "godot_cpp/variant/vector4i.hpp"              // for Vector4i
 #include "vatensor/varray.h"                                    // for DType, VArray
-namespace godot { class ClassDB; }
+
+namespace godot {
+	class ClassDB;
+}
 
 using namespace godot;
 
@@ -72,18 +75,18 @@ public:
 	[[nodiscard]] Layout strides_layout() const;
 	[[nodiscard]] uint64_t strides_offset() const;
 
-	Variant _iter_init(const Array &p_iter);
-	Variant _iter_next(const Array &p_iter);
-	Variant _iter_get(const Variant &p_iter);
+	Variant _iter_init(const Array& p_iter);
+	Variant _iter_next(const Array& p_iter);
+	Variant _iter_get(const Variant& p_iter);
 
 	// Subscript not available, i think. See object's set_bind / get_bind:
 	// I think godot assumes that all [] accesses are keypaths.
 	// https://github.com/godotengine/godot/blob/514c564a8c855d798ec6b5a52860e5bca8d57bc9/core/object/object.h#L643
-	void set(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
-	Ref<NDArray> get(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
-	bool get_bool(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
-	int64_t get_int(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
-	double_t get_float(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
+	void set(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error);
+	Ref<NDArray> get(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error);
+	bool get_bool(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error);
+	int64_t get_int(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error);
+	double_t get_float(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error);
 
 	[[nodiscard]] Variant as_type(va::DType dtype) const;
 
@@ -91,13 +94,13 @@ public:
 	[[nodiscard]] int64_t to_int() const;
 	[[nodiscard]] double_t to_float() const;
 
-    [[nodiscard]] Vector2 to_vector2() const;
-    [[nodiscard]] Vector3 to_vector3() const;
-    [[nodiscard]] Vector4 to_vector4() const;
-    [[nodiscard]] Vector2i to_vector2i() const;
-    [[nodiscard]] Vector3i to_vector3i() const;
-    [[nodiscard]] Vector4i to_vector4i() const;
-    [[nodiscard]] Color to_color() const;
+	[[nodiscard]] Vector2 to_vector2() const;
+	[[nodiscard]] Vector3 to_vector3() const;
+	[[nodiscard]] Vector4 to_vector4() const;
+	[[nodiscard]] Vector2i to_vector2i() const;
+	[[nodiscard]] Vector3i to_vector3i() const;
+	[[nodiscard]] Vector4i to_vector4i() const;
+	[[nodiscard]] Color to_color() const;
 
 	[[nodiscard]] PackedFloat32Array to_packed_float32_array() const;
 	[[nodiscard]] PackedFloat64Array to_packed_float64_array() const;
@@ -109,12 +112,12 @@ public:
 	[[nodiscard]] PackedVector4Array to_packed_vector4_array() const;
 	[[nodiscard]] PackedColorArray to_packed_color_array() const;
 
-    [[nodiscard]] TypedArray<NDArray> to_godot_array() const;
+	[[nodiscard]] TypedArray<NDArray> to_godot_array() const;
 
 	// Basic math functions.
-	Ref<NDArray> assign_add(const Variant &a, const Variant &b);
+	Ref<NDArray> assign_add(const Variant& a, const Variant& b);
 	Ref<NDArray> assign_subtract(const Variant& a, const Variant& b);
-	Ref<NDArray> assign_multiply(const Variant& a, const Variant &b);
+	Ref<NDArray> assign_multiply(const Variant& a, const Variant& b);
 	Ref<NDArray> assign_divide(const Variant& a, const Variant& b);
 	Ref<NDArray> assign_remainder(const Variant& a, const Variant& b);
 	Ref<NDArray> assign_pow(const Variant& a, const Variant& b);
@@ -133,7 +136,7 @@ public:
 
 	Ref<NDArray> assign_rad2deg(const Variant& a);
 	Ref<NDArray> assign_deg2rad(const Variant& a);
-	
+
 	// Trigonometric functions.
 	Ref<NDArray> assign_sin(const Variant& a);
 	Ref<NDArray> assign_cos(const Variant& a);
@@ -180,8 +183,8 @@ public:
 	Ref<NDArray> assign_logical_or(const Variant& a, const Variant& b);
 	Ref<NDArray> assign_logical_xor(const Variant& a, const Variant& b);
 	Ref<NDArray> assign_logical_not(const Variant& a);
-    Ref<NDArray> assign_all(const Variant& a, const Variant& axes);
-    Ref<NDArray> assign_any(const Variant& a, const Variant& axes);
+	Ref<NDArray> assign_all(const Variant& a, const Variant& axes);
+	Ref<NDArray> assign_any(const Variant& a, const Variant& axes);
 
 	// Linalg.
 	Ref<NDArray> assign_dot(const Variant& a, const Variant& b);

@@ -35,7 +35,7 @@ public:
 	static StringName ellipsis();
 
 	// Range.
-	static Vector4i range(const Variant &start_or_stop = static_cast<int32_t>(0), const Variant &stop = nullptr, const Variant &step = DEFVAL(nullptr));
+	static Vector4i range(const Variant& start_or_stop = static_cast<int32_t>(0), const Variant& stop = nullptr, const Variant& step = DEFVAL(nullptr));
 	static Vector4i from(int32_t start);
 	static Vector4i to(int32_t stop);
 
@@ -43,38 +43,38 @@ public:
 	static uint64_t size_of_dtype_in_bytes(DType dtype);
 
 	// Array interpretation.
-	static Ref<NDArray> as_array(const Variant &array, DType dtype = DType::DTypeMax);
-	static Ref<NDArray> array(const Variant &array, DType dtype = DType::DTypeMax);
+	static Ref<NDArray> as_array(const Variant& array, DType dtype = DType::DTypeMax);
+	static Ref<NDArray> array(const Variant& array, DType dtype = DType::DTypeMax);
 
-	static Ref<NDArray> bool_(const Variant &array);
-	static Ref<NDArray> float32(const Variant &array);
-	static Ref<NDArray> float64(const Variant &array);
-	static Ref<NDArray> int8(const Variant &array);
-	static Ref<NDArray> int16(const Variant &array);
-	static Ref<NDArray> int32(const Variant &array);
-	static Ref<NDArray> int64(const Variant &array);
-	static Ref<NDArray> uint8(const Variant &array);
-	static Ref<NDArray> uint16(const Variant &array);
-	static Ref<NDArray> uint32(const Variant &array);
-	static Ref<NDArray> uint64(const Variant &array);
+	static Ref<NDArray> bool_(const Variant& array);
+	static Ref<NDArray> float32(const Variant& array);
+	static Ref<NDArray> float64(const Variant& array);
+	static Ref<NDArray> int8(const Variant& array);
+	static Ref<NDArray> int16(const Variant& array);
+	static Ref<NDArray> int32(const Variant& array);
+	static Ref<NDArray> int64(const Variant& array);
+	static Ref<NDArray> uint8(const Variant& array);
+	static Ref<NDArray> uint16(const Variant& array);
+	static Ref<NDArray> uint32(const Variant& array);
+	static Ref<NDArray> uint64(const Variant& array);
 
 	// Array creation.
-	static Ref<NDArray> empty(const Variant &shape, DType dtype = DType::Float64);
-	static Ref<NDArray> empty_like(const Variant &model, DType dtype = DType::DTypeMax, const Variant &shape = nullptr);
+	static Ref<NDArray> empty(const Variant& shape, DType dtype = DType::Float64);
+	static Ref<NDArray> empty_like(const Variant& model, DType dtype = DType::DTypeMax, const Variant& shape = nullptr);
 	static Ref<NDArray> full(const Variant& shape, const Variant& fill_value, DType dtype = DType::Float64);
-	static Ref<NDArray> full_like(const Variant &model, const Variant& fill_value, DType dtype = DType::DTypeMax, const Variant& shape = nullptr);
-	static Ref<NDArray> zeros(const Variant &shape, DType dtype = DType::Float64);
-	static Ref<NDArray> zeros_like(const Variant &model, DType dtype = DType::DTypeMax, const Variant &shape = nullptr);
-	static Ref<NDArray> ones(const Variant &shape, DType dtype = DType::Float64);
-	static Ref<NDArray> ones_like(const Variant &model, DType dtype = DType::DTypeMax, const Variant &shape = nullptr);
+	static Ref<NDArray> full_like(const Variant& model, const Variant& fill_value, DType dtype = DType::DTypeMax, const Variant& shape = nullptr);
+	static Ref<NDArray> zeros(const Variant& shape, DType dtype = DType::Float64);
+	static Ref<NDArray> zeros_like(const Variant& model, DType dtype = DType::DTypeMax, const Variant& shape = nullptr);
+	static Ref<NDArray> ones(const Variant& shape, DType dtype = DType::Float64);
+	static Ref<NDArray> ones_like(const Variant& model, DType dtype = DType::DTypeMax, const Variant& shape = nullptr);
 
-    static Ref<NDArray> eye(const Variant& shape, int64_t k = 0, DType dtype = DType::DTypeMax);
-	static Ref<NDArray> linspace(const Variant &start, const Variant &stop, int64_t num = 50, bool endpoint = true, DType dtype = DType::DTypeMax);
-	static Ref<NDArray> arange(const Variant &start_or_stop = static_cast<int64_t>(0), const Variant &stop = nullptr, const Variant &step = static_cast<int64_t>(1), DType dtype = DType::DTypeMax);
+	static Ref<NDArray> eye(const Variant& shape, int64_t k = 0, DType dtype = DType::DTypeMax);
+	static Ref<NDArray> linspace(const Variant& start, const Variant& stop, int64_t num = 50, bool endpoint = true, DType dtype = DType::DTypeMax);
+	static Ref<NDArray> arange(const Variant& start_or_stop = static_cast<int64_t>(0), const Variant& stop = nullptr, const Variant& step = static_cast<int64_t>(1), DType dtype = DType::DTypeMax);
 
 	// Rearrange
-	static Ref<NDArray> transpose(const Variant &a, const Variant &permutation);
-	static Ref<NDArray> reshape(const Variant &a, const Variant &shape);
+	static Ref<NDArray> transpose(const Variant& a, const Variant& permutation);
+	static Ref<NDArray> reshape(const Variant& a, const Variant& shape);
 	static Ref<NDArray> swapaxes(const Variant& v, int64_t a, int64_t b);
 	static Ref<NDArray> moveaxis(const Variant& v, int64_t src, int64_t dst);
 	static Ref<NDArray> flip(const Variant& v, int64_t axis);
@@ -103,7 +103,7 @@ public:
 
 	static Ref<NDArray> rad2deg(const Variant& a);
 	static Ref<NDArray> deg2rad(const Variant& a);
-	
+
 	// Trigonometric functions.
 	static Ref<NDArray> sin(const Variant& a);
 	static Ref<NDArray> cos(const Variant& a);
@@ -151,8 +151,8 @@ public:
 	static Ref<NDArray> logical_or(const Variant& a, const Variant& b);
 	static Ref<NDArray> logical_xor(const Variant& a, const Variant& b);
 	static Ref<NDArray> logical_not(const Variant& a);
-    static Ref<NDArray> all(const Variant& a, const Variant& axes);
-    static Ref<NDArray> any(const Variant& a, const Variant& axes);
+	static Ref<NDArray> all(const Variant& a, const Variant& axes);
+	static Ref<NDArray> any(const Variant& a, const Variant& axes);
 
 	// Linalg.
 	static Ref<NDArray> dot(const Variant& a, const Variant& b);

@@ -1,8 +1,8 @@
 #ifndef ALLOCATE_H
 #define ALLOCATE_H
 
-#include "auto_defines.h"
-#include "varray.h"
+#include "auto_defines.hpp"
+#include "varray.hpp"
 
 namespace va {
 	std::shared_ptr<VArray> full(VScalar fill_value, shape_type shape);

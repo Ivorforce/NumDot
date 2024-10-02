@@ -1,8 +1,8 @@
-#include "allocate.h"
+#include "allocate.hpp"
 
 #include <utility>                      // for move
 #include <variant>                      // for visit
-#include "varray.h"            // for VArray, shape_type, DType
+#include "varray.hpp"            // for VArray, shape_type, DType
 #include "xtensor/xbuilder.hpp"         // for empty
 #include "xtensor/xlayout.hpp"          // for layout_type
 #include "xtensor/xoperation.hpp"       // for cast

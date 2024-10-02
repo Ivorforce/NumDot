@@ -1,8 +1,8 @@
 #ifndef LINALG_H
 #define LINALG_H
 
-#include "auto_defines.h"
-#include "varray.h"
+#include "auto_defines.hpp"
+#include "varray.hpp"
 
 namespace va {
 	VScalar reduce_dot(const VArray& a, const VArray& b);

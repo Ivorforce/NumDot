@@ -3,7 +3,7 @@
 
 #include <godot_cpp/variant/variant.hpp>  // for Variant
 #include "gdextension_interface.h"        // for GDExtensionCallError, GDExt...
-#include "vatensor/varray.h"              // for axes_type, shape_type
+#include "vatensor/varray.hpp"              // for axes_type, shape_type
 
 using namespace godot;
 

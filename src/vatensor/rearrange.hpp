@@ -1,12 +1,12 @@
 #ifndef VA_H
 #define VA_H
 
-#include "auto_defines.h"
+#include "auto_defines.hpp"
 
 #include <cstddef>      // for ptrdiff_t, size_t
 #include <type_traits>  // for decay_t
 #include <variant>      // for visit
-#include "varray.h"     // for VArray, strides_type, axes_type, from_surrogate
+#include "varray.hpp"     // for VArray, strides_type, axes_type, from_surrogate
 
 namespace va {
 	template<typename Visitor>

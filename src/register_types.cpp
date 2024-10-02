@@ -1,14 +1,14 @@
-#include "register_types.h"
+#include "register_types.hpp"
 
 #include <gdextension_interface.h>      // for GDExtensionBool, GDExtensionC...
 #include <godot_cpp/core/defs.hpp>      // for GDE_EXPORT
 #include <godot_cpp/godot.hpp>          // for ModuleInitializationLevel
 #include "godot_cpp/core/class_db.hpp"  // for GDREGISTER_CLASS
-#include "nd.h"                         // for nd
-#include "ndf.h"                         // for ndf
-#include "ndb.h"                         // for ndb
-#include "ndi.h"                         // for ndi
-#include "ndarray.h"                    // for NDArray
+#include "nd.hpp"                         // for nd
+#include "ndf.hpp"                         // for ndf
+#include "ndb.hpp"                         // for ndb
+#include "ndi.hpp"                         // for ndi
+#include "ndarray.hpp"                    // for NDArray
 
 using namespace godot;
 

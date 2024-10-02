@@ -5,7 +5,7 @@
 #include <windows.h>
 #endif
 
-#include "vatensor/auto_defines.h"
+#include "vatensor/auto_defines.hpp"
 
 #include <cmath>                                       // for Layout
 #include <cstdint>                                     // for uint64_t, int64_t
@@ -35,7 +35,7 @@
 #include "godot_cpp/variant/vector3i.hpp"              // for Vector3i
 #include "godot_cpp/variant/vector4.hpp"               // for Vector4
 #include "godot_cpp/variant/vector4i.hpp"              // for Vector4i
-#include "vatensor/varray.h"                                    // for DType, VArray
+#include "vatensor/varray.hpp"                                    // for DType, VArray
 
 namespace godot {
 	class ClassDB;

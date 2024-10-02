@@ -1,9 +1,9 @@
-#include "comparison.h"
+#include "comparison.hpp"
 
 #include <utility>                                       // for move
-#include "vatensor/varray.h"                             // for VArray, VArr...
-#include "vcompute.h"                            // for XFunction
-#include "vpromote.h"                                    // for common_num_i...
+#include "varray.hpp"                             // for VArray, VArr...
+#include "vcompute.hpp"                            // for XFunction
+#include "vpromote.hpp"                                    // for common_num_i...
 #include "xtensor/xlayout.hpp"                           // for layout_type
 #include "xtensor/xoperation.hpp"                        // for equal_to
 

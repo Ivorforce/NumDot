@@ -1,4 +1,4 @@
-#include "conversion_slice.h"
+#include "conversion_slice.hpp"
 
 #include <cstdint>                            // for int64_t
 #include <stdexcept>                          // for runtime_error

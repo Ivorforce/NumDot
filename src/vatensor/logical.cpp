@@ -1,9 +1,9 @@
-#include "logical.h"
+#include "logical.hpp"
 
 #include <utility>                                      // for move
-#include "vatensor/varray.h"                            // for VArray, VArra...
-#include "vcompute.h"                           // for XFunction
-#include "vpromote.h"                                   // for bool_in_bool_out
+#include "varray.hpp"                            // for VArray, VArra...
+#include "vcompute.hpp"                           // for XFunction
+#include "vpromote.hpp"                                   // for bool_in_bool_out
 #include "xtensor/xlayout.hpp"                          // for layout_type
 #include "xtensor/xoperation.hpp"                       // for logical_and
 

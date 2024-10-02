@@ -1,8 +1,8 @@
 #ifndef LOGICAL_H
 #define LOGICAL_H
 
-#include "auto_defines.h"
-#include "varray.h"
+#include "auto_defines.hpp"
+#include "varray.hpp"
 
 namespace va {
 	void logical_and(VArrayTarget target, const VArray& a, const VArray& b);

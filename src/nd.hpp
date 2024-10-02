@@ -1,7 +1,7 @@
 #ifndef NUMDOT_ND_H
 #define NUMDOT_ND_H
 
-#include "vatensor/auto_defines.h"
+#include "vatensor/auto_defines.hpp"
 #include <cstdint>                            // for int64_t, uint64_t
 #include <godot_cpp/classes/ref.hpp>          // for Ref
 #include <godot_cpp/core/binder_common.hpp>   // for VARIANT_ENUM_CAST
@@ -11,8 +11,8 @@
 #include "godot_cpp/variant/string_name.hpp"  // for StringName
 #include "godot_cpp/variant/variant.hpp"      // for Variant
 #include "godot_cpp/variant/vector4i.hpp"     // for Vector4i
-#include "ndarray.h"                          // for NDArray
-#include "vatensor/varray.h"                           // for DType
+#include "ndarray.hpp"                          // for NDArray
+#include "vatensor/varray.hpp"                           // for DType
 
 
 using namespace godot;

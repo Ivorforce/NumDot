@@ -7,9 +7,9 @@
 #include <utility>                      // for forward
 #include <variant>                      // for visit, variant
 #include <vector>                       // for vector
-#include "varray.h"                     // for VArrayTarget, VScalar, VWrite
-#include "vassign.h"                    // for assign_nonoverlapping, broadc...
-#include "vpromote.h"                   // for promote_xexpression_if_needed
+#include "varray.hpp"                     // for VArrayTarget, VScalar, VWrite
+#include "vassign.hpp"                    // for assign_nonoverlapping, broadc...
+#include "vpromote.hpp"                   // for promote_xexpression_if_needed
 #include "xtensor/xarray.hpp"           // for xarray_container
 #include "xtensor/xoperation.hpp"       // for xfunction_type_t
 #include "xtensor/xstorage.hpp"         // for uvector

@@ -1,8 +1,8 @@
 #ifndef REDUCE_H
 #define REDUCE_H
 
-#include "auto_defines.h"
-#include "varray.h"
+#include "auto_defines.hpp"
+#include "varray.hpp"
 
 namespace va {
 	VScalar sum(const VArray& array);

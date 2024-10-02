@@ -1,7 +1,7 @@
 #ifndef NUMDOT_AS_ARRAY_H
 #define NUMDOT_AS_ARRAY_H
 
-#include "vatensor/auto_defines.h"
+#include "vatensor/auto_defines.hpp"
 
 #include <cstddef>                        // for size_t
 #include <functional>                     // for multiplies
@@ -11,7 +11,7 @@
 #include <utility>                        // for forward
 #include <variant>                        // for visit
 #include "godot_cpp/variant/array.hpp"    // for Array
-#include "vatensor/varray.h"              // for shape_type, DType, VArray
+#include "vatensor/varray.hpp"              // for shape_type, DType, VArray
 #include "xtensor/xadapt.hpp"             // for adapt
 #include "xtensor/xbuffer_adaptor.hpp"    // for no_ownership
 #include "xtensor/xlayout.hpp"            // for layout_type

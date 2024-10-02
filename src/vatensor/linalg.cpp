@@ -1,13 +1,13 @@
-#include "linalg.h"
+#include "linalg.hpp"
 
 #include <cstddef>                // for ptrdiff_t
 #include <optional>               // for optional
 #include <stdexcept>              // for runtime_error
 #include <vector>                 // for vector
-#include "reduce.h"               // for sum
-#include "vatensor/varray.h"      // for VArray, VArrayTarget, VScalar, axes...
-#include "vatensor/vassign.h"     // for assign
-#include "vmath.h"                // for multiply
+#include "reduce.hpp"               // for sum
+#include "varray.hpp"      // for VArray, VArrayTarget, VScalar, axes...
+#include "vassign.hpp"     // for assign
+#include "vmath.hpp"                // for multiply
 #include "xtensor/xslice.hpp"     // for all, ellipsis, newaxis, xall_tag
 
 // struct Dot {

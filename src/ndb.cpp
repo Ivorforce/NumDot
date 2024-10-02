@@ -1,14 +1,14 @@
-#include "ndb.h"
+#include "ndb.hpp"
 
-#include <vatensor/reduce.h>                  // for all, any
+#include <vatensor/reduce.hpp>                  // for all, any
 #include <stdexcept>                          // for runtime_error
 #include <type_traits>                        // for decay_t
 #include <utility>                            // for forward
-#include "gdconvert/conversion_array.h"       // for variant_as_array
+#include "gdconvert/conversion_array.hpp"       // for variant_as_array
 #include "godot_cpp/core/class_db.hpp"        // for D_METHOD, ClassDB, Meth...
 #include "godot_cpp/core/error_macros.hpp"    // for ERR_FAIL_V_MSG
 #include "godot_cpp/variant/string_name.hpp"  // for StringName
-#include "vatensor/varray.h"                  // for VArray (ptr only), VScalar
+#include "vatensor/varray.hpp"                  // for VArray (ptr only), VScalar
 
 
 using namespace godot;

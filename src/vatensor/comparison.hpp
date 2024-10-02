@@ -1,8 +1,8 @@
 #ifndef COMPARISON_H
 #define COMPARISON_H
 
-#include "auto_defines.h"
-#include "varray.h"
+#include "auto_defines.hpp"
+#include "varray.hpp"
 
 namespace va {
 	void equal_to(VArrayTarget target, const VArray& a, const VArray& b);

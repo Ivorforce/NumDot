@@ -1,8 +1,8 @@
 #ifndef TRIGONOMETRY_H
 #define TRIGONOMETRY_H
 
-#include "auto_defines.h"
-#include "varray.h"
+#include "auto_defines.hpp"
+#include "varray.hpp"
 
 namespace va {
 	void sin(VArrayTarget target, const VArray& array);

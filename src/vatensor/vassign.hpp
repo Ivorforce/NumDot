@@ -1,7 +1,7 @@
 #ifndef NUMDOT_VASSIGN_H
 #define NUMDOT_VASSIGN_H
 
-#include "varray.h"               // for VWrite, VScalar, ArrayVariant, VArr...
+#include "varray.hpp"               // for VWrite, VScalar, ArrayVariant, VArr...
 #include "xtensor/xassign.hpp"    // for assert_compatible_shape, assign_data
 #include "xtensor/xsemantic.hpp"  // for get_rhs_triviality
 

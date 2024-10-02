@@ -1,15 +1,14 @@
-#include "nd.h"
+#include "nd.hpp"
 
-#include <vatensor/comparison.h>            // for equal_to, greater, greate...
-#include "nd.h"
-#include <vatensor/comparison.h>            // for equal_to, greater, greate...
-#include <vatensor/linalg.h>                // for reduce_dot, dot, matmul
-#include <vatensor/logical.h>               // for logical_and, logical_not
-#include <vatensor/reduce.h>                // for all, any, max, mean, median
-#include <vatensor/round.h>                 // for ceil, floor, nearbyint
-#include <vatensor/trigonometry.h>          // for acos, acosh, asin, asinh
-#include <vatensor/vassign.h>               // for assign
-#include <vatensor/vmath.h>                 // for abs, add, clip, deg2rad
+#include <vatensor/comparison.hpp>            // for equal_to, greater, greate...
+#include <vatensor/comparison.hpp>            // for equal_to, greater, greate...
+#include <vatensor/linalg.hpp>                // for reduce_dot, dot, matmul
+#include <vatensor/logical.hpp>               // for logical_and, logical_not
+#include <vatensor/reduce.hpp>                // for all, any, max, mean, median
+#include <vatensor/round.hpp>                 // for ceil, floor, nearbyint
+#include <vatensor/trigonometry.hpp>          // for acos, acosh, asin, asinh
+#include <vatensor/vassign.hpp>               // for assign
+#include <vatensor/vmath.hpp>                 // for abs, add, clip, deg2rad
 #include <cmath>                            // for double_t, isinf
 #include <optional>                         // for optional
 #include <stdexcept>                        // for runtime_error
@@ -17,16 +16,16 @@
 #include <type_traits>                      // for decay_t
 #include <utility>                          // for forward
 #include <variant>                          // for visit
-#include "gdconvert/conversion_array.h"     // for variant_as_array
-#include "gdconvert/conversion_ints.h"      // for variant_to_axes, variant_...
-#include "gdconvert/conversion_slice.h"     // for ellipsis, newaxis
+#include "gdconvert/conversion_array.hpp"     // for variant_as_array
+#include "gdconvert/conversion_ints.hpp"      // for variant_to_axes, variant_...
+#include "gdconvert/conversion_slice.hpp"     // for ellipsis, newaxis
 #include "godot_cpp/classes/ref.hpp"        // for Ref
 #include "godot_cpp/core/error_macros.hpp"  // for ERR_FAIL_V_MSG, ERR_FAIL_...
 #include "godot_cpp/core/memory.hpp"        // for _post_initialize, memnew
-#include "ndarray.h"                        // for NDArray
-#include "vatensor/allocate.h"              // for full, empty
-#include "vatensor/rearrange.h"             // for moveaxis, reshape, transpose
-#include "vatensor/varray.h"                // for VArrayTarget, axes_type
+#include "ndarray.hpp"                        // for NDArray
+#include "vatensor/allocate.hpp"              // for full, empty
+#include "vatensor/rearrange.hpp"             // for moveaxis, reshape, transpose
+#include "vatensor/varray.hpp"                // for VArrayTarget, axes_type
 #include "xtensor/xbuilder.hpp"             // for arange, linspace
 #include "xtensor/xlayout.hpp"              // for layout_type
 

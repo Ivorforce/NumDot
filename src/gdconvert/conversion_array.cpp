@@ -1,7 +1,7 @@
-#include "conversion_array.h"
+#include "conversion_array.hpp"
 
-#include <vatensor/allocate.h>                         // for copy_as_dtype
-#include <vatensor/vassign.h>                          // for assign
+#include <vatensor/allocate.hpp>                         // for copy_as_dtype
+#include <vatensor/vassign.hpp>                          // for assign
 #include <cmath>                                       // for double_t, float_t
 #include <cstddef>                                     // for size_t
 #include <cstdint>                                     // for int64_t, int32_t
@@ -30,7 +30,7 @@
 #include "godot_cpp/variant/vector3i.hpp"              // for Vector3i
 #include "godot_cpp/variant/vector4.hpp"               // for Vector4
 #include "godot_cpp/variant/vector4i.hpp"              // for Vector4i
-#include "ndarray.h"                                   // for NDArray
+#include "ndarray.hpp"                                   // for NDArray
 #include "xtensor/xarray.hpp"                          // for xarray_adaptor
 #include "xtensor/xbuffer_adaptor.hpp"                 // for xbuffer_adaptor
 #include "xtensor/xlayout.hpp"                         // for layout_type

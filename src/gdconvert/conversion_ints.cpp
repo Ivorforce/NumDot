@@ -1,4 +1,4 @@
-#include "conversion_ints.h"
+#include "conversion_ints.hpp"
 
 #include <cstdint>                                  // for int64_t
 #include <algorithm>                                 // for copy
@@ -17,7 +17,7 @@
 #include "godot_cpp/variant/vector2i.hpp"            // for Vector2i
 #include "godot_cpp/variant/vector3i.hpp"            // for Vector3i
 #include "godot_cpp/variant/vector4i.hpp"            // for Vector4i
-#include "ndarray.h"                                 // for NDArray
+#include "ndarray.hpp"                                 // for NDArray
 #include "xtensor/xiterator.hpp"                     // for operator==
 #include "xtensor/xlayout.hpp"                       // for layout_type
 #include "xtl/xiterator_base.hpp"                    // for operator!=

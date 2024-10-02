@@ -160,6 +160,19 @@
       <option name="/Default/CodeStyle/CodeFormatting/CppFormatting/EMPTY_BLOCK_STYLE/@EntryValue" value="TOGETHER_SAME_LINE" type="string" />
       <option name="/Default/CodeStyle/CodeFormatting/CppFormatting/WRAP_LIMIT/@EntryValue" value="0" type="long" />
     </RiderCodeStyleSettings>
+    <files>
+      <extensions>
+        <pair source="cpp" header="hpp" fileNamingConvention="NONE" />
+        <pair source="c" header="h" fileNamingConvention="NONE" />
+        <pair source="cu" header="cuh" fileNamingConvention="NONE" />
+        <pair source="ixx" header="" fileNamingConvention="NONE" />
+        <pair source="mxx" header="" fileNamingConvention="NONE" />
+        <pair source="cppm" header="" fileNamingConvention="NONE" />
+        <pair source="ccm" header="" fileNamingConvention="NONE" />
+        <pair source="cxxm" header="" fileNamingConvention="NONE" />
+        <pair source="c++m" header="" fileNamingConvention="NONE" />
+      </extensions>
+    </files>
     <codeStyleSettings language="kotlin">
       <option name="CODE_STYLE_DEFAULTS" value="KOTLIN_OFFICIAL" />
     </codeStyleSettings>

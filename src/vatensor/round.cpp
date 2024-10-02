@@ -1,9 +1,9 @@
-#include "round.h"
+#include "round.hpp"
 
 #include <utility>                                       // for move
-#include "vatensor/varray.h"                             // for VArray, VArr...
-#include "vcompute.h"                            // for XFunction
-#include "vpromote.h"                                    // for num_function...
+#include "varray.hpp"                             // for VArray, VArr...
+#include "vcompute.hpp"                            // for XFunction
+#include "vpromote.hpp"                                    // for num_function...
 #include "xtensor/xlayout.hpp"                           // for layout_type
 #include "xtensor/xmath.hpp"                             // for ceil_fun
 #include "xtensor/xoperation.hpp"                        // for make_xfunction

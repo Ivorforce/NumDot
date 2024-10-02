@@ -1,9 +1,9 @@
-#include "vmath.h"
+#include "vmath.hpp"
 
 #include <utility>                                          // for move
-#include "vatensor/varray.h"                                // for VArray
-#include "vcompute.h"                               // for XFunction
-#include "vpromote.h"                                       // for num_funct...
+#include "varray.hpp"                                // for VArray
+#include "vcompute.hpp"                               // for XFunction
+#include "vpromote.hpp"                                       // for num_funct...
 #include "xtensor/xlayout.hpp"                              // for layout_type
 #include "xtensor/xmath.hpp"                                // for maximum
 #include "xtensor/xoperation.hpp"                           // for divides

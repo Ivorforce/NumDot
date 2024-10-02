@@ -38,7 +38,7 @@ func run_numdot(
 	#  as part of the test, because that's what we'd need to pass to godot.
 	return polygon.to_packed_vector2_array()
 
-func _ready():
+func run_benchmark():
 	const RADIUS := 1.0
 	const NUM_SIDES := 20000
 	const POSITION := Vector2(0.0, 0.0)
@@ -67,3 +67,5 @@ func _ready():
 	start_time = Time.get_ticks_usec()
 	var result_nd := run_numdot(RADIUS, NUM_SIDES, POSITION)
 	print("NumDot: " + str(Time.get_ticks_usec() - start_time))
+	
+	print()

@@ -1,14 +1,18 @@
-[gd_scene load_steps=4 format=3 uid="uid://bdiwjirqot411"]
+[gd_scene load_steps=5 format=3 uid="uid://bdiwjirqot411"]
 
 [ext_resource type="Script" path="res://example_math.gd" id="1_lejsv"]
+[ext_resource type="Script" path="res://benchmarks.gd" id="2_34cos"]
 [ext_resource type="Script" path="res://sieve_of_eratosthenes.gd" id="2_kujve"]
 [ext_resource type="Script" path="res://generate_polygon.gd" id="3_1lu72"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_lejsv")
 
-[node name="SieveOfEratosthenes" type="Node" parent="."]
+[node name="Benchmarks" type="Node" parent="."]
+script = ExtResource("2_34cos")
+
+[node name="SieveOfEratosthenes" type="Node" parent="Benchmarks"]
 script = ExtResource("2_kujve")
 
-[node name="GeneratePolygon" type="Node" parent="."]
+[node name="GeneratePolygon" type="Node" parent="Benchmarks"]
 script = ExtResource("3_1lu72")

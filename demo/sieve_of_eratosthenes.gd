@@ -29,7 +29,7 @@ func run_gdscript(n: int) -> PackedByteArray:
 		p += 1
 	return is_prime
 
-func _ready() -> void:
+func run_benchmark() -> void:
 	# Same test as https://www.youtube.com/watch?v=qDXomV7Ojko
 	var n := 2_000_000
 	var start_time: int
@@ -58,3 +58,4 @@ func _ready() -> void:
 	print("NumDot: " + str(Time.get_ticks_usec() - start_time))
 
 	assert(result_gd == result_nd.to_packed_byte_array())
+	print()

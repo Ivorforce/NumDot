@@ -515,27 +515,29 @@ Ref<NDArray> nd::reshape(const Variant &a, const Variant &shape) {
 }
 
 Ref<NDArray> nd::swapaxes(const Variant& v, const int64_t a, const int64_t b) {
-	return map_variants_as_arrays([a, b](const va::VArray& v) { return va::swapaxes(v, a, b); }, v);
+	return map_variants_as_arrays([a, b](const va::VArray& v) {
+        return va::swapaxes(v, a, b);
+    }, v);
 }
 
 Ref<NDArray> nd::moveaxis(const Variant& v, int64_t src, int64_t dst) {
-	return map_variants_as_arrays([src, dst](const va::VArray& v) { return va::moveaxis(v, src, dst); }, v);
+	return map_variants_as_arrays([src, dst](const va::VArray& v) {
+        return va::moveaxis(v, src, dst);
+    }, v);
 }
 
 Ref<NDArray> nd::flip(const Variant& v, int64_t axis) {
-	return map_variants_as_arrays([axis](const va::VArray& v) { return va::flip(v, axis); }, v);
+	return map_variants_as_arrays([axis](const va::VArray& v) {
+        return va::flip(v, axis);
+    }, v);
 }
 
 Ref<NDArray> nd::stack(const Variant& v, int64_t axis) {
-	return map_variants_as_arrays([axis](const va::VArray& v) {
-		return va::moveaxis(v, 0, axis);
-	}, v);
+	return moveaxis(v, 0, axis);
 }
 
 Ref<NDArray> nd::unstack(const Variant& v, int64_t axis) {
-	return map_variants_as_arrays([axis](const va::VArray& v) {
-		return va::moveaxis(v, axis, 0);
-	}, v);
+    return moveaxis(v, axis, 0);
 }
 
 Ref<NDArray> nd::add(const Variant& a, const Variant& b) {

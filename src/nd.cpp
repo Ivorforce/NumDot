@@ -73,10 +73,15 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("uint64", "array"), &nd::uint64);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("empty", "shape", "dtype"), &nd::empty, DEFVAL(nullptr), DEFVAL(nd::DType::Float64));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("empty_like", "model", "dtype", "shape"), &nd::empty_like, DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax), DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("full", "shape", "fill_value", "dtype"), &nd::full, DEFVAL(nullptr), DEFVAL(nullptr), DEFVAL(nd::DType::Float64));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("full_like", "model", "fill_value", "dtype", "shape"), &nd::full_like, DEFVAL(nullptr), DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax), DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("zeros", "shape", "dtype"), &nd::zeros, DEFVAL(nullptr), DEFVAL(nd::DType::Float64));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("ones_like", "model", "dtype", "shape"), &nd::ones_like, DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax), DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("ones", "shape", "dtype"), &nd::ones, DEFVAL(nullptr), DEFVAL(nd::DType::Float64));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("linspace", "start", "stop", "num", "endpoint", "dtype"), &nd::linspace, DEFVAL(0), DEFVAL(nullptr), DEFVAL(50), DEFVAL(true), DEFVAL(nd::DType::DTypeMax));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("zeros_like", "model", "dtype", "shape"), &nd::zeros_like, DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax), DEFVAL(nullptr));
+
+    godot::ClassDB::bind_static_method("nd", D_METHOD("linspace", "start", "stop", "num", "endpoint", "dtype"), &nd::linspace, DEFVAL(0), DEFVAL(nullptr), DEFVAL(50), DEFVAL(true), DEFVAL(nd::DType::DTypeMax));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("arange", "start_or_stop", "stop", "step", "dtype"), &nd::arange, DEFVAL(0), DEFVAL(nullptr), DEFVAL(1), DEFVAL(nd::DType::DTypeMax));
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("transpose", "a", "permutation"), &nd::transpose);
@@ -211,6 +216,28 @@ inline Ref<NDArray> reduction(Visitor&& visitor, VisitorNoaxes&& visitor_noaxes,
 	}
 }
 
+template<typename Visitor>
+Ref<NDArray> like_visit(Visitor&& visitor, const Variant &model, nd::DType dtype, const Variant &shape) {
+    try {
+        va::shape_type shape_used;
+        va::DType dtype_used;
+
+        if (dtype != nd::DType::DTypeMax || shape.get_type() != Variant::NIL)
+            find_shape_and_dtype(shape_used, dtype_used, model);
+
+        if (dtype != nd::DType::DTypeMax)
+            dtype_used = dtype;
+
+        if (shape.get_type() != Variant::NIL)
+            shape_used = variant_to_shape(shape);
+
+        return std::forward<Visitor>(visitor)(shape_used, dtype_used);
+    }
+    catch (std::runtime_error& error) {
+        ERR_FAIL_V_MSG({}, error.what());
+    }
+}
+
 #define VARRAY_MAP1(func, varray1) \
 	map_variants_as_arrays_with_target([](const va::VArrayTarget target, const va::VArray& varray) {\
         va::func(target, varray);\
@@ -316,6 +343,12 @@ Ref<NDArray> nd::uint16(const Variant &array) { return nd::as_array(array, DType
 Ref<NDArray> nd::uint32(const Variant &array) { return nd::as_array(array, DType::UInt32); }
 Ref<NDArray> nd::uint64(const Variant &array) { return nd::as_array(array, DType::UInt64); }
 
+Ref<NDArray> nd::empty_like(const Variant &model, nd::DType dtype, const Variant &shape) {
+    return like_visit([](va::shape_type& shape, nd::DType& dtype) -> Ref<NDArray> {
+        return {memnew(NDArray(va::empty(dtype, shape)))};
+    }, model, dtype, shape);
+}
+
 Ref<NDArray> nd::empty(const Variant &shape, const nd::DType dtype) {
 	try {
 		const auto shape_array = variant_to_shape(shape);
@@ -327,47 +360,64 @@ Ref<NDArray> nd::empty(const Variant &shape, const nd::DType dtype) {
 	}
 }
 
+Ref<NDArray> full(const va::shape_type& shape, nd::DType dtype, const Variant& fill_value) {
+    switch (fill_value.get_type()) {
+        case Variant::BOOL: {
+            if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Bool;
+            const auto value = va::scalar_to_dtype(static_cast<bool>(fill_value), dtype);
+            return {memnew(NDArray(va::full(value, shape)))};
+        }
+        case Variant::INT: {
+            if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Int64;
+            const auto value = va::scalar_to_dtype(static_cast<int64_t>(fill_value), dtype);
+            return {memnew(NDArray(va::full(value, shape)))};
+        }
+        case Variant::FLOAT: {
+            if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Float64;
+            const auto value = va::scalar_to_dtype(static_cast<double_t>(fill_value), dtype);
+            return {memnew(NDArray(va::full(value, shape)))};
+        }
+        default: {
+            std::shared_ptr<va::VArray> result = va::empty(dtype, shape);
+            result->prepare_write();
+            va::assign(result->write.value(), variant_as_array(fill_value)->read);
+            return {memnew(NDArray(result))};
+        }
+    }
+
+    ERR_FAIL_V_MSG({}, "The fill value must be a number literal (for now).");
+}
+
 Ref<NDArray> nd::full(const Variant& shape, const Variant& fill_value, nd::DType dtype) {
 	try {
-		const auto shape_array = variant_to_shape(shape);
-
-		switch (fill_value.get_type()) {
-			case Variant::BOOL: {
-				if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Bool;
-				const auto value = va::scalar_to_dtype(static_cast<bool>(fill_value), dtype);
-				return {memnew(NDArray(va::full(value, shape_array)))};
-			}
-			case Variant::INT: {
-				if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Int64;
-				const auto value = va::scalar_to_dtype(static_cast<int64_t>(fill_value), dtype);
-				return {memnew(NDArray(va::full(value, shape_array)))};
-			}
-			case Variant::FLOAT: {
-				if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Float64;
-				const auto value = va::scalar_to_dtype(static_cast<double_t>(fill_value), dtype);
-				return {memnew(NDArray(va::full(value, shape_array)))};
-			}
-			default: {
-				std::shared_ptr<va::VArray> result = va::empty(dtype, shape_array);
-                result->prepare_write();
-				va::assign(result->write.value(), variant_as_array(fill_value)->read);
-				return {memnew(NDArray(result))};
-			}
-		}
-
-		ERR_FAIL_V_MSG({}, "The fill value must be a number literal (for now).");
+        const auto shape_array = variant_to_shape(shape);
+        return ::full(shape_array, dtype, fill_value);
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
 	}
 }
 
+Ref<NDArray> nd::full_like(const Variant &model, const Variant &fill_value, nd::DType dtype, const Variant &shape) {
+    return like_visit([fill_value](va::shape_type& shape, nd::DType dtype) -> Ref<NDArray> {
+        return ::full(shape, dtype, fill_value);
+    }, model, dtype, shape);
+}
+
 Ref<NDArray> nd::zeros(const Variant &shape, const nd::DType dtype) {
 	return full(shape, 0, dtype);
 }
 
+Ref<NDArray> nd::zeros_like(const Variant &model, nd::DType dtype, const Variant &shape) {
+    return full_like(model, 0, dtype, shape);
+}
+
 auto nd::ones(const Variant &shape, const nd::DType dtype) -> Ref<NDArray> {
 	return full(shape, 1, dtype);
+}
+
+Ref<NDArray> nd::ones_like(const Variant &model, nd::DType dtype, const Variant &shape) {
+    return full_like(model, 1, dtype, shape);
 }
 
 Ref<NDArray> nd::linspace(const Variant &start, const Variant &stop, const int64_t num, const bool endpoint, DType dtype) {

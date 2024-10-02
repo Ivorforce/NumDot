@@ -36,7 +36,7 @@ auto adapt_c_array(T&& ptr, const va::shape_type& shape) {
     );
 }
 
-void find_shape_and_dtype(va::shape_type& shape, va::DType &dtype, const Array& input_array);
+void find_shape_and_dtype(va::shape_type& shape, va::DType &dtype, const Variant& array);
 Array varray_to_godot_array(const va::VArray& array);
 
 #endif

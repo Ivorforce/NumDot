@@ -21,6 +21,7 @@ Upcoming Changes (main branch)
 - Added ``nd.median``.
 - Added new namespaces :ref:`ndb <class_ndb>`, :ref:`ndf <class_ndf>` and :ref:`ndi <class_ndi>`, for full tensor reductions to ``bool``, ``float`` and ``int``, respectively.
 - Added ``NDArray.strides()``, ``NDArray.strides_layout()``, and ``NDArray.strides_offset()``, through which you can inspect the strides properties of an ``NDArray`` / ``NDArray`` view.
+- Added ``nd.empty_like``, ``nd.full_like``, ``nd.ones_like`` and ``nd.zeros_like``.
 
 **Changed**
 

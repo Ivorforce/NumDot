@@ -209,6 +209,16 @@
 				Return a new array of given shape and type, without initializing entries.
 			</description>
 		</method>
+		<method name="empty_like" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="model" type="Variant" default="null" />
+			<param index="1" name="dtype" type="int" enum="nd.DType" default="11" />
+			<param index="2" name="shape" type="Variant" default="null" />
+			<description>
+				Return a new array with the same shape and type as a given array.
+				DType and shape will, if supplied, override the values inferred from the given array.
+			</description>
+		</method>
 		<method name="equal" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
@@ -271,6 +281,17 @@
 			<param index="2" name="dtype" type="int" enum="nd.DType" default="2" />
 			<description>
 				Return a new array of given shape and type, filled with fill_value.
+			</description>
+		</method>
+		<method name="full_like" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="model" type="Variant" default="null" />
+			<param index="1" name="fill_value" type="Variant" default="null" />
+			<param index="2" name="dtype" type="int" enum="nd.DType" default="11" />
+			<param index="3" name="shape" type="Variant" default="null" />
+			<description>
+				Return a new array with the same shape and type as a given array, filled with the given value.
+				DType and shape will, if supplied, override the values inferred from the given array.
 			</description>
 		</method>
 		<method name="greater" qualifiers="static">
@@ -504,6 +525,16 @@
 			<param index="1" name="dtype" type="int" enum="nd.DType" default="2" />
 			<description>
 				Return a new array of given shape and type, filled with ones.
+			</description>
+		</method>
+		<method name="ones_like" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="model" type="Variant" default="null" />
+			<param index="1" name="dtype" type="int" enum="nd.DType" default="11" />
+			<param index="2" name="shape" type="Variant" default="null" />
+			<description>
+				Return a new array of ones with the same shape and type as a given array.
+				DType and shape will, if supplied, override the values inferred from the given array.
 			</description>
 		</method>
 		<method name="pow" qualifiers="static">
@@ -772,6 +803,16 @@
 			<param index="1" name="dtype" type="int" enum="nd.DType" default="2" />
 			<description>
 				Return a new array of given shape and type, filled with zeros.
+			</description>
+		</method>
+		<method name="zeros_like" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="model" type="Variant" default="null" />
+			<param index="1" name="dtype" type="int" enum="nd.DType" default="11" />
+			<param index="2" name="shape" type="Variant" default="null" />
+			<description>
+				Return a new array of ones with the same shape and type as a given array.
+				DType and shape will, if supplied, override the values inferred from the given array.
 			</description>
 		</method>
 	</methods>

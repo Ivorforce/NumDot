@@ -60,9 +60,14 @@ public:
 
 	// Array creation.
 	static Ref<NDArray> empty(const Variant &shape, DType dtype = DType::Float64);
+	static Ref<NDArray> empty_like(const Variant &model, DType dtype = DType::DTypeMax, const Variant &shape = nullptr);
 	static Ref<NDArray> full(const Variant& shape, const Variant& fill_value, DType dtype = DType::Float64);
+	static Ref<NDArray> full_like(const Variant &model, const Variant& fill_value, DType dtype = DType::DTypeMax, const Variant& shape = nullptr);
 	static Ref<NDArray> zeros(const Variant &shape, DType dtype = DType::Float64);
+	static Ref<NDArray> zeros_like(const Variant &model, DType dtype = DType::DTypeMax, const Variant &shape = nullptr);
 	static Ref<NDArray> ones(const Variant &shape, DType dtype = DType::Float64);
+	static Ref<NDArray> ones_like(const Variant &model, DType dtype = DType::DTypeMax, const Variant &shape = nullptr);
+
 	static Ref<NDArray> linspace(const Variant &start, const Variant &stop, int64_t num = 50, bool endpoint = true, DType dtype = DType::DTypeMax);
 	static Ref<NDArray> arange(const Variant &start_or_stop = static_cast<int64_t>(0), const Variant &stop = nullptr, const Variant &step = static_cast<int64_t>(1), DType dtype = DType::DTypeMax);
 

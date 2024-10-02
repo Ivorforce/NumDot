@@ -80,6 +80,8 @@ Methods
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`empty<class_nd_method_empty>`\ (\ shape\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 2\ ) |static|                                                                                |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>` | :ref:`empty_like<class_nd_method_empty_like>`\ (\ model\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 11, shape\: ``Variant`` = null\ ) |static|                                         |
+   +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`equal<class_nd_method_equal>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                                   |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`exp<class_nd_method_exp>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                                        |
@@ -95,6 +97,8 @@ Methods
    | ``Vector4i``                  | :ref:`from<class_nd_method_from>`\ (\ start\: ``int``\ ) |static|                                                                                                                                      |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`full<class_nd_method_full>`\ (\ shape\: ``Variant`` = null, fill_value\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 2\ ) |static|                                                 |
+   +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>` | :ref:`full_like<class_nd_method_full_like>`\ (\ model\: ``Variant`` = null, fill_value\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 11, shape\: ``Variant`` = null\ ) |static|          |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`greater<class_nd_method_greater>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                               |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -149,6 +153,8 @@ Methods
    | :ref:`NDArray<class_NDArray>` | :ref:`not_equal<class_nd_method_not_equal>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                           |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`ones<class_nd_method_ones>`\ (\ shape\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 2\ ) |static|                                                                                  |
+   +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>` | :ref:`ones_like<class_nd_method_ones_like>`\ (\ model\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 11, shape\: ``Variant`` = null\ ) |static|                                           |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`pow<class_nd_method_pow>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                                       |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -213,6 +219,8 @@ Methods
    | :ref:`NDArray<class_NDArray>` | :ref:`var<class_nd_method_var>`\ (\ a\: ``Variant`` = null, axes\: ``Variant`` = null\ ) |static|                                                                                                      |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`zeros<class_nd_method_zeros>`\ (\ shape\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 2\ ) |static|                                                                                |
+   +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>` | :ref:`zeros_like<class_nd_method_zeros_like>`\ (\ model\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 11, shape\: ``Variant`` = null\ ) |static|                                         |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 .. rst-class:: classref-section-separator
@@ -651,6 +659,20 @@ Return a new array of given shape and type, without initializing entries.
 
 ----
 
+.. _class_nd_method_empty_like:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **empty_like**\ (\ model\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 11, shape\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_empty_like>`
+
+Return a new array with the same shape and type as a given array.
+
+DType and shape will, if supplied, override the values inferred from the given array.
+
+.. rst-class:: classref-item-separator
+
+----
+
 .. _class_nd_method_equal:
 
 .. rst-class:: classref-method
@@ -750,6 +772,20 @@ Create a range that starts at the given index.
 :ref:`NDArray<class_NDArray>` **full**\ (\ shape\: ``Variant`` = null, fill_value\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 2\ ) |static| :ref:`🔗<class_nd_method_full>`
 
 Return a new array of given shape and type, filled with fill_value.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_full_like:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **full_like**\ (\ model\: ``Variant`` = null, fill_value\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 11, shape\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_full_like>`
+
+Return a new array with the same shape and type as a given array, filled with the given value.
+
+DType and shape will, if supplied, override the values inferred from the given array.
 
 .. rst-class:: classref-item-separator
 
@@ -1114,6 +1150,20 @@ Return (x1 != x2) element-wise.
 :ref:`NDArray<class_NDArray>` **ones**\ (\ shape\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 2\ ) |static| :ref:`🔗<class_nd_method_ones>`
 
 Return a new array of given shape and type, filled with ones.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_ones_like:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **ones_like**\ (\ model\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 11, shape\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_ones_like>`
+
+Return a new array of ones with the same shape and type as a given array.
+
+DType and shape will, if supplied, override the values inferred from the given array.
 
 .. rst-class:: classref-item-separator
 
@@ -1550,6 +1600,20 @@ Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.v
 :ref:`NDArray<class_NDArray>` **zeros**\ (\ shape\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 2\ ) |static| :ref:`🔗<class_nd_method_zeros>`
 
 Return a new array of given shape and type, filled with zeros.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_zeros_like:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **zeros_like**\ (\ model\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 11, shape\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_zeros_like>`
+
+Return a new array of ones with the same shape and type as a given array.
+
+DType and shape will, if supplied, override the values inferred from the given array.
 
 .. |virtual| replace:: :abbr:`virtual (This method should typically be overridden by the user to have any effect.)`
 .. |const| replace:: :abbr:`const (This method has no side effects. It doesn't modify any of the instance's member variables.)`

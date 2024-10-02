@@ -63,7 +63,7 @@ void add_size_at_idx(va::shape_type& shape, const std::size_t idx, const std::si
     }
 }
 
-void find_shape_and_dtype(va::shape_type& shape, va::DType &dtype, const Array& input_array) {
+void find_shape_and_dtype_of_array(va::shape_type& shape, va::DType &dtype, const Array& input_array) {
     std::vector<Array> current_dim_arrays = { input_array };
 
     for (std::size_t current_dim_idx = 0; true; ++current_dim_idx) {
@@ -199,11 +199,136 @@ void find_shape_and_dtype(va::shape_type& shape, va::DType &dtype, const Array& 
     }
 }
 
+void find_shape_and_dtype(va::shape_type& shape, va::DType &dtype, const Variant& array) {
+    switch (array.get_type()) {
+        case Variant::OBJECT: {
+            if (const auto ndarray = Object::cast_to<NDArray>(array)) {
+                shape = ndarray->array->shape();
+                dtype = ndarray->array->dtype();
+                return;
+            }
+            break;
+        }
+        case Variant::ARRAY: {
+            find_shape_and_dtype_of_array(shape, dtype, array);
+            return;
+        }
+        case Variant::BOOL: {
+            shape = { 1 };
+            dtype = va::DType::Bool;
+            return;
+        }
+        case Variant::INT: {
+            shape = { 1 };
+            dtype = va::DType::Int64;
+            return;
+        }
+        case Variant::FLOAT: {
+            shape = { 1 };
+            dtype = va::DType::Float64;
+            return;
+        }
+        case Variant::PACKED_BYTE_ARRAY: {
+            const auto packed = PackedByteArray(array);
+            shape = { static_cast<size_t>(packed.size()) };
+            dtype = va::DType::UInt8;
+            return;
+        }
+        case Variant::PACKED_INT32_ARRAY: {
+            const auto packed = PackedInt32Array(array);
+            shape = { static_cast<size_t>(packed.size()) };
+            dtype = va::DType::Int32;
+            return;
+        }
+        case Variant::PACKED_INT64_ARRAY: {
+            const auto packed = PackedInt64Array(array);
+            shape = { static_cast<size_t>(packed.size()) };
+            dtype = va::DType::Int64;
+            return;
+        }
+        case Variant::PACKED_FLOAT32_ARRAY: {
+            const auto packed = PackedFloat32Array(array);
+            shape = { static_cast<size_t>(packed.size()) };
+            dtype = va::DType::Float32;
+            return;
+        }
+        case Variant::PACKED_FLOAT64_ARRAY: {
+            const auto packed = PackedFloat64Array(array);
+            shape = { static_cast<size_t>(packed.size()) };
+            dtype = va::DType::Float64;
+            return;
+        }
+        case Variant::PACKED_VECTOR2_ARRAY: {
+            const auto packed = PackedVector2Array(array);
+            shape = { static_cast<size_t>(packed.size()), 2 };
+            dtype = va::variant_to_dtype(real_t());
+            return;
+        }
+        case Variant::PACKED_VECTOR3_ARRAY: {
+            const auto packed = PackedVector3Array(array);
+            shape = { static_cast<size_t>(packed.size()), 3 };
+            dtype = va::variant_to_dtype(real_t());
+            return;
+        }
+        case Variant::PACKED_VECTOR4_ARRAY: {
+            const auto packed = PackedVector4Array(array);
+            shape = { static_cast<size_t>(packed.size()), 4 };
+            dtype = va::variant_to_dtype(real_t());
+            return;
+        }
+        case Variant::PACKED_COLOR_ARRAY: {
+            const auto packed = PackedColorArray(array);
+            shape = { static_cast<size_t>(packed.size()), 4 };
+            dtype = va::DType::Float32;
+            return;
+        }
+        case Variant::VECTOR2I: {
+            shape = { 2 };
+            dtype = va::DType::Int32;
+            return;
+        }
+        case Variant::VECTOR3I: {
+            shape = { 3 };
+            dtype = va::DType::Int32;
+            return;
+        }
+        case Variant::VECTOR4I: {
+            shape = { 4 };
+            dtype = va::DType::Int32;
+            return;
+        }
+        case Variant::VECTOR2: {
+            shape = { 2 };
+            dtype = va::variant_to_dtype(real_t());
+            return;
+        }
+        case Variant::VECTOR3: {
+            shape = { 3 };
+            dtype = va::variant_to_dtype(real_t());
+            return;
+        }
+        case Variant::VECTOR4: {
+            shape = { 4 };
+            dtype = va::variant_to_dtype(real_t());
+            return;
+        }
+        case Variant::COLOR: {
+            shape = { 4 };
+            dtype = va::DType::Float32;
+            return;
+        }
+        default:
+            break;
+    }
+
+    throw std::runtime_error("Unsupported type");
+}
+
 std::shared_ptr<va::VArray> array_as_varray(const Array& input_array) {
     va::shape_type shape;
     va::DType dtype = va::DTypeMax;
 
-    find_shape_and_dtype(shape, dtype, input_array);
+    find_shape_and_dtype_of_array(shape, dtype, input_array);
 
     if (dtype == va::DTypeMax) dtype = va::Float64; // Default dtype
 

@@ -86,6 +86,8 @@ Methods
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`exp<class_nd_method_exp>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                                        |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>` | :ref:`eye<class_nd_method_eye>`\ (\ shape\: ``Variant`` = null, k\: ``int`` = 0, dtype\: :ref:`DType<enum_nd_DType>` = 2\ ) |static|                                                                   |
+   +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`flip<class_nd_method_flip>`\ (\ v\: ``Variant``, axis\: ``int``\ ) |static|                                                                                                                      |
    +-------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>` | :ref:`float32<class_nd_method_float32>`\ (\ array\: ``Variant``\ ) |static|                                                                                                                            |
@@ -692,6 +694,24 @@ Return (x1 == x2) element-wise.
 :ref:`NDArray<class_NDArray>` **exp**\ (\ a\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_exp>`
 
 Calculate the exponential of all elements in the input array.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_eye:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **eye**\ (\ shape\: ``Variant`` = null, k\: ``int`` = 0, dtype\: :ref:`DType<enum_nd_DType>` = 2\ ) |static| :ref:`🔗<class_nd_method_eye>`
+
+Return a tensor with ones on the diagonal, and 0 elsewhere. The shape depends on the first parameter:
+
+If an int N is given, an NxN matrix is returned.
+
+Otherwise, the first parameter is interpreted as a shape.
+
+k is the index of the diagonal: 0 (the default) refers to the main diagonal, a positive value refers to an upper diagonal, and a negative value to a lower diagonal.
 
 .. rst-class:: classref-item-separator
 

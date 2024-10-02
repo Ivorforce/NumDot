@@ -38,6 +38,20 @@ std::shared_ptr<VArray> va::empty(DType dtype, shape_type shape) {
     return ::empty(dtype_to_variant(dtype), std::move(shape));
 }
 
+std::shared_ptr<VArray> va::eye(DType dtype, shape_type shape, int k) {
+#ifdef NUMDOT_DISABLE_ALLOCATION_FUNCTIONS
+    throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_ALLOCATION_FUNCTIONS to enable it.");
+#else
+    // For some reason, xt::eye wants this specific type
+    auto shape_eye = std::vector<std::size_t>(shape.size());
+    std::copy(shape.begin(), shape.end(), shape_eye.begin());
+    return std::visit([&shape_eye, k](auto t) -> std::shared_ptr<VArray> {
+        using T = decltype(t);
+        return from_store(make_store(xt::eye<T>(shape_eye, k)));
+    }, dtype_to_variant(dtype));
+#endif
+}
+
 std::shared_ptr<VArray> va::copy_as_dtype(const VArray& other, DType dtype) {
 #ifdef NUMDOT_DISABLE_ALLOCATION_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_ALLOCATION_FUNCTIONS to enable it.");

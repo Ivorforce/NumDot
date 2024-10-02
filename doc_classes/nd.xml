@@ -234,6 +234,18 @@
 				Calculate the exponential of all elements in the input array.
 			</description>
 		</method>
+		<method name="eye" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="shape" type="Variant" default="null" />
+			<param index="1" name="k" type="int" default="0" />
+			<param index="2" name="dtype" type="int" enum="nd.DType" default="2" />
+			<description>
+				Return a tensor with ones on the diagonal, and 0 elsewhere. The shape depends on the first parameter:
+				If an int N is given, an NxN matrix is returned.
+				Otherwise, the first parameter is interpreted as a shape.
+				k is the index of the diagonal: 0 (the default) refers to the main diagonal, a positive value refers to an upper diagonal, and a negative value to a lower diagonal.
+			</description>
+		</method>
 		<method name="flip" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="v" type="Variant" />

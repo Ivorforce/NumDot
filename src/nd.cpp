@@ -81,6 +81,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("ones", "shape", "dtype"), &nd::ones, DEFVAL(nullptr), DEFVAL(nd::DType::Float64));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("zeros_like", "model", "dtype", "shape"), &nd::zeros_like, DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax), DEFVAL(nullptr));
 
+    godot::ClassDB::bind_static_method("nd", D_METHOD("eye", "shape", "k", "dtype"), &nd::eye, DEFVAL(nullptr), DEFVAL(0), DEFVAL(nd::DType::Float64));
     godot::ClassDB::bind_static_method("nd", D_METHOD("linspace", "start", "stop", "num", "endpoint", "dtype"), &nd::linspace, DEFVAL(0), DEFVAL(nullptr), DEFVAL(50), DEFVAL(true), DEFVAL(nd::DType::DTypeMax));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("arange", "start_or_stop", "stop", "step", "dtype"), &nd::arange, DEFVAL(0), DEFVAL(nullptr), DEFVAL(1), DEFVAL(nd::DType::DTypeMax));
 
@@ -418,6 +419,20 @@ auto nd::ones(const Variant &shape, const nd::DType dtype) -> Ref<NDArray> {
 
 Ref<NDArray> nd::ones_like(const Variant &model, nd::DType dtype, const Variant &shape) {
     return full_like(model, 1, dtype, shape);
+}
+
+Ref<NDArray> nd::eye(const Variant &shape, int64_t k, nd::DType dtype) {
+    try {
+        va::shape_type used_shape = shape.get_type() == Variant::INT
+            ? va::shape_type { static_cast<va::size_type>(static_cast<int64_t>(shape)), static_cast<va::size_type>(static_cast<int64_t>(shape)) }
+            : variant_to_shape(shape);
+
+        auto result = va::eye(dtype, used_shape, k);
+        return {memnew(NDArray(result))};
+    }
+    catch (std::runtime_error& error) {
+        ERR_FAIL_V_MSG({}, error.what());
+    }
 }
 
 Ref<NDArray> nd::linspace(const Variant &start, const Variant &stop, const int64_t num, const bool endpoint, DType dtype) {

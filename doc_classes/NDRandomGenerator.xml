@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="NDRandomGenerator" inherits="RefCounted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="integers">
+			<return type="NDArray" />
+			<param index="0" name="low_or_high" type="int" default="0" />
+			<param index="1" name="high" type="Variant" default="null" />
+			<param index="2" name="shape" type="Variant" default="PackedByteArray()" />
+			<param index="3" name="dtype" type="int" enum="nd.DType" default="6" />
+			<param index="4" name="endpoint" type="bool" default="false" />
+			<description>
+				Return random integers from the “discrete uniform” distribution of the specified dtype. If high is None (the default), then results are from 0 to low.
+			</description>
+		</method>
+		<method name="random">
+			<return type="NDArray" />
+			<param index="0" name="shape" type="Variant" default="PackedByteArray()" />
+			<param index="1" name="dtype" type="int" enum="nd.DType" default="2" />
+			<description>
+				Return random floats in the half-open interval [lb]0.0, 1.0).
+			</description>
+		</method>
+		<method name="spawn">
+			<return type="NDRandomGenerator[]" />
+			<param index="0" name="n" type="int" />
+			<description>
+				Create new independent child generators.
+			</description>
+		</method>
+	</methods>
+</class>

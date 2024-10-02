@@ -166,6 +166,14 @@
 				Equivalent to 0.5 * (nd.exp(x) + nd.exp(-x)).
 			</description>
 		</method>
+		<method name="default_rng" qualifiers="static">
+			<return type="NDRandomGenerator" />
+			<param index="0" name="seed" type="Variant" default="null" />
+			<description>
+				Creates a new random number generator (rng).
+				If no seed is provided, a fresh, unpredictable entropy will be pulled from the OS.
+			</description>
+		</method>
 		<method name="deg2rad" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />

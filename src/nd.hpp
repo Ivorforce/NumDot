@@ -12,6 +12,7 @@
 #include "godot_cpp/variant/variant.hpp"      // for Variant
 #include "godot_cpp/variant/vector4i.hpp"     // for Vector4i
 #include "ndarray.hpp"                          // for NDArray
+#include "ndrandomgenerator.hpp"
 #include "vatensor/varray.hpp"                           // for DType
 
 
@@ -158,6 +159,9 @@ public:
 	static Ref<NDArray> dot(const Variant& a, const Variant& b);
 	static Ref<NDArray> reduce_dot(const Variant& a, const Variant& b, const Variant& axes);
 	static Ref<NDArray> matmul(const Variant& a, const Variant& b);
+
+	// Random.
+	static Ref<NDRandomGenerator> default_rng(const Variant& seed = nullptr);
 };
 
 VARIANT_ENUM_CAST(nd::DType);

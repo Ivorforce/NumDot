@@ -60,3 +60,4 @@ Table of Contents
    classes/class_ndi
    classes/class_ndarray
    classes/class_ndrange
+   classes/class_ndrandomgenerator

@@ -9,6 +9,7 @@
 #include "ndb.hpp"                         // for ndb
 #include "ndi.hpp"                         // for ndi
 #include "ndarray.hpp"                    // for NDArray
+#include "ndrandomgenerator.hpp"                    // for NDRandomGenerator
 
 using namespace godot;
 
@@ -22,6 +23,7 @@ void initialize_numdot_module(ModuleInitializationLevel p_level) {
 	GDREGISTER_CLASS(ndi);
 	GDREGISTER_CLASS(ndb);
 	GDREGISTER_CLASS(NDArray);
+	GDREGISTER_CLASS(NDRandomGenerator);
 }
 
 void uninitialize_numdot_module(ModuleInitializationLevel p_level) {

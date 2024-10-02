@@ -162,6 +162,8 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("dot", "a", "b"), &nd::dot);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("reduce_dot", "a", "b", "axes"), &nd::reduce_dot, DEFVAL(nullptr), DEFVAL(nullptr), DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("matmul", "a", "b"), &nd::matmul);
+
+	godot::ClassDB::bind_static_method("nd", D_METHOD("default_rng", "seed"), &nd::default_rng, DEFVAL(nullptr));
 }
 
 nd::nd() = default;
@@ -823,4 +825,14 @@ Ref<NDArray> nd::reduce_dot(const Variant& a, const Variant& b, const Variant& a
 
 Ref<NDArray> nd::matmul(const Variant& a, const Variant& b) {
 	return VARRAY_MAP2(matmul, a, b);
+}
+
+Ref<NDRandomGenerator> nd::default_rng(const Variant& seed) {
+	switch (seed.get_type()) {
+		case Variant::NIL:
+			return { memnew(NDRandomGenerator()) };
+		case Variant::INT:
+			return { memnew(NDRandomGenerator(va::random::VRandomEngine(static_cast<uint64_t>(seed)))) };
+		default: ERR_FAIL_V_MSG({}, "The given variant could not be converted to a seed.");
+	}
 }

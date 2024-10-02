@@ -23,4 +23,5 @@ Variant types
     class_ndb
     class_ndf
     class_ndi
+    class_ndrandomgenerator
 

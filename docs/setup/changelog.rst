@@ -23,6 +23,7 @@ Upcoming Changes (main branch)
 - Added ``NDArray.strides()``, ``NDArray.strides_layout()``, and ``NDArray.strides_offset()``, through which you can inspect the strides properties of an ``NDArray`` / ``NDArray`` view.
 - Added ``nd.empty_like``, ``nd.full_like``, ``nd.ones_like`` and ``nd.zeros_like``.
 - Added ``nd.eye``.
+- Added :ref:`ndb <class_NDRandomGenerator>`, created by ``nd.default_rng``. It offers ``.random()`` for floats, ``.integers`` for ints and ``.spawn()`` for child generators.
 
 **Changed**
 

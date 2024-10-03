@@ -21,6 +21,11 @@ func run_gdscript(
 			a_packed[i] = sin(a_packed[i])
 	print("sin: " + str(Time.get_ticks_usec() - start_time))
 
+	start_time = Time.get_ticks_usec()
+	for t in test_count:
+		for i in test_size:
+			a_packed[i] = asinh(a_packed[i])
+	print("asinh: " + str(Time.get_ticks_usec() - start_time))
 
 func run_numdot_nd(
 	test_size: int,
@@ -38,6 +43,11 @@ func run_numdot_nd(
 	for t in test_count:
 		nd.sin(a_nd)
 	print("sin: " + str(Time.get_ticks_usec() - start_time))
+
+	start_time = Time.get_ticks_usec()
+	for t in test_count:
+		nd.asinh(a_nd)
+	print("asinh: " + str(Time.get_ticks_usec() - start_time))
 
 
 func run_numdot_inplace(
@@ -57,6 +67,11 @@ func run_numdot_inplace(
 		a_nd.assign_sin(a_nd)
 	print("sin: " + str(Time.get_ticks_usec() - start_time))
 
+	start_time = Time.get_ticks_usec()
+	for t in test_count:
+		a_nd.assign_asinh(a_nd)
+	print("asinh: " + str(Time.get_ticks_usec() - start_time))
+
 
 func run_benchmark():
 	const test_size := 50000
@@ -72,3 +87,5 @@ func run_benchmark():
 
 	print("NumDot inplace:")
 	run_numdot_inplace(test_size, test_count)
+
+	print()

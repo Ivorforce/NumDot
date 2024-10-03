@@ -1,4 +1,4 @@
-extends Node
+extends Benchmark
 # loosely adapted the non-benchmark part of https://github.com/godotengine/godot-benchmarks/blob/main/benchmarks/math/triangulate.gd
 
 func run_gdscript(
@@ -57,15 +57,14 @@ func run_benchmark():
 	# n=20000000   804691 GDScript
 	#              795497 NumDot
 
-	var start_time: int
 	print("Generate polygon with sides=" + str(NUM_SIDES))
 
-	start_time = Time.get_ticks_usec()
+	begin_section("GDScript")
 	var result_gd := run_gdscript(RADIUS, NUM_SIDES, POSITION)
-	print("GDScript: " + str(Time.get_ticks_usec() - start_time))
+	store_result()
 
-	start_time = Time.get_ticks_usec()
+	begin_section("NumDot")
 	var result_nd := run_numdot(RADIUS, NUM_SIDES, POSITION)
-	print("NumDot: " + str(Time.get_ticks_usec() - start_time))
-	
-	print()
+	store_result()
+
+	end()

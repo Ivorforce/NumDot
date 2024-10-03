@@ -1,23 +1,22 @@
-extends Node
+extends Benchmark
 
 func run_gdscript(
 	test_size: int,
 	test_count: int,
 ):
-	var start_time: int
 	var a_packed := PackedFloat32Array()
 	a_packed.resize(test_size)
 	var b_packed := PackedByteArray()
 	b_packed.resize(test_size)
 	
-	start_time = Time.get_ticks_usec()
+	begin_section("sum")
 	for t in test_count:
 		var sum := 0.0
 		for i in test_size:
 			sum += a_packed[i]
-	print("sum: " + str(Time.get_ticks_usec() - start_time))
+	store_result()
 
-	start_time = Time.get_ticks_usec()
+	begin_section("std")
 	for t in test_count:
 		var mean := 0.0
 		for i in test_size:
@@ -28,60 +27,58 @@ func run_gdscript(
 			var acc := a_packed[i] - mean
 			std += acc * acc
 		std = sqrt(std / (test_size - 1))
-	print("std: " + str(Time.get_ticks_usec() - start_time))
+	store_result()
 
-	start_time = Time.get_ticks_usec()
+	begin_section("all")
 	for t in test_count:
 		var all := true
 		for i in test_size:
 			all = all && b_packed[i]
-	print("all: " + str(Time.get_ticks_usec() - start_time))
+	store_result()
 
 func run_numdot_nd(
 	test_size: int,
 	test_count: int,
 ):
-	var start_time: int
 	var a_nd := nd.ones(test_size, nd.DType.Float32)
 	var b_nd := nd.ones(test_size, nd.DType.Bool)
 
-	start_time = Time.get_ticks_usec()
+	begin_section("sum")
 	for t in test_count:
 		nd.sum(a_nd)
-	print("sum: " + str(Time.get_ticks_usec() - start_time))
+	store_result()
 	
-	start_time = Time.get_ticks_usec()
+	begin_section("std")
 	for t in test_count:
 		nd.std(a_nd)
-	print("std: " + str(Time.get_ticks_usec() - start_time))
+	store_result()
 
-	start_time = Time.get_ticks_usec()
+	begin_section("all")
 	for t in test_count:
 		nd.all(b_nd)
-	print("all: " + str(Time.get_ticks_usec() - start_time))
+	store_result()
 
 func run_numdot_ndifb(
 	test_size: int,
 	test_count: int,
 ):
-	var start_time: int
 	var a_nd := nd.ones(test_size, nd.DType.Float32)
 	var b_nd := nd.ones(test_size, nd.DType.Bool)
 
-	start_time = Time.get_ticks_usec()
+	begin_section("sum")
 	for t in test_count:
 		ndi.sum(a_nd)
-	print("sum: " + str(Time.get_ticks_usec() - start_time))
+	store_result()
 	
-	start_time = Time.get_ticks_usec()
+	begin_section("std")
 	for t in test_count:
 		ndf.std(a_nd)
-	print("std: " + str(Time.get_ticks_usec() - start_time))
+	store_result()
 
-	start_time = Time.get_ticks_usec()
+	begin_section("all")
 	for t in test_count:
 		ndb.all(b_nd)
-	print("all: " + str(Time.get_ticks_usec() - start_time))
+	store_result()
 
 
 func run_benchmark():
@@ -99,4 +96,4 @@ func run_benchmark():
 	print("NumDot ndi / ndf / ndb:")
 	run_numdot_ndifb(test_size, test_count)
 
-	print()
+	end()

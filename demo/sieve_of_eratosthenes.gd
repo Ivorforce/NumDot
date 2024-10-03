@@ -1,4 +1,4 @@
-extends Node
+extends Benchmark
 
 func run_numdot(n: int) -> NDArray:
 	var is_prime := nd.ones(n, nd.DType.Bool)
@@ -32,7 +32,7 @@ func run_gdscript(n: int) -> PackedByteArray:
 func run_benchmark() -> void:
 	# Same test as https://www.youtube.com/watch?v=qDXomV7Ojko
 	var n := 2_000_000
-	var start_time: int
+
 	print("Sieve of Eratosthenes with n=" + str(n))
 	
 	# Examples from my computer:
@@ -49,13 +49,13 @@ func run_benchmark() -> void:
 	# n=20000000  1600000 GDScript
 	#              110000 NumDot
 
-	start_time = Time.get_ticks_usec()
+	begin_section("GDScript")
 	var result_gd := run_gdscript(n)
-	print("GDScript: " + str(Time.get_ticks_usec() - start_time))
+	store_result()
 
-	start_time = Time.get_ticks_usec()
+	begin_section("NumDot")
 	var result_nd := run_numdot(n)
-	print("NumDot: " + str(Time.get_ticks_usec() - start_time))
+	store_result()
 
 	assert(result_gd == result_nd.to_packed_byte_array())
-	print()
+	end()

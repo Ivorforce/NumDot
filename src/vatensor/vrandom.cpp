@@ -31,12 +31,28 @@ std::shared_ptr<VArray> VRandomEngine::random_integers(long long low, long long 
 	return std::visit([low, high, shape, this, endpoint](auto t) -> std::shared_ptr<VArray> {
 		using T = decltype(t);
 
-		if constexpr (!std::is_integral_v<T> || std::is_same_v<T, bool>) {
+		if constexpr (!std::is_integral_v<T>) {
 			throw std::runtime_error("This function can only generate integer types.");
 		}
 		else {
+		// TODO Should automatically figure out somehow which are supported, not hardcode it...
+#ifdef _WIN32
+		// Windows supports no 8 bit random
+		using TRandom = std::conditional_t<
+			std::is_same_v<T, int8_t>,
+			uint8_t,
+			std::conditional_t<
+				std::is_same_v<T, bool> || std::is_same_v<T, uint8_t>,
+				uint16_t,
+				T
+			>
+		>;
+#else
+		// Unix supports all integrals except bool
+		using TRandom = std::conditional_t<std::is_same_v<T, bool>, uint8_t, T>;
+#endif
 			// FIXME + 1 can cause problems if INT_MAX, but xt does not support an endpoint parameter
-			return from_store(make_store<T>(xt::random::randint<T>(shape, low, high + (endpoint ? 1 : 0), this->engine)));
+			return from_store(make_store<T>(xt::random::randint<TRandom>(shape, low, high + (endpoint ? 1 : 0), this->engine)));
 		}
 	}, dtype_to_variant(dtype));
 }

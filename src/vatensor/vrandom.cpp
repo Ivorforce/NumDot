@@ -40,7 +40,7 @@ std::shared_ptr<VArray> VRandomEngine::random_integers(long long low, long long 
 		// Windows supports no 8 bit random
 		using TRandom = std::conditional_t<
 			std::is_same_v<T, int8_t>,
-			uint8_t,
+			int16_t,
 			std::conditional_t<
 				std::is_same_v<T, bool> || std::is_same_v<T, uint8_t>,
 				uint16_t,

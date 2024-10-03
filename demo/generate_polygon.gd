@@ -30,7 +30,7 @@ func run_numdot(
 	var polygon := nd.empty([num_sides, 2])
 	
 	polygon.get(null, 0).assign_sin(angle_delta)
-	polygon.get(null, 0).assign_cos(angle_delta)
+	polygon.get(null, 1).assign_cos(angle_delta)
 	polygon.assign_multiply(polygon, radius)
 	polygon.assign_add(polygon, position)
 
@@ -40,7 +40,7 @@ func run_numdot(
 
 func run_benchmark():
 	const RADIUS := 1.0
-	const NUM_SIDES := 20000
+	const NUM_SIDES := 2000
 	const POSITION := Vector2(0.0, 0.0)
 
 	# Examples from my computer:

@@ -15,6 +15,9 @@ VRandomEngine VRandomEngine::spawn() {
 }
 
 std::shared_ptr<va::VArray> VRandomEngine::random_floats(shape_type shape, const DType dtype) {
+#ifdef NUMDOT_DISABLE_RANDOM_FUNCTIONS
+	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_RANDOM_FUNCTIONS to enable it.");
+#else
 	return std::visit([shape, this](auto t) -> std::shared_ptr<va::VArray> {
 		using T = decltype(t);
 
@@ -25,9 +28,13 @@ std::shared_ptr<va::VArray> VRandomEngine::random_floats(shape_type shape, const
 			return from_store(make_store<T>(xt::random::rand<T>(shape, 0, 1, this->engine)));
 		}
 	}, dtype_to_variant(dtype));
+#endif
 }
 
 std::shared_ptr<VArray> VRandomEngine::random_integers(long long low, long long high, shape_type shape, const DType dtype, bool endpoint) {
+#ifdef NUMDOT_DISABLE_RANDOM_FUNCTIONS
+	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_RANDOM_FUNCTIONS to enable it.");
+#else
 	return std::visit([low, high, shape, this, endpoint](auto t) -> std::shared_ptr<VArray> {
 		using T = decltype(t);
 
@@ -55,4 +62,5 @@ std::shared_ptr<VArray> VRandomEngine::random_integers(long long low, long long 
 			return from_store(make_store<T>(xt::random::randint<TRandom>(shape, low, high + (endpoint ? 1 : 0), this->engine)));
 		}
 	}, dtype_to_variant(dtype));
+#endif
 }

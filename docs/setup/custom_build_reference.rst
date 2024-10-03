@@ -66,6 +66,7 @@ One of the easiest ways to save space is to disable features you don't need. Any
 - ``NUMDOT_DISABLE_ROUNDING_FUNCTIONS``
 - ``NUMDOT_DISABLE_TRIGONOMETRY_FUNCTIONS``
 - ``NUMDOT_DISABLE_MATH_FUNCTIONS``
+- ``NUMDOT_DISABLE_RANDOM_FUNCTIONS``
 - ``NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS``
 
 You can also pass ``NUMDOT_DISABLE_ALL_OPTIONAL_FUNCTIONS`` to disable all functions, and only enable those you need. Enable macros have precedence over disable macros.
@@ -77,6 +78,7 @@ You can also pass ``NUMDOT_DISABLE_ALL_OPTIONAL_FUNCTIONS`` to disable all funct
 - ``NUMDOT_ENABLE_ROUNDING_FUNCTIONS``
 - ``NUMDOT_ENABLE_TRIGONOMETRY_FUNCTIONS``
 - ``NUMDOT_ENABLE_MATH_FUNCTIONS``
+- ``NUMDOT_ENABLE_RANDOM_FUNCTIONS``
 - ``NUMDOT_ENABLE_GODOT_CONVERSION_FUNCTIONS``
 
 

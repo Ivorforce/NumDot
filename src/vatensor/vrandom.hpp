@@ -1,6 +1,8 @@
 #ifndef VRANDOM_HPP
 #define VRANDOM_HPP
 
+#include "auto_defines.hpp"
+
 #include "varray.hpp"
 #include "vatensor/auto_defines.hpp"
 

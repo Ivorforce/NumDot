@@ -125,7 +125,7 @@ GDScript's standard ``int`` and ``float`` types are fairly powerful (64 bits). O
     var result = array.multiply(array, 2.5)
 
     # Result stays 32-bit
-    var result = array.multiply(array, nd.array(2.5, nd.DType.Float32))
+    var result = array.multiply(array, nd.float32(2.5))
 
 Cache Constants
 ^^^^^^^^^^^^^^^
@@ -137,8 +137,7 @@ When operations run every frame, avoid unnecessarily re-creating constants:
     var positions: NDArray
 
     func _ready():
-        # TODO Use random when we have it
-        positions = nd.zeros([1000, 2])
+        positions = nd.default_rng().random([1000, 2])
 
     func _update():
         # Intermediate tensor created every frame
@@ -153,7 +152,7 @@ Consider storing the constant tensor:
 
     func _ready():
         # TODO Use random when we have it
-        positions = nd.zeros([1000, 2])
+        positions = nd.default_rng().random([1000, 2])
 
     func _update():
         # Use of existing tensor accelerates the call.

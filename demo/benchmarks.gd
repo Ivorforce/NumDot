@@ -5,3 +5,4 @@ func _ready() -> void:
 	$GeneratePolygon.run_benchmark()
 	$Math.run_benchmark()
 	$Reductions.run_benchmark()
+	$Matrix.run_benchmark()

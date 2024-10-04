@@ -1,11 +1,11 @@
 [gd_scene load_steps=7 format=3 uid="uid://dq6inhjq2xf8l"]
 
-[ext_resource type="Script" path="res://benchmarks.gd" id="1_ywkn7"]
-[ext_resource type="Script" path="res://sieve_of_eratosthenes.gd" id="2_is360"]
-[ext_resource type="Script" path="res://generate_polygon.gd" id="3_58q7f"]
-[ext_resource type="Script" path="res://math.gd" id="4_l7bbo"]
-[ext_resource type="Script" path="res://reductions.gd" id="5_isst8"]
-[ext_resource type="Script" path="res://matrix.gd" id="6_812f8"]
+[ext_resource type="Script" path="res://benchmarks/benchmarks.gd" id="1_ywkn7"]
+[ext_resource type="Script" path="res://benchmarks/sieve_of_eratosthenes.gd" id="2_is360"]
+[ext_resource type="Script" path="res://benchmarks/generate_polygon.gd" id="3_58q7f"]
+[ext_resource type="Script" path="res://benchmarks/math.gd" id="4_l7bbo"]
+[ext_resource type="Script" path="res://benchmarks/reductions.gd" id="5_isst8"]
+[ext_resource type="Script" path="res://benchmarks/matrix.gd" id="6_812f8"]
 
 [node name="Benchmarks" type="Node"]
 script = ExtResource("1_ywkn7")

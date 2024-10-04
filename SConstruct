@@ -89,6 +89,13 @@ if ARGUMENTS.get("optimize", None) is None:
 # if is_release:
 #     ARGUMENTS["optimize"] = "speed"  # For normal flags, like optimize
 #     env.Append(CPPDEFINES=["NUMDOT_XXX"])  # For all C macros (``define=``).
+#
+#     # You can optimize the binary for an exact machine. This improves performance of math,
+#     #  but makes the build incompatible with most other machines.
+#     #     '-march=native' will optimize it for the machine you're building on.
+#     #     For x86 arches, see https://gcc.gnu.org/onlinedocs/gcc/x86-Options.html
+#     #     For arm64 arches, see https://gcc.gnu.org/onlinedocs/gcc/AArch64-Options.html
+#     env.Append(CXX_FLAGS=["-march=native"])
 
 # Load godot-cpp
 env = SConscript("godot-cpp/SConstruct", {"env": env, "customs": customs})
@@ -124,10 +131,6 @@ if is_release:
     else:
         env.Append(CCFLAGS=["-flto"])
         env.Append(LINKFLAGS=["-flto"])
-
-# You can also use "-march=native", which should enable all simd architectures your computer supports.
-# Keep in mind the resulting binary will likely not work on many other computers.
-#env.Append(CCFLAGS=["-march=native"])
 
 # ============================= Actual source and lib setup =============================
 

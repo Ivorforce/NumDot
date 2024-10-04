@@ -14,8 +14,8 @@ NumDot is inspired by the Python tensor math library, [NumPy](https://numpy.org)
 
 ## What Now?
 
-NumDot is still in its early stages. If you want to keep up to date, come by and chat with us on our [Discord Server](https://discord.gg/hxuWcAXF).
+NumDot is still in its early stages. If you want to keep up to date, come by and chat with us on our [Discord Server](https://discord.gg/ch5MAsgKxF).
 
-If you want to contribute, check out [CONTRIBUTING.md](https://github.com/Ivorforce/NumDot/blob/main/CONTRIBUTING.md) or come by our [Discord Server](https://discord.gg/hxuWcAXF).
+If you want to contribute, check out [CONTRIBUTING.md](https://github.com/Ivorforce/NumDot/blob/main/CONTRIBUTING.md) or come by our [Discord Server](https://discord.gg/ch5MAsgKxF).
 
 We will be keeping track of ToDos through the GitHub issues.

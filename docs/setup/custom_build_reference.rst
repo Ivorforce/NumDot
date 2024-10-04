@@ -89,4 +89,4 @@ The most powerful way to get more out of NumDot is to edit its code. For example
 
 You'll need decent knowledge of C++ to make it work. See `Contributing.md <https://github.com/Ivorforce/NumDot/blob/main/CONTRIBUTING.md>`_ for a short introduction into its architecture.
 
-If you need any help, we're happy to assist. Come by our `Discord Server <https://discord.gg/hxuWcAXF>`_ and have a chat.
+If you need any help, we're happy to assist. Come by our `Discord Server <https://discord.gg/ch5MAsgKxF>`_ and have a chat.

@@ -20,6 +20,18 @@ That being said, here is some information about the most interesting options:
 
     - Sets compiler flags ``-Os``, ``-O3`` or ``-O2``, respectively. You can achieve up to 50% decrease in binary size, or increase of performance, with different values. ``speed_trace`` is a slightly weaker version of ``speed`` and not recommended.
 
+- ``arch``:
+
+    - Builds for one specific architecture. This can be relevant on macOS, where arch defaults to 'universal'. You can achieve lower binary sizes by building every arch separately.
+
+- ``optimize_for_arch``:
+
+    - Optimize the build for one specific (sub-)architecture. This makes the build incompatible with machines of different architectures, but can improve performance substantially.
+
+    - Use ``optimize_for_arch=native`` to automatically select the architecture of the machine you're building on.
+
+    - Otherwise, look up arches on the gcc docs, e.g. `x86_64 arches <https://gcc.gnu.org/onlinedocs/gcc/x86-Options.html>`_ or `arm64 arches <https://gcc.gnu.org/onlinedocs/gcc/AArch64-Options.html>`_.
+
 - ``use_xsimd``, one of [``yes`` ``no`` ``auto``]:
 
     - Whether to use `xsimd <https://xsimd.readthedocs.io/en/latest/>`_ to accelerate contiguous memory operations. Defaults to 'no' on web (unsupported as of yet) and yes elsewhere.

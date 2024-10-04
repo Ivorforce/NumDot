@@ -40,6 +40,11 @@ opts.Add(
     "Whether to use xsimd, accelerating contiguous memory computation. Defaults to no on web and yes elsewhere.",
     "auto"
 )
+opts.Add(
+    "optimize_for_arch",
+    "Enable all optimizations the arch supports, making the build incompatible with other machines. Use 'native' to optimize for this machine. Note that on macOS, setting this option also requires setting arch= to a specific arch, e.g. arch=x86_64 or arch=arm64.",
+    "",
+)
 opts.Update(env)
 
 use_xsimd = env["use_xsimd"]
@@ -49,11 +54,14 @@ if ARGUMENTS.get("use_xsimd", "auto") == "auto":
 else:
     use_xsimd = _text2bool(use_xsimd)
 
+optimize_for_arch = env["optimize_for_arch"]
+
 # TODO If we don't delete our own arguments, the godot-cpp SConscript will complain.
 # There must be a better way?
 ARGUMENTS.pop("build_dir", None)
 ARGUMENTS.pop("define", None)
 ARGUMENTS.pop("use_xsimd", None)
+ARGUMENTS.pop("optimize_for_this_machine", None)
 
 # ============================= Change defaults of godot-cpp =============================
 
@@ -84,18 +92,15 @@ if ARGUMENTS.get("optimize", None) is None:
 # It is False by default, unless dev_build is True.
 # dev_build is a flag that should only be used by engine developers (supposedly).
 
+if optimize_for_arch:
+    # Yo-march improves performance, makes the build incompatible with most other machines.
+    env.Append(CPPFLAGS=[f"-march={optimize_for_arch}"])
+
 # CUSTOM BUILD FLAGS
 # Add your build flags here:
 # if is_release:
 #     ARGUMENTS["optimize"] = "speed"  # For normal flags, like optimize
 #     env.Append(CPPDEFINES=["NUMDOT_XXX"])  # For all C macros (``define=``).
-#
-#     # You can optimize the binary for an exact machine. This improves performance of math,
-#     #  but makes the build incompatible with most other machines.
-#     #     '-march=native' will optimize it for the machine you're building on.
-#     #     For x86 arches, see https://gcc.gnu.org/onlinedocs/gcc/x86-Options.html
-#     #     For arm64 arches, see https://gcc.gnu.org/onlinedocs/gcc/AArch64-Options.html
-#     env.Append(CXX_FLAGS=["-march=native"])
 
 # Load godot-cpp
 env = SConscript("godot-cpp/SConstruct", {"env": env, "customs": customs})

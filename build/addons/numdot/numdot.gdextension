@@ -6,9 +6,9 @@ reloadable = true
 
 [libraries]
 
-macos = "macos/numdot-macos.framework/libnumdot.macos.universal.dylib"
+macos = "macos/numdot-macos.framework"
 
-ios = "ios/numdot-ios.framework/libnumdot.ios.universal.dylib"
+ios = "ios/numdot-ios.framework"
 
 windows.x86_32 = "windows/numdot.windows.x86_32.dll"
 windows.x86_64 = "windows/numdot.windows.x86_64.dll"

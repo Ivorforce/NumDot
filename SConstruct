@@ -149,8 +149,15 @@ lib_filename = f"{env.subst('$SHLIBPREFIX')}{libname}.{env['platform']}.{env['ar
 lib_filepath = ""
 
 if env["platform"] == "macos" or env["platform"] == "ios":
-    # For signing, the dylibs need to be in a folder, along with the plist files.
-    lib_filepath = "{}-{}.framework/".format(libname, env["platform"])
+    # The above defaults to creating a .dylib.
+    # These are not supported on the iOS app store.
+    # To make it consistent, we'll just use frameworks on both macOS and iOS.
+    framework_name = "{}-{}".format(libname, env["platform"])
+    lib_filename = framework_name
+    lib_filepath = "{}.framework/".format(framework_name)
+
+    env["SHLIBPREFIX"] = ""
+    env["SHLIBSUFFIX"] = ""
 
 library = env.SharedLibrary(
     os.path.join(env["build_dir"], f"addons/{libname}/{env['platform']}/{lib_filepath}{lib_filename}"),

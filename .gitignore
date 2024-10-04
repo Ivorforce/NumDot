@@ -53,3 +53,8 @@ __pycache__
 /build/addons/numdot/**/*
 !/build/addons/numdot/**/
 !/build/addons/numdot/**/*.plist
+
+# Demo build
+/demo/addons/numdot/**/*
+!/demo/addons/numdot/**/
+!/demo/addons/numdot/**/*.plist

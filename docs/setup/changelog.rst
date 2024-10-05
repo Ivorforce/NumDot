@@ -14,13 +14,14 @@ Upcoming Changes (main branch)
 ------------------------------
 **Added**
 
+- Properly bounds check single-value indices.
+- Negative indices are now supported everywhere.
 - Added boolean mask indexing, e.g. ``a.set(5, nd.greater(a, 5))``.
 - Added index list indexing, e.g. ``a.set(5, [[0, 1], [4, 2]])``.
 - Added ``array.copy()`` and ``nd.copy(array)`` functions.
 - Added ``array.copy()`` and ``nd.copy(array)`` functions.
 - Added ``positive`` and ``negative`` functions.
 - Added ``count_nonzero`` functions.
-- Properly bounds check single-value indices.
 
 **Changed**
 

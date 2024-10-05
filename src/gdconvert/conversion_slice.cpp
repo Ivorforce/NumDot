@@ -1,21 +1,12 @@
 #include "conversion_slice.hpp"
 
 #include <cstdint>                            // for int64_t
+#include <ndutil.hpp>
 #include <stdexcept>                          // for runtime_error
 #include "godot_cpp/variant/string_name.hpp"  // for StringName
 #include "godot_cpp/variant/variant.hpp"      // for Variant
 #include "godot_cpp/variant/vector4i.hpp"     // for Vector4i
 #include "xtensor/xslice.hpp"                 // for xrange_adaptor, xall_tag
-
-StringName newaxis() {
-	const StringName newaxis = StringName("newaxis");
-	return newaxis;
-}
-
-StringName ellipsis() {
-	const StringName ellipsis = StringName("...");
-	return ellipsis;
-}
 
 using xtuph = xt::placeholders::xtuph;
 
@@ -42,14 +33,17 @@ xt::xstrided_slice<std::ptrdiff_t> variant_to_slice_part(const Variant& variant)
 			return xt::all();
 		case Variant::INT:
 			return static_cast<int64_t>(variant);
-		case Variant::STRING_NAME:
-			if (StringName(variant) == ::newaxis()) {
+		case Variant::STRING_NAME: {
+			const auto string_name = static_cast<StringName>(variant);
+
+			if (string_name == ::newaxis()) {
 				return xt::newaxis();
 			}
-			else if (StringName(variant) == ::ellipsis()) {
+			else if (string_name == ::ellipsis()) {
 				return xt::ellipsis();
 			}
-			break;
+		}
+		break;
 		default:
 			break;
 	}

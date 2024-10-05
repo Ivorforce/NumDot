@@ -23,6 +23,7 @@
 #include "godot_cpp/core/error_macros.hpp"  // for ERR_FAIL_V_MSG, ERR_FAIL_...
 #include "godot_cpp/core/memory.hpp"        // for _post_initialize, memnew
 #include "ndarray.hpp"                        // for NDArray
+#include "ndutil.hpp"
 #include "vatensor/allocate.hpp"              // for full, empty
 #include "vatensor/rearrange.hpp"             // for moveaxis, reshape, transpose
 #include "vatensor/varray.hpp"                // for VArrayTarget, axes_type
@@ -52,7 +53,7 @@ void nd::_bind_methods() {
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("from", "start"), &nd::from);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("to", "stop"), &nd::to);
-	godot::ClassDB::bind_static_method("nd", D_METHOD("range", "start_or_stop", "stop", "step"), &nd::range, static_cast<int64_t>(0), DEFVAL(nullptr), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("range", "start_or_stop", "stop", "step"), &nd::range, static_cast<int64_t>(0), DEFVAL(no_value()), DEFVAL(nullptr));
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("size_of_dtype_in_bytes", "dtype"), &nd::size_of_dtype_in_bytes);
 
@@ -285,6 +286,11 @@ Vector4i nd::to(int32_t stop) {
 }
 
 Vector4i nd::range(const Variant& start_or_stop, const Variant& stop, const Variant& step) {
+	if (is_no_value(stop)) {
+		// Special case: nd.range(x)
+		return Vector4i(0b010, 0, static_cast<int32_t>(start_or_stop), 1);
+	}
+
 	const auto type1 = start_or_stop.get_type();
 	const auto type2 = stop.get_type();
 	const auto type3 = step.get_type();
@@ -295,12 +301,6 @@ Vector4i nd::range(const Variant& start_or_stop, const Variant& stop, const Vari
 	);
 
 	const auto mask = (0b100 * (type1 == Variant::INT)) | (0b010 * (type2 == Variant::INT)) | (0b001 * (type3 == Variant::INT));
-	if (mask == 0b100) {
-		// Special case: nd.range(x)
-		// TODO presumably! No real way to check....
-		return Vector4i(0b010, 0, static_cast<int32_t>(start_or_stop), 0);
-	}
-
 	return Vector4i(
 		mask,
 		// These default to 0 when type is NIL

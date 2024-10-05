@@ -17,6 +17,10 @@ Upcoming Changes (main branch)
 - Added ``array.copy()`` and ``nd.copy(array)`` functions.
 - Added ``array.copy()`` and ``nd.copy(array)`` functions.
 
+**Changed**
+
+- ``nd.range`` now behaves properly when called as ``nd.range(x, null)`` (i.e. range from x to end).
+
 **Fixed**
 
 - ``NDArray`` interpretation inside of Arrays would result in ``inhomogenous shape`` errors.

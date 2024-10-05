@@ -592,7 +592,7 @@
 		<method name="range" qualifiers="static">
 			<return type="Vector4i" />
 			<param index="0" name="start_or_stop" type="Variant" default="0" />
-			<param index="1" name="stop" type="Variant" default="null" />
+			<param index="1" name="stop" type="Variant" default="&amp;&quot;no_value&quot;" />
 			<param index="2" name="step" type="Variant" default="null" />
 			<description>
 				Create a range. arange can be called with a varying number of positional arguments:

@@ -14,3 +14,7 @@ config/name="numdot"
 run/main_scene="res://tests.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 config/icon="res://icon.svg"
+
+[display]
+
+window/stretch/mode="canvas_items"

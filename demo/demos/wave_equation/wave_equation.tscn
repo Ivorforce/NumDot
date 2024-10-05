@@ -1,0 +1,159 @@
+[gd_scene load_steps=5 format=3 uid="uid://copp8b0ljyafv"]
+
+[ext_resource type="Script" path="res://demos/wave_equation/wave_equation.gd" id="1_lapk8"]
+[ext_resource type="Script" path="res://demos/wave_equation/gd_solver.gd" id="2_imfsw"]
+[ext_resource type="Script" path="res://demos/wave_equation/nd_solver.gd" id="3_5m6yv"]
+[ext_resource type="Script" path="res://demos/wave_equation/nd_solver_opt.gd" id="4_vdf5w"]
+
+[node name="WaveEquation" type="Node2D" node_paths=PackedStringArray("solver")]
+position = Vector2(342, 323)
+script = ExtResource("1_lapk8")
+num_draw_points = 300
+point_color = Color(0.937255, 0.968627, 0.964706, 1)
+point_size = 3.0
+anchor_size = 5.0
+anchor_color = Color(1, 1, 1, 1)
+wall_width = 4
+solver = NodePath("Solvers/GDSolver")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+show_behind_parent = true
+custom_minimum_size = Vector2(1152, 648)
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -341.0
+offset_top = -325.0
+offset_right = 811.0
+offset_bottom = 323.0
+grow_horizontal = 2
+color = Color(0.4356, 0.55154, 0.66, 1)
+
+[node name="Solvers" type="Node" parent="."]
+
+[node name="GDSolver" type="Node" parent="Solvers" node_paths=PackedStringArray("params")]
+script = ExtResource("2_imfsw")
+params = NodePath("../..")
+
+[node name="NDSolver" type="Node" parent="Solvers" node_paths=PackedStringArray("params")]
+script = ExtResource("3_5m6yv")
+params = NodePath("../..")
+
+[node name="NDSolverOpt" type="Node" parent="Solvers" node_paths=PackedStringArray("params")]
+script = ExtResource("4_vdf5w")
+params = NodePath("../..")
+
+[node name="Labels" type="VBoxContainer" parent="."]
+offset_left = -324.0
+offset_top = -302.0
+offset_right = -133.0
+offset_bottom = -202.0
+metadata/_edit_group_ = true
+
+[node name="FPSLabel" type="Label" parent="Labels"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "FPS: 60"
+
+[node name="FrameTimeLabel" type="Label" parent="Labels"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Frame time: 1"
+
+[node name="Options" type="VBoxContainer" parent="."]
+offset_left = 515.0
+offset_top = -296.0
+offset_right = 787.0
+offset_bottom = -192.0
+metadata/_edit_group_ = true
+
+[node name="SolverOption" type="OptionButton" parent="Options"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+selected = 0
+item_count = 3
+popup/item_0/text = "GDSolver"
+popup/item_1/text = "NDSolver"
+popup/item_1/id = 1
+popup/item_2/text = "NDSolverInPlace"
+popup/item_2/id = 2
+
+[node name="InitOption" type="OptionButton" parent="Options"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+selected = 0
+item_count = 4
+popup/item_0/text = "Pluck"
+popup/item_1/text = "Standing"
+popup/item_1/id = 1
+popup/item_2/text = "Pulse"
+popup/item_2/id = 2
+popup/item_3/text = "Destructive"
+popup/item_3/id = 3
+
+[node name="BoundaryOptions" type="VBoxContainer" parent="."]
+offset_left = 515.0
+offset_top = 181.0
+offset_right = 787.0
+offset_bottom = 285.0
+metadata/_edit_group_ = true
+
+[node name="BCLeft" type="OptionButton" parent="BoundaryOptions"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+selected = 0
+item_count = 2
+popup/item_0/text = "Closed (left)"
+popup/item_1/text = "Open (left)"
+popup/item_1/id = 1
+
+[node name="BCRight" type="OptionButton" parent="BoundaryOptions"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+selected = 0
+item_count = 2
+popup/item_0/text = "Closed (right)"
+popup/item_1/text = "Open (right)"
+popup/item_1/id = 1
+
+[node name="SliderOptions" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(200, 0)
+offset_left = -320.0
+offset_top = 143.0
+offset_right = -120.0
+offset_bottom = 297.0
+metadata/_edit_group_ = true
+
+[node name="PointLabel" type="Label" parent="SliderOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Points: 150"
+
+[node name="PointSlider" type="HSlider" parent="SliderOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 50.0
+max_value = 20000.0
+step = 100.0
+value = 150.0
+
+[node name="CFLLabel" type="Label" parent="SliderOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "CFL: 0.8"
+
+[node name="IterLabel" type="Label" parent="SliderOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Sub-steps: 60"
+
+[connection signal="item_selected" from="Options/SolverOption" to="." method="_on_solver_option_item_selected"]
+[connection signal="item_selected" from="Options/InitOption" to="." method="_on_init_option_item_selected"]
+[connection signal="item_selected" from="BoundaryOptions/BCLeft" to="." method="_on_bc_left_item_selected"]
+[connection signal="item_selected" from="BoundaryOptions/BCRight" to="." method="_on_bc_right_item_selected"]
+[connection signal="drag_ended" from="SliderOptions/PointSlider" to="." method="_on_point_slider_drag_ended"]

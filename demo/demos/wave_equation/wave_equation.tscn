@@ -1,0 +1,89 @@
+[gd_scene load_steps=5 format=3 uid="uid://copp8b0ljyafv"]
+
+[ext_resource type="Script" path="res://demos/wave_equation/wave_equation.gd" id="1_lapk8"]
+[ext_resource type="Script" path="res://demos/wave_equation/gd_solver.gd" id="2_imfsw"]
+[ext_resource type="Script" path="res://demos/wave_equation/nd_solver.gd" id="3_5m6yv"]
+[ext_resource type="Script" path="res://demos/wave_equation/nd_solver_opt.gd" id="4_vdf5w"]
+
+[node name="WaveEquation" type="Node2D" node_paths=PackedStringArray("solver")]
+position = Vector2(342, 323)
+script = ExtResource("1_lapk8")
+num_points = 50
+wave_speed = 0.3
+num_draw_points = 100
+solver = NodePath("Solvers/NDSolver")
+
+[node name="PointLabel" type="Label" parent="."]
+unique_name_in_owner = true
+offset_left = 504.0
+offset_top = 170.0
+offset_right = 645.0
+offset_bottom = 212.0
+theme_override_font_sizes/font_size = 30
+text = "Points: 50"
+
+[node name="PointSlider" type="HSlider" parent="."]
+offset_left = 472.0
+offset_top = 227.0
+offset_right = 674.0
+offset_bottom = 243.0
+min_value = 50.0
+max_value = 10000.0
+step = 100.0
+value = 150.0
+
+[node name="Solvers" type="Node" parent="."]
+
+[node name="GDSolver" type="Node" parent="Solvers" node_paths=PackedStringArray("params")]
+script = ExtResource("2_imfsw")
+params = NodePath("../..")
+
+[node name="NDSolver" type="Node" parent="Solvers" node_paths=PackedStringArray("params")]
+script = ExtResource("3_5m6yv")
+params = NodePath("../..")
+
+[node name="NDSolverOpt" type="Node" parent="Solvers" node_paths=PackedStringArray("params")]
+script = ExtResource("4_vdf5w")
+params = NodePath("../..")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+offset_left = -324.0
+offset_top = -302.0
+offset_right = -133.0
+offset_bottom = -202.0
+metadata/_edit_group_ = true
+
+[node name="FPSLabel" type="Label" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "FPS: 60"
+
+[node name="IterLabel" type="Label" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Sub-steps: 60"
+
+[node name="CFLLabel" type="Label" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "CFL: 0.8"
+
+[node name="SolverOption" type="OptionButton" parent="."]
+offset_left = -314.0
+offset_top = 216.0
+offset_right = -42.0
+offset_bottom = 266.0
+theme_override_font_sizes/font_size = 30
+selected = 0
+item_count = 3
+popup/item_0/text = "GDSolver"
+popup/item_1/text = "NDSolver"
+popup/item_1/id = 1
+popup/item_2/text = "NDSolverInPlace"
+popup/item_2/id = 2
+
+[connection signal="drag_ended" from="PointSlider" to="." method="_on_point_slider_drag_ended"]
+[connection signal="item_selected" from="SolverOption" to="." method="_on_solver_option_item_selected"]

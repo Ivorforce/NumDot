@@ -17,8 +17,8 @@ func initialize() -> void:
 	rng = nd.range(1, params.num_points + 1)
 	
 	# initial condition
-	u.set(nd.multiply(nd.exp(nd.subtract(0, nd.divide(nd.square(nd.subtract(x, 0.5)), 0.005))), -2), rng)
-	uprev = nd.array(u)
+	u.set(nd.array(params.u), rng)
+	uprev.set(nd.array(params.uprev), rng)
 
 func simulation_step(delta: float) -> void:
 	var rsq = (params.wave_speed * (1/params.frame_rate/params.num_steps_per_frame) / params.dx)**2

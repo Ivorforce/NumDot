@@ -7,24 +7,20 @@ var tmp = []
 
 func initialize() -> void:
 	x = range(params.num_points).map(func(elt): return (params.dx * elt + params.xmin))
-	u.resize(params.num_points)
-	uprev.resize(params.num_points)
+	u = params.u.duplicate()
+	uprev = params.uprev.duplicate()
 	tmp.resize(params.num_points)
-	
-	for i in u.size():
-		u[i] = -2 * exp(-(x[i] - 0.5)**2/0.005)
-		uprev[i] = u[i]
-	
+
 func simulation_step(delta: float) -> void:
 	var rsq = (params.wave_speed * (1/params.frame_rate/params.num_steps_per_frame) / params.dx)**2
 
 	for n in params.num_steps_per_frame:
 		for i in range(1, u.size()-1):
 			tmp[i] = 2 * (1 - rsq) * u[i] - uprev[i] + (rsq * (u[i-1] + u[i+1]))
-		
-			tmp[0] = 2 * (1 - rsq) * u[0] - uprev[0] + rsq * u[1]
-			tmp[-1] = 2 * (1 - rsq) * u[-1] - uprev[-1] + rsq * u[-2]
-
+			# boundaries
+			tmp[0] = tmp[1] if (params.bc_left) else (2 * (1 - rsq) * u[0] - uprev[0] + rsq * u[1])
+			tmp[-1] = tmp[-2] if (params.bc_right) else  (2 * (1 - rsq) * u[-1] - uprev[-1] + rsq * u[-2])
+			
 		uprev = u.duplicate()
 		u = tmp.duplicate()	
 

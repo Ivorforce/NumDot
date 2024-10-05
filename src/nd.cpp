@@ -16,6 +16,8 @@
 #include <type_traits>                      // for decay_t
 #include <utility>                          // for forward
 #include <variant>                          // for visit
+#include <godot_cpp/variant/utility_functions.hpp>
+
 #include "gdconvert/conversion_array.hpp"     // for variant_as_array
 #include "gdconvert/conversion_ints.hpp"      // for variant_to_axes, variant_...
 #include "gdconvert/conversion_slice.hpp"     // for ellipsis, newaxis
@@ -96,6 +98,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("concatenate", "v", "axis", "dtype"), &nd::concatenate, DEFVAL(nullptr), DEFVAL(0), DEFVAL(nd::DType::DTypeMax));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("hstack", "v", "dtype"), &nd::hstack, DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("vstack", "v", "dtype"), &nd::vstack, DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("tile", "v", "reps"), &nd::tile);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("split", "v", "indices_or_section_size", "axis"), &nd::split, DEFVAL(nullptr), DEFVAL(0));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("hsplit", "v", "indices_or_section_size"), &nd::hsplit);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("vsplit", "v", "indices_or_section_size"), &nd::vsplit);
@@ -663,6 +666,72 @@ Ref<NDArray> nd::vstack(const Variant& v, DType dtype) {
 		}
 
 		return ::concatenate_(dtype, vector, 0);
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
+}
+
+Ref<NDArray> nd::tile(const Variant& v, const Variant& reps) {
+	try {
+		const auto array = variant_as_array(v);
+		const auto reps_ = variant_to_shape(reps);
+
+		// Let's build the broadcasts.
+		// array is sliced as a[..., all, newaxis, all, newaxis, [...]]
+		// The result array is reshaped to array shape, with reps_ where array has newaxis.
+
+		const auto matched_reps = MIN(array->dimension(), reps_.size());
+
+		// We slice the array as many times as necessary.
+		// If reps exceeds the array size, array will be auto-broadcast.
+		// If array exceeds the rep size, it will match the final shape without needing to be sliced.
+		xt::xstrided_slice_vector array_slices(1 + matched_reps * 2);
+		array_slices[0] = xt::ellipsis();
+		for (int i = 0; i < matched_reps; ++i) {
+			array_slices[1 + i * 2] = xt::newaxis();
+			array_slices[2 + i * 2] = xt::all();
+		}
+
+		va::shape_type result_final_shape(MAX(array->dimension(), reps_.size()));
+		va::strides_type result_broadcast_shape(array->dimension() + reps_.size());
+		int steps_from_end = 0;
+
+		// Fill everything that both array and reps cover.
+		for (int i = 0; i < matched_reps; ++i) {
+			const std::size_t rep_count = reps_[reps_.size() - steps_from_end - 1];
+			const std::size_t array_dim_size = array->shape()[(array->dimension() - steps_from_end - 1)];
+
+			result_broadcast_shape[result_broadcast_shape.size() - steps_from_end * 2 - 2] = rep_count;
+			result_broadcast_shape[result_broadcast_shape.size() - steps_from_end * 2 - 1] = array_dim_size;
+
+			result_final_shape[result_final_shape.size() - steps_from_end - 1] = rep_count * array_dim_size;
+
+			steps_from_end++;
+		}
+		// If needed, fill up the rest of the array shape.
+		if (array->dimension() > reps_.size()) {
+			for (std::size_t i = 0; i < array->dimension() - reps_.size(); ++i) {
+				result_broadcast_shape[i] = array->shape()[i];
+				result_final_shape[i] = array->shape()[i];
+			}
+		}
+		// If needed, fill up the rest of the reps shape.
+		if (reps_.size() > array->dimension()) {
+			for (std::size_t i = 0; i < reps_.size() - array->dimension(); ++i) {
+				result_broadcast_shape[i] = reps_[i];
+				result_final_shape[i] = reps_[i];
+			}
+		}
+
+		auto result = va::empty(array->dtype(), result_final_shape);
+		auto result_broadcast = va::reshape(*result, result_broadcast_shape);
+		const auto array_broadcast = array->sliced_read(array_slices);
+
+		result_broadcast->prepare_write();
+		va::assign(result_broadcast->write.value(), array_broadcast);
+
+		return { memnew(NDArray(result)) };
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());

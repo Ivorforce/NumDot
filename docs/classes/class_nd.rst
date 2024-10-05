@@ -220,6 +220,8 @@ Methods
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`tanh<class_nd_method_tanh>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                                      |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`tile<class_nd_method_tile>`\ (\ v\: ``Variant``, reps\: ``Variant``\ ) |static|                                                                                                                  |
+   +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``Vector4i``                                               | :ref:`to<class_nd_method_to>`\ (\ stop\: ``int``\ ) |static|                                                                                                                                           |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`transpose<class_nd_method_transpose>`\ (\ a\: ``Variant``, permutation\: ``Variant``\ ) |static|                                                                                                 |
@@ -1642,6 +1644,26 @@ Equivalent to nd.sin(x) / nd.cos(x) element-wise.
 Compute hyperbolic tangent element-wise.
 
 Equivalent to nd.sinh(x) / nd.cosh(x).
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_tile:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **tile**\ (\ v\: ``Variant``, reps\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_tile>`
+
+Construct an array by repeating v the number of times given by reps.
+
+If reps has length d, the result will have dimension of max(d, v.ndim).
+
+The repetitions will be applied from the innermost dimensions outwards.
+
+If v.ndim > d, the outermost dimensions will remain unchanged.
+
+If v.ndim < d, the array is broadcast with leading new axes.
 
 .. rst-class:: classref-item-separator
 

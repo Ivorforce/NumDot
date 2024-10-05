@@ -23,6 +23,7 @@ Upcoming Changes (main branch)
 - Added ``count_nonzero`` functions.
 - Added ``concatenate``, ``hstack`` and ``vstack`` functions.
 - Added ``split``, ``hsplit`` and ``vsplit`` functions.
+- Added ``tile`` functions.
 
 **Fixed**
 

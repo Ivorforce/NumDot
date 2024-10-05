@@ -11,6 +11,30 @@
 
 using namespace va;
 
+void va::positive(VArrayTarget target, const VArray& a) {
+#ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
+	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
+#else
+	va::xoperation_inplace<promote::common_num_or_error>(
+		XFunction<xt::detail::identity> {},
+		target,
+		a.read
+	);
+#endif
+}
+
+void va::negative(VArrayTarget target, const VArray& a) {
+#ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
+	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
+#else
+	va::xoperation_inplace<promote::common_num_or_error>(
+		XFunction<xt::detail::negate> {},
+		target,
+		a.read
+	);
+#endif
+}
+
 void va::add(VArrayTarget target, const VArray& a, const VArray& b) {
 #ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");

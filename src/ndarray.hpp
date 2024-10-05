@@ -116,6 +116,8 @@ public:
 	[[nodiscard]] TypedArray<NDArray> to_godot_array() const;
 
 	// Basic math functions.
+	Ref<NDArray> assign_positive(const Variant& a);
+	Ref<NDArray> assign_negative(const Variant& a);
 	Ref<NDArray> assign_add(const Variant& a, const Variant& b);
 	Ref<NDArray> assign_subtract(const Variant& a, const Variant& b);
 	Ref<NDArray> assign_multiply(const Variant& a, const Variant& b);

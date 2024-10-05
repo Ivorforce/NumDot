@@ -83,6 +83,8 @@ void NDArray::_bind_methods() {
 
 	godot::ClassDB::bind_method(D_METHOD("to_godot_array"), &NDArray::to_godot_array);
 
+	godot::ClassDB::bind_method(D_METHOD("assign_positive", "a"), &NDArray::assign_positive);
+	godot::ClassDB::bind_method(D_METHOD("assign_negative", "a"), &NDArray::assign_negative);
 	godot::ClassDB::bind_method(D_METHOD("assign_add", "a", "b"), &NDArray::assign_add);
 	godot::ClassDB::bind_method(D_METHOD("assign_subtract", "a", "b"), &NDArray::assign_subtract);
 	godot::ClassDB::bind_method(D_METHOD("assign_multiply", "a", "b"), &NDArray::assign_multiply);
@@ -652,6 +654,14 @@ inline void reduction_inplace(Visitor&& visitor, VisitorNoaxes&& visitor_noaxes,
 		return va::func(carray1, carray2);\
 	}, *this->array, (axes1), (varray1), (varray2));\
 	return {this}
+
+Ref<NDArray> NDArray::assign_positive(const Variant& a) {
+	VARRAY_MAP1(positive, a);
+}
+
+Ref<NDArray> NDArray::assign_negative(const Variant& a) {
+	VARRAY_MAP1(negative, a);
+}
 
 Ref<NDArray> NDArray::assign_add(const Variant& a, const Variant& b) {
 	// godot::UtilityFunctions::print(value);

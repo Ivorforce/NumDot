@@ -25,11 +25,14 @@ namespace va {
 		}
 
 		template<typename Arg>
-		using int64_if_bool_else_id = typename std::conditional<
+		using int64_if_bool_else_id = std::conditional_t<
 			std::is_same_v<Arg, bool>,
 			int64_t,
 			Arg
-		>::type;
+		>;
+
+		template<typename T>
+		struct is_non_bool_arithmetic : std::conjunction<std::is_arithmetic<T>, std::negation<std::is_same<T, bool>>> {};
 
 		// TODO We may want to support mixed-type input ops for some functions, to avoid explicitly promoting types.
 		//  I think it may be faster to not cast beforehand, but it's possible it does it later down the line anyway.
@@ -43,6 +46,18 @@ namespace va {
 
 			template<typename InputType>
 			using output_type = OutputType;
+		};
+
+		struct common_num_or_error {
+			template<typename... Args>
+			using input_type = std::conditional_t<
+				!std::conjunction_v<is_non_bool_arithmetic<Args>...>,
+				void,
+				std::common_type_t<Args...>
+			>;
+
+			template<typename InputType>
+			using output_type = InputType;
 		};
 
 		/**

@@ -522,6 +522,15 @@
 				Multiply arguments element-wise.
 			</description>
 		</method>
+		<method name="negative" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				Returns the negative value of the number.
+				For unsigned types, returns [code]MAX - value[/code].
+				For non-number types, generates an error.
+			</description>
+		</method>
 		<method name="newaxis" qualifiers="static">
 			<return type="StringName" />
 			<description>
@@ -563,6 +572,14 @@
 			<description>
 				Return a new array of ones with the same shape and type as a given array.
 				DType and shape will, if supplied, override the values inferred from the given array.
+			</description>
+		</method>
+		<method name="positive" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				For number types, returns a copy of the array.
+				For non-number types, generates an error.
 			</description>
 		</method>
 		<method name="pow" qualifiers="static">

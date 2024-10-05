@@ -108,9 +108,13 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`assign_multiply<class_NDArray_method_assign_multiply>`\ (\ a\: ``Variant``, b\: ``Variant``\ )                                              |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`assign_negative<class_NDArray_method_assign_negative>`\ (\ a\: ``Variant``\ )                                                               |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`assign_norm<class_NDArray_method_assign_norm>`\ (\ a\: ``Variant`` = null, ord\: ``Variant`` = 2, axes\: ``Variant`` = null\ )              |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`assign_not_equal<class_NDArray_method_assign_not_equal>`\ (\ a\: ``Variant``, b\: ``Variant``\ )                                            |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`assign_positive<class_NDArray_method_assign_positive>`\ (\ a\: ``Variant``\ )                                                               |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`assign_pow<class_NDArray_method_assign_pow>`\ (\ a\: ``Variant``, b\: ``Variant``\ )                                                        |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -809,6 +813,20 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 ----
 
+.. _class_NDArray_method_assign_negative:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **assign_negative**\ (\ a\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_negative>`
+
+In-place version of :ref:`nd.negative<class_nd_method_negative>`.
+
+Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
+
+.. rst-class:: classref-item-separator
+
+----
+
 .. _class_NDArray_method_assign_norm:
 
 .. rst-class:: classref-method
@@ -830,6 +848,20 @@ Assigns the result to this array, and returns it. The shape of the result must b
 :ref:`NDArray<class_NDArray>` **assign_not_equal**\ (\ a\: ``Variant``, b\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_not_equal>`
 
 In-place version of :ref:`nd.not_equal<class_nd_method_not_equal>`.
+
+Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_assign_positive:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **assign_positive**\ (\ a\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_positive>`
+
+In-place version of :ref:`nd.positive<class_nd_method_positive>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 

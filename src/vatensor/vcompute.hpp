@@ -116,12 +116,18 @@ namespace va {
         template<typename... Args>
         void operator()(const Args&... args) const {
             using InputType = typename PromotionRule::template input_type<typename std::decay_t<Args>::value_type...>;
-            using OutputType = typename PromotionRule::template output_type<InputType>;
 
-            // Result of visitor invocation
-            const auto result = visitor(promote::promote_xexpression_if_needed<InputType>(args)...);
+            if constexpr (std::is_same_v<InputType, void>) {
+                throw std::runtime_error("Unsupported type for operation.");
+            }
+            else {
+                using OutputType = typename PromotionRule::template output_type<InputType>;
 
-            assign_to_target<OutputType>(target, result);
+                // Result of visitor invocation
+                const auto result = visitor(promote::promote_xexpression_if_needed<InputType>(args)...);
+
+                assign_to_target<OutputType>(target, result);
+            }
         }
     };
 
@@ -143,12 +149,18 @@ namespace va {
         template<typename... Args>
         ReturnType operator()(const Args&... args) const {
             using InputType = typename PromotionRule::template input_type<typename std::decay_t<Args>::value_type...>;
-            using OutputType = typename PromotionRule::template output_type<InputType>;
 
-            // Result of visitor invocation
-            // TODO Some xt functions support passing the output type. That would be FAR better than casting it afterwards as here.
-            const auto result = OutputType(visitor(promote::promote_xexpression_if_needed<InputType>(args)...));
-            return static_cast<ReturnType>(result);
+            if constexpr (std::is_same_v<InputType, void>) {
+                throw std::runtime_error("Unsupported type for operation.");
+            }
+            else {
+                using OutputType = typename PromotionRule::template output_type<InputType>;
+
+                // Result of visitor invocation
+                // TODO Some xt functions support passing the output type. That would be FAR better than casting it afterwards as here.
+                const auto result = OutputType(visitor(promote::promote_xexpression_if_needed<InputType>(args)...));
+                return static_cast<ReturnType>(result);
+            }
         }
     };
 

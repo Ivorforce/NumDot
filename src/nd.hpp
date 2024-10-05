@@ -84,6 +84,9 @@ public:
 	static Ref<NDArray> unstack(const Variant& v, int64_t axis);
 
 	// Basic math functions.
+	static Ref<NDArray> positive(const Variant& a);
+	static Ref<NDArray> negative(const Variant& a);
+
 	static Ref<NDArray> add(const Variant& a, const Variant& b);
 	static Ref<NDArray> subtract(const Variant& a, const Variant& b);
 	static Ref<NDArray> multiply(const Variant& a, const Variant& b);

@@ -94,6 +94,8 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("stack", "v", "axis"), &nd::stack, DEFVAL(nullptr), 0);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("unstack", "v", "axis"), &nd::unstack, DEFVAL(nullptr), 0);
 
+	godot::ClassDB::bind_static_method("nd", D_METHOD("positive", "a"), &nd::positive);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("negative", "a"), &nd::negative);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("add", "a", "b"), &nd::add);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("subtract", "a", "b"), &nd::subtract);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("multiply", "a", "b"), &nd::multiply);
@@ -573,6 +575,14 @@ Ref<NDArray> nd::stack(const Variant& v, int64_t axis) {
 
 Ref<NDArray> nd::unstack(const Variant& v, int64_t axis) {
 	return moveaxis(v, axis, 0);
+}
+
+Ref<NDArray> nd::positive(const Variant& a) {
+	return VARRAY_MAP1(positive, a);
+}
+
+Ref<NDArray> nd::negative(const Variant& a) {
+	return VARRAY_MAP1(negative, a);
 }
 
 Ref<NDArray> nd::add(const Variant& a, const Variant& b) {

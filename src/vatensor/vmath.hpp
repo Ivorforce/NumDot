@@ -5,6 +5,9 @@
 #include "varray.hpp"
 
 namespace va {
+	void positive(VArrayTarget target, const VArray& a);
+	void negative(VArrayTarget target, const VArray& a);
+
 	void add(VArrayTarget target, const VArray& a, const VArray& b);
 	void subtract(VArrayTarget target, const VArray& a, const VArray& b);
 	void multiply(VArrayTarget target, const VArray& a, const VArray& b);

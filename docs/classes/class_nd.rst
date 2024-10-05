@@ -152,6 +152,8 @@ Methods
    +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                     | :ref:`multiply<class_nd_method_multiply>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                             |
    +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                     | :ref:`negative<class_nd_method_negative>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                              |
+   +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``StringName``                                    | :ref:`newaxis<class_nd_method_newaxis>`\ (\ ) |static|                                                                                                                                                 |
    +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                     | :ref:`norm<class_nd_method_norm>`\ (\ a\: ``Variant`` = null, ord\: ``Variant`` = 2, axes\: ``Variant`` = null\ ) |static|                                                                             |
@@ -162,13 +164,15 @@ Methods
    +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                     | :ref:`ones_like<class_nd_method_ones_like>`\ (\ model\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 11, shape\: ``Variant`` = null\ ) |static|                                           |
    +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                     | :ref:`positive<class_nd_method_positive>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                              |
+   +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                     | :ref:`pow<class_nd_method_pow>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                                       |
    +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                     | :ref:`prod<class_nd_method_prod>`\ (\ a\: ``Variant`` = null, axes\: ``Variant`` = null\ ) |static|                                                                                                    |
    +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                     | :ref:`rad2deg<class_nd_method_rad2deg>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                                |
    +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | ``Vector4i``                                      | :ref:`range<class_nd_method_range>`\ (\ start_or_stop\: ``Variant`` = 0, stop\: ``Variant`` = null, step\: ``Variant`` = null\ ) |static|                                                              |
+   | ``Vector4i``                                      | :ref:`range<class_nd_method_range>`\ (\ start_or_stop\: ``Variant`` = 0, stop\: ``Variant`` = &"no_value", step\: ``Variant`` = null\ ) |static|                                                       |
    +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                     | :ref:`reduce_dot<class_nd_method_reduce_dot>`\ (\ a\: ``Variant`` = null, b\: ``Variant`` = null, axes\: ``Variant`` = null\ ) |static|                                                                |
    +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1155,6 +1159,22 @@ Multiply arguments element-wise.
 
 ----
 
+.. _class_nd_method_negative:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **negative**\ (\ a\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_negative>`
+
+Returns the negative value of the number.
+
+For unsigned types, returns ``MAX - value``.
+
+For non-number types, generates an error.
+
+.. rst-class:: classref-item-separator
+
+----
+
 .. _class_nd_method_newaxis:
 
 .. rst-class:: classref-method
@@ -1221,6 +1241,20 @@ DType and shape will, if supplied, override the values inferred from the given a
 
 ----
 
+.. _class_nd_method_positive:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **positive**\ (\ a\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_positive>`
+
+For number types, returns a copy of the array.
+
+For non-number types, generates an error.
+
+.. rst-class:: classref-item-separator
+
+----
+
 .. _class_nd_method_pow:
 
 .. rst-class:: classref-method
@@ -1263,7 +1297,7 @@ Convert angles from radians to degrees.
 
 .. rst-class:: classref-method
 
-``Vector4i`` **range**\ (\ start_or_stop\: ``Variant`` = 0, stop\: ``Variant`` = null, step\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_range>`
+``Vector4i`` **range**\ (\ start_or_stop\: ``Variant`` = 0, stop\: ``Variant`` = &"no_value", step\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_range>`
 
 Create a range. arange can be called with a varying number of positional arguments:
 

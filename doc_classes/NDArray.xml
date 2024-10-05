@@ -342,6 +342,14 @@
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
+		<method name="assign_negative">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				In-place version of [method nd.negative].
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
+			</description>
+		</method>
 		<method name="assign_norm">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" default="null" />
@@ -358,6 +366,14 @@
 			<param index="1" name="b" type="Variant" />
 			<description>
 				In-place version of [method nd.not_equal].
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
+			</description>
+		</method>
+		<method name="assign_positive">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				In-place version of [method nd.positive].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>

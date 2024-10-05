@@ -1167,6 +1167,8 @@ Data-type of the array’s elements.
 
 Indexes into the array, and return the resulting tensor.
 
+If a single boolean array is passed, it is treated as a mask.
+
 .. rst-class:: classref-item-separator
 
 ----
@@ -1233,7 +1235,9 @@ Number of array dimensions.
 
 Indexes into the array, sets the element to the given value.
 
-The value's dimensions must match this array's last dimensions.
+The first value is the value to be set, all following values are indexes into the array.
+
+If the index is a single boolean array, it is treated as a mask.
 
 .. rst-class:: classref-item-separator
 

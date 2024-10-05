@@ -13,6 +13,7 @@
 #include <stdexcept>                               // for runtime_error
 #include <variant>                                 // for visit
 #include <vatensor/allocate.hpp>
+#include <vatensor/rearrange.hpp>
 
 #include "gdconvert/conversion_array.hpp"            // for fill_c_array_flat
 #include "gdconvert/conversion_slice.hpp"            // for variants_to_slice_...
@@ -268,35 +269,52 @@ Variant NDArray::copy() const {
 	return { memnew(NDArray(result)) };
 }
 
+va::VWrite get_write(va::VArray& array, const nullptr_t& ptr) {
+	array.prepare_write();
+	return array.write.value();
+}
+
+va::VWrite get_write(va::VArray& array, const xt::xstrided_slice_vector& sv) {
+	return array.sliced_write(sv);
+}
+
 void NDArray::set(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {
 	ERR_FAIL_COND_MSG(arg_count < 1, "At least one argument must be passed to NDarray->set(). Ignoring assignment.");
 
 	try {
 		const Variant& value = *args[0];
-		// todo don't need slices if arg_count == 1
-		array->prepare_write();
-		auto compute = arg_count == 1
-		               ? array->write.value()
-		               : array->sliced_write(variants_to_slice_vector(args + 1, arg_count - 1, error));
 
-		switch (value.get_type()) {
-			case Variant::BOOL:
-				va::assign(compute, static_cast<bool>(value));
-				return;
-			case Variant::INT:
-				va::assign(compute, static_cast<int64_t>(value));
-				return;
-			case Variant::FLOAT:
-				va::assign(compute, static_cast<double_t>(value));
-				return;
-			// TODO We could optimize more assignments of literals.
-			//  Just need to figure out how, ideally without duplicating code - as_array already does much type checking work.
-			default:
-				const auto a_ = variant_as_array(value)->read;
+		std::visit([this, value](auto slice) {
+			using T = std::decay_t<decltype(slice)>;
 
-				va::assign(compute, a_);
-				return;
-		}
+			if constexpr (std::is_same_v<T, xt::xstrided_slice_vector> || std::is_same_v<T, nullptr_t>) {
+				auto compute = get_write(*array, slice);
+
+				switch (value.get_type()) {
+					case Variant::BOOL:
+						va::assign(compute, static_cast<bool>(value));
+						return;
+					case Variant::INT:
+						va::assign(compute, static_cast<int64_t>(value));
+						return;
+					case Variant::FLOAT:
+						va::assign(compute, static_cast<double_t>(value));
+						return;
+					// TODO We could optimize more assignments of literals.
+					//  Just need to figure out how, ideally without duplicating code - as_array already does much type checking work.
+					default:
+						const auto value_ = variant_as_array(value);
+						va::assign(compute, value_->read);
+						return;
+				}
+			}
+			else {
+				// Mask
+				array->prepare_write();
+				const auto value_ = variant_as_array(value);
+				va::set_at_mask(array->write.value(), slice->read, value_->read);
+			}
+		}, variants_to_slice_variant(args + 1, arg_count - 1, error));
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_MSG(error.what());
@@ -305,10 +323,23 @@ void NDArray::set(const Variant** args, GDExtensionInt arg_count, GDExtensionCal
 
 Ref<NDArray> NDArray::get(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {
 	try {
-		xt::xstrided_slice_vector sv = variants_to_slice_vector(args, arg_count, error);
+		return std::visit([this](auto slice) -> Ref<NDArray> {
+			using T = std::decay_t<decltype(slice)>;
 
-		const auto result = array->sliced(sv);
-		return { memnew(NDArray(result)) };
+			if constexpr (std::is_same_v<T, xt::xstrided_slice_vector>) {
+				const auto result = array->sliced(slice);
+				return { memnew(NDArray(result)) };
+			}
+			else if constexpr (std::is_same_v<T, nullptr_t>) {
+				const auto result = array;
+				return { memnew(NDArray(result)) };
+			}
+			else {
+				// Mask
+				const auto result = va::get_at_mask(array->read, slice->read);
+				return { memnew(NDArray(result)) };
+			}
+		}, variants_to_slice_variant(args, arg_count, error));
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG(Ref<NDArray>(), error.what());

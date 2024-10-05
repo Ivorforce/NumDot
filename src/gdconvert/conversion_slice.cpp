@@ -1,8 +1,11 @@
 #include "conversion_slice.hpp"
 
 #include <cstdint>                            // for int64_t
+#include <ndarray.hpp>
 #include <ndutil.hpp>
 #include <stdexcept>                          // for runtime_error
+#include <vatensor/allocate.hpp>
+#include "conversion_array.hpp"
 #include "godot_cpp/variant/string_name.hpp"  // for StringName
 #include "godot_cpp/variant/variant.hpp"      // for Variant
 #include "godot_cpp/variant/vector4i.hpp"     // for Vector4i
@@ -51,7 +54,41 @@ xt::xstrided_slice<std::ptrdiff_t> variant_to_slice_part(const Variant& variant)
 	throw std::runtime_error("Variant cannot be converted to a slice.");
 }
 
-xt::xstrided_slice_vector variants_to_slice_vector(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {
+SliceVariant variants_to_slice_variant(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {
+	if (arg_count == 0)
+		return nullptr;
+
+	if (arg_count == 1) {
+		const Variant& first_arg = *args[0];
+		switch (first_arg.get_type()) {
+			case Variant::OBJECT: {
+				// May be mask access!
+				if (const auto ndarray = Object::cast_to<NDArray>(first_arg)) {
+					// Mask access?
+					if (ndarray->array->dtype() == va::Bool) return ndarray->array;
+					else throw std::runtime_error("Array is not a mask.");
+				}
+			}
+			case Variant::ARRAY: {
+				const Array input_array = first_arg;
+
+				va::shape_type shape;
+				va::DType dtype = va::DTypeMax;
+				find_shape_and_dtype_of_array(shape, dtype, input_array);
+				if (dtype != va::Bool) throw std::runtime_error("Array is not a mask.");
+
+				auto store = xt::empty<bool>(shape);
+				for (int i = 0; i < input_array.size(); ++i) {
+					store(i) = input_array[i];
+				}
+
+				return va::from_store(std::make_shared<decltype(store)>(store));
+			}
+			default:
+				break;
+		}
+	}
+
 	xt::xstrided_slice_vector sv(arg_count);
 	for (int i = 0; i < arg_count; i++) {
 		sv[i] = variant_to_slice_part(*args[i]);

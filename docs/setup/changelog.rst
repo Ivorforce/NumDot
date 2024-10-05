@@ -14,6 +14,7 @@ Upcoming Changes (main branch)
 ------------------------------
 **Added**
 
+- Added boolean mask indexing, e.g. ``a.set(5, nd.greater(a, 5))``.
 - Added ``array.copy()`` and ``nd.copy(array)`` functions.
 - Added ``array.copy()`` and ``nd.copy(array)`` functions.
 - Added ``positive`` and ``negative`` functions.

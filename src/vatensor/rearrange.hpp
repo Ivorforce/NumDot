@@ -19,8 +19,9 @@ namespace va {
 				if constexpr (!std::is_same_v<VTStore, VTRead>) {
 					throw std::runtime_error("unexpected data type discrepancy between store and read");
 				}
-
-				return from_surrogate(store, visitor(read));
+				else {
+					return from_surrogate(store, visitor(read));
+				}
 			}, varray.store, varray.read
 		);
 	}

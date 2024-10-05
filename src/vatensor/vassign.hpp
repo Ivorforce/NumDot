@@ -24,6 +24,9 @@ namespace va {
 	void assign(VWrite& array, VScalar value);
 
 	void assign(VArrayTarget target, VScalar value);
+
+	std::shared_ptr<VArray> get_at_mask(const VRead& varray, const VRead& mask);
+	void set_at_mask(VWrite& varray, VRead& mask, VRead& value);
 }
 
 #endif //NUMDOT_VASSIGN_H

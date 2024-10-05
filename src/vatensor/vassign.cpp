@@ -47,6 +47,9 @@ void va::assign(VArrayTarget target, VScalar value) {
 }
 
 std::shared_ptr<VArray> va::get_at_mask(const VRead& varray, const VRead& mask) {
+#ifdef NUMDOT_DISABLE_INDEX_MASKS
+	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_INDEX_MASKS to enable it.");
+#else
 	return std::visit(
 		[](const auto& array, const auto& mask) -> std::shared_ptr<VArray> {
 			using VTArray = typename std::decay_t<decltype(array)>::value_type;
@@ -73,9 +76,13 @@ std::shared_ptr<VArray> va::get_at_mask(const VRead& varray, const VRead& mask) 
 			}
 		}, varray, mask
 	);
+#endif
 }
 
 void va::set_at_mask(VWrite& varray, VRead& mask, VRead& value) {
+#ifdef NUMDOT_DISABLE_INDEX_MASKS
+	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_INDEX_MASKS to enable it.");
+#else
 	return std::visit(
 		// Mask can't be const because of masked_view iterator.
 		[](auto& array, auto& mask, const auto& value) {
@@ -109,6 +116,7 @@ void va::set_at_mask(VWrite& varray, VRead& mask, VRead& value) {
 			}
 		}, varray, mask, value
 	);
+#endif
 }
 
 template<typename A>
@@ -128,6 +136,9 @@ xt::svector<xt::svector<size_type>> array_to_indices(const A& indices) {
 }
 
 std::shared_ptr<VArray> va::get_at_indices(const VRead& varray, const VRead& indices) {
+#ifdef NUMDOT_DISABLE_INDEX_LISTS
+	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_INDEX_LISTS to enable it.");
+#else
 	return std::visit(
 		[](const auto& array, const auto& indices) -> std::shared_ptr<VArray> {
 			using VTMask = typename std::decay_t<decltype(indices)>::value_type;
@@ -150,9 +161,13 @@ std::shared_ptr<VArray> va::get_at_indices(const VRead& varray, const VRead& ind
 			}
 		}, varray, indices
 	);
+#endif
 }
 
 void va::set_at_indices(VWrite& varray, VRead& indices, VRead& value) {
+#ifdef NUMDOT_DISABLE_INDEX_LISTS
+	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_INDEX_LISTS to enable it.");
+#else
 	std::visit(
 		[](auto& array, const auto& indices, const auto& value) {
 			using VTMask = typename std::decay_t<decltype(indices)>::value_type;
@@ -178,4 +193,5 @@ void va::set_at_indices(VWrite& varray, VRead& indices, VRead& value) {
 			}
 		}, varray, indices, value
 	);
+#endif
 }

@@ -554,7 +554,8 @@
 			<return type="NDArray" />
 			<description>
 				Indexes into the array, and return the resulting tensor.
-				If a single boolean array is passed, it is treated as a mask.
+				If the index is a single boolean array, it is treated as a mask.
+				If the index is a single integer array, it is treated as an index list.
 			</description>
 		</method>
 		<method name="get_bool" qualifiers="const vararg">
@@ -590,6 +591,7 @@
 				Indexes into the array, sets the element to the given value.
 				The first value is the value to be set, all following values are indexes into the array.
 				If the index is a single boolean array, it is treated as a mask.
+				If the index is a single integer array, it is treated as an index list.
 			</description>
 		</method>
 		<method name="shape" qualifiers="const">

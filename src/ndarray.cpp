@@ -308,11 +308,16 @@ void NDArray::set(const Variant** args, GDExtensionInt arg_count, GDExtensionCal
 						return;
 				}
 			}
+			else if constexpr (std::is_same_v<T, SliceIndexList>) {
+				array->prepare_write();
+				const auto value_ = variant_as_array(value);
+				va::set_at_indices(array->write.value(), slice.index_list->read, value_->read);
+			}
 			else {
 				// Mask
 				array->prepare_write();
 				const auto value_ = variant_as_array(value);
-				va::set_at_mask(array->write.value(), slice->read, value_->read);
+				va::set_at_mask(array->write.value(), slice.mask->read, value_->read);
 			}
 		}, variants_to_slice_variant(args + 1, arg_count - 1, error));
 	}
@@ -334,9 +339,13 @@ Ref<NDArray> NDArray::get(const Variant** args, GDExtensionInt arg_count, GDExte
 				const auto result = array;
 				return { memnew(NDArray(result)) };
 			}
+			else if constexpr (std::is_same_v<T, SliceIndexList>) {
+				const auto result = va::get_at_indices(array->read, slice.index_list->read);
+				return { memnew(NDArray(result)) };
+			}
 			else {
 				// Mask
-				const auto result = va::get_at_mask(array->read, slice->read);
+				const auto result = va::get_at_mask(array->read, slice.mask->read);
 				return { memnew(NDArray(result)) };
 			}
 		}, variants_to_slice_variant(args, arg_count, error));

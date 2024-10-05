@@ -11,10 +11,14 @@
 
 using namespace godot;
 
+struct SliceMask { std::shared_ptr<va::VArray> mask; };
+struct SliceIndexList { std::shared_ptr<va::VArray> index_list; };
+
 using SliceVariant = std::variant<
 	std::nullptr_t,
 	xt::xstrided_slice_vector,
-	std::shared_ptr<va::VArray>
+	SliceMask,
+	SliceIndexList
 >;
 
 xt::xstrided_slice<std::ptrdiff_t> variant_to_slice_part(const Variant& variant);

@@ -65,24 +65,19 @@ SliceVariant variants_to_slice_variant(const Variant** args, GDExtensionInt arg_
 				// May be mask access!
 				if (const auto ndarray = Object::cast_to<NDArray>(first_arg)) {
 					// Mask access?
-					if (ndarray->array->dtype() == va::Bool) return ndarray->array;
-					else throw std::runtime_error("Array is not a mask.");
+					if (ndarray->array->dtype() == va::Bool) return SliceMask { ndarray->array };
+
+					// Could be float, but we'll notice later.
+					return SliceIndexList { ndarray->array };
 				}
 			}
 			case Variant::ARRAY: {
-				const Array input_array = first_arg;
+				const auto input_varray = array_as_varray(first_arg);
 
-				va::shape_type shape;
-				va::DType dtype = va::DTypeMax;
-				find_shape_and_dtype_of_array(shape, dtype, input_array);
-				if (dtype != va::Bool) throw std::runtime_error("Array is not a mask.");
-
-				auto store = xt::empty<bool>(shape);
-				for (int i = 0; i < input_array.size(); ++i) {
-					store(i) = input_array[i];
-				}
-
-				return va::from_store(std::make_shared<decltype(store)>(store));
+				if (input_varray->dtype() == va::Bool)
+					return SliceMask { input_varray };
+				else
+					return SliceIndexList { input_varray };
 			}
 			default:
 				break;

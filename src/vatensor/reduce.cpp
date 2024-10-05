@@ -325,6 +325,30 @@ void va::norm_linf(VArrayTarget target, const VArray& array, const axes_type& ax
 #endif
 }
 
+VScalar va::count_nonzero(const VArray& array) {
+#ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
+	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
+#else
+	if (array.dtype() == va::Bool)
+		return sum(array);
+
+	const auto is_nonzero = va::copy_as_dtype(array, va::Bool);
+	return va::sum(*is_nonzero);
+#endif
+}
+
+void va::count_nonzero(VArrayTarget target, const VArray& array, const axes_type& axes) {
+#ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
+	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
+#else
+	if (array.dtype() == va::Bool)
+		return sum(target, array, axes);
+
+	const auto is_nonzero = va::copy_as_dtype(array, va::Bool);
+	return va::sum(target, *is_nonzero, axes);
+#endif
+}
+
 bool va::all(const VArray& array) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");

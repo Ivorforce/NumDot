@@ -41,6 +41,9 @@ namespace va {
 	VScalar norm_linf(const VArray& array);
 	void norm_linf(VArrayTarget target, const VArray& array, const axes_type& axes);
 
+	VScalar count_nonzero(const VArray& array);
+	void count_nonzero(VArrayTarget target, const VArray& array, const axes_type& axes);
+
 	bool all(const VArray& array);
 	void all(VArrayTarget target, const VArray& array, const axes_type& axes);
 

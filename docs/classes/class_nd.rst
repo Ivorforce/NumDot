@@ -72,6 +72,8 @@ Methods
    +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                     | :ref:`cosh<class_nd_method_cosh>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                                      |
    +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                     | :ref:`count_nonzero<class_nd_method_count_nonzero>`\ (\ a\: ``Variant`` = null, axes\: ``Variant`` = null\ ) |static|                                                                                  |
+   +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDRandomGenerator<class_NDRandomGenerator>` | :ref:`default_rng<class_nd_method_default_rng>`\ (\ seed\: ``Variant`` = null\ ) |static|                                                                                                              |
    +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                     | :ref:`deg2rad<class_nd_method_deg2rad>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                                |
@@ -606,6 +608,20 @@ Cosine element-wise.
 Hyperbolic cosine, element-wise.
 
 Equivalent to 0.5 \* (nd.exp(x) + nd.exp(-x)).
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_count_nonzero:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **count_nonzero**\ (\ a\: ``Variant`` = null, axes\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_count_nonzero>`
+
+Counts the number of non-zero values in the array a along the given axes.
+
+Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndi.count_nonzero<class_ndi_method_count_nonzero>`.
 
 .. rst-class:: classref-item-separator
 

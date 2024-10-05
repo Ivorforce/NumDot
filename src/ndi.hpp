@@ -28,6 +28,7 @@ public:
 	static int64_t max(const Variant& a);
 	static int64_t min(const Variant& a);
 	static int64_t norm(const Variant& a, const Variant& ord);
+	static int64_t count_nonzero(const Variant& a);
 
 	// Linalg.
 	static int64_t reduce_dot(const Variant& a, const Variant& b);

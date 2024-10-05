@@ -9,6 +9,13 @@
 	<tutorials>
 	</tutorials>
 	<methods>
+		<method name="count_nonzero" qualifiers="static">
+			<return type="int" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				No-axis equivalent of [method nd.count_nonzero] that returns an int.
+			</description>
+		</method>
 		<method name="max" qualifiers="static">
 			<return type="int" />
 			<param index="0" name="a" type="Variant" />

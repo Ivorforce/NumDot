@@ -142,6 +142,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("max", "a", "axes"), &nd::max, DEFVAL(nullptr), DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("min", "a", "axes"), &nd::min, DEFVAL(nullptr), DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("norm", "a", "ord", "axes"), &nd::norm, DEFVAL(nullptr), DEFVAL(2), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("count_nonzero", "a", "axes"), &nd::count_nonzero, DEFVAL(nullptr), DEFVAL(nullptr));
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("floor", "a"), &nd::floor);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("ceil", "a"), &nd::ceil);
@@ -759,6 +760,10 @@ Ref<NDArray> nd::norm(const Variant& a, const Variant& ord, const Variant& axes)
 	}
 
 	ERR_FAIL_V_MSG({}, "This norm is currently not supported");
+}
+
+Ref<NDArray> nd::count_nonzero(const Variant& a, const Variant& axes) {
+	return REDUCTION1(count_nonzero, a, axes);
 }
 
 Ref<NDArray> nd::floor(const Variant& a) {

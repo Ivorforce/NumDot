@@ -30,6 +30,8 @@ Methods
    :widths: auto
 
    +---------+--------------------------------------------------------------------------------------------------+
+   | ``int`` | :ref:`count_nonzero<class_ndi_method_count_nonzero>`\ (\ a\: ``Variant``\ ) |static|             |
+   +---------+--------------------------------------------------------------------------------------------------+
    | ``int`` | :ref:`max<class_ndi_method_max>`\ (\ a\: ``Variant``\ ) |static|                                 |
    +---------+--------------------------------------------------------------------------------------------------+
    | ``int`` | :ref:`median<class_ndi_method_median>`\ (\ a\: ``Variant``\ ) |static|                           |
@@ -53,6 +55,18 @@ Methods
 
 Method Descriptions
 -------------------
+
+.. _class_ndi_method_count_nonzero:
+
+.. rst-class:: classref-method
+
+``int`` **count_nonzero**\ (\ a\: ``Variant``\ ) |static| :ref:`🔗<class_ndi_method_count_nonzero>`
+
+No-axis equivalent of :ref:`nd.count_nonzero<class_nd_method_count_nonzero>` that returns an int.
+
+.. rst-class:: classref-item-separator
+
+----
 
 .. _class_ndi_method_max:
 

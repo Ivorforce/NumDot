@@ -19,6 +19,7 @@ Upcoming Changes (main branch)
 - Added ``array.copy()`` and ``nd.copy(array)`` functions.
 - Added ``array.copy()`` and ``nd.copy(array)`` functions.
 - Added ``positive`` and ``negative`` functions.
+- Added ``count_nonzero`` functions.
 
 **Changed**
 

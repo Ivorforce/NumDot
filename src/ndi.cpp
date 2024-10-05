@@ -22,6 +22,7 @@ void ndi::_bind_methods() {
 	godot::ClassDB::bind_static_method("ndi", D_METHOD("max", "a"), &ndi::max);
 	godot::ClassDB::bind_static_method("ndi", D_METHOD("min", "a"), &ndi::min);
 	godot::ClassDB::bind_static_method("ndi", D_METHOD("norm", "a", "ord"), &ndi::norm, DEFVAL(nullptr), DEFVAL(2));
+	godot::ClassDB::bind_static_method("ndi", D_METHOD("count_nonzero", "a"), &ndi::count_nonzero);
 
 	godot::ClassDB::bind_static_method("ndi", D_METHOD("reduce_dot", "a", "b"), &ndi::reduce_dot);
 }
@@ -94,6 +95,10 @@ int64_t ndi::norm(const Variant& a, const Variant& ord) {
 	}
 
 	ERR_FAIL_V_MSG({}, "This norm is currently not supported");
+}
+
+int64_t ndi::count_nonzero(const Variant& a) {
+	return REDUCTION1(count_nonzero, a);
 }
 
 //int64_t ndi::all(const Variant& a) {

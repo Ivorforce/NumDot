@@ -135,6 +135,7 @@ public:
 	static Ref<NDArray> max(const Variant& a, const Variant& axes);
 	static Ref<NDArray> min(const Variant& a, const Variant& axes);
 	static Ref<NDArray> norm(const Variant& a, const Variant& ord, const Variant& axes);
+	static Ref<NDArray> count_nonzero(const Variant& a, const Variant& axes);
 
 	// Rounding.
 	static Ref<NDArray> floor(const Variant& a);

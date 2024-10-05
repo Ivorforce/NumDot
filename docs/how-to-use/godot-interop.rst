@@ -18,13 +18,14 @@ NumDot can adapt most `Variant <https://docs.godotengine.org/en/stable/classes/c
 In-Place Views
 --------------
 
-In the future, we want to support in-place modification without copying. This is not yet implemented.
+You can also directly assign to an array, rather than a new one. This can be faster than creating a new array, because memory can be re-used.
 
 .. code-block:: gdscript
 
     var packed := PackedFloat32Array([1, 2, 3])
     var a := nd.as_array(packed)
-    a.add(a, 5)
+    a.assign_add(a, 5)
+    a.assign_multiply(a, 2)
     print(packed)  # [6, 7, 8]
 
 Godot-Native Reductions

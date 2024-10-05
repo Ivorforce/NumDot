@@ -1,0 +1,102 @@
+[gd_scene load_steps=4 format=3 uid="uid://bujidut18snxp"]
+
+[ext_resource type="Script" path="res://demos/sirs_model/sirs_model.gd" id="1_lsy6e"]
+[ext_resource type="Script" path="res://demos/sirs_model/gd_solver.gd" id="2_u2f2u"]
+[ext_resource type="Script" path="res://demos/sirs_model/nd_solver.gd" id="3_7y254"]
+
+[node name="SirsModel" type="Node2D" node_paths=PackedStringArray("solver")]
+script = ExtResource("1_lsy6e")
+solver = NodePath("Solvers/NDSolver")
+tauR = 3
+
+[node name="Solvers" type="Node" parent="."]
+
+[node name="GDSolver" type="Node" parent="Solvers" node_paths=PackedStringArray("params")]
+script = ExtResource("2_u2f2u")
+params = NodePath("../..")
+
+[node name="NDSolver" type="Node" parent="Solvers" node_paths=PackedStringArray("params")]
+script = ExtResource("3_7y254")
+params = NodePath("../..")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+show_behind_parent = true
+custom_minimum_size = Vector2(1152, 648)
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 4.0
+offset_right = 1156.0
+offset_bottom = 648.0
+grow_horizontal = 2
+color = Color(0.4356, 0.55154, 0.66, 1)
+
+[node name="Labels" type="VBoxContainer" parent="."]
+offset_left = 23.0
+offset_top = 18.0
+offset_right = 223.0
+offset_bottom = 118.0
+metadata/_edit_group_ = true
+
+[node name="FPSLabel" type="Label" parent="Labels"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "FPS: 60"
+
+[node name="FrameTimeLabel" type="Label" parent="Labels"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Frame time: 1"
+
+[node name="SliderOptions" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(250, 0)
+offset_left = 22.0
+offset_top = 439.0
+offset_right = 261.0
+offset_bottom = 633.0
+metadata/_edit_group_ = true
+
+[node name="PointLabel" type="Label" parent="SliderOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Grid: 20x20"
+
+[node name="PointSlider" type="HSlider" parent="SliderOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 10.0
+max_value = 75.0
+value = 20.0
+
+[node name="InfectedLabel" type="Label" parent="SliderOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Infection time: 4"
+
+[node name="InfectedSlider" type="HSlider" parent="SliderOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 1.0
+max_value = 20.0
+value = 4.0
+
+[node name="RecoveryLabel" type="Label" parent="SliderOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Recovery time: 6"
+
+[node name="RecoverySlider" type="HSlider" parent="SliderOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 1.0
+max_value = 20.0
+value = 6.0
+
+[connection signal="drag_ended" from="SliderOptions/PointSlider" to="." method="_on_point_slider_drag_ended"]
+[connection signal="drag_ended" from="SliderOptions/InfectedSlider" to="." method="_on_infected_slider_drag_ended"]
+[connection signal="drag_ended" from="SliderOptions/RecoverySlider" to="." method="_on_recovery_slider_drag_ended"]

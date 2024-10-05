@@ -1,4 +1,4 @@
-extends Solver
+extends WaveSolver
 
 var x = []
 var u = []

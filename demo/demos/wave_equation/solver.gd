@@ -1,5 +1,5 @@
 extends Node
-class_name Solver
+class_name WaveSolver
 
 @export var params: Node2D
 

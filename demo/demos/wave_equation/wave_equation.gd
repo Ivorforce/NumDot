@@ -19,7 +19,7 @@ extends Node2D
 @export var wall_width := 3
 
 @export_category("Solver parameters")
-@export var solver: Solver
+@export var solver: WaveSolver
 
 # simulation parameters computed
 @onready var dx: float = (xmax - xmin)/num_points

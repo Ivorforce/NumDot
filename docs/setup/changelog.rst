@@ -27,6 +27,7 @@ Upcoming Changes (main branch)
 **Fixed**
 
 - ``NDArray`` interpretation inside of Arrays would result in ``inhomogenous shape`` errors.
+- ``NDArray.to_godot_array()`` produced garbage data and shapes.
 
 Version 0.4 - 2024-10-03
 ------------------------

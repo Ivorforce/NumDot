@@ -622,10 +622,11 @@ TypedArray<NDArray> NDArray::to_godot_array() const {
 	ERR_FAIL_COND_V_MSG(array->dimension() == 0, {}, "can't slice a 0-dimension vector");
 
 	auto godot_array = TypedArray<NDArray>();
-	const std::size_t size = array->size();
-	godot_array.resize(static_cast<int64_t>(size));
-	for (std::size_t i = 0; i < size; i++) {
-		godot_array[static_cast<int64_t>(i)] = { memnew(NDArray(array->sliced({i}))) };
+	const std::size_t outer_dim_size = array->shape()[0];
+	godot_array.resize(static_cast<int64_t>(outer_dim_size));
+	for (std::size_t i = 0; i < outer_dim_size; i++) {
+		xt::xstrided_slice_vector idx = {i};
+		godot_array[static_cast<int64_t>(i)] = { memnew(NDArray(array->sliced(idx))) };
 	}
 	return godot_array;
 }

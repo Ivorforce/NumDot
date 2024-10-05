@@ -14,23 +14,19 @@ Upcoming Changes (main branch)
 ------------------------------
 **Added**
 
-- Properly bounds check single-value indices.
+- Bounds checks are now enabled everywhere.
 - Negative indices are now supported everywhere.
 - Added boolean mask indexing, e.g. ``a.set(5, nd.greater(a, 5))``.
 - Added index list indexing, e.g. ``a.set(5, [[0, 1], [4, 2]])``.
 - Added ``array.copy()`` and ``nd.copy(array)`` functions.
-- Added ``array.copy()`` and ``nd.copy(array)`` functions.
 - Added ``positive`` and ``negative`` functions.
 - Added ``count_nonzero`` functions.
 
-**Changed**
-
-- ``nd.range`` now behaves properly when called as ``nd.range(x, null)`` (i.e. range from x to end).
-
 **Fixed**
 
+- ``nd.range`` now behaves properly when called as ``nd.range(x, null)`` (i.e. range from x to end).
 - ``NDArray`` interpretation inside of Arrays would result in ``inhomogenous shape`` errors.
-- ``NDArray.to_godot_array()`` produced garbage data and shapes.
+- Fixed ``NDArray.to_godot_array()`` producing garbage data and shapes.
 
 Version 0.4 - 2024-10-03
 ------------------------

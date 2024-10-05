@@ -7,13 +7,13 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleExecutable</key>
-	<string>numdot-ios</string>
+	<string>numdot.macos.universal</string>
 	<key>CFBundleName</key>
 	<string>NumDot</string>
 	<key>CFBundleDisplayName</key>
 	<string>NumDot</string>
 	<key>CFBundleIdentifier</key>
-	<string>de.ivorius.numdot</string>
+	<string>de.ivorius.numdot.macos.universal</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Unlicensed</string>
 	<key>CFBundleVersion</key>
@@ -25,8 +25,8 @@
 	<key>CSResourcesFileMapped</key>
 	<true/>
 	<key>DTPlatformName</key>
-	<string>iphoneos</string>
-	<key>MinimumOSVersion</key>
-	<string>12.0</string>
+	<string>macosx</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>10.12</string>
 </dict>
 </plist>

@@ -160,7 +160,7 @@ if env["platform"] == "macos" or env["platform"] == "ios":
     # The above defaults to creating a .dylib.
     # These are not supported on the iOS app store.
     # To make it consistent, we'll just use frameworks on both macOS and iOS.
-    framework_name = "{}-{}".format(libname, env["platform"])
+    framework_name = "{}.{}.{}".format(libname, env["platform"], env["arch"])
     lib_filename = framework_name
     lib_filepath = "{}.framework/".format(framework_name)
 

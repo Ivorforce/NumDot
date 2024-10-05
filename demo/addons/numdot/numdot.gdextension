@@ -6,9 +6,11 @@ reloadable = true
 
 [libraries]
 
-macos = "macos/numdot-macos.framework"
+macos.x86_64 = "macos/numdot.macos.x86_64.framework/numdot.macos.x86_64"
+macos.arm64 = "macos/numdot.macos.arm64.framework/numdot.macos.arm64"
 
-ios = "ios/numdot-ios.framework"
+ios.x86_64 = "ios/numdot.ios.x86_64.framework/numdot.ios.x86_64"
+ios.arm64 = "ios/numdot.ios.arm64.framework/numdot.ios.arm64"
 
 windows.x86_32 = "windows/numdot.windows.x86_32.dll"
 windows.x86_64 = "windows/numdot.windows.x86_64.dll"

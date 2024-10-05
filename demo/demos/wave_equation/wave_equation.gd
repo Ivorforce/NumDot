@@ -12,6 +12,11 @@ extends Node2D
 @export var xscale: float = 500.
 @export var yscale: float = 50.
 @export var num_draw_points: int = 200
+@export var point_color := Color("70d6ff")
+@export var point_size := 2.
+@export var anchor_size := 4.
+@export var anchor_color := Color("000000")
+@export var wall_width := 3
 
 @export_category("Solver parameters")
 @export var solver: Solver
@@ -30,6 +35,7 @@ extends Node2D
 var init_option = 0
 
 # initial arrays
+var x = []
 var u = []
 var uprev = []
 
@@ -55,6 +61,8 @@ func _process(delta: float) -> void:
 	queue_redraw()
 
 func _draw() -> void:
+	if not bc_left: draw_line(Vector2(-3, -0.5 * yscale), Vector2(-3, 0.5 * yscale), Color.WHITE, wall_width)
+	if not bc_right: draw_line(Vector2(xmax * xscale, -0.5 * yscale), Vector2(xmax * xscale, 0.5 * yscale), Color.WHITE, wall_width)
 	solver.on_draw()
 
 func _on_solver_option_item_selected(index: int) -> void:
@@ -77,7 +85,7 @@ func _on_init_option_item_selected(index: int) -> void:
 	solver.initialize()
 
 func set_initial_condition(idx) -> void:
-	var x = range(num_points).map(func(elt): return (dx * elt + xmin))
+	x = range(num_points).map(func(elt): return (dx * elt + xmin))
 	
 	u.resize(num_points)
 	uprev.resize(num_points)

@@ -8,7 +8,26 @@
 [node name="WaveEquation" type="Node2D" node_paths=PackedStringArray("solver")]
 position = Vector2(342, 323)
 script = ExtResource("1_lapk8")
+num_draw_points = 300
+point_color = Color(0.937255, 0.968627, 0.964706, 1)
+point_size = 3.0
+anchor_size = 5.0
+anchor_color = Color(1, 1, 1, 1)
+wall_width = 4
 solver = NodePath("Solvers/GDSolver")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+show_behind_parent = true
+custom_minimum_size = Vector2(1152, 648)
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -341.0
+offset_top = -325.0
+offset_right = 811.0
+offset_bottom = 323.0
+grow_horizontal = 2
+color = Color(0.4356, 0.55154, 0.66, 1)
 
 [node name="Solvers" type="Node" parent="."]
 

@@ -15,6 +15,11 @@ Upcoming Changes (main branch)
 **Added**
 
 - Added ``array.copy()`` and ``nd.copy(array)`` functions.
+- Added ``array.copy()`` and ``nd.copy(array)`` functions.
+
+**Fixed**
+
+- ``NDArray`` interpretation inside of Arrays would result in ``inhomogenous shape`` errors.
 
 Version 0.4 - 2024-10-03
 ------------------------

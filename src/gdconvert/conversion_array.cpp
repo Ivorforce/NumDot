@@ -79,7 +79,7 @@ void find_shape_and_dtype_of_array(va::shape_type& shape, va::DType& dtype, cons
 				switch (array_element.get_type()) {
 					case Variant::OBJECT: {
 						if (const auto ndarray = Object::cast_to<NDArray>(array_element)) {
-							auto varray_dim_idx = current_dim_idx;
+							auto varray_dim_idx = current_dim_idx + 1;
 							for (const auto size : ndarray->array->shape()) {
 								add_size_at_idx(shape, varray_dim_idx, size);
 								varray_dim_idx++;

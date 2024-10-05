@@ -25,6 +25,8 @@ std::shared_ptr<va::VArray> array_as_varray(const Array& array);
 std::shared_ptr<va::VArray> variant_as_array(const Variant& array);
 std::shared_ptr<va::VArray> variant_as_array(const Variant& array, va::DType dtype, bool copy);
 
+std::vector<std::shared_ptr<va::VArray>> variant_to_vector(const Variant& array);
+
 template<typename T>
 void fill_c_array_flat(T* target, const va::VRead& array) {
 	std::visit(

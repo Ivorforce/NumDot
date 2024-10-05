@@ -66,6 +66,8 @@ Methods
    +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                     | :ref:`clip<class_nd_method_clip>`\ (\ a\: ``Variant``, min\: ``Variant``, max\: ``Variant``\ ) |static|                                                                                                |
    +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                     | :ref:`concatenate<class_nd_method_concatenate>`\ (\ v\: ``Variant`` = null, axis\: ``int`` = 0, dtype\: :ref:`DType<enum_nd_DType>` = 11\ ) |static|                                                   |
+   +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                     | :ref:`copy<class_nd_method_copy>`\ (\ array\: ``Variant``\ ) |static|                                                                                                                                  |
    +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                     | :ref:`cos<class_nd_method_cos>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                                        |
@@ -570,6 +572,20 @@ Given an interval, values outside the interval are clipped to the interval edges
 Equivalent to but faster than nd.minimum(a_max, nd.maximum(a, a_min)).
 
 No check is performed to ensure a_min < a_max.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_concatenate:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **concatenate**\ (\ v\: ``Variant`` = null, axis\: ``int`` = 0, dtype\: :ref:`DType<enum_nd_DType>` = 11\ ) |static| :ref:`🔗<class_nd_method_concatenate>`
+
+Join a sequence of arrays along an existing axis.
+
+The arrays must match in dimension except in the axis.
 
 .. rst-class:: classref-item-separator
 

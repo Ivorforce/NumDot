@@ -82,6 +82,7 @@ public:
 	static Ref<NDArray> flip(const Variant& v, int64_t axis);
 	static Ref<NDArray> stack(const Variant& v, int64_t axis);
 	static Ref<NDArray> unstack(const Variant& v, int64_t axis);
+	static Ref<NDArray> concatenate(const Variant& v, int64_t axis, DType dtype = DType::DTypeMax);
 
 	// Basic math functions.
 	static Ref<NDArray> positive(const Variant& a);

@@ -152,6 +152,16 @@
 				No check is performed to ensure a_min &lt; a_max.
 			</description>
 		</method>
+		<method name="concatenate" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="v" type="Variant" default="null" />
+			<param index="1" name="axis" type="int" default="0" />
+			<param index="2" name="dtype" type="int" enum="nd.DType" default="11" />
+			<description>
+				Join a sequence of arrays along an existing axis.
+				The arrays must match in dimension except in the axis.
+			</description>
+		</method>
 		<method name="copy" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="array" type="Variant" />

@@ -711,3 +711,32 @@ std::shared_ptr<va::VArray> variant_as_array(const Variant& array, const va::DTy
 	else
 		return va::copy_as_dtype(*varray, dtype);
 }
+
+std::vector<std::shared_ptr<va::VArray>> variant_to_vector(const Variant& array) {
+	switch (array.get_type()) {
+		case Variant::ARRAY: {
+			const Array gdarray = array;
+
+			const std::size_t outer_dim_size = gdarray.size();
+			std::vector<std::shared_ptr<va::VArray>> vector(outer_dim_size);
+			for (std::size_t i = 0; i < outer_dim_size; i++) {
+				xt::xstrided_slice_vector idx = {i};
+				vector[i] = variant_as_array(gdarray[static_cast<int64_t>(i)]);
+			}
+			return vector;
+		}
+		default:
+			break;
+	}
+
+	const auto ndarray = variant_as_array(array);
+	if (ndarray->dimension() < 1) throw std::runtime_error("Invalid array dimension");
+
+	const std::size_t outer_dim_size = ndarray->shape()[0];
+	std::vector<std::shared_ptr<va::VArray>> vector(outer_dim_size);
+	for (std::size_t i = 0; i < outer_dim_size; i++) {
+		xt::xstrided_slice_vector idx = {i};
+		vector[i] = ndarray->sliced(idx);
+	}
+	return vector;
+}

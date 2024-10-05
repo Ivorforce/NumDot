@@ -269,7 +269,7 @@ Variant NDArray::copy() const {
 	return { memnew(NDArray(result)) };
 }
 
-va::VWrite get_write(va::VArray& array, const nullptr_t& ptr) {
+va::VWrite get_write(va::VArray& array, const std::nullptr_t& ptr) {
 	array.prepare_write();
 	return array.write.value();
 }
@@ -287,7 +287,7 @@ void NDArray::set(const Variant** args, GDExtensionInt arg_count, GDExtensionCal
 		std::visit([this, value](auto slice) {
 			using T = std::decay_t<decltype(slice)>;
 
-			if constexpr (std::is_same_v<T, xt::xstrided_slice_vector> || std::is_same_v<T, nullptr_t>) {
+			if constexpr (std::is_same_v<T, xt::xstrided_slice_vector> || std::is_same_v<T, std::nullptr_t>) {
 				auto compute = get_write(*array, slice);
 
 				switch (value.get_type()) {
@@ -330,7 +330,7 @@ Ref<NDArray> NDArray::get(const Variant** args, GDExtensionInt arg_count, GDExte
 				const auto result = array->sliced(slice);
 				return { memnew(NDArray(result)) };
 			}
-			else if constexpr (std::is_same_v<T, nullptr_t>) {
+			else if constexpr (std::is_same_v<T, std::nullptr_t>) {
 				const auto result = array;
 				return { memnew(NDArray(result)) };
 			}

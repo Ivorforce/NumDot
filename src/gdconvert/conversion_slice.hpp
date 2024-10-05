@@ -12,7 +12,7 @@
 using namespace godot;
 
 using SliceVariant = std::variant<
-	nullptr_t,
+	std::nullptr_t,
 	xt::xstrided_slice_vector,
 	std::shared_ptr<va::VArray>
 >;

@@ -114,6 +114,8 @@ Methods
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`greater_equal<class_nd_method_greater_equal>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                   |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`Array<class_Array>`\[:ref:`NDArray<class_NDArray>`\] | :ref:`hsplit<class_nd_method_hsplit>`\ (\ v\: ``Variant``, indices_or_section_size\: ``Variant``\ ) |static|                                                                                           |
+   +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`hstack<class_nd_method_hstack>`\ (\ v\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 11\ ) |static|                                                                                 |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`int8<class_nd_method_int8>`\ (\ array\: ``Variant``\ ) |static|                                                                                                                                  |
@@ -235,6 +237,8 @@ Methods
    | :ref:`NDArray<class_NDArray>`                              | :ref:`unstack<class_nd_method_unstack>`\ (\ v\: ``Variant`` = null, axis\: ``int`` = 0\ ) |static|                                                                                                     |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`var<class_nd_method_var>`\ (\ a\: ``Variant`` = null, axes\: ``Variant`` = null\ ) |static|                                                                                                      |
+   +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`Array<class_Array>`\[:ref:`NDArray<class_NDArray>`\] | :ref:`vsplit<class_nd_method_vsplit>`\ (\ v\: ``Variant``, indices_or_section_size\: ``Variant``\ ) |static|                                                                                           |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`vstack<class_nd_method_vstack>`\ (\ v\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 11\ ) |static|                                                                                 |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -904,6 +908,20 @@ Return (x1 > x2) element-wise.
 :ref:`NDArray<class_NDArray>` **greater_equal**\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_greater_equal>`
 
 Return (x1 >= x2) element-wise.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_hsplit:
+
+.. rst-class:: classref-method
+
+:ref:`Array<class_Array>`\[:ref:`NDArray<class_NDArray>`\] **hsplit**\ (\ v\: ``Variant``, indices_or_section_size\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_hsplit>`
+
+Split an array into multiple sub-arrays horizontally (column-wise).
+
+Please refer to :ref:`split<class_nd_method_split>`. hsplit is equivalent to :ref:`split<class_nd_method_split>` with axis=1, the array is always split along the second axis except for 1-D arrays, where it is split at axis=0.
 
 .. rst-class:: classref-item-separator
 
@@ -1748,6 +1766,20 @@ Compute the variance along the specified axis.
 Returns the variance of the array elements, a measure of the spread of a distribution. The variance is computed for the flattened array by default, otherwise over the specified axis.
 
 Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.var<class_ndf_method_var>`.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_vsplit:
+
+.. rst-class:: classref-method
+
+:ref:`Array<class_Array>`\[:ref:`NDArray<class_NDArray>`\] **vsplit**\ (\ v\: ``Variant``, indices_or_section_size\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_vsplit>`
+
+Split an array into multiple sub-arrays vertically (row-wise).
+
+Please refer to :ref:`split<class_nd_method_split>`. vsplit is equivalent to split with axis=0 (default), the array is always split along the first axis regardless of the array dimension.
 
 .. rst-class:: classref-item-separator
 

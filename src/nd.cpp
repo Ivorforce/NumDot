@@ -97,6 +97,8 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("hstack", "v", "dtype"), &nd::hstack, DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("vstack", "v", "dtype"), &nd::vstack, DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("split", "v", "indices_or_section_size", "axis"), &nd::split, DEFVAL(nullptr), DEFVAL(0));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("hsplit", "v", "indices_or_section_size"), &nd::hsplit);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("vsplit", "v", "indices_or_section_size"), &nd::vsplit);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("positive", "a"), &nd::positive);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("negative", "a"), &nd::negative);
@@ -704,23 +706,40 @@ TypedArray<NDArray> split_(const va::VArray& array, const va::strides_type indic
 	return godot_array;
 }
 
+TypedArray<NDArray> split_(const std::shared_ptr<va::VArray>& array, const Variant& indices_or_section_size, int64_t axis) {
+	if (axis < 0) axis += static_cast<int64_t>(array->dimension());
+	ERR_FAIL_COND_V_MSG(axis < 0 || axis >= array->dimension(), {}, "Axis out of range.");
+
+	if (indices_or_section_size.get_type() == Variant::Type::INT) {
+		return ::split_(*array, static_cast<std::size_t>(static_cast<int64_t>(indices_or_section_size)), static_cast<size_t>(axis));
+	}
+
+	const auto ints = variant_to_axes(indices_or_section_size);
+	return ::split_(*array, ints, static_cast<size_t>(axis));
+}
+
 TypedArray<NDArray> nd::split(const Variant& v, const Variant& indices_or_section_size, int64_t axis) {
 	try {
-		auto array = variant_as_array(v);
-
-		if (axis < 0) axis += static_cast<int64_t>(array->dimension());
-		ERR_FAIL_COND_V_MSG(axis < 0 || axis >= array->dimension(), {}, "Axis out of range.");
-
-		if (indices_or_section_size.get_type() == Variant::Type::INT) {
-			return ::split_(*array, static_cast<std::size_t>(static_cast<int64_t>(indices_or_section_size)), static_cast<size_t>(axis));
-		}
-
-		const auto ints = variant_to_axes(indices_or_section_size);
-		return ::split_(*array, ints, static_cast<size_t>(axis));
+		const auto array = variant_as_array(v);
+		return split_(array, indices_or_section_size, axis);
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
 	}
+}
+
+TypedArray<NDArray> nd::hsplit(const Variant& v, const Variant& indices_or_section_size) {
+	try {
+		const auto array = variant_as_array(v);
+		return split_(array, indices_or_section_size, array->dimension() == 1 ? 0 : 1);
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
+}
+
+TypedArray<NDArray> nd::vsplit(const Variant& v, const Variant& indices_or_section_size) {
+	return nd::split(v, indices_or_section_size, 0);
 }
 
 Ref<NDArray> nd::positive(const Variant& a) {

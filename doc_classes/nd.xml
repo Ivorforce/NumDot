@@ -357,6 +357,15 @@
 				Return (x1 &gt;= x2) element-wise.
 			</description>
 		</method>
+		<method name="hsplit" qualifiers="static">
+			<return type="NDArray[]" />
+			<param index="0" name="v" type="Variant" />
+			<param index="1" name="indices_or_section_size" type="Variant" />
+			<description>
+				Split an array into multiple sub-arrays horizontally (column-wise).
+				Please refer to [method split]. hsplit is equivalent to [method split] with axis=1, the array is always split along the second axis except for 1-D arrays, where it is split at axis=0.
+			</description>
+		</method>
 		<method name="hstack" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="v" type="Variant" default="null" />
@@ -882,6 +891,15 @@
 				Compute the variance along the specified axis.
 				Returns the variance of the array elements, a measure of the spread of a distribution. The variance is computed for the flattened array by default, otherwise over the specified axis.
 				Returns a 0-dimension scalar if axes is null. In that case, consider [method ndf.var].
+			</description>
+		</method>
+		<method name="vsplit" qualifiers="static">
+			<return type="NDArray[]" />
+			<param index="0" name="v" type="Variant" />
+			<param index="1" name="indices_or_section_size" type="Variant" />
+			<description>
+				Split an array into multiple sub-arrays vertically (row-wise).
+				Please refer to [method split]. vsplit is equivalent to split with axis=0 (default), the array is always split along the first axis regardless of the array dimension.
 			</description>
 		</method>
 		<method name="vstack" qualifiers="static">

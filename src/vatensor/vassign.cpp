@@ -106,10 +106,10 @@ void va::set_at_mask(VWrite& varray, VRead& mask, VRead& value) {
 					throw std::runtime_error("mask must be single value or match the mask sum");
 
 				const auto stride = value.strides()[0];
-				auto iter_value = array.begin();
+				auto iter_value = value.begin();
 				for (auto masked_value : masked_view) {
 					if (masked_value.visible()) {
-						*iter_value = masked_value.value();
+						masked_value.value() = static_cast<VTArray>(*iter_value);
 						iter_value += stride;
 					}
 				}

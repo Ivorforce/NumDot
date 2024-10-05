@@ -114,6 +114,8 @@ Methods
    +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                     | :ref:`greater_equal<class_nd_method_greater_equal>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                   |
    +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                     | :ref:`hstack<class_nd_method_hstack>`\ (\ v\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 11\ ) |static|                                                                                 |
+   +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                     | :ref:`int8<class_nd_method_int8>`\ (\ array\: ``Variant``\ ) |static|                                                                                                                                  |
    +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                     | :ref:`int16<class_nd_method_int16>`\ (\ array\: ``Variant``\ ) |static|                                                                                                                                |
@@ -231,6 +233,8 @@ Methods
    | :ref:`NDArray<class_NDArray>`                     | :ref:`unstack<class_nd_method_unstack>`\ (\ v\: ``Variant`` = null, axis\: ``int`` = 0\ ) |static|                                                                                                     |
    +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                     | :ref:`var<class_nd_method_var>`\ (\ a\: ``Variant`` = null, axes\: ``Variant`` = null\ ) |static|                                                                                                      |
+   +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                     | :ref:`vstack<class_nd_method_vstack>`\ (\ v\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 11\ ) |static|                                                                                 |
    +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                     | :ref:`zeros<class_nd_method_zeros>`\ (\ shape\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 2\ ) |static|                                                                                |
    +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -898,6 +902,22 @@ Return (x1 > x2) element-wise.
 :ref:`NDArray<class_NDArray>` **greater_equal**\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_greater_equal>`
 
 Return (x1 >= x2) element-wise.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_hstack:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **hstack**\ (\ v\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 11\ ) |static| :ref:`🔗<class_nd_method_hstack>`
+
+Stack arrays in sequence horizontally (column wise).
+
+This is equivalent to concatenation along the second axis, except for 1-D arrays where it concatenates along the first axis. Rebuilds arrays divided by hsplit.
+
+This function makes most sense for arrays with up to 3 dimensions. For instance, for pixel-data with a height (first axis), width (second axis), and r/g/b channels (third axis). The functions concatenate, stack and block provide more general stacking and concatenation operations.
 
 .. rst-class:: classref-item-separator
 
@@ -1706,6 +1726,22 @@ Compute the variance along the specified axis.
 Returns the variance of the array elements, a measure of the spread of a distribution. The variance is computed for the flattened array by default, otherwise over the specified axis.
 
 Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.var<class_ndf_method_var>`.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_vstack:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **vstack**\ (\ v\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 11\ ) |static| :ref:`🔗<class_nd_method_vstack>`
+
+Stack arrays in sequence vertically (row wise).
+
+This is equivalent to concatenation along the first axis after 1-D arrays of shape (N,) have been reshaped to (1,N). Rebuilds arrays divided by vsplit.
+
+This function makes most sense for arrays with up to 3 dimensions. For instance, for pixel-data with a height (first axis), width (second axis), and r/g/b channels (third axis). The functions concatenate, stack and block provide more general stacking and concatenation operations.
 
 .. rst-class:: classref-item-separator
 

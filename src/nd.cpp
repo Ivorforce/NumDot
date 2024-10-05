@@ -94,6 +94,8 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("stack", "v", "axis"), &nd::stack, DEFVAL(nullptr), DEFVAL(0));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("unstack", "v", "axis"), &nd::unstack, DEFVAL(nullptr), DEFVAL(0));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("concatenate", "v", "axis", "dtype"), &nd::concatenate, DEFVAL(nullptr), DEFVAL(0), DEFVAL(nd::DType::DTypeMax));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("hstack", "v", "dtype"), &nd::hstack, DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("vstack", "v", "dtype"), &nd::vstack, DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax));
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("positive", "a"), &nd::positive);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("negative", "a"), &nd::negative);
@@ -579,6 +581,43 @@ Ref<NDArray> nd::unstack(const Variant& v, int64_t axis) {
 	return moveaxis(v, axis, 0);
 }
 
+Ref<NDArray> concatenate_(nd::DType dtype, const std::vector<std::shared_ptr<va::VArray>>& vector, const size_t axis_) {
+	auto shape = vector[0]->shape();
+	for (auto it = vector.begin() + 1; it != vector.end(); ++it) {
+		ERR_FAIL_COND_V_MSG((*it)->dimension() != shape.size(), {}, "Dimensions of given arrays must match.");
+		for (int i = 0; i < shape.size(); ++i) {
+			if (axis_ == i) continue;
+			ERR_FAIL_COND_V_MSG((*it)->shape()[i] != shape[i], {}, "Shapes of given arrays must match.");
+		}
+
+		shape[axis_] += (*it)->shape()[axis_];
+	}
+
+	if (dtype == nd::DType::DTypeMax) {
+		for (auto& array : vector) {
+			dtype = va::dtype_common_type(dtype, array->dtype());
+		}
+	}
+
+	auto result = va::empty(dtype, shape);
+
+	xt::xstrided_slice_vector slice(axis_ + 1);
+	std::fill(slice.begin(), slice.end() - 1, xt::all());
+	size_t current_idx = 0;
+
+	for (auto& array : vector) {
+		const auto size_ = array->shape()[axis_];
+
+		slice.back() = xt::xrange(current_idx, current_idx + size_);
+		auto write = result->sliced_write(slice);
+		va::assign(write, array->read);
+
+		current_idx += size_;
+	}
+
+	return { memnew(NDArray(result)) };
+}
+
 Ref<NDArray> nd::concatenate(const Variant& v, int64_t axis, DType dtype) {
 	try {
 		const auto vector = variant_to_vector(v);
@@ -586,42 +625,41 @@ Ref<NDArray> nd::concatenate(const Variant& v, int64_t axis, DType dtype) {
 
 		if (axis < 0) axis += static_cast<int64_t>(vector[0]->dimension());
 		ERR_FAIL_COND_V_MSG(axis < 0 || axis >= vector[0]->dimension(), {}, "Axis out of range.");
-		auto axis_ = static_cast<size_t>(axis);
 
-		auto shape = vector[0]->shape();
-		for (auto it = vector.begin() + 1; it != vector.end(); ++it) {
-			ERR_FAIL_COND_V_MSG((*it)->dimension() != shape.size(), {}, "Dimensions of given arrays must match.");
-			for (int i = 0; i < shape.size(); ++i) {
-				if (axis_ == i) continue;
-				ERR_FAIL_COND_V_MSG((*it)->shape()[i] != shape[i], {}, "Shapes of given arrays must match.");
-			}
+		return ::concatenate_(dtype, vector, static_cast<size_t>(axis));
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
+}
 
-			shape[axis_] += (*it)->shape()[axis_];
-		}
-
-		if (dtype == nd::DType::DTypeMax) {
-			for (auto& array : vector) {
-				dtype = va::dtype_common_type(dtype, array->dtype());
-			}
-		}
-
-		auto result = va::empty(dtype, shape);
-
-		xt::xstrided_slice_vector slice(axis_ + 1);
-		std::fill(slice.begin(), slice.end() - 1, xt::all());
-		size_t current_idx = 0;
+Ref<NDArray> nd::hstack(const Variant& v, DType dtype) {
+	try {
+		auto vector = variant_to_vector(v);
+		ERR_FAIL_COND_V_MSG(vector.empty(), {}, "Need at least one array to concatenate.");
 
 		for (auto& array : vector) {
-			const auto size_ = array->shape()[axis_];
-
-			slice.back() = xt::xrange(current_idx, current_idx + size_);
-			auto write = result->sliced_write(slice);
-			va::assign(write, array->read);
-
-			current_idx += size_;
+			if (array->dimension() == 0) array = array->sliced({ xt::newaxis() });
 		}
 
-		return { memnew(NDArray(result)) };
+		return ::concatenate_(dtype, vector, vector[0]->dimension() == 1 ? 0 : 1);
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
+}
+
+Ref<NDArray> nd::vstack(const Variant& v, DType dtype) {
+	try {
+		auto vector = variant_to_vector(v);
+		ERR_FAIL_COND_V_MSG(vector.empty(), {}, "Need at least one array to concatenate.");
+
+		for (auto& array : vector) {
+			if (array->dimension() == 0) array = array->sliced({ xt::newaxis(), xt::newaxis() });
+			else if (array->dimension() == 1) array = array->sliced({ xt::newaxis(), xt::all() });
+		}
+
+		return ::concatenate_(dtype, vector, 0);
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());

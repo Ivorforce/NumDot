@@ -21,7 +21,7 @@ Upcoming Changes (main branch)
 - Added ``array.copy()`` and ``nd.copy(array)`` functions.
 - Added ``positive`` and ``negative`` functions.
 - Added ``count_nonzero`` functions.
-- Added ``concatenate`` functions.
+- Added ``concatenate``, ``hstack`` and ``vstack`` functions.
 
 **Fixed**
 

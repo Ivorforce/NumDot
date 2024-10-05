@@ -357,6 +357,16 @@
 				Return (x1 &gt;= x2) element-wise.
 			</description>
 		</method>
+		<method name="hstack" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="v" type="Variant" default="null" />
+			<param index="1" name="dtype" type="int" enum="nd.DType" default="11" />
+			<description>
+				Stack arrays in sequence horizontally (column wise).
+				This is equivalent to concatenation along the second axis, except for 1-D arrays where it concatenates along the first axis. Rebuilds arrays divided by hsplit.
+				This function makes most sense for arrays with up to 3 dimensions. For instance, for pixel-data with a height (first axis), width (second axis), and r/g/b channels (third axis). The functions concatenate, stack and block provide more general stacking and concatenation operations.
+			</description>
+		</method>
 		<method name="int8" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="array" type="Variant" />
@@ -859,6 +869,16 @@
 				Compute the variance along the specified axis.
 				Returns the variance of the array elements, a measure of the spread of a distribution. The variance is computed for the flattened array by default, otherwise over the specified axis.
 				Returns a 0-dimension scalar if axes is null. In that case, consider [method ndf.var].
+			</description>
+		</method>
+		<method name="vstack" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="v" type="Variant" default="null" />
+			<param index="1" name="dtype" type="int" enum="nd.DType" default="11" />
+			<description>
+				Stack arrays in sequence vertically (row wise).
+				This is equivalent to concatenation along the first axis after 1-D arrays of shape (N,) have been reshaped to (1,N). Rebuilds arrays divided by vsplit.
+				This function makes most sense for arrays with up to 3 dimensions. For instance, for pixel-data with a height (first axis), width (second axis), and r/g/b channels (third axis). The functions concatenate, stack and block provide more general stacking and concatenation operations.
 			</description>
 		</method>
 		<method name="zeros" qualifiers="static">

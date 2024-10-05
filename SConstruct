@@ -116,6 +116,7 @@ if use_xsimd:
         # See https://github.com/xtensor-stack/xsimd for supported list of simd extensions.
         # Choosing more will make your program faster, but also more incompatible to older machines.
         "-DXTENSOR_USE_XSIMD=1",
+        "-DXTENSOR_ENABLE_ASSERT=1",
     ])
 
 if env["platform"] == "windows":

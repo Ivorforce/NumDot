@@ -31,7 +31,7 @@ func initialize() -> void:
 	grid.set(params.tau0 + 1, null, nd.range(params.N - 1, params.N))
 	
 	# random initial infection
-	grid.set(1, randi_range(1, params.N-1), randi_range(1, params.N-1))
+	place_random()
 	gridp = nd.copy(grid)
 
 func simulation_step() -> void:
@@ -69,3 +69,6 @@ func on_draw() -> void:
 	for i in params.N:
 		for j in params.N:
 			params.draw_circle(origin + params.draw_space * Vector2(i, j), params.draw_space/2, params.colors[grid.get_int(i, j)])
+
+func place_random() -> void:
+	grid.set(1, randi_range(1, params.N-1), randi_range(1, params.N-1))

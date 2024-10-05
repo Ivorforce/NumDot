@@ -16,13 +16,21 @@ extends Node2D
 var frame_time: float = 0.
 
 func _ready() -> void:
-	# colors
+	%PointSlider.value = N
+	%PointLabel.text = "Grid: " + str(N) + "x" + str(N)
+	
+	%InfectedSlider.value = tauI
+	%InfectedLabel.text = str("Infection time: " + str(tauI))
+	
+	%RecoverySlider.value = tauR
+	%RecoveryLabel.text = str("Recovery time: " + str(tauR))
+	
 	generate_colors()	
 	solver.initialize()
 	
 func _process(delta: float) -> void:
 
-	%FPSLabel.text = "FPS: " + str(int(1/delta))
+	%FPSLabel.text = "FPS: " + str(Engine.get_frames_per_second())
 
 	frame_time = Time.get_ticks_usec()
 	solver.simulation_step()
@@ -59,3 +67,10 @@ func _on_recovery_slider_drag_ended(value_changed: bool) -> void:
 	tau0 = tauI + tauR
 	solver.initialize()
 	generate_colors()
+
+func _on_restart_button_pressed() -> void:
+	solver.initialize()
+
+func _on_solver_option_item_selected(index: int) -> void:
+	solver = $Solvers.get_child(index)
+	solver.initialize()

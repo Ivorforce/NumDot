@@ -11,3 +11,6 @@ func simulation_step() -> void:
 	
 func on_draw() -> void:
 	pass
+
+func place_random() -> void:
+	pass

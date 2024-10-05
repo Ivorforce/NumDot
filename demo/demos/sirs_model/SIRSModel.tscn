@@ -6,8 +6,10 @@
 
 [node name="SirsModel" type="Node2D" node_paths=PackedStringArray("solver")]
 script = ExtResource("1_lsy6e")
-solver = NodePath("Solvers/NDSolver")
-tauR = 3
+solver = NodePath("Solvers/GDSolver")
+N = 30
+tauI = 8
+tauR = 9
 
 [node name="Solvers" type="Node" parent="."]
 
@@ -97,6 +99,29 @@ min_value = 1.0
 max_value = 20.0
 value = 6.0
 
+[node name="RestartButton" type="Button" parent="."]
+offset_left = 920.0
+offset_top = 581.0
+offset_right = 1140.0
+offset_bottom = 631.0
+theme_override_font_sizes/font_size = 30
+text = "Restart
+"
+
+[node name="SolverOption" type="OptionButton" parent="."]
+offset_left = 865.0
+offset_top = 23.0
+offset_right = 1137.0
+offset_bottom = 73.0
+theme_override_font_sizes/font_size = 30
+selected = 0
+item_count = 2
+popup/item_0/text = "GDSolver"
+popup/item_1/text = "NDSolver"
+popup/item_1/id = 1
+
 [connection signal="drag_ended" from="SliderOptions/PointSlider" to="." method="_on_point_slider_drag_ended"]
 [connection signal="drag_ended" from="SliderOptions/InfectedSlider" to="." method="_on_infected_slider_drag_ended"]
 [connection signal="drag_ended" from="SliderOptions/RecoverySlider" to="." method="_on_recovery_slider_drag_ended"]
+[connection signal="pressed" from="RestartButton" to="." method="_on_restart_button_pressed"]
+[connection signal="item_selected" from="SolverOption" to="." method="_on_solver_option_item_selected"]

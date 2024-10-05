@@ -230,55 +230,55 @@ void find_shape_and_dtype(va::shape_type& shape, va::DType& dtype, const Variant
 		}
 		case Variant::PACKED_BYTE_ARRAY: {
 			const auto packed = PackedByteArray(array);
-			shape = { static_cast<size_t>(packed.size()) };
+			shape = { static_cast<std::size_t>(packed.size()) };
 			dtype = va::DType::UInt8;
 			return;
 		}
 		case Variant::PACKED_INT32_ARRAY: {
 			const auto packed = PackedInt32Array(array);
-			shape = { static_cast<size_t>(packed.size()) };
+			shape = { static_cast<std::size_t>(packed.size()) };
 			dtype = va::DType::Int32;
 			return;
 		}
 		case Variant::PACKED_INT64_ARRAY: {
 			const auto packed = PackedInt64Array(array);
-			shape = { static_cast<size_t>(packed.size()) };
+			shape = { static_cast<std::size_t>(packed.size()) };
 			dtype = va::DType::Int64;
 			return;
 		}
 		case Variant::PACKED_FLOAT32_ARRAY: {
 			const auto packed = PackedFloat32Array(array);
-			shape = { static_cast<size_t>(packed.size()) };
+			shape = { static_cast<std::size_t>(packed.size()) };
 			dtype = va::DType::Float32;
 			return;
 		}
 		case Variant::PACKED_FLOAT64_ARRAY: {
 			const auto packed = PackedFloat64Array(array);
-			shape = { static_cast<size_t>(packed.size()) };
+			shape = { static_cast<std::size_t>(packed.size()) };
 			dtype = va::DType::Float64;
 			return;
 		}
 		case Variant::PACKED_VECTOR2_ARRAY: {
 			const auto packed = PackedVector2Array(array);
-			shape = { static_cast<size_t>(packed.size()), 2 };
+			shape = { static_cast<std::size_t>(packed.size()), 2 };
 			dtype = va::variant_to_dtype(real_t());
 			return;
 		}
 		case Variant::PACKED_VECTOR3_ARRAY: {
 			const auto packed = PackedVector3Array(array);
-			shape = { static_cast<size_t>(packed.size()), 3 };
+			shape = { static_cast<std::size_t>(packed.size()), 3 };
 			dtype = va::variant_to_dtype(real_t());
 			return;
 		}
 		case Variant::PACKED_VECTOR4_ARRAY: {
 			const auto packed = PackedVector4Array(array);
-			shape = { static_cast<size_t>(packed.size()), 4 };
+			shape = { static_cast<std::size_t>(packed.size()), 4 };
 			dtype = va::variant_to_dtype(real_t());
 			return;
 		}
 		case Variant::PACKED_COLOR_ARRAY: {
 			const auto packed = PackedColorArray(array);
-			shape = { static_cast<size_t>(packed.size()), 4 };
+			shape = { static_cast<std::size_t>(packed.size()), 4 };
 			dtype = va::DType::Float32;
 			return;
 		}

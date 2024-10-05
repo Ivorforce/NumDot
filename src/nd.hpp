@@ -85,6 +85,7 @@ public:
 	static Ref<NDArray> concatenate(const Variant& v, int64_t axis, DType dtype = DType::DTypeMax);
 	static Ref<NDArray> hstack(const Variant& v, DType dtype = DType::DTypeMax);
 	static Ref<NDArray> vstack(const Variant& v, DType dtype = DType::DTypeMax);
+	static TypedArray<NDArray> split(const Variant& v, const Variant& indices_or_section_size, int64_t axis);
 
 	// Basic math functions.
 	static Ref<NDArray> positive(const Variant& a);

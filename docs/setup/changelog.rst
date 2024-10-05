@@ -22,6 +22,7 @@ Upcoming Changes (main branch)
 - Added ``positive`` and ``negative`` functions.
 - Added ``count_nonzero`` functions.
 - Added ``concatenate``, ``hstack`` and ``vstack`` functions.
+- Added ``split`` functions.
 
 **Fixed**
 

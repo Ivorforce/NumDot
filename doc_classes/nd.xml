@@ -721,6 +721,19 @@
 				Size of a single element of an array using the dtype.
 			</description>
 		</method>
+		<method name="split" qualifiers="static">
+			<return type="NDArray[]" />
+			<param index="0" name="v" type="Variant" />
+			<param index="1" name="indices_or_section_size" type="Variant" default="null" />
+			<param index="2" name="axis" type="int" default="0" />
+			<description>
+				Split an array into multiple sub-arrays as views into v.
+				This can be regarded as the opposite of [method concatenate].
+				[param indices_or_section_size] must be either:
+				An integer that the array can be evenly divided into.
+				A list of sorted indices to split the array at.
+			</description>
+		</method>
 		<method name="sqrt" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />

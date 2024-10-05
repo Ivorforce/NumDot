@@ -96,6 +96,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("concatenate", "v", "axis", "dtype"), &nd::concatenate, DEFVAL(nullptr), DEFVAL(0), DEFVAL(nd::DType::DTypeMax));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("hstack", "v", "dtype"), &nd::hstack, DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("vstack", "v", "dtype"), &nd::vstack, DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("split", "v", "indices_or_section_size", "axis"), &nd::split, DEFVAL(nullptr), DEFVAL(0));
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("positive", "a"), &nd::positive);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("negative", "a"), &nd::negative);
@@ -581,7 +582,7 @@ Ref<NDArray> nd::unstack(const Variant& v, int64_t axis) {
 	return moveaxis(v, axis, 0);
 }
 
-Ref<NDArray> concatenate_(nd::DType dtype, const std::vector<std::shared_ptr<va::VArray>>& vector, const size_t axis_) {
+Ref<NDArray> concatenate_(nd::DType dtype, const std::vector<std::shared_ptr<va::VArray>>& vector, const std::size_t axis_) {
 	auto shape = vector[0]->shape();
 	for (auto it = vector.begin() + 1; it != vector.end(); ++it) {
 		ERR_FAIL_COND_V_MSG((*it)->dimension() != shape.size(), {}, "Dimensions of given arrays must match.");
@@ -603,7 +604,7 @@ Ref<NDArray> concatenate_(nd::DType dtype, const std::vector<std::shared_ptr<va:
 
 	xt::xstrided_slice_vector slice(axis_ + 1);
 	std::fill(slice.begin(), slice.end() - 1, xt::all());
-	size_t current_idx = 0;
+	std::size_t current_idx = 0;
 
 	for (auto& array : vector) {
 		const auto size_ = array->shape()[axis_];
@@ -626,7 +627,7 @@ Ref<NDArray> nd::concatenate(const Variant& v, int64_t axis, DType dtype) {
 		if (axis < 0) axis += static_cast<int64_t>(vector[0]->dimension());
 		ERR_FAIL_COND_V_MSG(axis < 0 || axis >= vector[0]->dimension(), {}, "Axis out of range.");
 
-		return ::concatenate_(dtype, vector, static_cast<size_t>(axis));
+		return ::concatenate_(dtype, vector, static_cast<std::size_t>(axis));
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
@@ -660,6 +661,62 @@ Ref<NDArray> nd::vstack(const Variant& v, DType dtype) {
 		}
 
 		return ::concatenate_(dtype, vector, 0);
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
+}
+
+TypedArray<NDArray> split_(const va::VArray& array, const std::size_t section_size, const size_t axis) {
+	ERR_FAIL_COND_V_MSG(array.shape()[axis] % section_size != 0, {}, "Cannot split array equally with this section size.");
+
+	auto godot_array = TypedArray<NDArray>();
+	godot_array.resize(static_cast<std::int64_t>(array.shape()[axis]) / section_size);
+
+	xt::xstrided_slice_vector slice(axis + 1);
+	std::fill(slice.begin(), slice.end() - 1, xt::all());
+
+	for (std::size_t current_idx = 0; current_idx < godot_array.size(); ++current_idx) {
+		slice.back() = xt::range(current_idx * section_size, (current_idx + 1) * section_size);
+		godot_array[static_cast<int64_t>(current_idx)] = { memnew(NDArray(array.sliced(slice))) };
+	}
+
+	return godot_array;
+}
+
+TypedArray<NDArray> split_(const va::VArray& array, const va::strides_type indices, const size_t axis) {
+	ERR_FAIL_COND_V_MSG(!std::is_sorted(indices.begin(), indices.end()), {}, "Indices must be sorted.");
+
+	auto godot_array = TypedArray<NDArray>();
+	godot_array.resize(indices.size() + 1);
+
+	xt::xstrided_slice_vector slice(axis + 1);
+	std::fill(slice.begin(), slice.end() - 1, xt::all());
+
+	for (std::size_t current_idx = 0; current_idx < godot_array.size(); ++current_idx) {
+		slice.back() = xt::range(
+			current_idx == 0 ? 0 : MAX(0, indices[current_idx - 1]),
+			current_idx == godot_array.size() - 1 ? array.shape()[axis] : indices[current_idx]
+		);
+		godot_array[static_cast<int64_t>(current_idx)] = { memnew(NDArray(array.sliced(slice))) };
+	}
+
+	return godot_array;
+}
+
+TypedArray<NDArray> nd::split(const Variant& v, const Variant& indices_or_section_size, int64_t axis) {
+	try {
+		auto array = variant_as_array(v);
+
+		if (axis < 0) axis += static_cast<int64_t>(array->dimension());
+		ERR_FAIL_COND_V_MSG(axis < 0 || axis >= array->dimension(), {}, "Axis out of range.");
+
+		if (indices_or_section_size.get_type() == Variant::Type::INT) {
+			return ::split_(*array, static_cast<std::size_t>(static_cast<int64_t>(indices_or_section_size)), static_cast<size_t>(axis));
+		}
+
+		const auto ints = variant_to_axes(indices_or_section_size);
+		return ::split_(*array, ints, static_cast<size_t>(axis));
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());

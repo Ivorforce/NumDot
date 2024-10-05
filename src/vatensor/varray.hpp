@@ -23,6 +23,7 @@
 #include "xtensor/xstrided_view_base.hpp"  // for strided_view_args
 #include "xtensor/xtensor_forward.hpp"     // for xarray
 #include "xtensor/xutils.hpp"              // for get_strides_t
+#include "vstrided_view.hpp"
 
 namespace va {
     // We should be using the same default types as xarray does, so we know for sure the ones we create /
@@ -211,7 +212,7 @@ namespace va {
 
     template<typename CC>
     static auto slice_compute(CC& compute, const xt::xstrided_slice_vector& slices) {
-        xt::detail::strided_view_args<xt::detail::no_adj_strides_policy> args;
+        va::strided_view_args<xt::detail::no_adj_strides_policy> args;
         args.fill_args(
             compute.shape(),
             compute.strides(),

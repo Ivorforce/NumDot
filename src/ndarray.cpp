@@ -12,6 +12,8 @@
 #include <cstddef>                                 // for size_t
 #include <stdexcept>                               // for runtime_error
 #include <variant>                                 // for visit
+#include <vatensor/allocate.hpp>
+
 #include "gdconvert/conversion_array.hpp"            // for fill_c_array_flat
 #include "gdconvert/conversion_slice.hpp"            // for variants_to_slice_...
 #include "gdconvert/conversion_string.hpp"           // for xt_to_string
@@ -55,6 +57,7 @@ void NDArray::_bind_methods() {
 	ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "get_float", &NDArray::get_float);
 
 	godot::ClassDB::bind_method(D_METHOD("as_type", "type"), &NDArray::as_type);
+	godot::ClassDB::bind_method(D_METHOD("copy"), &NDArray::copy);
 
 	godot::ClassDB::bind_method(D_METHOD("to_bool"), &NDArray::to_bool);
 	godot::ClassDB::bind_method(D_METHOD("to_int"), &NDArray::to_int);
@@ -253,8 +256,14 @@ Variant NDArray::_iter_get(const Variant& p_iter) {
 	return { memnew(NDArray(result)) };
 }
 
-Variant NDArray::as_type(va::DType dtype) const {
-	return nd::as_array(this, dtype);
+Variant NDArray::as_type(const va::DType dtype) const {
+	const auto result = ndarray_as_dtype(*this, dtype);
+	return { memnew(NDArray(result)) };
+}
+
+Variant NDArray::copy() const {
+	const auto result = va::copy_as_dtype(*array, va::DTypeMax);
+	return { memnew(NDArray(result)) };
 }
 
 void NDArray::set(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {

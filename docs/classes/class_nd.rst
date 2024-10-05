@@ -66,6 +66,8 @@ Methods
    +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                     | :ref:`clip<class_nd_method_clip>`\ (\ a\: ``Variant``, min\: ``Variant``, max\: ``Variant``\ ) |static|                                                                                                |
    +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                     | :ref:`copy<class_nd_method_copy>`\ (\ array\: ``Variant``\ ) |static|                                                                                                                                  |
+   +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                     | :ref:`cos<class_nd_method_cos>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                                        |
    +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                     | :ref:`cosh<class_nd_method_cosh>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                                      |
@@ -435,7 +437,9 @@ Return evenly spaced values within a given interval.
 
 :ref:`NDArray<class_NDArray>` **array**\ (\ array\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 11\ ) |static| :ref:`🔗<class_nd_method_array>`
 
-Copy existing data to a new array.
+Create a new :ref:`NDArray<class_NDArray>` of the given DType from the given data.
+
+If the input is an :ref:`NDArray<class_NDArray>`, it will be copied.
 
 .. rst-class:: classref-item-separator
 
@@ -560,6 +564,18 @@ Given an interval, values outside the interval are clipped to the interval edges
 Equivalent to but faster than nd.minimum(a_max, nd.maximum(a, a_min)).
 
 No check is performed to ensure a_min < a_max.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_copy:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **copy**\ (\ array\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_copy>`
+
+Creates a copy of the given array.
 
 .. rst-class:: classref-item-separator
 

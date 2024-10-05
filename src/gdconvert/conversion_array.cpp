@@ -683,14 +683,21 @@ std::shared_ptr<va::VArray> variant_as_array(const Variant& array) {
 	throw std::runtime_error("Unsupported type");
 }
 
+std::shared_ptr<va::VArray> ndarray_as_dtype(const NDArray& ndarray, const va::DType dtype) {
+	if (dtype == va::DTypeMax || ndarray.array->dtype() == dtype)
+		return ndarray.array;
+
+	return va::copy_as_dtype(*ndarray.array, dtype);
+}
+
 std::shared_ptr<va::VArray> variant_as_array(const Variant& array, const va::DType dtype, const bool copy) {
 	switch (array.get_type()) {
 		case Variant::OBJECT: {
 			if (const auto ndarray = Object::cast_to<NDArray>(array)) {
-				if (!copy && (dtype == va::DTypeMax || ndarray->array->dtype() == dtype))
-					return ndarray->array;
-				else
+				if (copy)
 					return va::copy_as_dtype(*ndarray->array, dtype);
+
+				return ndarray_as_dtype(*ndarray, dtype);
 			}
 		}
 		default:

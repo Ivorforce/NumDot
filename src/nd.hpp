@@ -46,6 +46,7 @@ public:
 	// Array interpretation.
 	static Ref<NDArray> as_array(const Variant& array, DType dtype = DType::DTypeMax);
 	static Ref<NDArray> array(const Variant& array, DType dtype = DType::DTypeMax);
+	static Ref<NDArray> copy(const Variant& array);
 
 	static Ref<NDArray> bool_(const Variant& array);
 	static Ref<NDArray> float32(const Variant& array);

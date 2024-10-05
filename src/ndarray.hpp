@@ -89,6 +89,7 @@ public:
 	double_t get_float(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error);
 
 	[[nodiscard]] Variant as_type(va::DType dtype) const;
+	[[nodiscard]] Variant copy() const;
 
 	[[nodiscard]] bool to_bool() const;
 	[[nodiscard]] int64_t to_int() const;

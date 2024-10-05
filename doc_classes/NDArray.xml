@@ -522,6 +522,12 @@
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
+		<method name="copy" qualifiers="const">
+			<return type="Variant" />
+			<description>
+				Creates a copy of this array.
+			</description>
+		</method>
 		<method name="dtype" qualifiers="const">
 			<return type="int" enum="nd.DType" />
 			<description>

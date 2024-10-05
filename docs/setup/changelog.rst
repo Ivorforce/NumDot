@@ -10,6 +10,12 @@ Here you will find the release notes for each version of the library. Each secti
    :local:
    :backlinks: none
 
+Upcoming Changes (main branch)
+------------------------------
+**Added**
+
+- Added ``array.copy()`` and ``nd.copy(array)`` functions.
+
 Version 0.4 - 2024-10-03
 ------------------------
 **Added**

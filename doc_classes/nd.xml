@@ -73,7 +73,8 @@
 			<param index="0" name="array" type="Variant" default="null" />
 			<param index="1" name="dtype" type="int" enum="nd.DType" default="11" />
 			<description>
-				Copy existing data to a new array.
+				Create a new [NDArray] of the given DType from the given data.
+				If the input is an [NDArray], it will be copied.
 			</description>
 		</method>
 		<method name="as_array" qualifiers="static">
@@ -149,6 +150,13 @@
 				Given an interval, values outside the interval are clipped to the interval edges. For example, if an interval of [lb]0, 1[rb] is specified, values smaller than 0 become 0, and values larger than 1 become 1.
 				Equivalent to but faster than nd.minimum(a_max, nd.maximum(a, a_min)).
 				No check is performed to ensure a_min &lt; a_max.
+			</description>
+		</method>
+		<method name="copy" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="array" type="Variant" />
+			<description>
+				Creates a copy of the given array.
 			</description>
 		</method>
 		<method name="cos" qualifiers="static">

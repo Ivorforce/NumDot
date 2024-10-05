@@ -16,8 +16,11 @@
 #include "xtensor/xbuffer_adaptor.hpp"    // for no_ownership
 #include "xtensor/xlayout.hpp"            // for layout_type
 
+class NDArray;
+
 using namespace godot;
 
+std::shared_ptr<va::VArray> ndarray_as_dtype(const NDArray& ndarray, va::DType dtype);
 std::shared_ptr<va::VArray> variant_as_array(const Variant& array);
 std::shared_ptr<va::VArray> variant_as_array(const Variant& array, va::DType dtype, bool copy);
 

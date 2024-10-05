@@ -150,6 +150,8 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`assign_var<class_NDArray_method_assign_var>`\ (\ a\: ``Variant`` = null, axes\: ``Variant`` = null\ )                                       |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``Variant``                                                | :ref:`copy<class_NDArray_method_copy>`\ (\ ) |const|                                                                                              |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`DType<enum_nd_DType>`                                | :ref:`dtype<class_NDArray_method_dtype>`\ (\ ) |const|                                                                                            |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`get<class_NDArray_method_get>`\ (\ ...\ ) |const| |vararg|                                                                                  |
@@ -1096,6 +1098,18 @@ Assigns the result to this array, and returns it. The shape of the result must b
 In-place version of :ref:`nd.var<class_nd_method_var>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_copy:
+
+.. rst-class:: classref-method
+
+``Variant`` **copy**\ (\ ) |const| :ref:`🔗<class_NDArray_method_copy>`
+
+Creates a copy of this array.
 
 .. rst-class:: classref-item-separator
 

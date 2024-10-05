@@ -58,6 +58,7 @@ void nd::_bind_methods() {
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("as_array", "array", "dtype"), &nd::as_array, DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("array", "array", "dtype"), &nd::array, DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("copy", "array"), &nd::copy);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("bool_", "array"), &nd::bool_);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("float32", "array"), &nd::float32);
@@ -331,6 +332,10 @@ Ref<NDArray> nd::array(const Variant& array, nd::DType dtype) {
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
 	}
+}
+
+Ref<NDArray> nd::copy(const Variant& array) {
+	return nd::array(array, nd::DType::DTypeMax);
 }
 
 Ref<NDArray> nd::bool_(const Variant& array) { return nd::as_array(array, DType::Bool); }

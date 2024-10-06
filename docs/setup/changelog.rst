@@ -27,6 +27,7 @@ Upcoming Changes (main branch)
 - Added scalar optimizations for binary functions. This will greatly accelerate calls like ``nd.add(array, 5)``, at the cost of some binary size. This behavior can be disabled with the build flag ``NUMDOT_DISABLE_SCALAR_OPTIMIZATION``.
 
 **Changed**
+
 - Added ``array.set(x)`` should now be slightly faster when only a single element is updated.
 
 **Fixed**

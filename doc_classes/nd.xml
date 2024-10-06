@@ -821,14 +821,16 @@
 		</method>
 		<method name="tile" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="v" type="Variant" />
-			<param index="1" name="reps" type="Variant" />
+			<param index="0" name="v" type="Variant" default="null" />
+			<param index="1" name="reps" type="Variant" default="null" />
+			<param index="2" name="inner" type="bool" default="false" />
 			<description>
 				Construct an array by repeating v the number of times given by reps.
 				If reps has length d, the result will have dimension of max(d, v.ndim).
 				The repetitions will be applied from the innermost dimensions outwards.
 				If v.ndim &gt; d, the outermost dimensions will remain unchanged.
 				If v.ndim &lt; d, the array is broadcast with leading new axes.
+				When [param inner]=true, elements will repeat individually rather than element groups repeating.
 			</description>
 		</method>
 		<method name="to" qualifiers="static">

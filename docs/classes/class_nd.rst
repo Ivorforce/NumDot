@@ -220,7 +220,7 @@ Methods
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`tanh<class_nd_method_tanh>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                                      |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`NDArray<class_NDArray>`                              | :ref:`tile<class_nd_method_tile>`\ (\ v\: ``Variant``, reps\: ``Variant``\ ) |static|                                                                                                                  |
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`tile<class_nd_method_tile>`\ (\ v\: ``Variant`` = null, reps\: ``Variant`` = null, inner\: ``bool`` = false\ ) |static|                                                                          |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``Vector4i``                                               | :ref:`to<class_nd_method_to>`\ (\ stop\: ``int``\ ) |static|                                                                                                                                           |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1653,7 +1653,7 @@ Equivalent to nd.sinh(x) / nd.cosh(x).
 
 .. rst-class:: classref-method
 
-:ref:`NDArray<class_NDArray>` **tile**\ (\ v\: ``Variant``, reps\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_tile>`
+:ref:`NDArray<class_NDArray>` **tile**\ (\ v\: ``Variant`` = null, reps\: ``Variant`` = null, inner\: ``bool`` = false\ ) |static| :ref:`🔗<class_nd_method_tile>`
 
 Construct an array by repeating v the number of times given by reps.
 
@@ -1664,6 +1664,8 @@ The repetitions will be applied from the innermost dimensions outwards.
 If v.ndim > d, the outermost dimensions will remain unchanged.
 
 If v.ndim < d, the array is broadcast with leading new axes.
+
+When ``inner``\ =true, elements will repeat individually rather than element groups repeating.
 
 .. rst-class:: classref-item-separator
 

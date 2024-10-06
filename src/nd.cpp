@@ -98,7 +98,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("concatenate", "v", "axis", "dtype"), &nd::concatenate, DEFVAL(nullptr), DEFVAL(0), DEFVAL(nd::DType::DTypeMax));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("hstack", "v", "dtype"), &nd::hstack, DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("vstack", "v", "dtype"), &nd::vstack, DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("tile", "v", "reps"), &nd::tile);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("tile", "v", "reps", "inner"), &nd::tile, DEFVAL(nullptr), DEFVAL(nullptr), DEFVAL(false));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("split", "v", "indices_or_section_size", "axis"), &nd::split, DEFVAL(nullptr), DEFVAL(0));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("hsplit", "v", "indices_or_section_size"), &nd::hsplit);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("vsplit", "v", "indices_or_section_size"), &nd::vsplit);
@@ -672,7 +672,7 @@ Ref<NDArray> nd::vstack(const Variant& v, DType dtype) {
 	}
 }
 
-Ref<NDArray> nd::tile(const Variant& v, const Variant& reps) {
+Ref<NDArray> nd::tile(const Variant& v, const Variant& reps, bool inner) {
 	try {
 		const auto array = variant_as_array(v);
 		const auto reps_ = variant_to_shape(reps);
@@ -683,14 +683,17 @@ Ref<NDArray> nd::tile(const Variant& v, const Variant& reps) {
 
 		const auto matched_reps = MIN(array->dimension(), reps_.size());
 
+		const int shape_shift = inner ? 1 : 2;
+		const int repeat_shift = inner ? 2 : 1;
+
 		// We slice the array as many times as necessary.
 		// If reps exceeds the array size, array will be auto-broadcast.
 		// If array exceeds the rep size, it will match the final shape without needing to be sliced.
 		xt::xstrided_slice_vector array_slices(1 + matched_reps * 2);
 		array_slices[0] = xt::ellipsis();
 		for (int i = 0; i < matched_reps; ++i) {
-			array_slices[1 + i * 2] = xt::newaxis();
-			array_slices[2 + i * 2] = xt::all();
+			array_slices[repeat_shift + i * 2] = xt::newaxis();
+			array_slices[shape_shift + i * 2] = xt::all();
 		}
 
 		va::shape_type result_final_shape(MAX(array->dimension(), reps_.size()));
@@ -702,8 +705,8 @@ Ref<NDArray> nd::tile(const Variant& v, const Variant& reps) {
 			const std::size_t rep_count = reps_[reps_.size() - steps_from_end - 1];
 			const std::size_t array_dim_size = array->shape()[(array->dimension() - steps_from_end - 1)];
 
-			result_broadcast_shape[result_broadcast_shape.size() - steps_from_end * 2 - 2] = rep_count;
-			result_broadcast_shape[result_broadcast_shape.size() - steps_from_end * 2 - 1] = array_dim_size;
+			result_broadcast_shape[result_broadcast_shape.size() - steps_from_end * 2 - shape_shift] = rep_count;
+			result_broadcast_shape[result_broadcast_shape.size() - steps_from_end * 2 - repeat_shift] = array_dim_size;
 
 			result_final_shape[result_final_shape.size() - steps_from_end - 1] = rep_count * array_dim_size;
 

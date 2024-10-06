@@ -74,10 +74,10 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 30
 selected = 0
 item_count = 3
-popup/item_0/text = "GDSolver"
-popup/item_1/text = "NDSolver"
+popup/item_0/text = "GDScript"
+popup/item_1/text = "NumDot"
 popup/item_1/id = 1
-popup/item_2/text = "NDSolverInPlace"
+popup/item_2/text = "NumDot In-place"
 popup/item_2/id = 2
 
 [node name="InitOption" type="OptionButton" parent="Options"]

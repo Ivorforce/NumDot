@@ -122,8 +122,8 @@ offset_bottom = 73.0
 theme_override_font_sizes/font_size = 30
 selected = 0
 item_count = 2
-popup/item_0/text = "GDSolver"
-popup/item_1/text = "NDSolver"
+popup/item_0/text = "GDScript"
+popup/item_1/text = "NumDot"
 popup/item_1/id = 1
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]

@@ -254,7 +254,6 @@ namespace va {
         );
     }
 
-
     template<typename V>
     static std::shared_ptr<VArray> from_scalar(const V value) {
         return from_store(make_store<V>(value));

@@ -6,6 +6,8 @@
 #include <xtensor/xmasked_view.hpp>
 #include <xtensor/xindex_view.hpp>
 
+#include "allocate.hpp"
+
 using namespace va;
 
 static void mod_index(axes_type& index, const shape_type& shape) {
@@ -58,6 +60,19 @@ void va::assign(VWrite& array, VScalar value) {
 			using V = typename std::decay_t<decltype(carray)>::value_type;
 			carray.fill(static_cast<V>(cvalue));
 		}, array, value
+	);
+}
+
+void va::assign(VArrayTarget target, const VRead& value) {
+	std::visit(
+		[&value](auto target) {
+			if constexpr (std::is_same_v<decltype(target), VWrite*>) {
+				va::assign(*target, value);
+			}
+			else {
+				*target = va::copy(value);
+			}
+		}, target
 	);
 }
 

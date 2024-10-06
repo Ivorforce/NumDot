@@ -58,6 +58,14 @@ std::shared_ptr<VArray> va::eye(DType dtype, shape_type shape, int k) {
 #endif
 }
 
+std::shared_ptr<VArray> va::copy(const VRead& read) {
+	return std::visit(
+		[](auto& carray) {
+			return from_store(make_store(carray));
+		}, read
+	);
+}
+
 std::shared_ptr<VArray> va::copy_as_dtype(const VArray& other, DType dtype) {
 #ifdef NUMDOT_DISABLE_ALLOCATION_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_ALLOCATION_FUNCTIONS to enable it.");
@@ -72,9 +80,10 @@ std::shared_ptr<VArray> va::copy_as_dtype(const VArray& other, DType dtype) {
 			if constexpr (std::is_same_v<TWeWanted, TWeGot>) {
 				return from_store(make_store<TWeWanted>(carray));
 			}
-
-			// Cast first to reduce number of combinations down the line.
-			return from_store(make_store<TWeWanted>(xt::cast<TWeWanted>(carray)));
+			else {
+				// Cast first to reduce number of combinations down the line.
+				return from_store(make_store<TWeWanted>(xt::cast<TWeWanted>(carray)));
+			}
 		}, dtype_to_variant(dtype), other.read
 	);
 #endif

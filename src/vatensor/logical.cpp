@@ -12,12 +12,13 @@ using namespace va;
 
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 void logical_and(VArrayTarget target, const VArray& a, const VScalar& b) {
-	va::xoperation_inplace<promote::bool_in_bool_out>(
-		XFunction<xt::detail::logical_and> {},
-		target,
-		a.read,
-		b
-	);
+	// Can shortcut the logic
+	if (!scalar_to_type<bool>(b)) {
+		assign(target, false);
+		return;
+	}
+
+	assign(target, a.read);
 }
 #endif
 
@@ -40,12 +41,13 @@ void va::logical_and(VArrayTarget target, const VArray& a, const VArray& b) {
 
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 void logical_or(VArrayTarget target, const VArray& a, const VScalar& b) {
-	va::xoperation_inplace<promote::bool_in_bool_out>(
-		XFunction<xt::detail::logical_or> {},
-		target,
-		a.read,
-		b
-	);
+	// Can shortcut the logic
+	if (scalar_to_type<bool>(b)) {
+		assign(target, true);
+		return;
+	}
+
+	assign(target, a.read);
 }
 #endif
 
@@ -68,12 +70,13 @@ void va::logical_or(VArrayTarget target, const VArray& a, const VArray& b) {
 
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 void logical_xor(VArrayTarget target, const VArray& a, const VScalar& b) {
-	va::xoperation_inplace<promote::bool_in_bool_out>(
-		XFunction<xt::detail::not_equal_to> {},
-		target,
-		a.read,
-		b
-	);
+	// Can shortcut the logic
+	if (scalar_to_type<bool>(b)) {
+		va::logical_not(target, a);
+		return;
+	}
+
+	assign(target, a.read);
 }
 #endif
 

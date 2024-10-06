@@ -28,6 +28,7 @@ namespace va {
 	void assign_nonoverlapping(VWrite& array, const ArrayVariant& value);
 	void assign(VWrite& array, VScalar value);
 
+	void assign(VArrayTarget target, const VRead& value);
 	void assign(VArrayTarget target, VScalar value);
 
 	std::shared_ptr<VArray> get_at_mask(const VRead& varray, const VRead& mask);

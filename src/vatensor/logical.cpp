@@ -10,6 +10,19 @@
 
 using namespace va;
 
+void assign_bool(VArrayTarget target, const VArray& a) {
+	if (a.dtype() == Bool) {
+		va::assign(target, a.read);
+		return;
+	}
+
+	va::xoperation_inplace<promote::bool_in_bool_out>(
+		XFunction<typename xt::detail::cast<bool>::functor> {},
+		target,
+		a.read
+	);
+}
+
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 void logical_and(VArrayTarget target, const VArray& a, const VScalar& b) {
 	// Can shortcut the logic
@@ -18,7 +31,7 @@ void logical_and(VArrayTarget target, const VArray& a, const VScalar& b) {
 		return;
 	}
 
-	assign(target, a.read);
+	assign_bool(target, a);
 }
 #endif
 
@@ -47,7 +60,7 @@ void logical_or(VArrayTarget target, const VArray& a, const VScalar& b) {
 		return;
 	}
 
-	assign(target, a.read);
+	assign_bool(target, a);
 }
 #endif
 
@@ -76,7 +89,7 @@ void logical_xor(VArrayTarget target, const VArray& a, const VScalar& b) {
 		return;
 	}
 
-	assign(target, a.read);
+	assign_bool(target, a);
 }
 #endif
 

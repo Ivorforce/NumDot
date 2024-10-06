@@ -10,7 +10,7 @@ var infected_mask: NDArray
 var terminal_mask: NDArray
 
 var neighbor_indices_relative: NDArray
-var rng = nd.default_rng()
+var rng := nd.default_rng()
 
 func initialize() -> void:
 	grid = nd.zeros([params.N, params.N], nd.Int64)

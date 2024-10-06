@@ -1,15 +1,16 @@
 extends SIRSolver
 
-@onready var grid: NDArray
-@onready var gridp: NDArray
-@onready var indices: NDArray
+var grid: NDArray
+var gridp: NDArray
+var indices: NDArray
 
-@onready var susceptible_mask: NDArray
-@onready var infected_mask: NDArray
-@onready var terminal_mask: NDArray
+var susceptible_mask: NDArray
+var infected_mask: NDArray
+var terminal_mask: NDArray
+
+var neighbor_indices_relative: NDArray
 
 func initialize() -> void:
-
 	grid = nd.zeros([params.N, params.N], nd.Int64)
 	gridp = nd.zeros([params.N, params.N], nd.Int64)
 	indices = nd.zeros([params.N, params.N], nd.Int64)
@@ -18,6 +19,8 @@ func initialize() -> void:
 	infected_mask = nd.full([params.N, params.N], false, nd.Bool)
 	terminal_mask = nd.full([params.N, params.N], false, nd.Bool)
 
+	neighbor_indices_relative = nd.array([+1, -1, -params.N, +params.N], nd.Int64)
+	
 	# indices
 	for i in params.N:
 		for j in params.N:
@@ -35,7 +38,6 @@ func initialize() -> void:
 	gridp = nd.copy(grid)
 
 func simulation_step() -> void:
-	
 	# infect susceptible cells based on infected neighbours
 	susceptible_mask.assign_equal(gridp, 0)
 	var infp = indices.get(susceptible_mask).to_godot_array().map(frac_infected_neighbours)
@@ -52,11 +54,8 @@ func simulation_step() -> void:
 	
 	gridp = nd.copy(grid)
 
-func get_neighbours(idx: int) -> Array:
-	return [idx + 1, idx - 1, idx - params.N, idx + params.N]
-
-func frac_infected_neighbours(idx: Object) -> float:
-	var nbs := nd.reshape(gridp, -1).get(get_neighbours(idx.get_int()))
+func frac_infected_neighbours(idx: NDArray) -> float:
+	var nbs := nd.reshape(gridp, -1).get(nd.add(idx, neighbor_indices_relative))
 	var num_infected = nd.sum(nd.logical_and(nd.greater(nbs, 0), nd.less_equal(nbs, params.tauI)))
 	
 	if num_infected == null:

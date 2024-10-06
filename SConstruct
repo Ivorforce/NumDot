@@ -61,7 +61,7 @@ optimize_for_arch = env["optimize_for_arch"]
 ARGUMENTS.pop("build_dir", None)
 ARGUMENTS.pop("define", None)
 ARGUMENTS.pop("use_xsimd", None)
-ARGUMENTS.pop("optimize_for_this_machine", None)
+ARGUMENTS.pop("optimize_for_arch", None)
 
 # ============================= Change defaults of godot-cpp =============================
 

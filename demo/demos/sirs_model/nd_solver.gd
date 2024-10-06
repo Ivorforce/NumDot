@@ -2,6 +2,7 @@ extends SIRSolver
 
 var grid: NDArray
 var gridp: NDArray
+var gridi: NDArray
 var indices: NDArray
 
 var susceptible_mask: NDArray
@@ -40,6 +41,8 @@ func initialize() -> void:
 func simulation_step() -> void:
 	# infect susceptible cells based on infected neighbours
 	susceptible_mask.assign_equal(gridp, 0)
+	
+	gridi = nd.logical_and(nd.greater(gridp, 0), nd.less_equal(gridp, params.tauI))
 	var infp = indices.get(susceptible_mask).to_godot_array().map(frac_infected_neighbours)
 	var to_infect_mask = nd.less(nd.default_rng(Time.get_ticks_usec()).random(infp.size()), infp)
 	nd.reshape(grid, -1).set(1, indices.get(susceptible_mask).get(to_infect_mask))
@@ -55,13 +58,12 @@ func simulation_step() -> void:
 	gridp = nd.copy(grid)
 
 func frac_infected_neighbours(idx: NDArray) -> float:
-	var nbs := nd.reshape(gridp, -1).get(nd.add(idx, neighbor_indices_relative))
-	var num_infected = nd.sum(nd.logical_and(nd.greater(nbs, 0), nd.less_equal(nbs, params.tauI)))
+	var nbs := nd.reshape(gridi, -1).get(nd.add(idx, neighbor_indices_relative))
 	
-	if num_infected == null:
+	if nbs.size() == 0:
 		return 0.
 	else:
-		return num_infected.to_float() / nbs.size()
+		return ndf.mean(nbs)
 	
 func on_draw() -> void:
 	for i in params.N:

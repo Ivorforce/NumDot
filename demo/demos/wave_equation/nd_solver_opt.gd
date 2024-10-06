@@ -61,8 +61,11 @@ func simulation_step(delta: float) -> void:
 		if params.bc_right: u.set(u.get(params.num_points), params.num_points+1); uprev.set(uprev.get(params.num_points), params.num_points+1)
 
 func on_draw() -> void:
-	for i in range(0, params.num_points, max(1, floori(params.num_points/params.num_draw_points))):
-		params.draw_circle(Vector2(x.get_float(i) * params.xscale, u.get_float(i) * params.yscale), params.point_size, params.point_color)
+	for idx in params.draw_array.size():
+		params.draw_array[idx].x = params.xscale * x.get_float(params.draw_range[idx])
+		params.draw_array[idx].y = params.yscale * u.get_float(params.draw_range[idx])
+	
+	params.draw_polyline(params.draw_array, params.point_color, params.point_size)
 
 	if params.bc_left:
 		params.draw_circle(Vector2(x.get_float(0), u.get_float(0) * params.yscale), params.anchor_size, params.anchor_color)

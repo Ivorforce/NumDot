@@ -46,6 +46,10 @@ var uprev = []
 # fps
 var frame_time: float = 1./60
 
+# drawing arrays for the wave
+var draw_range: Array # range of solution points to draw
+var draw_array: PackedVector2Array # final array to pass to draw_polyline
+
 func _ready() -> void:
 	_on_init_option_item_selected(init_option)
 
@@ -67,8 +71,8 @@ func _draw() -> void:
 
 func _on_solver_option_item_selected(index: int) -> void:
 	solver = $Solvers.get_child(index)
-	solver.initialize()
-
+	restart_simulation()
+	
 func _on_point_slider_drag_ended(value_changed: bool) -> void:
 	%PointLabel.text = "Points: " + str(%PointSlider.value)
 	%CFLLabel.text = "CFL: " + str(snappedf(wave_speed * 1/(frame_rate * num_steps_per_frame * dx), 1e-3))
@@ -77,12 +81,12 @@ func _on_point_slider_drag_ended(value_changed: bool) -> void:
 	dx = (xmax - xmin)/num_points
 	num_steps_per_frame = max(1, ceili(wave_speed/ dx / frame_rate)) # to satisfy CFL condition
 	set_initial_condition(init_option)
-	solver.initialize()
+	restart_simulation()
 
 func _on_init_option_item_selected(index: int) -> void:
 	init_option = index
 	set_initial_condition(init_option)
-	solver.initialize()
+	restart_simulation()
 
 func set_initial_condition(idx) -> void:
 	x = range(num_points).map(func(elt): return (dx * elt + xmin))
@@ -116,3 +120,11 @@ func _on_bc_left_item_selected(index: int) -> void:
 
 func _on_bc_right_item_selected(index: int) -> void:
 	bc_right = index
+
+func restart_simulation() -> void:
+	var draw_step = max(1, floori(num_points/num_draw_points))
+	draw_range = range(0, num_points, draw_step)
+	draw_array.resize(draw_range.size())
+	draw_array.fill(Vector2.ZERO)
+
+	solver.initialize()

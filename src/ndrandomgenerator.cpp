@@ -35,6 +35,7 @@ void NDRandomGenerator::_bind_methods() {
 
 	godot::ClassDB::bind_method(D_METHOD("random", "shape", "dtype"), &NDRandomGenerator::random, DEFVAL(PackedByteArray()), DEFVAL(va::DType::Float64));
 	godot::ClassDB::bind_method(D_METHOD("integers", "low_or_high", "high", "shape", "dtype", "endpoint"), &NDRandomGenerator::integers, DEFVAL(0), DEFVAL(nullptr), DEFVAL(PackedByteArray()), DEFVAL(va::DType::Int64), DEFVAL(false));
+	godot::ClassDB::bind_method(D_METHOD("randn", "shape", "dtype"), &NDRandomGenerator::randn, DEFVAL(PackedByteArray()), DEFVAL(va::DType::Float64));
 }
 
 NDRandomGenerator::NDRandomGenerator() = default;
@@ -78,6 +79,17 @@ Ref<NDArray> NDRandomGenerator::integers(const int64_t low_or_high, const Varian
 				ERR_FAIL_V_MSG({}, "high is not an int");
 		}
 
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
+}
+
+Ref<NDArray> NDRandomGenerator::randn(const Variant& shape, const va::DType dtype) {
+	try {
+		const auto shape_array = variant_to_shape(shape);
+
+		return { memnew(NDArray(engine.random_normal(shape_array, dtype))) };
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());

@@ -19,6 +19,7 @@ namespace va::random {
 
 		std::shared_ptr<VArray> random_floats(shape_type shape, DType dtype);
 		std::shared_ptr<VArray> random_integers(long long low, long long high, shape_type shape, DType dtype, bool endpoint);
+		std::shared_ptr<VArray> random_normal(shape_type shape, DType dtype);
 	};
 }
 

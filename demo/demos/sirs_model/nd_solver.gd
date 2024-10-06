@@ -18,7 +18,7 @@ func initialize() -> void:
 	infected_mask = nd.full([params.N, params.N], false, nd.Bool)
 	terminal_mask = nd.full([params.N, params.N], false, nd.Bool)
 
-		# indices
+	# indices
 	for i in params.N:
 		for j in params.N:
 			var idx = params.N * i + j
@@ -65,10 +65,11 @@ func frac_infected_neighbours(idx: Object) -> float:
 		return num_infected.to_float() / nbs.size()
 	
 func on_draw() -> void:
-	var origin = params.get_viewport_rect().get_center() - Vector2(params.draw_space * params.N/2., params.draw_space * params.N/2.)
 	for i in params.N:
 		for j in params.N:
-			params.draw_circle(origin + params.draw_space * Vector2(i, j), params.draw_space/2, params.colors[grid.get_int(i, j)])
+			params._image.set_pixel(i, j, params.colors[grid.get_int(i, j)])
+
+	params.update_texture()
 
 func place_random() -> void:
-	grid.set(1, randi_range(1, params.N-1), randi_range(1, params.N-1))
+	grid.set(1, randi_range(1, params.N-2), randi_range(1, params.N-2))

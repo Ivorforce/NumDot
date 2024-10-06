@@ -1,15 +1,21 @@
-[gd_scene load_steps=4 format=3 uid="uid://bujidut18snxp"]
+[gd_scene load_steps=5 format=3 uid="uid://bujidut18snxp"]
 
 [ext_resource type="Script" path="res://demos/sirs_model/sirs_model.gd" id="1_lsy6e"]
 [ext_resource type="Script" path="res://demos/sirs_model/gd_solver.gd" id="2_u2f2u"]
 [ext_resource type="Script" path="res://demos/sirs_model/nd_solver.gd" id="3_7y254"]
 
-[node name="SirsModel" type="Node2D" node_paths=PackedStringArray("solver")]
+[sub_resource type="ImageTexture" id="ImageTexture_03ndn"]
+
+[node name="SIRSModel" type="Node2D" node_paths=PackedStringArray("solver", "texture_rect")]
 script = ExtResource("1_lsy6e")
 solver = NodePath("Solvers/GDSolver")
 N = 30
 tauI = 8
 tauR = 9
+color_susceptible = Color(0.803922, 0.803922, 0.776471, 1)
+color_infected = Color(0.737255, 0.223529, 0.133333, 1)
+color_recovered = Color(0.921569, 0.584314, 0.14902, 1)
+texture_rect = NodePath("CanvasLayer/TextureRect")
 
 [node name="Solvers" type="Node" parent="."]
 
@@ -119,6 +125,28 @@ item_count = 2
 popup/item_0/text = "GDSolver"
 popup/item_1/text = "NDSolver"
 popup/item_1/id = 1
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer"]
+texture_filter = 1
+offset_right = 40.0
+offset_bottom = 40.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = SubResource("ImageTexture_03ndn")
+
+[node name="LegendInfected" type="TextureRect" parent="."]
+offset_left = 288.0
+offset_top = 549.0
+offset_right = 308.0
+offset_bottom = 569.0
+
+[node name="LegendRecovered" type="TextureRect" parent="."]
+offset_left = 288.0
+offset_top = 615.0
+offset_right = 308.0
+offset_bottom = 635.0
 
 [connection signal="drag_ended" from="SliderOptions/PointSlider" to="." method="_on_point_slider_drag_ended"]
 [connection signal="drag_ended" from="SliderOptions/InfectedSlider" to="." method="_on_infected_slider_drag_ended"]

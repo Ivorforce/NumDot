@@ -34,11 +34,12 @@ func simulation_step() -> void:
 	gridp = grid.duplicate(true)
 
 func on_draw() -> void:
-	var origin = params.get_viewport_rect().get_center() - Vector2(params.draw_space * params.N/2., params.draw_space * params.N/2.)
 	for i in params.N:
 		for j in params.N:
-			params.draw_circle(origin + params.draw_space * Vector2(i, j), params.draw_space/2, params.colors[grid[i][j]])
+			params._image.set_pixel(i, j, params.colors[grid[i][j]])
 
+	params.update_texture()
+	
 func create_matrix(N: int) -> Array:
 	var matrix := []
 	for x in range(N):
@@ -49,4 +50,4 @@ func create_matrix(N: int) -> Array:
 	return matrix
 
 func place_random() -> void:
-	grid[randi_range(1, params.N-1)][randi_range(1, params.N-1)] = 1
+	grid[randi_range(1, params.N-2)][randi_range(1, params.N-2)] = 1

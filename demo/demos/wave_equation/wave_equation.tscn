@@ -136,7 +136,7 @@ text = "Points: 150"
 unique_name_in_owner = true
 layout_mode = 2
 min_value = 50.0
-max_value = 20000.0
+max_value = 50000.0
 step = 100.0
 value = 150.0
 

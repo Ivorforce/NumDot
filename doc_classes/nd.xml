@@ -197,7 +197,7 @@
 			<return type="NDRandomGenerator" />
 			<param index="0" name="seed" type="Variant" default="null" />
 			<description>
-				Creates a new random number generator (rng).
+				Creates a new random number generator (rng) with the default random engine (mt19937).
 				If no seed is provided, a fresh, unpredictable entropy will be pulled from the OS.
 			</description>
 		</method>

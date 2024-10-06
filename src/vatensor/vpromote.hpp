@@ -29,7 +29,7 @@ namespace va {
 			}
 			else {
 				if constexpr (std::is_fundamental_v<T>) {
-					return static_cast<NeededType>(arg);
+					return static_cast<NeededType>(std::forward<T>(arg));
 				}
 				else {
 					// Casting can considerably increase performance (from a small test, it was 25%).

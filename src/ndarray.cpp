@@ -581,7 +581,7 @@ PackedVector2Array NDArray::to_packed_vector2_array() const {
 	// TODO Handle row major/minor? This still assumes it's normal row-major, i think.
 
 	PackedVector2Array packed;
-	packed.resize(static_cast<int64_t>(array->shape()[0] * 2));
+	packed.resize(static_cast<int64_t>(array->shape()[0]));
 	fill_c_array_flat(&packed.ptrw()->coord[0], array->read);
 
 	return packed;
@@ -592,12 +592,12 @@ PackedVector3Array NDArray::to_packed_vector3_array() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
-	ERR_FAIL_COND_V_MSG(array->dimension() != 3, {}, "flatten the array before converting to packed");
+	ERR_FAIL_COND_V_MSG(array->dimension() != 2, {}, "flatten the array before converting to packed");
 	ERR_FAIL_COND_V_MSG(array->shape()[1] != 3, {}, "final array dimension must be size 2");
 	// TODO Handle row major/minor? This still assumes it's normal row-major, i think.
 
 	PackedVector3Array packed;
-	packed.resize(static_cast<int64_t>(array->shape()[0] * 3));
+	packed.resize(static_cast<int64_t>(array->shape()[0]));
 	fill_c_array_flat(&packed.ptrw()->coord[0], array->read);
 
 	return packed;
@@ -608,12 +608,12 @@ PackedVector4Array NDArray::to_packed_vector4_array() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
-	ERR_FAIL_COND_V_MSG(array->dimension() != 3, {}, "flatten the array before converting to packed");
-	ERR_FAIL_COND_V_MSG(array->shape()[1] != 3, {}, "final array dimension must be size 2");
+	ERR_FAIL_COND_V_MSG(array->dimension() != 2, {}, "flatten the array before converting to packed");
+	ERR_FAIL_COND_V_MSG(array->shape()[1] != 4, {}, "final array dimension must be size 2");
 	// TODO Handle row major/minor? This still assumes it's normal row-major, i think.
 
 	PackedVector4Array packed;
-	packed.resize(static_cast<int64_t>(array->shape()[0] * 3));
+	packed.resize(static_cast<int64_t>(array->shape()[0]));
 	fill_c_array_flat(&packed.ptrw()->components[0], array->read);
 
 	return packed;
@@ -624,12 +624,12 @@ PackedColorArray NDArray::to_packed_color_array() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
-	ERR_FAIL_COND_V_MSG(array->dimension() != 3, {}, "flatten the array before converting to packed");
-	ERR_FAIL_COND_V_MSG(array->shape()[1] != 3, {}, "final array dimension must be size 2");
+	ERR_FAIL_COND_V_MSG(array->dimension() != 2, {}, "flatten the array before converting to packed");
+	ERR_FAIL_COND_V_MSG(array->shape()[1] != 4, {}, "final array dimension must be size 2");
 	// TODO Handle row major/minor? This still assumes it's normal row-major, i think.
 
 	PackedColorArray packed;
-	packed.resize(static_cast<int64_t>(array->shape()[0] * 3));
+	packed.resize(static_cast<int64_t>(array->shape()[0]));
 	fill_c_array_flat(&packed.ptrw()->components[0], array->read);
 
 	return packed;

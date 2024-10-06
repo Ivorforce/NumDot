@@ -35,6 +35,7 @@ Upcoming Changes (main branch)
 - ``nd.range`` now behaves properly when called as ``nd.range(x, null)`` (i.e. range from x to end).
 - ``NDArray`` interpretation inside of Arrays would result in ``inhomogenous shape`` errors.
 - Fixed ``NDArray.to_godot_array()`` producing garbage data and shapes.
+- Fixed ``NDArray.to_packed_xxx`` producing arrays that were too large.
 
 Version 0.4 - 2024-10-03
 ------------------------

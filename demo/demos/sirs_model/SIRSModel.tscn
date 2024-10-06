@@ -76,7 +76,6 @@ text = "Grid: 20x20"
 unique_name_in_owner = true
 layout_mode = 2
 min_value = 10.0
-max_value = 75.0
 value = 20.0
 
 [node name="InfectedLabel" type="Label" parent="SliderOptions"]

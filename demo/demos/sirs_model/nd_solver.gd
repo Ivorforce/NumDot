@@ -10,6 +10,7 @@ var infected_mask: NDArray
 var terminal_mask: NDArray
 
 var neighbor_indices_relative: NDArray
+var rng = nd.default_rng()
 
 func initialize() -> void:
 	grid = nd.zeros([params.N, params.N], nd.Int64)
@@ -44,7 +45,7 @@ func simulation_step() -> void:
 	
 	gridi = nd.logical_and(nd.greater(gridp, 0), nd.less_equal(gridp, params.tauI))
 	var infp = indices.get(susceptible_mask).to_godot_array().map(frac_infected_neighbours)
-	var to_infect_mask = nd.less(nd.default_rng(Time.get_ticks_usec()).random(infp.size()), infp)
+	var to_infect_mask = nd.less(rng.random(infp.size()), infp)
 	nd.reshape(grid, -1).set(1, indices.get(susceptible_mask).get(to_infect_mask))
 	
 	# increment day in infection + recovery stage

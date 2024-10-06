@@ -133,6 +133,15 @@
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
+		<method name="assign_convolve">
+			<return type="NDArray" />
+			<param index="0" name="array" type="Variant" />
+			<param index="1" name="kernel" type="Variant" />
+			<description>
+				In-place version of [method nd.convolve].
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
+			</description>
+		</method>
 		<method name="assign_cos">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />

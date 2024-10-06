@@ -172,6 +172,10 @@ public:
 	static Ref<NDArray> reduce_dot(const Variant& a, const Variant& b, const Variant& axes);
 	static Ref<NDArray> matmul(const Variant& a, const Variant& b);
 
+	// Convolutions.
+	static Ref<NDArray> sliding_window_view(const Variant& array, const Variant& window_shape);
+	static Ref<NDArray> convolve(const Variant& array, const Variant& kernel);
+
 	// Random.
 	static Ref<NDRandomGenerator> default_rng(const Variant& seed = nullptr);
 };

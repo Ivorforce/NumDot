@@ -1,7 +1,6 @@
 #include "nd.hpp"
 
 #include <vatensor/comparison.hpp>            // for equal_to, greater, greate...
-#include <vatensor/comparison.hpp>            // for equal_to, greater, greate...
 #include <vatensor/linalg.hpp>                // for reduce_dot, dot, matmul
 #include <vatensor/logical.hpp>               // for logical_and, logical_not
 #include <vatensor/reduce.hpp>                // for all, any, max, mean, median
@@ -17,7 +16,7 @@
 #include <utility>                          // for forward
 #include <variant>                          // for visit
 #include <godot_cpp/variant/utility_functions.hpp>
-
+#include <vatensor/stride_tricks.hpp>
 #include "gdconvert/conversion_array.hpp"     // for variant_as_array
 #include "gdconvert/conversion_ints.hpp"      // for variant_to_axes, variant_...
 #include "gdconvert/conversion_slice.hpp"     // for ellipsis, newaxis
@@ -176,6 +175,9 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("dot", "a", "b"), &nd::dot);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("reduce_dot", "a", "b", "axes"), &nd::reduce_dot, DEFVAL(nullptr), DEFVAL(nullptr), DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("matmul", "a", "b"), &nd::matmul);
+
+	godot::ClassDB::bind_static_method("nd", D_METHOD("sliding_window_view", "array", "window_shape"), &nd::sliding_window_view);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("convolve", "array", "kernel"), &nd::convolve);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("default_rng", "seed"), &nd::default_rng, DEFVAL(nullptr));
 }
@@ -1029,6 +1031,22 @@ Ref<NDArray> nd::reduce_dot(const Variant& a, const Variant& b, const Variant& a
 
 Ref<NDArray> nd::matmul(const Variant& a, const Variant& b) {
 	return VARRAY_MAP2(matmul, a, b);
+}
+
+Ref<NDArray> nd::sliding_window_view(const Variant& array, const Variant& window_shape) {
+	try {
+		const auto array_ = variant_as_array(array);
+		const auto shape_ = variant_to_shape(window_shape);
+		const auto result = va::sliding_window_view(*array_, shape_);
+		return { memnew(NDArray(result)) };
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
+}
+
+Ref<NDArray> nd::convolve(const Variant& array, const Variant& kernel) {
+	return VARRAY_MAP2(convolve, array, kernel);
 }
 
 Ref<NDRandomGenerator> nd::default_rng(const Variant& seed) {

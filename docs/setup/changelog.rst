@@ -18,12 +18,14 @@ Upcoming Changes (main branch)
 - Negative indices are now supported everywhere.
 - Added boolean mask indexing, e.g. ``a.set(5, nd.greater(a, 5))``.
 - Added index list indexing, e.g. ``a.set(5, [[0, 1], [4, 2]])``.
+- Added a basic ``convolve`` function.
+- Added the ``sliding_window_view`` function.
 - Added ``array.copy()`` and ``nd.copy(array)`` functions.
 - Added ``positive`` and ``negative`` functions.
 - Added ``count_nonzero`` functions.
 - Added ``concatenate``, ``hstack`` and ``vstack`` functions.
 - Added ``split``, ``hsplit`` and ``vsplit`` functions.
-- Added ``tile`` functions.
+- Added the ``tile`` function.
 - Added scalar optimizations for binary functions. This will greatly accelerate calls like ``nd.add(array, 5)``, at the cost of some binary size. This behavior can be disabled with the build flag ``NUMDOT_DISABLE_SCALAR_OPTIMIZATION``.
 
 **Changed**

@@ -162,6 +162,15 @@
 				The arrays must match in dimension except in the axis.
 			</description>
 		</method>
+		<method name="convolve" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="array" type="Variant" />
+			<param index="1" name="kernel" type="Variant" />
+			<description>
+				Convolve two N-dimensional arrays. They are broadcasted against each other in the inner dimensions.
+				Currently, kernel must be smaller than array in all dimensions.
+			</description>
+		</method>
 		<method name="copy" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="array" type="Variant" />
@@ -728,6 +737,15 @@
 			<param index="0" name="dtype" type="int" enum="nd.DType" />
 			<description>
 				Size of a single element of an array using the dtype.
+			</description>
+		</method>
+		<method name="sliding_window_view" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="array" type="Variant" />
+			<param index="1" name="window_shape" type="Variant" />
+			<description>
+				Create a sliding window view into the array with the given window shape.
+				Also known as rolling or moving window, the window slides across all dimensions of the array and extracts subsets of the array at all window positions.
 			</description>
 		</method>
 		<method name="split" qualifiers="static">

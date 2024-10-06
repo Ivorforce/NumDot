@@ -31,6 +31,7 @@
 #include "xtensor/xiterator.hpp"                   // for operator==
 #include "xtensor/xstrided_view.hpp"               // for xstrided_slice_vector
 #include "xtl/xiterator_base.hpp"                  // for operator!=
+#include "vatensor/stride_tricks.hpp"
 
 using namespace godot;
 
@@ -156,6 +157,8 @@ void NDArray::_bind_methods() {
 	godot::ClassDB::bind_method(D_METHOD("assign_dot", "a", "b"), &NDArray::assign_dot);
 	godot::ClassDB::bind_method(D_METHOD("assign_reduce_dot", "a", "b", "axes"), &NDArray::assign_reduce_dot, DEFVAL(nullptr), DEFVAL(nullptr), DEFVAL(nullptr));
 	godot::ClassDB::bind_method(D_METHOD("assign_matmul", "a", "b"), &NDArray::assign_matmul);
+
+	godot::ClassDB::bind_method(D_METHOD("assign_convolve", "array", "kernel"), &NDArray::assign_convolve);
 }
 
 NDArray::NDArray() = default;
@@ -974,6 +977,10 @@ Ref<NDArray> NDArray::assign_reduce_dot(const Variant& a, const Variant& b, cons
 
 Ref<NDArray> NDArray::assign_matmul(const Variant& a, const Variant& b) {
 	VARRAY_MAP2(matmul, a, b);
+}
+
+Ref<NDArray> NDArray::assign_convolve(const Variant& array, const Variant& kernel) {
+	VARRAY_MAP2(convolve, array, kernel);
 }
 
 #define CONVERT_TO_SCALAR(type)\

@@ -68,6 +68,8 @@ Methods
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`concatenate<class_nd_method_concatenate>`\ (\ v\: ``Variant`` = null, axis\: ``int`` = 0, dtype\: :ref:`DType<enum_nd_DType>` = 11\ ) |static|                                                   |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`convolve<class_nd_method_convolve>`\ (\ array\: ``Variant``, kernel\: ``Variant``\ ) |static|                                                                                                    |
+   +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`copy<class_nd_method_copy>`\ (\ array\: ``Variant``\ ) |static|                                                                                                                                  |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`cos<class_nd_method_cos>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                                        |
@@ -199,6 +201,8 @@ Methods
    | :ref:`NDArray<class_NDArray>`                              | :ref:`sinh<class_nd_method_sinh>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                                      |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``int``                                                    | :ref:`size_of_dtype_in_bytes<class_nd_method_size_of_dtype_in_bytes>`\ (\ dtype\: :ref:`DType<enum_nd_DType>`\ ) |static|                                                                              |
+   +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`sliding_window_view<class_nd_method_sliding_window_view>`\ (\ array\: ``Variant``, window_shape\: ``Variant``\ ) |static|                                                                        |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`Array<class_Array>`\[:ref:`NDArray<class_NDArray>`\] | :ref:`split<class_nd_method_split>`\ (\ v\: ``Variant``, indices_or_section_size\: ``Variant`` = null, axis\: ``int`` = 0\ ) |static|                                                                  |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -603,6 +607,20 @@ The arrays must match in dimension except in the axis.
 
 ----
 
+.. _class_nd_method_convolve:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **convolve**\ (\ array\: ``Variant``, kernel\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_convolve>`
+
+Convolve two N-dimensional arrays. They are broadcasted against each other in the inner dimensions.
+
+Currently, kernel must be smaller than array in all dimensions.
+
+.. rst-class:: classref-item-separator
+
+----
+
 .. _class_nd_method_copy:
 
 .. rst-class:: classref-method
@@ -661,7 +679,7 @@ Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndi.c
 
 :ref:`NDRandomGenerator<class_NDRandomGenerator>` **default_rng**\ (\ seed\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_default_rng>`
 
-Creates a new random number generator (rng).
+Creates a new random number generator (rng) with the default random engine (mt19937).
 
 If no seed is provided, a fresh, unpredictable entropy will be pulled from the OS.
 
@@ -1502,6 +1520,20 @@ Equivalent to 0.5 \* (nd.exp(x) - nd.exp(-x)).
 ``int`` **size_of_dtype_in_bytes**\ (\ dtype\: :ref:`DType<enum_nd_DType>`\ ) |static| :ref:`🔗<class_nd_method_size_of_dtype_in_bytes>`
 
 Size of a single element of an array using the dtype.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_sliding_window_view:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **sliding_window_view**\ (\ array\: ``Variant``, window_shape\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_sliding_window_view>`
+
+Create a sliding window view into the array with the given window shape.
+
+Also known as rolling or moving window, the window slides across all dimensions of the array and extracts subsets of the array at all window positions.
 
 .. rst-class:: classref-item-separator
 

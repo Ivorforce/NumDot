@@ -194,6 +194,9 @@ public:
 	Ref<NDArray> assign_reduce_dot(const Variant& a, const Variant& b, const Variant& axes);
 	Ref<NDArray> assign_matmul(const Variant& a, const Variant& b);
 
+	// Convolutions
+	Ref<NDArray> assign_convolve(const Variant& array, const Variant& kernel);
+
 	// Conversion to other types.
 	explicit operator bool() const;
 	explicit operator int64_t() const;

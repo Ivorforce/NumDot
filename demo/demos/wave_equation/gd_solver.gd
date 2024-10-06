@@ -9,6 +9,7 @@ func initialize() -> void:
 	x = range(params.num_points).map(func(elt): return (params.dx * elt + params.xmin))
 	u = params.u.duplicate()
 	uprev = params.uprev.duplicate()
+	
 	tmp.resize(params.num_points)
 
 func simulation_step(delta: float) -> void:
@@ -26,9 +27,12 @@ func simulation_step(delta: float) -> void:
 		u = tmp.duplicate()	
 
 func on_draw() -> void:
-	for i in range(0, params.num_points, max(1, floori(params.num_points/params.num_draw_points))):
-		params.draw_circle(Vector2(x[i] * params.xscale, u[i] * params.yscale), params.point_size, params.point_color)
-
+	for idx in params.draw_array.size():
+		params.draw_array[idx].x = params.xscale * x[params.draw_range[idx]]
+		params.draw_array[idx].y = params.yscale * u[params.draw_range[idx]]
+	
+	params.draw_polyline(params.draw_array, params.point_color, params.point_size)
+	
 	if params.bc_left:
 		params.draw_circle(Vector2(x[0], u[0] * params.yscale), params.anchor_size, params.anchor_color)
 

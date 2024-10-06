@@ -8,7 +8,6 @@
 [node name="WaveEquation" type="Node2D" node_paths=PackedStringArray("solver")]
 position = Vector2(342, 323)
 script = ExtResource("1_lapk8")
-num_draw_points = 300
 point_color = Color(0.937255, 0.968627, 0.964706, 1)
 point_size = 3.0
 anchor_size = 5.0

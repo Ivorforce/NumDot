@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://dq6inhjq2xf8l"]
+[gd_scene load_steps=8 format=3 uid="uid://dq6inhjq2xf8l"]
 
 [ext_resource type="Script" path="res://benchmarks/benchmarks.gd" id="1_ywkn7"]
 [ext_resource type="Script" path="res://benchmarks/sieve_of_eratosthenes.gd" id="2_is360"]
 [ext_resource type="Script" path="res://benchmarks/generate_polygon.gd" id="3_58q7f"]
 [ext_resource type="Script" path="res://benchmarks/math.gd" id="4_l7bbo"]
 [ext_resource type="Script" path="res://benchmarks/reductions.gd" id="5_isst8"]
+[ext_resource type="Script" path="res://benchmarks/scalar_math.gd" id="5_m6f22"]
 [ext_resource type="Script" path="res://benchmarks/matrix.gd" id="6_812f8"]
 
 [node name="Benchmarks" type="Node"]
@@ -18,6 +19,9 @@ script = ExtResource("3_58q7f")
 
 [node name="Math" type="Node" parent="."]
 script = ExtResource("4_l7bbo")
+
+[node name="ScalarMath" type="Node" parent="."]
+script = ExtResource("5_m6f22")
 
 [node name="Reductions" type="Node" parent="."]
 script = ExtResource("5_isst8")

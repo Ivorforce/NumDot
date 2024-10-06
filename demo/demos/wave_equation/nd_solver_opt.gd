@@ -1,43 +1,58 @@
 extends Solver
 
-var x = null
-var u  = null
-var uprev = null
-var rng = null
+var rng: Vector4i
+var x: NDArray
+
+var u: NDArray
+var u_rng: NDArray
+var u_from_2: NDArray
+var u_to_num_points: NDArray
+
+var uprev: NDArray
+var uprev_rng: NDArray
 
 # temporary arrays
-var tmp1 = null
-var tmp2 = null
+var tmp1: NDArray
+var tmp2: NDArray
 	
+var rsq: NDArray
+var rsq_inv: NDArray
+
 func initialize() -> void:
+	# solution range
+	rng = nd.range(1, params.num_points + 1)
+
 	# grids and solution arrays
 	x = nd.linspace(params.xmin, params.xmax, params.num_points)
+
 	u = nd.zeros(params.num_points + 2)
+	u_rng = u.get(rng)
+	u_from_2 = u.get(nd.from(2))
+	u_to_num_points = u.get(nd.to(params.num_points))
+
 	uprev = nd.zeros(params.num_points + 2)
+	uprev_rng = uprev.get(rng)
 	
 	# tmp arrays
 	tmp1 = nd.zeros(params.num_points)
 	tmp2 = nd.zeros(params.num_points)
 
-	# solution range
-	rng = nd.range(1, params.num_points + 1)
-	
 	# initial condition
-	u.set(nd.array(params.u), rng)
-	uprev.set(nd.array(params.uprev), rng)
-
-func simulation_step(delta: float) -> void:
-	var rsq = (params.wave_speed * (1/params.frame_rate/params.num_steps_per_frame) / params.dx)**2
+	u_rng.set(params.u)
+	uprev_rng.set(params.uprev)
 	
+	# Other variables
+	rsq = nd.array((params.wave_speed * (1/params.frame_rate/params.num_steps_per_frame) / params.dx)**2)
+	rsq_inv = nd.multiply(2, nd.subtract(1, rsq))
+
+func simulation_step(delta: float) -> void:	
 	for i in params.num_steps_per_frame:
-		tmp1.assign_multiply(2 * (1 - rsq), u.get(rng))
-		tmp1.assign_subtract(tmp1, uprev.get(rng))
+		tmp1.assign_subtract(tmp1, uprev_rng)
 
-		tmp2.assign_add(u.get(nd.from(2)), u.get(nd.to(params.num_points)))
-		tmp2.assign_multiply(rsq, tmp2)
+		tmp2.assign_add(u_from_2, u_to_num_points)
 
-		uprev = nd.array(u) # copy
-		u.get(rng).assign_add(tmp1, tmp2)
+		uprev.set(u)
+		u_rng.assign_add(tmp1, tmp2)
 
 		# boundary condition
 		if params.bc_left: u.set(u.get(1), 0); uprev.set(uprev.get(1), 0)

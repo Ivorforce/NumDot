@@ -3,8 +3,24 @@
 
 namespace va {
 	namespace promote {
+		template <typename T, typename Enable = void>
+		struct ValueType;
+
+		template <typename T>
+		struct ValueType<T, std::enable_if_t<std::is_fundamental_v<T>>> {
+			using value_type = T;
+		};
+
+		template <typename T>
+		struct ValueType<T, std::enable_if_t<!std::is_fundamental_v<T>>> {
+			using value_type = typename T::value_type;
+		};
+
+		template<typename T>
+		using value_type_v = typename ValueType<T>::value_type;
+
 		template<typename NeededType, typename T>
-		auto promote_xexpression_if_needed(T&& arg) {
+		auto promote_value_type_if_needed(T&& arg) {
 			using V = typename std::decay_t<decltype(arg)>::value_type;
 
 			if constexpr (std::is_same_v<V, NeededType>) {
@@ -12,15 +28,20 @@ namespace va {
 				return std::forward<T>(arg);
 			}
 			else {
-				// Casting can considerably increase performance (from a small test, it was 25%).
-				// However, this is only relevant for operations that even need casting.
-				// The cost for casting instead of copying is a much larger binary size (100% increase).
-				// Most people will probably prefer the small binary, and accept less optimized wrong dtype operations.
+				if constexpr (std::is_fundamental_v<T>) {
+					return static_cast<NeededType>(arg);
+				}
+				else {
+					// Casting can considerably increase performance (from a small test, it was 25%).
+					// However, this is only relevant for operations that even need casting.
+					// The cost for casting instead of copying is a much larger binary size (100% increase).
+					// Most people will probably prefer the small binary, and accept less optimized wrong dtype operations.
 #ifdef NUMDOT_CAST_INSTEAD_OF_COPY_FOR_ARGUMENTS
-                return xt::cast<NeededType>(std::forward<T>(arg));
+			        return xt::cast<NeededType>(std::forward<T>(arg));
 #else
-				return xt::xarray<NeededType>(std::forward<T>(arg));
+					return xt::xarray<NeededType>(std::forward<T>(arg));
 #endif
+				}
 			}
 		}
 

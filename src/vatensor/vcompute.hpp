@@ -9,7 +9,7 @@
 #include <vector>                       // for vector
 #include "varray.hpp"                     // for VArrayTarget, VScalar, VWrite
 #include "vassign.hpp"                    // for assign_nonoverlapping, broadc...
-#include "vpromote.hpp"                   // for promote_xexpression_if_needed
+#include "vpromote.hpp"                   // for promote_value_type_if_needed
 #include "xtensor/xarray.hpp"           // for xarray_container
 #include "xtensor/xoperation.hpp"       // for xfunction_type_t
 #include "xtensor/xstorage.hpp"         // for uvector
@@ -115,7 +115,7 @@ namespace va {
 
         template<typename... Args>
         void operator()(const Args&... args) const {
-            using InputType = typename PromotionRule::template input_type<typename std::decay_t<Args>::value_type...>;
+            using InputType = typename PromotionRule::template input_type<promote::value_type_v<std::decay_t<Args>>...>;
 
             if constexpr (std::is_same_v<InputType, void>) {
                 throw std::runtime_error("Unsupported type for operation.");
@@ -124,7 +124,7 @@ namespace va {
                 using OutputType = typename PromotionRule::template output_type<InputType>;
 
                 // Result of visitor invocation
-                const auto result = visitor(promote::promote_xexpression_if_needed<InputType>(args)...);
+                const auto result = visitor(promote::promote_value_type_if_needed<InputType>(args)...);
 
                 assign_to_target<OutputType>(target, result);
             }
@@ -158,7 +158,7 @@ namespace va {
 
                 // Result of visitor invocation
                 // TODO Some xt functions support passing the output type. That would be FAR better than casting it afterwards as here.
-                const auto result = OutputType(visitor(promote::promote_xexpression_if_needed<InputType>(args)...));
+                const auto result = OutputType(visitor(promote::promote_value_type_if_needed<InputType>(args)...));
                 return static_cast<ReturnType>(result);
             }
         }

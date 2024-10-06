@@ -21,7 +21,7 @@ namespace va {
 
 		template<typename NeededType, typename T>
 		auto promote_value_type_if_needed(T&& arg) {
-			using V = typename std::decay_t<decltype(arg)>::value_type;
+			using V = value_type_v<std::decay_t<decltype(arg)>>;
 
 			if constexpr (std::is_same_v<V, NeededType>) {
 				// Most common situation: the argument we need is the same as the argument that's given.

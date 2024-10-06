@@ -48,6 +48,10 @@ That being said, here is some information about the most interesting options:
 
     - Optimize wrong-type argument conversion (e.g. ``nd.sqrt``, which promotes int arguments to ``float64``). The argument improves performance of cross datatype conversions, but also increases binary size.
 
+- ``define=NUMDOT_DISABLE_SCALAR_OPTIMIZATION``
+
+    - Disable optimization for scalar operations, like ``nd.add(array, 5)``. This reduces their performance to that of regular ndarray operations, but saves on some binary size.
+
 **Note:** You can have as many ``define=[...]`` arguments as you wish.
 
 You can test building with these options locally. To get them to be permanent, edit the SConstruct file, and add your needed changes at the spot intended for it:

@@ -8,6 +8,7 @@
 #include "xtensor/xmath.hpp"                                // for maximum
 #include "xtensor/xoperation.hpp"                           // for divides
 #include "xtl/xfunctional.hpp"                              // for select
+#include "scalar_tricks.hpp"
 
 using namespace va;
 
@@ -35,10 +36,25 @@ void va::negative(VArrayTarget target, const VArray& a) {
 #endif
 }
 
+#ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
+void add(VArrayTarget target, const VArray& a, const VScalar& b) {
+	va::xoperation_inplace<promote::num_function_result<xt::detail::plus>>(
+		XFunction<xt::detail::plus> {},
+		target,
+		a.read,
+		b
+	);
+}
+#endif
+
 void va::add(VArrayTarget target, const VArray& a, const VArray& b) {
 #ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
 #else
+#ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
+	OPTIMIZE_COMMUTATIVE(::add, a, b);
+#endif
+
 	va::xoperation_inplace<promote::num_function_result<xt::detail::plus>>(
 		XFunction<xt::detail::plus> {},
 		target,
@@ -52,6 +68,27 @@ void va::subtract(VArrayTarget target, const VArray& a, const VArray& b) {
 #ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
 #else
+#ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
+	if (a.dimension() == 0) {
+		va::xoperation_inplace<promote::num_function_result<xt::detail::minus>>(
+			XFunction<xt::detail::minus> {},
+			target,
+			a.to_single_value(),
+			b.read
+		);
+		return;
+	}
+	if (b.dimension() == 0) {
+		va::xoperation_inplace<promote::num_function_result<xt::detail::minus>>(
+			XFunction<xt::detail::minus> {},
+			target,
+			a.read,
+			b.to_single_value()
+		);
+		return;
+	}
+#endif
+
 	va::xoperation_inplace<promote::num_function_result<xt::detail::minus>>(
 		XFunction<xt::detail::minus> {},
 		target,
@@ -61,10 +98,23 @@ void va::subtract(VArrayTarget target, const VArray& a, const VArray& b) {
 #endif
 }
 
+void multiply(VArrayTarget target, const VArray& a, const VScalar& b) {
+	va::xoperation_inplace<promote::num_function_result<xt::detail::multiplies>>(
+		XFunction<xt::detail::multiplies> {},
+		target,
+		a.read,
+		b
+	);
+}
+
 void va::multiply(VArrayTarget target, const VArray& a, const VArray& b) {
 #ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
 #else
+#ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
+	OPTIMIZE_COMMUTATIVE(::multiply, a, b);
+#endif
+
 	va::xoperation_inplace<promote::num_function_result<xt::detail::multiplies>>(
 		XFunction<xt::detail::multiplies> {},
 		target,
@@ -78,6 +128,27 @@ void va::divide(VArrayTarget target, const VArray& a, const VArray& b) {
 #ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
 #else
+#ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
+	if (a.dimension() == 0) {
+		va::xoperation_inplace<promote::num_function_result<xt::detail::divides>>(
+			XFunction<xt::detail::divides> {},
+			target,
+			a.to_single_value(),
+			b.read
+		);
+		return;
+	}
+	if (b.dimension() == 0) {
+		va::xoperation_inplace<promote::num_function_result<xt::detail::divides>>(
+			XFunction<xt::detail::divides> {},
+			target,
+			a.read,
+			b.to_single_value()
+		);
+		return;
+	}
+#endif
+
 	va::xoperation_inplace<promote::num_function_result<xt::detail::divides>>(
 		XFunction<xt::detail::divides> {},
 		target,
@@ -91,6 +162,27 @@ void va::remainder(VArrayTarget target, const VArray& a, const VArray& b) {
 #ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
 #else
+#ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
+	if (a.dimension() == 0) {
+		va::xoperation_inplace<promote::num_function_result<xt::math::remainder_fun>>(
+			XFunction<xt::math::remainder_fun> {},
+			target,
+			a.to_single_value(),
+			b.read
+		);
+		return;
+	}
+	if (b.dimension() == 0) {
+		va::xoperation_inplace<promote::num_function_result<xt::math::remainder_fun>>(
+			XFunction<xt::math::remainder_fun> {},
+			target,
+			a.read,
+			b.to_single_value()
+		);
+		return;
+	}
+#endif
+
 	va::xoperation_inplace<promote::num_function_result<xt::math::remainder_fun>>(
 		XFunction<xt::math::remainder_fun> {},
 		target,
@@ -104,6 +196,27 @@ void va::pow(VArrayTarget target, const VArray& a, const VArray& b) {
 #ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
 #else
+#ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
+	if (a.dimension() == 0) {
+		va::xoperation_inplace<promote::num_function_result<xt::math::pow_fun>>(
+			XFunction<xt::math::pow_fun> {},
+			target,
+			a.to_single_value(),
+			b.read
+		);
+		return;
+	}
+	if (b.dimension() == 0) {
+		va::xoperation_inplace<promote::num_function_result<xt::math::pow_fun>>(
+			XFunction<xt::math::pow_fun> {},
+			target,
+			a.read,
+			b.to_single_value()
+		);
+		return;
+	}
+#endif
+
 	va::xoperation_inplace<promote::num_function_result<xt::math::pow_fun>>(
 		XFunction<xt::math::pow_fun> {},
 		target,
@@ -113,10 +226,23 @@ void va::pow(VArrayTarget target, const VArray& a, const VArray& b) {
 #endif
 }
 
+void minimum(VArrayTarget target, const VArray& a, const VScalar& b) {
+	va::xoperation_inplace<promote::common_in_common_out>(
+		XFunction<xt::math::minimum<void>> {},
+		target,
+		a.read,
+		b
+	);
+}
+
 void va::minimum(VArrayTarget target, const VArray& a, const VArray& b) {
 #ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
 #else
+#ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
+	OPTIMIZE_COMMUTATIVE(::minimum, a, b);
+#endif
+
 	va::xoperation_inplace<promote::common_in_common_out>(
 		XFunction<xt::math::minimum<void>> {},
 		target,
@@ -126,10 +252,23 @@ void va::minimum(VArrayTarget target, const VArray& a, const VArray& b) {
 #endif
 }
 
+void maximum(VArrayTarget target, const VArray& a, const VScalar& b) {
+	va::xoperation_inplace<promote::common_in_common_out>(
+		XFunction<xt::math::maximum<void>> {},
+		target,
+		a.read,
+		b
+	);
+}
+
 void va::maximum(VArrayTarget target, const VArray& a, const VArray& b) {
 #ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
 #else
+#ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
+	OPTIMIZE_COMMUTATIVE(::maximum, a, b);
+#endif
+
 	va::xoperation_inplace<promote::common_in_common_out>(
 		XFunction<xt::math::maximum<void>> {},
 		target,
@@ -143,6 +282,19 @@ void va::clip(VArrayTarget target, const VArray& a, const VArray& lo, const VArr
 #ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
 #else
+#ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
+	if (lo.dimension() == 0 && hi.dimension() == 0) {
+		va::xoperation_inplace<promote::common_in_common_out>(
+			XFunction<xt::math::clamp_fun> {},
+			target,
+			a.read,
+			lo.to_single_value(),
+			hi.to_single_value()
+		);
+		return;
+	}
+#endif
+
 	va::xoperation_inplace<promote::common_in_common_out>(
 		XFunction<xt::math::clamp_fun> {},
 		target,

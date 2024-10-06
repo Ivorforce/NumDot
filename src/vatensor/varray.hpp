@@ -150,9 +150,6 @@ namespace va {
         [[nodiscard]] std::size_t dimension() const;
         [[nodiscard]] std::size_t size_of_array_in_bytes() const;
 
-        void set_scalar(const axes_type& index, VScalar scalar);
-        [[nodiscard]] VScalar get_scalar(const axes_type& index) const;
-
         void prepare_write();
 
         [[nodiscard]] std::shared_ptr<VArray> sliced(const xt::xstrided_slice_vector& slices) const;

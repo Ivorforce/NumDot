@@ -288,20 +288,21 @@ void NDArray::set(const Variant** args, GDExtensionInt arg_count, GDExtensionCal
 		std::visit([this, value](auto slice) {
 			using T = std::decay_t<decltype(slice)>;
 
-			if constexpr (std::is_same_v<T, xt::xstrided_slice_vector> || std::is_same_v<T, std::nullptr_t>) {
-				if constexpr (std::is_same_v<T, xt::xstrided_slice_vector>) {
-					// See if we can't make it a single-value assign.
-					// This should be faster than fill-assign, due to various overheads.
-					// TODO We should figure out if this is fast enough. If not, we'll need a set_scalar function.
-					if (slice.size() == array->dimension()) {
-						const auto as_axes = slice_vector_to_axes_list(slice);
-						if (as_axes != std::nullopt) {
-							array->set_scalar(*as_axes, variant_to_vscalar(value));
-							return;
-						}
+			if constexpr (std::is_same_v<T, xt::xstrided_slice_vector>) {
+				// See if we can't make it a single-value assign.
+				// This should be faster than fill-assign, due to various overheads.
+				// TODO We should figure out if this is fast enough. If not, we'll need a set_scalar function.
+				if (slice.size() == array->dimension()) {
+					auto as_axes = slice_vector_to_axes_list(slice);
+					if (as_axes != std::nullopt) {
+						array->prepare_write();
+						va::set_single_value(array->write.value(), *as_axes, variant_to_vscalar(value));
+						return;
 					}
 				}
+			}
 
+			if constexpr (std::is_same_v<T, xt::xstrided_slice_vector> || std::is_same_v<T, std::nullptr_t>) {
 				auto compute = get_write(*array, slice);
 
 				switch (value.get_type()) {
@@ -371,7 +372,8 @@ Ref<NDArray> NDArray::get(const Variant** args, GDExtensionInt arg_count, GDExte
 
 bool NDArray::get_bool(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {
 	try {
-		return va::scalar_to_type<bool>(array->get_scalar(variants_to_axes(args, arg_count, error)));
+		auto axes = variants_to_axes(args, arg_count, error);
+		return va::scalar_to_type<bool>(va::get_single_value(array->read, axes));
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG(0, error.what());
@@ -380,7 +382,8 @@ bool NDArray::get_bool(const Variant** args, GDExtensionInt arg_count, GDExtensi
 
 int64_t NDArray::get_int(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {
 	try {
-		return va::scalar_to_type<int64_t>(array->get_scalar(variants_to_axes(args, arg_count, error)));
+		auto axes = variants_to_axes(args, arg_count, error);
+		return va::scalar_to_type<int64_t>(va::get_single_value(array->read, axes));
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG(0, error.what());
@@ -389,7 +392,8 @@ int64_t NDArray::get_int(const Variant** args, GDExtensionInt arg_count, GDExten
 
 double_t NDArray::get_float(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {
 	try {
-		return va::scalar_to_type<double_t>(array->get_scalar(variants_to_axes(args, arg_count, error)));
+		auto axes = variants_to_axes(args, arg_count, error);
+		return va::scalar_to_type<double_t>(va::get_single_value(array->read, axes));
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG(0, error.what());

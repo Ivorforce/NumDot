@@ -21,6 +21,9 @@ namespace va {
 		xt::assign_data(t, e, xt::detail::get_rhs_triviality(e.derived_cast()));
 	}
 
+	void set_single_value(VWrite& array, axes_type& index, VScalar value);
+	VScalar get_single_value(VRead& array, axes_type& index);
+
 	void assign(VWrite& array, const VRead& value);
 	void assign_nonoverlapping(VWrite& array, const ArrayVariant& value);
 	void assign(VWrite& array, VScalar value);

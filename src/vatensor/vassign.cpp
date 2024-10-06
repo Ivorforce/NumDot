@@ -8,6 +8,34 @@
 
 using namespace va;
 
+static void mod_index(axes_type& index, const shape_type& shape) {
+	// xtensor actually checks later, too, but it just pads with 0 rather than throwing.
+	if (index.size() != shape.size()) throw std::runtime_error("invalid dimension for index");
+
+	for (int i = 0; i < index.size(); ++i) {
+		if (index[i] < 0) index[i] += shape[i];
+		if (index[i] < 0 || index[i] >= shape[i]) throw std::runtime_error("index out of boudns");
+	}
+}
+
+void va::set_single_value(VWrite& array, axes_type& index, VScalar value) {
+	std::visit(
+		[&index](auto& carray, auto value) -> void {
+			mod_index(index, carray.shape());
+			carray[index] = value;
+		}, array, value
+	);
+}
+
+VScalar va::get_single_value(VRead& array, axes_type& index) {
+	return std::visit(
+		[&index](auto& carray) -> VScalar {
+			mod_index(index, carray.shape());
+			return carray[index];
+		}, array
+	);
+}
+
 void va::assign(VWrite& array, const VRead& value) {
 	std::visit(
 		[](auto& carray, const auto& cvalue) {

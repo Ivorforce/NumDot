@@ -57,30 +57,6 @@ std::size_t va::VArray::dimension() const {
     );
 }
 
-
-void va::VArray::set_scalar(const axes_type& index, VScalar scalar) {
-    // xtensor actually checks later, too, but it just pads with 0 rather than throwing.
-    if (index.size() != dimension()) throw std::runtime_error("invalid dimension for index");
-    prepare_write();
-
-    std::visit(
-        [&index](auto& carray, auto value) -> void {
-            carray[index] = value;
-        }, write.value(), scalar
-    );
-}
-
-va::VScalar va::VArray::get_scalar(const axes_type& index) const {
-    // xtensor actually checks later, too, but it just pads with 0 rather than throwing.
-    if (index.size() != dimension()) throw std::runtime_error("invalid dimension for index");
-
-    return std::visit(
-        [&index](auto& carray) -> VScalar {
-            return carray[index];
-        }, read
-    );
-}
-
 void va::VArray::prepare_write() {
     if (write.has_value()) {
         return;

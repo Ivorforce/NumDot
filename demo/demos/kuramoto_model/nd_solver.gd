@@ -23,8 +23,8 @@ func initialize() -> void:
 	phase = nd.multiply(2*PI, rng.random(params.N))
 	omega = nd.add(nd.multiply(rng.randn(params.N), params.frequency_sigma), params.frequency_mean)
 	
-	phase_coherence = nd.zeros(params.N)
-	avg_phase = nd.zeros(params.N)
+	phase_coherence = nd.zeros(1)
+	avg_phase = nd.zeros(1)
 	phase_sin = nd.zeros(params.N)
 	phase_cos = nd.zeros(params.N)
 	

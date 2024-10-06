@@ -23,5 +23,6 @@ using SliceVariant = std::variant<
 
 xt::xstrided_slice<std::ptrdiff_t> variant_to_slice_part(const Variant& variant);
 SliceVariant variants_to_slice_variant(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error);
+std::optional<va::axes_type> slice_vector_to_axes_list(const xt::xstrided_slice_vector& vector);
 
 #endif

@@ -10,6 +10,7 @@
 #include "godot_cpp/variant/variant.hpp"      // for Variant
 #include "godot_cpp/variant/vector4i.hpp"     // for Vector4i
 #include "xtensor/xslice.hpp"                 // for xrange_adaptor, xall_tag
+#include "xtl/xvariant.hpp"                 // for get_if
 
 using xtuph = xt::placeholders::xtuph;
 
@@ -89,4 +90,14 @@ SliceVariant variants_to_slice_variant(const Variant** args, GDExtensionInt arg_
 		sv[i] = variant_to_slice_part(*args[i]);
 	}
 	return sv;
+}
+
+std::optional<va::axes_type> slice_vector_to_axes_list(const xt::xstrided_slice_vector& vector) {
+	va::axes_type axes(vector.size());
+	for (int i = 0; i < vector.size(); i++) {
+		auto* ptr = xtl::get_if<std::ptrdiff_t>(&vector[i]);
+		if (ptr == nullptr) return std::nullopt;
+		axes[i] = *ptr;
+	}
+	return axes;
 }

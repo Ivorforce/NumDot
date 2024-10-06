@@ -25,6 +25,9 @@ Upcoming Changes (main branch)
 - Added ``split``, ``hsplit`` and ``vsplit`` functions.
 - Added ``tile`` functions.
 
+**Changed**
+- Added ``array.set(x)`` should now be slightly faster when only a single element is updated.
+
 **Fixed**
 
 - ``nd.range`` now behaves properly when called as ``nd.range(x, null)`` (i.e. range from x to end).

@@ -18,6 +18,7 @@
 #include "gdconvert/conversion_array.hpp"            // for fill_c_array_flat
 #include "gdconvert/conversion_slice.hpp"            // for variants_to_slice_...
 #include "gdconvert/conversion_string.hpp"           // for xt_to_string
+#include "gdconvert/conversion_scalar.hpp"
 #include "godot_cpp/classes/global_constants.hpp"  // for MethodFlags
 #include "godot_cpp/core/class_db.hpp"             // for D_METHOD, ClassDB
 #include "godot_cpp/core/error_macros.hpp"         // for ERR_FAIL_COND_V_MSG
@@ -288,6 +289,19 @@ void NDArray::set(const Variant** args, GDExtensionInt arg_count, GDExtensionCal
 			using T = std::decay_t<decltype(slice)>;
 
 			if constexpr (std::is_same_v<T, xt::xstrided_slice_vector> || std::is_same_v<T, std::nullptr_t>) {
+				if constexpr (std::is_same_v<T, xt::xstrided_slice_vector>) {
+					// See if we can't make it a single-value assign.
+					// This should be faster than fill-assign, due to various overheads.
+					// TODO We should figure out if this is fast enough. If not, we'll need a set_scalar function.
+					if (slice.size() == array->dimension()) {
+						const auto as_axes = slice_vector_to_axes_list(slice);
+						if (as_axes != std::nullopt) {
+							array->set_scalar(*as_axes, variant_to_vscalar(value));
+							return;
+						}
+					}
+				}
+
 				auto compute = get_write(*array, slice);
 
 				switch (value.get_type()) {

@@ -1,4 +1,4 @@
-extends Solver
+extends WaveSolver
 
 var rng: Vector4i
 var x: NDArray

@@ -47,7 +47,7 @@ var uprev = []
 var frame_time: float = 1./60
 
 # drawing arrays for the wave
-var draw_range: Array # range of solution points to draw
+var draw_range: PackedInt64Array # range of solution points to draw
 var draw_array: PackedVector2Array # final array to pass to draw_polyline
 
 func _ready() -> void:
@@ -122,8 +122,7 @@ func _on_bc_right_item_selected(index: int) -> void:
 	bc_right = index
 
 func restart_simulation() -> void:
-	var draw_step = max(1, floori(num_points/num_draw_points))
-	draw_range = range(0, num_points, draw_step)
+	draw_range = nd.linspace(0, num_points, num_draw_points, false, nd.Int64).to_packed_int64_array()
 	draw_array.resize(draw_range.size())
 	draw_array.fill(Vector2.ZERO)
 

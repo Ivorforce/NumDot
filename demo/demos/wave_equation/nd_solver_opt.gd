@@ -47,9 +47,11 @@ func initialize() -> void:
 
 func simulation_step(delta: float) -> void:	
 	for i in params.num_steps_per_frame:
+		tmp1.assign_multiply(rsq_inv, u_rng)
 		tmp1.assign_subtract(tmp1, uprev_rng)
 
 		tmp2.assign_add(u_from_2, u_to_num_points)
+		tmp2.assign_multiply(rsq, tmp2)
 
 		uprev.set(u)
 		u_rng.assign_add(tmp1, tmp2)

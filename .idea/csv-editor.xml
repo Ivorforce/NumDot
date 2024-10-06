@@ -3,6 +3,13 @@
   <component name="CsvFileAttributes">
     <option name="attributeMap">
       <map>
+        <entry key="$PROJECT_DIR$/docs/how-to-use/numpy-xtensor-numdot.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/docs/godot-docs/_tools/redirects/redirects.csv">
           <value>
             <Attribute>

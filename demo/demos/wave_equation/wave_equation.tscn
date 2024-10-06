@@ -135,9 +135,10 @@ text = "Points: 150"
 unique_name_in_owner = true
 layout_mode = 2
 min_value = 20.0
-max_value = 50000.0
-step = 100.0
+max_value = 100000.0
+step = 10.0
 value = 120.0
+exp_edit = true
 
 [node name="CFLLabel" type="Label" parent="SliderOptions"]
 unique_name_in_owner = true

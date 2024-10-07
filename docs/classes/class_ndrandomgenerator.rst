@@ -34,6 +34,8 @@ Methods
    +--------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                                                  | :ref:`integers<class_NDRandomGenerator_method_integers>`\ (\ low_or_high\: ``int`` = 0, high\: ``Variant`` = null, shape\: ``Variant`` = PackedByteArray(), dtype\: :ref:`DType<enum_nd_DType>` = 6, endpoint\: ``bool`` = false\ ) |
    +--------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                                                  | :ref:`randn<class_NDRandomGenerator_method_randn>`\ (\ shape\: ``Variant`` = PackedByteArray(), dtype\: :ref:`DType<enum_nd_DType>` = 2\ )                                                                                          |
+   +--------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                                                  | :ref:`random<class_NDRandomGenerator_method_random>`\ (\ shape\: ``Variant`` = PackedByteArray(), dtype\: :ref:`DType<enum_nd_DType>` = 2\ )                                                                                        |
    +--------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`Array<class_Array>`\[:ref:`NDRandomGenerator<class_NDRandomGenerator>`\] | :ref:`spawn<class_NDRandomGenerator_method_spawn>`\ (\ n\: ``int``\ )                                                                                                                                                               |
@@ -54,7 +56,19 @@ Method Descriptions
 
 :ref:`NDArray<class_NDArray>` **integers**\ (\ low_or_high\: ``int`` = 0, high\: ``Variant`` = null, shape\: ``Variant`` = PackedByteArray(), dtype\: :ref:`DType<enum_nd_DType>` = 6, endpoint\: ``bool`` = false\ ) :ref:`🔗<class_NDRandomGenerator_method_integers>`
 
-Return random integers from the “discrete uniform” distribution of the specified dtype. If high is None (the default), then results are from 0 to low.
+Return random integers sampled from the “discrete uniform” distribution of the specified dtype. If high is None (the default), then results are from 0 to low.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDRandomGenerator_method_randn:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **randn**\ (\ shape\: ``Variant`` = PackedByteArray(), dtype\: :ref:`DType<enum_nd_DType>` = 2\ ) :ref:`🔗<class_NDRandomGenerator_method_randn>`
+
+Return random integers sampled from the standard normal distribution `N(0, 1)` of the specified dtype. A general gaussian distribution `N(mu, sig)` may be obtained by multiplying the result with `sig` and adding it with `mu`.
 
 .. rst-class:: classref-item-separator
 

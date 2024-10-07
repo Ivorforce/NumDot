@@ -76,6 +76,7 @@ text = "Grid: 20x20"
 unique_name_in_owner = true
 layout_mode = 2
 min_value = 10.0
+max_value = 250.0
 value = 20.0
 
 [node name="SpreadLabel" type="Label" parent="SliderOptions"]
@@ -88,6 +89,7 @@ text = "Spread: 1"
 unique_name_in_owner = true
 layout_mode = 2
 min_value = 0.01
+max_value = 4.0
 step = 0.0
 value = 1.0
 exp_edit = true

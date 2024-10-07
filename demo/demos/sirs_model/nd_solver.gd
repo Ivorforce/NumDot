@@ -1,77 +1,58 @@
 extends SIRSolver
 
-var grid: NDArray
-var gridp: NDArray
-var gridi: NDArray
-var indices: NDArray
+var grid_time_since_infection: NDArray
+var grid_can_infect_neighbor: NDArray
+var grid_is_infectable: NDArray
+var grid_infected_neighbor_count: NDArray
+var grid_infected_neighbor_count_inner: NDArray
+var grid_infected_neighbor_ratio: NDArray
+var grid_new_infected_this_step: NDArray
 
-var susceptible_mask: NDArray
-var infected_mask: NDArray
-var terminal_mask: NDArray
-
-var neighbor_indices_relative: NDArray
+var neighbor_kernel: NDArray
 var rng := nd.default_rng()
 
 func initialize() -> void:
-	grid = nd.zeros([params.N, params.N], nd.Int64)
-	gridp = nd.zeros([params.N, params.N], nd.Int64)
-	indices = nd.zeros([params.N, params.N], nd.Int64)
-
-	susceptible_mask = nd.full([params.N, params.N], false, nd.Bool)
-	infected_mask = nd.full([params.N, params.N], false, nd.Bool)
-	terminal_mask = nd.full([params.N, params.N], false, nd.Bool)
-
-	neighbor_indices_relative = nd.array([+1, -1, -params.N, +params.N], nd.Int64)
+	var grid_size := [params.N, params.N]
 	
-	# indices
-	for i in params.N:
-		for j in params.N:
-			var idx = params.N * i + j
-			indices.set(idx, i, j)
+	grid_time_since_infection = nd.zeros(grid_size, nd.Int64)
+	grid_time_since_infection.set(params.tau0 + 1)
+	grid_can_infect_neighbor = nd.zeros(grid_size, nd.Bool)
+	grid_is_infectable = nd.zeros(grid_size, nd.Bool)
+	grid_infected_neighbor_count = nd.zeros(grid_size, nd.Int64)
+	grid_infected_neighbor_count_inner = grid_infected_neighbor_count.get(nd.range(1, -1), nd.range(1, -1))
+	grid_infected_neighbor_ratio = nd.zeros(grid_size, nd.Float64)
+	grid_new_infected_this_step = nd.zeros(grid_size, nd.Bool)
 
-	# boundary conditions
-	grid.set(params.tau0 + 1, nd.range(0, 1), null)
-	grid.set(params.tau0 + 1, nd.range(params.N - 1, params.N), null)
-	grid.set(params.tau0 + 1, null, nd.range(0, 1))
-	grid.set(params.tau0 + 1, null, nd.range(params.N - 1, params.N))
+	neighbor_kernel = nd.array([[0, 1, 0], [1, 1, 1], [0, 1, 0]], nd.Int64);
 	
 	# random initial infection
 	place_random()
-	gridp = nd.copy(grid)
 
 func simulation_step() -> void:
-	# infect susceptible cells based on infected neighbours
-	susceptible_mask.assign_equal(gridp, 0)
+	# Infect
+	grid_can_infect_neighbor.assign_less_equal(grid_time_since_infection, params.tauI)
+	grid_is_infectable.assign_greater(grid_time_since_infection, params.tau0)
 	
-	gridi = nd.logical_and(nd.greater(gridp, 0), nd.less_equal(gridp, params.tauI))
-	var infp = indices.get(susceptible_mask).to_godot_array().map(frac_infected_neighbours)
-	var to_infect_mask = nd.less(rng.random(infp.size()), infp)
-	nd.reshape(grid, -1).set(1, indices.get(susceptible_mask).get(to_infect_mask))
+	grid_infected_neighbor_count_inner.assign_convolve(grid_can_infect_neighbor, neighbor_kernel)
+	grid_infected_neighbor_ratio.assign_divide(grid_infected_neighbor_count, 5.0)
 	
-	# increment day in infection + recovery stage
-	infected_mask.assign_logical_and(nd.greater(gridp, 0), nd.less(gridp, params.tau0))
-	grid.set(nd.add(gridp.get(infected_mask), 1), infected_mask)
+	grid_new_infected_this_step.assign_less(rng.random(grid_time_since_infection.shape()), grid_infected_neighbor_ratio)
+	grid_new_infected_this_step.assign_logical_and(grid_new_infected_this_step, grid_is_infectable)
 	
-	# transition from recovered to susceptible
-	terminal_mask.assign_equal(gridp, params.tau0)
-	grid.set(0, terminal_mask)
+	grid_time_since_infection.set(0, grid_new_infected_this_step)
 	
-	gridp = nd.copy(grid)
+	# Time Pass
+	grid_time_since_infection.assign_add(grid_time_since_infection, 1)
 
-func frac_infected_neighbours(idx: NDArray) -> float:
-	var nbs := nd.reshape(gridi, -1).get(nd.add(idx, neighbor_indices_relative))
-	
-	if nbs.size() == 0:
-		return 0.
-	else:
-		return ndf.mean(nbs)
-	
 func on_draw() -> void:
 	for i in params.N:
 		for j in params.N:
-			params._image.set_pixel(i, j, params.colors[grid.get_int(i, j)])
+			var color_idx = grid_time_since_infection.get_int(i, j)
+			if color_idx > params.tau0:
+				color_idx = 0
+			params._image.set_pixel(i, j, params.colors[color_idx])
 
 	params.update_texture()
 
 func place_random() -> void:
-	grid.set(1, randi_range(1, params.N-2), randi_range(1, params.N-2))
+	grid_time_since_infection.set(0, randi_range(1, params.N-2), randi_range(1, params.N-2))

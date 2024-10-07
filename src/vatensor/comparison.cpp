@@ -48,6 +48,7 @@ void va::equal_to(VArrayTarget target, const VArray& a, const VArray& b) {
 }
 
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
+#if !(defined(__aarch64__) || defined(_M_ARM64) || defined(__ARM_NEON) || defined(_M_ARM))
 void not_equal_to(VArrayTarget target, const VArray& a, const VScalar& b) {
 	va::xoperation_inplace<promote::common_in_bool_out>(
 		va::XFunction<xt::detail::not_equal_to> {},
@@ -57,13 +58,17 @@ void not_equal_to(VArrayTarget target, const VArray& a, const VScalar& b) {
 	);
 }
 #endif
+#endif
 
 void va::not_equal_to(VArrayTarget target, const VArray& a, const VArray& b) {
 #ifdef NUMDOT_DISABLE_COMPARISON_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_COMPARISON_FUNCTIONS to enable it.");
 #else
+
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
+#if !(defined(__aarch64__) || defined(_M_ARM64) || defined(__ARM_NEON) || defined(_M_ARM))
 	OPTIMIZE_COMMUTATIVE(::not_equal_to, a, b);
+#endif
 #endif
 
 	va::xoperation_inplace<promote::common_in_bool_out>(

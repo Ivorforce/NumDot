@@ -2,7 +2,7 @@ extends Node2D
 
 @export_category("Simulation parameters")
 @export var N: int = 1000
-@export var coupling: float = 6
+@export var coupling: float = 3
 @export var frequency_sigma:  float = 2
 @export var frequency_mean: float = 0.
 
@@ -20,8 +20,17 @@ var firefly_texture := load("res://demos/kuramoto_model/firefly.tres")
 @onready var fireflies := $Fireflies
 
 func _ready() -> void:	
-	_restart_simulation()
+	%PointSlider.value = N
+	%PointLabel.text = "Fireflies: " + str(%PointSlider.value)
+	%CouplingSlider.value = coupling
+	%CouplingLabel.text = "Coupling: " + str(%CouplingSlider.value)
+	%MeanSlider.value = frequency_mean
+	%MeanLabel.text = "Frequency mean: " + str(%MeanSlider.value)
+	%StdSlider.value = frequency_sigma
+	%StdLabel.text = "Frequency std: " + str(%StdSlider.value)
 	
+	_restart_simulation()
+
 func _process(delta: float) -> void:
 	%FPSLabel.text = "FPS: " + str(Engine.get_frames_per_second())
 

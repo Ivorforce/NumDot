@@ -6,8 +6,6 @@
 
 [node name="KuramotoModel" type="Node2D" node_paths=PackedStringArray("solver")]
 script = ExtResource("1_4fesd")
-N = 100
-coupling = 3.0
 solver = NodePath("Solvers/GDSolver")
 
 [node name="Solvers" type="Node" parent="."]

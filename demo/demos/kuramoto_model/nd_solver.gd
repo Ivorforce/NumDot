@@ -21,7 +21,7 @@ func initialize() -> void:
 	integrator = [Callable(euler_step), Callable(rk4_step)]
 
 	phase = nd.multiply(2*PI, rng.random(params.N))
-	omega = nd.add(nd.multiply(rng.randn(params.N), params.frequency_sigma), params.frequency_mean)
+	generate_frequencies()
 	
 	phase_coherence = nd.zeros(1)
 	avg_phase = nd.zeros(1)

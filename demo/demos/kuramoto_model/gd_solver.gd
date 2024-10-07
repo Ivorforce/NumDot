@@ -37,8 +37,7 @@ func initialize() -> void:
 	k4.resize(params.N)
 	
 func on_draw() -> void:
-	for i in params.N:
-		params.draw_circle(params.positions[i], params.entity_size, Color(params.entity_color, sin(phase[i])/2 + 0.5))
+	params.set_alphas(phase)
 
 func simulation_step() -> void:
 	var dt_substep: float = params.dt / params.sub_steps
@@ -58,7 +57,7 @@ func compute_derivative(df: Array, phase: Array):
 	avg_phase = atan2(phase_sin_sum, phase_cos_sum)
 	
 	for i in phase.size():
-		df[i] = omega[i] + params.coupling * phase_coherence * sin(phase[i] - avg_phase)
+		df[i] = omega[i] - params.coupling * phase_coherence * sin(phase[i] - avg_phase)
 	
 func generate_frequencies() -> void:
 	omega.resize(params.N)

@@ -58,8 +58,10 @@ func rk4_step(dt: float) -> void:
 	phase.assign_add(phase, nd.multiply(dt/6, nd.add(k1, nd.add(nd.multiply(2, k2), nd.add(nd.multiply(2, k3), k4)))))
 
 func on_draw() -> void:
-	for i in params.N:
-		params.draw_circle(params.positions[i], params.entity_size, Color(params.entity_color, sin(phase.get_float(i))/2 + 0.5))
-
+	phase_sin.assign_divide(phase, 2)
+	phase_sin.assign_add(phase_sin, 0.5)
+	phase_sin.assign_sin(phase_sin)
+	params.set_alphas(phase_sin)
+	
 func generate_frequencies() -> void:
 	omega = nd.add(nd.multiply(rng.randn(params.N), params.frequency_sigma), params.frequency_mean)

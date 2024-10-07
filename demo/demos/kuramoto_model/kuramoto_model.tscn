@@ -9,7 +9,6 @@ script = ExtResource("1_4fesd")
 N = 100
 coupling = 3.0
 solver = NodePath("Solvers/GDSolver")
-entity_color = Color(1, 1, 0.227451, 1)
 
 [node name="Solvers" type="Node" parent="."]
 
@@ -70,7 +69,7 @@ text = "Fireflies: 100
 unique_name_in_owner = true
 layout_mode = 2
 min_value = 10.0
-max_value = 10000.0
+max_value = 20000.0
 step = 100.0
 value = 110.0
 
@@ -166,6 +165,8 @@ offset_bottom = 545.0
 theme_override_font_sizes/font_size = 30
 text = "Restart
 "
+
+[node name="Fireflies" type="Node2D" parent="."]
 
 [connection signal="drag_ended" from="SliderOptions/PointSlider" to="." method="_on_point_slider_drag_ended"]
 [connection signal="drag_ended" from="SliderOptions/CouplingSlider" to="." method="_on_coupling_slider_drag_ended"]

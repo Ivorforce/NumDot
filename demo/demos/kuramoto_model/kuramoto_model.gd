@@ -11,18 +11,17 @@ extends Node2D
 @export var solver: KuramotoSolver
 @export var integrator_idx: int = 0
 
-@export_category("Visual parameters")
-@export var entity_color: Color = Color.RED
-@export var entity_size: float = 2.
-
 # positions
 var positions := []
 var frame_time: float = 1./60
 
-func _ready() -> void:	
-	generate_positions()
-	solver.initialize()
+# visuals
+var firefly_texture := load("res://demos/kuramoto_model/firefly.tres")
+@onready var fireflies := $Fireflies
 
+func _ready() -> void:	
+	_restart_simulation()
+	
 func _process(delta: float) -> void:
 	%FPSLabel.text = "FPS: " + str(Engine.get_frames_per_second())
 
@@ -31,21 +30,16 @@ func _process(delta: float) -> void:
 	frame_time = Time.get_ticks_usec() - frame_time
 	
 	%FrameTimeLabel.text = "Delta (ms): " + str(snappedf(frame_time/1000, 1e-3))	
-	queue_redraw()
-
-func _draw() -> void:
 	solver.on_draw()
 
-func generate_positions():
-	positions.resize(N)
-	for i in N: 
-		positions[i] = Vector2(randf_range(0, get_viewport().size.x), randf_range(0, get_viewport().size.y))
+#func _draw() -> void:
+	#solver.on_draw()
 
 func _on_point_slider_drag_ended(value_changed: bool) -> void:
 	%PointLabel.text = "Fireflies: " + str(%PointSlider.value)
 	N = %PointSlider.value
-	generate_positions()
-	solver.initialize()
+	_restart_simulation()
+	_randomize_positions()
 
 func _on_coupling_slider_drag_ended(value_changed: bool) -> void:
 	%CouplingLabel.text = "Coupling: " + str(%CouplingSlider.value)
@@ -60,7 +54,8 @@ func _on_std_slider_drag_ended(value_changed: bool) -> void:
 	solver.generate_frequencies()
 
 func _on_restart_button_pressed() -> void:
-	solver.initialize()
+	_restart_simulation()
+	_randomize_positions()
 
 func _on_substep_slider_drag_ended(value_changed: bool) -> void:
 	%SubstepLabel.text = "Sub-steps: " + str(%SubstepSlider.value)
@@ -68,7 +63,38 @@ func _on_substep_slider_drag_ended(value_changed: bool) -> void:
 
 func _on_solver_option_item_selected(index: int) -> void:
 	solver = $Solvers.get_child(index)
-	solver.initialize()
+	_restart_simulation()
 
 func _on_integrator_option_item_selected(index: int) -> void:
 	integrator_idx = index
+
+func _restart_simulation() -> void:
+	_generate_fireflies()
+	solver.initialize()
+
+func _generate_fireflies() -> void:
+	var sprite: Sprite2D
+	var num_fireflies: int = fireflies.get_child_count()
+	
+	if num_fireflies < N:
+		for i in N - num_fireflies:
+			sprite = Sprite2D.new()
+			sprite.texture = firefly_texture
+			sprite.position = Vector2(randf_range(0, get_viewport().size.x), randf_range(0, get_viewport().size.y))
+			fireflies.add_child(sprite)
+	if num_fireflies > N:
+		for i in num_fireflies - N:
+			fireflies.get_child(N + i).queue_free()
+	
+func _randomize_positions() -> void:
+	for firefly in fireflies.get_children():
+		firefly.position.x = randf_range(0, get_viewport().size.x)
+		firefly.position.y = randf_range(0, get_viewport().size.y)
+
+func set_alphas(alphas: Variant) -> void:
+	if alphas is Array:
+		for i in alphas.size():
+			fireflies.get_child(i).modulate.a = sin(alphas[i])/2 + 0.5
+	elif alphas is NDArray:
+		for i in alphas.size():
+			fireflies.get_child(i).modulate.a = alphas.get_float(i)

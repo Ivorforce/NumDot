@@ -11,6 +11,9 @@
 using namespace va;
 
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
+#ifndef __ARM_NEON__
+// FIXME NEON xtensor / xsimd has a compile-time bug, see
+// https://github.com/xtensor-stack/xtensor/issues/2733
 void equal_to(VArrayTarget target, const VArray& a, const VScalar& b) {
 	va::xoperation_inplace<promote::common_in_bool_out>(
 		va::XFunction<xt::detail::equal_to> {},
@@ -20,14 +23,15 @@ void equal_to(VArrayTarget target, const VArray& a, const VScalar& b) {
 	);
 }
 #endif
+#endif
 
 void va::equal_to(VArrayTarget target, const VArray& a, const VArray& b) {
 #ifdef NUMDOT_DISABLE_COMPARISON_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_COMPARISON_FUNCTIONS to enable it.");
 #else
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
-	// FIXME NEON xtensor / xsimd has a compile-time bug, see
-	// https://github.com/xtensor-stack/xtensor/issues/2733
+
+// Doesn't work right now with NEON, see above.
 #ifndef __ARM_NEON__
 	OPTIMIZE_COMMUTATIVE(::equal_to, a, b);
 #endif

@@ -1,7 +1,7 @@
 #include "stride_tricks.hpp"
 
 #include <variant>
-#include "linalg.hpp"
+#include "reduce.hpp"
 
 std::shared_ptr<va::VArray> va::as_strided(const VArray& array, const shape_type& shape, const strides_type& strides) {
 	return std::visit(

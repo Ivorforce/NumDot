@@ -721,15 +721,11 @@ Dot product of two arrays. Specifically,
 
 
 
-If both a and b are 1-D arrays, it is inner product of vectors (without complex conjugation).
+If either a or b is 0-D (scalar), it is equivalent to multiply, but using :ref:`multiply<class_nd_method_multiply>` or a \* b is preferred.
 
-If both a and b are 2-D arrays, it is matrix multiplication, but using nd.matmul is preferred.
+If both a and b are 2-D or less, but not 0-D, it is equal to :ref:`matmul<class_nd_method_matmul>`, and using it is preferred.
 
-If either a or b is 0-D (scalar), it is equivalent to multiply and using :ref:`multiply<class_nd_method_multiply>` or a \* b is preferred.
-
-If a is an N-D array and b is a 1-D array, it is a sum product over the last axis of a and b.
-
-If a is an N-D array and b is an M-D array (where M>=2), it currently fails.
+Otherwise, it would be equivalent to tensordot, but currently fails.
 
 .. rst-class:: classref-item-separator
 
@@ -1133,7 +1129,13 @@ Matrix multiplication of two arrays.
 
 The behavior depends on the arguments in the following way:
 
+If either of the arguments is 0-D, the operation fails.
+
 If both arguments are 2-D they are multiplied like conventional matrices.
+
+If the first argument is 1-D, it is promoted to a matrix by prepending a 1 to its dimensions. After matrix multiplication the prepended 1 is removed.
+
+If the second argument is 1-D, it is promoted to a matrix by appending a 1 to its dimensions. After matrix multiplication the appended 1 is removed.
 
 If either argument is N-D, N > 2, it is treated as a stack of matrices residing in the last two indexes and broadcast accordingly.
 
@@ -1411,9 +1413,9 @@ Note that ranges are represented as Vector4i(mask, start, stop, step).
 
 :ref:`NDArray<class_NDArray>` **reduce_dot**\ (\ a\: ``Variant`` = null, b\: ``Variant`` = null, axes\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_reduce_dot>`
 
-Dot product of two arrays along the given axis.
+Dot product of two arrays along the given axes.
 
-Equivalent to nd.sum(nd.multiply(a, b), axes).
+Equivalent to ``nd.sum(nd.multiply(a, b), axes)``.
 
 Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.reduce_dot<class_ndf_method_reduce_dot>` or :ref:`ndi.reduce_dot<class_ndi_method_reduce_dot>`.
 

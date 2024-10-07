@@ -9,6 +9,7 @@
 #include "allocate.hpp"
 #include "varray.hpp"                            // for VArray, axes_...
 #include "vcompute.hpp"                                   // for vreduce, xope...
+#include "vmath.hpp"
 #include "vpromote.hpp"                                   // for num_matching_...
 #include "xtensor/xiterator.hpp"                        // for operator==
 #include "xtensor/xlayout.hpp"                          // for layout_type
@@ -391,4 +392,37 @@ void va::any(VArrayTarget target, const VArray& array, const axes_type& axes) {
 		target, array.read
 	);
 #endif
+}
+
+// struct Dot {
+// 	template <typename GivenAxes, typename A, typename B>
+// 	auto operator()(GivenAxes&& axes, A&& a, B&& b) const {
+// 		auto prod = std::forward<A>(a) * std::forward<B>(b);
+// 		return xt::sum(prod, std::forward<GivenAxes>(axes), std::tuple<xt::evaluation_strategy::lazy_type>());
+// 	}
+//
+// 	template <typename A, typename B>
+// 	inline auto operator()(A&& a, B&& b) const {
+// 		auto prod = std::forward<A>(a) * std::forward<B>(b);
+// 		return xt::sum(prod, std::tuple<xt::evaluation_strategy::lazy_type>());
+// 	}
+// };
+
+va::VScalar va::reduce_dot(const VArray& a, const VArray& b) {
+	std::shared_ptr<va::VArray> prod_cache;
+	va::multiply(&prod_cache, a, b);
+	return sum(*prod_cache);
+}
+
+void va::reduce_dot(VArrayTarget target, const VArray& a, const VArray& b, const axes_type& axes) {
+	std::shared_ptr<va::VArray> prod_cache;
+	va::multiply(&prod_cache, a, b);
+	va::sum(target, *prod_cache, axes);
+
+	// TODO This doesn't work because prod or a and b are lost, either way it crashes.
+	// The upside to the above implementation is that no additional code is generated.
+	// But it's also a bit slower than if it was fully lazy and accelerated, probably.
+	// va::xreduction_inplace<promote::num_matching_float_or_default<double_t>>(
+	// 	NormL0{}, axes, target, array.read
+	// );
 }

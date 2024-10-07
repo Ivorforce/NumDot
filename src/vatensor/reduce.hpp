@@ -49,6 +49,9 @@ namespace va {
 
 	bool any(const VArray& array);
 	void any(VArrayTarget target, const VArray& array, const axes_type& axes);
+
+	VScalar reduce_dot(const VArray& a, const VArray& b);
+	void reduce_dot(VArrayTarget target, const VArray& a, const VArray& b, const axes_type& axes);
 }
 
 #endif //REDUCE_H

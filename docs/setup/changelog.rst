@@ -27,6 +27,7 @@ Upcoming Changes (main branch)
 - Added ``split``, ``hsplit`` and ``vsplit`` functions.
 - Added the ``tile`` function.
 - Added scalar optimizations for binary functions. This will greatly accelerate calls like ``nd.add(array, 5)``, at the cost of some binary size. This behavior can be disabled with the build flag ``NUMDOT_DISABLE_SCALAR_OPTIMIZATION``.
+- ``nd.matmul`` can now handle matrix-vector multiplication.
 
 **Changed**
 

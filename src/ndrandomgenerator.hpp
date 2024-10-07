@@ -66,6 +66,7 @@ public:
 
 	Ref<NDArray> random(const Variant& shape = PackedByteArray(), va::DType dtype = va::Float64);
 	Ref<NDArray> integers(int64_t low_or_high, const Variant& high, const Variant& shape = PackedByteArray(), va::DType dtype = va::Float64, bool endpoint = false);
+	Ref<NDArray> randn(const Variant& shape = PackedByteArray(), va::DType dtype = va::Float64);
 };
 
 #endif

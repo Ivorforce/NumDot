@@ -67,3 +67,22 @@ std::shared_ptr<VArray> VRandomEngine::random_integers(long long low, long long 
 	);
 #endif
 }
+
+std::shared_ptr<va::VArray> VRandomEngine::random_normal(shape_type shape, const DType dtype) {
+#ifdef NUMDOT_DISABLE_RANDOM_FUNCTIONS
+	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_RANDOM_FUNCTIONS to enable it.");
+#else
+	return std::visit(
+		[shape, this](auto t) -> std::shared_ptr<va::VArray> {
+			using T = decltype(t);
+
+			if constexpr (!std::is_floating_point_v<T>) {
+				throw std::runtime_error("This function can only generate floating point types.");
+			}
+			else {
+				return from_store(make_store<T>(xt::random::randn<T>(shape, 0, 1, this->engine)));
+			}
+		}, dtype_to_variant(dtype)
+	);
+#endif
+}

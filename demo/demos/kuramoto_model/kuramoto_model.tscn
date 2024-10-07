@@ -1,0 +1,178 @@
+[gd_scene load_steps=4 format=3 uid="uid://b0s40i0gcfwtk"]
+
+[ext_resource type="Script" path="res://demos/kuramoto_model/kuramoto_model.gd" id="1_4fesd"]
+[ext_resource type="Script" path="res://demos/kuramoto_model/gd_solver.gd" id="2_8q8fw"]
+[ext_resource type="Script" path="res://demos/kuramoto_model/nd_solver.gd" id="3_upt5u"]
+
+[node name="KuramotoModel" type="Node2D" node_paths=PackedStringArray("solver")]
+script = ExtResource("1_4fesd")
+N = 100
+coupling = 3.0
+solver = NodePath("Solvers/GDSolver")
+
+[node name="Solvers" type="Node" parent="."]
+
+[node name="GDSolver" type="Node" parent="Solvers" node_paths=PackedStringArray("params")]
+script = ExtResource("2_8q8fw")
+params = NodePath("../..")
+
+[node name="NDSolver" type="Node" parent="Solvers" node_paths=PackedStringArray("params")]
+script = ExtResource("3_upt5u")
+params = NodePath("../..")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+show_behind_parent = true
+custom_minimum_size = Vector2(1152, 648)
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_right = 1152.0
+offset_bottom = 648.0
+grow_horizontal = 2
+color = Color(0.0437092, 0.0736913, 0.101474, 1)
+
+[node name="Labels" type="VBoxContainer" parent="."]
+offset_left = 23.0
+offset_top = 18.0
+offset_right = 223.0
+offset_bottom = 118.0
+metadata/_edit_group_ = true
+
+[node name="FPSLabel" type="Label" parent="Labels"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "FPS: 60"
+
+[node name="FrameTimeLabel" type="Label" parent="Labels"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Frame time: 1"
+
+[node name="SliderOptions" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(250, 0)
+offset_left = 22.0
+offset_top = 361.0
+offset_right = 305.0
+offset_bottom = 621.0
+metadata/_edit_group_ = true
+
+[node name="PointLabel" type="Label" parent="SliderOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Fireflies: 100
+"
+
+[node name="PointSlider" type="HSlider" parent="SliderOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 10.0
+max_value = 20000.0
+step = 100.0
+value = 110.0
+
+[node name="CouplingLabel" type="Label" parent="SliderOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Coupling: 1.0"
+
+[node name="CouplingSlider" type="HSlider" parent="SliderOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 10.0
+step = 0.05
+value = 1.0
+
+[node name="MeanLabel" type="Label" parent="SliderOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Frequency mean: 0."
+
+[node name="MeanSlider" type="HSlider" parent="SliderOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 6.28
+step = 0.1
+
+[node name="StdLabel" type="Label" parent="SliderOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Frequency std: 2."
+
+[node name="StdSlider" type="HSlider" parent="SliderOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 5.0
+step = 0.1
+value = 2.0
+
+[node name="Options" type="VBoxContainer" parent="."]
+offset_left = 862.0
+offset_top = 16.0
+offset_right = 1140.0
+offset_bottom = 120.0
+metadata/_edit_group_ = true
+
+[node name="SolverOption" type="OptionButton" parent="Options"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+selected = 0
+item_count = 2
+popup/item_0/text = "GDScript"
+popup/item_1/text = "NumDot"
+popup/item_1/id = 1
+
+[node name="IntegratorOption" type="OptionButton" parent="Options"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+selected = 0
+item_count = 2
+popup/item_0/text = "Euler scheme"
+popup/item_1/text = "RK4 scheme"
+popup/item_1/id = 1
+
+[node name="SolverOptions" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(200, 0)
+offset_left = 928.0
+offset_top = 565.0
+offset_right = 1128.0
+offset_bottom = 627.0
+metadata/_edit_group_ = true
+
+[node name="SubstepLabel" type="Label" parent="SolverOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Sub-steps: 1"
+
+[node name="SubstepSlider" type="HSlider" parent="SolverOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 1.0
+max_value = 200.0
+value = 1.0
+
+[node name="RestartButton" type="Button" parent="."]
+offset_left = 991.0
+offset_top = 495.0
+offset_right = 1104.0
+offset_bottom = 545.0
+theme_override_font_sizes/font_size = 30
+text = "Restart
+"
+
+[node name="Fireflies" type="Node2D" parent="."]
+
+[connection signal="drag_ended" from="SliderOptions/PointSlider" to="." method="_on_point_slider_drag_ended"]
+[connection signal="drag_ended" from="SliderOptions/CouplingSlider" to="." method="_on_coupling_slider_drag_ended"]
+[connection signal="drag_ended" from="SliderOptions/MeanSlider" to="." method="_on_mean_slider_drag_ended"]
+[connection signal="drag_ended" from="SliderOptions/StdSlider" to="." method="_on_std_slider_drag_ended"]
+[connection signal="item_selected" from="Options/SolverOption" to="." method="_on_solver_option_item_selected"]
+[connection signal="item_selected" from="Options/IntegratorOption" to="." method="_on_integrator_option_item_selected"]
+[connection signal="drag_ended" from="SolverOptions/SubstepSlider" to="." method="_on_substep_slider_drag_ended"]
+[connection signal="pressed" from="RestartButton" to="." method="_on_restart_button_pressed"]

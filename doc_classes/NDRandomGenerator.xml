@@ -18,7 +18,15 @@
 			<param index="3" name="dtype" type="int" enum="nd.DType" default="6" />
 			<param index="4" name="endpoint" type="bool" default="false" />
 			<description>
-				Return random integers from the “discrete uniform” distribution of the specified dtype. If high is None (the default), then results are from 0 to low.
+				Return random integers sampled from the “discrete uniform” distribution of the specified dtype. If high is None (the default), then results are from 0 to low.
+			</description>
+		</method>
+		<method name="randn">
+			<return type="NDArray" />
+			<param index="0" name="shape" type="Variant" default="PackedByteArray()" />
+			<param index="1" name="dtype" type="int" enum="nd.DType" default="2" />
+			<description>
+				Return random integers sampled from the standard normal distribution `N(0, 1)` of the specified dtype. A general gaussian distribution `N(mu, sig)` may be obtained by multiplying the result with `sig` and adding it with `mu`.
 			</description>
 		</method>
 		<method name="random">

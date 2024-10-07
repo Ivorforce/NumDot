@@ -11,7 +11,7 @@
 using namespace va;
 
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
-#ifndef __ARM_NEON__
+#if !(defined(__aarch64__) || defined(_M_ARM64) || defined(__ARM_NEON) || defined(_M_ARM))
 // FIXME NEON xtensor / xsimd has a compile-time bug, see
 // https://github.com/xtensor-stack/xtensor/issues/2733
 void equal_to(VArrayTarget target, const VArray& a, const VScalar& b) {
@@ -32,7 +32,7 @@ void va::equal_to(VArrayTarget target, const VArray& a, const VArray& b) {
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 
 // Doesn't work right now with NEON, see above.
-#ifndef __ARM_NEON__
+#if !(defined(__aarch64__) || defined(_M_ARM64) || defined(__ARM_NEON) || defined(_M_ARM))
 	OPTIMIZE_COMMUTATIVE(::equal_to, a, b);
 #endif
 

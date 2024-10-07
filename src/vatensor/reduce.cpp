@@ -30,8 +30,8 @@ using namespace va;
 // TODO Passing EVS is required because norms don't support it without it, we should make a PR (though it's not bad to explicitly make it lazy).
 #define REDUCER_LAMBDA(func) [](auto&& a) { return func(std::forward<decltype(a)>(a), std::tuple<xt::evaluation_strategy::lazy_type>())(); }
 #define REDUCER_LAMBDA_NOECS(func) [](auto&& a) { return func(std::forward<decltype(a)>(a)); }
-#define REDUCER_LAMBDA_AXES(axes, func) [axes](auto&& a) { return func(std::forward<decltype(a)>(a), axes, std::tuple<xt::evaluation_strategy::lazy_type>()); }
-#define REDUCER_LAMBDA_AXES_NOECS(axes, func) [axes](auto&& a) { return func(std::forward<decltype(a)>(a), axes); }
+#define REDUCER_LAMBDA_AXES(axes, func) [&axes](auto&& a) { return func(std::forward<decltype(a)>(a), axes, std::tuple<xt::evaluation_strategy::lazy_type>()); }
+#define REDUCER_LAMBDA_AXES_NOECS(axes, func) [&axes](auto&& a) { return func(std::forward<decltype(a)>(a), axes); }
 
 // FIXME These don't support axes yet, see https://github.com/xtensor-stack/xtensor/issues/1555
 using namespace xt;

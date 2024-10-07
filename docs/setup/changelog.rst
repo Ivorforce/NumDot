@@ -32,6 +32,7 @@ Upcoming Changes (main branch)
 **Changed**
 
 - Added ``array.set(x)`` should now be slightly faster when only a single element is updated.
+- Accelerated ``reduce_dot``. This also affects ``matmul``, ``dot``, and ``convolve`` operations.
 
 **Fixed**
 

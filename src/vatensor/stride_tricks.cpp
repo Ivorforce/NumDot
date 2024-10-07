@@ -56,7 +56,7 @@ std::shared_ptr<va::VArray> va::sliding_window_view(const VArray& array, const s
 
 		if (window_shape[window_idx] > array_shape[array_idx]) throw std::runtime_error("kernel axis too large for array");
 
-		new_shape[array_idx] = array_shape[array_idx] - window_shape[array_idx];
+		new_shape[array_idx] = array_shape[array_idx] - window_shape[array_idx] + 1;
 	}
 
 	return as_strided(array, new_shape, new_strides);

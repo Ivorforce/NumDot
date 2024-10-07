@@ -26,7 +26,12 @@ void va::equal_to(VArrayTarget target, const VArray& a, const VArray& b) {
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_COMPARISON_FUNCTIONS to enable it.");
 #else
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
+	// FIXME NEON xtensor / xsimd has a compile-time bug, see
+	// https://github.com/xtensor-stack/xtensor/issues/2733
+#ifndef __ARM_NEON__
 	OPTIMIZE_COMMUTATIVE(::equal_to, a, b);
+#endif
+
 #endif
 
 	va::xoperation_inplace<promote::common_in_bool_out>(

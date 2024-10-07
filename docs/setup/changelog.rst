@@ -38,6 +38,7 @@ Upcoming Changes (main branch)
 - ``NDArray`` interpretation inside of Arrays would result in ``inhomogenous shape`` errors.
 - Fixed ``NDArray.to_godot_array()`` producing garbage data and shapes.
 - Fixed ``NDArray.to_packed_xxx`` producing arrays that were too large.
+- Fixed ``zeros_like`` and similar producing garbage arrays when the dtype is not given.
 
 Version 0.4 - 2024-10-03
 ------------------------

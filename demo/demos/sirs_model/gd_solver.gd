@@ -24,7 +24,7 @@ func simulation_step() -> void:
 		for j in range(1, params.N-1):
 			if gridp[i][j] == 0:
 				infp = [gridp[i+1][j], gridp[i-1][j], gridp[i][j-1], gridp[i][j+1]].map(func(elt): return (elt > 0) and (elt <= params.tauI)).count(true) / 4.
-				if randf() < infp:
+				if randf() < infp * params.spread:
 					grid[i][j] = 1
 			elif gridp[i][j] < params.tau0:
 				grid[i][j] += 1

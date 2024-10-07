@@ -4,6 +4,7 @@ extends Node2D
 @export var solver: SIRSolver
 
 @export var N: int = 20
+@export var spread: float = 1.0
 @export var tauI: int = 4
 @export var tauR: int = 6
 @onready var tau0 := tauI + tauR
@@ -25,12 +26,15 @@ var frame_time: float = 0.
 func _ready() -> void:
 	%PointSlider.value = N
 	%PointLabel.text = "Grid: " + str(N) + "x" + str(N)
+
+	%SpreadSlider.value = spread
+	%SpreadLabel.text = "Spread: %.3f" % spread
 	
 	%InfectedSlider.value = tauI
-	%InfectedLabel.text = str("Infection time: " + str(tauI))
+	%InfectedLabel.text = "Infection time: " + str(tauI)
 	
 	%RecoverySlider.value = tauR
-	%RecoveryLabel.text = str("Recovery time: " + str(tauR))
+	%RecoveryLabel.text = "Recovery time: " + str(tauR)
 	
 	generate_colors()	
 	resize_image()
@@ -61,6 +65,11 @@ func _on_point_slider_drag_ended(value_changed: bool) -> void:
 	N = %PointSlider.value
 	%PointLabel.text = "Grid: " + str(N) + "x" + str(N)
 	resize_image()
+	solver.initialize()
+
+func _on_spread_slider_drag_ended(value_changed: bool) -> void:
+	spread = %SpreadSlider.value
+	%SpreadLabel.text = "Spread: %.3f" % spread
 	solver.initialize()
 
 func _on_infected_slider_drag_ended(value_changed: bool) -> void:

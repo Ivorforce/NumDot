@@ -61,9 +61,9 @@ text = "Frame time: 1"
 [node name="SliderOptions" type="VBoxContainer" parent="."]
 custom_minimum_size = Vector2(250, 0)
 offset_left = 22.0
-offset_top = 439.0
-offset_right = 261.0
-offset_bottom = 633.0
+offset_top = 365.0
+offset_right = 272.0
+offset_bottom = 625.0
 metadata/_edit_group_ = true
 
 [node name="PointLabel" type="Label" parent="SliderOptions"]
@@ -78,6 +78,20 @@ layout_mode = 2
 min_value = 10.0
 value = 20.0
 
+[node name="SpreadLabel" type="Label" parent="SliderOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Spread: 1"
+
+[node name="SpreadSlider" type="HSlider" parent="SliderOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 0.01
+step = 0.0
+value = 1.0
+exp_edit = true
+
 [node name="InfectedLabel" type="Label" parent="SliderOptions"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -88,8 +102,8 @@ text = "Infection time: 4"
 unique_name_in_owner = true
 layout_mode = 2
 min_value = 1.0
-max_value = 20.0
 value = 4.0
+exp_edit = true
 
 [node name="RecoveryLabel" type="Label" parent="SliderOptions"]
 unique_name_in_owner = true
@@ -101,8 +115,8 @@ text = "Recovery time: 6"
 unique_name_in_owner = true
 layout_mode = 2
 min_value = 1.0
-max_value = 20.0
 value = 6.0
+exp_edit = true
 
 [node name="RestartButton" type="Button" parent="."]
 offset_left = 920.0
@@ -148,6 +162,7 @@ offset_right = 308.0
 offset_bottom = 635.0
 
 [connection signal="drag_ended" from="SliderOptions/PointSlider" to="." method="_on_point_slider_drag_ended"]
+[connection signal="drag_ended" from="SliderOptions/SpreadSlider" to="." method="_on_spread_slider_drag_ended"]
 [connection signal="drag_ended" from="SliderOptions/InfectedSlider" to="." method="_on_infected_slider_drag_ended"]
 [connection signal="drag_ended" from="SliderOptions/RecoverySlider" to="." method="_on_recovery_slider_drag_ended"]
 [connection signal="pressed" from="RestartButton" to="." method="_on_restart_button_pressed"]

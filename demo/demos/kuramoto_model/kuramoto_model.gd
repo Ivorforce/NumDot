@@ -47,10 +47,12 @@ func _on_coupling_slider_drag_ended(value_changed: bool) -> void:
 
 func _on_mean_slider_drag_ended(value_changed: bool) -> void:
 	%MeanLabel.text = "Frequency mean: " + str(%MeanSlider.value)
+	frequency_mean = %MeanSlider.value
 	solver.generate_frequencies()
 
 func _on_std_slider_drag_ended(value_changed: bool) -> void:
 	%StdLabel.text = "Frequency std: " + str(%StdSlider.value)
+	frequency_sigma = %StdSlider.value
 	solver.generate_frequencies()
 
 func _on_restart_button_pressed() -> void:

@@ -11,7 +11,6 @@ extends Node2D
 
 @export_category("Visual parameters")
 @export var num_draw_points: int = 50
-@export var draw_scale = 5
 @export var colors = []
 
 @export var color_susceptible: Color = Color.WHITE
@@ -39,7 +38,6 @@ func _ready() -> void:
 	generate_colors()	
 	resize_image()
 	create_legend()
-	texture_rect.scale = Vector2(draw_scale, draw_scale)
 	
 	solver.initialize()
 
@@ -100,8 +98,8 @@ func resize_image() -> void:
 	_image = Image.create(N, N, false, Image.FORMAT_RGBA8)
 
 	texture_rect.texture = ImageTexture.create_from_image(_image)
-	texture_rect.set_size(Vector2(N, N))
-	var origin = get_viewport_rect().get_center() - texture_rect.size/2 * draw_scale
+	texture_rect.set_size(Vector2(500, 500))
+	var origin = get_viewport_rect().get_center() - texture_rect.size/2
 	texture_rect.position = origin
 
 func create_legend() -> void:

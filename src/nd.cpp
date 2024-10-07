@@ -240,7 +240,7 @@ Ref<NDArray> like_visit(Visitor&& visitor, const Variant& model, nd::DType dtype
 		va::shape_type shape_used;
 		va::DType dtype_used;
 
-		if (dtype != nd::DType::DTypeMax || shape.get_type() != Variant::NIL)
+		if (dtype == nd::DType::DTypeMax || shape.get_type() == Variant::NIL)
 			find_shape_and_dtype(shape_used, dtype_used, model);
 
 		if (dtype != nd::DType::DTypeMax)

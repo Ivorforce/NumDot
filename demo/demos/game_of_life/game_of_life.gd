@@ -47,7 +47,7 @@ func _on_point_slider_drag_ended(value_changed: bool) -> void:
 
 func _on_steps_per_second_slider_drag_ended(value_changed: bool) -> void:
 	steps_per_second = %StepsPerSecondSlider.value
-	%StepsPerSecondLabel.text = "Speed: %.3f" % steps_per_second
+	%StepsPerSecondLabel.text = "Speed: %.2f" % steps_per_second
 
 func _on_restart_button_pressed() -> void:
 	solver.initialize()

@@ -26,8 +26,14 @@ func read_json(path: String) -> void:
 	var file = FileAccess.open(path, FileAccess.READ)
 	if file:
 		var data = JSON.new().parse_string(file.get_as_text())
-		data["path"] = path.get_base_dir() + "/"
-		demo_data.append(data)
-	
+		if data.has("name") and data.has("description") and data.has("link"):
+			data["path"] = path.get_base_dir() + "/"
+			if ResourceLoader.exists(data["path"] + "main.tscn"):
+				demo_data.append(data)
+			else:
+				print(data["path"] + " missing main.tscn!")
+		else:
+			print("JSON file (" + path + ") is missing required keys (name, description, link).")
+		
 func _on_texture_button_pressed() -> void:
 	OS.shell_open("https://godotengine.org/asset-library/asset/3351")

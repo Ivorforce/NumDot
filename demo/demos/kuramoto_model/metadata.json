@@ -1,0 +1,6 @@
+{
+	"name": "Kuramoto model",
+	"description": "A simulation of synchronization in fireflies, displaying the emergence of order from chaos.",
+	"link": "https://en.wikipedia.org/wiki/Kuramoto_model",
+	"authors": "20akshay00"
+}

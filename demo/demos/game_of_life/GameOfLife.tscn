@@ -1,0 +1,140 @@
+[gd_scene load_steps=5 format=3 uid="uid://c8jgsn3pwwvim"]
+
+[ext_resource type="Script" path="res://demos/game_of_life/game_of_life.gd" id="1_q11u0"]
+[ext_resource type="Script" path="res://demos/game_of_life/gd_solver.gd" id="2_qwkai"]
+[ext_resource type="Script" path="res://demos/game_of_life/nd_solver.gd" id="3_c7vpd"]
+
+[sub_resource type="ImageTexture" id="ImageTexture_03ndn"]
+
+[node name="GameOfLife" type="Node2D" node_paths=PackedStringArray("solver", "texture_rect")]
+script = ExtResource("1_q11u0")
+solver = NodePath("Solvers/GDSolver")
+texture_rect = NodePath("CanvasLayer/TextureRect")
+
+[node name="Solvers" type="Node" parent="."]
+
+[node name="GDSolver" type="Node" parent="Solvers" node_paths=PackedStringArray("params")]
+script = ExtResource("2_qwkai")
+params = NodePath("../..")
+
+[node name="NDSolver" type="Node" parent="Solvers" node_paths=PackedStringArray("params")]
+script = ExtResource("3_c7vpd")
+params = NodePath("../..")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+show_behind_parent = true
+custom_minimum_size = Vector2(1152, 648)
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 4.0
+offset_right = 1156.0
+offset_bottom = 648.0
+grow_horizontal = 2
+color = Color(0.4356, 0.55154, 0.66, 1)
+
+[node name="SolverOptions" type="VBoxContainer" parent="ColorRect"]
+custom_minimum_size = Vector2(200, 0)
+offset_left = 928.0
+offset_top = 565.0
+offset_right = 1128.0
+offset_bottom = 627.0
+metadata/_edit_group_ = true
+
+[node name="Labels" type="VBoxContainer" parent="."]
+offset_left = 23.0
+offset_top = 18.0
+offset_right = 223.0
+offset_bottom = 118.0
+metadata/_edit_group_ = true
+
+[node name="FPSLabel" type="Label" parent="Labels"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "FPS: 60"
+
+[node name="FrameTimeLabel" type="Label" parent="Labels"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Frame time: 1"
+
+[node name="SliderOptions" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(250, 0)
+offset_left = 22.0
+offset_top = 550.0
+offset_right = 272.0
+offset_bottom = 620.0
+metadata/_edit_group_ = true
+
+[node name="PointLabel" type="Label" parent="SliderOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Grid: 20x20"
+
+[node name="PointSlider" type="HSlider" parent="SliderOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 10.0
+max_value = 500.0
+value = 20.0
+exp_edit = true
+
+[node name="RestartButton" type="Button" parent="."]
+offset_left = 920.0
+offset_top = 505.0
+offset_right = 1140.0
+offset_bottom = 555.0
+theme_override_font_sizes/font_size = 30
+text = "Restart
+"
+
+[node name="StepsPerSecondLabel" type="Label" parent="."]
+unique_name_in_owner = true
+offset_left = 932.0
+offset_top = 565.0
+offset_right = 1132.0
+offset_bottom = 607.0
+theme_override_font_sizes/font_size = 30
+text = "Speed: 1"
+
+[node name="StepsPerSecondSlider" type="HSlider" parent="."]
+unique_name_in_owner = true
+offset_left = 932.0
+offset_top = 611.0
+offset_right = 1132.0
+offset_bottom = 627.0
+min_value = 0.1
+max_value = 500.0
+step = 0.0
+value = 1.0
+exp_edit = true
+
+[node name="SolverOption" type="OptionButton" parent="."]
+offset_left = 865.0
+offset_top = 23.0
+offset_right = 1137.0
+offset_bottom = 73.0
+theme_override_font_sizes/font_size = 30
+selected = 0
+item_count = 2
+popup/item_0/text = "GDScript"
+popup/item_1/text = "NumDot"
+popup/item_1/id = 1
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer"]
+texture_filter = 1
+offset_right = 40.0
+offset_bottom = 40.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = SubResource("ImageTexture_03ndn")
+
+[connection signal="drag_ended" from="SliderOptions/PointSlider" to="." method="_on_point_slider_drag_ended"]
+[connection signal="pressed" from="RestartButton" to="." method="_on_restart_button_pressed"]
+[connection signal="drag_ended" from="StepsPerSecondSlider" to="." method="_on_steps_per_second_slider_drag_ended"]
+[connection signal="item_selected" from="SolverOption" to="." method="_on_solver_option_item_selected"]

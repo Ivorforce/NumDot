@@ -131,3 +131,4 @@ text = "Restart
 [connection signal="drag_ended" from="SliderOptions/PointSlider" to="." method="_on_point_slider_drag_ended"]
 [connection signal="item_selected" from="SolverOption" to="." method="_on_solver_option_item_selected"]
 [connection signal="drag_ended" from="SolverOptions/StepsPerSecondSlider" to="." method="_on_steps_per_second_slider_drag_ended"]
+[connection signal="pressed" from="RestartButton" to="." method="_on_restart_button_pressed"]

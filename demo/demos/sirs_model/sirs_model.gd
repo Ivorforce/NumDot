@@ -9,7 +9,7 @@ extends Node2D
 @export var tauR: int = 6
 @onready var tau0 := tauI + tauR
 
-@export var steps_per_second: float = 1.0
+@export var steps_per_second: float = 20.0
 var current_step: float = 0.0
 
 @export_category("Visual parameters")

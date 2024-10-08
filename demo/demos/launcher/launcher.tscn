@@ -32,9 +32,9 @@ layout_mode = 2
 [node name="DescriptionLabel" type="Label" parent="."]
 offset_left = 239.0
 offset_top = 71.0
-offset_right = 1082.0
+offset_right = 1059.0
 offset_bottom = 198.0
-text = "This is a collection of projects designed to demonstrate the performance gains offered by NumDot  native GDScript implementations. These projects have been chosen to showcase the utility NumDot in bringing various scientific toy models to life by incorporating real-time interactivity through Godot! 
+text = "This is a collection of projects designed to demonstrate the performance gains offered by NumDot over native GDScript implementations. These projects have been chosen to showcase the utility NumDot in bringing various scientific toy models to life by incorporating real-time interactivity through Godot! 
 
 Press B to return to this screen.
 "

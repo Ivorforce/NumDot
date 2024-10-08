@@ -10,7 +10,6 @@ extends Node2D
 @onready var tau0 := tauI + tauR
 
 @export_category("Visual parameters")
-@export var num_draw_points: int = 50
 @export var colors = []
 
 @export var color_susceptible: Color = Color.WHITE

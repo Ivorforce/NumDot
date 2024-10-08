@@ -15,6 +15,11 @@ run/main_scene="res://tests.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+TransitionManager="*res://demos/launcher/transition_manager.tscn"
+InputListener="*res://demos/launcher/input_listener.gd"
+
 [display]
 
 window/stretch/mode="canvas_items"

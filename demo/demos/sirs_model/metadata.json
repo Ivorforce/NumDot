@@ -1,0 +1,6 @@
+{
+	"name": "SIRS model",
+	"description": "An exploration of the dynamics of disease transmission on a 2D grid.",
+	"link": "https://en.wikipedia.org/wiki/Compartmental_models_in_epidemiology",
+	"authors": "20akshay00, Ivorforce"
+}

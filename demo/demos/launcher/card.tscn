@@ -1,0 +1,73 @@
+[gd_scene load_steps=3 format=3 uid="uid://bv8vkmqakj7e1"]
+
+[ext_resource type="Script" path="res://demos/launcher/card.gd" id="1_dl5o8"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_no71f"]
+
+[node name="Card" type="Control"]
+custom_minimum_size = Vector2(290, 250)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 290.0
+offset_bottom = 300.0
+script = ExtResource("1_dl5o8")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 0
+offset_right = 290.0
+offset_bottom = 255.0
+color = Color(1, 1, 1, 0.145098)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 0
+offset_right = 290.0
+offset_bottom = 254.0
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/MarginContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="CenterContainer3" type="CenterContainer" parent="CenterContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Name" type="Button" parent="CenterContainer/MarginContainer/VBoxContainer/CenterContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Demo Name"
+
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+theme_override_styles/separator = SubResource("StyleBoxEmpty_no71f")
+
+[node name="CenterContainer2" type="CenterContainer" parent="CenterContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Description" type="Label" parent="CenterContainer/MarginContainer/VBoxContainer/CenterContainer2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+autowrap_mode = 1
+
+[node name="HSeparator2" type="HSeparator" parent="CenterContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+theme_override_styles/separator = SubResource("StyleBoxEmpty_no71f")
+
+[node name="CenterContainer" type="CenterContainer" parent="CenterContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Link" type="LinkButton" parent="CenterContainer/MarginContainer/VBoxContainer/CenterContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "(Learn more)"
+
+[connection signal="pressed" from="CenterContainer/MarginContainer/VBoxContainer/CenterContainer3/Name" to="." method="_on_name_pressed"]

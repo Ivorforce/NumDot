@@ -1,0 +1,6 @@
+{
+	"name": "Conway's Game of Life",
+	"description": "A popular cellular automaton ruleset that shows how life arises from the simplest of places.",
+	"link": "https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life",
+	"authors": "Ivorforce"
+}

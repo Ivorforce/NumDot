@@ -5,7 +5,7 @@ extends Node2D
 
 @export var N: int = 20
 
-@export var steps_per_second: float = 1.0
+@export var steps_per_second: float = 20.
 var current_step: float = 0.0
 
 @export_category("Visual parameters")

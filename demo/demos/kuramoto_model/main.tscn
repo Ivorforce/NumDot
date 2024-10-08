@@ -1,21 +1,21 @@
 [gd_scene load_steps=4 format=3 uid="uid://b0s40i0gcfwtk"]
 
-[ext_resource type="Script" path="res://demos/kuramoto_model/kuramoto_model.gd" id="1_4fesd"]
-[ext_resource type="Script" path="res://demos/kuramoto_model/gd_solver.gd" id="2_8q8fw"]
-[ext_resource type="Script" path="res://demos/kuramoto_model/nd_solver.gd" id="3_upt5u"]
+[ext_resource type="Script" path="res://demos/kuramoto_model/kuramoto_model.gd" id="1_rmybu"]
+[ext_resource type="Script" path="res://demos/kuramoto_model/gd_solver.gd" id="2_d1pps"]
+[ext_resource type="Script" path="res://demos/kuramoto_model/nd_solver.gd" id="3_ai2qh"]
 
 [node name="KuramotoModel" type="Node2D" node_paths=PackedStringArray("solver")]
-script = ExtResource("1_4fesd")
+script = ExtResource("1_rmybu")
 solver = NodePath("Solvers/GDSolver")
 
 [node name="Solvers" type="Node" parent="."]
 
 [node name="GDSolver" type="Node" parent="Solvers" node_paths=PackedStringArray("params")]
-script = ExtResource("2_8q8fw")
+script = ExtResource("2_d1pps")
 params = NodePath("../..")
 
 [node name="NDSolver" type="Node" parent="Solvers" node_paths=PackedStringArray("params")]
-script = ExtResource("3_upt5u")
+script = ExtResource("3_ai2qh")
 params = NodePath("../..")
 
 [node name="ColorRect" type="ColorRect" parent="."]

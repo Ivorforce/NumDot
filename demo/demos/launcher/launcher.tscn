@@ -1,0 +1,72 @@
+[gd_scene load_steps=3 format=3 uid="uid://qsyya0wgdw00"]
+
+[ext_resource type="Script" path="res://demos/launcher/launcher.gd" id="1_cm6uh"]
+[ext_resource type="Texture2D" uid="uid://cqhiuipi3ogx3" path="res://demos/launcher/NumDot-Logo-Dark.png" id="2_dlp71"]
+
+[node name="Launcher" type="Node2D"]
+script = ExtResource("1_cm6uh")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+show_behind_parent = true
+custom_minimum_size = Vector2(1152, 648)
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_right = 1152.0
+offset_bottom = 648.0
+grow_horizontal = 2
+color = Color(0.0437092, 0.0736913, 0.101474, 1)
+
+[node name="DemoSelection" type="ScrollContainer" parent="."]
+offset_left = 35.0
+offset_top = 255.0
+offset_right = 1118.0
+offset_bottom = 573.0
+horizontal_scroll_mode = 3
+vertical_scroll_mode = 0
+
+[node name="DemoList" type="HBoxContainer" parent="DemoSelection"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="DescriptionLabel" type="Label" parent="."]
+offset_left = 239.0
+offset_top = 71.0
+offset_right = 1082.0
+offset_bottom = 198.0
+text = "This is a collection of projects designed to demonstrate the performance gains offered by NumDot  native GDScript implementations. These projects have been chosen to showcase the utility NumDot in bringing various scientific toy models to life by incorporating real-time interactivity through Godot! 
+
+Press B to return to this screen.
+"
+autowrap_mode = 2
+
+[node name="TextureButton" type="TextureButton" parent="."]
+offset_left = 47.0
+offset_top = 66.0
+offset_right = 1327.0
+offset_bottom = 1346.0
+scale = Vector2(0.1, 0.1)
+texture_normal = ExtResource("2_dlp71")
+
+[node name="GithubLabel" type="Label" parent="."]
+offset_left = 287.0
+offset_top = 581.0
+offset_right = 667.0
+offset_bottom = 604.0
+text = "Want to contribute or report bugs? Check out the"
+
+[node name="BackLabel" type="Label" parent="."]
+offset_left = 1022.0
+offset_top = 542.0
+offset_right = 1128.0
+offset_bottom = 617.0
+
+[node name="GithubLink" type="LinkButton" parent="."]
+offset_left = 672.0
+offset_top = 581.0
+offset_right = 813.0
+offset_bottom = 621.0
+text = "Github repository."
+uri = "https://github.com/Ivorforce/NumDot/"
+
+[connection signal="pressed" from="TextureButton" to="." method="_on_texture_button_pressed"]

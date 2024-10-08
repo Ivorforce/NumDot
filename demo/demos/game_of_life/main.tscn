@@ -1,30 +1,24 @@
-[gd_scene load_steps=5 format=3 uid="uid://bujidut18snxp"]
+[gd_scene load_steps=5 format=3 uid="uid://c8jgsn3pwwvim"]
 
-[ext_resource type="Script" path="res://demos/sirs_model/sirs_model.gd" id="1_lsy6e"]
-[ext_resource type="Script" path="res://demos/sirs_model/gd_solver.gd" id="2_u2f2u"]
-[ext_resource type="Script" path="res://demos/sirs_model/nd_solver.gd" id="3_7y254"]
+[ext_resource type="Script" path="res://demos/game_of_life/game_of_life.gd" id="1_gede7"]
+[ext_resource type="Script" path="res://demos/game_of_life/gd_solver.gd" id="2_7ih7m"]
+[ext_resource type="Script" path="res://demos/game_of_life/nd_solver.gd" id="3_lau5v"]
 
 [sub_resource type="ImageTexture" id="ImageTexture_03ndn"]
 
-[node name="SIRSModel" type="Node2D" node_paths=PackedStringArray("solver", "texture_rect")]
-script = ExtResource("1_lsy6e")
+[node name="GameOfLife" type="Node2D" node_paths=PackedStringArray("solver", "texture_rect")]
+script = ExtResource("1_gede7")
 solver = NodePath("Solvers/GDSolver")
-N = 30
-tauI = 8
-tauR = 9
-color_susceptible = Color(0.803922, 0.803922, 0.776471, 1)
-color_infected = Color(0.737255, 0.223529, 0.133333, 1)
-color_recovered = Color(0.921569, 0.584314, 0.14902, 1)
 texture_rect = NodePath("CanvasLayer/TextureRect")
 
 [node name="Solvers" type="Node" parent="."]
 
 [node name="GDSolver" type="Node" parent="Solvers" node_paths=PackedStringArray("params")]
-script = ExtResource("2_u2f2u")
+script = ExtResource("2_7ih7m")
 params = NodePath("../..")
 
 [node name="NDSolver" type="Node" parent="Solvers" node_paths=PackedStringArray("params")]
-script = ExtResource("3_7y254")
+script = ExtResource("3_lau5v")
 params = NodePath("../..")
 
 [node name="ColorRect" type="ColorRect" parent="."]
@@ -61,9 +55,9 @@ text = "Frame time: 1"
 [node name="SliderOptions" type="VBoxContainer" parent="."]
 custom_minimum_size = Vector2(250, 0)
 offset_left = 22.0
-offset_top = 365.0
+offset_top = 550.0
 offset_right = 272.0
-offset_bottom = 625.0
+offset_bottom = 620.0
 metadata/_edit_group_ = true
 
 [node name="PointLabel" type="Label" parent="SliderOptions"]
@@ -76,58 +70,9 @@ text = "Grid: 20x20"
 unique_name_in_owner = true
 layout_mode = 2
 min_value = 10.0
-max_value = 250.0
+max_value = 500.0
 value = 20.0
-
-[node name="SpreadLabel" type="Label" parent="SliderOptions"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 30
-text = "Spread: 1"
-
-[node name="SpreadSlider" type="HSlider" parent="SliderOptions"]
-unique_name_in_owner = true
-layout_mode = 2
-min_value = 0.01
-max_value = 4.0
-step = 0.0
-value = 1.0
 exp_edit = true
-
-[node name="InfectedLabel" type="Label" parent="SliderOptions"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 30
-text = "Infection time: 4"
-
-[node name="InfectedSlider" type="HSlider" parent="SliderOptions"]
-unique_name_in_owner = true
-layout_mode = 2
-min_value = 1.0
-value = 4.0
-exp_edit = true
-
-[node name="RecoveryLabel" type="Label" parent="SliderOptions"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 30
-text = "Recovery time: 6"
-
-[node name="RecoverySlider" type="HSlider" parent="SliderOptions"]
-unique_name_in_owner = true
-layout_mode = 2
-min_value = 1.0
-value = 6.0
-exp_edit = true
-
-[node name="RestartButton" type="Button" parent="."]
-offset_left = 865.0
-offset_top = 79.0
-offset_right = 1140.0
-offset_bottom = 129.0
-theme_override_font_sizes/font_size = 30
-text = "Restart
-"
 
 [node name="SolverOption" type="OptionButton" parent="."]
 offset_left = 865.0
@@ -151,24 +96,12 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 texture = SubResource("ImageTexture_03ndn")
 
-[node name="LegendInfected" type="TextureRect" parent="."]
-offset_left = 288.0
-offset_top = 549.0
-offset_right = 308.0
-offset_bottom = 569.0
-
-[node name="LegendRecovered" type="TextureRect" parent="."]
-offset_left = 288.0
-offset_top = 615.0
-offset_right = 308.0
-offset_bottom = 635.0
-
 [node name="SolverOptions" type="VBoxContainer" parent="."]
 custom_minimum_size = Vector2(200, 0)
-offset_left = 940.0
-offset_top = 570.0
-offset_right = 1140.0
-offset_bottom = 635.0
+offset_left = 936.0
+offset_top = 567.0
+offset_right = 1136.0
+offset_bottom = 632.0
 metadata/_edit_group_ = true
 
 [node name="StepsPerSecondLabel" type="Label" parent="SolverOptions"]
@@ -183,13 +116,19 @@ layout_mode = 2
 min_value = 0.1
 max_value = 10000.0
 step = 0.5
-value = 30.0
+value = 20.0
 exp_edit = true
 
+[node name="RestartButton" type="Button" parent="."]
+offset_left = 865.0
+offset_top = 83.0
+offset_right = 1138.0
+offset_bottom = 133.0
+theme_override_font_sizes/font_size = 30
+text = "Restart
+"
+
 [connection signal="drag_ended" from="SliderOptions/PointSlider" to="." method="_on_point_slider_drag_ended"]
-[connection signal="drag_ended" from="SliderOptions/SpreadSlider" to="." method="_on_spread_slider_drag_ended"]
-[connection signal="drag_ended" from="SliderOptions/InfectedSlider" to="." method="_on_infected_slider_drag_ended"]
-[connection signal="drag_ended" from="SliderOptions/RecoverySlider" to="." method="_on_recovery_slider_drag_ended"]
-[connection signal="pressed" from="RestartButton" to="." method="_on_restart_button_pressed"]
 [connection signal="item_selected" from="SolverOption" to="." method="_on_solver_option_item_selected"]
 [connection signal="drag_ended" from="SolverOptions/StepsPerSecondSlider" to="." method="_on_steps_per_second_slider_drag_ended"]
+[connection signal="pressed" from="RestartButton" to="." method="_on_restart_button_pressed"]

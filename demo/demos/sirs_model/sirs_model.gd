@@ -9,6 +9,9 @@ extends Node2D
 @export var tauR: int = 6
 @onready var tau0 := tauI + tauR
 
+@export var steps_per_second: float = 1.0
+var current_step: float = 0.0
+
 @export_category("Visual parameters")
 @export var colors = []
 
@@ -34,7 +37,7 @@ func _ready() -> void:
 	%RecoverySlider.value = tauR
 	%RecoveryLabel.text = "Recovery time: " + str(tauR)
 	
-	generate_colors()	
+	generate_colors()
 	resize_image()
 	create_legend()
 	
@@ -44,9 +47,12 @@ func _process(delta: float) -> void:
 
 	%FPSLabel.text = "FPS: " + str(Engine.get_frames_per_second())
 
-	frame_time = Time.get_ticks_usec()
-	solver.simulation_step()
-	frame_time = Time.get_ticks_usec() - frame_time
+	var next_step := current_step + delta * steps_per_second
+	for i in (int(next_step) - int(current_step)):
+		frame_time = Time.get_ticks_usec()
+		solver.simulation_step()
+		frame_time = Time.get_ticks_usec() - frame_time
+	current_step = next_step
 	
 	%FrameTimeLabel.text = "Delta (ms): " + str(snappedf(frame_time/1000, 1e-3))
 	solver.on_draw()
@@ -82,6 +88,10 @@ func _on_recovery_slider_drag_ended(value_changed: bool) -> void:
 	tau0 = tauI + tauR
 	solver.initialize()
 	generate_colors()
+
+func _on_steps_per_second_slider_drag_ended(value_changed: bool) -> void:
+	steps_per_second = %StepsPerSecondSlider.value
+	%StepsPerSecondLabel.text = "Speed: %.2f" % steps_per_second
 
 func _on_restart_button_pressed() -> void:
 	solver.initialize()

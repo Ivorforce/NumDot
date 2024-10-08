@@ -4,8 +4,9 @@ extends Node2D
 @export var solver: GameOfLifeSolver
 
 @export var N: int = 20
+
 @export var steps_per_second: float = 1.0
-@export var current_step: float = 0.0
+var current_step: float = 0.0
 
 @export_category("Visual parameters")
 @export var color_on: Color = Color.WHITE
@@ -28,12 +29,10 @@ func _process(delta: float) -> void:
 	%FPSLabel.text = "FPS: " + str(Engine.get_frames_per_second())
 
 	var next_step := current_step + delta * steps_per_second
-	
 	for i in (int(next_step) - int(current_step)):
 		frame_time = Time.get_ticks_usec()
 		solver.simulation_step()
 		frame_time = Time.get_ticks_usec() - frame_time
-
 	current_step = next_step
 	
 	%FrameTimeLabel.text = "Delta (ms): " + str(snappedf(frame_time/1000, 1e-3))

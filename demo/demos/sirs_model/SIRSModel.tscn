@@ -121,10 +121,10 @@ value = 6.0
 exp_edit = true
 
 [node name="RestartButton" type="Button" parent="."]
-offset_left = 920.0
-offset_top = 581.0
+offset_left = 865.0
+offset_top = 79.0
 offset_right = 1140.0
-offset_bottom = 631.0
+offset_bottom = 129.0
 theme_override_font_sizes/font_size = 30
 text = "Restart
 "
@@ -163,9 +163,33 @@ offset_top = 615.0
 offset_right = 308.0
 offset_bottom = 635.0
 
+[node name="SolverOptions" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(200, 0)
+offset_left = 940.0
+offset_top = 570.0
+offset_right = 1140.0
+offset_bottom = 635.0
+metadata/_edit_group_ = true
+
+[node name="StepsPerSecondLabel" type="Label" parent="SolverOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Speed: 1"
+
+[node name="StepsPerSecondSlider" type="HSlider" parent="SolverOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 0.1
+max_value = 10000.0
+step = 0.0
+value = 5.0
+exp_edit = true
+
 [connection signal="drag_ended" from="SliderOptions/PointSlider" to="." method="_on_point_slider_drag_ended"]
 [connection signal="drag_ended" from="SliderOptions/SpreadSlider" to="." method="_on_spread_slider_drag_ended"]
 [connection signal="drag_ended" from="SliderOptions/InfectedSlider" to="." method="_on_infected_slider_drag_ended"]
 [connection signal="drag_ended" from="SliderOptions/RecoverySlider" to="." method="_on_recovery_slider_drag_ended"]
 [connection signal="pressed" from="RestartButton" to="." method="_on_restart_button_pressed"]
 [connection signal="item_selected" from="SolverOption" to="." method="_on_solver_option_item_selected"]
+[connection signal="drag_ended" from="SolverOptions/StepsPerSecondSlider" to="." method="_on_steps_per_second_slider_drag_ended"]

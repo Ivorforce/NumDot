@@ -8,10 +8,6 @@ extends Node2D
 @export var steps_per_second: float = 20.
 var current_step: float = 0.0
 
-@export_category("Visual parameters")
-@export var color_on: Color = Color.WHITE
-@export var color_off: Color = Color.BLACK
-
 @export var texture_rect: TextureRect
 var _image: Image
 
@@ -59,7 +55,7 @@ func update_texture() -> void:
 	texture_rect.texture.update(_image)
 
 func resize_image() -> void:
-	_image = Image.create(N, N, false, Image.FORMAT_RGBA8)
+	_image = Image.create(N, N, false, Image.FORMAT_R8)
 
 	texture_rect.texture = ImageTexture.create_from_image(_image)
 	texture_rect.set_size(Vector2(500, 500))

@@ -31,10 +31,8 @@ func simulation_step() -> void:
 	is_alive_inner.set(false, tmp_inner.assign_greater(neighour_count, 3))
 
 func on_draw() -> void:
-	for i in range(params.N):
-		for j in range(params.N):
-			params._image.set_pixel(i, j, params.color_on if is_alive.get_bool(i, j) else params.color_off)
-
+	var image_data := nd.multiply(255, nd.reshape(is_alive, -1)).to_packed_byte_array()
+	params._image.set_data(params.N, params.N, false, Image.FORMAT_R8, image_data)
 	params.update_texture()
 
 func place_random() -> void:

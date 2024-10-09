@@ -20,7 +20,7 @@ The NumDot library for Godot Engine is designed to make scientific and mathemati
 
 In short, NumDot bridges the gap between high-level GDScript programming and efficient mathematical computations, enhancing both the development process and the final product.
 
-If you need any help with NumDot, come by our `Discord Server <https://discord.gg/ch5MAsgKxF>`_ and have a chat.
+If you need any help with NumDot, come by our `Discord Server <https://discord.gg/mwS2sW6V5M>`_ and have a chat.
 
 Table of Contents
 ============================

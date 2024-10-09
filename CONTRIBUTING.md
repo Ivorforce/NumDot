@@ -2,7 +2,7 @@
 
 New collaborators are very welcome! There's 3 quick ways to start:
 
-- [Come by our Discord and have a chat with us](https://discord.gg/ch5MAsgKxF).
+- [Come by our Discord and have a chat with us](https://discord.gg/mwS2sW6V5M).
 - [Browse the issues for those good for newcomers](https://github.com/Ivorforce/NumDot/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22). Open up a pull request once you're done.
 - Continue reading the document for a quick introduction into the NumDot ecosystem.
 
@@ -68,4 +68,4 @@ Finally, [make a Pull Request (PR)](https://github.com/Ivorforce/NumDot/compare)
 
 ## Any Problems?
 
-Please [come by our Discord and have a chat with us](https://discord.gg/ch5MAsgKxF). We are happy you want to help, and should be able to help you make a contribution.
+Please [come by our Discord and have a chat with us](https://discord.gg/mwS2sW6V5M). We are happy you want to help, and should be able to help you make a contribution.

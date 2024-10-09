@@ -11,9 +11,7 @@ var rng := nd.default_rng()
 func initialize() -> void:
 	var grid_size := [params.N, params.N]
 	
-	# TODO This should be bool, but that's somehow broken with the assignment
-	#  from random below
-	is_alive = nd.zeros(grid_size, nd.Int8)
+	is_alive = nd.zeros(grid_size, nd.Bool)
 	is_alive_inner = is_alive.get(nd.range(1, -1), nd.range(1, -1))
 
 	neighour_count = nd.zeros_like(is_alive_inner, nd.Int8)
@@ -40,4 +38,4 @@ func on_draw() -> void:
 	params.update_texture()
 
 func place_random() -> void:
-	is_alive_inner.set(rng.integers(0, 2, is_alive_inner.shape(), nd.Int8))
+	is_alive_inner.set(rng.integers(0, 2, is_alive_inner.shape(), nd.Bool))

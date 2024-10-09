@@ -41,7 +41,21 @@ VScalar va::get_single_value(VRead& array, axes_type& index) {
 void va::assign(VWrite& array, const VRead& value) {
 	std::visit(
 		[](auto& carray, const auto& cvalue) {
-			broadcasting_assign(carray, cvalue);
+			using VWrite = typename std::decay_t<decltype(carray)>::value_type;
+			using VRead = typename std::decay_t<decltype(carray)>::value_type;
+
+#ifdef XTENSOR_USE_XSIMD
+			// For some reason, bool - to - bool assignments are broken in xsimd
+			// TODO Should make this reproducible, I haven't managed so far.
+			// See https://github.com/Ivorforce/NumDot/issues/123
+			if constexpr (std::is_same_v<VWrite, bool> && std::is_same_v<VRead, bool>) {
+				broadcasting_assign(carray, xt::cast<uint8_t>(cvalue));
+			}
+			else
+#endif
+			{
+				broadcasting_assign(carray, cvalue);
+			}
 		}, array, value
 	);
 }
@@ -49,7 +63,19 @@ void va::assign(VWrite& array, const VRead& value) {
 void va::assign_nonoverlapping(VWrite& array, const ArrayVariant& value) {
 	std::visit(
 		[](auto& carray, const auto& cvalue) {
-			broadcasting_assign(carray, cvalue);
+			using VWrite = typename std::decay_t<decltype(carray)>::value_type;
+			using VRead = typename std::decay_t<decltype(carray)>::value_type;
+
+#ifdef XTENSOR_USE_XSIMD
+			// See above
+			if constexpr (std::is_same_v<VWrite, bool> && std::is_same_v<VRead, bool>) {
+				broadcasting_assign(carray, xt::cast<uint8_t>(cvalue));
+			}
+			else
+#endif
+			{
+				broadcasting_assign(carray, cvalue);
+			}
 		}, array, value
 	);
 }

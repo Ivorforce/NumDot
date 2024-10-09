@@ -162,6 +162,10 @@ void va::set_at_mask(VWrite& varray, VRead& mask, VRead& value) {
 				throw std::runtime_error("mask must be boolean dtype");
 			}
 			else {
+				if (array.shape() != mask.shape()) {
+					throw std::runtime_error("mask must be same shape as array");
+				}
+
 				auto masked_view = xt::masked_view(array, mask);
 				if (value.dimension() == 0) {
 					// Simple fill, masked_view supports this.

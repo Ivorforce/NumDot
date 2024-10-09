@@ -16,6 +16,11 @@ Upcoming Changes (main branch)
 
 - ``randn`` function (random sampling from a normal distribution)
 
+**Fixed**
+
+- Assignment from boolean to boolean arrays didn't work properly.
+- Setting with a mask of incompatible shape to the array didn't properly fail.
+
 Version 0.5 - 2024-10-07
 ------------------------
 **Added**

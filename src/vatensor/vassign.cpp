@@ -16,7 +16,7 @@ static void mod_index(axes_type& index, const shape_type& shape) {
 
 	for (int i = 0; i < index.size(); ++i) {
 		if (index[i] < 0) index[i] += shape[i];
-		if (index[i] < 0 || index[i] >= shape[i]) throw std::runtime_error("index out of boudns");
+		if (index[i] < 0 || index[i] >= shape[i]) throw std::runtime_error("index out of bounds");
 	}
 }
 

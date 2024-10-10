@@ -19,6 +19,7 @@ Upcoming Changes (main branch)
 
 **Changed**
 
+- Contiguous scalar assignment (e.g. ``array.set(0)``) is now about 20x as fast as before.
 - Mask assignments with scalars are now a bit faster.
 
 **Fixed**

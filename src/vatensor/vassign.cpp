@@ -83,8 +83,20 @@ void va::assign_nonoverlapping(VWrite& array, const ArrayVariant& value) {
 void va::assign(VWrite& array, VScalar value) {
 	std::visit(
 		[](auto& carray, const auto cvalue) {
-			using V = typename std::decay_t<decltype(carray)>::value_type;
-			carray.fill(static_cast<V>(cvalue));
+			using T = std::decay_t<decltype(carray)>;
+			using V = typename T::value_type;
+
+			// TODO The .fill makes this check statically only, so is_contiguous() isn't called.
+			// See https://github.com/xtensor-stack/xtensor/pull/2809
+			// carray.fill(static_cast<V>(cvalue));
+			if (T::contiguous_layout || carray.is_contiguous())
+			{
+				std::fill(carray.linear_begin(), carray.linear_end(), static_cast<V>(cvalue));
+			}
+			else
+			{
+				std::fill(carray.begin(), carray.end(), static_cast<V>(cvalue));
+			}
 		}, array, value
 	);
 }

@@ -156,10 +156,10 @@ namespace va {
         [[nodiscard]] size_type offset() const { return va::offset(read); }
         [[nodiscard]] xt::layout_type layout() const { return va::layout(read); }
 
-        [[nodiscard]] DType dtype() const;
-        [[nodiscard]] std::size_t size() const;
-        [[nodiscard]] std::size_t dimension() const;
-        [[nodiscard]] std::size_t size_of_array_in_bytes() const;
+        [[nodiscard]] DType dtype() const { return va::dtype(read); }
+        [[nodiscard]] std::size_t size() const { return va::size(read); }
+        [[nodiscard]] std::size_t dimension() const { return va::dimension(read); }
+        [[nodiscard]] std::size_t size_of_array_in_bytes() const { return va::size_of_array_in_bytes(read); }
 
         void prepare_write();
 

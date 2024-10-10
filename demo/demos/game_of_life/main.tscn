@@ -1,8 +1,12 @@
-[gd_scene load_steps=5 format=3 uid="uid://c8jgsn3pwwvim"]
+[gd_scene load_steps=7 format=3 uid="uid://c8jgsn3pwwvim"]
 
 [ext_resource type="Script" path="res://demos/game_of_life/game_of_life.gd" id="1_gede7"]
 [ext_resource type="Script" path="res://demos/game_of_life/gd_solver.gd" id="2_7ih7m"]
 [ext_resource type="Script" path="res://demos/game_of_life/nd_solver.gd" id="3_lau5v"]
+[ext_resource type="Shader" path="res://demos/game_of_life/grid.gdshader" id="4_jfmvj"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1vf8p"]
+shader = ExtResource("4_jfmvj")
 
 [sub_resource type="ImageTexture" id="ImageTexture_03ndn"]
 
@@ -90,6 +94,7 @@ popup/item_1/id = 1
 
 [node name="TextureRect" type="TextureRect" parent="CanvasLayer"]
 texture_filter = 1
+material = SubResource("ShaderMaterial_1vf8p")
 offset_right = 40.0
 offset_bottom = 40.0
 size_flags_horizontal = 4

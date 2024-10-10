@@ -81,20 +81,25 @@ namespace va {
                                 // We need to cast, just give up here.
                                 return false;
                             }
+                            else
 #endif
-
-                            // TODO Could use assign_xexpression if there is no aliasing, aka overlap of target and inputs.
-                            va::broadcasting_assign(ctarget, result);
-                            return true;
+                            {
+                                // TODO Could use assign_xexpression if there is no aliasing, aka overlap of target and inputs.
+                                va::broadcasting_assign(ctarget, result);
+                                return true;
+                            }
                         }, *target
                     )) {
                         // Ran accelerated assign, we don't need to do the regular one.
                         return;
                     }
+                    else
 #endif
-                    // Make a copy, similar as in promote_compute_case_if_needed.
-                    // After copying we can be sure no aliasing is taking place, so we can assign with assign_xexpression.
-                    va::assign_nonoverlapping(*target, xt::xarray<RStorable>(result));
+                    {
+                        // Make a copy, similar as in promote_compute_case_if_needed.
+                        // After copying we can be sure no aliasing is taking place, so we can assign with assign_xexpression.
+                        va::assign_nonoverlapping(*target, xt::xarray<RStorable>(result));
+                    }
                 }
                 else {
                     // Create new array, assign to our target pointer.

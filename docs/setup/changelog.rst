@@ -17,6 +17,10 @@ Upcoming Changes (main branch)
 - ``randn`` function (random sampling from a normal distribution)
 - OpenMP support (through the new ``openmp_threshold`` compile option, disabled by default). This requires your compiler to support OpenMP.
 
+**Changed**
+
+- Mask assignments with scalars are now a bit faster.
+
 **Fixed**
 
 - Assignment from boolean to boolean arrays didn't work properly.

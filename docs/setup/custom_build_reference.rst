@@ -38,7 +38,11 @@ That being said, here is some information about the most interesting options:
 
 - ``openmp_threshold``, integer, defaults to ``-1``:
 
-    - If ``openmp_threshold >= 0`` (e.g. ``openmp_threshold=1000``), OpenMP will be used to parallelize operations larger than ``openmp_threshold`` elements. Small thresholds are discouraged because of parallelism overhead. For large operations, you can speed up your operations immensely. This option also increases the binary size.
+    - If ``openmp_threshold >= 0`` (e.g. ``openmp_threshold=1000``), OpenMP will be used to parallelize operations larger than ``openmp_threshold`` elements. Small thresholds are discouraged because of parallelism overhead. This may speed up your operations, at the cost of a larger binary.
+
+    - Note that on some systems, OpenMP needs to be installed before this works.
+
+    - Our current tests have yielded assignments with OpenMP to be slower than without it. So benchmark before you ship it with OpenMP enabled!
 
 - ``define=NUMDOT_COPY_FOR_ALL_INPLACE_OPERATIONS``
 

@@ -57,6 +57,15 @@ std::size_t va::dimension(const VRead& read) {
     );
 }
 
+std::size_t va::size_of_array_in_bytes(const VRead& read) {
+    return std::visit(
+        [](auto& carray) {
+            using V = typename std::decay_t<decltype(carray)>::value_type;
+            return carray.size() * sizeof(V);
+        }, read
+    );
+}
+
 va::VScalar va::to_single_value(const VRead& read) {
     return std::visit(
         [](const auto& carray) -> va::VScalar {
@@ -128,15 +137,6 @@ va::VWrite va::VArray::sliced_write(const xt::xstrided_slice_vector& slices) {
         [&slices](auto& write) -> va::VWrite {
             return slice_compute(write, slices);
         }, write.value()
-    );
-}
-
-std::size_t va::VArray::size_of_array_in_bytes() const {
-    return std::visit(
-        [](auto& carray) {
-            using V = typename std::decay_t<decltype(carray)>::value_type;
-            return carray.size() * sizeof(V);
-        }, read
     );
 }
 

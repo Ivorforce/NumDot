@@ -161,13 +161,13 @@ namespace va {
         [[nodiscard]] std::size_t dimension() const { return va::dimension(read); }
         [[nodiscard]] std::size_t size_of_array_in_bytes() const { return va::size_of_array_in_bytes(read); }
 
+        [[nodiscard]] VScalar to_single_value() const { return va::to_single_value(read); }
+
         void prepare_write();
 
         [[nodiscard]] std::shared_ptr<VArray> sliced(const xt::xstrided_slice_vector& slices) const;
         [[nodiscard]] VRead sliced_read(const xt::xstrided_slice_vector& slices) const;
         [[nodiscard]] VWrite sliced_write(const xt::xstrided_slice_vector& slices);
-
-        [[nodiscard]] VScalar to_single_value() const { return va::to_single_value(read); }
 
         explicit operator bool() const;
         explicit operator int64_t() const;

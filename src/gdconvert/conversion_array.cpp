@@ -687,7 +687,7 @@ std::shared_ptr<va::VArray> ndarray_as_dtype(const NDArray& ndarray, const va::D
 	if (dtype == va::DTypeMax || ndarray.array->dtype() == dtype)
 		return ndarray.array;
 
-	return va::copy_as_dtype(*ndarray.array, dtype);
+	return va::copy_as_dtype(ndarray.array->read, dtype);
 }
 
 std::shared_ptr<va::VArray> variant_as_array(const Variant& array, const va::DType dtype, const bool copy) {
@@ -695,7 +695,7 @@ std::shared_ptr<va::VArray> variant_as_array(const Variant& array, const va::DTy
 		case Variant::OBJECT: {
 			if (const auto ndarray = Object::cast_to<NDArray>(array)) {
 				if (copy)
-					return va::copy_as_dtype(*ndarray->array, dtype);
+					return va::copy_as_dtype(ndarray->array->read, dtype);
 
 				return ndarray_as_dtype(*ndarray, dtype);
 			}
@@ -709,7 +709,7 @@ std::shared_ptr<va::VArray> variant_as_array(const Variant& array, const va::DTy
 	if (dtype == va::DTypeMax || dtype == varray->dtype())
 		return varray;
 	else
-		return va::copy_as_dtype(*varray, dtype);
+		return va::copy_as_dtype(varray->read, dtype);
 }
 
 std::vector<std::shared_ptr<va::VArray>> variant_to_vector(const Variant& array) {

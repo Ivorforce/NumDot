@@ -135,7 +135,7 @@ void va::median(VArrayTarget target, const VArray& array, const axes_type& axes)
 
 	if (joined->layout() == xt::layout_type::dynamic) {
 		// xtensor does not support dynamic layout, so we need a copy first.
-		const auto joined_copy = copy_as_dtype(array, DTypeMax);
+		const auto joined_copy = copy_as_dtype(array.read, DTypeMax);
 		va::xoperation_inplace<promote::num_common_type>(
 			REDUCER_LAMBDA_AXES_NOECS(axis, xt::median),
 			target, joined_copy->read
@@ -333,7 +333,7 @@ VScalar va::count_nonzero(const VArray& array) {
 	if (array.dtype() == va::Bool)
 		return sum(array);
 
-	const auto is_nonzero = va::copy_as_dtype(array, va::Bool);
+	const auto is_nonzero = va::copy_as_dtype(array.read, va::Bool);
 	return va::sum(*is_nonzero);
 #endif
 }
@@ -345,7 +345,7 @@ void va::count_nonzero(VArrayTarget target, const VArray& array, const axes_type
 	if (array.dtype() == va::Bool)
 		return sum(target, array, axes);
 
-	const auto is_nonzero = va::copy_as_dtype(array, va::Bool);
+	const auto is_nonzero = va::copy_as_dtype(array.read, va::Bool);
 	return va::sum(target, *is_nonzero, axes);
 #endif
 }

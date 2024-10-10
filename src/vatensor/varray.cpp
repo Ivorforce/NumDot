@@ -5,7 +5,7 @@
 #include <type_traits>                     // for decay_t, common_type_t
 #include "xtensor/xstrided_view_base.hpp"  // for strided_view_args
 
-const va::shape_type& va::VArray::shape() const {
+const va::shape_type& va::shape(const VRead& read) {
     return std::visit(
         [](const auto& carray) -> const va::shape_type& {
             return carray.shape();
@@ -13,7 +13,7 @@ const va::shape_type& va::VArray::shape() const {
     );
 }
 
-const va::strides_type& va::VArray::strides() const {
+const va::strides_type& va::strides(const VRead& read) {
     return std::visit(
         [](const auto& carray) -> const va::strides_type& {
             return carray.strides();
@@ -21,7 +21,7 @@ const va::strides_type& va::VArray::strides() const {
     );
 }
 
-va::size_type va::VArray::offset() const {
+va::size_type va::offset(const VRead& read) {
     return std::visit(
         [](const auto& carray) -> va::size_type {
             return carray.data_offset();
@@ -29,7 +29,7 @@ va::size_type va::VArray::offset() const {
     );
 }
 
-xt::layout_type va::VArray::layout() const {
+xt::layout_type va::layout(const VRead& read) {
     return std::visit(
         [](const auto& carray) -> xt::layout_type {
             return carray.layout();
@@ -37,11 +37,11 @@ xt::layout_type va::VArray::layout() const {
     );
 }
 
-va::DType va::VArray::dtype() const {
+va::DType va::dtype(const VRead& read) {
     return static_cast<DType>(read.index());
 }
 
-std::size_t va::VArray::size() const {
+std::size_t va::size(const VRead& read) {
     return std::visit(
         [](const auto& carray) -> std::size_t {
             return carray.size();
@@ -49,10 +49,24 @@ std::size_t va::VArray::size() const {
     );
 }
 
-std::size_t va::VArray::dimension() const {
+std::size_t va::dimension(const VRead& read) {
     return std::visit(
         [](const auto& carray) -> std::size_t {
             return carray.dimension();
+        }, read
+    );
+}
+
+va::VScalar va::to_single_value(const VRead& read) {
+    return std::visit(
+        [](const auto& carray) -> va::VScalar {
+            if (carray.size() != 1) {
+                throw std::runtime_error("Expected a single element after slicing.");
+            }
+            return *carray.data();
+            // TODO I expected this to work, but it doesn't. See https://xtensor.readthedocs.io/en/latest/indices.html#operator
+            // But at least the above is a view, so no copy is made.
+            // return V(array[slice]);
         }, read
     );
 }
@@ -184,20 +198,6 @@ va::DType va::dtype_common_type(const DType a, const DType b) {
         [](auto a, auto b) { return variant_to_dtype(std::common_type_t<decltype(a), decltype(b)>()); },
         dtype_to_variant(a),
         dtype_to_variant(b)
-    );
-}
-
-va::VScalar va::VArray::to_single_value() const {
-    return std::visit(
-        [](const auto& carray) -> va::VScalar {
-            if (carray.size() != 1) {
-                throw std::runtime_error("Expected a single element after slicing.");
-            }
-            return *carray.data();
-            // TODO I expected this to work, but it doesn't. See https://xtensor.readthedocs.io/en/latest/indices.html#operator
-            // But at least the above is a view, so no copy is made.
-            // return V(array[slice]);
-        }, read
     );
 }
 

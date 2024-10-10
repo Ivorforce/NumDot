@@ -69,11 +69,11 @@ std::shared_ptr<VArray> va::copy(const VRead& read) {
 	);
 }
 
-std::shared_ptr<VArray> va::copy_as_dtype(const VArray& other, DType dtype) {
+std::shared_ptr<VArray> va::copy_as_dtype(const VRead& other, DType dtype) {
 #ifdef NUMDOT_DISABLE_ALLOCATION_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_ALLOCATION_FUNCTIONS to enable it.");
 #else
-	if (dtype == DTypeMax) dtype = other.dtype();
+	if (dtype == DTypeMax) dtype = va::dtype(other);
 
 	return std::visit(
 		[](auto t, auto carray) -> std::shared_ptr<VArray> {
@@ -87,7 +87,7 @@ std::shared_ptr<VArray> va::copy_as_dtype(const VArray& other, DType dtype) {
 				// Cast first to reduce number of combinations down the line.
 				return from_store(make_store<TWeWanted>(xt::cast<TWeWanted>(carray)));
 			}
-		}, dtype_to_variant(dtype), other.read
+		}, dtype_to_variant(dtype), other
 	);
 #endif
 }

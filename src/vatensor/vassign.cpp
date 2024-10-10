@@ -152,6 +152,11 @@ void va::set_at_mask(VWrite& varray, VRead& mask, VRead& value) {
 #ifdef NUMDOT_DISABLE_INDEX_MASKS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_INDEX_MASKS to enable it.");
 #else
+	// This case is not handled again later, so we actually need this 'performance' check.
+    if (va::dimension(value) == 0) {
+	    return set_at_mask(varray, mask, va::to_single_value(value));
+    }
+
 	return std::visit(
 		// Mask can't be const because of masked_view iterator.
 		[](auto& array, auto& mask, const auto& value) {
@@ -167,11 +172,6 @@ void va::set_at_mask(VWrite& varray, VRead& mask, VRead& value) {
 				}
 
 				auto masked_view = xt::masked_view(array, mask);
-				if (value.dimension() == 0) {
-					// Simple fill, masked_view supports this.
-					masked_view = *value.data();
-					return;
-				}
 
 				// Masked views don't offer array fill functionality automatically.
 				const size_type array_size = xt::sum(mask)();
@@ -190,6 +190,27 @@ void va::set_at_mask(VWrite& varray, VRead& mask, VRead& value) {
 		}, varray, mask, value
 	);
 #endif
+}
+
+void va::set_at_mask(VWrite& varray, VRead& mask, VScalar value) {
+	return std::visit(
+		// Mask can't be const because of masked_view iterator.
+		[](auto& array, auto& mask, const auto& value) {
+			using VTMask = typename std::decay_t<decltype(mask)>::value_type;
+
+			if constexpr (!std::is_same_v<VTMask, bool>) {
+				throw std::runtime_error("mask must be boolean dtype");
+			}
+			else {
+				if (array.shape() != mask.shape()) {
+					throw std::runtime_error("mask must be same shape as array");
+				}
+
+				auto masked_view = xt::masked_view(array, mask);
+				masked_view = value;
+			}
+		}, varray, mask, value
+	);
 }
 
 template<typename A>

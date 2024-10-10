@@ -269,7 +269,7 @@ Variant NDArray::as_type(const va::DType dtype) const {
 }
 
 Variant NDArray::copy() const {
-	const auto result = va::copy_as_dtype(*array, va::DTypeMax);
+	const auto result = va::copy(array->read);
 	return { memnew(NDArray(result)) };
 }
 
@@ -328,14 +328,30 @@ void NDArray::set(const Variant** args, GDExtensionInt arg_count, GDExtensionCal
 			}
 			else if constexpr (std::is_same_v<T, SliceIndexList>) {
 				array->prepare_write();
+
 				const auto value_ = variant_as_array(value);
 				va::set_at_indices(array->write.value(), slice.index_list->read, value_->read);
 			}
 			else {
 				// Mask
 				array->prepare_write();
-				const auto value_ = variant_as_array(value);
-				va::set_at_mask(array->write.value(), slice.mask->read, value_->read);
+				auto compute = array->write.value();
+
+				switch (value.get_type()) {
+					case Variant::BOOL:
+						va::set_at_mask(compute, slice.mask->read, static_cast<bool>(value));
+						return;
+					case Variant::INT:
+						va::set_at_mask(compute, slice.mask->read, static_cast<int64_t>(value));
+						return;
+					case Variant::FLOAT:
+						va::set_at_mask(compute, slice.mask->read, static_cast<double_t>(value));
+						return;
+					default:
+						const auto value_ = variant_as_array(value);
+						va::set_at_mask(compute, slice.mask->read, value_->read);
+						return;
+				}
 			}
 		}, variants_to_slice_variant(args + 1, arg_count - 1, error));
 	}

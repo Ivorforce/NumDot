@@ -33,6 +33,7 @@ namespace va {
 
 	std::shared_ptr<VArray> get_at_mask(const VRead& varray, const VRead& mask);
 	void set_at_mask(VWrite& varray, VRead& mask, VRead& value);
+	void set_at_mask(VWrite& varray, VRead& mask, VScalar value);
 
 	std::shared_ptr<VArray> get_at_indices(const VRead& varray, const VRead& indices);
 	void set_at_indices(VWrite& varray, VRead& indices, VRead& value);

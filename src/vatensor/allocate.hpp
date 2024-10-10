@@ -10,7 +10,7 @@ namespace va {
 	std::shared_ptr<VArray> eye(DType dtype, shape_type shape, int k);
 
 	std::shared_ptr<VArray> copy(const VRead& read);
-	std::shared_ptr<VArray> copy_as_dtype(const VArray& other, DType dtype);
+	std::shared_ptr<VArray> copy_as_dtype(const VRead& other, DType dtype);
 
 	std::shared_ptr<VArray> tile(const VArray& array, const shape_type& reps, bool inner);
 }

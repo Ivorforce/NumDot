@@ -134,16 +134,27 @@ namespace va {
         compute_case<const uint64_t*>
     >;
 
+    [[nodiscard]] const shape_type& shape(const VRead& read);
+    [[nodiscard]] const strides_type& strides(const VRead& read);
+    [[nodiscard]] size_type offset(const VRead& read);
+    [[nodiscard]] xt::layout_type layout(const VRead& read);
+    [[nodiscard]] DType dtype(const VRead& read);
+    [[nodiscard]] std::size_t size(const VRead& read);
+    [[nodiscard]] std::size_t dimension(const VRead& read);
+    [[nodiscard]] std::size_t size_of_array_in_bytes(const VRead& read);
+
+    [[nodiscard]] VScalar to_single_value(const VRead& read);
+
     class VArray {
     public:
         VStore store;
         VRead read;
         std::optional<VWrite> write;
 
-        [[nodiscard]] const shape_type& shape() const;
-        [[nodiscard]] const strides_type& strides() const;
-        [[nodiscard]] size_type offset() const;
-        [[nodiscard]] xt::layout_type layout() const;
+        [[nodiscard]] const shape_type& shape() const { return va::shape(read); }
+        [[nodiscard]] const strides_type& strides() const { return va::strides(read); }
+        [[nodiscard]] size_type offset() const { return va::offset(read); }
+        [[nodiscard]] xt::layout_type layout() const { return va::layout(read); }
 
         [[nodiscard]] DType dtype() const;
         [[nodiscard]] std::size_t size() const;
@@ -156,7 +167,8 @@ namespace va {
         [[nodiscard]] VRead sliced_read(const xt::xstrided_slice_vector& slices) const;
         [[nodiscard]] VWrite sliced_write(const xt::xstrided_slice_vector& slices);
 
-        [[nodiscard]] VScalar to_single_value() const;
+        [[nodiscard]] VScalar to_single_value() const { return va::to_single_value(read); }
+
         explicit operator bool() const;
         explicit operator int64_t() const;
         explicit operator int32_t() const;

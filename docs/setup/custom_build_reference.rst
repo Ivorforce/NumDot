@@ -36,6 +36,10 @@ That being said, here is some information about the most interesting options:
 
     - Whether to use `xsimd <https://xsimd.readthedocs.io/en/latest/>`_ to accelerate contiguous memory operations. Defaults to 'no' on web (unsupported as of yet) and yes elsewhere.
 
+- ``openmp_threshold``, integer, defaults to ``-1``:
+
+    - If ``openmp_threshold >= 0`` (e.g. ``openmp_threshold=1000``), OpenMP will be used to parallelize operations larger than ``openmp_threshold`` elements. Small thresholds are discouraged because of parallelism overhead. For large operations, you can speed up your operations immensely. This option also increases the binary size.
+
 - ``define=NUMDOT_COPY_FOR_ALL_INPLACE_OPERATIONS``
 
     - Don't optimize in-place operations (e.g. ``array.assign_add(a, b)``, even those of optimal type. This reduces their performance, but reduces the binary size.

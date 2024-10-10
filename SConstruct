@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import os
 import sys
+from pathlib import Path
 from SCons.Variables.BoolVariable import _text2bool
 
 from methods import print_error, print_warning
@@ -41,6 +42,11 @@ opts.Add(
     "auto"
 )
 opts.Add(
+    "openmp_threshold",
+    "If 0 or above, use OpenMP, for parallel assignment for operation sizes above or equal to the threshold. Defaults to -1 (no OpenMP).",
+    "-1"
+ )
+opts.Add(
     "optimize_for_arch",
     "Enable all optimizations the arch supports, making the build incompatible with other machines. Use 'native' to optimize for this machine. Note that on macOS, setting this option also requires setting arch= to a specific arch, e.g. arch=x86_64 or arch=arm64.",
     "",
@@ -55,6 +61,7 @@ else:
     use_xsimd = _text2bool(use_xsimd)
 
 optimize_for_arch = env["optimize_for_arch"]
+openmp_threshold = int(env["openmp_threshold"])
 
 # TODO If we don't delete our own arguments, the godot-cpp SConscript will complain.
 # There must be a better way?
@@ -62,6 +69,7 @@ ARGUMENTS.pop("build_dir", None)
 ARGUMENTS.pop("define", None)
 ARGUMENTS.pop("use_xsimd", None)
 ARGUMENTS.pop("optimize_for_arch", None)
+ARGUMENTS.pop("openmp_threshold", None)
 
 # ============================= Change defaults of godot-cpp =============================
 
@@ -139,6 +147,17 @@ if is_release:
     else:
         env.Append(CCFLAGS=["-flto"])
         env.Append(LINKFLAGS=["-flto"])
+
+if openmp_threshold >= 0:
+    # TODO Support is not yet complete. We somehow need include paths for each OS.
+    if is_msvc:
+        env.Append(CCFLAGS=['/openmp'])
+        env.Append(LINKFLAGS=['/openmp'])
+    else:
+        env.Append(CCFLAGS=['-fopenmp'])
+        env.Append(LINKFLAGS=['-fopenmp'])
+
+    env.Append(CCFLAGS=["-DXTENSOR_USE_OPENMP", f"-DXTENSOR_OPENMP_TRESHOLD={openmp_threshold}"])
 
 # ============================= Actual source and lib setup =============================
 

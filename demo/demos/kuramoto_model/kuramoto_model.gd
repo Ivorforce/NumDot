@@ -91,16 +91,17 @@ func _generate_fireflies() -> void:
 		for i in N - num_fireflies:
 			sprite = Sprite2D.new()
 			sprite.texture = firefly_texture
-			sprite.position = Vector2(randf_range(0, get_viewport().size.x), randf_range(0, get_viewport().size.y))
 			fireflies.add_child(sprite)
+	_randomize_positions()
+	
 	if num_fireflies > N:
 		for i in num_fireflies - N:
 			fireflies.get_child(N + i).queue_free()
 	
 func _randomize_positions() -> void:
 	for firefly in fireflies.get_children():
-		firefly.position.x = randf_range(0, get_viewport().size.x)
-		firefly.position.y = randf_range(0, get_viewport().size.y)
+		firefly.position.x = randf_range(0, get_viewport_rect().size.x)
+		firefly.position.y = randf_range(0, get_viewport_rect().size.y)
 
 func set_alphas(alphas: Variant) -> void:
 	if alphas is Array:

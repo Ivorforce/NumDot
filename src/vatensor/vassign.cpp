@@ -39,6 +39,12 @@ VScalar va::get_single_value(VRead& array, axes_type& index) {
 }
 
 void va::assign(VWrite& array, const VRead& value) {
+	if (va::dimension(value) == 0) {
+		// Optimization for
+		va::assign(array, va::to_single_value(value));
+		return;
+	}
+
 	std::visit(
 		[](auto& carray, const auto& cvalue) {
 			using VWrite = typename std::decay_t<decltype(carray)>::value_type;

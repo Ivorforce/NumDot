@@ -194,7 +194,9 @@ library = env.SharedLibrary(
     source=sources,
 )
 
-if env["install_dir"]:
-    env.Install(f"{env["install_dir"]}/addons/{libname}/{env['platform']}/{lib_filepath}", library)
+targets = [library]
 
-Default(library)
+if env["install_dir"]:
+    targets.append(env.Install(f"{env["install_dir"]}/addons/{libname}/{env['platform']}/{lib_filepath}", library))
+
+Default(targets)

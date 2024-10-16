@@ -31,9 +31,9 @@ customs = [os.path.abspath(path) for path in customs]
 opts = Variables(customs, ARGUMENTS)
 opts.Add(
     PathVariable(
-        key="build_dir",
-        help="Target location of the binary (./build by default)",
-        default=env.get("build_dir", "build"),
+        key="install_dir",
+        help="Optional target project location the binary. The binary always builds in build/, but if this argument is supplied, the binary will be copied to the target location.",
+        default=env.get("install_dir", ""),
     )
 )
 opts.Add(
@@ -65,7 +65,7 @@ openmp_threshold = int(env["openmp_threshold"])
 
 # TODO If we don't delete our own arguments, the godot-cpp SConscript will complain.
 # There must be a better way?
-ARGUMENTS.pop("build_dir", None)
+ARGUMENTS.pop("install_dir", None)
 ARGUMENTS.pop("define", None)
 ARGUMENTS.pop("use_xsimd", None)
 ARGUMENTS.pop("optimize_for_arch", None)
@@ -190,8 +190,11 @@ if env["platform"] == "macos" or env["platform"] == "ios":
     env["SHLIBSUFFIX"] = ""
 
 library = env.SharedLibrary(
-    os.path.join(env["build_dir"], f"addons/{libname}/{env['platform']}/{lib_filepath}{lib_filename}"),
+    f"build/addons/{libname}/{env['platform']}/{lib_filepath}{lib_filename}",
     source=sources,
 )
+
+if env["install_dir"]:
+    env.Install(f"{env["install_dir"]}/addons/{libname}/{env['platform']}/{lib_filepath}", library)
 
 Default(library)

@@ -43,19 +43,19 @@ You should test your changes locally before submitting anything. The ``demo`` pr
 .. code-block:: bash
 
    # Replace platform with one of [macos, windows, linux]
-   scons platform=<platform> build_dir=demo target=template_debug
+   scons platform=<platform> install_dir=demo target=template_debug
 
 **For macOS Users:** You should (currently) specify the target arch (``x86_64`` or ``arm64``) to avoid unnecessarily building a universal version, which takes twice as long.
 
 .. code-block:: bash
 
-   scons platform=windows  build_dir=demo target=template_debug arch=x86_64
+   scons platform=windows install_dir=demo target=template_debug arch=x86_64
 
 **For Windows Users:** It is recommended to use `MinGW <https://www.mingw-w64.org/>`__ to compile the project, as it more closely mimics Unix build semantics than MSVC. MinGW must be added to ``PATH``, and specified in the build command like so:
 
 .. code-block:: bash
 
-   scons platform=windows  build_dir=demo target=template_debug use-mingw=yes
+   scons platform=windows install_dir=demo target=template_debug use-mingw=yes
 
 You should now be able to open the Demo project (``demo`` in the repository) in Godot, and test your build.
 

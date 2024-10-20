@@ -33,7 +33,7 @@ opts.Add(
     PathVariable(
         key="install_dir",
         help="Optional target project location the binary. The binary always builds in build/, but if this argument is supplied, the binary will be copied to the target location.",
-        default=env.get("install_dir", ""),
+        default=env.get("install_dir", None),
     )
 )
 opts.Add(
@@ -196,7 +196,7 @@ library = env.SharedLibrary(
 
 targets = [library]
 
-if env["install_dir"]:
+if env.get("install_dir", None) is not None:
     targets.append(env.Install(f"{env["install_dir"]}/addons/{libname}/{env['platform']}/{lib_filepath}", library))
 
 Default(targets)

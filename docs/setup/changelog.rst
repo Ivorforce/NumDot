@@ -15,7 +15,7 @@ Upcoming Changes (main branch)
 **Added**
 
 - ``randn`` function (random sampling from a normal distribution)
-- OpenMP support (through the new ``openmp_threshold`` compile option, disabled by default). This requires your compiler to support OpenMP.
+- For custom builds, OpenMP support (through the new ``openmp_threshold`` compile option, disabled by default). This requires your compiler to support OpenMP.
 
 **Changed**
 

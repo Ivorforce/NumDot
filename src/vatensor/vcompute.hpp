@@ -126,10 +126,12 @@ namespace va {
                 throw std::runtime_error("Unsupported type for operation.");
             }
             else {
-                using OutputType = typename PromotionRule::template output_type<InputType>;
 
                 // Result of visitor invocation
                 const auto result = visitor(promote::promote_value_type_if_needed<InputType>(args)...);
+
+                using NaturalOutputType = typename std::decay_t<decltype(result)>::value_type;
+                using OutputType = typename PromotionRule::template output_type<InputType, NaturalOutputType>;
 
                 assign_to_target<OutputType>(target, result);
             }
@@ -159,7 +161,8 @@ namespace va {
                 throw std::runtime_error("Unsupported type for operation.");
             }
             else {
-                using OutputType = typename PromotionRule::template output_type<InputType>;
+                using NaturalOutputType = decltype(visitor(promote::promote_value_type_if_needed<InputType>(args)...));
+                using OutputType = typename PromotionRule::template output_type<InputType, NaturalOutputType>;
 
                 // Result of visitor invocation
                 // TODO Some xt functions support passing the output type. That would be FAR better than casting it afterwards as here.

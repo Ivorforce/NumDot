@@ -60,16 +60,15 @@ namespace va {
 		//  That should be tested.
 		// Also, mixed-type input ops can really increase binary size, so it should be used with care if at all.
 
-		template<typename OutputType>
-		struct common_num_in_x_out {
+		struct num_in_same_out {
 			template<typename... Args>
 			using input_type = std::common_type_t<int64_if_bool_else_id<Args>...>;
 
-			template<typename InputType>
-			using output_type = OutputType;
+			template<typename InputType, typename NaturalOutputType>
+			using output_type = InputType;
 		};
 
-		struct common_num_or_error {
+		struct num_or_error_in_same_out {
 			template<typename... Args>
 			using input_type = std::conditional_t<
 				!std::conjunction_v<is_non_bool_arithmetic<Args>...>,
@@ -77,7 +76,7 @@ namespace va {
 				std::common_type_t<Args...>
 			>;
 
-			template<typename InputType>
+			template<typename InputType, typename NaturalOutputType>
 			using output_type = InputType;
 		};
 
@@ -85,43 +84,35 @@ namespace va {
 		 * 	what results from the native C++ operation op(A(), B())
 		 */
 		template<typename FN>
-		struct num_function_result {
+		struct num_function_result_in_same_out {
 			template<typename... Args>
 			using input_type = decltype(std::declval<FN>()(std::declval<int64_if_bool_else_id<Args>>()...));
 
-			template<typename InputType>
+			template<typename InputType, typename NaturalOutputType>
 			using output_type = InputType;
 		};
 
-		struct num_common_type {
-			template<typename... Args>
-			using input_type = std::common_type_t<int64_if_bool_else_id<Args>...>;
-
-			template<typename InputType>
-			using output_type = InputType;
-		};
-
-		struct num_common_at_least_int32 {
+		struct num_at_least_int32_in_same_out {
 			template<typename... Args>
 			using common_type = std::common_type_t<int64_if_bool_else_id<Args>...>;
 
 			template<typename... Args>
-			using input_type = typename std::conditional<
+			using input_type = std::conditional_t<
 				(std::numeric_limits<common_type<Args...>>::digits >= std::numeric_limits<int32_t>::digits),
 				common_type<Args...>,
-				typename std::conditional<
-					std::is_signed<common_type<Args...>>::value,
+				std::conditional_t<
+					std::is_signed_v<common_type<Args...>>,
 					int32_t,
 					uint32_t
-				>::type
-			>::type;
+				>
+			>;
 
-			template<typename InputType>
+			template<typename InputType, typename NaturalOutputType>
 			using output_type = InputType;
 		};
 
 		template<typename Default>
-		struct num_matching_float_or_default {
+		struct num_matching_float_or_default_in_same_out {
 			template<typename... Args>
 			using input_type = std::conditional_t<
 				std::is_floating_point_v<std::common_type_t<int64_if_bool_else_id<Args>...>>,
@@ -129,32 +120,41 @@ namespace va {
 				Default
 			>;
 
-			template<typename InputType>
+			template<typename InputType, typename NaturalOutputType>
 			using output_type = InputType;
 		};
 
-		struct common_in_common_out {
+		struct common_in_same_out {
 			template<typename... Args>
 			using input_type = std::common_type_t<Args...>;
 
-			template<typename InputType>
+			template<typename InputType, typename NaturalOutputType>
 			using output_type = InputType;
 		};
 
-		struct common_in_bool_out {
+		struct num_in_nat_out {
+			template<typename... Args>
+			using input_type = std::common_type_t<int64_if_bool_else_id<Args>...>;
+
+			template<typename InputType, typename NaturalOutputType>
+			using output_type = NaturalOutputType;
+		};
+
+		struct common_in_nat_out {
 			template<typename... Args>
 			using input_type = std::common_type_t<Args...>;
 
-			template<typename InputType>
-			using output_type = bool;
+			template<typename InputType, typename NaturalOutputType>
+			using output_type = NaturalOutputType;
 		};
 
-		struct bool_in_bool_out {
+		template<typename Type>
+		struct x_in_nat_out {
 			template<typename... Args>
-			using input_type = bool;
+			using input_type = Type;
 
-			template<typename InputType>
-			using output_type = bool;
+			template<typename InputType, typename NaturalOutputType>
+			using output_type = NaturalOutputType;
 		};
 	}
 }

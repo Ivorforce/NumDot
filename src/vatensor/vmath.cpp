@@ -16,7 +16,7 @@ void va::positive(VArrayTarget target, const VArray& a) {
 #ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
 #else
-	va::xoperation_inplace<promote::common_num_or_error>(
+	va::xoperation_inplace<promote::num_or_error_in_same_out>(
 		XFunction<xt::detail::identity> {},
 		target,
 		a.read
@@ -28,7 +28,7 @@ void va::negative(VArrayTarget target, const VArray& a) {
 #ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
 #else
-	va::xoperation_inplace<promote::common_num_or_error>(
+	va::xoperation_inplace<promote::num_or_error_in_same_out>(
 		XFunction<xt::detail::negate> {},
 		target,
 		a.read
@@ -38,7 +38,7 @@ void va::negative(VArrayTarget target, const VArray& a) {
 
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 void add(VArrayTarget target, const VArray& a, const VScalar& b) {
-	va::xoperation_inplace<promote::num_function_result<xt::detail::plus>>(
+	va::xoperation_inplace<promote::num_function_result_in_same_out<xt::detail::plus>>(
 		XFunction<xt::detail::plus> {},
 		target,
 		a.read,
@@ -55,7 +55,7 @@ void va::add(VArrayTarget target, const VArray& a, const VArray& b) {
 	OPTIMIZE_COMMUTATIVE(::add, a, b);
 #endif
 
-	va::xoperation_inplace<promote::num_function_result<xt::detail::plus>>(
+	va::xoperation_inplace<promote::num_function_result_in_same_out<xt::detail::plus>>(
 		XFunction<xt::detail::plus> {},
 		target,
 		a.read,
@@ -70,7 +70,7 @@ void va::subtract(VArrayTarget target, const VArray& a, const VArray& b) {
 #else
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	if (a.dimension() == 0) {
-		va::xoperation_inplace<promote::num_function_result<xt::detail::minus>>(
+		va::xoperation_inplace<promote::num_function_result_in_same_out<xt::detail::minus>>(
 			XFunction<xt::detail::minus> {},
 			target,
 			a.to_single_value(),
@@ -79,7 +79,7 @@ void va::subtract(VArrayTarget target, const VArray& a, const VArray& b) {
 		return;
 	}
 	if (b.dimension() == 0) {
-		va::xoperation_inplace<promote::num_function_result<xt::detail::minus>>(
+		va::xoperation_inplace<promote::num_function_result_in_same_out<xt::detail::minus>>(
 			XFunction<xt::detail::minus> {},
 			target,
 			a.read,
@@ -89,7 +89,7 @@ void va::subtract(VArrayTarget target, const VArray& a, const VArray& b) {
 	}
 #endif
 
-	va::xoperation_inplace<promote::num_function_result<xt::detail::minus>>(
+	va::xoperation_inplace<promote::num_function_result_in_same_out<xt::detail::minus>>(
 		XFunction<xt::detail::minus> {},
 		target,
 		a.read,
@@ -99,7 +99,7 @@ void va::subtract(VArrayTarget target, const VArray& a, const VArray& b) {
 }
 
 void multiply(VArrayTarget target, const VArray& a, const VScalar& b) {
-	va::xoperation_inplace<promote::num_function_result<xt::detail::multiplies>>(
+	va::xoperation_inplace<promote::num_function_result_in_same_out<xt::detail::multiplies>>(
 		XFunction<xt::detail::multiplies> {},
 		target,
 		a.read,
@@ -115,7 +115,7 @@ void va::multiply(VArrayTarget target, const VArray& a, const VArray& b) {
 	OPTIMIZE_COMMUTATIVE(::multiply, a, b);
 #endif
 
-	va::xoperation_inplace<promote::num_function_result<xt::detail::multiplies>>(
+	va::xoperation_inplace<promote::num_function_result_in_same_out<xt::detail::multiplies>>(
 		XFunction<xt::detail::multiplies> {},
 		target,
 		a.read,
@@ -130,7 +130,7 @@ void va::divide(VArrayTarget target, const VArray& a, const VArray& b) {
 #else
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	if (a.dimension() == 0) {
-		va::xoperation_inplace<promote::num_function_result<xt::detail::divides>>(
+		va::xoperation_inplace<promote::num_function_result_in_same_out<xt::detail::divides>>(
 			XFunction<xt::detail::divides> {},
 			target,
 			a.to_single_value(),
@@ -139,7 +139,7 @@ void va::divide(VArrayTarget target, const VArray& a, const VArray& b) {
 		return;
 	}
 	if (b.dimension() == 0) {
-		va::xoperation_inplace<promote::num_function_result<xt::detail::divides>>(
+		va::xoperation_inplace<promote::num_function_result_in_same_out<xt::detail::divides>>(
 			XFunction<xt::detail::divides> {},
 			target,
 			a.read,
@@ -149,7 +149,7 @@ void va::divide(VArrayTarget target, const VArray& a, const VArray& b) {
 	}
 #endif
 
-	va::xoperation_inplace<promote::num_function_result<xt::detail::divides>>(
+	va::xoperation_inplace<promote::num_function_result_in_same_out<xt::detail::divides>>(
 		XFunction<xt::detail::divides> {},
 		target,
 		a.read,
@@ -164,7 +164,7 @@ void va::remainder(VArrayTarget target, const VArray& a, const VArray& b) {
 #else
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	if (a.dimension() == 0) {
-		va::xoperation_inplace<promote::num_function_result<xt::math::remainder_fun>>(
+		va::xoperation_inplace<promote::num_function_result_in_same_out<xt::math::remainder_fun>>(
 			XFunction<xt::math::remainder_fun> {},
 			target,
 			a.to_single_value(),
@@ -173,7 +173,7 @@ void va::remainder(VArrayTarget target, const VArray& a, const VArray& b) {
 		return;
 	}
 	if (b.dimension() == 0) {
-		va::xoperation_inplace<promote::num_function_result<xt::math::remainder_fun>>(
+		va::xoperation_inplace<promote::num_function_result_in_same_out<xt::math::remainder_fun>>(
 			XFunction<xt::math::remainder_fun> {},
 			target,
 			a.read,
@@ -183,7 +183,7 @@ void va::remainder(VArrayTarget target, const VArray& a, const VArray& b) {
 	}
 #endif
 
-	va::xoperation_inplace<promote::num_function_result<xt::math::remainder_fun>>(
+	va::xoperation_inplace<promote::num_function_result_in_same_out<xt::math::remainder_fun>>(
 		XFunction<xt::math::remainder_fun> {},
 		target,
 		a.read,
@@ -198,7 +198,7 @@ void va::pow(VArrayTarget target, const VArray& a, const VArray& b) {
 #else
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	if (a.dimension() == 0) {
-		va::xoperation_inplace<promote::num_function_result<xt::math::pow_fun>>(
+		va::xoperation_inplace<promote::num_function_result_in_same_out<xt::math::pow_fun>>(
 			XFunction<xt::math::pow_fun> {},
 			target,
 			a.to_single_value(),
@@ -207,7 +207,7 @@ void va::pow(VArrayTarget target, const VArray& a, const VArray& b) {
 		return;
 	}
 	if (b.dimension() == 0) {
-		va::xoperation_inplace<promote::num_function_result<xt::math::pow_fun>>(
+		va::xoperation_inplace<promote::num_function_result_in_same_out<xt::math::pow_fun>>(
 			XFunction<xt::math::pow_fun> {},
 			target,
 			a.read,
@@ -217,7 +217,7 @@ void va::pow(VArrayTarget target, const VArray& a, const VArray& b) {
 	}
 #endif
 
-	va::xoperation_inplace<promote::num_function_result<xt::math::pow_fun>>(
+	va::xoperation_inplace<promote::num_function_result_in_same_out<xt::math::pow_fun>>(
 		XFunction<xt::math::pow_fun> {},
 		target,
 		a.read,
@@ -227,7 +227,7 @@ void va::pow(VArrayTarget target, const VArray& a, const VArray& b) {
 }
 
 void minimum(VArrayTarget target, const VArray& a, const VScalar& b) {
-	va::xoperation_inplace<promote::common_in_common_out>(
+	va::xoperation_inplace<promote::common_in_same_out>(
 		XFunction<xt::math::minimum<void>> {},
 		target,
 		a.read,
@@ -243,7 +243,7 @@ void va::minimum(VArrayTarget target, const VArray& a, const VArray& b) {
 	OPTIMIZE_COMMUTATIVE(::minimum, a, b);
 #endif
 
-	va::xoperation_inplace<promote::common_in_common_out>(
+	va::xoperation_inplace<promote::common_in_same_out>(
 		XFunction<xt::math::minimum<void>> {},
 		target,
 		a.read,
@@ -253,7 +253,7 @@ void va::minimum(VArrayTarget target, const VArray& a, const VArray& b) {
 }
 
 void maximum(VArrayTarget target, const VArray& a, const VScalar& b) {
-	va::xoperation_inplace<promote::common_in_common_out>(
+	va::xoperation_inplace<promote::common_in_same_out>(
 		XFunction<xt::math::maximum<void>> {},
 		target,
 		a.read,
@@ -269,7 +269,7 @@ void va::maximum(VArrayTarget target, const VArray& a, const VArray& b) {
 	OPTIMIZE_COMMUTATIVE(::maximum, a, b);
 #endif
 
-	va::xoperation_inplace<promote::common_in_common_out>(
+	va::xoperation_inplace<promote::common_in_same_out>(
 		XFunction<xt::math::maximum<void>> {},
 		target,
 		a.read,
@@ -284,7 +284,7 @@ void va::clip(VArrayTarget target, const VArray& a, const VArray& lo, const VArr
 #else
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	if (lo.dimension() == 0 && hi.dimension() == 0) {
-		va::xoperation_inplace<promote::common_in_common_out>(
+		va::xoperation_inplace<promote::common_in_same_out>(
 			XFunction<xt::math::clamp_fun> {},
 			target,
 			a.read,
@@ -295,7 +295,7 @@ void va::clip(VArrayTarget target, const VArray& a, const VArray& lo, const VArr
 	}
 #endif
 
-	va::xoperation_inplace<promote::common_in_common_out>(
+	va::xoperation_inplace<promote::common_in_same_out>(
 		XFunction<xt::math::clamp_fun> {},
 		target,
 		a.read,
@@ -309,7 +309,7 @@ void va::sign(VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
 #else
-	xoperation_inplace<promote::num_common_type>(
+	xoperation_inplace<promote::num_or_error_in_same_out>(
 		va::XFunction<xt::math::sign_fun> {},
 		target,
 		array.read
@@ -321,7 +321,7 @@ void va::abs(VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
 #else
-	xoperation_inplace<promote::num_function_result<xt::math::abs_fun>>(
+	xoperation_inplace<promote::num_function_result_in_same_out<xt::math::abs_fun>>(
 		va::XFunction<xt::math::abs_fun> {},
 		target,
 		array.read
@@ -342,7 +342,7 @@ void va::square(VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
 #else
-	xoperation_inplace<promote::num_common_type>(
+	xoperation_inplace<promote::common_in_same_out>(
 		va::XFunction<square_fun> {},
 		target,
 		array.read
@@ -354,7 +354,7 @@ void va::sqrt(VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
 #else
-	xoperation_inplace<promote::num_function_result<xt::math::sqrt_fun>>(
+	xoperation_inplace<promote::num_function_result_in_same_out<xt::math::sqrt_fun>>(
 		va::XFunction<xt::math::sqrt_fun> {},
 		target,
 		array.read
@@ -366,7 +366,7 @@ void va::exp(VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
 #else
-	xoperation_inplace<promote::num_function_result<xt::math::exp_fun>>(
+	xoperation_inplace<promote::num_function_result_in_same_out<xt::math::exp_fun>>(
 		va::XFunction<xt::math::exp_fun> {},
 		target,
 		array.read
@@ -378,7 +378,7 @@ void va::log(VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
 #else
-	xoperation_inplace<promote::num_function_result<xt::math::log_fun>>(
+	xoperation_inplace<promote::num_function_result_in_same_out<xt::math::log_fun>>(
 		va::XFunction<xt::math::log_fun> {},
 		target,
 		array.read
@@ -390,7 +390,7 @@ void va::rad2deg(VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
 #else
-	xoperation_inplace<promote::num_function_result<xt::math::rad2deg>>(
+	xoperation_inplace<promote::num_function_result_in_same_out<xt::math::rad2deg>>(
 		va::XFunction<xt::math::rad2deg> {},
 		target,
 		array.read
@@ -402,7 +402,7 @@ void va::deg2rad(VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
 #else
-	xoperation_inplace<promote::num_function_result<xt::math::deg2rad>>(
+	xoperation_inplace<promote::num_function_result_in_same_out<xt::math::deg2rad>>(
 		va::XFunction<xt::math::deg2rad> {},
 		target,
 		array.read

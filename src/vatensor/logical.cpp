@@ -16,7 +16,7 @@ void assign_bool(VArrayTarget target, const VArray& a) {
 		return;
 	}
 
-	va::xoperation_inplace<promote::bool_in_bool_out>(
+	va::xoperation_inplace<promote::x_in_nat_out<bool>>(
 		XFunction<typename xt::detail::cast<bool>::functor> {},
 		target,
 		a.read
@@ -43,7 +43,7 @@ void va::logical_and(VArrayTarget target, const VArray& a, const VArray& b) {
 	OPTIMIZE_COMMUTATIVE(::logical_and, a, b);
 #endif
 
-	va::xoperation_inplace<promote::bool_in_bool_out>(
+	va::xoperation_inplace<promote::x_in_nat_out<bool>>(
 		XFunction<xt::detail::logical_and> {},
 		target,
 		a.read,
@@ -72,7 +72,7 @@ void va::logical_or(VArrayTarget target, const VArray& a, const VArray& b) {
 	OPTIMIZE_COMMUTATIVE(::logical_or, a, b);
 #endif
 
-	va::xoperation_inplace<promote::bool_in_bool_out>(
+	va::xoperation_inplace<promote::x_in_nat_out<bool>>(
 		XFunction<xt::detail::logical_or> {},
 		target,
 		a.read,
@@ -101,7 +101,7 @@ void va::logical_xor(VArrayTarget target, const VArray& a, const VArray& b) {
 	OPTIMIZE_COMMUTATIVE(::logical_xor, a, b);
 #endif
 
-	va::xoperation_inplace<promote::bool_in_bool_out>(
+	va::xoperation_inplace<promote::x_in_nat_out<bool>>(
 		XFunction<xt::detail::not_equal_to> {},
 		target,
 		a.read,
@@ -114,7 +114,7 @@ void va::logical_not(VArrayTarget target, const VArray& a) {
 #ifdef NUMDOT_DISABLE_LOGICAL_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_LOGICAL_FUNCTIONS to enable it.");
 #else
-	va::xoperation_inplace<promote::bool_in_bool_out>(
+	va::xoperation_inplace<promote::x_in_nat_out<bool>>(
 		XFunction<xt::detail::logical_not> {},
 		target,
 		a.read

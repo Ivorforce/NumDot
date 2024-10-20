@@ -15,7 +15,7 @@ using namespace va;
 // FIXME NEON xtensor / xsimd has a compile-time bug, see
 // https://github.com/xtensor-stack/xtensor/issues/2733
 void equal_to(VArrayTarget target, const VArray& a, const VScalar& b) {
-	va::xoperation_inplace<promote::common_in_bool_out>(
+	va::xoperation_inplace<promote::common_in_nat_out>(
 		va::XFunction<xt::detail::equal_to> {},
 		target,
 		a.read,
@@ -38,7 +38,7 @@ void va::equal_to(VArrayTarget target, const VArray& a, const VArray& b) {
 
 #endif
 
-	va::xoperation_inplace<promote::common_in_bool_out>(
+	va::xoperation_inplace<promote::common_in_nat_out>(
 		va::XFunction<xt::detail::equal_to> {},
 		target,
 		a.read,
@@ -50,7 +50,7 @@ void va::equal_to(VArrayTarget target, const VArray& a, const VArray& b) {
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 #if !(defined(__aarch64__) || defined(_M_ARM64) || defined(__ARM_NEON) || defined(_M_ARM))
 void not_equal_to(VArrayTarget target, const VArray& a, const VScalar& b) {
-	va::xoperation_inplace<promote::common_in_bool_out>(
+	va::xoperation_inplace<promote::common_in_nat_out>(
 		va::XFunction<xt::detail::not_equal_to> {},
 		target,
 		a.read,
@@ -71,7 +71,7 @@ void va::not_equal_to(VArrayTarget target, const VArray& a, const VArray& b) {
 #endif
 #endif
 
-	va::xoperation_inplace<promote::common_in_bool_out>(
+	va::xoperation_inplace<promote::common_in_nat_out>(
 		va::XFunction<xt::detail::not_equal_to> {},
 		target,
 		a.read,
@@ -86,7 +86,7 @@ void va::greater(VArrayTarget target, const VArray& a, const VArray& b) {
 #else
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	if (a.dimension() == 0) {
-		va::xoperation_inplace<promote::common_num_in_x_out<bool>>(
+		va::xoperation_inplace<promote::num_in_nat_out>(
 			va::XFunction<xt::detail::greater> {},
 			target,
 			a.to_single_value(),
@@ -95,7 +95,7 @@ void va::greater(VArrayTarget target, const VArray& a, const VArray& b) {
 		return;
 	}
 	if (b.dimension() == 0) {
-		va::xoperation_inplace<promote::common_num_in_x_out<bool>>(
+		va::xoperation_inplace<promote::num_in_nat_out>(
 			va::XFunction<xt::detail::greater> {},
 			target,
 			a.read,
@@ -105,7 +105,7 @@ void va::greater(VArrayTarget target, const VArray& a, const VArray& b) {
 	}
 #endif
 
-	va::xoperation_inplace<promote::common_num_in_x_out<bool>>(
+	va::xoperation_inplace<promote::num_in_nat_out>(
 		va::XFunction<xt::detail::greater> {},
 		target,
 		a.read,
@@ -120,7 +120,7 @@ void va::greater_equal(VArrayTarget target, const VArray& a, const VArray& b) {
 #else
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	if (a.dimension() == 0) {
-		va::xoperation_inplace<promote::common_num_in_x_out<bool>>(
+		va::xoperation_inplace<promote::num_in_nat_out>(
 			va::XFunction<xt::detail::greater_equal> {},
 			target,
 			a.to_single_value(),
@@ -129,7 +129,7 @@ void va::greater_equal(VArrayTarget target, const VArray& a, const VArray& b) {
 		return;
 	}
 	if (b.dimension() == 0) {
-		va::xoperation_inplace<promote::common_num_in_x_out<bool>>(
+		va::xoperation_inplace<promote::num_in_nat_out>(
 			va::XFunction<xt::detail::greater_equal> {},
 			target,
 			a.read,
@@ -139,7 +139,7 @@ void va::greater_equal(VArrayTarget target, const VArray& a, const VArray& b) {
 	}
 #endif
 
-	va::xoperation_inplace<promote::common_num_in_x_out<bool>>(
+	va::xoperation_inplace<promote::num_in_nat_out>(
 		va::XFunction<xt::detail::greater_equal> {},
 		target,
 		a.read,
@@ -154,7 +154,7 @@ void va::less(VArrayTarget target, const VArray& a, const VArray& b) {
 #else
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	if (a.dimension() == 0) {
-		va::xoperation_inplace<promote::common_num_in_x_out<bool>>(
+		va::xoperation_inplace<promote::num_in_nat_out>(
 			va::XFunction<xt::detail::less> {},
 			target,
 			a.to_single_value(),
@@ -163,7 +163,7 @@ void va::less(VArrayTarget target, const VArray& a, const VArray& b) {
 		return;
 	}
 	if (b.dimension() == 0) {
-		va::xoperation_inplace<promote::common_num_in_x_out<bool>>(
+		va::xoperation_inplace<promote::num_in_nat_out>(
 			va::XFunction<xt::detail::less> {},
 			target,
 			a.read,
@@ -173,7 +173,7 @@ void va::less(VArrayTarget target, const VArray& a, const VArray& b) {
 	}
 #endif
 
-	va::xoperation_inplace<promote::common_num_in_x_out<bool>>(
+	va::xoperation_inplace<promote::num_in_nat_out>(
 		va::XFunction<xt::detail::less> {},
 		target,
 		a.read,
@@ -188,7 +188,7 @@ void va::less_equal(VArrayTarget target, const VArray& a, const VArray& b) {
 #else
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	if (a.dimension() == 0) {
-		va::xoperation_inplace<promote::common_num_in_x_out<bool>>(
+		va::xoperation_inplace<promote::num_in_nat_out>(
 			va::XFunction<xt::detail::less_equal> {},
 			target,
 			a.to_single_value(),
@@ -197,7 +197,7 @@ void va::less_equal(VArrayTarget target, const VArray& a, const VArray& b) {
 		return;
 	}
 	if (b.dimension() == 0) {
-		va::xoperation_inplace<promote::common_num_in_x_out<bool>>(
+		va::xoperation_inplace<promote::num_in_nat_out>(
 			va::XFunction<xt::detail::less_equal> {},
 			target,
 			a.read,
@@ -207,7 +207,7 @@ void va::less_equal(VArrayTarget target, const VArray& a, const VArray& b) {
 	}
 #endif
 
-	va::xoperation_inplace<promote::common_num_in_x_out<bool>>(
+	va::xoperation_inplace<promote::num_in_nat_out>(
 		va::XFunction<xt::detail::less_equal> {},
 		target,
 		a.read,

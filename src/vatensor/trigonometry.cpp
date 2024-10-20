@@ -14,7 +14,7 @@ void va::sin(VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_TRIGONOMETRY_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_TRIGONOMETRY_FUNCTIONS to enable it.");
 #else
-	xoperation_inplace<promote::num_function_result<xt::math::sin_fun>>(
+	xoperation_inplace<promote::num_function_result_in_same_out<xt::math::sin_fun>>(
 		va::XFunction<xt::math::sin_fun> {},
 		target,
 		array.read
@@ -26,7 +26,7 @@ void va::cos(VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_TRIGONOMETRY_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_TRIGONOMETRY_FUNCTIONS to enable it.");
 #else
-	xoperation_inplace<promote::num_function_result<xt::math::cos_fun>>(
+	xoperation_inplace<promote::num_function_result_in_same_out<xt::math::cos_fun>>(
 		va::XFunction<xt::math::cos_fun> {},
 		target,
 		array.read
@@ -38,7 +38,7 @@ void va::tan(VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_TRIGONOMETRY_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_TRIGONOMETRY_FUNCTIONS to enable it.");
 #else
-	xoperation_inplace<promote::num_function_result<xt::math::tan_fun>>(
+	xoperation_inplace<promote::num_function_result_in_same_out<xt::math::tan_fun>>(
 		va::XFunction<xt::math::tan_fun> {},
 		target,
 		array.read
@@ -50,7 +50,7 @@ void va::asin(VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_TRIGONOMETRY_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_TRIGONOMETRY_FUNCTIONS to enable it.");
 #else
-	xoperation_inplace<promote::num_function_result<xt::math::asin_fun>>(
+	xoperation_inplace<promote::num_function_result_in_same_out<xt::math::asin_fun>>(
 		va::XFunction<xt::math::asin_fun> {},
 		target,
 		array.read
@@ -62,7 +62,7 @@ void va::acos(VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_TRIGONOMETRY_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_TRIGONOMETRY_FUNCTIONS to enable it.");
 #else
-	xoperation_inplace<promote::num_function_result<xt::math::acos_fun>>(
+	xoperation_inplace<promote::num_function_result_in_same_out<xt::math::acos_fun>>(
 		va::XFunction<xt::math::acos_fun> {},
 		target,
 		array.read
@@ -74,7 +74,7 @@ void va::atan(VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_TRIGONOMETRY_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_TRIGONOMETRY_FUNCTIONS to enable it.");
 #else
-	xoperation_inplace<promote::num_function_result<xt::math::atan_fun>>(
+	xoperation_inplace<promote::num_function_result_in_same_out<xt::math::atan_fun>>(
 		va::XFunction<xt::math::atan_fun> {},
 		target,
 		array.read
@@ -86,7 +86,7 @@ void va::atan2(VArrayTarget target, const VArray& x1, const VArray& x2) {
 #ifdef NUMDOT_DISABLE_TRIGONOMETRY_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_TRIGONOMETRY_FUNCTIONS to enable it.");
 #else
-	xoperation_inplace<promote::num_function_result<xt::math::atan2_fun>>(
+	xoperation_inplace<promote::num_function_result_in_same_out<xt::math::atan2_fun>>(
 		va::XFunction<xt::math::atan2_fun> {},
 		target,
 		x1.read,
@@ -99,7 +99,7 @@ void va::sinh(VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_TRIGONOMETRY_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_TRIGONOMETRY_FUNCTIONS to enable it.");
 #else
-	xoperation_inplace<promote::num_function_result<xt::math::sinh_fun>>(
+	xoperation_inplace<promote::num_function_result_in_same_out<xt::math::sinh_fun>>(
 		va::XFunction<xt::math::sinh_fun> {},
 		target,
 		array.read
@@ -111,7 +111,7 @@ void va::cosh(VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_TRIGONOMETRY_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_TRIGONOMETRY_FUNCTIONS to enable it.");
 #else
-	xoperation_inplace<promote::num_function_result<xt::math::cosh_fun>>(
+	xoperation_inplace<promote::num_function_result_in_same_out<xt::math::cosh_fun>>(
 		va::XFunction<xt::math::cosh_fun> {},
 		target,
 		array.read
@@ -123,7 +123,7 @@ void va::tanh(VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_TRIGONOMETRY_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_TRIGONOMETRY_FUNCTIONS to enable it.");
 #else
-	xoperation_inplace<promote::num_function_result<xt::math::tanh_fun>>(
+	xoperation_inplace<promote::num_function_result_in_same_out<xt::math::tanh_fun>>(
 		va::XFunction<xt::math::tanh_fun> {},
 		target,
 		array.read
@@ -135,7 +135,7 @@ void va::asinh(VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_TRIGONOMETRY_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_TRIGONOMETRY_FUNCTIONS to enable it.");
 #else
-	xoperation_inplace<promote::num_function_result<xt::math::asinh_fun>>(
+	xoperation_inplace<promote::num_function_result_in_same_out<xt::math::asinh_fun>>(
 		va::XFunction<xt::math::asinh_fun> {},
 		target,
 		array.read
@@ -147,7 +147,7 @@ void va::acosh(VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_TRIGONOMETRY_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_TRIGONOMETRY_FUNCTIONS to enable it.");
 #else
-	xoperation_inplace<promote::num_function_result<xt::math::acosh_fun>>(
+	xoperation_inplace<promote::num_function_result_in_same_out<xt::math::acosh_fun>>(
 		va::XFunction<xt::math::acosh_fun> {},
 		target,
 		array.read
@@ -159,7 +159,7 @@ void va::atanh(VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_TRIGONOMETRY_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_TRIGONOMETRY_FUNCTIONS to enable it.");
 #else
-	xoperation_inplace<promote::num_function_result<xt::math::atanh_fun>>(
+	xoperation_inplace<promote::num_function_result_in_same_out<xt::math::atanh_fun>>(
 		va::XFunction<xt::math::atanh_fun> {},
 		target,
 		array.read

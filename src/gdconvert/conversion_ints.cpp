@@ -7,6 +7,8 @@
 #include <type_traits>                               // for decay_t
 #include <variant>                                   // for visit
 #include <vector>                                    // for vector
+
+#include "conversion_array.hpp"
 #include "godot_cpp/classes/object.hpp"              // for Object
 #include "godot_cpp/core/object.hpp"                 // for Object::cast_to
 #include "godot_cpp/variant/array.hpp"               // for Array
@@ -37,9 +39,14 @@ C variant_as_int_strict(const Variant& variant) {
 
 						switch (carray.dimension()) {
 							case 0:
-								return static_cast<C>(*carray.data());
+								if constexpr (!std::is_convertible_v<V, C>) {
+									throw std::runtime_error("Cannot promote in this way.");
+								}
+								else {
+									return static_cast<C>(*carray.data());
+								}
 							default:
-								throw std::runtime_error("array must be zero-dimensional or one-dimensional");
+								throw std::runtime_error("array must be zero-dimensional");
 						}
 					}, ndarray->array->read
 				);
@@ -66,18 +73,19 @@ T variant_as_ints_(const Variant& variant) {
 						if constexpr (!std::is_integral_v<V>) {
 							throw std::runtime_error("incompatible dtype; must be int");
 						}
-
-						switch (carray.dimension()) {
-							case 0:
-								return T { C(*carray.data()) };
-							case 1: {
-								T ints;
-								ints.resize(carray.size());
-								std::copy(carray.cbegin(), carray.cend(), ints.begin());
-								return ints;
+						else {
+							switch (carray.dimension()) {
+								case 0:
+									return T { C(*carray.data()) };
+								case 1: {
+									T ints;
+									ints.resize(carray.size());
+									fill_c_array_flat(ints.data(), carray);
+									return ints;
+								}
+								default:
+									throw std::runtime_error("array must be zero-dimensional or one-dimensional");
 							}
-							default:
-								throw std::runtime_error("array must be zero-dimensional or one-dimensional");
 						}
 					}, ndarray->array->read
 				);

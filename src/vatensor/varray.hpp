@@ -2,6 +2,7 @@
 #define VARRAY_H
 
 #include <cmath>                           // for double_t, float_t
+#include <complex>
 #include <cstddef>                         // for size_t
 #include <cstdint>                         // for int16_t, int32_t, int64_t
 #include <functional>                      // for multiplies
@@ -45,6 +46,8 @@ namespace va {
         store_case<bool>,
         store_case<float_t>,
         store_case<double_t>,
+        store_case<std::complex<float_t>>,
+        store_case<std::complex<double_t>>,
         store_case<int8_t>,
         store_case<int16_t>,
         store_case<int32_t>,
@@ -59,6 +62,8 @@ namespace va {
         array_case<bool>,
         array_case<float_t>,
         array_case<double_t>,
+        array_case<std::complex<float_t>>,
+        array_case<std::complex<double_t>>,
         array_case<int8_t>,
         array_case<int16_t>,
         array_case<int32_t>,
@@ -73,6 +78,8 @@ namespace va {
         Bool,
         Float32,
         Float64,
+        Complex64,
+        Complex128,
         Int8,
         Int16,
         Int32,
@@ -88,6 +95,8 @@ namespace va {
         bool,
         float_t,
         double_t,
+        std::complex<float_t>,
+        std::complex<double_t>,
         int8_t,
         int16_t,
         int32_t,
@@ -110,6 +119,8 @@ namespace va {
         compute_case<bool*>,
         compute_case<float_t*>,
         compute_case<double_t*>,
+        compute_case<std::complex<float_t>*>,
+        compute_case<std::complex<double_t>*>,
         compute_case<int8_t*>,
         compute_case<int16_t*>,
         compute_case<int32_t*>,
@@ -124,6 +135,8 @@ namespace va {
         compute_case<const bool*>,
         compute_case<const float_t*>,
         compute_case<const double_t*>,
+        compute_case<const std::complex<float_t>*>,
+        compute_case<const std::complex<double_t>*>,
         compute_case<const int8_t*>,
         compute_case<const int16_t*>,
         compute_case<const int32_t*>,
@@ -290,7 +303,14 @@ namespace va {
     // TODO Can probably just be static_cast override or some such.
     template<typename V>
     V scalar_to_type(VScalar v) {
-        return std::visit([](auto v) { return static_cast<V>(v); }, v);
+        return std::visit([](auto v) -> V {
+            if constexpr (!std::is_convertible_v<decltype(v), V>) {
+                throw std::runtime_error("Cannot promote in this way.");
+            }
+            else {
+                return static_cast<V>(v);
+            }
+        }, v);
     }
 }
 

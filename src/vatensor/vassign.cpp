@@ -48,7 +48,7 @@ void va::assign(VWrite& array, const VRead& value) {
 	std::visit(
 		[](auto& carray, const auto& cvalue) {
 			using VWrite = typename std::decay_t<decltype(carray)>::value_type;
-			using VRead = typename std::decay_t<decltype(carray)>::value_type;
+			using VRead = typename std::decay_t<decltype(cvalue)>::value_type;
 
 #ifdef XTENSOR_USE_XSIMD
 			// For some reason, bool - to - bool assignments are broken in xsimd
@@ -70,7 +70,7 @@ void va::assign_nonoverlapping(VWrite& array, const ArrayVariant& value) {
 	std::visit(
 		[](auto& carray, const auto& cvalue) {
 			using VWrite = typename std::decay_t<decltype(carray)>::value_type;
-			using VRead = typename std::decay_t<decltype(carray)>::value_type;
+			using VRead = typename std::decay_t<decltype(cvalue)>::value_type;
 
 #ifdef XTENSOR_USE_XSIMD
 			// See above

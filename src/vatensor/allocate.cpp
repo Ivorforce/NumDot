@@ -12,12 +12,12 @@
 
 using namespace va;
 
-std::shared_ptr<VArray> empty(VScalar type, shape_type shape) {
+std::shared_ptr<VArray> empty(VScalar type, const shape_type& shape) {
 #ifdef NUMDOT_DISABLE_ALLOCATION_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_ALLOCATION_FUNCTIONS to enable it.");
 #else
 	return std::visit(
-		[shape](auto t) {
+		[&shape](auto t) {
 			using T = decltype(t);
 			return from_store(make_store<T>(xt::empty<T>(shape)));
 		}, type
@@ -25,13 +25,13 @@ std::shared_ptr<VArray> empty(VScalar type, shape_type shape) {
 #endif
 }
 
-std::shared_ptr<VArray> va::full(const VScalar fill_value, shape_type shape) {
+std::shared_ptr<VArray> va::full(const VScalar fill_value, const shape_type& shape) {
 #ifdef NUMDOT_DISABLE_ALLOCATION_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_ALLOCATION_FUNCTIONS to enable it.");
 #else
 	// This is duplicate code, but by filling the store directly instead of the VArray we avoid a few checks, speeding it up a ton.
 	return std::visit(
-		[shape](auto fill_value) {
+		[&shape](auto fill_value) {
 			using T = decltype(fill_value);
 			auto store = make_store<T>(xt::empty<T>(shape));
 			store->fill(fill_value);
@@ -41,11 +41,11 @@ std::shared_ptr<VArray> va::full(const VScalar fill_value, shape_type shape) {
 #endif
 }
 
-std::shared_ptr<VArray> va::empty(DType dtype, shape_type shape) {
-	return ::empty(dtype_to_variant(dtype), std::move(shape));
+std::shared_ptr<VArray> va::empty(DType dtype, const shape_type& shape) {
+	return ::empty(dtype_to_variant(dtype), shape);
 }
 
-std::shared_ptr<VArray> va::eye(DType dtype, shape_type shape, int k) {
+std::shared_ptr<VArray> va::eye(DType dtype, const shape_type& shape, int k) {
 #ifdef NUMDOT_DISABLE_ALLOCATION_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_ALLOCATION_FUNCTIONS to enable it.");
 #else

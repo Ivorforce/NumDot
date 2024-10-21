@@ -423,6 +423,14 @@ bool NDArray::to_bool() const { return static_cast<bool>(*this); }
 int64_t NDArray::to_int() const { return static_cast<int64_t>(*this); }
 double_t NDArray::to_float() const { return static_cast<double_t>(*this); }
 
+#define TRY_CONVERT(target, read)\
+try {\
+	fill_c_array_flat(target, read);\
+}\
+catch (std::runtime_error& error) {\
+	ERR_FAIL_V_MSG({}, error.what());\
+}\
+
 Vector2 NDArray::to_vector2() const {
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
@@ -431,7 +439,7 @@ Vector2 NDArray::to_vector2() const {
 	ERR_FAIL_COND_V_MSG(array->shape()[0] != 2, {}, "array dimension must be size 2");
 
 	Vector2 vector;
-	fill_c_array_flat(&vector.coord[0], array->read);
+	TRY_CONVERT(&vector.coord[0], array->read);
 
 	return vector;
 #endif
@@ -445,7 +453,7 @@ Vector3 NDArray::to_vector3() const {
 	ERR_FAIL_COND_V_MSG(array->shape()[0] != 3, {}, "array dimension must be size 3");
 
 	Vector3 vector;
-	fill_c_array_flat(&vector.coord[0], array->read);
+	TRY_CONVERT(&vector.coord[0], array->read);
 
 	return vector;
 #endif
@@ -459,7 +467,7 @@ Vector4 NDArray::to_vector4() const {
 	ERR_FAIL_COND_V_MSG(array->shape()[0] != 4, {}, "array dimension must be size 4");
 
 	Vector4 vector;
-	fill_c_array_flat(&vector.components[0], array->read);
+	TRY_CONVERT(&vector.components[0], array->read);
 
 	return vector;
 #endif
@@ -473,7 +481,7 @@ Vector2i NDArray::to_vector2i() const {
 	ERR_FAIL_COND_V_MSG(array->shape()[0] != 2, {}, "array dimension must be size 2");
 
 	Vector2i vector;
-	fill_c_array_flat(&vector.coord[0], array->read);
+	TRY_CONVERT(&vector.coord[0], array->read);
 
 	return vector;
 #endif
@@ -487,7 +495,7 @@ Vector3i NDArray::to_vector3i() const {
 	ERR_FAIL_COND_V_MSG(array->shape()[0] != 3, {}, "array dimension must be size 3");
 
 	Vector3i vector;
-	fill_c_array_flat(&vector.coord[0], array->read);
+	TRY_CONVERT(&vector.coord[0], array->read);
 
 	return vector;
 #endif
@@ -501,7 +509,7 @@ Vector4i NDArray::to_vector4i() const {
 	ERR_FAIL_COND_V_MSG(array->shape()[0] != 4, {}, "array dimension must be size 4");
 
 	Vector4i vector;
-	fill_c_array_flat(&vector.coord[0], array->read);
+	TRY_CONVERT(&vector.coord[0], array->read);
 
 	return vector;
 #endif
@@ -515,7 +523,7 @@ Color NDArray::to_color() const {
 	ERR_FAIL_COND_V_MSG(array->shape()[0] != 4, {}, "array dimension must be size 4");
 
 	Color vector;
-	fill_c_array_flat(&vector.components[0], array->read);
+	TRY_CONVERT(&vector.components[0], array->read);
 
 	return vector;
 #endif
@@ -529,7 +537,7 @@ PackedFloat32Array NDArray::to_packed_float32_array() const {
 
 	PackedFloat32Array packed;
 	packed.resize(static_cast<int64_t>(array->shape()[0]));
-	fill_c_array_flat(packed.ptrw(), array->read);
+	TRY_CONVERT(packed.ptrw(), array->read);
 
 	return packed;
 #endif
@@ -543,7 +551,7 @@ PackedFloat64Array NDArray::to_packed_float64_array() const {
 
 	PackedFloat64Array packed;
 	packed.resize(static_cast<int64_t>(array->shape()[0]));
-	fill_c_array_flat(packed.ptrw(), array->read);
+	TRY_CONVERT(packed.ptrw(), array->read);
 
 	return packed;
 #endif
@@ -557,7 +565,7 @@ PackedByteArray NDArray::to_packed_byte_array() const {
 
 	PackedByteArray packed;
 	packed.resize(static_cast<int64_t>(array->shape()[0]));
-	fill_c_array_flat(packed.ptrw(), array->read);
+	TRY_CONVERT(packed.ptrw(), array->read);
 
 	return packed;
 #endif
@@ -571,7 +579,7 @@ PackedInt32Array NDArray::to_packed_int32_array() const {
 
 	PackedInt32Array packed;
 	packed.resize(static_cast<int64_t>(array->shape()[0]));
-	fill_c_array_flat(packed.ptrw(), array->read);
+	TRY_CONVERT(packed.ptrw(), array->read);
 
 	return packed;
 #endif
@@ -585,7 +593,7 @@ PackedInt64Array NDArray::to_packed_int64_array() const {
 
 	PackedInt64Array packed;
 	packed.resize(static_cast<int64_t>(array->shape()[0]));
-	fill_c_array_flat(packed.ptrw(), array->read);
+	TRY_CONVERT(packed.ptrw(), array->read);
 
 	return packed;
 #endif
@@ -601,7 +609,7 @@ PackedVector2Array NDArray::to_packed_vector2_array() const {
 
 	PackedVector2Array packed;
 	packed.resize(static_cast<int64_t>(array->shape()[0]));
-	fill_c_array_flat(&packed.ptrw()->coord[0], array->read);
+	TRY_CONVERT(&packed.ptrw()->coord[0], array->read);
 
 	return packed;
 #endif
@@ -617,7 +625,7 @@ PackedVector3Array NDArray::to_packed_vector3_array() const {
 
 	PackedVector3Array packed;
 	packed.resize(static_cast<int64_t>(array->shape()[0]));
-	fill_c_array_flat(&packed.ptrw()->coord[0], array->read);
+	TRY_CONVERT(&packed.ptrw()->coord[0], array->read);
 
 	return packed;
 #endif
@@ -633,7 +641,7 @@ PackedVector4Array NDArray::to_packed_vector4_array() const {
 
 	PackedVector4Array packed;
 	packed.resize(static_cast<int64_t>(array->shape()[0]));
-	fill_c_array_flat(&packed.ptrw()->components[0], array->read);
+	TRY_CONVERT(&packed.ptrw()->components[0], array->read);
 
 	return packed;
 #endif
@@ -649,7 +657,7 @@ PackedColorArray NDArray::to_packed_color_array() const {
 
 	PackedColorArray packed;
 	packed.resize(static_cast<int64_t>(array->shape()[0]));
-	fill_c_array_flat(&packed.ptrw()->components[0], array->read);
+	TRY_CONVERT(&packed.ptrw()->components[0], array->read);
 
 	return packed;
 #endif

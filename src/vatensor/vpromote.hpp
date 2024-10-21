@@ -45,7 +45,7 @@ namespace va {
 		>;
 
 		template<typename T>
-		inline constexpr bool is_at_least_real_t = std::is_floating_point_v<T> || is_complex_t<T>::value;
+		inline constexpr bool is_at_least_float_t = std::is_floating_point_v<T> || is_complex_t<T>::value;
 
 		template<typename T>
 		struct is_number_t : std::conjunction<
@@ -73,7 +73,6 @@ namespace va {
 #ifdef NUMDOT_CAST_INSTEAD_OF_COPY_FOR_ARGUMENTS
 			        return xt::cast<NeededType>(std::forward<T>(arg));
 #else
-					// TODO If we really want to cut down on combinations we should convert to compute_case somehow
 					return xt::xarray<NeededType>(std::forward<T>(arg));
 #endif
 				}
@@ -167,7 +166,7 @@ namespace va {
 		struct num_matching_float_or_default_in_same_out {
 			template<typename... Args>
 			using input_type = std::conditional_t<
-				is_at_least_real_t<std::common_type_t<int64_if_bool_else_id<Args>...>>,
+				is_at_least_float_t<std::common_type_t<int64_if_bool_else_id<Args>...>>,
 				std::common_type_t<int64_if_bool_else_id<Args>...>,
 				Default
 			>;

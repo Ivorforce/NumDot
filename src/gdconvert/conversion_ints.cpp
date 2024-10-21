@@ -7,7 +7,6 @@
 #include <type_traits>                               // for decay_t
 #include <variant>                                   // for visit
 #include <vector>                                    // for vector
-
 #include "conversion_array.hpp"
 #include "godot_cpp/classes/object.hpp"              // for Object
 #include "godot_cpp/core/object.hpp"                 // for Object::cast_to

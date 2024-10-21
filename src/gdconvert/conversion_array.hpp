@@ -10,8 +10,6 @@
 #include <memory>                        // for shared_ptr
 #include <utility>                        // for forward
 #include <variant>                        // for visit
-#include <vatensor/vpromote.hpp>
-
 #include "godot_cpp/variant/array.hpp"    // for Array
 #include "vatensor/varray.hpp"              // for shape_type, DType, VArray
 #include "xtensor/xadapt.hpp"             // for adapt
@@ -31,7 +29,7 @@ std::vector<std::shared_ptr<va::VArray>> variant_to_vector(const Variant& array)
 
 template<typename T, typename Compute>
 void fill_c_array_flat(T target, const Compute& carray) {
-	if constexpr (!std::is_convertible_v<va::promote::value_type_v<std::decay_t<Compute>>, std::decay_t<T>>) {
+	if constexpr (!std::is_convertible_v<typename Compute::value_type, std::remove_pointer_t<std::decay_t<T>>>) {
 		throw std::runtime_error("Cannot promote in this way.");
 	}
 	else {

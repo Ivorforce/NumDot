@@ -183,10 +183,10 @@ std::size_t va::size_of_dtype_in_bytes(const DType dtype) {
 
 va::VScalar va::scalar_to_dtype(const VScalar v, const DType dtype) {
     return std::visit(
-        [](auto v, const auto t) -> va::VScalar {
+        [v](const auto t) -> va::VScalar {
             using T = std::decay_t<decltype(t)>;
-            return static_cast<T>(v);
-        }, v, dtype_to_variant(dtype)
+            return va::scalar_to_type<T>(v);
+        }, dtype_to_variant(dtype)
     );
 }
 

@@ -290,7 +290,14 @@ namespace va {
     // TODO Can probably just be static_cast override or some such.
     template<typename V>
     V scalar_to_type(VScalar v) {
-        return std::visit([](auto v) { return static_cast<V>(v); }, v);
+        return std::visit([](auto v) -> V {
+            if constexpr (!std::is_convertible_v<decltype(v), V>) {
+                throw std::runtime_error("Cannot promote in this way.");
+            }
+            else {
+                return static_cast<V>(v);
+            }
+        }, v);
     }
 }
 

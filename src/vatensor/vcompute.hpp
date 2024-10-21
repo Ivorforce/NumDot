@@ -125,6 +125,9 @@ namespace va {
             if constexpr (std::is_same_v<InputType, void>) {
                 throw std::runtime_error("Unsupported type for operation.");
             }
+            else if constexpr (!std::disjunction_v<std::is_convertible<promote::value_type_v<std::decay_t<Args>>, InputType>...>) {
+                throw std::runtime_error("Cannot promote in this way.");
+            }
             else {
 
                 // Result of visitor invocation
@@ -159,6 +162,9 @@ namespace va {
 
             if constexpr (std::is_same_v<InputType, void>) {
                 throw std::runtime_error("Unsupported type for operation.");
+            }
+            else if constexpr (!std::disjunction_v<std::is_convertible<promote::value_type_v<std::decay_t<Args>>, InputType>...>) {
+                throw std::runtime_error("Cannot promote in this way.");
             }
             else {
                 using NaturalOutputType = decltype(visitor(promote::promote_value_type_if_needed<InputType>(args)...));

@@ -27,11 +27,21 @@ std::shared_ptr<va::VArray> variant_as_array(const Variant& array, va::DType dty
 
 std::vector<std::shared_ptr<va::VArray>> variant_to_vector(const Variant& array);
 
+template<typename T, typename Compute>
+void fill_c_array_flat(T target, const Compute& carray) {
+	if constexpr (!std::is_convertible_v<typename Compute::value_type, std::remove_pointer_t<std::decay_t<T>>>) {
+		throw std::runtime_error("Cannot promote in this way.");
+	}
+	else {
+		std::copy(carray.begin(), carray.end(), target);
+	}
+}
+
 template<typename T>
 void fill_c_array_flat(T* target, const va::VRead& array) {
 	std::visit(
 		[target](auto& carray) {
-			std::copy(carray.begin(), carray.end(), target);
+            fill_c_array_flat(target, carray);
 		}, array
 	);
 }

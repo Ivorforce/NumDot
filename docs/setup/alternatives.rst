@@ -5,6 +5,8 @@ Alternatives to NumDot
 
 If you want to use fast tensor math in godot, there are alternative approaches you can take. This article lists your options, and describes the differences.
 
+If you need help deciding what approach to take for your computational problem in general, check out the flowchart on the `Awesome Godot Scientific <https://github.com/Ivorforce/Awesome-Godot-Scientific/>`_ page.
+
 NumDot
 ------
 

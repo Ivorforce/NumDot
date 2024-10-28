@@ -30,6 +30,14 @@ jobs:
           mkdir -v -p ~/.local/share/godot/export_templates/
           mv /root/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable ~/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable
 
+      # Download the relevant NumDot version.
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          # TODO Can we automate choosing the run ID?
+          run-id: 11562444170
+          path: demo/addons
+
       - name: Web Build
         working-directory: demo
         run: |

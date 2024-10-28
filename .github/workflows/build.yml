@@ -53,8 +53,8 @@ jobs:
           arch: ${{ matrix.arch }}
           float-precision: single
           build-target-type: template_release
-          godot-cpp_folder: 'godot-cpp/'
-          gdextension_folder: ''
+          godot-cpp-directory: 'godot-cpp/'
+          gdextension-directory: ''
           em_version: '3.1.55'  # FIXME Doesn't compile on the newest, xtensor has problems
       - name: Mac Sign
         if: ${{ matrix.platform == 'macos' && env.APPLE_CERT_BASE64 }}

@@ -55,10 +55,15 @@ opts.Update(env)
 
 use_xsimd = env["use_xsimd"]
 if ARGUMENTS.get("use_xsimd", "auto") == "auto":
-    # Web "requires target feature "simd128"", we should solve that but for now let"s just disable simd on web.
-    use_xsimd = ARGUMENTS.get("platform", None) != "web"
+    use_xsimd = True
 else:
     use_xsimd = _text2bool(use_xsimd)
+
+if ARGUMENTS.get("platform", None) == "web":
+    ARGUMENTS.setdefault("threads", "no")
+    if _text2bool(ARGUMENTS.get("threads", "yes")):
+        # TODO Figure out why that is.
+        raise ValueError("NumDot does not currently support compiling web with threads.")
 
 optimize_for_arch = env["optimize_for_arch"]
 openmp_threshold = int(env["openmp_threshold"])
@@ -137,7 +142,17 @@ if env["platform"] == "windows":
     else:
         env.Append(CCFLAGS=["-Wa,-mbig-obj"])
 
-# TODO Figure out MSVC equivalents
+if env['platform'] == "web":
+    # FIXME Can remove when https://github.com/godotengine/godot-cpp/pull/1614 is merged.
+    env.Append(LINKFLAGS=["-sWASM_BIGINT"])
+
+if env['platform'] == "web" and use_xsimd:
+    # Not enabled by default, and xsimd doesn't have guards against it so we have to force-add it.
+    # See https://github.com/emscripten-core/emscripten/issues/12714.
+    env.Append(CPPFLAGS=["-msimd128"])
+    # TODO We could also pass -fno-vectorize for size-optimizing builds, as discussed in the linked issue.
+
+# TODO Can replace when https://github.com/godotengine/godot-cpp/pull/1601 is merged.
 if is_release:
     # Enable link-time optimization.
     # This further lets the compiler optimize, reduce binary size (~.5mb) or inline functions (possibly improving speeds).

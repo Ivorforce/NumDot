@@ -16,6 +16,7 @@ Upcoming Changes (main branch)
 
 - ``randn`` function (random sampling from a normal distribution)
 - For custom builds, OpenMP support (through the new ``openmp_threshold`` compile option, disabled by default). This requires your compiler to support OpenMP.
+- Add support for web exports (wasm32).
 
 **Changed**
 

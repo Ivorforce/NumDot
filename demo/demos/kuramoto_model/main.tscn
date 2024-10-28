@@ -1,8 +1,13 @@
-[gd_scene load_steps=4 format=3 uid="uid://b0s40i0gcfwtk"]
+[gd_scene load_steps=7 format=3 uid="uid://b0s40i0gcfwtk"]
 
 [ext_resource type="Script" path="res://demos/kuramoto_model/kuramoto_model.gd" id="1_rmybu"]
 [ext_resource type="Script" path="res://demos/kuramoto_model/gd_solver.gd" id="2_d1pps"]
 [ext_resource type="Script" path="res://demos/kuramoto_model/nd_solver.gd" id="3_ai2qh"]
+[ext_resource type="Shader" path="res://demos/kuramoto_model/fireflies.gdshader" id="4_3p2g8"]
+[ext_resource type="Texture2D" uid="uid://bt0oq50dfy0yq" path="res://demos/kuramoto_model/firefly.tres" id="5_bkn7j"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_olo0v"]
+shader = ExtResource("4_3p2g8")
 
 [node name="KuramotoModel" type="Node2D" node_paths=PackedStringArray("solver")]
 script = ExtResource("1_rmybu")
@@ -164,7 +169,9 @@ theme_override_font_sizes/font_size = 30
 text = "Restart
 "
 
-[node name="Fireflies" type="Node2D" parent="."]
+[node name="Fireflies" type="GPUParticles2D" parent="."]
+process_material = SubResource("ShaderMaterial_olo0v")
+texture = ExtResource("5_bkn7j")
 
 [connection signal="drag_ended" from="SliderOptions/PointSlider" to="." method="_on_point_slider_drag_ended"]
 [connection signal="drag_ended" from="SliderOptions/CouplingSlider" to="." method="_on_coupling_slider_drag_ended"]

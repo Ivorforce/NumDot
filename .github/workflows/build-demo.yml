@@ -1,5 +1,7 @@
 name: "Export Demo and deploy to Itch.io"
 
+permissions: read-all
+
 on:
   workflow_call:
   workflow_dispatch:
@@ -37,6 +39,7 @@ jobs:
           # TODO Can we automate choosing the run ID?
           run-id: 11562444170
           path: demo/addons
+          github-token: ${{ github.token }}
 
       - name: Web Build
         working-directory: demo

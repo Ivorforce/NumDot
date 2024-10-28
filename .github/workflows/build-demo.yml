@@ -32,14 +32,27 @@ jobs:
           mkdir -v -p ~/.local/share/godot/export_templates/
           mv /root/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable ~/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable
 
+      # Clean up the extension files we have here already; we'll be using the files from the release downloaded below.
+      - name: Clean demo gdextension
+        working-directory: demo
+        run: |
+          rm -rf addons
+          tree addons
+
       # Download the relevant NumDot version.
       - name: Download Artifact
         uses: actions/download-artifact@v4
         with:
           # TODO Can we automate choosing the run ID?
           run-id: 11562444170
+          name: GDExtension-all
           path: demo/addons
           github-token: ${{ github.token }}
+
+      - name: "Debug: Display the addons folder."
+        working-directory: demo
+        run: |
+          tree addons
 
       - name: Web Build
         working-directory: demo

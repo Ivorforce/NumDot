@@ -37,7 +37,6 @@ jobs:
         working-directory: demo
         run: |
           rm -rf addons
-          tree addons
 
       # Download the relevant NumDot version.
       - name: Download Artifact
@@ -48,11 +47,6 @@ jobs:
           name: GDExtension-all
           path: demo/addons
           github-token: ${{ github.token }}
-
-      - name: "Debug: Display the addons folder."
-        working-directory: demo
-        run: |
-          tree addons
 
       - name: Web Build
         working-directory: demo

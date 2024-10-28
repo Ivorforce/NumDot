@@ -38,7 +38,8 @@ jobs:
             os: macos-latest
           - platform: web
             arch: wasm32
-            os: ubuntu-20.04
+            # TODO Could be ubuntu but it currently fails, see https://github.com/Ivorforce/NumDot/actions/runs/11561641301/job/32181108213
+            os: macos-latest
 
     runs-on: ${{ matrix.os }}
     steps:

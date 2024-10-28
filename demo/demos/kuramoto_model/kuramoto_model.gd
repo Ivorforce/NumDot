@@ -15,11 +15,13 @@ extends Node2D
 var positions := []
 var frame_time: float = 1./60
 
-# visuals
-var firefly_texture := load("res://demos/kuramoto_model/firefly.tres")
+# particle shader
 @onready var fireflies := $Fireflies
+var TEXTURE_SIZE: int
+var fireflies_data: Image
+var fireflies_texture: ImageTexture
 
-func _ready() -> void:	
+func _ready() -> void:
 	%PointSlider.value = N
 	%PointLabel.text = "Fireflies: " + str(%PointSlider.value)
 	%CouplingSlider.value = coupling
@@ -84,29 +86,37 @@ func _restart_simulation() -> void:
 	solver.initialize()
 
 func _generate_fireflies() -> void:
-	var sprite: Sprite2D
-	var num_fireflies: int = fireflies.get_child_count()
+	TEXTURE_SIZE = int(ceil(sqrt(N)))
+	fireflies_data = Image.create(TEXTURE_SIZE, TEXTURE_SIZE, false, Image.FORMAT_RGBAH)
+	fireflies_texture = ImageTexture.create_from_image(fireflies_data)
 	
-	if num_fireflies < N:
-		for i in N - num_fireflies:
-			sprite = Sprite2D.new()
-			sprite.texture = firefly_texture
-			fireflies.add_child(sprite)
-	_randomize_positions()
+	fireflies.amount = N
+	fireflies.process_material.set_shader_parameter("fireflies_data", fireflies_texture)
 	
-	if num_fireflies > N:
-		for i in num_fireflies - N:
-			fireflies.get_child(N + i).queue_free()
+	positions.resize(N)
+	for i in N:
+		positions[i] = Vector2(randf_range(0, get_viewport_rect().size.x), randf_range(0, get_viewport_rect().size.y))
 	
 func _randomize_positions() -> void:
-	for firefly in fireflies.get_children():
-		firefly.position.x = randf_range(0, get_viewport_rect().size.x)
-		firefly.position.y = randf_range(0, get_viewport_rect().size.y)
+	for i in N:
+		positions[i].x = randf_range(0, get_viewport_rect().size.x)
+		positions[i].y = randf_range(0, get_viewport_rect().size.y)
 
 func set_alphas(alphas: Variant) -> void:
 	if alphas is Array:
 		for i in alphas.size():
-			fireflies.get_child(i).modulate.a = sin(alphas[i])/2 + 0.5
+			var pixel_pos := Vector2(int(i / TEXTURE_SIZE), int(i % TEXTURE_SIZE))
+			fireflies_data.set_pixel(
+				pixel_pos.x, pixel_pos.y,
+				Color(positions[i].x, positions[i].y, sin(alphas[i])/2 + 0.5, 0)
+				)
+			
 	elif alphas is NDArray:
 		for i in alphas.size():
-			fireflies.get_child(i).modulate.a = alphas.get_float(i)
+			var pixel_pos := Vector2(int(i / TEXTURE_SIZE), int(i % TEXTURE_SIZE))
+			fireflies_data.set_pixel(
+				pixel_pos.x, pixel_pos.y, 
+				Color(positions[i].x, positions[i].y, alphas.get_float(i), 0)
+				)
+
+	fireflies_texture.update(fireflies_data)

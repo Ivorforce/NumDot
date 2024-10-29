@@ -2,9 +2,9 @@ extends Node2D
 
 @export_category("Simulation parameters")
 @export var N: int = 1000
-@export var coupling: float = 3
-@export var frequency_sigma:  float = 2
-@export var frequency_mean: float = 0.
+@export var coupling: float = 1
+@export var frequency_sigma:  float = 0.2
+@export var frequency_mean: float = 2.
 
 @export var dt: float = 1./60 # 60 fps
 @export var sub_steps: int = 1

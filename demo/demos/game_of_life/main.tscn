@@ -103,9 +103,9 @@ texture = SubResource("ImageTexture_03ndn")
 [node name="SolverOptions" type="VBoxContainer" parent="."]
 custom_minimum_size = Vector2(200, 0)
 offset_left = 936.0
-offset_top = 567.0
+offset_top = 550.0
 offset_right = 1136.0
-offset_bottom = 632.0
+offset_bottom = 615.0
 metadata/_edit_group_ = true
 
 [node name="StepsPerSecondLabel" type="Label" parent="SolverOptions"]

@@ -33,11 +33,10 @@ custom_minimum_size = Vector2(1152, 648)
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = 4.0
-offset_right = 1156.0
+offset_right = 1152.0
 offset_bottom = 648.0
 grow_horizontal = 2
-color = Color(0.4356, 0.55154, 0.66, 1)
+color = Color(0.0431373, 0.0745098, 0.101961, 1)
 
 [node name="Labels" type="VBoxContainer" parent="."]
 offset_left = 23.0

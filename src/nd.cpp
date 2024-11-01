@@ -17,6 +17,7 @@
 #include <variant>                          // for visit
 #include <godot_cpp/variant/utility_functions.hpp>
 #include <vatensor/stride_tricks.hpp>
+#include <vatensor/xscalar_store.hpp>
 #include "gdconvert/conversion_array.hpp"     // for variant_as_array
 #include "gdconvert/conversion_ints.hpp"      // for variant_to_axes, variant_...
 #include "gdconvert/conversion_slice.hpp"     // for ellipsis, newaxis

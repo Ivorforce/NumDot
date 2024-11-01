@@ -4,6 +4,7 @@
 #include <cstddef>                         // for size_t
 #include <stdexcept>                       // for runtime_error
 #include <type_traits>                     // for decay_t, common_type_t
+#include "xscalar_store.hpp"
 #include "xtensor/xstrided_view_base.hpp"  // for strided_view_args
 
 const va::shape_type& va::shape(const VRead& read) {

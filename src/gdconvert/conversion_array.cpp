@@ -11,7 +11,7 @@
 #include <utility>                                     // for move
 #include <vector>                                      // for allocator, vector
 #include <vatensor/xarray_store.hpp>
-
+#include <vatensor/xscalar_store.hpp>
 #include "godot_cpp/classes/object.hpp"                // for Object
 #include "godot_cpp/core/defs.hpp"                     // for real_t
 #include "godot_cpp/core/object.hpp"                   // for Object::cast_to

@@ -61,11 +61,6 @@ namespace va::store {
 			}
 		);
 	}
-
-	template<typename V>
-	static std::shared_ptr<VArray> from_scalar(const V value) {
-		return from_store(va::array_case<V>(value));
-	}
 }
 
 #endif //VSTORE_HPP

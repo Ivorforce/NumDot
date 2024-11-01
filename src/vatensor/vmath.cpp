@@ -321,7 +321,7 @@ void va::abs(VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
 #else
-	xoperation_inplace<promote::num_function_result_in_same_out<xt::math::abs_fun>>(
+	xoperation_inplace<promote::num_in_nat_out>(
 		va::XFunction<xt::math::abs_fun> {},
 		target,
 		array.read

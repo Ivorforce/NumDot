@@ -128,6 +128,17 @@ namespace va {
 		 */
 		template<typename FN>
 		struct num_function_result_in_same_out {
+			template<typename... Args>
+			using input_type = decltype(std::declval<FN>()(std::declval<int64_if_bool_else_id<Args>>()...));
+
+			template<typename InputType, typename NaturalOutputType>
+			using output_type = InputType;
+		};
+
+		// TODO This may be better solvable with function tables or something like that...
+		// is_invocable_v unfortunately doesn't work because the functions I'm using aren't SFINAE safe.
+		template<typename FN>
+		struct num_function_result_in_same_out_no_complex {
 			template<bool, typename... Args>
 			struct input_type_impl { using type = void; };
 

@@ -15,6 +15,7 @@ Upcoming Changes (main branch)
 
 - Add complex numbers data types (``complex64`` and ``complex128``).
 - Add ``real`` and ``imag`` functions.
+- Add ``any`` layout type, which may bring tiny speed improvements.
 
 Version 0.6 - 2024-10-28
 ------------------------

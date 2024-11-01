@@ -39,6 +39,7 @@ void NDArray::_bind_methods() {
 	BIND_ENUM_CONSTANT(RowMajor);
 	BIND_ENUM_CONSTANT(ColumnMajor);
 	BIND_ENUM_CONSTANT(Dynamic);
+	BIND_ENUM_CONSTANT(Any);
 
 	godot::ClassDB::bind_method(D_METHOD("dtype"), &NDArray::dtype);
 	godot::ClassDB::bind_method(D_METHOD("shape"), &NDArray::shape);
@@ -210,7 +211,7 @@ NDArray::Layout NDArray::strides_layout() const {
 		case xt::layout_type::dynamic:
 			return NDArray::Layout::Dynamic;
 		case xt::layout_type::any:
-			ERR_FAIL_V_MSG(NDArray::Dynamic, "Unrecognized 'any' layout found.");
+			return NDArray::Layout::Any;
 		default: ;
 			ERR_FAIL_V_MSG(NDArray::Dynamic, "Unrecognized layout found.");
 	}

@@ -30,7 +30,7 @@ namespace va::store {
 				static_cast<const V*>(&std::get<V>(store->scalar)),
 				shape_type{},
 				strides_type{},
-				xt::layout_type::row_major  // TODO Should be any
+				xt::layout_type::any
 			)
 		});
 	}

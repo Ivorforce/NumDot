@@ -190,6 +190,7 @@ namespace va {
         switch (layout) {
             case xt::layout_type::row_major:
             case xt::layout_type::column_major:
+            case xt::layout_type::any:
                 return xt::adapt<xt::layout_type::dynamic, V>(std::forward<V>(ptr), size_, xt::no_ownership(), shape, layout);
             default: {
                 return xt::adapt<V>(std::forward<V>(ptr), size_, xt::no_ownership(), shape, strides);

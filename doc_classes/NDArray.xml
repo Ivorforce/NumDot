@@ -769,5 +769,8 @@
 		<constant name="Dynamic" value="2" enum="Layout">
 			The array's strides are inconsistent in order.
 		</constant>
+		<constant name="Any" value="3" enum="Layout">
+			Compatible with both row major and column major, i.e. 0D and 1D arrays.
+		</constant>
 	</constants>
 </class>

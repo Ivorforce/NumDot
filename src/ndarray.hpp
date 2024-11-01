@@ -56,7 +56,8 @@ public:
 	enum Layout: int64_t {
 		RowMajor,
 		ColumnMajor,
-		Dynamic
+		Dynamic,
+		Any
 	};
 
 	// We need a shared pointer because things like asarray can return either a view or an array

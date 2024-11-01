@@ -262,6 +262,14 @@ The array's strides increase consistently from the outer to the inner dimensions
 
 The array's strides are inconsistent in order.
 
+.. _class_NDArray_constant_Any:
+
+.. rst-class:: classref-enumeration-constant
+
+:ref:`Layout<enum_NDArray_Layout>` **Any** = ``3``
+
+Compatible with both row major and column major, i.e. 0D and 1D arrays.
+
 .. rst-class:: classref-section-separator
 
 ----

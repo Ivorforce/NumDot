@@ -10,8 +10,10 @@ Here you will find the release notes for each version of the library. Each secti
    :local:
    :backlinks: none
 
-.. Upcoming Changes (main branch)
-.. ------------------------------
+Upcoming Changes (main branch)
+------------------------------
+
+- Complex numbers data types (``complex64`` and ``complex128``).
 
 Version 0.6 - 2024-10-28
 ------------------------

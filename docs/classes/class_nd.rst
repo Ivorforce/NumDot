@@ -44,11 +44,11 @@ Methods
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`any<class_nd_method_any>`\ (\ a\: ``Variant`` = null, axes\: ``Variant`` = null\ ) |static|                                                                                                      |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`NDArray<class_NDArray>`                              | :ref:`arange<class_nd_method_arange>`\ (\ start_or_stop\: ``Variant`` = 0, stop\: ``Variant`` = null, step\: ``Variant`` = 1, dtype\: :ref:`DType<enum_nd_DType>` = 11\ ) |static|                     |
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`arange<class_nd_method_arange>`\ (\ start_or_stop\: ``Variant`` = 0, stop\: ``Variant`` = null, step\: ``Variant`` = 1, dtype\: :ref:`DType<enum_nd_DType>` = 13\ ) |static|                     |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`NDArray<class_NDArray>`                              | :ref:`array<class_nd_method_array>`\ (\ array\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 11\ ) |static|                                                                               |
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`array<class_nd_method_array>`\ (\ array\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 13\ ) |static|                                                                               |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`NDArray<class_NDArray>`                              | :ref:`as_array<class_nd_method_as_array>`\ (\ array\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 11\ ) |static|                                                                         |
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`as_array<class_nd_method_as_array>`\ (\ array\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 13\ ) |static|                                                                         |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`asin<class_nd_method_asin>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                                      |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -66,7 +66,7 @@ Methods
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`clip<class_nd_method_clip>`\ (\ a\: ``Variant``, min\: ``Variant``, max\: ``Variant``\ ) |static|                                                                                                |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`NDArray<class_NDArray>`                              | :ref:`concatenate<class_nd_method_concatenate>`\ (\ v\: ``Variant`` = null, axis\: ``int`` = 0, dtype\: :ref:`DType<enum_nd_DType>` = 11\ ) |static|                                                   |
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`concatenate<class_nd_method_concatenate>`\ (\ v\: ``Variant`` = null, axis\: ``int`` = 0, dtype\: :ref:`DType<enum_nd_DType>` = 13\ ) |static|                                                   |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`convolve<class_nd_method_convolve>`\ (\ array\: ``Variant``, kernel\: ``Variant``\ ) |static|                                                                                                    |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -90,7 +90,7 @@ Methods
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`empty<class_nd_method_empty>`\ (\ shape\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 2\ ) |static|                                                                                |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`NDArray<class_NDArray>`                              | :ref:`empty_like<class_nd_method_empty_like>`\ (\ model\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 11, shape\: ``Variant`` = null\ ) |static|                                         |
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`empty_like<class_nd_method_empty_like>`\ (\ model\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 13, shape\: ``Variant`` = null\ ) |static|                                         |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`equal<class_nd_method_equal>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                                   |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -110,7 +110,7 @@ Methods
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`full<class_nd_method_full>`\ (\ shape\: ``Variant`` = null, fill_value\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 2\ ) |static|                                                 |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`NDArray<class_NDArray>`                              | :ref:`full_like<class_nd_method_full_like>`\ (\ model\: ``Variant`` = null, fill_value\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 11, shape\: ``Variant`` = null\ ) |static|          |
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`full_like<class_nd_method_full_like>`\ (\ model\: ``Variant`` = null, fill_value\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 13, shape\: ``Variant`` = null\ ) |static|          |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`greater<class_nd_method_greater>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                               |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -118,7 +118,7 @@ Methods
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`Array<class_Array>`\[:ref:`NDArray<class_NDArray>`\] | :ref:`hsplit<class_nd_method_hsplit>`\ (\ v\: ``Variant``, indices_or_section_size\: ``Variant``\ ) |static|                                                                                           |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`NDArray<class_NDArray>`                              | :ref:`hstack<class_nd_method_hstack>`\ (\ v\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 11\ ) |static|                                                                                 |
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`hstack<class_nd_method_hstack>`\ (\ v\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 13\ ) |static|                                                                                 |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`int8<class_nd_method_int8>`\ (\ array\: ``Variant``\ ) |static|                                                                                                                                  |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -132,7 +132,7 @@ Methods
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`less_equal<class_nd_method_less_equal>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                         |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`NDArray<class_NDArray>`                              | :ref:`linspace<class_nd_method_linspace>`\ (\ start\: ``Variant`` = 0, stop\: ``Variant`` = null, num\: ``int`` = 50, endpoint\: ``bool`` = true, dtype\: :ref:`DType<enum_nd_DType>` = 11\ ) |static| |
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`linspace<class_nd_method_linspace>`\ (\ start\: ``Variant`` = 0, stop\: ``Variant`` = null, num\: ``int`` = 50, endpoint\: ``bool`` = true, dtype\: :ref:`DType<enum_nd_DType>` = 13\ ) |static| |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`log<class_nd_method_log>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                                        |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -172,7 +172,7 @@ Methods
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`ones<class_nd_method_ones>`\ (\ shape\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 2\ ) |static|                                                                                  |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`NDArray<class_NDArray>`                              | :ref:`ones_like<class_nd_method_ones_like>`\ (\ model\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 11, shape\: ``Variant`` = null\ ) |static|                                           |
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`ones_like<class_nd_method_ones_like>`\ (\ model\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 13, shape\: ``Variant`` = null\ ) |static|                                           |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`positive<class_nd_method_positive>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                              |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -246,11 +246,11 @@ Methods
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`Array<class_Array>`\[:ref:`NDArray<class_NDArray>`\] | :ref:`vsplit<class_nd_method_vsplit>`\ (\ v\: ``Variant``, indices_or_section_size\: ``Variant``\ ) |static|                                                                                           |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`NDArray<class_NDArray>`                              | :ref:`vstack<class_nd_method_vstack>`\ (\ v\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 11\ ) |static|                                                                                 |
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`vstack<class_nd_method_vstack>`\ (\ v\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 13\ ) |static|                                                                                 |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`zeros<class_nd_method_zeros>`\ (\ shape\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 2\ ) |static|                                                                                |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`NDArray<class_NDArray>`                              | :ref:`zeros_like<class_nd_method_zeros_like>`\ (\ model\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 11, shape\: ``Variant`` = null\ ) |static|                                         |
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`zeros_like<class_nd_method_zeros_like>`\ (\ model\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 13, shape\: ``Variant`` = null\ ) |static|                                         |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 .. rst-class:: classref-section-separator
@@ -292,11 +292,27 @@ Single-precision (32 bit) floating-point number type.
 
 Double-precision (64 bit) floating-point number type.
 
+.. _class_nd_constant_Complex64:
+
+.. rst-class:: classref-enumeration-constant
+
+:ref:`DType<enum_nd_DType>` **Complex64** = ``3``
+
+Complex number type composed of two single-precision floating-point numbers.
+
+.. _class_nd_constant_Complex128:
+
+.. rst-class:: classref-enumeration-constant
+
+:ref:`DType<enum_nd_DType>` **Complex128** = ``4``
+
+Complex number type composed of two double-precision floating-point numbers.
+
 .. _class_nd_constant_Int8:
 
 .. rst-class:: classref-enumeration-constant
 
-:ref:`DType<enum_nd_DType>` **Int8** = ``3``
+:ref:`DType<enum_nd_DType>` **Int8** = ``5``
 
 Signed integer type with 8 bits.
 
@@ -304,7 +320,7 @@ Signed integer type with 8 bits.
 
 .. rst-class:: classref-enumeration-constant
 
-:ref:`DType<enum_nd_DType>` **Int16** = ``4``
+:ref:`DType<enum_nd_DType>` **Int16** = ``6``
 
 Signed integer type with 16 bits.
 
@@ -312,7 +328,7 @@ Signed integer type with 16 bits.
 
 .. rst-class:: classref-enumeration-constant
 
-:ref:`DType<enum_nd_DType>` **Int32** = ``5``
+:ref:`DType<enum_nd_DType>` **Int32** = ``7``
 
 Signed integer type with 32 bits.
 
@@ -320,7 +336,7 @@ Signed integer type with 32 bits.
 
 .. rst-class:: classref-enumeration-constant
 
-:ref:`DType<enum_nd_DType>` **Int64** = ``6``
+:ref:`DType<enum_nd_DType>` **Int64** = ``8``
 
 Signed integer type with 64 bits.
 
@@ -328,7 +344,7 @@ Signed integer type with 64 bits.
 
 .. rst-class:: classref-enumeration-constant
 
-:ref:`DType<enum_nd_DType>` **UInt8** = ``7``
+:ref:`DType<enum_nd_DType>` **UInt8** = ``9``
 
 Unsigned integer type with 8 bits. This dtype cannot express negative values.
 
@@ -336,7 +352,7 @@ Unsigned integer type with 8 bits. This dtype cannot express negative values.
 
 .. rst-class:: classref-enumeration-constant
 
-:ref:`DType<enum_nd_DType>` **UInt16** = ``8``
+:ref:`DType<enum_nd_DType>` **UInt16** = ``10``
 
 Unsigned integer type with 16 bits. This dtype cannot express negative values.
 
@@ -344,7 +360,7 @@ Unsigned integer type with 16 bits. This dtype cannot express negative values.
 
 .. rst-class:: classref-enumeration-constant
 
-:ref:`DType<enum_nd_DType>` **UInt32** = ``9``
+:ref:`DType<enum_nd_DType>` **UInt32** = ``11``
 
 Unsigned integer type with 32 bits. This dtype cannot express negative values.
 
@@ -352,7 +368,7 @@ Unsigned integer type with 32 bits. This dtype cannot express negative values.
 
 .. rst-class:: classref-enumeration-constant
 
-:ref:`DType<enum_nd_DType>` **UInt64** = ``10``
+:ref:`DType<enum_nd_DType>` **UInt64** = ``12``
 
 Unsigned integer type with 64 bits. This dtype cannot express negative values.
 
@@ -447,7 +463,7 @@ Returns a 0-dimension boolean if axes is null. In that case, :ref:`ndb.any<class
 
 .. rst-class:: classref-method
 
-:ref:`NDArray<class_NDArray>` **arange**\ (\ start_or_stop\: ``Variant`` = 0, stop\: ``Variant`` = null, step\: ``Variant`` = 1, dtype\: :ref:`DType<enum_nd_DType>` = 11\ ) |static| :ref:`🔗<class_nd_method_arange>`
+:ref:`NDArray<class_NDArray>` **arange**\ (\ start_or_stop\: ``Variant`` = 0, stop\: ``Variant`` = null, step\: ``Variant`` = 1, dtype\: :ref:`DType<enum_nd_DType>` = 13\ ) |static| :ref:`🔗<class_nd_method_arange>`
 
 Return evenly spaced values within a given interval.
 
@@ -459,7 +475,7 @@ Return evenly spaced values within a given interval.
 
 .. rst-class:: classref-method
 
-:ref:`NDArray<class_NDArray>` **array**\ (\ array\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 11\ ) |static| :ref:`🔗<class_nd_method_array>`
+:ref:`NDArray<class_NDArray>` **array**\ (\ array\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 13\ ) |static| :ref:`🔗<class_nd_method_array>`
 
 Create a new :ref:`NDArray<class_NDArray>` of the given DType from the given data.
 
@@ -473,7 +489,7 @@ If the input is an :ref:`NDArray<class_NDArray>`, it will be copied.
 
 .. rst-class:: classref-method
 
-:ref:`NDArray<class_NDArray>` **as_array**\ (\ array\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 11\ ) |static| :ref:`🔗<class_nd_method_as_array>`
+:ref:`NDArray<class_NDArray>` **as_array**\ (\ array\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 13\ ) |static| :ref:`🔗<class_nd_method_as_array>`
 
 Convert the input to an array, but avoid copying data if possible.
 
@@ -597,7 +613,7 @@ No check is performed to ensure a_min < a_max.
 
 .. rst-class:: classref-method
 
-:ref:`NDArray<class_NDArray>` **concatenate**\ (\ v\: ``Variant`` = null, axis\: ``int`` = 0, dtype\: :ref:`DType<enum_nd_DType>` = 11\ ) |static| :ref:`🔗<class_nd_method_concatenate>`
+:ref:`NDArray<class_NDArray>` **concatenate**\ (\ v\: ``Variant`` = null, axis\: ``int`` = 0, dtype\: :ref:`DType<enum_nd_DType>` = 13\ ) |static| :ref:`🔗<class_nd_method_concatenate>`
 
 Join a sequence of arrays along an existing axis.
 
@@ -759,7 +775,7 @@ Return a new array of given shape and type, without initializing entries.
 
 .. rst-class:: classref-method
 
-:ref:`NDArray<class_NDArray>` **empty_like**\ (\ model\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 11, shape\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_empty_like>`
+:ref:`NDArray<class_NDArray>` **empty_like**\ (\ model\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 13, shape\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_empty_like>`
 
 Return a new array with the same shape and type as a given array.
 
@@ -895,7 +911,7 @@ Return a new array of given shape and type, filled with fill_value.
 
 .. rst-class:: classref-method
 
-:ref:`NDArray<class_NDArray>` **full_like**\ (\ model\: ``Variant`` = null, fill_value\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 11, shape\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_full_like>`
+:ref:`NDArray<class_NDArray>` **full_like**\ (\ model\: ``Variant`` = null, fill_value\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 13, shape\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_full_like>`
 
 Return a new array with the same shape and type as a given array, filled with the given value.
 
@@ -947,7 +963,7 @@ Please refer to :ref:`split<class_nd_method_split>`. hsplit is equivalent to :re
 
 .. rst-class:: classref-method
 
-:ref:`NDArray<class_NDArray>` **hstack**\ (\ v\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 11\ ) |static| :ref:`🔗<class_nd_method_hstack>`
+:ref:`NDArray<class_NDArray>` **hstack**\ (\ v\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 13\ ) |static| :ref:`🔗<class_nd_method_hstack>`
 
 Stack arrays in sequence horizontally (column wise).
 
@@ -1043,7 +1059,7 @@ Return (x1 <= x2) element-wise.
 
 .. rst-class:: classref-method
 
-:ref:`NDArray<class_NDArray>` **linspace**\ (\ start\: ``Variant`` = 0, stop\: ``Variant`` = null, num\: ``int`` = 50, endpoint\: ``bool`` = true, dtype\: :ref:`DType<enum_nd_DType>` = 11\ ) |static| :ref:`🔗<class_nd_method_linspace>`
+:ref:`NDArray<class_NDArray>` **linspace**\ (\ start\: ``Variant`` = 0, stop\: ``Variant`` = null, num\: ``int`` = 50, endpoint\: ``bool`` = true, dtype\: :ref:`DType<enum_nd_DType>` = 13\ ) |static| :ref:`🔗<class_nd_method_linspace>`
 
 Return evenly spaced numbers over a specified interval.
 
@@ -1325,7 +1341,7 @@ Return a new array of given shape and type, filled with ones.
 
 .. rst-class:: classref-method
 
-:ref:`NDArray<class_NDArray>` **ones_like**\ (\ model\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 11, shape\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_ones_like>`
+:ref:`NDArray<class_NDArray>` **ones_like**\ (\ model\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 13, shape\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_ones_like>`
 
 Return a new array of ones with the same shape and type as a given array.
 
@@ -1847,7 +1863,7 @@ Please refer to :ref:`split<class_nd_method_split>`. vsplit is equivalent to spl
 
 .. rst-class:: classref-method
 
-:ref:`NDArray<class_NDArray>` **vstack**\ (\ v\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 11\ ) |static| :ref:`🔗<class_nd_method_vstack>`
+:ref:`NDArray<class_NDArray>` **vstack**\ (\ v\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 13\ ) |static| :ref:`🔗<class_nd_method_vstack>`
 
 Stack arrays in sequence vertically (row wise).
 
@@ -1875,7 +1891,7 @@ Return a new array of given shape and type, filled with zeros.
 
 .. rst-class:: classref-method
 
-:ref:`NDArray<class_NDArray>` **zeros_like**\ (\ model\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 11, shape\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_zeros_like>`
+:ref:`NDArray<class_NDArray>` **zeros_like**\ (\ model\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 13, shape\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_zeros_like>`
 
 Return a new array of ones with the same shape and type as a given array.
 

@@ -63,7 +63,7 @@
 			<param index="0" name="start_or_stop" type="Variant" default="0" />
 			<param index="1" name="stop" type="Variant" default="null" />
 			<param index="2" name="step" type="Variant" default="1" />
-			<param index="3" name="dtype" type="int" enum="nd.DType" default="11" />
+			<param index="3" name="dtype" type="int" enum="nd.DType" default="13" />
 			<description>
 				Return evenly spaced values within a given interval.
 			</description>
@@ -71,7 +71,7 @@
 		<method name="array" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="array" type="Variant" default="null" />
-			<param index="1" name="dtype" type="int" enum="nd.DType" default="11" />
+			<param index="1" name="dtype" type="int" enum="nd.DType" default="13" />
 			<description>
 				Create a new [NDArray] of the given DType from the given data.
 				If the input is an [NDArray], it will be copied.
@@ -80,7 +80,7 @@
 		<method name="as_array" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="array" type="Variant" default="null" />
-			<param index="1" name="dtype" type="int" enum="nd.DType" default="11" />
+			<param index="1" name="dtype" type="int" enum="nd.DType" default="13" />
 			<description>
 				Convert the input to an array, but avoid copying data if possible.
 			</description>
@@ -156,7 +156,7 @@
 			<return type="NDArray" />
 			<param index="0" name="v" type="Variant" default="null" />
 			<param index="1" name="axis" type="int" default="0" />
-			<param index="2" name="dtype" type="int" enum="nd.DType" default="11" />
+			<param index="2" name="dtype" type="int" enum="nd.DType" default="13" />
 			<description>
 				Join a sequence of arrays along an existing axis.
 				The arrays must match in dimension except in the axis.
@@ -254,7 +254,7 @@
 		<method name="empty_like" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="model" type="Variant" default="null" />
-			<param index="1" name="dtype" type="int" enum="nd.DType" default="11" />
+			<param index="1" name="dtype" type="int" enum="nd.DType" default="13" />
 			<param index="2" name="shape" type="Variant" default="null" />
 			<description>
 				Return a new array with the same shape and type as a given array.
@@ -341,7 +341,7 @@
 			<return type="NDArray" />
 			<param index="0" name="model" type="Variant" default="null" />
 			<param index="1" name="fill_value" type="Variant" default="null" />
-			<param index="2" name="dtype" type="int" enum="nd.DType" default="11" />
+			<param index="2" name="dtype" type="int" enum="nd.DType" default="13" />
 			<param index="3" name="shape" type="Variant" default="null" />
 			<description>
 				Return a new array with the same shape and type as a given array, filled with the given value.
@@ -376,7 +376,7 @@
 		<method name="hstack" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="v" type="Variant" default="null" />
-			<param index="1" name="dtype" type="int" enum="nd.DType" default="11" />
+			<param index="1" name="dtype" type="int" enum="nd.DType" default="13" />
 			<description>
 				Stack arrays in sequence horizontally (column wise).
 				This is equivalent to concatenation along the second axis, except for 1-D arrays where it concatenates along the first axis. Rebuilds arrays divided by hsplit.
@@ -437,7 +437,7 @@
 			<param index="1" name="stop" type="Variant" default="null" />
 			<param index="2" name="num" type="int" default="50" />
 			<param index="3" name="endpoint" type="bool" default="true" />
-			<param index="4" name="dtype" type="int" enum="nd.DType" default="11" />
+			<param index="4" name="dtype" type="int" enum="nd.DType" default="13" />
 			<description>
 				Return evenly spaced numbers over a specified interval.
 				Returns num evenly spaced samples, calculated over the interval [lb]start, stop[rb].
@@ -615,7 +615,7 @@
 		<method name="ones_like" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="model" type="Variant" default="null" />
-			<param index="1" name="dtype" type="int" enum="nd.DType" default="11" />
+			<param index="1" name="dtype" type="int" enum="nd.DType" default="13" />
 			<param index="2" name="shape" type="Variant" default="null" />
 			<description>
 				Return a new array of ones with the same shape and type as a given array.
@@ -938,7 +938,7 @@
 		<method name="vstack" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="v" type="Variant" default="null" />
-			<param index="1" name="dtype" type="int" enum="nd.DType" default="11" />
+			<param index="1" name="dtype" type="int" enum="nd.DType" default="13" />
 			<description>
 				Stack arrays in sequence vertically (row wise).
 				This is equivalent to concatenation along the first axis after 1-D arrays of shape (N,) have been reshaped to (1,N). Rebuilds arrays divided by vsplit.
@@ -956,7 +956,7 @@
 		<method name="zeros_like" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="model" type="Variant" default="null" />
-			<param index="1" name="dtype" type="int" enum="nd.DType" default="11" />
+			<param index="1" name="dtype" type="int" enum="nd.DType" default="13" />
 			<param index="2" name="shape" type="Variant" default="null" />
 			<description>
 				Return a new array of ones with the same shape and type as a given array.
@@ -974,28 +974,34 @@
 		<constant name="Float64" value="2" enum="DType">
 			Double-precision (64 bit) floating-point number type.
 		</constant>
-		<constant name="Int8" value="3" enum="DType">
+		<constant name="Complex64" value="3" enum="DType">
+			Complex number type composed of two single-precision floating-point numbers.
+		</constant>
+		<constant name="Complex128" value="4" enum="DType">
+			Complex number type composed of two double-precision floating-point numbers.
+		</constant>
+		<constant name="Int8" value="5" enum="DType">
 			Signed integer type with 8 bits.
 		</constant>
-		<constant name="Int16" value="4" enum="DType">
+		<constant name="Int16" value="6" enum="DType">
 			Signed integer type with 16 bits.
 		</constant>
-		<constant name="Int32" value="5" enum="DType">
+		<constant name="Int32" value="7" enum="DType">
 			Signed integer type with 32 bits.
 		</constant>
-		<constant name="Int64" value="6" enum="DType">
+		<constant name="Int64" value="8" enum="DType">
 			Signed integer type with 64 bits.
 		</constant>
-		<constant name="UInt8" value="7" enum="DType">
+		<constant name="UInt8" value="9" enum="DType">
 			Unsigned integer type with 8 bits. This dtype cannot express negative values.
 		</constant>
-		<constant name="UInt16" value="8" enum="DType">
+		<constant name="UInt16" value="10" enum="DType">
 			Unsigned integer type with 16 bits. This dtype cannot express negative values.
 		</constant>
-		<constant name="UInt32" value="9" enum="DType">
+		<constant name="UInt32" value="11" enum="DType">
 			Unsigned integer type with 32 bits. This dtype cannot express negative values.
 		</constant>
-		<constant name="UInt64" value="10" enum="DType">
+		<constant name="UInt64" value="12" enum="DType">
 			Unsigned integer type with 64 bits. This dtype cannot express negative values.
 		</constant>
 	</constants>

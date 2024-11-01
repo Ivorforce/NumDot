@@ -32,7 +32,7 @@ Methods
    :widths: auto
 
    +--------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`NDArray<class_NDArray>`                                                  | :ref:`integers<class_NDRandomGenerator_method_integers>`\ (\ low_or_high\: ``int`` = 0, high\: ``Variant`` = null, shape\: ``Variant`` = PackedByteArray(), dtype\: :ref:`DType<enum_nd_DType>` = 6, endpoint\: ``bool`` = false\ ) |
+   | :ref:`NDArray<class_NDArray>`                                                  | :ref:`integers<class_NDRandomGenerator_method_integers>`\ (\ low_or_high\: ``int`` = 0, high\: ``Variant`` = null, shape\: ``Variant`` = PackedByteArray(), dtype\: :ref:`DType<enum_nd_DType>` = 8, endpoint\: ``bool`` = false\ ) |
    +--------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                                                  | :ref:`randn<class_NDRandomGenerator_method_randn>`\ (\ shape\: ``Variant`` = PackedByteArray(), dtype\: :ref:`DType<enum_nd_DType>` = 2\ )                                                                                          |
    +--------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -54,7 +54,7 @@ Method Descriptions
 
 .. rst-class:: classref-method
 
-:ref:`NDArray<class_NDArray>` **integers**\ (\ low_or_high\: ``int`` = 0, high\: ``Variant`` = null, shape\: ``Variant`` = PackedByteArray(), dtype\: :ref:`DType<enum_nd_DType>` = 6, endpoint\: ``bool`` = false\ ) :ref:`🔗<class_NDRandomGenerator_method_integers>`
+:ref:`NDArray<class_NDArray>` **integers**\ (\ low_or_high\: ``int`` = 0, high\: ``Variant`` = null, shape\: ``Variant`` = PackedByteArray(), dtype\: :ref:`DType<enum_nd_DType>` = 8, endpoint\: ``bool`` = false\ ) :ref:`🔗<class_NDRandomGenerator_method_integers>`
 
 Return random integers sampled from the “discrete uniform” distribution of the specified dtype. If high is None (the default), then results are from 0 to low.
 

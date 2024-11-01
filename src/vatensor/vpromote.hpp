@@ -128,16 +128,16 @@ namespace va {
 		 */
 		template<typename FN>
 		struct num_function_result_in_same_out {
-			// template<typename... Args>
-			// using input_type = std::conditional_t<
-			// 	// TODO For now it's easier to disable complex functions here already.
-			// 	std::disjunction_v<is_complex_t<std::decay_t<Args>>...>,
-			// 	void,
-			// 	decltype(std::declval<FN>()(std::declval<int64_if_bool_else_id<Args>>()...))
-			// >;
-			// FIXME
+			template<bool, typename... Args>
+			struct input_type_impl { using type = void; };
+
 			template<typename... Args>
-			using input_type = void;
+			struct input_type_impl<false, Args...> {
+				using type = decltype(std::declval<FN>()(std::declval<int64_if_bool_else_id<Args>>()...));
+			};
+
+			template<typename... Args>
+			using input_type = typename input_type_impl<std::disjunction_v<is_complex_t<std::decay_t<Args>>...>, Args...>::type;
 
 			template<typename InputType, typename NaturalOutputType>
 			using output_type = InputType;

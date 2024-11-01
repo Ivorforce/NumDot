@@ -108,8 +108,6 @@ template <typename T>
 std::shared_ptr<VArray> reinterpret_complex_as_floats(std::shared_ptr<VStore>&& store, const T& carray, std::ptrdiff_t offset) {
     using V = typename std::decay_t<decltype(carray)>::value_type;
 
-	auto dim = carray.dimension();
-
 	auto new_strides = carray.strides();
 	for (auto& stride : new_strides) { stride *= 2; }
 

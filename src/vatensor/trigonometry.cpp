@@ -86,7 +86,7 @@ void va::atan2(VArrayTarget target, const VArray& x1, const VArray& x2) {
 #ifdef NUMDOT_DISABLE_TRIGONOMETRY_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_TRIGONOMETRY_FUNCTIONS to enable it.");
 #else
-	xoperation_inplace<promote::num_function_result_in_same_out<xt::math::atan2_fun>>(
+	xoperation_inplace<promote::num_function_result_in_same_out_no_complex<xt::math::atan2_fun>>(
 		va::XFunction<xt::math::atan2_fun> {},
 		target,
 		x1.read,

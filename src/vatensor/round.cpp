@@ -14,7 +14,7 @@ void va::ceil(const VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_ROUNDING_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_ROUNDING_FUNCTIONS to enable it.");
 #else
-	xoperation_inplace<promote::num_function_result_in_same_out<xt::math::ceil_fun>>(
+	xoperation_inplace<promote::num_function_result_in_same_out_no_complex<xt::math::ceil_fun>>(
 		va::XFunction<xt::math::ceil_fun> {},
 		target,
 		array.read
@@ -26,7 +26,7 @@ void va::floor(VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_ROUNDING_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_ROUNDING_FUNCTIONS to enable it.");
 #else
-	xoperation_inplace<promote::num_function_result_in_same_out<xt::math::floor_fun>>(
+	xoperation_inplace<promote::num_function_result_in_same_out_no_complex<xt::math::floor_fun>>(
 		va::XFunction<xt::math::floor_fun> {},
 		target,
 		array.read
@@ -38,7 +38,7 @@ void va::trunc(VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_ROUNDING_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_ROUNDING_FUNCTIONS to enable it.");
 #else
-	xoperation_inplace<promote::num_function_result_in_same_out<xt::math::trunc_fun>>(
+	xoperation_inplace<promote::num_function_result_in_same_out_no_complex<xt::math::trunc_fun>>(
 		va::XFunction<xt::math::trunc_fun> {},
 		target,
 		array.read
@@ -50,7 +50,7 @@ void va::round(VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_ROUNDING_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_ROUNDING_FUNCTIONS to enable it.");
 #else
-	xoperation_inplace<promote::num_function_result_in_same_out<xt::math::round_fun>>(
+	xoperation_inplace<promote::num_function_result_in_same_out_no_complex<xt::math::round_fun>>(
 		va::XFunction<xt::math::round_fun> {},
 		target,
 		array.read
@@ -62,7 +62,7 @@ void va::nearbyint(VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_ROUNDING_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_ROUNDING_FUNCTIONS to enable it.");
 #else
-	xoperation_inplace<promote::num_function_result_in_same_out<xt::math::nearbyint_fun>>(
+	xoperation_inplace<promote::num_function_result_in_same_out_no_complex<xt::math::nearbyint_fun>>(
 		va::XFunction<xt::math::nearbyint_fun> {},
 		target,
 		array.read

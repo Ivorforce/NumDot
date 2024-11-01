@@ -66,6 +66,10 @@ void va::assign(VWrite& array, const VRead& value) {
 			else if constexpr (std::is_same_v<VWrite, bool> && std::is_same_v<VRead, bool>) {
 				broadcasting_assign(carray, xt::cast<uint8_t>(cvalue));
 			}
+			else if constexpr (va::promote::is_complex_t<VWrite>{}) {
+				// xsimd also has no auto conversion into complex types
+				broadcasting_assign(carray, xt::cast<VWrite>(cvalue));
+			}
 #endif
 			else
 			{
@@ -88,6 +92,9 @@ void va::assign_nonoverlapping(VWrite& array, const ArrayVariant& value) {
 			// See above
 			else if constexpr (std::is_same_v<VWrite, bool> && std::is_same_v<VRead, bool>) {
 				broadcasting_assign(carray, xt::cast<uint8_t>(cvalue));
+			}
+			else if constexpr (va::promote::is_complex_t<VWrite>{}) {
+				broadcasting_assign(carray, xt::cast<VWrite>(cvalue));
 			}
 #endif
 			else
@@ -325,7 +332,17 @@ void va::set_at_indices(VWrite& varray, VRead& indices, VRead& value) {
 					if (array.dimension() != 1) throw std::runtime_error("cannot use 1D index list for nd tensor");
 
 					auto index_view = xt::index_view(array, indices);
-					index_view = value;
+
+#ifdef XTENSOR_USE_XSIMD
+					if constexpr (va::promote::is_complex_t<VTArray>{}) {
+						// See above; xsimd cannot auto-convert to complex types
+						index_view = xt::cast<VTArray>(value);
+					}
+					else
+#endif
+					{
+						index_view = value;
+					}
 					return;
 				}
 				if (indices.dimension() != 2) throw std::runtime_error("index list must be 1d or 2d");
@@ -334,7 +351,17 @@ void va::set_at_indices(VWrite& varray, VRead& indices, VRead& value) {
 				// Index views need to be vectors of xindex.
 				xt::svector<xt::svector<size_type>> xindices = array_to_indices(indices);
 				auto index_view = xt::index_view(array, xindices);
-				index_view = value;
+
+#ifdef XTENSOR_USE_XSIMD
+				if constexpr (va::promote::is_complex_t<VTArray>{}) {
+					// See above; xsimd cannot auto-convert to complex types
+					index_view = xt::cast<VTArray>(value);
+				}
+				else
+#endif
+				{
+					index_view = value;
+				}
 			}
 		}, varray, indices, value
 	);

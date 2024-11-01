@@ -164,7 +164,7 @@ void va::remainder(VArrayTarget target, const VArray& a, const VArray& b) {
 #else
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	if (a.dimension() == 0) {
-		va::xoperation_inplace<promote::num_function_result_in_same_out<xt::math::remainder_fun>>(
+		va::xoperation_inplace<promote::num_function_result_in_same_out_no_complex<xt::math::remainder_fun>>(
 			XFunction<xt::math::remainder_fun> {},
 			target,
 			a.to_single_value(),
@@ -173,7 +173,7 @@ void va::remainder(VArrayTarget target, const VArray& a, const VArray& b) {
 		return;
 	}
 	if (b.dimension() == 0) {
-		va::xoperation_inplace<promote::num_function_result_in_same_out<xt::math::remainder_fun>>(
+		va::xoperation_inplace<promote::num_function_result_in_same_out_no_complex<xt::math::remainder_fun>>(
 			XFunction<xt::math::remainder_fun> {},
 			target,
 			a.read,
@@ -183,7 +183,7 @@ void va::remainder(VArrayTarget target, const VArray& a, const VArray& b) {
 	}
 #endif
 
-	va::xoperation_inplace<promote::num_function_result_in_same_out<xt::math::remainder_fun>>(
+	va::xoperation_inplace<promote::num_function_result_in_same_out_no_complex<xt::math::remainder_fun>>(
 		XFunction<xt::math::remainder_fun> {},
 		target,
 		a.read,
@@ -390,7 +390,7 @@ void va::rad2deg(VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
 #else
-	xoperation_inplace<promote::num_function_result_in_same_out<xt::math::rad2deg>>(
+	xoperation_inplace<promote::num_function_result_in_same_out_no_complex<xt::math::rad2deg>>(
 		va::XFunction<xt::math::rad2deg> {},
 		target,
 		array.read
@@ -402,7 +402,7 @@ void va::deg2rad(VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
 #else
-	xoperation_inplace<promote::num_function_result_in_same_out<xt::math::deg2rad>>(
+	xoperation_inplace<promote::num_function_result_in_same_out_no_complex<xt::math::deg2rad>>(
 		va::XFunction<xt::math::deg2rad> {},
 		target,
 		array.read

@@ -19,6 +19,10 @@ Upcoming Changes (main branch)
 - Add ``any`` layout type, which may bring tiny speed improvements.
 - Add ``fft`` function.
 
+**Fixed**
+
+- ``arange`` produced 0-size arrays when at least two arguments were passed.
+
 Version 0.6 - 2024-10-28
 ------------------------
 **Added**

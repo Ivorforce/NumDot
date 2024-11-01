@@ -514,7 +514,7 @@ Ref<NDArray> nd::arange(const Variant& start_or_stop, const Variant& stop, const
 	}
 	static const Variant zero = 0;
 	const Variant& start_ = stop.get_type() == Variant::NIL ? zero : start_or_stop;
-	const Variant& stop_ = stop.get_type() == Variant::NIL ? start_or_stop : nullptr;
+	const Variant& stop_ = stop.get_type() == Variant::NIL ? start_or_stop : stop;
 	const Variant& step_ = step;
 
 	try {

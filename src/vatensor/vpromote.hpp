@@ -14,7 +14,7 @@ namespace va {
 		struct is_complex_t<std::complex<T>> : std::true_type {};
 
 		template<typename T>
-		inline constexpr bool is_complex_v = std::is_same_v<is_complex_t<T>, std::true_type>;
+		inline constexpr bool is_complex_v = is_complex_t<T>::value;
 
 		template <typename T, typename Enable = void>
 		struct ValueType;

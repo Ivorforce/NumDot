@@ -148,6 +148,10 @@ va::VScalar va::dtype_to_variant(const DType dtype) {
             return float_t();
         case DType::Float64:
             return double_t();
+        case DType::Complex64:
+            return std::complex<float_t>();
+        case DType::Complex128:
+            return std::complex<double_t>();
         case DType::Int8:
             return int8_t();
         case DType::Int16:

@@ -20,7 +20,7 @@ std::shared_ptr<VArray> empty(VScalar type, const shape_type& shape) {
 	return std::visit(
 		[&shape](auto t) {
 			using T = decltype(t);
-			return from_store(make_store<T>(xt::empty<T>(shape)));
+			return store::from_store(va::array_case<T>(xt::empty<T>(shape)));
 		}, type
 	);
 #endif
@@ -34,9 +34,9 @@ std::shared_ptr<VArray> va::full(const VScalar fill_value, const shape_type& sha
 	return std::visit(
 		[&shape](auto fill_value) {
 			using T = decltype(fill_value);
-			auto store = make_store<T>(xt::empty<T>(shape));
-			store->fill(fill_value);
-			return from_store(store);
+			auto store = va::array_case<T>(xt::empty<T>(shape));
+			store.fill(fill_value);
+			return store::from_store(std::move(store));
 		}, fill_value
 	);
 #endif
@@ -56,7 +56,7 @@ std::shared_ptr<VArray> va::eye(DType dtype, const shape_type& shape, int k) {
 	return std::visit(
 		[&shape_eye, k](auto t) -> std::shared_ptr<VArray> {
 			using T = decltype(t);
-			return from_store(make_store(xt::eye<T>(shape_eye, k)));
+			return store::from_store(store::make_store(xt::eye<T>(shape_eye, k)));
 		}, dtype_to_variant(dtype)
 	);
 #endif
@@ -65,7 +65,7 @@ std::shared_ptr<VArray> va::eye(DType dtype, const shape_type& shape, int k) {
 std::shared_ptr<VArray> va::copy(const VRead& read) {
 	return std::visit(
 		[](auto& carray) {
-			return from_store(make_store(carray));
+			return store::from_store(store::make_store(carray));
 		}, read
 	);
 }
@@ -82,7 +82,7 @@ std::shared_ptr<VArray> va::copy_as_dtype(const VRead& other, DType dtype) {
 			using TWeGot = typename decltype(carray)::value_type;
 
 			if constexpr (std::is_same_v<TWeWanted, TWeGot>) {
-				return from_store(make_store<TWeWanted>(carray));
+				return store::from_store(va::array_case<TWeWanted>(carray));
 			}
 			else if constexpr (!std::is_convertible_v<TWeWanted, TWeGot>) {
 				throw std::runtime_error("Cannot promote in this way.");
@@ -93,7 +93,7 @@ std::shared_ptr<VArray> va::copy_as_dtype(const VRead& other, DType dtype) {
 			}
 			else {
 				// Cast first to reduce number of combinations down the line.
-				return from_store(make_store<TWeWanted>(va::promote::promote_value_type_if_needed_fast<TWeWanted>(carray)));
+				return store::from_store(va::array_case<TWeWanted>(va::promote::promote_value_type_if_needed_fast<TWeWanted>(carray)));
 			}
 		}, dtype_to_variant(dtype), other
 	);

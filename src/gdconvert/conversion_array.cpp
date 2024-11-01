@@ -10,6 +10,8 @@
 #include <tuple>                                       // for tuple, make_tuple
 #include <utility>                                     // for move
 #include <vector>                                      // for allocator, vector
+#include <vatensor/xarray_store.hpp>
+
 #include "godot_cpp/classes/object.hpp"                // for Object
 #include "godot_cpp/core/defs.hpp"                     // for real_t
 #include "godot_cpp/core/object.hpp"                   // for Object::cast_to
@@ -540,138 +542,138 @@ std::shared_ptr<va::VArray> variant_as_array(const Variant& array) {
 			return array_as_varray(array);
 		}
 		case Variant::BOOL: {
-			return va::from_scalar<bool>(array);
+			return va::store::from_scalar<bool>(array);
 		}
 		case Variant::INT: {
-			return va::from_scalar<int64_t>(array);
+			return va::store::from_scalar<int64_t>(array);
 		}
 		case Variant::FLOAT: {
-			return va::from_scalar<double_t>(array);
+			return va::store::from_scalar<double_t>(array);
 		}
 		case Variant::PACKED_BYTE_ARRAY: {
 			const auto packed = PackedByteArray(array);
-			return va::from_store(
-				va::make_store(
+			return va::store::from_store(
+				va::store::make_store(
 					adapt_c_array(packed.ptr(), { static_cast<std::size_t>(packed.size()) })
 				)
 			);
 		}
 		case Variant::PACKED_INT32_ARRAY: {
 			const auto packed = PackedInt32Array(array);
-			return va::from_store(
-				va::make_store(
+			return va::store::from_store(
+				va::store::make_store(
 					adapt_c_array(packed.ptr(), { static_cast<std::size_t>(packed.size()) })
 				)
 			);
 		}
 		case Variant::PACKED_INT64_ARRAY: {
 			const auto packed = PackedInt64Array(array);
-			return va::from_store(
-				va::make_store(
+			return va::store::from_store(
+				va::store::make_store(
 					adapt_c_array(packed.ptr(), { static_cast<std::size_t>(packed.size()) })
 				)
 			);
 		}
 		case Variant::PACKED_FLOAT32_ARRAY: {
 			const auto packed = PackedFloat32Array(array);
-			return va::from_store(
-				va::make_store(
+			return va::store::from_store(
+				va::store::make_store(
 					adapt_c_array(packed.ptr(), { static_cast<std::size_t>(packed.size()) })
 				)
 			);
 		}
 		case Variant::PACKED_FLOAT64_ARRAY: {
 			const auto packed = PackedFloat64Array(array);
-			return va::from_store(
-				va::make_store(
+			return va::store::from_store(
+				va::store::make_store(
 					adapt_c_array(packed.ptr(), { static_cast<std::size_t>(packed.size()) })
 				)
 			);
 		}
 		case Variant::PACKED_VECTOR2_ARRAY: {
 			const auto packed = PackedVector2Array(array);
-			return va::from_store(
-				va::make_store(
+			return va::store::from_store(
+				va::store::make_store(
 					adapt_c_array(&packed.ptr()[0].coord[0], { static_cast<std::size_t>(packed.size()), 2 })
 				)
 			);
 		}
 		case Variant::PACKED_VECTOR3_ARRAY: {
 			const auto packed = PackedVector3Array(array);
-			return va::from_store(
-				va::make_store(
+			return va::store::from_store(
+				va::store::make_store(
 					adapt_c_array(&packed.ptr()[0].coord[0], { static_cast<std::size_t>(packed.size()), 3 })
 				)
 			);
 		}
 		case Variant::PACKED_VECTOR4_ARRAY: {
 			const auto packed = PackedVector4Array(array);
-			return va::from_store(
-				va::make_store(
+			return va::store::from_store(
+				va::store::make_store(
 					adapt_c_array(&packed.ptr()[0].components[0], { static_cast<std::size_t>(packed.size()), 4 })
 				)
 			);
 		}
 		case Variant::PACKED_COLOR_ARRAY: {
 			const auto packed = PackedColorArray(array);
-			return va::from_store(
-				va::make_store(
+			return va::store::from_store(
+				va::store::make_store(
 					adapt_c_array(&packed.ptr()[0].components[0], { static_cast<std::size_t>(packed.size()), 4 })
 				)
 			);
 		}
 		case Variant::VECTOR2I: {
 			auto vector = Vector2i(array);
-			return va::from_store(
-				va::make_store(
+			return va::store::from_store(
+				va::store::make_store(
 					{ vector.x, vector.y }
 				)
 			);
 		}
 		case Variant::VECTOR3I: {
 			auto vector = Vector3i(array);
-			return va::from_store(
-				va::make_store(
+			return va::store::from_store(
+				va::store::make_store(
 					{ vector.x, vector.y, vector.z }
 				)
 			);
 		}
 		case Variant::VECTOR4I: {
 			auto vector = Vector4i(array);
-			return va::from_store(
-				va::make_store(
+			return va::store::from_store(
+				va::store::make_store(
 					{ vector.x, vector.y, vector.z, vector.w }
 				)
 			);
 		}
 		case Variant::VECTOR2: {
 			auto vector = Vector2(array);
-			return va::from_store(
-				va::make_store(
+			return va::store::from_store(
+				va::store::make_store(
 					{ vector.x, vector.y }
 				)
 			);
 		}
 		case Variant::VECTOR3: {
 			auto vector = Vector3(array);
-			return va::from_store(
-				va::make_store(
+			return va::store::from_store(
+				va::store::make_store(
 					{ vector.x, vector.y, vector.z }
 				)
 			);
 		}
 		case Variant::VECTOR4: {
 			auto vector = Vector4(array);
-			return va::from_store(
-				va::make_store(
+			return va::store::from_store(
+				va::store::make_store(
 					{ vector.x, vector.y, vector.z, vector.w }
 				)
 			);
 		}
 		case Variant::COLOR: {
 			auto vector = Color(array);
-			return va::from_store(
-				va::make_store(
+			return va::store::from_store(
+				va::store::make_store(
 					{ vector.r, vector.g, vector.b, vector.a }
 				)
 			);

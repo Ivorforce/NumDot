@@ -220,7 +220,7 @@ inline Ref<NDArray> reduction(Visitor&& visitor, VisitorNoaxes&& visitor_noaxes,
 				return { memnew(NDArray(va::from_scalar_variant(result))) };
 			}
 			else {
-				return { memnew(NDArray(va::from_scalar(result))) };
+				return { memnew(NDArray(va::store::from_scalar(result))) };
 			}
 		}
 
@@ -477,12 +477,14 @@ Ref<NDArray> nd::linspace(const Variant& start, const Variant& stop, const int64
 				using T = std::decay_t<decltype(t)>;
 
 				if constexpr (std::is_floating_point_v<T>) {
-					auto store = va::make_store<T>(xt::linspace(static_cast<double_t>(start), static_cast<double_t>(stop), num, endpoint));
-					return va::from_store(store);
+					return va::store::from_store(
+						va::array_case<T>(xt::linspace(static_cast<double_t>(start), static_cast<double_t>(stop), num, endpoint))
+					);
 				}
 				else {
-					auto store = va::make_store<T>(xt::linspace(static_cast<int64_t>(start), static_cast<int64_t>(stop), num, endpoint));
-					return va::from_store(store);
+					return va::store::from_store(
+						va::array_case<T>(xt::linspace(static_cast<int64_t>(start), static_cast<int64_t>(stop), num, endpoint))
+					);
 				}
 			}, va::dtype_to_variant(dtype)
 		);
@@ -514,12 +516,14 @@ Ref<NDArray> nd::arange(const Variant& start_or_stop, const Variant& stop, const
 				using T = std::decay_t<decltype(t)>;
 
 				if constexpr (std::is_floating_point_v<T>) {
-					const auto store = va::make_store<T>(xt::arange(static_cast<double_t>(start_), static_cast<double_t>(stop_), static_cast<double_t>(step_)));
-					return va::from_store(store);
+					return va::store::from_store(va::array_case<T>(
+						xt::arange(static_cast<double_t>(start_), static_cast<double_t>(stop_), static_cast<double_t>(step_)))
+					);
 				}
 				else {
-					const auto store = va::make_store<T>(xt::arange(static_cast<int64_t>(start_), static_cast<int64_t>(stop_), static_cast<int64_t>(step_)));
-					return va::from_store(store);
+					return va::store::from_store(
+						va::array_case<T>(xt::arange(static_cast<int64_t>(start_), static_cast<int64_t>(stop_), static_cast<int64_t>(step_)))
+					);
 				}
 			}, va::dtype_to_variant(dtype)
 		);

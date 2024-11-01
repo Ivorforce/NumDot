@@ -8,6 +8,7 @@
 #include <variant>                      // for visit, variant
 #include <vector>                       // for vector
 #include "varray.hpp"                     // for VArrayTarget, VScalar, VWrite
+#include "xarray_store.hpp"                     // for VArrayTarget, VScalar, VWrite
 #include "vassign.hpp"                    // for assign_nonoverlapping, broadc...
 #include "vpromote.hpp"                   // for promote_value_type_if_needed
 #include "xtensor/xarray.hpp"           // for xarray_container
@@ -104,7 +105,7 @@ namespace va {
                 else {
                     // Create new array, assign to our target pointer.
                     // OutputType may be different from R, if we want different behavior than xtensor for computation.
-                    *target = from_store(make_store<OStorable>(result));
+                    *target = store::from_store(va::array_case<OStorable>(result));
                 }
             }, target
         );

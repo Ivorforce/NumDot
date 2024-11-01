@@ -3,9 +3,9 @@
 #include <type_traits>                                  // for decay_t
 #include <variant>                                      // for visit
 #include "varray.hpp"                            // for VWrite, VScalar
+#include "xarray_store.hpp"                            // for VWrite, VScalar
 #include <xtensor/xmasked_view.hpp>
 #include <xtensor/xindex_view.hpp>
-
 #include "allocate.hpp"
 #include "vpromote.hpp"
 
@@ -174,10 +174,10 @@ std::shared_ptr<VArray> va::get_at_mask(const VRead& varray, const VRead& mask) 
 			else {
 				// Masked views don't offer this functionality automatically.
 				const size_type array_size = xt::sum(mask)();
-				auto result = make_store<VTArray>(xt::empty<VTArray>({ array_size }));
+				auto result = va::array_case<VTArray>(xt::empty<VTArray>({ array_size }));
 				const auto masked_view = xt::masked_view(array, mask);
 
-				auto iter_result = result->begin();
+				auto iter_result = result.begin();
 				for (auto masked_value : masked_view) {
 					if (masked_value.visible()) {
 						*iter_result = masked_value.value();
@@ -185,7 +185,7 @@ std::shared_ptr<VArray> va::get_at_mask(const VRead& varray, const VRead& mask) 
 					}
 				}
 
-				return from_store(result);
+				return store::from_store(std::move(result));
 			}
 		}, varray, mask
 	);
@@ -297,14 +297,14 @@ std::shared_ptr<VArray> va::get_at_indices(const VRead& varray, const VRead& ind
 				if (indices.dimension() == 1) {
 					if (array.dimension() != 1) throw std::runtime_error("cannot use 1D index list for nd tensor");
 
-					return from_store(make_store(xt::index_view(array, indices)));
+					return store::from_store(store::make_store(xt::index_view(array, indices)));
 				}
 				if (indices.dimension() != 2) throw std::runtime_error("index list must be 1d or 2d");
 				if (indices.shape()[1] != array.dimension()) throw std::runtime_error("index list dimension 2 must match array dimension");
 
 				// Index views need to be vectors of xindex.
 				xt::svector<xt::svector<size_type>> xindices = array_to_indices(indices);
-				return from_store(make_store(xt::index_view(array, xindices)));
+				return store::from_store(store::make_store(xt::index_view(array, xindices)));
 			}
 		}, varray, indices
 	);

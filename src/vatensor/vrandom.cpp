@@ -1,6 +1,7 @@
 #include "vrandom.hpp"
 
 #include "varray.hpp"
+#include "xarray_store.hpp"
 
 using namespace va;
 using namespace va::random;
@@ -25,7 +26,7 @@ std::shared_ptr<va::VArray> VRandomEngine::random_floats(shape_type shape, const
 				throw std::runtime_error("This function can only generate floating point types.");
 			}
 			else {
-				return from_store(make_store<T>(xt::random::rand<T>(shape, 0, 1, this->engine)));
+				return store::from_store(va::array_case<T>(xt::random::rand<T>(shape, 0, 1, this->engine)));
 			}
 		}, dtype_to_variant(dtype)
 	);
@@ -61,7 +62,7 @@ std::shared_ptr<VArray> VRandomEngine::random_integers(long long low, long long 
 				using TRandom = std::conditional_t<std::is_same_v<T, bool>, uint8_t, T>;
 #endif
 				// FIXME + 1 can cause problems if INT_MAX, but xt does not support an endpoint parameter
-				return from_store(make_store<T>(xt::random::randint<TRandom>(shape, low, high + (endpoint ? 1 : 0), this->engine)));
+				return store::from_store(va::array_case<T>(xt::random::randint<TRandom>(shape, low, high + (endpoint ? 1 : 0), this->engine)));
 			}
 		}, dtype_to_variant(dtype)
 	);
@@ -80,7 +81,7 @@ std::shared_ptr<va::VArray> VRandomEngine::random_normal(shape_type shape, const
 				throw std::runtime_error("This function can only generate floating point types.");
 			}
 			else {
-				return from_store(make_store<T>(xt::random::randn<T>(shape, 0, 1, this->engine)));
+				return store::from_store(va::array_case<T>(xt::random::randn<T>(shape, 0, 1, this->engine)));
 			}
 		}, dtype_to_variant(dtype)
 	);

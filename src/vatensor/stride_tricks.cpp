@@ -5,28 +5,22 @@
 
 std::shared_ptr<va::VArray> va::as_strided(const VArray& array, const shape_type& shape, const strides_type& strides) {
 	return std::visit(
-		[&shape, &strides](const auto& store, const auto& read) -> std::shared_ptr<VArray> {
-			using VTStore = typename std::decay_t<decltype(*store)>::value_type;
+		[&array, &shape, &strides](const auto& read) -> std::shared_ptr<VArray> {
 			using VTRead = typename std::decay_t<decltype(read)>::value_type;
 
-			if constexpr (!std::is_same_v<VTStore, VTRead>) {
-				throw std::runtime_error("unexpected data type discrepancy between store and read");
-			}
-			else {
-				return std::make_shared<VArray>(
-					VArray {
-						store,
-						make_compute<const VTRead*>(
-							store->data(),
-							shape,
-							strides,
-							xt::layout_type::dynamic
-						),
-						{}
-					}
-				);
-			}
-		}, array.store, array.read
+			return std::make_shared<VArray>(
+				VArray {
+					array.store,
+					make_compute<const VTRead*>(
+						read.data(),
+						shape,
+						strides,
+						xt::layout_type::dynamic
+					),
+					{}
+				}
+			);
+		}, array.read
 	);
 }
 

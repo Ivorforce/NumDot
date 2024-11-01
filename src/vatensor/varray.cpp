@@ -1,5 +1,6 @@
 #include "varray.hpp"
 
+#include "xarray_store.hpp"
 #include <cstddef>                         // for size_t
 #include <stdexcept>                       // for runtime_error
 #include <type_traits>                     // for decay_t, common_type_t
@@ -85,40 +86,20 @@ void va::VArray::prepare_write() {
         return;
     }
 
-    write = std::visit(
-        [](auto& store, const auto& read) -> VWrite {
-            using VTStore = typename std::decay_t<decltype(*store)>::value_type;
-            using VTRead = typename std::decay_t<decltype(read)>::value_type;
-
-            if constexpr (!std::is_same_v<VTStore, VTRead>) {
-                throw std::runtime_error("unexpected data type discrepancy between store and read");
-            }
-            else {
-                return make_vwrite<VTStore>(store, read);
-            }
-        }, store, read
-    );
+    write = store->make_write(read);
 }
 
 std::shared_ptr<va::VArray> va::VArray::sliced(const xt::xstrided_slice_vector& slices) const {
     return std::visit(
-        [&slices](const auto& store, const auto& read) -> std::shared_ptr<VArray> {
-            using VTStore = typename std::decay_t<decltype(*store)>::value_type;
-            using VTRead = typename std::decay_t<decltype(read)>::value_type;
-
-            if constexpr (!std::is_same_v<VTStore, VTRead>) {
-                throw std::runtime_error("unexpected data type discrepancy between store and read");
-            }
-            else {
-                return std::make_shared<VArray>(
-                    VArray {
-                        store,
-                        slice_compute(read, slices),
-                        {}
-                    }
-                );
-            }
-        }, store, read
+        [this, &slices](const auto& read) -> std::shared_ptr<VArray> {
+            return std::make_shared<VArray>(
+                VArray {
+                    store,
+                    slice_compute(read, slices),
+                    {}
+                }
+            );
+        }, read
     );
 }
 
@@ -220,7 +201,7 @@ va::VArray::operator float() const { return va::scalar_to_type<float>(to_single_
 std::shared_ptr<va::VArray> va::from_scalar_variant(VScalar scalar) {
     return std::visit(
         [](auto cscalar) {
-            return from_scalar(cscalar);
+            return va::store::from_scalar(cscalar);
         }, scalar
     );
 }

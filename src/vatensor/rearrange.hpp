@@ -7,22 +7,19 @@
 #include <type_traits>  // for decay_t
 #include <variant>      // for visit
 #include "varray.hpp"     // for VArray, strides_type, axes_type, from_surrogate
+#include "xarray_store.hpp"
 
 namespace va {
 	template<typename Visitor>
 	static std::shared_ptr<VArray> map(const Visitor& visitor, const VArray& varray) {
 		return std::visit(
-			[visitor](auto& store, auto& read) -> std::shared_ptr<VArray> {
-				using VTStore = typename std::decay_t<decltype(*store)>::value_type;
-				using VTRead = typename std::decay_t<decltype(read)>::value_type;
-
-				if constexpr (!std::is_same_v<VTStore, VTRead>) {
-					throw std::runtime_error("unexpected data type discrepancy between store and read");
-				}
-				else {
-					return from_surrogate(store, visitor(read));
-				}
-			}, varray.store, varray.read
+			[&varray, &visitor](auto& read) -> std::shared_ptr<VArray> {
+				return va::from_surrogate(
+					std::shared_ptr(varray.store),
+					visitor(read),
+					read.data()
+				);
+			}, varray.read
 		);
 	}
 

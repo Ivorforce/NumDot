@@ -189,6 +189,22 @@ namespace va {
 			using output_type = InputType;
 		};
 
+		template<typename Default>
+		struct num_matching_complex_or_default_in_same_out {
+			template <typename Arg, typename Enable = void> struct at_least_float;
+			template <typename Arg> struct at_least_float<Arg, std::enable_if_t<is_complex_v<Arg>>> { using type = typename Arg::value_type; };
+			template <typename Arg> struct at_least_float<Arg, std::enable_if_t<std::is_floating_point_v<Arg>>> { using type = Arg; };
+			template <typename Arg> struct at_least_float<Arg, std::enable_if_t<!is_complex_v<Arg> && !std::is_floating_point_v<Arg>>> { using type = Default; };
+
+			template <typename Arg> using at_least_float_v = typename at_least_float<Arg>::type;
+
+			template<typename... Args>
+			using input_type = std::complex<std::common_type_t<at_least_float_v<Args>...>>;
+
+			template<typename InputType, typename NaturalOutputType>
+			using output_type = InputType;
+		};
+
 		struct common_in_same_out {
 			template<typename... Args>
 			using input_type = std::common_type_t<Args...>;

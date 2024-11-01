@@ -97,12 +97,19 @@ namespace va {
                     else
 #endif
                     {
-                        // Make a copy, similar as in promote_compute_case_if_needed.
-                        // After copying we can be sure no aliasing is taking place, so we can assign with assign_xexpression.
-                        va::assign_nonoverlapping(*target, xt::xarray<RStorable>(result));
+                        if constexpr (!std::is_convertible_v<RNatural, RStorable>) {
+                            throw std::runtime_error("Cannot store the function result in an array of this dtype.");
+                        }
+                        else {
+                            // Make a copy, similar as in promote_compute_case_if_needed.
+                            // After copying we can be sure no aliasing is taking place, so we can assign with assign_xexpression.
+                            va::assign_nonoverlapping(*target, xt::xarray<RStorable>(result));
+                        }
                     }
                 }
                 else {
+                    static_assert(std::is_convertible_v<RNatural, OStorable>, "Cannot store the function result.");
+
                     // Create new array, assign to our target pointer.
                     // OutputType may be different from R, if we want different behavior than xtensor for computation.
                     *target = store::from_store(va::array_case<OStorable>(result));

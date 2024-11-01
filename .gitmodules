@@ -14,3 +14,6 @@
 [submodule "docs/godot-docs"]
 	path = docs/godot-docs
 	url = https://github.com/godotengine/godot-docs.git
+[submodule "xtensor-signal"]
+	path = xtensor-signal
+	url = https://github.com/xtensor-stack/xtensor-signal.git

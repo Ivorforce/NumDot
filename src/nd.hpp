@@ -182,6 +182,9 @@ public:
 
 	// Random.
 	static Ref<NDRandomGenerator> default_rng(const Variant& seed = nullptr);
+
+	// Signal.
+	static Ref<NDArray> fft(const Variant& array, int64_t axis);
 };
 
 VARIANT_ENUM_CAST(nd::DType);

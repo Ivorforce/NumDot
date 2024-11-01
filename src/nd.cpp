@@ -17,6 +17,7 @@
 #include <variant>                          // for visit
 #include <godot_cpp/variant/utility_functions.hpp>
 #include <vatensor/stride_tricks.hpp>
+#include <vatensor/vsignal.hpp>
 #include <vatensor/xscalar_store.hpp>
 #include "gdconvert/conversion_array.hpp"     // for variant_as_array
 #include "gdconvert/conversion_ints.hpp"      // for variant_to_axes, variant_...
@@ -186,6 +187,8 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("convolve", "array", "kernel"), &nd::convolve);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("default_rng", "seed"), &nd::default_rng, DEFVAL(nullptr));
+
+	godot::ClassDB::bind_static_method("nd", D_METHOD("fft", "v", "axis"), &nd::fft, DEFVAL(nullptr), DEFVAL(-1));
 }
 
 nd::nd() = default;
@@ -1083,4 +1086,10 @@ Ref<NDRandomGenerator> nd::default_rng(const Variant& seed) {
 			return { memnew(NDRandomGenerator(va::random::VRandomEngine(static_cast<uint64_t>(seed)))) };
 		default: ERR_FAIL_V_MSG({}, "The given variant could not be converted to a seed.");
 	}
+}
+
+Ref<NDArray> nd::fft(const Variant& array, const int64_t axis) {
+	return map_variants_as_arrays_with_target([axis](const va::VArrayTarget target, const std::shared_ptr<va::VArray>& a) {
+		va::fft(target, *a, axis);
+	}, array);
 }

@@ -98,6 +98,8 @@ Methods
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`eye<class_nd_method_eye>`\ (\ shape\: ``Variant`` = null, k\: ``int`` = 0, dtype\: :ref:`DType<enum_nd_DType>` = 2\ ) |static|                                                                   |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`fft<class_nd_method_fft>`\ (\ v\: ``Variant`` = null, axis\: ``int`` = -1\ ) |static|                                                                                                            |
+   +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`flip<class_nd_method_flip>`\ (\ v\: ``Variant``, axis\: ``int``\ ) |static|                                                                                                                      |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`float32<class_nd_method_float32>`\ (\ array\: ``Variant``\ ) |static|                                                                                                                            |
@@ -826,6 +828,18 @@ If an int N is given, an NxN matrix is returned.
 Otherwise, the first parameter is interpreted as a shape.
 
 k is the index of the diagonal: 0 (the default) refers to the main diagonal, a positive value refers to an upper diagonal, and a negative value to a lower diagonal.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_fft:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **fft**\ (\ v\: ``Variant`` = null, axis\: ``int`` = -1\ ) |static| :ref:`🔗<class_nd_method_fft>`
+
+Compute the one-dimensional discrete Fourier Transform.
 
 .. rst-class:: classref-item-separator
 

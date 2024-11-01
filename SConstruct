@@ -176,7 +176,7 @@ if openmp_threshold >= 0:
 
 # ============================= Actual source and lib setup =============================
 
-env.Append(CPPPATH=["xtl/include", "xsimd/include", "xtensor/include"])
+env.Append(CPPPATH=["xtl/include", "xsimd/include", "xtensor/include", "xtensor-signal/include"])
 
 env.Append(CPPPATH=["src/"])
 sources = Glob("src/*.cpp") + Glob("src/*/*.cpp")

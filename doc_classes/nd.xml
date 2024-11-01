@@ -288,6 +288,14 @@
 				k is the index of the diagonal: 0 (the default) refers to the main diagonal, a positive value refers to an upper diagonal, and a negative value to a lower diagonal.
 			</description>
 		</method>
+		<method name="fft" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="v" type="Variant" default="null" />
+			<param index="1" name="axis" type="int" default="-1" />
+			<description>
+				Compute the one-dimensional discrete Fourier Transform.
+			</description>
+		</method>
 		<method name="flip" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="v" type="Variant" />

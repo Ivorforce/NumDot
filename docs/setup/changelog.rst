@@ -12,10 +12,12 @@ Here you will find the release notes for each version of the library. Each secti
 
 Upcoming Changes (main branch)
 ------------------------------
+**Added**
 
 - Add complex numbers data types (``complex64`` and ``complex128``).
 - Add ``real`` and ``imag`` functions.
 - Add ``any`` layout type, which may bring tiny speed improvements.
+- Add ``fft`` function.
 
 Version 0.6 - 2024-10-28
 ------------------------

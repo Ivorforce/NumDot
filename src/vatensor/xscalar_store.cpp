@@ -10,3 +10,7 @@ va::VWrite va::store::VScalarStore::make_write(const VRead& read) {
 		}, read
 	);
 }
+
+va::VWrite va::store::VScalarStoreNonwrite::make_write(const VRead& read) {
+	throw std::runtime_error("attempted to write to read-only storage");
+}

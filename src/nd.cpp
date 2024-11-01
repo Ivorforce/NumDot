@@ -105,6 +105,9 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("hsplit", "v", "indices_or_section_size"), &nd::hsplit);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("vsplit", "v", "indices_or_section_size"), &nd::vsplit);
 
+	godot::ClassDB::bind_static_method("nd", D_METHOD("real", "v"), &nd::real);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("imag", "v"), &nd::imag);
+
 	godot::ClassDB::bind_static_method("nd", D_METHOD("positive", "a"), &nd::positive);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("negative", "a"), &nd::negative);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("add", "a", "b"), &nd::add);
@@ -191,7 +194,7 @@ nd::~nd() = default;
 template<typename Visitor, typename... Args>
 Ref<NDArray> map_variants_as_arrays(Visitor&& visitor, const Args&... args) {
 	try {
-		const std::shared_ptr<va::VArray> result = std::forward<Visitor>(visitor)(*variant_as_array(args)...);
+		const std::shared_ptr<va::VArray> result = std::forward<Visitor>(visitor)(variant_as_array(args)...);
 		return { memnew(NDArray(result)) };
 	}
 	catch (std::runtime_error& error) {
@@ -203,7 +206,7 @@ template<typename Visitor, typename... Args>
 Ref<NDArray> map_variants_as_arrays_with_target(Visitor&& visitor, const Args&... args) {
 	try {
 		std::shared_ptr<va::VArray> result;
-		std::forward<Visitor>(visitor)(&result, *variant_as_array(args)...);
+		std::forward<Visitor>(visitor)(&result, variant_as_array(args)...);
 		return { memnew(NDArray(result)) };
 	}
 	catch (std::runtime_error& error) {
@@ -260,18 +263,18 @@ Ref<NDArray> like_visit(Visitor&& visitor, const Variant& model, nd::DType dtype
 }
 
 #define VARRAY_MAP1(func, varray1) \
-	map_variants_as_arrays_with_target([](const va::VArrayTarget target, const va::VArray& varray) {\
-        va::func(target, varray);\
+	map_variants_as_arrays_with_target([](const va::VArrayTarget target, const std::shared_ptr<va::VArray>& varray) {\
+        va::func(target, *varray);\
     }, (varray1))
 
 #define VARRAY_MAP2(func, varray1, varray2) \
-	map_variants_as_arrays_with_target([](const va::VArrayTarget target, const va::VArray& a, const va::VArray& b) {\
-        va::func(target, a, b);\
+	map_variants_as_arrays_with_target([](const va::VArrayTarget target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b) {\
+        va::func(target, *a, *b);\
     }, (varray1), (varray2))
 
 #define VARRAY_MAP3(func, varray1, varray2, varray3) \
-	map_variants_as_arrays_with_target([](const va::VArrayTarget target, const va::VArray& a, const va::VArray& b, const va::VArray& c) {\
-        va::func(target, a, b, c);\
+	map_variants_as_arrays_with_target([](const va::VArrayTarget target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b, const std::shared_ptr<va::VArray>& c) {\
+        va::func(target, *a, *b, *c);\
     }, (varray1), (varray2), (varray3))
 
 #define REDUCTION1(func, varray1, axes1) \
@@ -566,24 +569,24 @@ Ref<NDArray> nd::reshape(const Variant& a, const Variant& shape) {
 
 Ref<NDArray> nd::swapaxes(const Variant& v, const int64_t a, const int64_t b) {
 	return map_variants_as_arrays(
-		[a, b](const va::VArray& v) {
-			return va::swapaxes(v, a, b);
+		[a, b](const std::shared_ptr<va::VArray>& v) {
+			return va::swapaxes(*v, a, b);
 		}, v
 	);
 }
 
 Ref<NDArray> nd::moveaxis(const Variant& v, int64_t src, int64_t dst) {
 	return map_variants_as_arrays(
-		[src, dst](const va::VArray& v) {
-			return va::moveaxis(v, src, dst);
+		[src, dst](const std::shared_ptr<va::VArray>& v) {
+			return va::moveaxis(*v, src, dst);
 		}, v
 	);
 }
 
 Ref<NDArray> nd::flip(const Variant& v, int64_t axis) {
 	return map_variants_as_arrays(
-		[axis](const va::VArray& v) {
-			return va::flip(v, axis);
+		[axis](const std::shared_ptr<va::VArray>& v) {
+			return va::flip(*v, axis);
 		}, v
 	);
 }
@@ -769,6 +772,22 @@ TypedArray<NDArray> nd::hsplit(const Variant& v, const Variant& indices_or_secti
 
 TypedArray<NDArray> nd::vsplit(const Variant& v, const Variant& indices_or_section_size) {
 	return nd::split(v, indices_or_section_size, 0);
+}
+
+Ref<NDArray> nd::real(const Variant& v) {
+	return map_variants_as_arrays(
+		[](const std::shared_ptr<va::VArray>& v) {
+			return va::real(v);
+		}, v
+	);
+}
+
+Ref<NDArray> nd::imag(const Variant& v) {
+	return map_variants_as_arrays(
+		[](const std::shared_ptr<va::VArray>& v) {
+			return va::imag(v);
+		}, v
+	);
 }
 
 Ref<NDArray> nd::positive(const Variant& a) {

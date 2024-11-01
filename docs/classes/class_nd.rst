@@ -120,6 +120,8 @@ Methods
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`hstack<class_nd_method_hstack>`\ (\ v\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 13\ ) |static|                                                                                 |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`imag<class_nd_method_imag>`\ (\ v\: ``Variant``\ ) |static|                                                                                                                                      |
+   +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`int8<class_nd_method_int8>`\ (\ array\: ``Variant``\ ) |static|                                                                                                                                  |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`int16<class_nd_method_int16>`\ (\ array\: ``Variant``\ ) |static|                                                                                                                                |
@@ -183,6 +185,8 @@ Methods
    | :ref:`NDArray<class_NDArray>`                              | :ref:`rad2deg<class_nd_method_rad2deg>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                                |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``Vector4i``                                               | :ref:`range<class_nd_method_range>`\ (\ start_or_stop\: ``Variant`` = 0, stop\: ``Variant`` = &"no_value", step\: ``Variant`` = null\ ) |static|                                                       |
+   +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`real<class_nd_method_real>`\ (\ v\: ``Variant``\ ) |static|                                                                                                                                      |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`reduce_dot<class_nd_method_reduce_dot>`\ (\ a\: ``Variant`` = null, b\: ``Variant`` = null, axes\: ``Variant`` = null\ ) |static|                                                                |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -975,6 +979,20 @@ This function makes most sense for arrays with up to 3 dimensions. For instance,
 
 ----
 
+.. _class_nd_method_imag:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **imag**\ (\ v\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_imag>`
+
+Return the imaginary part of the complex argument.
+
+If the argument is not complex, returns a non-writeable array.
+
+.. rst-class:: classref-item-separator
+
+----
+
 .. _class_nd_method_int8:
 
 .. rst-class:: classref-method
@@ -1418,6 +1436,20 @@ arange(start, stop): Values are generated within the half-open interval \[start,
 arange(start, stop, step) Values are generated within the half-open interval \[start, stop), with spacing between values given by step.
 
 Note that ranges are represented as Vector4i(mask, start, stop, step).
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_real:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **real**\ (\ v\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_real>`
+
+Return the real part of the complex argument.
+
+If the argument is not complex, returns the argument.
 
 .. rst-class:: classref-item-separator
 

@@ -29,6 +29,9 @@ namespace va {
 	std::shared_ptr<VArray> moveaxis(const VArray& varray, std::ptrdiff_t src, std::ptrdiff_t dst);
 	std::shared_ptr<VArray> flip(const VArray& varray, std::size_t axis);
 	std::shared_ptr<VArray> join_axes_into_last_dimension(const VArray& varray, axes_type axes);
+
+	std::shared_ptr<VArray> real(const std::shared_ptr<VArray>& varray);
+	std::shared_ptr<VArray> imag(const std::shared_ptr<VArray>& varray);
 }
 
 #endif //XV_H

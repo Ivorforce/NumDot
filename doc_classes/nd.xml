@@ -383,6 +383,14 @@
 				This function makes most sense for arrays with up to 3 dimensions. For instance, for pixel-data with a height (first axis), width (second axis), and r/g/b channels (third axis). The functions concatenate, stack and block provide more general stacking and concatenation operations.
 			</description>
 		</method>
+		<method name="imag" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="v" type="Variant" />
+			<description>
+				Return the imaginary part of the complex argument.
+				If the argument is not complex, returns a non-writeable array.
+			</description>
+		</method>
 		<method name="int8" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="array" type="Variant" />
@@ -665,6 +673,14 @@
 				arange(start, stop): Values are generated within the half-open interval [lb]start, stop).
 				arange(start, stop, step) Values are generated within the half-open interval [lb]start, stop), with spacing between values given by step.
 				Note that ranges are represented as Vector4i(mask, start, stop, step).
+			</description>
+		</method>
+		<method name="real" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="v" type="Variant" />
+			<description>
+				Return the real part of the complex argument.
+				If the argument is not complex, returns the argument.
 			</description>
 		</method>
 		<method name="reduce_dot" qualifiers="static">

@@ -13,7 +13,8 @@ Here you will find the release notes for each version of the library. Each secti
 Upcoming Changes (main branch)
 ------------------------------
 
-- Complex numbers data types (``complex64`` and ``complex128``).
+- Add complex numbers data types (``complex64`` and ``complex128``).
+- Add ``real`` and ``imag`` functions.
 
 Version 0.6 - 2024-10-28
 ------------------------

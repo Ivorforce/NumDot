@@ -74,7 +74,7 @@ public:
 	static Ref<NDArray> linspace(const Variant& start, const Variant& stop, int64_t num = 50, bool endpoint = true, DType dtype = DType::DTypeMax);
 	static Ref<NDArray> arange(const Variant& start_or_stop = static_cast<int64_t>(0), const Variant& stop = nullptr, const Variant& step = static_cast<int64_t>(1), DType dtype = DType::DTypeMax);
 
-	// Rearrange
+	// Rearrange.
 	static Ref<NDArray> transpose(const Variant& a, const Variant& permutation);
 	static Ref<NDArray> reshape(const Variant& a, const Variant& shape);
 	static Ref<NDArray> swapaxes(const Variant& v, int64_t a, int64_t b);
@@ -89,6 +89,10 @@ public:
 	static TypedArray<NDArray> split(const Variant& v, const Variant& indices_or_section_size, int64_t axis);
 	static TypedArray<NDArray> hsplit(const Variant& v, const Variant& indices_or_section_size);
 	static TypedArray<NDArray> vsplit(const Variant& v, const Variant& indices_or_section_size);
+
+	// Reinterpret.
+	static Ref<NDArray> real(const Variant& a);
+	static Ref<NDArray> imag(const Variant& a);
 
 	// Basic math functions.
 	static Ref<NDArray> positive(const Variant& a);

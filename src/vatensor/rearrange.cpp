@@ -8,6 +8,9 @@
 #include <functional>                 // for multiplies
 #include <numeric>                    // for accumulate, iota
 #include <set>                        // for operator==, set
+
+#include "vpromote.hpp"
+#include "xscalar_store.hpp"
 #include "vatensor//varray.hpp"         // for VArray, strides_type, axes_type
 #include "xtensor/xlayout.hpp"        // for layout_type
 #include "xtensor/xmanipulation.hpp"  // for full, transpose, flip, moveaxis
@@ -98,5 +101,59 @@ std::shared_ptr<VArray> va::join_axes_into_last_dimension(const VArray& varray, 
 			new_shape.erase(reduction_begin + 1, new_shape.end());
 			return xt::reshape_view(transposed, new_shape);
 		}, varray
+	);
+}
+
+template <typename T>
+std::shared_ptr<VArray> reinterpret_complex_as_floats(VStore&& store, T& carray, std::ptrdiff_t offset) {
+    using V = typename std::decay_t<decltype(carray)>::value_type;
+
+	auto dim = carray.dimension();
+
+	shape_type new_shape(dim + 1);
+	std::copy_n(carray.shape(), dim, new_shape.begin());
+	new_shape.back() = 1;
+
+	shape_type new_strides(dim + 1);
+	std::copy_n(carray.strides().begin(), dim, new_strides.begin());
+	new_strides.back() = 2;
+
+	return std::make_shared<VArray>(VArray {
+		store,
+		make_compute(
+			reinterpret_cast<typename V::value_type*>(carray->store.data()) + offset,
+			new_shape,
+			new_strides,
+			carray.layout()
+		)
+	});
+}
+
+std::shared_ptr<VArray> va::real(const std::shared_ptr<VArray>& varray) {
+	return std::visit(
+		[&varray](auto& carray) -> std::shared_ptr<VArray> {
+		    using V = typename std::decay_t<decltype(carray)>::value_type;
+
+			if constexpr (va::promote::is_complex_v<V>) {
+				return reinterpret_complex_as_floats(varray->store, carray, 0);
+			}
+			else {
+				return varray;
+			}
+		}, varray->read
+	);
+}
+
+std::shared_ptr<VArray> va::imag(const std::shared_ptr<VArray>& varray) {
+	return std::visit(
+		[&varray](auto& carray) -> std::shared_ptr<VArray> {
+			using V = typename std::decay_t<decltype(carray)>::value_type;
+			if constexpr (va::promote::is_complex_v<V>) {
+				return reinterpret_complex_as_floats(varray->store, carray, 1);
+			}
+			else {
+				return va::store::full_dummy_like(0, carray);
+			}
+		}, varray->read
 	);
 }

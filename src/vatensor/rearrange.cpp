@@ -105,26 +105,21 @@ std::shared_ptr<VArray> va::join_axes_into_last_dimension(const VArray& varray, 
 }
 
 template <typename T>
-std::shared_ptr<VArray> reinterpret_complex_as_floats(std::shared_ptr<VStore>&& store, T& carray, std::ptrdiff_t offset) {
+std::shared_ptr<VArray> reinterpret_complex_as_floats(std::shared_ptr<VStore>&& store, const T& carray, std::ptrdiff_t offset) {
     using V = typename std::decay_t<decltype(carray)>::value_type;
 
 	auto dim = carray.dimension();
 
-	shape_type new_shape(dim + 1);
-	std::copy_n(carray.shape().begin(), dim, new_shape.begin());
-	new_shape.back() = 1;
-
-	strides_type new_strides(dim + 1);
-	std::copy_n(carray.strides().begin(), dim, new_strides.begin());
-	new_strides.back() = 2;
+	auto new_strides = carray.strides();
+	for (auto& stride : new_strides) { stride *= 2; }
 
 	return std::make_shared<VArray>(VArray {
 		std::forward<std::shared_ptr<VStore>>(store),
 		make_compute(
 			reinterpret_cast<const typename V::value_type*>(carray.data()) + offset,
-			new_shape,
+			carray.shape(),
 			new_strides,
-			carray.layout()
+			xt::layout_type::dynamic
 		)
 	});
 }

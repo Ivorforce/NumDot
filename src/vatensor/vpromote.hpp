@@ -4,18 +4,10 @@
 #include <complex>
 #include <xtensor/xexpression.hpp>
 #include <xtensor/xoperation.hpp>
+#include <xtl/xcomplex.hpp>
 
 namespace va {
 	namespace promote {
-		template<typename T>
-		struct is_complex_t : std::false_type {};
-
-		template<typename T>
-		struct is_complex_t<std::complex<T>> : std::true_type {};
-
-		template<typename T>
-		inline constexpr bool is_complex_v = is_complex_t<T>::value;
-
 		template <typename T, typename Enable = void>
 		struct ValueType;
 
@@ -33,7 +25,7 @@ namespace va {
 
 		// complex
 		template <typename T>
-		struct ValueType<T, std::enable_if_t<is_complex_t<T>{}>> {
+		struct ValueType<T, std::enable_if_t<xtl::is_complex<T>::value>> {
 			using value_type = T;
 		};
 
@@ -48,11 +40,11 @@ namespace va {
 		>;
 
 		template<typename T>
-		inline constexpr bool is_at_least_float_t = std::is_floating_point_v<T> || is_complex_t<T>::value;
+		inline constexpr bool is_at_least_float_t = std::is_floating_point_v<T> || xtl::is_complex<T>::value;
 
 		template<typename T>
 		struct is_number_t : std::conjunction<
-			std::disjunction<std::is_arithmetic<T>, is_complex_t<T>>,
+			std::disjunction<std::is_arithmetic<T>, xtl::is_complex<T>>,
 			std::negation<std::is_same<T, bool>>
 		> {};
 
@@ -65,8 +57,12 @@ namespace va {
 				return std::forward<T>(arg);
 			}
 			else {
-				if constexpr (std::is_fundamental_v<T>) {
+				if constexpr (std::is_fundamental_v<std::decay_t<T>> || xtl::is_complex<std::decay_t<T>>::value) {
 					return static_cast<NeededType>(std::forward<T>(arg));
+				}
+				else if constexpr (xtl::is_complex<NeededType>::value) {
+					// FIXME Not auto-convertible like below for some reason
+					return xt::xarray<NeededType>(xt::cast<NeededType>(std::forward<T>(arg)));
 				}
 				else {
 					// Casting can considerably increase performance (from a small test, it was 25%).
@@ -138,25 +134,6 @@ namespace va {
 			using output_type = InputType;
 		};
 
-		// TODO This may be better solvable with function tables or something like that...
-		// is_invocable_v unfortunately doesn't work because the functions I'm using aren't SFINAE safe.
-		template<typename FN>
-		struct num_function_result_in_same_out_no_complex {
-			template<bool, typename... Args>
-			struct input_type_impl { using type = void; };
-
-			template<typename... Args>
-			struct input_type_impl<false, Args...> {
-				using type = decltype(std::declval<FN>()(std::declval<int64_if_bool_else_id<Args>>()...));
-			};
-
-			template<typename... Args>
-			using input_type = typename input_type_impl<std::disjunction_v<is_complex_t<std::decay_t<Args>>...>, Args...>::type;
-
-			template<typename InputType, typename NaturalOutputType>
-			using output_type = InputType;
-		};
-
 		struct num_at_least_int32_in_same_out {
 			template<typename... Args>
 			using common_type = std::common_type_t<int64_if_bool_else_id<Args>...>;
@@ -177,7 +154,7 @@ namespace va {
 		};
 
 		template<typename Default>
-		struct num_matching_float_or_default_in_same_out {
+		struct num_matching_float_or_default_in_nat_out {
 			template<typename... Args>
 			using input_type = std::conditional_t<
 				is_at_least_float_t<std::common_type_t<int64_if_bool_else_id<Args>...>>,
@@ -186,23 +163,7 @@ namespace va {
 			>;
 
 			template<typename InputType, typename NaturalOutputType>
-			using output_type = InputType;
-		};
-
-		template<typename Default>
-		struct num_matching_complex_or_default_in_same_out {
-			template <typename Arg, typename Enable = void> struct at_least_float;
-			template <typename Arg> struct at_least_float<Arg, std::enable_if_t<is_complex_v<Arg>>> { using type = typename Arg::value_type; };
-			template <typename Arg> struct at_least_float<Arg, std::enable_if_t<std::is_floating_point_v<Arg>>> { using type = Arg; };
-			template <typename Arg> struct at_least_float<Arg, std::enable_if_t<!is_complex_v<Arg> && !std::is_floating_point_v<Arg>>> { using type = Default; };
-
-			template <typename Arg> using at_least_float_v = typename at_least_float<Arg>::type;
-
-			template<typename... Args>
-			using input_type = std::complex<std::common_type_t<at_least_float_v<Args>...>>;
-
-			template<typename InputType, typename NaturalOutputType>
-			using output_type = InputType;
+			using output_type = NaturalOutputType;
 		};
 
 		struct common_in_same_out {
@@ -236,6 +197,37 @@ namespace va {
 
 			template<typename InputType, typename NaturalOutputType>
 			using output_type = NaturalOutputType;
+		};
+
+		template<typename Default>
+		struct num_matching_complex_or_default_in_same_out {
+			template <typename Arg, typename Enable = void> struct at_least_float;
+			template <typename Arg> struct at_least_float<Arg, std::enable_if_t<xtl::is_complex<Arg>::value>> { using type = typename Arg::value_type; };
+			template <typename Arg> struct at_least_float<Arg, std::enable_if_t<std::is_floating_point_v<Arg>>> { using type = Arg; };
+			template <typename Arg> struct at_least_float<Arg, std::enable_if_t<!xtl::is_complex<Arg>::value && !std::is_floating_point_v<Arg>>> { using type = Default; };
+
+			template <typename Arg> using at_least_float_v = typename at_least_float<Arg>::type;
+
+			template<typename... Args>
+			using input_type = std::complex<std::common_type_t<at_least_float_v<Args>...>>;
+
+			template<typename InputType, typename NaturalOutputType>
+			using output_type = InputType;
+		};
+
+		template<typename Base>
+		struct reject_complex {
+			template<bool, typename... Args>
+			struct input_type_impl { using type = void; };
+
+			template<typename... Args>
+			struct input_type_impl<false, Args...> { using type = typename Base::template input_type<Args...>; };
+
+			template<typename... Args>
+			using input_type = typename input_type_impl<std::disjunction_v<xtl::is_complex<std::decay_t<Args>>...>, Args...>::type;
+
+			template<typename InputType, typename NaturalOutputType>
+			using output_type = typename Base::template output_type<InputType, NaturalOutputType>;
 		};
 	}
 }

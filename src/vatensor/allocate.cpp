@@ -84,12 +84,8 @@ std::shared_ptr<VArray> va::copy_as_dtype(const VRead& other, DType dtype) {
 			if constexpr (std::is_same_v<TWeWanted, TWeGot>) {
 				return store::from_store(va::array_case<TWeWanted>(carray));
 			}
-			else if constexpr (!std::is_convertible_v<TWeWanted, TWeGot>) {
+			else if constexpr (!std::is_convertible_v<TWeGot, TWeWanted>) {
 				throw std::runtime_error("Cannot promote in this way.");
-			}
-			else if constexpr (std::disjunction_v<va::promote::is_complex_t<TWeWanted>, va::promote::is_complex_t<TWeGot>>) {
-				// TODO Promotions should obviously be implemented.
-				throw std::runtime_error("Cannot promote to and from complex.");
 			}
 			else {
 				// Cast first to reduce number of combinations down the line.

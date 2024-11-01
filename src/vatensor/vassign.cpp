@@ -66,7 +66,7 @@ void va::assign(VWrite& array, const VRead& value) {
 			else if constexpr (std::is_same_v<VWrite, bool> && std::is_same_v<VRead, bool>) {
 				broadcasting_assign(carray, xt::cast<uint8_t>(cvalue));
 			}
-			else if constexpr (va::promote::is_complex_t<VWrite>{}) {
+			else if constexpr (xtl::is_complex<VWrite>::value) {
 				// xsimd also has no auto conversion into complex types
 				broadcasting_assign(carray, xt::cast<VWrite>(cvalue));
 			}
@@ -93,7 +93,7 @@ void va::assign_nonoverlapping(VWrite& array, const ArrayVariant& value) {
 			else if constexpr (std::is_same_v<VWrite, bool> && std::is_same_v<VRead, bool>) {
 				broadcasting_assign(carray, xt::cast<uint8_t>(cvalue));
 			}
-			else if constexpr (va::promote::is_complex_t<VWrite>{}) {
+			else if constexpr (xtl::is_complex<VWrite>::value) {
 				broadcasting_assign(carray, xt::cast<VWrite>(cvalue));
 			}
 #endif
@@ -334,7 +334,7 @@ void va::set_at_indices(VWrite& varray, VRead& indices, VRead& value) {
 					auto index_view = xt::index_view(array, indices);
 
 #ifdef XTENSOR_USE_XSIMD
-					if constexpr (va::promote::is_complex_t<VTArray>{}) {
+					if constexpr (xtl::is_complex<VTArray>::value) {
 						// See above; xsimd cannot auto-convert to complex types
 						index_view = xt::cast<VTArray>(value);
 					}
@@ -353,7 +353,7 @@ void va::set_at_indices(VWrite& varray, VRead& indices, VRead& value) {
 				auto index_view = xt::index_view(array, xindices);
 
 #ifdef XTENSOR_USE_XSIMD
-				if constexpr (va::promote::is_complex_t<VTArray>{}) {
+				if constexpr (xtl::is_complex<VTArray>::value) {
 					// See above; xsimd cannot auto-convert to complex types
 					index_view = xt::cast<VTArray>(value);
 				}

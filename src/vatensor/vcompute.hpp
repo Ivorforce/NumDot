@@ -136,10 +136,6 @@ namespace va {
             else if constexpr (!std::disjunction_v<std::is_convertible<promote::value_type_v<std::decay_t<Args>>, InputType>...>) {
                 throw std::runtime_error("Cannot promote in this way.");
             }
-            else if constexpr (std::disjunction_v<va::promote::is_complex_t<promote::value_type_v<std::decay_t<Args>>>..., va::promote::is_complex_t<InputType>>) {
-                // TODO Promotions should obviously be implemented.
-                throw std::runtime_error("Cannot promote to and from complex.");
-            }
             else {
                 // Result of visitor invocation
                 const auto result = visitor(promote::promote_value_type_if_needed<InputType>(args)...);
@@ -176,10 +172,6 @@ namespace va {
             }
             else if constexpr (!std::disjunction_v<std::is_convertible<promote::value_type_v<std::decay_t<Args>>, InputType>...>) {
                 throw std::runtime_error("Cannot promote in this way.");
-            }
-            else if constexpr (std::disjunction_v<va::promote::is_complex_t<promote::value_type_v<std::decay_t<Args>>>..., va::promote::is_complex_t<InputType>>) {
-                // TODO Promotions should obviously be implemented.
-                throw std::runtime_error("Cannot promote to and from complex.");
             }
             else {
                 using NaturalOutputType = decltype(visitor(promote::promote_value_type_if_needed<InputType>(args)...));

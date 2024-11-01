@@ -86,7 +86,7 @@ void va::greater(VArrayTarget target, const VArray& a, const VArray& b) {
 #else
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	if (a.dimension() == 0) {
-		va::xoperation_inplace<promote::num_in_nat_out>(
+		va::xoperation_inplace<promote::reject_complex<promote::num_in_nat_out>>(
 			va::XFunction<xt::detail::greater> {},
 			target,
 			a.to_single_value(),
@@ -95,7 +95,7 @@ void va::greater(VArrayTarget target, const VArray& a, const VArray& b) {
 		return;
 	}
 	if (b.dimension() == 0) {
-		va::xoperation_inplace<promote::num_in_nat_out>(
+		va::xoperation_inplace<promote::reject_complex<promote::num_in_nat_out>>(
 			va::XFunction<xt::detail::greater> {},
 			target,
 			a.read,
@@ -105,7 +105,7 @@ void va::greater(VArrayTarget target, const VArray& a, const VArray& b) {
 	}
 #endif
 
-	va::xoperation_inplace<promote::num_in_nat_out>(
+	va::xoperation_inplace<promote::reject_complex<promote::num_in_nat_out>>(
 		va::XFunction<xt::detail::greater> {},
 		target,
 		a.read,
@@ -120,7 +120,7 @@ void va::greater_equal(VArrayTarget target, const VArray& a, const VArray& b) {
 #else
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	if (a.dimension() == 0) {
-		va::xoperation_inplace<promote::num_in_nat_out>(
+		va::xoperation_inplace<promote::reject_complex<promote::num_in_nat_out>>(
 			va::XFunction<xt::detail::greater_equal> {},
 			target,
 			a.to_single_value(),
@@ -129,7 +129,7 @@ void va::greater_equal(VArrayTarget target, const VArray& a, const VArray& b) {
 		return;
 	}
 	if (b.dimension() == 0) {
-		va::xoperation_inplace<promote::num_in_nat_out>(
+		va::xoperation_inplace<promote::reject_complex<promote::num_in_nat_out>>(
 			va::XFunction<xt::detail::greater_equal> {},
 			target,
 			a.read,
@@ -139,7 +139,7 @@ void va::greater_equal(VArrayTarget target, const VArray& a, const VArray& b) {
 	}
 #endif
 
-	va::xoperation_inplace<promote::num_in_nat_out>(
+	va::xoperation_inplace<promote::reject_complex<promote::num_in_nat_out>>(
 		va::XFunction<xt::detail::greater_equal> {},
 		target,
 		a.read,
@@ -154,7 +154,7 @@ void va::less(VArrayTarget target, const VArray& a, const VArray& b) {
 #else
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	if (a.dimension() == 0) {
-		va::xoperation_inplace<promote::num_in_nat_out>(
+		va::xoperation_inplace<promote::reject_complex<promote::num_in_nat_out>>(
 			va::XFunction<xt::detail::less> {},
 			target,
 			a.to_single_value(),
@@ -163,7 +163,7 @@ void va::less(VArrayTarget target, const VArray& a, const VArray& b) {
 		return;
 	}
 	if (b.dimension() == 0) {
-		va::xoperation_inplace<promote::num_in_nat_out>(
+		va::xoperation_inplace<promote::reject_complex<promote::num_in_nat_out>>(
 			va::XFunction<xt::detail::less> {},
 			target,
 			a.read,
@@ -173,7 +173,7 @@ void va::less(VArrayTarget target, const VArray& a, const VArray& b) {
 	}
 #endif
 
-	va::xoperation_inplace<promote::num_in_nat_out>(
+	va::xoperation_inplace<promote::reject_complex<promote::num_in_nat_out>>(
 		va::XFunction<xt::detail::less> {},
 		target,
 		a.read,
@@ -188,7 +188,7 @@ void va::less_equal(VArrayTarget target, const VArray& a, const VArray& b) {
 #else
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	if (a.dimension() == 0) {
-		va::xoperation_inplace<promote::num_in_nat_out>(
+		va::xoperation_inplace<promote::reject_complex<promote::num_in_nat_out>>(
 			va::XFunction<xt::detail::less_equal> {},
 			target,
 			a.to_single_value(),
@@ -197,7 +197,7 @@ void va::less_equal(VArrayTarget target, const VArray& a, const VArray& b) {
 		return;
 	}
 	if (b.dimension() == 0) {
-		va::xoperation_inplace<promote::num_in_nat_out>(
+		va::xoperation_inplace<promote::reject_complex<promote::num_in_nat_out>>(
 			va::XFunction<xt::detail::less_equal> {},
 			target,
 			a.read,
@@ -207,7 +207,7 @@ void va::less_equal(VArrayTarget target, const VArray& a, const VArray& b) {
 	}
 #endif
 
-	va::xoperation_inplace<promote::num_in_nat_out>(
+	va::xoperation_inplace<promote::reject_complex<promote::num_in_nat_out>>(
 		va::XFunction<xt::detail::less_equal> {},
 		target,
 		a.read,

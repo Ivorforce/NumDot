@@ -134,7 +134,7 @@ std::shared_ptr<VArray> va::real(const std::shared_ptr<VArray>& varray) {
 		[&varray](auto& carray) -> std::shared_ptr<VArray> {
 		    using V = typename std::decay_t<decltype(carray)>::value_type;
 
-			if constexpr (va::promote::is_complex_v<V>) {
+			if constexpr (xtl::is_complex<V>::value) {
 				return reinterpret_complex_as_floats(std::shared_ptr(varray->store), carray, 0);
 			}
 			else {
@@ -148,7 +148,7 @@ std::shared_ptr<VArray> va::imag(const std::shared_ptr<VArray>& varray) {
 	return std::visit(
 		[&varray](auto& carray) -> std::shared_ptr<VArray> {
 			using V = typename std::decay_t<decltype(carray)>::value_type;
-			if constexpr (va::promote::is_complex_v<V>) {
+			if constexpr (xtl::is_complex<V>::value) {
 				return reinterpret_complex_as_floats(std::shared_ptr(varray->store), carray, 1);
 			}
 			else {

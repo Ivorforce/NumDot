@@ -164,7 +164,7 @@ void va::remainder(VArrayTarget target, const VArray& a, const VArray& b) {
 #else
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	if (a.dimension() == 0) {
-		va::xoperation_inplace<promote::num_function_result_in_same_out_no_complex<xt::math::remainder_fun>>(
+		va::xoperation_inplace<promote::reject_complex<promote::num_function_result_in_same_out<xt::math::remainder_fun>>>(
 			XFunction<xt::math::remainder_fun> {},
 			target,
 			a.to_single_value(),
@@ -173,7 +173,7 @@ void va::remainder(VArrayTarget target, const VArray& a, const VArray& b) {
 		return;
 	}
 	if (b.dimension() == 0) {
-		va::xoperation_inplace<promote::num_function_result_in_same_out_no_complex<xt::math::remainder_fun>>(
+		va::xoperation_inplace<promote::reject_complex<promote::num_function_result_in_same_out<xt::math::remainder_fun>>>(
 			XFunction<xt::math::remainder_fun> {},
 			target,
 			a.read,
@@ -183,7 +183,7 @@ void va::remainder(VArrayTarget target, const VArray& a, const VArray& b) {
 	}
 #endif
 
-	va::xoperation_inplace<promote::num_function_result_in_same_out_no_complex<xt::math::remainder_fun>>(
+	va::xoperation_inplace<promote::reject_complex<promote::num_function_result_in_same_out<xt::math::remainder_fun>>>(
 		XFunction<xt::math::remainder_fun> {},
 		target,
 		a.read,
@@ -227,7 +227,7 @@ void va::pow(VArrayTarget target, const VArray& a, const VArray& b) {
 }
 
 void minimum(VArrayTarget target, const VArray& a, const VScalar& b) {
-	va::xoperation_inplace<promote::common_in_same_out>(
+	va::xoperation_inplace<promote::reject_complex<promote::common_in_same_out>>(
 		XFunction<xt::math::minimum<void>> {},
 		target,
 		a.read,
@@ -243,7 +243,7 @@ void va::minimum(VArrayTarget target, const VArray& a, const VArray& b) {
 	OPTIMIZE_COMMUTATIVE(::minimum, a, b);
 #endif
 
-	va::xoperation_inplace<promote::common_in_same_out>(
+	va::xoperation_inplace<promote::reject_complex<promote::common_in_same_out>>(
 		XFunction<xt::math::minimum<void>> {},
 		target,
 		a.read,
@@ -253,7 +253,7 @@ void va::minimum(VArrayTarget target, const VArray& a, const VArray& b) {
 }
 
 void maximum(VArrayTarget target, const VArray& a, const VScalar& b) {
-	va::xoperation_inplace<promote::common_in_same_out>(
+	va::xoperation_inplace<promote::reject_complex<promote::common_in_same_out>>(
 		XFunction<xt::math::maximum<void>> {},
 		target,
 		a.read,
@@ -269,7 +269,7 @@ void va::maximum(VArrayTarget target, const VArray& a, const VArray& b) {
 	OPTIMIZE_COMMUTATIVE(::maximum, a, b);
 #endif
 
-	va::xoperation_inplace<promote::common_in_same_out>(
+	va::xoperation_inplace<promote::reject_complex<promote::common_in_same_out>>(
 		XFunction<xt::math::maximum<void>> {},
 		target,
 		a.read,
@@ -284,7 +284,7 @@ void va::clip(VArrayTarget target, const VArray& a, const VArray& lo, const VArr
 #else
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	if (lo.dimension() == 0 && hi.dimension() == 0) {
-		va::xoperation_inplace<promote::common_in_same_out>(
+		va::xoperation_inplace<promote::reject_complex<promote::common_in_same_out>>(
 			XFunction<xt::math::clamp_fun> {},
 			target,
 			a.read,
@@ -295,7 +295,7 @@ void va::clip(VArrayTarget target, const VArray& a, const VArray& lo, const VArr
 	}
 #endif
 
-	va::xoperation_inplace<promote::common_in_same_out>(
+	va::xoperation_inplace<promote::reject_complex<promote::common_in_same_out>>(
 		XFunction<xt::math::clamp_fun> {},
 		target,
 		a.read,
@@ -309,7 +309,7 @@ void va::sign(VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
 #else
-	xoperation_inplace<promote::num_or_error_in_same_out>(
+	xoperation_inplace<promote::reject_complex<promote::common_in_same_out>>(
 		va::XFunction<xt::math::sign_fun> {},
 		target,
 		array.read
@@ -390,7 +390,7 @@ void va::rad2deg(VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
 #else
-	xoperation_inplace<promote::num_function_result_in_same_out_no_complex<xt::math::rad2deg>>(
+	xoperation_inplace<promote::reject_complex<promote::num_function_result_in_same_out<xt::math::rad2deg>>>(
 		va::XFunction<xt::math::rad2deg> {},
 		target,
 		array.read
@@ -402,7 +402,7 @@ void va::deg2rad(VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
 #else
-	xoperation_inplace<promote::num_function_result_in_same_out_no_complex<xt::math::deg2rad>>(
+	xoperation_inplace<promote::reject_complex<promote::num_function_result_in_same_out<xt::math::deg2rad>>>(
 		va::XFunction<xt::math::deg2rad> {},
 		target,
 		array.read

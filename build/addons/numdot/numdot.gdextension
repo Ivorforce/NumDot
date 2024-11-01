@@ -19,3 +19,5 @@ linux.rv64 = "linux/libnumdot.linux.rv64.so"
 
 android.x86_64 = "android/libnumdot.android.x86_64.so"
 android.arm64 = "android/libnumdot.android.arm64.so"
+
+web.wasm32 = "web/libnumdot.web.wasm32.wasm"

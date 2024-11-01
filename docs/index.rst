@@ -7,6 +7,8 @@ Introduction
 
 NumDot provides a multidimensional array object (:ref:`NDArray <class_NDArray>`) and :ref:`many functions <class_nd>` for fast operations on arrays, including mathematical, logical, statistical, and more. It is inspired by the Python tensor math library, `NumPy <https://numpy.org>`__, and thus shares many semantics with it.
 
+View NumDot in action: `NumDot Demos on itch.io <https://ivorius.itch.io/numdot-demos>`__.
+
 Motivation
 ==========
 

@@ -10,12 +10,16 @@ Here you will find the release notes for each version of the library. Each secti
    :local:
    :backlinks: none
 
-Upcoming Changes (main branch)
-------------------------------
+.. Upcoming Changes (main branch)
+.. ------------------------------
+
+Version 0.6 - 2024-10-28
+------------------------
 **Added**
 
 - ``randn`` function (random sampling from a normal distribution)
 - For custom builds, OpenMP support (through the new ``openmp_threshold`` compile option, disabled by default). This requires your compiler to support OpenMP.
+- Add support for web exports (wasm32).
 
 **Changed**
 

@@ -1,8 +1,13 @@
-[gd_scene load_steps=4 format=3 uid="uid://b0s40i0gcfwtk"]
+[gd_scene load_steps=7 format=3 uid="uid://b0s40i0gcfwtk"]
 
 [ext_resource type="Script" path="res://demos/kuramoto_model/kuramoto_model.gd" id="1_rmybu"]
 [ext_resource type="Script" path="res://demos/kuramoto_model/gd_solver.gd" id="2_d1pps"]
 [ext_resource type="Script" path="res://demos/kuramoto_model/nd_solver.gd" id="3_ai2qh"]
+[ext_resource type="Shader" path="res://demos/kuramoto_model/fireflies.gdshader" id="4_3p2g8"]
+[ext_resource type="Texture2D" uid="uid://bt0oq50dfy0yq" path="res://demos/kuramoto_model/firefly.tres" id="5_bkn7j"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_olo0v"]
+shader = ExtResource("4_3p2g8")
 
 [node name="KuramotoModel" type="Node2D" node_paths=PackedStringArray("solver")]
 script = ExtResource("1_rmybu")
@@ -67,7 +72,7 @@ text = "Fireflies: 100
 unique_name_in_owner = true
 layout_mode = 2
 min_value = 10.0
-max_value = 20000.0
+max_value = 30000.0
 step = 100.0
 value = 110.0
 
@@ -88,26 +93,28 @@ value = 1.0
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
-text = "Frequency mean: 0."
+text = "Frequency mean: 2."
 
 [node name="MeanSlider" type="HSlider" parent="SliderOptions"]
 unique_name_in_owner = true
 layout_mode = 2
+min_value = 2.0
 max_value = 6.28
 step = 0.1
+value = 2.0
 
 [node name="StdLabel" type="Label" parent="SliderOptions"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
-text = "Frequency std: 2."
+text = "Frequency std: 0.5"
 
 [node name="StdSlider" type="HSlider" parent="SliderOptions"]
 unique_name_in_owner = true
 layout_mode = 2
 max_value = 5.0
 step = 0.1
-value = 2.0
+value = 0.5
 
 [node name="Options" type="VBoxContainer" parent="."]
 offset_left = 862.0
@@ -135,6 +142,7 @@ popup/item_1/text = "RK4 scheme"
 popup/item_1/id = 1
 
 [node name="SolverOptions" type="VBoxContainer" parent="."]
+visible = false
 custom_minimum_size = Vector2(200, 0)
 offset_left = 928.0
 offset_top = 565.0
@@ -156,15 +164,17 @@ max_value = 200.0
 value = 1.0
 
 [node name="RestartButton" type="Button" parent="."]
-offset_left = 991.0
-offset_top = 495.0
-offset_right = 1104.0
-offset_bottom = 545.0
+offset_left = 1023.0
+offset_top = 582.0
+offset_right = 1136.0
+offset_bottom = 632.0
 theme_override_font_sizes/font_size = 30
 text = "Restart
 "
 
-[node name="Fireflies" type="Node2D" parent="."]
+[node name="Fireflies" type="GPUParticles2D" parent="."]
+process_material = SubResource("ShaderMaterial_olo0v")
+texture = ExtResource("5_bkn7j")
 
 [connection signal="drag_ended" from="SliderOptions/PointSlider" to="." method="_on_point_slider_drag_ended"]
 [connection signal="drag_ended" from="SliderOptions/CouplingSlider" to="." method="_on_coupling_slider_drag_ended"]

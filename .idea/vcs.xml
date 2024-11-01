@@ -7,6 +7,7 @@
     <mapping directory="$PROJECT_DIR$/godot-cpp" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/xsimd" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/xtensor" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/xtensor-signal" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/xtl" vcs="Git" />
   </component>
 </project>

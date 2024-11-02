@@ -34,6 +34,7 @@
 #include "godot_cpp/variant/vector4i.hpp"              // for Vector4i
 #include "ndarray.hpp"                                   // for NDArray
 #include "tensor_fixed_store.hpp"
+#include "packed_array_store.hpp"
 #include "xtensor/xarray.hpp"                          // for xarray_adaptor
 #include "xtensor/xbuffer_adaptor.hpp"                 // for xbuffer_adaptor
 #include "xtensor/xlayout.hpp"                         // for layout_type
@@ -552,75 +553,66 @@ std::shared_ptr<va::VArray> variant_as_array(const Variant& array) {
 			return va::store::from_scalar<double_t>(array);
 		}
 		case Variant::PACKED_BYTE_ARRAY: {
-			const auto packed = PackedByteArray(array);
-			return va::store::from_store(
-				va::store::make_store(
-					adapt_c_array(packed.ptr(), { static_cast<std::size_t>(packed.size()) })
-				)
+			auto packed = PackedByteArray(array);
+			return numdot::varray_from_packed(
+			adapt_c_array(const_cast<uint8_t*>(packed.ptr()), { static_cast<std::size_t>(packed.size()) }),
+				std::move(packed)
 			);
 		}
 		case Variant::PACKED_INT32_ARRAY: {
-			const auto packed = PackedInt32Array(array);
-			return va::store::from_store(
-				va::store::make_store(
-					adapt_c_array(packed.ptr(), { static_cast<std::size_t>(packed.size()) })
-				)
+			auto packed = PackedInt32Array(array);
+			return numdot::varray_from_packed(
+					adapt_c_array(const_cast<int32_t*>(packed.ptr()), { static_cast<std::size_t>(packed.size()) }),
+				std::move(packed)
 			);
 		}
 		case Variant::PACKED_INT64_ARRAY: {
-			const auto packed = PackedInt64Array(array);
-			return va::store::from_store(
-				va::store::make_store(
-					adapt_c_array(packed.ptr(), { static_cast<std::size_t>(packed.size()) })
-				)
+			auto packed = PackedInt64Array(array);
+			return numdot::varray_from_packed(
+			adapt_c_array(const_cast<int64_t*>(packed.ptr()), { static_cast<std::size_t>(packed.size()) }),
+				std::move(packed)
 			);
 		}
 		case Variant::PACKED_FLOAT32_ARRAY: {
-			const auto packed = PackedFloat32Array(array);
-			return va::store::from_store(
-				va::store::make_store(
-					adapt_c_array(packed.ptr(), { static_cast<std::size_t>(packed.size()) })
-				)
+			auto packed = PackedFloat32Array(array);
+			return numdot::varray_from_packed(
+			adapt_c_array(const_cast<float_t*>(packed.ptr()), { static_cast<std::size_t>(packed.size()) }),
+				std::move(packed)
 			);
 		}
 		case Variant::PACKED_FLOAT64_ARRAY: {
-			const auto packed = PackedFloat64Array(array);
-			return va::store::from_store(
-				va::store::make_store(
-					adapt_c_array(packed.ptr(), { static_cast<std::size_t>(packed.size()) })
-				)
+			auto packed = PackedFloat64Array(array);
+			return numdot::varray_from_packed(
+			adapt_c_array(const_cast<double_t*>(packed.ptr()), { static_cast<std::size_t>(packed.size()) }),
+				std::move(packed)
 			);
 		}
 		case Variant::PACKED_VECTOR2_ARRAY: {
-			const auto packed = PackedVector2Array(array);
-			return va::store::from_store(
-				va::store::make_store(
-					adapt_c_array(&packed.ptr()[0].coord[0], { static_cast<std::size_t>(packed.size()), 2 })
-				)
+			auto packed = PackedVector2Array(array);
+			return numdot::varray_from_packed(
+			adapt_c_array(const_cast<real_t*>(&packed.ptr()[0].coord[0]), { static_cast<std::size_t>(packed.size()), 2 }),
+				std::move(packed)
 			);
 		}
 		case Variant::PACKED_VECTOR3_ARRAY: {
-			const auto packed = PackedVector3Array(array);
-			return va::store::from_store(
-				va::store::make_store(
-					adapt_c_array(&packed.ptr()[0].coord[0], { static_cast<std::size_t>(packed.size()), 3 })
-				)
+			auto packed = PackedVector3Array(array);
+			return numdot::varray_from_packed(
+			adapt_c_array(const_cast<real_t*>(&packed.ptr()[0].coord[0]), { static_cast<std::size_t>(packed.size()), 3 }),
+				std::move(packed)
 			);
 		}
 		case Variant::PACKED_VECTOR4_ARRAY: {
-			const auto packed = PackedVector4Array(array);
-			return va::store::from_store(
-				va::store::make_store(
-					adapt_c_array(&packed.ptr()[0].components[0], { static_cast<std::size_t>(packed.size()), 4 })
-				)
+			auto packed = PackedVector4Array(array);
+			return numdot::varray_from_packed(
+			adapt_c_array(const_cast<real_t*>(&packed.ptr()[0].components[0]), { static_cast<std::size_t>(packed.size()), 4 }),
+				std::move(packed)
 			);
 		}
 		case Variant::PACKED_COLOR_ARRAY: {
-			const auto packed = PackedColorArray(array);
-			return va::store::from_store(
-				va::store::make_store(
-					adapt_c_array(&packed.ptr()[0].components[0], { static_cast<std::size_t>(packed.size()), 4 })
-				)
+			auto packed = PackedColorArray(array);
+			return numdot::varray_from_packed(
+			adapt_c_array(const_cast<float_t*>(&packed.ptr()[0].components[0]), { static_cast<std::size_t>(packed.size()), 4 }),
+				std::move(packed)
 			);
 		}
 		case Variant::VECTOR2I: {

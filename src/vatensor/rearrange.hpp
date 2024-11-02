@@ -17,7 +17,7 @@ namespace va {
 				using VTRead = typename std::decay_t<decltype(read)>::value_type;
 
 				return va::from_surrogate(
-					std::shared_ptr(varray.store),
+					varray,
 					visitor(read),
 					const_cast<VTRead*>(read.data())
 				);

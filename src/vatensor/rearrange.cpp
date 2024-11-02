@@ -105,20 +105,21 @@ std::shared_ptr<VArray> va::join_axes_into_last_dimension(const VArray& varray, 
 }
 
 template <typename T>
-std::shared_ptr<VArray> reinterpret_complex_as_floats(std::shared_ptr<VStore>&& store, const T& carray, std::ptrdiff_t offset) {
+std::shared_ptr<VArray> reinterpret_complex_as_floats(const VArray& varray, const T& carray, std::ptrdiff_t offset) {
     using V = typename std::decay_t<decltype(carray)>::value_type;
 
 	auto new_strides = carray.strides();
 	for (auto& stride : new_strides) { stride *= 2; }
 
 	return std::make_shared<VArray>(VArray {
-		std::forward<std::shared_ptr<VStore>>(store),
+		std::shared_ptr(varray.store),
 		make_compute(
 			reinterpret_cast<typename V::value_type*>(const_cast<V*>(carray.data())) + offset,
 			carray.shape(),
 			new_strides,
 			xt::layout_type::dynamic
-		)
+		),
+		varray.data_offset * 2 + offset
 	});
 }
 
@@ -128,7 +129,7 @@ std::shared_ptr<VArray> va::real(const std::shared_ptr<VArray>& varray) {
 		    using V = typename std::decay_t<decltype(carray)>::value_type;
 
 			if constexpr (xtl::is_complex<V>::value) {
-				return reinterpret_complex_as_floats(std::shared_ptr(varray->store), carray, 0);
+				return reinterpret_complex_as_floats(*varray, carray, 0);
 			}
 			else {
 				return varray;
@@ -142,7 +143,7 @@ std::shared_ptr<VArray> va::imag(const std::shared_ptr<VArray>& varray) {
 		[&varray](auto& carray) -> std::shared_ptr<VArray> {
 			using V = typename std::decay_t<decltype(carray)>::value_type;
 			if constexpr (xtl::is_complex<V>::value) {
-				return reinterpret_complex_as_floats(std::shared_ptr(varray->store), carray, 1);
+				return reinterpret_complex_as_floats(*varray, carray, 1);
 			}
 			else {
 				return va::store::full_dummy_like(0, carray);

@@ -1409,6 +1409,8 @@ Errors if size() is not 1.
 
 If 1D, converts this tensor to a PackedByteArray.
 
+If the backing array is PackedByteArray, it will produce an instantaneous copy-on-write copy.
+
 .. rst-class:: classref-item-separator
 
 ----
@@ -1420,6 +1422,8 @@ If 1D, converts this tensor to a PackedByteArray.
 ``PackedColorArray`` **to_packed_color_array**\ (\ ) |const| :ref:`🔗<class_NDArray_method_to_packed_color_array>`
 
 If shape is \[?, 4\], converts this tensor to a PackedColorArray.
+
+If the backing array is PackedColorArray, it will produce an instantaneous copy-on-write copy.
 
 .. rst-class:: classref-item-separator
 
@@ -1433,6 +1437,8 @@ If shape is \[?, 4\], converts this tensor to a PackedColorArray.
 
 If 1D, converts this tensor to a PackedFloat32Array.
 
+If the backing array is PackedFloat32Array, it will produce an instantaneous copy-on-write copy.
+
 .. rst-class:: classref-item-separator
 
 ----
@@ -1444,6 +1450,8 @@ If 1D, converts this tensor to a PackedFloat32Array.
 ``PackedFloat64Array`` **to_packed_float64_array**\ (\ ) |const| :ref:`🔗<class_NDArray_method_to_packed_float64_array>`
 
 If 1D, converts this tensor to a PackedFloat64Array.
+
+If the backing array is PackedFloat64Array, it will produce an instantaneous copy-on-write copy.
 
 .. rst-class:: classref-item-separator
 
@@ -1457,6 +1465,8 @@ If 1D, converts this tensor to a PackedFloat64Array.
 
 If 1D, converts this tensor to a PackedInt32Array.
 
+If the backing array is PackedInt32Array, it will produce an instantaneous copy-on-write copy.
+
 .. rst-class:: classref-item-separator
 
 ----
@@ -1468,6 +1478,8 @@ If 1D, converts this tensor to a PackedInt32Array.
 ``PackedInt64Array`` **to_packed_int64_array**\ (\ ) |const| :ref:`🔗<class_NDArray_method_to_packed_int64_array>`
 
 If 1D, converts this tensor to a PackedInt64Array.
+
+If the backing array is PackedInt64Array, it will produce an instantaneous copy-on-write copy.
 
 .. rst-class:: classref-item-separator
 
@@ -1481,6 +1493,8 @@ If 1D, converts this tensor to a PackedInt64Array.
 
 If shape is \[?, 2\], converts this tensor to a PackedVector2Array.
 
+If the backing array is PackedVector2Array, it will produce an instantaneous copy-on-write copy.
+
 .. rst-class:: classref-item-separator
 
 ----
@@ -1493,6 +1507,8 @@ If shape is \[?, 2\], converts this tensor to a PackedVector2Array.
 
 If shape is \[?, 3\], converts this tensor to a PackedVector3Array.
 
+If the backing array is PackedVector3Array, it will produce an instantaneous copy-on-write copy.
+
 .. rst-class:: classref-item-separator
 
 ----
@@ -1504,6 +1520,8 @@ If shape is \[?, 3\], converts this tensor to a PackedVector3Array.
 ``PackedVector4Array`` **to_packed_vector4_array**\ (\ ) |const| :ref:`🔗<class_NDArray_method_to_packed_vector4_array>`
 
 If shape is \[?, 4\], converts this tensor to a PackedVector4Array.
+
+If the backing array is PackedVector4Array, it will produce an instantaneous copy-on-write copy.
 
 .. rst-class:: classref-item-separator
 

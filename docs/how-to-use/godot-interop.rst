@@ -15,6 +15,8 @@ NumDot can adapt most `Variant <https://docs.godotengine.org/en/stable/classes/c
     packed = a.to_packed_float32_array()
     print(packed)  # [6, 7, 8]
 
+ND-Arrays produced from packed arrays are special, in that they can produce instantaneous copy-on-write copies of the same type. In the above code, the latter assignment to packed happens instantaneously, because ``a`` is backed by a ``PackedFloat32Array``.
+
 In-Place Views
 --------------
 

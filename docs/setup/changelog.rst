@@ -14,10 +14,14 @@ Upcoming Changes (main branch)
 ------------------------------
 **Added**
 
-- Add complex numbers data types (``complex64`` and ``complex128``).
-- Add ``real`` and ``imag`` functions.
-- Add ``any`` layout type, which may bring tiny speed improvements.
-- Add ``fft`` function.
+- Added complex numbers data types (``complex64`` and ``complex128``).
+- Added ``real`` and ``imag`` functions.
+- Added ``any`` layout type, which may bring tiny speed improvements.
+- Added ``fft`` function.
+
+**Changed**
+
+- In-place adaptations of native godot types speed up conversions (to and from NumDot). In particular, in-place adaptations of packed arrays do not need to copy data on read, and will produce instantaneous copy-on-write copies on ``to_packed_xxx_array`` calls for the same type.
 
 **Fixed**
 

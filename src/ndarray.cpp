@@ -12,6 +12,7 @@
 #include <cstddef>                                 // for size_t
 #include <stdexcept>                               // for runtime_error
 #include <variant>                                 // for visit
+#include <gdconvert/packed_array_store.hpp>
 #include <vatensor/allocate.hpp>
 #include <vatensor/rearrange.hpp>
 
@@ -218,7 +219,7 @@ NDArray::Layout NDArray::strides_layout() const {
 }
 
 uint64_t NDArray::strides_offset() const {
-	return static_cast<uint64_t>(array->offset());
+	return static_cast<uint64_t>(array->data_offset);
 }
 
 Variant NDArray::_iter_init(const Array& p_iter) {
@@ -531,6 +532,9 @@ Color NDArray::to_color() const {
 }
 
 PackedFloat32Array NDArray::to_packed_float32_array() const {
+	if (auto* store = dynamic_cast<numdot::VStorePackedFloat32Array*>(&*array->store)) {
+		return store->array;
+	}
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
@@ -545,6 +549,9 @@ PackedFloat32Array NDArray::to_packed_float32_array() const {
 }
 
 PackedFloat64Array NDArray::to_packed_float64_array() const {
+	if (auto* store = dynamic_cast<numdot::VStorePackedFloat64Array*>(&*array->store)) {
+		return store->array;
+	}
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
@@ -559,6 +566,9 @@ PackedFloat64Array NDArray::to_packed_float64_array() const {
 }
 
 PackedByteArray NDArray::to_packed_byte_array() const {
+	if (auto* store = dynamic_cast<numdot::VStorePackedByteArray*>(&*array->store)) {
+		return store->array;
+	}
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
@@ -573,6 +583,9 @@ PackedByteArray NDArray::to_packed_byte_array() const {
 }
 
 PackedInt32Array NDArray::to_packed_int32_array() const {
+	if (auto* store = dynamic_cast<numdot::VStorePackedInt32Array*>(&*array->store)) {
+		return store->array;
+	}
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
@@ -587,6 +600,9 @@ PackedInt32Array NDArray::to_packed_int32_array() const {
 }
 
 PackedInt64Array NDArray::to_packed_int64_array() const {
+	if (auto* store = dynamic_cast<numdot::VStorePackedInt64Array*>(&*array->store)) {
+		return store->array;
+	}
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
@@ -601,6 +617,9 @@ PackedInt64Array NDArray::to_packed_int64_array() const {
 }
 
 PackedVector2Array NDArray::to_packed_vector2_array() const {
+	if (auto* store = dynamic_cast<numdot::VStorePackedVector2Array*>(&*array->store)) {
+		return store->array;
+	}
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
@@ -617,6 +636,9 @@ PackedVector2Array NDArray::to_packed_vector2_array() const {
 }
 
 PackedVector3Array NDArray::to_packed_vector3_array() const {
+	if (auto* store = dynamic_cast<numdot::VStorePackedVector3Array*>(&*array->store)) {
+		return store->array;
+	}
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else
@@ -633,6 +655,9 @@ PackedVector3Array NDArray::to_packed_vector3_array() const {
 }
 
 PackedVector4Array NDArray::to_packed_vector4_array() const {
+	if (auto* store = dynamic_cast<numdot::VStorePackedVector4Array*>(&*array->store)) {
+		return store->array;
+	}
 #ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
 #else

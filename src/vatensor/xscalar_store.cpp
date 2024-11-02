@@ -1,6 +1,6 @@
 #include "xscalar_store.hpp"
 
-void va::store::VScalarStoreNonwrite::prepare_write(VData& data) {
+void va::store::VScalarStoreNonwrite::prepare_write(VData& data, std::ptrdiff_t data_offset) {
 	throw std::runtime_error("attempted to write to read-only storage");
 }
 

@@ -125,7 +125,7 @@ namespace va {
 
     class VStore {
         public:
-        virtual void prepare_write(VData& data) {};
+        virtual void prepare_write(VData& data, std::ptrdiff_t data_offset) {}
 
         virtual ~VStore() = default;
     };
@@ -134,6 +134,8 @@ namespace va {
     public:
         std::shared_ptr<VStore> store;
         VData data;
+        // This is not stored by data (xarray_adaptor.data_offset() is 0, because the pointer is pre-offset).
+        std::ptrdiff_t data_offset;
 
         [[nodiscard]] const shape_type& shape() const { return va::shape(data); }
         [[nodiscard]] const strides_type& strides() const { return va::strides(data); }
@@ -147,7 +149,7 @@ namespace va {
 
         [[nodiscard]] VScalar to_single_value() const { return va::to_single_value(data); }
 
-        void prepare_write() { store->prepare_write(data); }
+        void prepare_write() { store->prepare_write(data, data_offset); }
 
         [[nodiscard]] std::shared_ptr<VArray> sliced(const xt::xstrided_slice_vector& slices) const;
         [[nodiscard]] VData sliced_data(const xt::xstrided_slice_vector& slices) const;
@@ -181,7 +183,7 @@ namespace va {
     }
 
     template<typename CC>
-    static auto slice_compute(CC& compute, const xt::xstrided_slice_vector& slices) {
+    static auto slice_compute(CC& compute, const xt::xstrided_slice_vector& slices, std::ptrdiff_t& new_offset) {
 		using V = typename std::decay_t<decltype(compute)>::value_type;
 
         va::strided_view_args<xt::detail::no_adj_strides_policy> args;
@@ -193,20 +195,22 @@ namespace va {
             slices
         );
 
+        new_offset = static_cast<std::ptrdiff_t>(args.new_offset);
         return make_compute(const_cast<V*>(compute.data()) + args.new_offset, args.new_shape, args.new_strides, args.new_layout);
     }
 
     template<typename S, typename VT = typename S::value_type>
-    static std::shared_ptr<VArray> from_surrogate(std::shared_ptr<VStore>&& owner, const S& surrogate, VT* data) {
+    static std::shared_ptr<VArray> from_surrogate(const VArray& varray, const S& surrogate, VT* data) {
         return std::make_shared<VArray>(
             VArray {
-                std::forward<std::shared_ptr<VStore>>(owner),
+                std::shared_ptr(varray.store),
                 make_compute<VT*>(
                     data + surrogate.data_offset(),
                     surrogate.shape(),
                     surrogate.strides(),
                     surrogate.layout()
-                )
+                ),
+                varray.data_offset + static_cast<std::ptrdiff_t>(surrogate.data_offset())
             }
         );
     }

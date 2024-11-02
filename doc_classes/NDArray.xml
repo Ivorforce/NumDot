@@ -672,54 +672,63 @@
 			<return type="PackedByteArray" />
 			<description>
 				If 1D, converts this tensor to a PackedByteArray.
+				If the backing array is PackedByteArray, it will produce an instantaneous copy-on-write copy.
 			</description>
 		</method>
 		<method name="to_packed_color_array" qualifiers="const">
 			<return type="PackedColorArray" />
 			<description>
 				If shape is [lb]?, 4[rb], converts this tensor to a PackedColorArray.
+				If the backing array is PackedColorArray, it will produce an instantaneous copy-on-write copy.
 			</description>
 		</method>
 		<method name="to_packed_float32_array" qualifiers="const">
 			<return type="PackedFloat32Array" />
 			<description>
 				If 1D, converts this tensor to a PackedFloat32Array.
+				If the backing array is PackedFloat32Array, it will produce an instantaneous copy-on-write copy.
 			</description>
 		</method>
 		<method name="to_packed_float64_array" qualifiers="const">
 			<return type="PackedFloat64Array" />
 			<description>
 				If 1D, converts this tensor to a PackedFloat64Array.
+				If the backing array is PackedFloat64Array, it will produce an instantaneous copy-on-write copy.
 			</description>
 		</method>
 		<method name="to_packed_int32_array" qualifiers="const">
 			<return type="PackedInt32Array" />
 			<description>
 				If 1D, converts this tensor to a PackedInt32Array.
+				If the backing array is PackedInt32Array, it will produce an instantaneous copy-on-write copy.
 			</description>
 		</method>
 		<method name="to_packed_int64_array" qualifiers="const">
 			<return type="PackedInt64Array" />
 			<description>
 				If 1D, converts this tensor to a PackedInt64Array.
+				If the backing array is PackedInt64Array, it will produce an instantaneous copy-on-write copy.
 			</description>
 		</method>
 		<method name="to_packed_vector2_array" qualifiers="const">
 			<return type="PackedVector2Array" />
 			<description>
 				If shape is [lb]?, 2[rb], converts this tensor to a PackedVector2Array.
+				If the backing array is PackedVector2Array, it will produce an instantaneous copy-on-write copy.
 			</description>
 		</method>
 		<method name="to_packed_vector3_array" qualifiers="const">
 			<return type="PackedVector3Array" />
 			<description>
 				If shape is [lb]?, 3[rb], converts this tensor to a PackedVector3Array.
+				If the backing array is PackedVector3Array, it will produce an instantaneous copy-on-write copy.
 			</description>
 		</method>
 		<method name="to_packed_vector4_array" qualifiers="const">
 			<return type="PackedVector4Array" />
 			<description>
 				If shape is [lb]?, 4[rb], converts this tensor to a PackedVector4Array.
+				If the backing array is PackedVector4Array, it will produce an instantaneous copy-on-write copy.
 			</description>
 		</method>
 		<method name="to_vector2" qualifiers="const">

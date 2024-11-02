@@ -16,7 +16,8 @@ std::shared_ptr<va::VArray> va::as_strided(const VArray& array, const shape_type
 						shape,
 						strides,
 						xt::layout_type::dynamic
-					)
+					),
+					array.data_offset
 				}
 			);
 		}, array.data

@@ -45,6 +45,8 @@ namespace va::store {
 
 	template<typename V>
 	static std::shared_ptr<VArray> from_store(array_case<V>&& array) {
+		const auto data_offset = static_cast<std::ptrdiff_t>(array.data_offset());
+
 		auto compute = make_compute<V*>(
 			array.data() + array.data_offset(),  // Offset should be 0, but you know...
 			array.shape(),
@@ -55,7 +57,8 @@ namespace va::store {
 		return std::make_shared<VArray>(
 			VArray {
 				std::shared_ptr<VStore>(std::make_shared<XArrayStore>(XArrayStore { XArrayStoreVariant { std::forward<array_case<V>>(array) } })),
-				compute
+				compute,
+				data_offset
 			}
 		);
 	}

@@ -14,7 +14,7 @@ namespace va::store {
 	public:
 		explicit VScalarStoreNonwrite(VScalar scalar) : VScalarStore(scalar) {}
 
-		void prepare_write(VData& data) override;
+		void prepare_write(VData& data, std::ptrdiff_t data_offset) override;
 	};
 
 	template <typename V>
@@ -29,7 +29,8 @@ namespace va::store {
 				shape_type{},
 				strides_type{},
 				xt::layout_type::any
-			)
+			),
+			0
 		});
 	}
 
@@ -49,7 +50,8 @@ namespace va::store {
 				strides,
 				// Because strides are fake
 				xt::layout_type::dynamic
-			)
+			),
+			0
 		});
 	}
 

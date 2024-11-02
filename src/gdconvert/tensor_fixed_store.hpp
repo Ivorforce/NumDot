@@ -1,5 +1,5 @@
-#ifndef PACKED_ARRAY_STORE_HPP
-#define PACKED_ARRAY_STORE_HPP
+#ifndef TENSOR_FIXED_STORE_HPP
+#define TENSOR_FIXED_STORE_HPP
 
 #include <godot_cpp/core/defs.hpp>
 #include <xtensor/xtensor_forward.hpp>
@@ -38,7 +38,8 @@ namespace numdot {
 		return std::make_shared<va::VArray>(
 			va::VArray {
 				std::shared_ptr<va::VStore>(store),
-				compute
+				compute,
+				static_cast<std::ptrdiff_t>(store->tensor.data_offset())
 			}
 		);
 	}
@@ -52,4 +53,4 @@ namespace numdot {
 	using VStoreColor = XTensorFixedStore<float_t, xt::xshape<4>>;
 }
 
-#endif //PACKED_ARRAY_STORE_HPP
+#endif //TENSOR_FIXED_STORE_HPP

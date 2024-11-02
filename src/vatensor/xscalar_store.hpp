@@ -52,5 +52,7 @@ namespace va::store {
 			)
 		});
 	}
+
+	std::shared_ptr<VArray> from_scalar_variant(VScalar scalar);
 }
 #endif //XSCALAR_STORE_HPP

@@ -211,8 +211,6 @@ namespace va {
         );
     }
 
-    std::shared_ptr<VArray> from_scalar_variant(VScalar scalar);
-
     // For all functions returning an or assigning to an array.
     // The first case will place the array in the optional.
     // The second case will assign to the compute variant.

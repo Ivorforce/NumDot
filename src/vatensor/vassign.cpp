@@ -8,6 +8,7 @@
 #include <xtensor/xindex_view.hpp>
 #include "allocate.hpp"
 #include "vpromote.hpp"
+#include "xscalar_store.hpp"
 
 using namespace va;
 
@@ -153,7 +154,7 @@ void va::assign(VArrayTarget target, VScalar value) {
 				va::assign(*target, value);
 			}
 			else {
-				*target = from_scalar_variant(value);
+				*target = va::store::from_scalar_variant(value);
 			}
 		}, target
 	);

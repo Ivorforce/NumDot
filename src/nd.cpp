@@ -224,7 +224,7 @@ inline Ref<NDArray> reduction(Visitor&& visitor, VisitorNoaxes&& visitor_noaxes,
 			const auto result = std::forward<VisitorNoaxes>(visitor_noaxes)(*variant_as_array(args)...);
 
 			if constexpr (std::is_same_v<std::decay_t<decltype(result)>, va::VScalar>) {
-				return { memnew(NDArray(va::from_scalar_variant(result))) };
+				return { memnew(NDArray(va::store::from_scalar_variant(result))) };
 			}
 			else {
 				return { memnew(NDArray(va::store::from_scalar(result))) };

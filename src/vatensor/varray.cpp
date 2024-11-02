@@ -179,11 +179,3 @@ va::VArray::operator uint16_t() const { return va::scalar_to_type<uint16_t>(to_s
 va::VArray::operator uint8_t() const { return va::scalar_to_type<uint8_t>(to_single_value()); }
 va::VArray::operator double() const { return va::scalar_to_type<double>(to_single_value()); }
 va::VArray::operator float() const { return va::scalar_to_type<float>(to_single_value()); }
-
-std::shared_ptr<va::VArray> va::from_scalar_variant(VScalar scalar) {
-    return std::visit(
-        [](auto cscalar) {
-            return va::store::from_scalar(cscalar);
-        }, scalar
-    );
-}

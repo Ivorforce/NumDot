@@ -33,6 +33,7 @@
 #include "godot_cpp/variant/vector4.hpp"               // for Vector4
 #include "godot_cpp/variant/vector4i.hpp"              // for Vector4i
 #include "ndarray.hpp"                                   // for NDArray
+#include "tensor_fixed_store.hpp"
 #include "xtensor/xarray.hpp"                          // for xarray_adaptor
 #include "xtensor/xbuffer_adaptor.hpp"                 // for xbuffer_adaptor
 #include "xtensor/xlayout.hpp"                         // for layout_type
@@ -624,58 +625,44 @@ std::shared_ptr<va::VArray> variant_as_array(const Variant& array) {
 		}
 		case Variant::VECTOR2I: {
 			auto vector = Vector2i(array);
-			return va::store::from_store(
-				va::store::make_store(
-					{ vector.x, vector.y }
-				)
+			return numdot::varray_from_tensor<numdot::VStoreVector2i>(
+				{ vector.x, vector.y }
 			);
 		}
 		case Variant::VECTOR3I: {
 			auto vector = Vector3i(array);
-			return va::store::from_store(
-				va::store::make_store(
-					{ vector.x, vector.y, vector.z }
-				)
+			return numdot::varray_from_tensor<numdot::VStoreVector3i>(
+				{ vector.x, vector.y, vector.z }
 			);
 		}
 		case Variant::VECTOR4I: {
 			auto vector = Vector4i(array);
-			return va::store::from_store(
-				va::store::make_store(
-					{ vector.x, vector.y, vector.z, vector.w }
-				)
+			return numdot::varray_from_tensor<numdot::VStoreVector4i>(
+				{ vector.x, vector.y, vector.z, vector.w }
 			);
 		}
 		case Variant::VECTOR2: {
 			auto vector = Vector2(array);
-			return va::store::from_store(
-				va::store::make_store(
-					{ vector.x, vector.y }
-				)
+			return numdot::varray_from_tensor<numdot::VStoreVector2>(
+				{ vector.x, vector.y }
 			);
 		}
 		case Variant::VECTOR3: {
 			auto vector = Vector3(array);
-			return va::store::from_store(
-				va::store::make_store(
-					{ vector.x, vector.y, vector.z }
-				)
+			return numdot::varray_from_tensor<numdot::VStoreVector3>(
+				{ vector.x, vector.y, vector.z }
 			);
 		}
 		case Variant::VECTOR4: {
 			auto vector = Vector4(array);
-			return va::store::from_store(
-				va::store::make_store(
-					{ vector.x, vector.y, vector.z, vector.w }
-				)
+			return numdot::varray_from_tensor<numdot::VStoreVector4>(
+				{ vector.x, vector.y, vector.z, vector.w }
 			);
 		}
 		case Variant::COLOR: {
 			auto vector = Color(array);
-			return va::store::from_store(
-				va::store::make_store(
-					{ vector.r, vector.g, vector.b, vector.a }
-				)
+			return numdot::varray_from_tensor<numdot::VStoreColor>(
+				{ vector.r, vector.g, vector.b, vector.a }
 			);
 		}
 		default:

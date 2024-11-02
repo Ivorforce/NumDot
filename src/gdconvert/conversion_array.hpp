@@ -38,7 +38,7 @@ void fill_c_array_flat(T target, const Compute& carray) {
 }
 
 template<typename T>
-void fill_c_array_flat(T* target, const va::VRead& array) {
+void fill_c_array_flat(T* target, const va::VData& array) {
 	std::visit(
 		[target](auto& carray) {
             fill_c_array_flat(target, carray);

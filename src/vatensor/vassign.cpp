@@ -2,8 +2,8 @@
 
 #include <type_traits>                                  // for decay_t
 #include <variant>                                      // for visit
-#include "varray.hpp"                            // for VWrite, VScalar
-#include "xarray_store.hpp"                            // for VWrite, VScalar
+#include "varray.hpp"                            // for VData, VScalar
+#include "xarray_store.hpp"
 #include <xtensor/xmasked_view.hpp>
 #include <xtensor/xindex_view.hpp>
 #include "allocate.hpp"
@@ -21,7 +21,7 @@ static void mod_index(axes_type& index, const shape_type& shape) {
 	}
 }
 
-void va::set_single_value(VWrite& array, axes_type& index, VScalar value) {
+void va::set_single_value(VData& array, axes_type& index, VScalar value) {
 	std::visit(
 		[&index](auto& carray, auto value) -> void {
 			if constexpr (!std::is_convertible_v<decltype(value), typename std::decay_t<decltype(carray)>::value_type>) {
@@ -35,7 +35,7 @@ void va::set_single_value(VWrite& array, axes_type& index, VScalar value) {
 	);
 }
 
-VScalar va::get_single_value(VRead& array, axes_type& index) {
+VScalar va::get_single_value(const VData& array, axes_type& index) {
 	return std::visit(
 		[&index](auto& carray) -> VScalar {
 			mod_index(index, carray.shape());
@@ -44,7 +44,7 @@ VScalar va::get_single_value(VRead& array, axes_type& index) {
 	);
 }
 
-void va::assign(VWrite& array, const VRead& value) {
+void va::assign(VData& array, const VData& value) {
 	if (va::dimension(value) == 0) {
 		// Optimization for 0D tensors
 		va::assign(array, va::to_single_value(value));
@@ -79,7 +79,7 @@ void va::assign(VWrite& array, const VRead& value) {
 	);
 }
 
-void va::assign_nonoverlapping(VWrite& array, const ArrayVariant& value) {
+void va::assign_nonoverlapping(VData& array, const ArrayVariant& value) {
 	std::visit(
 		[](auto& carray, const auto& cvalue) {
 			using VWrite = typename std::decay_t<decltype(carray)>::value_type;
@@ -105,7 +105,7 @@ void va::assign_nonoverlapping(VWrite& array, const ArrayVariant& value) {
 	);
 }
 
-void va::assign(VWrite& array, VScalar value) {
+void va::assign(VData& array, VScalar value) {
 	std::visit(
 		[](auto& carray, const auto cvalue) {
 			using T = std::decay_t<decltype(carray)>;
@@ -133,10 +133,10 @@ void va::assign(VWrite& array, VScalar value) {
 	);
 }
 
-void va::assign(VArrayTarget target, const VRead& value) {
+void va::assign(VArrayTarget target, const VData& value) {
 	std::visit(
 		[&value](auto target) {
-			if constexpr (std::is_same_v<decltype(target), VWrite*>) {
+			if constexpr (std::is_same_v<decltype(target), VData*>) {
 				va::assign(*target, value);
 			}
 			else {
@@ -149,7 +149,7 @@ void va::assign(VArrayTarget target, const VRead& value) {
 void va::assign(VArrayTarget target, VScalar value) {
 	std::visit(
 		[value](auto target) {
-			if constexpr (std::is_same_v<decltype(target), VWrite*>) {
+			if constexpr (std::is_same_v<decltype(target), VData*>) {
 				va::assign(*target, value);
 			}
 			else {
@@ -159,7 +159,7 @@ void va::assign(VArrayTarget target, VScalar value) {
 	);
 }
 
-std::shared_ptr<VArray> va::get_at_mask(const VRead& varray, const VRead& mask) {
+std::shared_ptr<VArray> va::get_at_mask(const VData& varray, const VData& mask) {
 #ifdef NUMDOT_DISABLE_INDEX_MASKS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_INDEX_MASKS to enable it.");
 #else
@@ -192,7 +192,7 @@ std::shared_ptr<VArray> va::get_at_mask(const VRead& varray, const VRead& mask) 
 #endif
 }
 
-void va::set_at_mask(VWrite& varray, VRead& mask, VRead& value) {
+void va::set_at_mask(VData& varray, VData& mask, VData& value) {
 #ifdef NUMDOT_DISABLE_INDEX_MASKS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_INDEX_MASKS to enable it.");
 #else
@@ -240,7 +240,7 @@ void va::set_at_mask(VWrite& varray, VRead& mask, VRead& value) {
 #endif
 }
 
-void va::set_at_mask(VWrite& varray, VRead& mask, VScalar value) {
+void va::set_at_mask(VData& varray, VData& mask, VScalar value) {
 	return std::visit(
 		// Mask can't be const because of masked_view iterator.
 		[](auto& array, auto& mask, const auto value) {
@@ -282,7 +282,7 @@ xt::svector<xt::svector<size_type>> array_to_indices(const A& indices) {
 	return xindices;
 }
 
-std::shared_ptr<VArray> va::get_at_indices(const VRead& varray, const VRead& indices) {
+std::shared_ptr<VArray> va::get_at_indices(const VData& varray, const VData& indices) {
 #ifdef NUMDOT_DISABLE_INDEX_LISTS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_INDEX_LISTS to enable it.");
 #else
@@ -311,7 +311,7 @@ std::shared_ptr<VArray> va::get_at_indices(const VRead& varray, const VRead& ind
 #endif
 }
 
-void va::set_at_indices(VWrite& varray, VRead& indices, VRead& value) {
+void va::set_at_indices(VData& varray, VData& indices, VData& value) {
 #ifdef NUMDOT_DISABLE_INDEX_LISTS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_INDEX_LISTS to enable it.");
 #else

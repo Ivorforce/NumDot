@@ -17,7 +17,7 @@ void va::ceil(const VArrayTarget target, const VArray& array) {
 	xoperation_inplace<promote::reject_complex<promote::num_function_result_in_same_out<xt::math::ceil_fun>>>(
 		va::XFunction<xt::math::ceil_fun> {},
 		target,
-		array.read
+		array.data
 	);
 #endif
 }
@@ -29,7 +29,7 @@ void va::floor(VArrayTarget target, const VArray& array) {
 	xoperation_inplace<promote::reject_complex<promote::num_function_result_in_same_out<xt::math::floor_fun>>>(
 		va::XFunction<xt::math::floor_fun> {},
 		target,
-		array.read
+		array.data
 	);
 #endif
 }
@@ -41,7 +41,7 @@ void va::trunc(VArrayTarget target, const VArray& array) {
 	xoperation_inplace<promote::reject_complex<promote::num_function_result_in_same_out<xt::math::trunc_fun>>>(
 		va::XFunction<xt::math::trunc_fun> {},
 		target,
-		array.read
+		array.data
 	);
 #endif
 }
@@ -53,7 +53,7 @@ void va::round(VArrayTarget target, const VArray& array) {
 	xoperation_inplace<promote::reject_complex<promote::num_function_result_in_same_out<xt::math::round_fun>>>(
 		va::XFunction<xt::math::round_fun> {},
 		target,
-		array.read
+		array.data
 	);
 #endif
 }
@@ -65,7 +65,7 @@ void va::nearbyint(VArrayTarget target, const VArray& array) {
 	xoperation_inplace<promote::reject_complex<promote::num_function_result_in_same_out<xt::math::nearbyint_fun>>>(
 		va::XFunction<xt::math::nearbyint_fun> {},
 		target,
-		array.read
+		array.data
 	);
 #endif
 }

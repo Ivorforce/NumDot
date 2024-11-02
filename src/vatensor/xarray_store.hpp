@@ -30,8 +30,6 @@ namespace va::store {
 		public:
 			XArrayStoreVariant array;
 			explicit XArrayStore(XArrayStoreVariant&& array) : array(std::forward<XArrayStoreVariant>(array)) {}
-
-			VWrite make_write(const VRead& read) override;
 	};
 
 	// For deducted V, from xexpressions
@@ -47,7 +45,7 @@ namespace va::store {
 
 	template<typename V>
 	static std::shared_ptr<VArray> from_store(array_case<V>&& array) {
-		auto compute = make_compute<const V*>(
+		auto compute = make_compute<V*>(
 			array.data() + array.data_offset(),  // Offset should be 0, but you know...
 			array.shape(),
 			array.strides(),

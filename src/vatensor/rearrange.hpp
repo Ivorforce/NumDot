@@ -13,13 +13,15 @@ namespace va {
 	template<typename Visitor>
 	static std::shared_ptr<VArray> map(const Visitor& visitor, const VArray& varray) {
 		return std::visit(
-			[&varray, &visitor](auto& read) -> std::shared_ptr<VArray> {
+			[&varray, &visitor](const auto& read) -> std::shared_ptr<VArray> {
+				using VTRead = typename std::decay_t<decltype(read)>::value_type;
+
 				return va::from_surrogate(
 					std::shared_ptr(varray.store),
 					visitor(read),
-					read.data()
+					const_cast<VTRead*>(read.data())
 				);
-			}, varray.read
+			}, varray.data
 		);
 	}
 

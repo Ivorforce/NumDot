@@ -18,7 +18,7 @@ void equal_to(VArrayTarget target, const VArray& a, const VScalar& b) {
 	va::xoperation_inplace<promote::common_in_nat_out>(
 		va::XFunction<xt::detail::equal_to> {},
 		target,
-		a.read,
+		a.data,
 		b
 	);
 }
@@ -41,8 +41,8 @@ void va::equal_to(VArrayTarget target, const VArray& a, const VArray& b) {
 	va::xoperation_inplace<promote::common_in_nat_out>(
 		va::XFunction<xt::detail::equal_to> {},
 		target,
-		a.read,
-		b.read
+		a.data,
+		b.data
 	);
 #endif
 }
@@ -53,7 +53,7 @@ void not_equal_to(VArrayTarget target, const VArray& a, const VScalar& b) {
 	va::xoperation_inplace<promote::common_in_nat_out>(
 		va::XFunction<xt::detail::not_equal_to> {},
 		target,
-		a.read,
+		a.data,
 		b
 	);
 }
@@ -74,8 +74,8 @@ void va::not_equal_to(VArrayTarget target, const VArray& a, const VArray& b) {
 	va::xoperation_inplace<promote::common_in_nat_out>(
 		va::XFunction<xt::detail::not_equal_to> {},
 		target,
-		a.read,
-		b.read
+		a.data,
+		b.data
 	);
 #endif
 }
@@ -90,7 +90,7 @@ void va::greater(VArrayTarget target, const VArray& a, const VArray& b) {
 			va::XFunction<xt::detail::greater> {},
 			target,
 			a.to_single_value(),
-			b.read
+			b.data
 		);
 		return;
 	}
@@ -98,7 +98,7 @@ void va::greater(VArrayTarget target, const VArray& a, const VArray& b) {
 		va::xoperation_inplace<promote::reject_complex<promote::num_in_nat_out>>(
 			va::XFunction<xt::detail::greater> {},
 			target,
-			a.read,
+			a.data,
 			b.to_single_value()
 		);
 		return;
@@ -108,8 +108,8 @@ void va::greater(VArrayTarget target, const VArray& a, const VArray& b) {
 	va::xoperation_inplace<promote::reject_complex<promote::num_in_nat_out>>(
 		va::XFunction<xt::detail::greater> {},
 		target,
-		a.read,
-		b.read
+		a.data,
+		b.data
 	);
 #endif
 }
@@ -124,7 +124,7 @@ void va::greater_equal(VArrayTarget target, const VArray& a, const VArray& b) {
 			va::XFunction<xt::detail::greater_equal> {},
 			target,
 			a.to_single_value(),
-			b.read
+			b.data
 		);
 		return;
 	}
@@ -132,7 +132,7 @@ void va::greater_equal(VArrayTarget target, const VArray& a, const VArray& b) {
 		va::xoperation_inplace<promote::reject_complex<promote::num_in_nat_out>>(
 			va::XFunction<xt::detail::greater_equal> {},
 			target,
-			a.read,
+			a.data,
 			b.to_single_value()
 		);
 		return;
@@ -142,8 +142,8 @@ void va::greater_equal(VArrayTarget target, const VArray& a, const VArray& b) {
 	va::xoperation_inplace<promote::reject_complex<promote::num_in_nat_out>>(
 		va::XFunction<xt::detail::greater_equal> {},
 		target,
-		a.read,
-		b.read
+		a.data,
+		b.data
 	);
 #endif
 }
@@ -158,7 +158,7 @@ void va::less(VArrayTarget target, const VArray& a, const VArray& b) {
 			va::XFunction<xt::detail::less> {},
 			target,
 			a.to_single_value(),
-			b.read
+			b.data
 		);
 		return;
 	}
@@ -166,7 +166,7 @@ void va::less(VArrayTarget target, const VArray& a, const VArray& b) {
 		va::xoperation_inplace<promote::reject_complex<promote::num_in_nat_out>>(
 			va::XFunction<xt::detail::less> {},
 			target,
-			a.read,
+			a.data,
 			b.to_single_value()
 		);
 		return;
@@ -176,8 +176,8 @@ void va::less(VArrayTarget target, const VArray& a, const VArray& b) {
 	va::xoperation_inplace<promote::reject_complex<promote::num_in_nat_out>>(
 		va::XFunction<xt::detail::less> {},
 		target,
-		a.read,
-		b.read
+		a.data,
+		b.data
 	);
 #endif
 }
@@ -192,7 +192,7 @@ void va::less_equal(VArrayTarget target, const VArray& a, const VArray& b) {
 			va::XFunction<xt::detail::less_equal> {},
 			target,
 			a.to_single_value(),
-			b.read
+			b.data
 		);
 		return;
 	}
@@ -200,7 +200,7 @@ void va::less_equal(VArrayTarget target, const VArray& a, const VArray& b) {
 		va::xoperation_inplace<promote::reject_complex<promote::num_in_nat_out>>(
 			va::XFunction<xt::detail::less_equal> {},
 			target,
-			a.read,
+			a.data,
 			b.to_single_value()
 		);
 		return;
@@ -210,8 +210,8 @@ void va::less_equal(VArrayTarget target, const VArray& a, const VArray& b) {
 	va::xoperation_inplace<promote::reject_complex<promote::num_in_nat_out>>(
 		va::XFunction<xt::detail::less_equal> {},
 		target,
-		a.read,
-		b.read
+		a.data,
+		b.data
 	);
 #endif
 }

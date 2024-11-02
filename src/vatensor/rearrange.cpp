@@ -114,7 +114,7 @@ std::shared_ptr<VArray> reinterpret_complex_as_floats(std::shared_ptr<VStore>&& 
 	return std::make_shared<VArray>(VArray {
 		std::forward<std::shared_ptr<VStore>>(store),
 		make_compute(
-			reinterpret_cast<const typename V::value_type*>(carray.data()) + offset,
+			reinterpret_cast<typename V::value_type*>(const_cast<V*>(carray.data())) + offset,
 			carray.shape(),
 			new_strides,
 			xt::layout_type::dynamic
@@ -133,7 +133,7 @@ std::shared_ptr<VArray> va::real(const std::shared_ptr<VArray>& varray) {
 			else {
 				return varray;
 			}
-		}, varray->read
+		}, varray->data
 	);
 }
 
@@ -147,6 +147,6 @@ std::shared_ptr<VArray> va::imag(const std::shared_ptr<VArray>& varray) {
 			else {
 				return va::store::full_dummy_like(0, carray);
 			}
-		}, varray->read
+		}, varray->data
 	);
 }

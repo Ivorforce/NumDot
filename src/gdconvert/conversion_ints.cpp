@@ -47,7 +47,7 @@ C variant_as_int_strict(const Variant& variant) {
 							default:
 								throw std::runtime_error("array must be zero-dimensional");
 						}
-					}, ndarray->array->read
+					}, ndarray->array->data
 				);
 			};
 		}
@@ -86,7 +86,7 @@ T variant_as_ints_(const Variant& variant) {
 									throw std::runtime_error("array must be zero-dimensional or one-dimensional");
 							}
 						}
-					}, ndarray->array->read
+					}, ndarray->array->data
 				);
 			}
 			break;

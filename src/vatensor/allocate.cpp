@@ -62,7 +62,7 @@ std::shared_ptr<VArray> va::eye(DType dtype, const shape_type& shape, int k) {
 #endif
 }
 
-std::shared_ptr<VArray> va::copy(const VRead& read) {
+std::shared_ptr<VArray> va::copy(const VData& read) {
 	return std::visit(
 		[](auto& carray) {
 			return store::from_store(store::make_store(carray));
@@ -70,7 +70,7 @@ std::shared_ptr<VArray> va::copy(const VRead& read) {
 	);
 }
 
-std::shared_ptr<VArray> va::copy_as_dtype(const VRead& other, DType dtype) {
+std::shared_ptr<VArray> va::copy_as_dtype(const VData& other, DType dtype) {
 #ifdef NUMDOT_DISABLE_ALLOCATION_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_ALLOCATION_FUNCTIONS to enable it.");
 #else
@@ -145,10 +145,10 @@ std::shared_ptr<VArray> va::tile(const VArray& array, const shape_type& reps, bo
 
 		auto result = va::empty(array.dtype(), result_final_shape);
 		auto result_broadcast = va::reshape(*result, result_broadcast_shape);
-		const auto array_broadcast = array.sliced_read(array_slices);
+		const auto array_broadcast = array.sliced_data(array_slices);
 
 		result_broadcast->prepare_write();
-		va::assign(result_broadcast->write.value(), array_broadcast);
+		va::assign(result_broadcast->data, array_broadcast);
 
 		return result;
 }

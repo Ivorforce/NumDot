@@ -12,14 +12,14 @@ using namespace va;
 
 void assign_bool(VArrayTarget target, const VArray& a) {
 	if (a.dtype() == Bool) {
-		va::assign(target, a.read);
+		va::assign(target, a.data);
 		return;
 	}
 
 	va::xoperation_inplace<promote::x_in_nat_out<bool>>(
 		XFunction<typename xt::detail::cast<bool>::functor> {},
 		target,
-		a.read
+		a.data
 	);
 }
 
@@ -46,8 +46,8 @@ void va::logical_and(VArrayTarget target, const VArray& a, const VArray& b) {
 	va::xoperation_inplace<promote::reject_complex<promote::x_in_nat_out<bool>>>(
 		XFunction<xt::detail::logical_and> {},
 		target,
-		a.read,
-		b.read
+		a.data,
+		b.data
 	);
 #endif
 }
@@ -75,8 +75,8 @@ void va::logical_or(VArrayTarget target, const VArray& a, const VArray& b) {
 	va::xoperation_inplace<promote::reject_complex<promote::x_in_nat_out<bool>>>(
 		XFunction<xt::detail::logical_or> {},
 		target,
-		a.read,
-		b.read
+		a.data,
+		b.data
 	);
 #endif
 }
@@ -104,8 +104,8 @@ void va::logical_xor(VArrayTarget target, const VArray& a, const VArray& b) {
 	va::xoperation_inplace<promote::reject_complex<promote::x_in_nat_out<bool>>>(
 		XFunction<xt::detail::not_equal_to> {},
 		target,
-		a.read,
-		b.read
+		a.data,
+		b.data
 	);
 #endif
 }
@@ -117,7 +117,7 @@ void va::logical_not(VArrayTarget target, const VArray& a) {
 	va::xoperation_inplace<promote::reject_complex<promote::x_in_nat_out<bool>>>(
 		XFunction<xt::detail::logical_not> {},
 		target,
-		a.read
+		a.data
 	);
 #endif
 }

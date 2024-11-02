@@ -412,7 +412,7 @@ Ref<NDArray> full(const va::shape_type& shape, nd::DType dtype, const Variant& f
 		default: {
 			std::shared_ptr<va::VArray> result = va::empty(dtype, shape);
 			result->prepare_write();
-			va::assign(result->write.value(), variant_as_array(fill_value)->read);
+			va::assign(result->data, variant_as_array(fill_value)->data);
 			return { memnew(NDArray(result)) };
 		}
 	}
@@ -630,8 +630,8 @@ Ref<NDArray> concatenate_(nd::DType dtype, const std::vector<std::shared_ptr<va:
 		const auto size_ = array->shape()[axis_];
 
 		slice.back() = xt::xrange(current_idx, current_idx + size_);
-		auto write = result->sliced_write(slice);
-		va::assign(write, array->read);
+		auto write = result->sliced_data(slice);
+		va::assign(write, array->data);
 
 		current_idx += size_;
 	}

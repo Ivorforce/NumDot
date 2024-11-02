@@ -7,8 +7,8 @@
 #include <utility>                      // for forward
 #include <variant>                      // for visit, variant
 #include <vector>                       // for vector
-#include "varray.hpp"                     // for VArrayTarget, VScalar, VWrite
-#include "xarray_store.hpp"                     // for VArrayTarget, VScalar, VWrite
+#include "varray.hpp"                     // for VArrayTarget, VScalar, VData
+#include "xarray_store.hpp"                     // for VArrayTarget, VScalar, VData
 #include "vassign.hpp"                    // for assign_nonoverlapping, broadc...
 #include "vpromote.hpp"                   // for promote_value_type_if_needed
 #include "xtensor/xarray.hpp"           // for xarray_container
@@ -68,7 +68,7 @@ namespace va {
                 using PtrType = std::decay_t<decltype(target)>;
 
 #ifndef NUMDOT_COPY_FOR_ALL_INPLACE_OPERATIONS
-                if constexpr (std::is_same_v<PtrType, VWrite*>) {
+                if constexpr (std::is_same_v<PtrType, VData*>) {
                     // Assign to compute case, broadcasting and casting if necessary.
                     if (std::visit(
                         [&result](auto& ctarget) {

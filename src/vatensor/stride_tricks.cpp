@@ -11,16 +11,15 @@ std::shared_ptr<va::VArray> va::as_strided(const VArray& array, const shape_type
 			return std::make_shared<VArray>(
 				VArray {
 					array.store,
-					make_compute<const VTRead*>(
-						read.data(),
+					make_compute<VTRead*>(
+						const_cast<VTRead*>(read.data()),
 						shape,
 						strides,
 						xt::layout_type::dynamic
-					),
-					{}
+					)
 				}
 			);
-		}, array.read
+		}, array.data
 	);
 }
 

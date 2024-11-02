@@ -96,7 +96,7 @@ namespace va {
         shape_type
     >;
 
-    using VWrite = std::variant<
+    using VData = std::variant<
         compute_case<bool*>,
         compute_case<float_t*>,
         compute_case<double_t*>,
@@ -112,36 +112,20 @@ namespace va {
         compute_case<uint64_t*>
     >;
 
-    using VRead = std::variant<
-        compute_case<const bool*>,
-        compute_case<const float_t*>,
-        compute_case<const double_t*>,
-        compute_case<const std::complex<float_t>*>,
-        compute_case<const std::complex<double_t>*>,
-        compute_case<const int8_t*>,
-        compute_case<const int16_t*>,
-        compute_case<const int32_t*>,
-        compute_case<const int64_t*>,
-        compute_case<const uint8_t*>,
-        compute_case<const uint16_t*>,
-        compute_case<const uint32_t*>,
-        compute_case<const uint64_t*>
-    >;
+    [[nodiscard]] const shape_type& shape(const VData& read);
+    [[nodiscard]] const strides_type& strides(const VData& read);
+    [[nodiscard]] size_type offset(const VData& read);
+    [[nodiscard]] xt::layout_type layout(const VData& read);
+    [[nodiscard]] DType dtype(const VData& read);
+    [[nodiscard]] std::size_t size(const VData& read);
+    [[nodiscard]] std::size_t dimension(const VData& read);
+    [[nodiscard]] std::size_t size_of_array_in_bytes(const VData& read);
 
-    [[nodiscard]] const shape_type& shape(const VRead& read);
-    [[nodiscard]] const strides_type& strides(const VRead& read);
-    [[nodiscard]] size_type offset(const VRead& read);
-    [[nodiscard]] xt::layout_type layout(const VRead& read);
-    [[nodiscard]] DType dtype(const VRead& read);
-    [[nodiscard]] std::size_t size(const VRead& read);
-    [[nodiscard]] std::size_t dimension(const VRead& read);
-    [[nodiscard]] std::size_t size_of_array_in_bytes(const VRead& read);
-
-    [[nodiscard]] VScalar to_single_value(const VRead& read);
+    [[nodiscard]] VScalar to_single_value(const VData& read);
 
     class VStore {
         public:
-        virtual VWrite make_write(const VRead& read) = 0;
+        virtual void prepare_write(VData& data) {};
 
         virtual ~VStore() = default;
     };
@@ -149,26 +133,24 @@ namespace va {
     class VArray {
     public:
         std::shared_ptr<VStore> store;
-        VRead read;
-        std::optional<VWrite> write;
+        VData data;
 
-        [[nodiscard]] const shape_type& shape() const { return va::shape(read); }
-        [[nodiscard]] const strides_type& strides() const { return va::strides(read); }
-        [[nodiscard]] size_type offset() const { return va::offset(read); }
-        [[nodiscard]] xt::layout_type layout() const { return va::layout(read); }
+        [[nodiscard]] const shape_type& shape() const { return va::shape(data); }
+        [[nodiscard]] const strides_type& strides() const { return va::strides(data); }
+        [[nodiscard]] size_type offset() const { return va::offset(data); }
+        [[nodiscard]] xt::layout_type layout() const { return va::layout(data); }
 
-        [[nodiscard]] DType dtype() const { return va::dtype(read); }
-        [[nodiscard]] std::size_t size() const { return va::size(read); }
-        [[nodiscard]] std::size_t dimension() const { return va::dimension(read); }
-        [[nodiscard]] std::size_t size_of_array_in_bytes() const { return va::size_of_array_in_bytes(read); }
+        [[nodiscard]] DType dtype() const { return va::dtype(data); }
+        [[nodiscard]] std::size_t size() const { return va::size(data); }
+        [[nodiscard]] std::size_t dimension() const { return va::dimension(data); }
+        [[nodiscard]] std::size_t size_of_array_in_bytes() const { return va::size_of_array_in_bytes(data); }
 
-        [[nodiscard]] VScalar to_single_value() const { return va::to_single_value(read); }
+        [[nodiscard]] VScalar to_single_value() const { return va::to_single_value(data); }
 
-        void prepare_write();
+        void prepare_write() { store->prepare_write(data); }
 
         [[nodiscard]] std::shared_ptr<VArray> sliced(const xt::xstrided_slice_vector& slices) const;
-        [[nodiscard]] VRead sliced_read(const xt::xstrided_slice_vector& slices) const;
-        [[nodiscard]] VWrite sliced_write(const xt::xstrided_slice_vector& slices);
+        [[nodiscard]] VData sliced_data(const xt::xstrided_slice_vector& slices) const;
 
         explicit operator bool() const;
         explicit operator int64_t() const;
@@ -200,6 +182,8 @@ namespace va {
 
     template<typename CC>
     static auto slice_compute(CC& compute, const xt::xstrided_slice_vector& slices) {
+		using V = typename std::decay_t<decltype(compute)>::value_type;
+
         va::strided_view_args<xt::detail::no_adj_strides_policy> args;
         args.fill_args(
             compute.shape(),
@@ -209,15 +193,15 @@ namespace va {
             slices
         );
 
-        return make_compute(compute.data() + args.new_offset, args.new_shape, args.new_strides, args.new_layout);
+        return make_compute(const_cast<V*>(compute.data()) + args.new_offset, args.new_shape, args.new_strides, args.new_layout);
     }
 
     template<typename S, typename VT = typename S::value_type>
-    static std::shared_ptr<VArray> from_surrogate(std::shared_ptr<VStore>&& owner, const S& surrogate, const VT* data) {
+    static std::shared_ptr<VArray> from_surrogate(std::shared_ptr<VStore>&& owner, const S& surrogate, VT* data) {
         return std::make_shared<VArray>(
             VArray {
                 std::forward<std::shared_ptr<VStore>>(owner),
-                make_compute<const VT*>(
+                make_compute<VT*>(
                     data + surrogate.data_offset(),
                     surrogate.shape(),
                     surrogate.strides(),
@@ -232,7 +216,7 @@ namespace va {
     // For all functions returning an or assigning to an array.
     // The first case will place the array in the optional.
     // The second case will assign to the compute variant.
-    using VArrayTarget = std::variant<std::shared_ptr<VArray>*, VWrite*>;
+    using VArrayTarget = std::variant<std::shared_ptr<VArray>*, VData*>;
 
     VScalar dtype_to_variant(DType dtype);
     DType variant_to_dtype(VScalar dtype);

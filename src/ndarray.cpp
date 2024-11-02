@@ -167,7 +167,7 @@ NDArray::NDArray() = default;
 NDArray::~NDArray() = default;
 
 String NDArray::_to_string() const {
-	return std::visit([](auto&& arg) { return xt_to_string(arg); }, array->read);
+	return std::visit([](auto&& arg) { return xt_to_string(arg); }, array->data);
 }
 
 va::DType NDArray::dtype() const {
@@ -270,17 +270,17 @@ Variant NDArray::as_type(const va::DType dtype) const {
 }
 
 Variant NDArray::copy() const {
-	const auto result = va::copy(array->read);
+	const auto result = va::copy(array->data);
 	return { memnew(NDArray(result)) };
 }
 
-va::VWrite get_write(va::VArray& array, const std::nullptr_t& ptr) {
+va::VData& get_write(va::VArray& array, const std::nullptr_t& ptr) {
 	array.prepare_write();
-	return array.write.value();
+	return array.data;
 }
 
-va::VWrite get_write(va::VArray& array, const xt::xstrided_slice_vector& sv) {
-	return array.sliced_write(sv);
+va::VData get_write(va::VArray& array, const xt::xstrided_slice_vector& sv) {
+	return array.sliced_data(sv);
 }
 
 void NDArray::set(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {
@@ -300,7 +300,7 @@ void NDArray::set(const Variant** args, GDExtensionInt arg_count, GDExtensionCal
 					auto as_axes = slice_vector_to_axes_list(slice);
 					if (as_axes != std::nullopt) {
 						array->prepare_write();
-						va::set_single_value(array->write.value(), *as_axes, variant_to_vscalar(value));
+						va::set_single_value(array->data, *as_axes, variant_to_vscalar(value));
 						return;
 					}
 				}
@@ -323,7 +323,7 @@ void NDArray::set(const Variant** args, GDExtensionInt arg_count, GDExtensionCal
 					//  Just need to figure out how, ideally without duplicating code - as_array already does much type checking work.
 					default:
 						const auto value_ = variant_as_array(value);
-						va::assign(compute, value_->read);
+						va::assign(compute, value_->data);
 						return;
 				}
 			}
@@ -331,26 +331,26 @@ void NDArray::set(const Variant** args, GDExtensionInt arg_count, GDExtensionCal
 				array->prepare_write();
 
 				const auto value_ = variant_as_array(value);
-				va::set_at_indices(array->write.value(), slice.index_list->read, value_->read);
+				va::set_at_indices(array->data, slice.index_list->data, value_->data);
 			}
 			else {
 				// Mask
 				array->prepare_write();
-				auto compute = array->write.value();
+				auto compute = array->data;
 
 				switch (value.get_type()) {
 					case Variant::BOOL:
-						va::set_at_mask(compute, slice.mask->read, static_cast<bool>(value));
+						va::set_at_mask(compute, slice.mask->data, static_cast<bool>(value));
 						return;
 					case Variant::INT:
-						va::set_at_mask(compute, slice.mask->read, static_cast<int64_t>(value));
+						va::set_at_mask(compute, slice.mask->data, static_cast<int64_t>(value));
 						return;
 					case Variant::FLOAT:
-						va::set_at_mask(compute, slice.mask->read, static_cast<double_t>(value));
+						va::set_at_mask(compute, slice.mask->data, static_cast<double_t>(value));
 						return;
 					default:
 						const auto value_ = variant_as_array(value);
-						va::set_at_mask(compute, slice.mask->read, value_->read);
+						va::set_at_mask(compute, slice.mask->data, value_->data);
 						return;
 				}
 			}
@@ -375,12 +375,12 @@ Ref<NDArray> NDArray::get(const Variant** args, GDExtensionInt arg_count, GDExte
 				return { memnew(NDArray(result)) };
 			}
 			else if constexpr (std::is_same_v<T, SliceIndexList>) {
-				const auto result = va::get_at_indices(array->read, slice.index_list->read);
+				const auto result = va::get_at_indices(array->data, slice.index_list->data);
 				return { memnew(NDArray(result)) };
 			}
 			else {
 				// Mask
-				const auto result = va::get_at_mask(array->read, slice.mask->read);
+				const auto result = va::get_at_mask(array->data, slice.mask->data);
 				return { memnew(NDArray(result)) };
 			}
 		}, variants_to_slice_variant(args, arg_count, error));
@@ -393,7 +393,7 @@ Ref<NDArray> NDArray::get(const Variant** args, GDExtensionInt arg_count, GDExte
 bool NDArray::get_bool(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {
 	try {
 		auto axes = variants_to_axes(args, arg_count, error);
-		return va::scalar_to_type<bool>(va::get_single_value(array->read, axes));
+		return va::scalar_to_type<bool>(va::get_single_value(array->data, axes));
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG(0, error.what());
@@ -403,7 +403,7 @@ bool NDArray::get_bool(const Variant** args, GDExtensionInt arg_count, GDExtensi
 int64_t NDArray::get_int(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {
 	try {
 		auto axes = variants_to_axes(args, arg_count, error);
-		return va::scalar_to_type<int64_t>(va::get_single_value(array->read, axes));
+		return va::scalar_to_type<int64_t>(va::get_single_value(array->data, axes));
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG(0, error.what());
@@ -413,7 +413,7 @@ int64_t NDArray::get_int(const Variant** args, GDExtensionInt arg_count, GDExten
 double_t NDArray::get_float(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {
 	try {
 		auto axes = variants_to_axes(args, arg_count, error);
-		return va::scalar_to_type<double_t>(va::get_single_value(array->read, axes));
+		return va::scalar_to_type<double_t>(va::get_single_value(array->data, axes));
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG(0, error.what());
@@ -440,7 +440,7 @@ Vector2 NDArray::to_vector2() const {
 	ERR_FAIL_COND_V_MSG(array->shape()[0] != 2, {}, "array dimension must be size 2");
 
 	Vector2 vector;
-	TRY_CONVERT(&vector.coord[0], array->read);
+	TRY_CONVERT(&vector.coord[0], array->data);
 
 	return vector;
 #endif
@@ -454,7 +454,7 @@ Vector3 NDArray::to_vector3() const {
 	ERR_FAIL_COND_V_MSG(array->shape()[0] != 3, {}, "array dimension must be size 3");
 
 	Vector3 vector;
-	TRY_CONVERT(&vector.coord[0], array->read);
+	TRY_CONVERT(&vector.coord[0], array->data);
 
 	return vector;
 #endif
@@ -468,7 +468,7 @@ Vector4 NDArray::to_vector4() const {
 	ERR_FAIL_COND_V_MSG(array->shape()[0] != 4, {}, "array dimension must be size 4");
 
 	Vector4 vector;
-	TRY_CONVERT(&vector.components[0], array->read);
+	TRY_CONVERT(&vector.components[0], array->data);
 
 	return vector;
 #endif
@@ -482,7 +482,7 @@ Vector2i NDArray::to_vector2i() const {
 	ERR_FAIL_COND_V_MSG(array->shape()[0] != 2, {}, "array dimension must be size 2");
 
 	Vector2i vector;
-	TRY_CONVERT(&vector.coord[0], array->read);
+	TRY_CONVERT(&vector.coord[0], array->data);
 
 	return vector;
 #endif
@@ -496,7 +496,7 @@ Vector3i NDArray::to_vector3i() const {
 	ERR_FAIL_COND_V_MSG(array->shape()[0] != 3, {}, "array dimension must be size 3");
 
 	Vector3i vector;
-	TRY_CONVERT(&vector.coord[0], array->read);
+	TRY_CONVERT(&vector.coord[0], array->data);
 
 	return vector;
 #endif
@@ -510,7 +510,7 @@ Vector4i NDArray::to_vector4i() const {
 	ERR_FAIL_COND_V_MSG(array->shape()[0] != 4, {}, "array dimension must be size 4");
 
 	Vector4i vector;
-	TRY_CONVERT(&vector.coord[0], array->read);
+	TRY_CONVERT(&vector.coord[0], array->data);
 
 	return vector;
 #endif
@@ -524,7 +524,7 @@ Color NDArray::to_color() const {
 	ERR_FAIL_COND_V_MSG(array->shape()[0] != 4, {}, "array dimension must be size 4");
 
 	Color vector;
-	TRY_CONVERT(&vector.components[0], array->read);
+	TRY_CONVERT(&vector.components[0], array->data);
 
 	return vector;
 #endif
@@ -538,7 +538,7 @@ PackedFloat32Array NDArray::to_packed_float32_array() const {
 
 	PackedFloat32Array packed;
 	packed.resize(static_cast<int64_t>(array->shape()[0]));
-	TRY_CONVERT(packed.ptrw(), array->read);
+	TRY_CONVERT(packed.ptrw(), array->data);
 
 	return packed;
 #endif
@@ -552,7 +552,7 @@ PackedFloat64Array NDArray::to_packed_float64_array() const {
 
 	PackedFloat64Array packed;
 	packed.resize(static_cast<int64_t>(array->shape()[0]));
-	TRY_CONVERT(packed.ptrw(), array->read);
+	TRY_CONVERT(packed.ptrw(), array->data);
 
 	return packed;
 #endif
@@ -566,7 +566,7 @@ PackedByteArray NDArray::to_packed_byte_array() const {
 
 	PackedByteArray packed;
 	packed.resize(static_cast<int64_t>(array->shape()[0]));
-	TRY_CONVERT(packed.ptrw(), array->read);
+	TRY_CONVERT(packed.ptrw(), array->data);
 
 	return packed;
 #endif
@@ -580,7 +580,7 @@ PackedInt32Array NDArray::to_packed_int32_array() const {
 
 	PackedInt32Array packed;
 	packed.resize(static_cast<int64_t>(array->shape()[0]));
-	TRY_CONVERT(packed.ptrw(), array->read);
+	TRY_CONVERT(packed.ptrw(), array->data);
 
 	return packed;
 #endif
@@ -594,7 +594,7 @@ PackedInt64Array NDArray::to_packed_int64_array() const {
 
 	PackedInt64Array packed;
 	packed.resize(static_cast<int64_t>(array->shape()[0]));
-	TRY_CONVERT(packed.ptrw(), array->read);
+	TRY_CONVERT(packed.ptrw(), array->data);
 
 	return packed;
 #endif
@@ -610,7 +610,7 @@ PackedVector2Array NDArray::to_packed_vector2_array() const {
 
 	PackedVector2Array packed;
 	packed.resize(static_cast<int64_t>(array->shape()[0]));
-	TRY_CONVERT(&packed.ptrw()->coord[0], array->read);
+	TRY_CONVERT(&packed.ptrw()->coord[0], array->data);
 
 	return packed;
 #endif
@@ -626,7 +626,7 @@ PackedVector3Array NDArray::to_packed_vector3_array() const {
 
 	PackedVector3Array packed;
 	packed.resize(static_cast<int64_t>(array->shape()[0]));
-	TRY_CONVERT(&packed.ptrw()->coord[0], array->read);
+	TRY_CONVERT(&packed.ptrw()->coord[0], array->data);
 
 	return packed;
 #endif
@@ -642,7 +642,7 @@ PackedVector4Array NDArray::to_packed_vector4_array() const {
 
 	PackedVector4Array packed;
 	packed.resize(static_cast<int64_t>(array->shape()[0]));
-	TRY_CONVERT(&packed.ptrw()->components[0], array->read);
+	TRY_CONVERT(&packed.ptrw()->components[0], array->data);
 
 	return packed;
 #endif
@@ -658,7 +658,7 @@ PackedColorArray NDArray::to_packed_color_array() const {
 
 	PackedColorArray packed;
 	packed.resize(static_cast<int64_t>(array->shape()[0]));
-	TRY_CONVERT(&packed.ptrw()->components[0], array->read);
+	TRY_CONVERT(&packed.ptrw()->components[0], array->data);
 
 	return packed;
 #endif
@@ -681,7 +681,7 @@ template<typename Visitor, typename... Args>
 void map_variants_as_arrays_inplace(Visitor&& visitor, va::VArray& target, const Args&... args) {
 	try {
 		target.prepare_write();
-		std::forward<Visitor>(visitor)(&target.write.value(), *variant_as_array(args)...);
+		std::forward<Visitor>(visitor)(&target.data, *variant_as_array(args)...);
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_MSG(error.what());
@@ -695,13 +695,13 @@ inline void reduction_inplace(Visitor&& visitor, VisitorNoaxes&& visitor_noaxes,
 
 		if (axes.get_type() == Variant::NIL) {
 			const va::VScalar result = std::forward<VisitorNoaxes>(visitor_noaxes)(*variant_as_array(args)...);
-			va::assign(target.write.value(), result);
+			va::assign(target.data, result);
 			return;
 		}
 
 		const auto axes_ = variant_to_axes(axes);
 
-		std::forward<Visitor>(visitor)(static_cast<va::VArrayTarget>(&target.write.value()), axes_, *variant_as_array(args)...);
+		std::forward<Visitor>(visitor)(static_cast<va::VArrayTarget>(&target.data), axes_, *variant_as_array(args)...);
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_MSG(error.what());

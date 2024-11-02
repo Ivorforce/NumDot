@@ -19,7 +19,7 @@ void va::positive(VArrayTarget target, const VArray& a) {
 	va::xoperation_inplace<promote::num_or_error_in_same_out>(
 		XFunction<xt::detail::identity> {},
 		target,
-		a.read
+		a.data
 	);
 #endif
 }
@@ -31,7 +31,7 @@ void va::negative(VArrayTarget target, const VArray& a) {
 	va::xoperation_inplace<promote::num_or_error_in_same_out>(
 		XFunction<xt::detail::negate> {},
 		target,
-		a.read
+		a.data
 	);
 #endif
 }
@@ -41,7 +41,7 @@ void add(VArrayTarget target, const VArray& a, const VScalar& b) {
 	va::xoperation_inplace<promote::num_function_result_in_same_out<xt::detail::plus>>(
 		XFunction<xt::detail::plus> {},
 		target,
-		a.read,
+		a.data,
 		b
 	);
 }
@@ -58,8 +58,8 @@ void va::add(VArrayTarget target, const VArray& a, const VArray& b) {
 	va::xoperation_inplace<promote::num_function_result_in_same_out<xt::detail::plus>>(
 		XFunction<xt::detail::plus> {},
 		target,
-		a.read,
-		b.read
+		a.data,
+		b.data
 	);
 #endif
 }
@@ -74,7 +74,7 @@ void va::subtract(VArrayTarget target, const VArray& a, const VArray& b) {
 			XFunction<xt::detail::minus> {},
 			target,
 			a.to_single_value(),
-			b.read
+			b.data
 		);
 		return;
 	}
@@ -82,7 +82,7 @@ void va::subtract(VArrayTarget target, const VArray& a, const VArray& b) {
 		va::xoperation_inplace<promote::num_function_result_in_same_out<xt::detail::minus>>(
 			XFunction<xt::detail::minus> {},
 			target,
-			a.read,
+			a.data,
 			b.to_single_value()
 		);
 		return;
@@ -92,8 +92,8 @@ void va::subtract(VArrayTarget target, const VArray& a, const VArray& b) {
 	va::xoperation_inplace<promote::num_function_result_in_same_out<xt::detail::minus>>(
 		XFunction<xt::detail::minus> {},
 		target,
-		a.read,
-		b.read
+		a.data,
+		b.data
 	);
 #endif
 }
@@ -102,7 +102,7 @@ void multiply(VArrayTarget target, const VArray& a, const VScalar& b) {
 	va::xoperation_inplace<promote::num_function_result_in_same_out<xt::detail::multiplies>>(
 		XFunction<xt::detail::multiplies> {},
 		target,
-		a.read,
+		a.data,
 		b
 	);
 }
@@ -118,8 +118,8 @@ void va::multiply(VArrayTarget target, const VArray& a, const VArray& b) {
 	va::xoperation_inplace<promote::num_function_result_in_same_out<xt::detail::multiplies>>(
 		XFunction<xt::detail::multiplies> {},
 		target,
-		a.read,
-		b.read
+		a.data,
+		b.data
 	);
 #endif
 }
@@ -134,7 +134,7 @@ void va::divide(VArrayTarget target, const VArray& a, const VArray& b) {
 			XFunction<xt::detail::divides> {},
 			target,
 			a.to_single_value(),
-			b.read
+			b.data
 		);
 		return;
 	}
@@ -142,7 +142,7 @@ void va::divide(VArrayTarget target, const VArray& a, const VArray& b) {
 		va::xoperation_inplace<promote::num_function_result_in_same_out<xt::detail::divides>>(
 			XFunction<xt::detail::divides> {},
 			target,
-			a.read,
+			a.data,
 			b.to_single_value()
 		);
 		return;
@@ -152,8 +152,8 @@ void va::divide(VArrayTarget target, const VArray& a, const VArray& b) {
 	va::xoperation_inplace<promote::num_function_result_in_same_out<xt::detail::divides>>(
 		XFunction<xt::detail::divides> {},
 		target,
-		a.read,
-		b.read
+		a.data,
+		b.data
 	);
 #endif
 }
@@ -168,7 +168,7 @@ void va::remainder(VArrayTarget target, const VArray& a, const VArray& b) {
 			XFunction<xt::math::remainder_fun> {},
 			target,
 			a.to_single_value(),
-			b.read
+			b.data
 		);
 		return;
 	}
@@ -176,7 +176,7 @@ void va::remainder(VArrayTarget target, const VArray& a, const VArray& b) {
 		va::xoperation_inplace<promote::reject_complex<promote::num_function_result_in_same_out<xt::math::remainder_fun>>>(
 			XFunction<xt::math::remainder_fun> {},
 			target,
-			a.read,
+			a.data,
 			b.to_single_value()
 		);
 		return;
@@ -186,8 +186,8 @@ void va::remainder(VArrayTarget target, const VArray& a, const VArray& b) {
 	va::xoperation_inplace<promote::reject_complex<promote::num_function_result_in_same_out<xt::math::remainder_fun>>>(
 		XFunction<xt::math::remainder_fun> {},
 		target,
-		a.read,
-		b.read
+		a.data,
+		b.data
 	);
 #endif
 }
@@ -202,7 +202,7 @@ void va::pow(VArrayTarget target, const VArray& a, const VArray& b) {
 			XFunction<xt::math::pow_fun> {},
 			target,
 			a.to_single_value(),
-			b.read
+			b.data
 		);
 		return;
 	}
@@ -210,7 +210,7 @@ void va::pow(VArrayTarget target, const VArray& a, const VArray& b) {
 		va::xoperation_inplace<promote::num_function_result_in_same_out<xt::math::pow_fun>>(
 			XFunction<xt::math::pow_fun> {},
 			target,
-			a.read,
+			a.data,
 			b.to_single_value()
 		);
 		return;
@@ -220,8 +220,8 @@ void va::pow(VArrayTarget target, const VArray& a, const VArray& b) {
 	va::xoperation_inplace<promote::num_function_result_in_same_out<xt::math::pow_fun>>(
 		XFunction<xt::math::pow_fun> {},
 		target,
-		a.read,
-		b.read
+		a.data,
+		b.data
 	);
 #endif
 }
@@ -230,7 +230,7 @@ void minimum(VArrayTarget target, const VArray& a, const VScalar& b) {
 	va::xoperation_inplace<promote::reject_complex<promote::common_in_same_out>>(
 		XFunction<xt::math::minimum<void>> {},
 		target,
-		a.read,
+		a.data,
 		b
 	);
 }
@@ -246,8 +246,8 @@ void va::minimum(VArrayTarget target, const VArray& a, const VArray& b) {
 	va::xoperation_inplace<promote::reject_complex<promote::common_in_same_out>>(
 		XFunction<xt::math::minimum<void>> {},
 		target,
-		a.read,
-		b.read
+		a.data,
+		b.data
 	);
 #endif
 }
@@ -256,7 +256,7 @@ void maximum(VArrayTarget target, const VArray& a, const VScalar& b) {
 	va::xoperation_inplace<promote::reject_complex<promote::common_in_same_out>>(
 		XFunction<xt::math::maximum<void>> {},
 		target,
-		a.read,
+		a.data,
 		b
 	);
 }
@@ -272,8 +272,8 @@ void va::maximum(VArrayTarget target, const VArray& a, const VArray& b) {
 	va::xoperation_inplace<promote::reject_complex<promote::common_in_same_out>>(
 		XFunction<xt::math::maximum<void>> {},
 		target,
-		a.read,
-		b.read
+		a.data,
+		b.data
 	);
 #endif
 }
@@ -287,7 +287,7 @@ void va::clip(VArrayTarget target, const VArray& a, const VArray& lo, const VArr
 		va::xoperation_inplace<promote::reject_complex<promote::common_in_same_out>>(
 			XFunction<xt::math::clamp_fun> {},
 			target,
-			a.read,
+			a.data,
 			lo.to_single_value(),
 			hi.to_single_value()
 		);
@@ -298,9 +298,9 @@ void va::clip(VArrayTarget target, const VArray& a, const VArray& lo, const VArr
 	va::xoperation_inplace<promote::reject_complex<promote::common_in_same_out>>(
 		XFunction<xt::math::clamp_fun> {},
 		target,
-		a.read,
-		lo.read,
-		hi.read
+		a.data,
+		lo.data,
+		hi.data
 	);
 #endif
 }
@@ -312,7 +312,7 @@ void va::sign(VArrayTarget target, const VArray& array) {
 	xoperation_inplace<promote::reject_complex<promote::common_in_same_out>>(
 		va::XFunction<xt::math::sign_fun> {},
 		target,
-		array.read
+		array.data
 	);
 #endif
 }
@@ -324,7 +324,7 @@ void va::abs(VArrayTarget target, const VArray& array) {
 	xoperation_inplace<promote::num_in_nat_out>(
 		va::XFunction<xt::math::abs_fun> {},
 		target,
-		array.read
+		array.data
 	);
 #endif
 }
@@ -345,7 +345,7 @@ void va::square(VArrayTarget target, const VArray& array) {
 	xoperation_inplace<promote::common_in_same_out>(
 		va::XFunction<square_fun> {},
 		target,
-		array.read
+		array.data
 	);
 #endif
 }
@@ -357,7 +357,7 @@ void va::sqrt(VArrayTarget target, const VArray& array) {
 	xoperation_inplace<promote::num_function_result_in_same_out<xt::math::sqrt_fun>>(
 		va::XFunction<xt::math::sqrt_fun> {},
 		target,
-		array.read
+		array.data
 	);
 #endif
 }
@@ -369,7 +369,7 @@ void va::exp(VArrayTarget target, const VArray& array) {
 	xoperation_inplace<promote::num_function_result_in_same_out<xt::math::exp_fun>>(
 		va::XFunction<xt::math::exp_fun> {},
 		target,
-		array.read
+		array.data
 	);
 #endif
 }
@@ -381,7 +381,7 @@ void va::log(VArrayTarget target, const VArray& array) {
 	xoperation_inplace<promote::num_function_result_in_same_out<xt::math::log_fun>>(
 		va::XFunction<xt::math::log_fun> {},
 		target,
-		array.read
+		array.data
 	);
 #endif
 }
@@ -393,7 +393,7 @@ void va::rad2deg(VArrayTarget target, const VArray& array) {
 	xoperation_inplace<promote::reject_complex<promote::num_function_result_in_same_out<xt::math::rad2deg>>>(
 		va::XFunction<xt::math::rad2deg> {},
 		target,
-		array.read
+		array.data
 	);
 #endif
 }
@@ -405,7 +405,7 @@ void va::deg2rad(VArrayTarget target, const VArray& array) {
 	xoperation_inplace<promote::reject_complex<promote::num_function_result_in_same_out<xt::math::deg2rad>>>(
 		va::XFunction<xt::math::deg2rad> {},
 		target,
-		array.read
+		array.data
 	);
 #endif
 }

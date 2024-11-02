@@ -44,7 +44,7 @@ VScalar va::sum(const VArray& array) {
 #else
 	return vreduce<promote::num_in_same_out, VScalar>(
 		REDUCER_LAMBDA(xt::sum),
-		array.read
+		array.data
 	);
 #endif
 }
@@ -55,7 +55,7 @@ void va::sum(VArrayTarget target, const VArray& array, const axes_type& axes) {
 #else
 	va::xoperation_inplace<promote::num_in_same_out>(
 		REDUCER_LAMBDA_AXES(axes, xt::sum),
-		target, array.read
+		target, array.data
 	);
 #endif
 }
@@ -66,7 +66,7 @@ VScalar va::prod(const VArray& array) {
 #else
 	return vreduce<promote::num_at_least_int32_in_same_out, VScalar>(
 		REDUCER_LAMBDA(xt::prod),
-		array.read
+		array.data
 	);
 #endif
 }
@@ -77,7 +77,7 @@ void va::prod(VArrayTarget target, const VArray& array, const axes_type& axes) {
 #else
 	va::xoperation_inplace<promote::num_at_least_int32_in_same_out>(
 		REDUCER_LAMBDA_AXES(axes, xt::prod),
-		target, array.read
+		target, array.data
 	);
 #endif
 }
@@ -88,7 +88,7 @@ VScalar va::mean(const VArray& array) {
 #else
 	return vreduce<promote::num_matching_float_or_default_in_nat_out<double_t>, VScalar>(
 		REDUCER_LAMBDA(xt::mean),
-		array.read
+		array.data
 	);
 #endif
 }
@@ -99,7 +99,7 @@ void va::mean(VArrayTarget target, const VArray& array, const axes_type& axes) {
 #else
 	va::xoperation_inplace<promote::num_matching_float_or_default_in_nat_out<double_t>>(
 		REDUCER_LAMBDA_AXES(axes, xt::mean),
-		target, array.read
+		target, array.data
 	);
 #endif
 }
@@ -110,7 +110,7 @@ VScalar va::median(const VArray& array) {
 #else
 	return vreduce<promote::reject_complex<promote::num_in_same_out>, VScalar>(
 		REDUCER_LAMBDA_NOECS(xt::median),
-		array.read
+		array.data
 	);
 #endif
 }
@@ -124,7 +124,7 @@ void va::median(VArrayTarget target, const VArray& array, const axes_type& axes)
 		auto axis = axes[0];
 		va::xoperation_inplace<promote::reject_complex<promote::num_in_same_out>>(
 			REDUCER_LAMBDA_AXES_NOECS(axis, xt::median),
-			target, array.read
+			target, array.data
 		);
 		return;
 	}
@@ -135,16 +135,16 @@ void va::median(VArrayTarget target, const VArray& array, const axes_type& axes)
 
 	if (joined->layout() == xt::layout_type::dynamic) {
 		// xtensor does not support dynamic layout, so we need a copy first.
-		const auto joined_copy = copy_as_dtype(array.read, DTypeMax);
+		const auto joined_copy = copy_as_dtype(array.data, DTypeMax);
 		va::xoperation_inplace<promote::reject_complex<promote::num_in_same_out>>(
 			REDUCER_LAMBDA_AXES_NOECS(axis, xt::median),
-			target, joined_copy->read
+			target, joined_copy->data
 		);
 	}
 	else {
 		va::xoperation_inplace<promote::reject_complex<promote::num_in_same_out>>(
 			REDUCER_LAMBDA_AXES_NOECS(axis, xt::median),
-			target, joined->read
+			target, joined->data
 		);
 	}
 #endif
@@ -156,7 +156,7 @@ VScalar va::var(const VArray& array) {
 #else
 	return vreduce<promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>, VScalar>(
 		REDUCER_LAMBDA(xt::variance),
-		array.read
+		array.data
 	);
 #endif
 }
@@ -167,7 +167,7 @@ void va::var(VArrayTarget target, const VArray& array, const axes_type& axes) {
 #else
 	va::xoperation_inplace<promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>>(
 		REDUCER_LAMBDA_AXES(axes, xt::variance),
-		target, array.read
+		target, array.data
 	);
 #endif
 }
@@ -178,7 +178,7 @@ VScalar va::std(const VArray& array) {
 #else
 	return vreduce<promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>, VScalar>(
 		REDUCER_LAMBDA(xt::stddev),
-		array.read
+		array.data
 	);
 #endif
 }
@@ -189,7 +189,7 @@ void va::std(VArrayTarget target, const VArray& array, const axes_type& axes) {
 #else
 	va::xoperation_inplace<promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>>(
 		REDUCER_LAMBDA_AXES(axes, xt::stddev),
-		target, array.read
+		target, array.data
 	);
 #endif
 }
@@ -200,7 +200,7 @@ VScalar va::max(const VArray& array) {
 #else
 	return vreduce<promote::reject_complex<promote::common_in_same_out>, VScalar>(
 		REDUCER_LAMBDA(xt::amax),
-		array.read
+		array.data
 	);
 #endif
 }
@@ -211,7 +211,7 @@ void va::max(VArrayTarget target, const VArray& array, const axes_type& axes) {
 #else
 	va::xoperation_inplace<promote::reject_complex<promote::common_in_same_out>>(
 		REDUCER_LAMBDA_AXES(axes, xt::amax),
-		target, array.read
+		target, array.data
 	);
 #endif
 }
@@ -222,7 +222,7 @@ VScalar va::min(const VArray& array) {
 #else
 	return vreduce<promote::reject_complex<promote::common_in_same_out>, VScalar>(
 		REDUCER_LAMBDA(xt::amin),
-		array.read
+		array.data
 	);
 #endif
 }
@@ -233,7 +233,7 @@ void va::min(VArrayTarget target, const VArray& array, const axes_type& axes) {
 #else
 	va::xoperation_inplace<promote::reject_complex<promote::common_in_same_out>>(
 		REDUCER_LAMBDA_AXES(axes, xt::amin),
-		target, array.read
+		target, array.data
 	);
 #endif
 }
@@ -244,7 +244,7 @@ VScalar va::norm_l0(const VArray& array) {
 #else
 	return vreduce<promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>, VScalar>(
 		REDUCER_LAMBDA(xt::norm_l0),
-		array.read
+		array.data
 	);
 #endif
 }
@@ -255,7 +255,7 @@ void va::norm_l0(VArrayTarget target, const VArray& array, const axes_type& axes
 #else
 	va::xoperation_inplace<promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>>(
 		REDUCER_LAMBDA_AXES(axes, xt::norm_l0),
-		target, array.read
+		target, array.data
 	);
 #endif
 }
@@ -266,7 +266,7 @@ VScalar va::norm_l1(const VArray& array) {
 #else
 	return vreduce<promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>, VScalar>(
 		REDUCER_LAMBDA(xt::norm_l1),
-		array.read
+		array.data
 	);
 #endif
 }
@@ -277,7 +277,7 @@ void va::norm_l1(VArrayTarget target, const VArray& array, const axes_type& axes
 #else
 	va::xoperation_inplace<promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>>(
 		REDUCER_LAMBDA_AXES(axes, xt::norm_l1),
-		target, array.read
+		target, array.data
 	);
 #endif
 }
@@ -288,7 +288,7 @@ VScalar va::norm_l2(const VArray& array) {
 #else
 	return vreduce<promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>, VScalar>(
 		REDUCER_LAMBDA(xt::norm_l2),
-		array.read
+		array.data
 	);
 #endif
 }
@@ -299,7 +299,7 @@ void va::norm_l2(VArrayTarget target, const VArray& array, const axes_type& axes
 #else
 	va::xoperation_inplace<promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>>(
 		REDUCER_LAMBDA_AXES(axes, xt::norm_l2),
-		target, array.read
+		target, array.data
 	);
 #endif
 }
@@ -310,7 +310,7 @@ VScalar va::norm_linf(const VArray& array) {
 #else
 	return vreduce<promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>, VScalar>(
 		REDUCER_LAMBDA(xt::norm_linf),
-		array.read
+		array.data
 	);
 #endif
 }
@@ -321,7 +321,7 @@ void va::norm_linf(VArrayTarget target, const VArray& array, const axes_type& ax
 #else
 	va::xoperation_inplace<promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>>(
 		REDUCER_LAMBDA_AXES(axes, xt::norm_linf),
-		target, array.read
+		target, array.data
 	);
 #endif
 }
@@ -333,7 +333,7 @@ VScalar va::count_nonzero(const VArray& array) {
 	if (array.dtype() == va::Bool)
 		return sum(array);
 
-	const auto is_nonzero = va::copy_as_dtype(array.read, va::Bool);
+	const auto is_nonzero = va::copy_as_dtype(array.data, va::Bool);
 	return va::sum(*is_nonzero);
 #endif
 }
@@ -345,7 +345,7 @@ void va::count_nonzero(VArrayTarget target, const VArray& array, const axes_type
 	if (array.dtype() == va::Bool)
 		return sum(target, array, axes);
 
-	const auto is_nonzero = va::copy_as_dtype(array.read, va::Bool);
+	const auto is_nonzero = va::copy_as_dtype(array.data, va::Bool);
 	return va::sum(target, *is_nonzero, axes);
 #endif
 }
@@ -356,7 +356,7 @@ bool va::all(const VArray& array) {
 #else
 	return vreduce<promote::reject_complex<promote::x_in_nat_out<bool>>, bool>(
 		REDUCER_LAMBDA_NOECS(xt::all),
-		array.read
+		array.data
 	);
 #endif
 }
@@ -367,7 +367,7 @@ void va::all(VArrayTarget target, const VArray& array, const axes_type& axes) {
 #else
 	va::xoperation_inplace<promote::reject_complex<promote::x_in_nat_out<bool>>>(
 		REDUCER_LAMBDA_AXES(axes, va_all),
-		target, array.read
+		target, array.data
 	);
 #endif
 }
@@ -378,7 +378,7 @@ bool va::any(const VArray& array) {
 #else
 	return vreduce<promote::reject_complex<promote::x_in_nat_out<bool>>, bool>(
 		REDUCER_LAMBDA_NOECS(xt::any),
-		array.read
+		array.data
 	);
 #endif
 }
@@ -389,7 +389,7 @@ void va::any(VArrayTarget target, const VArray& array, const axes_type& axes) {
 #else
 	va::xoperation_inplace<promote::reject_complex<promote::x_in_nat_out<bool>>>(
 		REDUCER_LAMBDA_AXES(axes, va_any),
-		target, array.read
+		target, array.data
 	);
 #endif
 }
@@ -410,7 +410,7 @@ va::VScalar va::reduce_dot(const VArray& a, const VArray& b) {
 			 	std::tuple<xt::evaluation_strategy::lazy_type>()
 			)();
 	   },
-		a.read, b.read
+		a.data, b.data
 	);
 }
 
@@ -433,6 +433,6 @@ void va::reduce_dot(VArrayTarget target, const VArray& a, const VArray& b, const
 			 	std::tuple<xt::evaluation_strategy::lazy_type>()
 			);
 		},
-		target, a.read, b.read
+		target, a.data, b.data
 	);
 }

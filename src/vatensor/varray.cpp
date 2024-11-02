@@ -7,7 +7,7 @@
 #include "xscalar_store.hpp"
 #include "xtensor/xstrided_view_base.hpp"  // for strided_view_args
 
-const va::shape_type& va::shape(const VRead& read) {
+const va::shape_type& va::shape(const VData& read) {
     return std::visit(
         [](const auto& carray) -> const va::shape_type& {
             return carray.shape();
@@ -15,7 +15,7 @@ const va::shape_type& va::shape(const VRead& read) {
     );
 }
 
-const va::strides_type& va::strides(const VRead& read) {
+const va::strides_type& va::strides(const VData& read) {
     return std::visit(
         [](const auto& carray) -> const va::strides_type& {
             return carray.strides();
@@ -23,7 +23,7 @@ const va::strides_type& va::strides(const VRead& read) {
     );
 }
 
-va::size_type va::offset(const VRead& read) {
+va::size_type va::offset(const VData& read) {
     return std::visit(
         [](const auto& carray) -> va::size_type {
             return carray.data_offset();
@@ -31,7 +31,7 @@ va::size_type va::offset(const VRead& read) {
     );
 }
 
-xt::layout_type va::layout(const VRead& read) {
+xt::layout_type va::layout(const VData& read) {
     return std::visit(
         [](const auto& carray) -> xt::layout_type {
             return carray.layout();
@@ -39,11 +39,11 @@ xt::layout_type va::layout(const VRead& read) {
     );
 }
 
-va::DType va::dtype(const VRead& read) {
+va::DType va::dtype(const VData& read) {
     return static_cast<DType>(read.index());
 }
 
-std::size_t va::size(const VRead& read) {
+std::size_t va::size(const VData& read) {
     return std::visit(
         [](const auto& carray) -> std::size_t {
             return carray.size();
@@ -51,7 +51,7 @@ std::size_t va::size(const VRead& read) {
     );
 }
 
-std::size_t va::dimension(const VRead& read) {
+std::size_t va::dimension(const VData& read) {
     return std::visit(
         [](const auto& carray) -> std::size_t {
             return carray.dimension();
@@ -59,7 +59,7 @@ std::size_t va::dimension(const VRead& read) {
     );
 }
 
-std::size_t va::size_of_array_in_bytes(const VRead& read) {
+std::size_t va::size_of_array_in_bytes(const VData& read) {
     return std::visit(
         [](auto& carray) {
             using V = typename std::decay_t<decltype(carray)>::value_type;
@@ -68,7 +68,7 @@ std::size_t va::size_of_array_in_bytes(const VRead& read) {
     );
 }
 
-va::VScalar va::to_single_value(const VRead& read) {
+va::VScalar va::to_single_value(const VData& read) {
     return std::visit(
         [](const auto& carray) -> va::VScalar {
             if (carray.size() != 1) {
@@ -82,43 +82,24 @@ va::VScalar va::to_single_value(const VRead& read) {
     );
 }
 
-void va::VArray::prepare_write() {
-    if (write.has_value()) {
-        return;
-    }
-
-    write = store->make_write(read);
-}
-
 std::shared_ptr<va::VArray> va::VArray::sliced(const xt::xstrided_slice_vector& slices) const {
     return std::visit(
         [this, &slices](const auto& read) -> std::shared_ptr<VArray> {
             return std::make_shared<VArray>(
                 VArray {
                     store,
-                    slice_compute(read, slices),
-                    {}
+                    slice_compute(read, slices)
                 }
             );
-        }, read
+        }, data
     );
 }
 
-va::VRead va::VArray::sliced_read(const xt::xstrided_slice_vector& slices) const {
+va::VData va::VArray::sliced_data(const xt::xstrided_slice_vector& slices) const {
     return std::visit(
-        [&slices](const auto& read) -> va::VRead {
+        [&slices](const auto& read) -> va::VData {
             return slice_compute(read, slices);
-        }, read
-    );
-}
-
-va::VWrite va::VArray::sliced_write(const xt::xstrided_slice_vector& slices) {
-    prepare_write();
-
-    return std::visit(
-        [&slices](auto& write) -> va::VWrite {
-            return slice_compute(write, slices);
-        }, write.value()
+        }, data
     );
 }
 

@@ -11,3 +11,39 @@ void va::fft(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, s
 		a.data
 	);
 }
+
+void va::pad(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const std::vector<std::vector<std::size_t>>& pad_width, xt::pad_mode pad_mode, VScalar pad_value) {
+	va::xoperation_inplace<promote::common_in_same_out>(
+		[&pad_width, pad_mode, pad_value](auto&& a) {
+			using V = typename std::decay_t<decltype(a)>::value_type;
+			return xt::pad(std::forward<decltype(a)>(a), pad_width, pad_mode, va::scalar_to_type<V>(pad_value));
+		},
+		allocator,
+		target,
+		a.data
+	);
+}
+
+void va::pad(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const std::vector<std::size_t>& pad_width, xt::pad_mode pad_mode, VScalar pad_value) {
+	va::xoperation_inplace<promote::common_in_same_out>(
+		[&pad_width, pad_mode, pad_value](auto&& a) {
+			using V = typename std::decay_t<decltype(a)>::value_type;
+			return xt::pad(std::forward<decltype(a)>(a), pad_width, pad_mode, va::scalar_to_type<V>(pad_value));
+		},
+		allocator,
+		target,
+		a.data
+	);
+}
+
+void va::pad(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const size_t& pad_width, xt::pad_mode pad_mode, VScalar pad_value) {
+	va::xoperation_inplace<promote::common_in_same_out>(
+		[&pad_width, pad_mode, pad_value](auto&& a) {
+			using V = typename std::decay_t<decltype(a)>::value_type;
+			return xt::pad(std::forward<decltype(a)>(a), pad_width, pad_mode, va::scalar_to_type<V>(pad_value));
+		},
+		allocator,
+		target,
+		a.data
+	);
+}

@@ -5,6 +5,7 @@
 #include <cstdint>                            // for int64_t, uint64_t
 #include <godot_cpp/classes/ref.hpp>          // for Ref
 #include <godot_cpp/core/binder_common.hpp>   // for VARIANT_ENUM_CAST
+
 #include "godot_cpp/classes/object.hpp"       // for Object
 #include "godot_cpp/classes/wrapped.hpp"      // for GDCLASS
 #include "godot_cpp/core/class_db.hpp"        // for ClassDB (ptr only), DEFVAL
@@ -25,8 +26,16 @@ protected:
 	static void _bind_methods();
 
 public:
-	// Godot needs nd::DType here.
+	// Godot needs enums declared in the object.
 	using DType = va::DType;
+	enum PadMode
+	{
+		Constant,
+		Symmetric,
+		Reflect,
+		Wrap,
+		Edge
+	};
 
 	nd();
 	~nd();
@@ -185,8 +194,10 @@ public:
 
 	// Signal.
 	static Ref<NDArray> fft(const Variant& array, int64_t axis);
+	static Ref<NDArray> pad(const Variant& array, const Variant& pad_width, PadMode pad_mode = PadMode::Constant, const Variant& pad_value = 0);
 };
 
 VARIANT_ENUM_CAST(nd::DType);
+VARIANT_ENUM_CAST(nd::PadMode);
 
 #endif

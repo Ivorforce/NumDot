@@ -12,9 +12,11 @@
 #include <optional>                         // for optional
 #include <stdexcept>                        // for runtime_error
 #include <memory>                           // shared_ptr
+#include <nd.hpp>
 #include <type_traits>                      // for decay_t
 #include <utility>                          // for forward
 #include <variant>                          // for visit
+#include <gdconvert/conversion_scalar.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 #include <vatensor/stride_tricks.hpp>
 #include <vatensor/vcompute.hpp>
@@ -54,6 +56,12 @@ void nd::_bind_methods() {
 	BIND_ENUM_CONSTANT(UInt16);
 	BIND_ENUM_CONSTANT(UInt32);
 	BIND_ENUM_CONSTANT(UInt64);
+
+	BIND_ENUM_CONSTANT(Constant);
+	BIND_ENUM_CONSTANT(Symmetric);
+	BIND_ENUM_CONSTANT(Reflect);
+	BIND_ENUM_CONSTANT(Wrap);
+	BIND_ENUM_CONSTANT(Edge);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("newaxis"), &nd::newaxis);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("ellipsis"), &nd::ellipsis);
@@ -191,6 +199,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("default_rng", "seed"), &nd::default_rng, DEFVAL(nullptr));
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("fft", "v", "axis"), &nd::fft, DEFVAL(nullptr), DEFVAL(-1));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("pad", "v", "pad_width", "pad_mode", "pad_value"), &nd::pad, DEFVAL(nullptr), DEFVAL(0), DEFVAL(nd::PadMode::Constant), DEFVAL(0));
 }
 
 nd::nd() = default;
@@ -1099,5 +1108,34 @@ Ref<NDRandomGenerator> nd::default_rng(const Variant& seed) {
 Ref<NDArray> nd::fft(const Variant& array, const int64_t axis) {
 	return map_variants_as_arrays_with_target([axis](const va::VArrayTarget target, const std::shared_ptr<va::VArray>& a) {
 		va::fft(va::store::default_allocator, target, *a, axis);
+	}, array);
+}
+
+xt::pad_mode pad_mode_to_xt_pad_mode(const nd::PadMode pad_mode) {
+	switch (pad_mode) {
+		case nd::Constant:
+			return xt::pad_mode::constant;
+		case nd::Symmetric:
+			return xt::pad_mode::symmetric;
+		case nd::Reflect:
+			return xt::pad_mode::reflect;
+		case nd::Wrap:
+			return xt::pad_mode::wrap;
+		case nd::Edge:
+			return xt::pad_mode::edge;
+	}
+
+	throw std::runtime_error("Invalid pad mode");
+}
+
+Ref<NDArray> nd::pad(const Variant& array, const Variant& pad_width, PadMode pad_mode, const Variant& pad_value) {
+	return map_variants_as_arrays_with_target([pad_mode, &pad_value, &pad_width](const va::VArrayTarget target, const std::shared_ptr<va::VArray>& a) {
+		const auto pad_value_scalar = variant_to_vscalar(pad_value);
+		const auto pad_width_variant = variant_to_pad_variant(pad_width);
+		const auto pad_mode_xt = pad_mode_to_xt_pad_mode(pad_mode);
+
+		std::visit([target, &a, pad_mode_xt, &pad_value_scalar](auto& pad_width) {
+			va::pad(va::store::default_allocator, target, *a, pad_width, pad_mode_xt, pad_value_scalar);
+		}, pad_width_variant);
 	}, array);
 }

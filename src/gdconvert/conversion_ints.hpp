@@ -14,8 +14,16 @@ T packed_as_array(Packed packed) {
 	return axes;
 }
 
+using PadVariant = std::variant<
+	std::size_t,
+	std::vector<std::size_t>,
+	std::vector<std::vector<std::size_t>>
+>;
+
 va::shape_type variant_to_shape(const Variant& variant);
 va::axes_type variant_to_axes(const Variant& variant);
 va::axes_type variants_to_axes(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error);
+
+PadVariant variant_to_pad_variant(const Variant& variant);
 
 #endif

@@ -18,6 +18,7 @@ Upcoming Changes (main branch)
 - Added ``real`` and ``imag`` functions.
 - Added ``any`` layout type, which may bring tiny speed improvements.
 - Added ``fft`` function.
+- Added ``pad`` function.
 
 **Changed**
 

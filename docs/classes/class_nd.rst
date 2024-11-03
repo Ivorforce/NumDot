@@ -178,6 +178,8 @@ Methods
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`ones_like<class_nd_method_ones_like>`\ (\ model\: ``Variant`` = null, dtype\: :ref:`DType<enum_nd_DType>` = 13, shape\: ``Variant`` = null\ ) |static|                                           |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`pad<class_nd_method_pad>`\ (\ v\: ``Variant`` = null, pad_width\: ``Variant`` = 0, pad_mode\: :ref:`PadMode<enum_nd_PadMode>` = 0, pad_value\: ``Variant`` = 0\ ) |static|                       |
+   +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`positive<class_nd_method_positive>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                              |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`pow<class_nd_method_pow>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                                       |
@@ -377,6 +379,56 @@ Unsigned integer type with 32 bits. This dtype cannot express negative values.
 :ref:`DType<enum_nd_DType>` **UInt64** = ``12``
 
 Unsigned integer type with 64 bits. This dtype cannot express negative values.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _enum_nd_PadMode:
+
+.. rst-class:: classref-enumeration
+
+enum **PadMode**: :ref:`🔗<enum_nd_PadMode>`
+
+.. _class_nd_constant_Constant:
+
+.. rst-class:: classref-enumeration-constant
+
+:ref:`PadMode<enum_nd_PadMode>` **Constant** = ``0``
+
+Pads with a constant value, given by pad_value.
+
+.. _class_nd_constant_Symmetric:
+
+.. rst-class:: classref-enumeration-constant
+
+:ref:`PadMode<enum_nd_PadMode>` **Symmetric** = ``1``
+
+Pads with the reflection of the vector mirrored along the edge of the array.
+
+.. _class_nd_constant_Reflect:
+
+.. rst-class:: classref-enumeration-constant
+
+:ref:`PadMode<enum_nd_PadMode>` **Reflect** = ``2``
+
+Pads with the reflection of the vector mirrored on the first and last values of the vector along each axis.
+
+.. _class_nd_constant_Wrap:
+
+.. rst-class:: classref-enumeration-constant
+
+:ref:`PadMode<enum_nd_PadMode>` **Wrap** = ``3``
+
+Pads with the wrap of the vector along the axis. The first values are used to pad the end and the end values are used to pad the beginning.
+
+.. _class_nd_constant_Edge:
+
+.. rst-class:: classref-enumeration-constant
+
+:ref:`PadMode<enum_nd_PadMode>` **Edge** = ``4``
+
+Pads with the edge values of array.
 
 .. rst-class:: classref-section-separator
 
@@ -1378,6 +1430,26 @@ Return a new array of given shape and type, filled with ones.
 Return a new array of ones with the same shape and type as a given array.
 
 DType and shape will, if supplied, override the values inferred from the given array.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_pad:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **pad**\ (\ v\: ``Variant`` = null, pad_width\: ``Variant`` = 0, pad_mode\: :ref:`PadMode<enum_nd_PadMode>` = 0, pad_value\: ``Variant`` = 0\ ) |static| :ref:`🔗<class_nd_method_pad>`
+
+Pad an array.
+
+\ ``pad_width`` can be one of the following:
+
+1. number, shortcut for ``number, number``.
+
+2. ``before, after``, pads all axes equally.
+
+3. ``[before_0, after_0``, ``before_1, after_1``, ...], pads axes in order.
 
 .. rst-class:: classref-item-separator
 

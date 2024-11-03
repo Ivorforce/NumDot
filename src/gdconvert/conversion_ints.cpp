@@ -141,3 +141,33 @@ va::axes_type variants_to_axes(const Variant** args, GDExtensionInt arg_count, G
 	}
 	return axes;
 }
+
+PadVariant variant_to_pad_variant(const Variant& variant) {
+	switch (variant.get_type()) {
+		case Variant::INT:
+			return static_cast<std::size_t>(static_cast<int64_t>(variant));
+		case Variant::ARRAY: {
+			const Array array = variant;
+			std::vector<std::vector<std::size_t>> pad_width(array.size());
+			for (int64_t i = 0; i < array.size(); i++) {
+				switch (array[i].get_type()) {
+					case Variant::INT:
+						goto just_use_1d;
+					default:
+						break;
+				}
+
+				pad_width[i] = variant_as_ints_<std::size_t, std::vector<std::size_t>>(array[i]);
+				if (pad_width[i].size() != 2) throw std::runtime_error("pad_width elements must be [before, after]");
+			}
+			return pad_width;
+		}
+		default:
+			break;
+	}
+	just_use_1d:
+
+	auto ints = variant_as_ints_<std::size_t, std::vector<std::size_t>>(variant);
+	if (ints.size() != 2) throw std::runtime_error("pad_width must be [before, after]");
+	return ints;
+}

@@ -8,14 +8,14 @@
 #include <vatensor/trigonometry.hpp>                 // for acos, acosh, asin
 #include <vatensor/vassign.hpp>                      // for assign
 #include <vatensor/vmath.hpp>                        // for abs, add, clip
+#include <vatensor/xtensor_store.hpp>                        // for abs, add, clip
 #include <algorithm>                               // for copy
 #include <cstddef>                                 // for size_t
 #include <stdexcept>                               // for runtime_error
 #include <variant>                                 // for visit
 #include <gdconvert/packed_array_store.hpp>
-#include <vatensor/allocate.hpp>
+#include <vatensor/create.hpp>
 #include <vatensor/rearrange.hpp>
-
 #include "gdconvert/conversion_array.hpp"            // for fill_c_array_flat
 #include "gdconvert/conversion_slice.hpp"            // for variants_to_slice_...
 #include "gdconvert/conversion_string.hpp"           // for xt_to_string
@@ -271,7 +271,7 @@ Variant NDArray::as_type(const va::DType dtype) const {
 }
 
 Variant NDArray::copy() const {
-	const auto result = va::copy(array->data);
+	const auto result = va::copy(va::store::default_allocator, array->data);
 	return { memnew(NDArray(result)) };
 }
 
@@ -376,12 +376,12 @@ Ref<NDArray> NDArray::get(const Variant** args, GDExtensionInt arg_count, GDExte
 				return { memnew(NDArray(result)) };
 			}
 			else if constexpr (std::is_same_v<T, SliceIndexList>) {
-				const auto result = va::get_at_indices(array->data, slice.index_list->data);
+				const auto result = va::get_at_indices(va::store::default_allocator, array->data, slice.index_list->data);
 				return { memnew(NDArray(result)) };
 			}
 			else {
 				// Mask
-				const auto result = va::get_at_mask(array->data, slice.mask->data);
+				const auto result = va::get_at_mask(va::store::default_allocator, array->data, slice.mask->data);
 				return { memnew(NDArray(result)) };
 			}
 		}, variants_to_slice_variant(args, arg_count, error));
@@ -735,25 +735,25 @@ inline void reduction_inplace(Visitor&& visitor, VisitorNoaxes&& visitor_noaxes,
 
 #define VARRAY_MAP1(func, varray1) \
 	map_variants_as_arrays_inplace([this](va::VArrayTarget target, const va::VArray& varray) {\
-        va::func(target, varray);\
+        va::func(va::store::default_allocator, target, varray);\
     }, *this->array, (varray1));\
     return {this}
 
 #define VARRAY_MAP2(func, varray1, varray2) \
 	map_variants_as_arrays_inplace([this](va::VArrayTarget target, const va::VArray& a, const va::VArray& b) {\
-        va::func(target, a, b);\
+        va::func(va::store::default_allocator, target, a, b);\
     }, *this->array, (varray1), (varray2));\
     return {this}
 
 #define VARRAY_MAP3(func, varray1, varray2, varray3) \
 	map_variants_as_arrays_inplace([this](va::VArrayTarget target, const va::VArray& a, const va::VArray& b, const va::VArray& c) {\
-        va::func(target, a, b, c);\
+        va::func(va::store::default_allocator, target, a, b, c);\
     }, *this->array, (varray1), (varray2), (varray3));\
     return {this}
 
 #define REDUCTION1(func, varray1, axes1) \
 	reduction_inplace([this](va::VArrayTarget target, const va::axes_type& axes, const va::VArray& array) {\
-		va::func(target, array, axes);\
+		va::func(va::store::default_allocator, target, array, axes);\
 	}, [this](const va::VArray& array) {\
 		return va::func(array);\
 	}, *this->array, (axes1), (varray1));\
@@ -761,7 +761,7 @@ inline void reduction_inplace(Visitor&& visitor, VisitorNoaxes&& visitor_noaxes,
 
 #define REDUCTION2(func, varray1, varray2, axes1) \
 	reduction_inplace([this](va::VArrayTarget target, const va::axes_type& axes, const va::VArray& carray1, const va::VArray& carray2) {\
-		va::func(target, carray1, carray2, axes);\
+		va::func(va::store::default_allocator, target, carray1, carray2, axes);\
 	}, [this](const va::VArray& carray1, const va::VArray& carray2) {\
 		return va::func(carray1, carray2);\
 	}, *this->array, (axes1), (varray1), (varray2));\

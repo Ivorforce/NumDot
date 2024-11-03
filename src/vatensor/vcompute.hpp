@@ -8,7 +8,6 @@
 #include <variant>                      // for visit, variant
 #include <vector>                       // for vector
 #include "varray.hpp"                     // for VArrayTarget, VScalar, VData
-#include "xarray_store.hpp"                     // for VArrayTarget, VScalar, VData
 #include "vassign.hpp"                    // for assign_nonoverlapping, broadc...
 #include "vpromote.hpp"                   // for promote_value_type_if_needed
 #include "xtensor/xarray.hpp"           // for xarray_container
@@ -55,16 +54,47 @@ namespace va {
     };
 
     template<typename OutputType, typename Result>
-    void assign_to_target(VArrayTarget target, const Result& result) {
+    std::shared_ptr<VArray> create_varray(VStoreAllocator& allocator, const Result& result) {
+        using RNatural = typename std::decay_t<decltype(result)>::value_type;
+        using OStorable = compatible_type_or_64_bit_t<OutputType, VScalar>;
+
+        static_assert(std::is_convertible_v<RNatural, OStorable>, "Cannot store the function result.");
+
+        const auto dimension = result.dimension();
+
+        shape_type shape(dimension);
+        std::copy_n(result.shape().begin(), dimension, shape.begin());
+
+        // Create new array, assign to our target pointer.
+        // OutputType may be different from R, if we want different behavior than xtensor for computation.
+        std::shared_ptr<VStore> result_store = allocator.allocate(va::variant_to_dtype(OStorable{}), result.size());
+        auto data = make_compute<OStorable*>(
+            static_cast<OStorable*>(result_store->data()),
+            shape,
+            strides_type{}, // unused
+            dimension <= 1 ? xt::layout_type::any : xt::layout_type::row_major
+        );
+        va::broadcasting_assign(data, result);
+
+        return std::make_shared<VArray>(
+            VArray {
+                std::move(result_store),
+                std::move(data),
+                0
+            }
+        );
+    }
+
+    template<typename OutputType, typename Result>
+    void assign_to_target(VArrayTarget target, VStoreAllocator& allocator, const Result& result) {
         // Some functions (or compilers) may offer 128 bit types as results from functions.
         // We may not be able to store them. This is not the best way to go about it
         // (as incompatible types COULD be less than the supported ones, prompting us to upcast), but it's good enough for now.
         using RNatural = typename std::decay_t<decltype(result)>::value_type;
         using RStorable = compatible_type_or_64_bit_t<RNatural, VScalar>;
-        using OStorable = compatible_type_or_64_bit_t<OutputType, VScalar>;
 
         std::visit(
-            [&result](auto& target) {
+            [&result, &allocator](auto& target) {
                 using PtrType = std::decay_t<decltype(target)>;
 
 #ifndef NUMDOT_COPY_FOR_ALL_INPLACE_OPERATIONS
@@ -102,17 +132,15 @@ namespace va {
                         }
                         else {
                             // Make a copy, similar as in promote_compute_case_if_needed.
-                            // After copying we can be sure no aliasing is taking place, so we can assign with assign_xexpression.
-                            va::assign_nonoverlapping(*target, xt::xarray<RStorable>(result));
+                            // This is the same operation on all branches so we don't produce much code.
+                            const auto temporary = create_varray<RStorable>(allocator, result);
+                            // Now, a normal type conversion.
+                            va::assign(*target, temporary->data);
                         }
                     }
                 }
                 else {
-                    static_assert(std::is_convertible_v<RNatural, OStorable>, "Cannot store the function result.");
-
-                    // Create new array, assign to our target pointer.
-                    // OutputType may be different from R, if we want different behavior than xtensor for computation.
-                    *target = store::from_store(va::array_case<OStorable>(result));
+                    *target = create_varray<OutputType>(allocator, result);
                 }
             }, target
         );
@@ -122,12 +150,13 @@ namespace va {
     struct VArrayFunctionInplace {
         const Visitor visitor;
         const VArrayTarget target;
+        VStoreAllocator& allocator;
 
-        explicit VArrayFunctionInplace(const Visitor visitor, const VArrayTarget target)
-            : visitor(std::move(visitor)), target(target) {}
+        explicit VArrayFunctionInplace(const Visitor visitor, const VArrayTarget target, VStoreAllocator& allocator)
+            : visitor(std::move(visitor)), target(target), allocator(allocator) {}
 
         template<typename... Args>
-        void operator()(const Args&... args) const {
+        void operator()(const Args&... args) {
             using InputType = typename PromotionRule::template input_type<promote::value_type_v<std::decay_t<Args>>...>;
 
             if constexpr (std::is_same_v<InputType, void>) {
@@ -143,15 +172,15 @@ namespace va {
                 using NaturalOutputType = typename std::decay_t<decltype(result)>::value_type;
                 using OutputType = typename PromotionRule::template output_type<InputType, NaturalOutputType>;
 
-                assign_to_target<OutputType>(target, result);
+                assign_to_target<OutputType>(target, allocator, result);
             }
         }
     };
 
     template<typename PromotionRule, typename FX, typename... Args>
-    static inline void xoperation_inplace(FX&& fx, VArrayTarget target, const Args&... args) {
+    static inline void xoperation_inplace(FX&& fx, VStoreAllocator& allocator, VArrayTarget target, const Args&... args) {
         std::visit(
-            VArrayFunctionInplace<PromotionRule, FX> { std::forward<FX>(fx), target },
+            VArrayFunctionInplace<PromotionRule, FX> { std::forward<FX>(fx), target, allocator },
             args...
         );
     }

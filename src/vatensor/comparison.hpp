@@ -5,12 +5,12 @@
 #include "varray.hpp"
 
 namespace va {
-	void equal_to(VArrayTarget target, const VArray& a, const VArray& b);
-	void not_equal_to(VArrayTarget target, const VArray& a, const VArray& b);
-	void greater(VArrayTarget target, const VArray& a, const VArray& b);
-	void greater_equal(VArrayTarget target, const VArray& a, const VArray& b);
-	void less(VArrayTarget target, const VArray& a, const VArray& b);
-	void less_equal(VArrayTarget target, const VArray& a, const VArray& b);
+	void equal_to(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& b);
+	void not_equal_to(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& b);
+	void greater(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& b);
+	void greater_equal(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& b);
+	void less(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& b);
+	void less_equal(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& b);
 }
 
 #endif //COMPARISON_H

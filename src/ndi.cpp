@@ -6,6 +6,8 @@
 #include <stdexcept>                          // for runtime_error
 #include <type_traits>                        // for decay_t
 #include <utility>                            // for forward
+#include <vatensor/xtensor_store.hpp>
+
 #include "gdconvert/conversion_array.hpp"       // for variant_as_array
 #include "godot_cpp/core/class_db.hpp"        // for D_METHOD, ClassDB, Meth...
 #include "godot_cpp/core/error_macros.hpp"    // for ERR_FAIL_V_MSG
@@ -98,7 +100,9 @@ int64_t ndi::norm(const Variant& a, const Variant& ord) {
 }
 
 int64_t ndi::count_nonzero(const Variant& a) {
-	return REDUCTION1(count_nonzero, a);
+	return reduction([](const va::VArray& array) {
+		return va::count_nonzero(va::store::default_allocator, array);
+	}, a);
 }
 
 //int64_t ndi::all(const Variant& a) {

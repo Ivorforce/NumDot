@@ -4,7 +4,7 @@
 #include <ndarray.hpp>
 #include <ndutil.hpp>
 #include <stdexcept>                          // for runtime_error
-#include <vatensor/allocate.hpp>
+#include <vatensor/create.hpp>
 #include "conversion_array.hpp"
 #include "godot_cpp/variant/string_name.hpp"  // for StringName
 #include "godot_cpp/variant/variant.hpp"      // for Variant

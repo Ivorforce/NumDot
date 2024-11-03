@@ -25,17 +25,16 @@ namespace va {
 	VScalar get_single_value(const VData& array, axes_type& index);
 
 	void assign(VData& array, const VData& value);
-	void assign_nonoverlapping(VData& array, const ArrayVariant& value);
 	void assign(VData& array, VScalar value);
 
-	void assign(VArrayTarget target, const VData& value);
+	void assign(VStoreAllocator& allocator, VArrayTarget target, const VData& value);
 	void assign(VArrayTarget target, VScalar value);
 
-	std::shared_ptr<VArray> get_at_mask(const VData& varray, const VData& mask);
+	std::shared_ptr<VArray> get_at_mask(VStoreAllocator& allocator, const VData& varray, const VData& mask);
 	void set_at_mask(VData& varray, VData& mask, VData& value);
 	void set_at_mask(VData& varray, VData& mask, VScalar value);
 
-	std::shared_ptr<VArray> get_at_indices(const VData& varray, const VData& indices);
+	std::shared_ptr<VArray> get_at_indices(VStoreAllocator& allocator, const VData& varray, const VData& indices);
 	void set_at_indices(VData& varray, VData& indices, VData& value);
 }
 

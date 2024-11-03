@@ -17,9 +17,9 @@ namespace va::random {
 
 		VRandomEngine spawn();
 
-		std::shared_ptr<VArray> random_floats(shape_type shape, DType dtype);
-		std::shared_ptr<VArray> random_integers(long long low, long long high, shape_type shape, DType dtype, bool endpoint);
-		std::shared_ptr<VArray> random_normal(shape_type shape, DType dtype);
+		std::shared_ptr<VArray> random_floats(VStoreAllocator& allocator, shape_type shape, DType dtype);
+		std::shared_ptr<VArray> random_integers(VStoreAllocator& allocator, long long low, long long high, shape_type shape, DType dtype, bool endpoint);
+		std::shared_ptr<VArray> random_normal(VStoreAllocator& allocator, shape_type shape, DType dtype);
 	};
 }
 

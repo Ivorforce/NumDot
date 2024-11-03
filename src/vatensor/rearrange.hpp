@@ -7,7 +7,6 @@
 #include <type_traits>  // for decay_t
 #include <variant>      // for visit
 #include "varray.hpp"     // for VArray, strides_type, axes_type, from_surrogate
-#include "xarray_store.hpp"
 
 namespace va {
 	template<typename Visitor>

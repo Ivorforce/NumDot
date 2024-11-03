@@ -1,6 +1,6 @@
 #include "varray.hpp"
 
-#include "xarray_store.hpp"
+#include "xtensor_store.hpp"
 #include <cstddef>                         // for size_t
 #include <stdexcept>                       // for runtime_error
 #include <type_traits>                     // for decay_t, common_type_t

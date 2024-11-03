@@ -7,7 +7,10 @@ namespace va::store {
 	class VScalarStore : public VStore {
 	public:
 		VScalar scalar;
+
 		explicit VScalarStore(VScalar scalar) : scalar(scalar) {}
+
+		void* data() override;
 	};
 
 	class VScalarStoreNonwrite : public VScalarStore {

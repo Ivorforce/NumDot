@@ -20,8 +20,14 @@ namespace numdot {
 		Array array;
 		explicit PackedArrayStore(Array&& array) : array(std::forward<Array>(array)) {}
 
+		void* data() override;
 		void prepare_write(va::VData& data, std::ptrdiff_t data_offset) override;
 	};
+
+	template<typename Array>
+	void* PackedArrayStore<Array>::data() {
+		return const_cast<void*>(static_cast<const void*>(array.ptr()));
+	}
 
 	template<typename Array>
 	void PackedArrayStore<Array>::prepare_write(va::VData& data, std::ptrdiff_t data_offset) {

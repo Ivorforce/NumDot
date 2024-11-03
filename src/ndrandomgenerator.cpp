@@ -12,6 +12,8 @@
 #include <cstddef>                                 // for size_t
 #include <stdexcept>                               // for runtime_error
 #include <variant>                                 // for visit
+#include <vatensor/xtensor_store.hpp>
+
 #include "gdconvert/conversion_array.hpp"            // for fill_c_array_flat
 #include "gdconvert/conversion_slice.hpp"            // for variants_to_slice_...
 #include "gdconvert/conversion_string.hpp"           // for xt_to_string
@@ -59,7 +61,7 @@ Ref<NDArray> NDRandomGenerator::random(const Variant& shape, const va::DType dty
 	try {
 		const auto shape_array = variant_to_shape(shape);
 
-		return { memnew(NDArray(engine.random_floats(shape_array, dtype))) };
+		return { memnew(NDArray(engine.random_floats(va::store::default_allocator, shape_array, dtype))) };
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
@@ -72,9 +74,9 @@ Ref<NDArray> NDRandomGenerator::integers(const int64_t low_or_high, const Varian
 
 		switch (high.get_type()) {
 			case Variant::Type::NIL:
-				return { memnew(NDArray(engine.random_integers(0, low_or_high, shape_array, dtype, endpoint))) };
+				return { memnew(NDArray(engine.random_integers(va::store::default_allocator, 0, low_or_high, shape_array, dtype, endpoint))) };
 			case Variant::Type::INT:
-				return { memnew(NDArray(engine.random_integers(low_or_high, static_cast<int64_t>(high), shape_array, dtype, endpoint))) };
+				return { memnew(NDArray(engine.random_integers(va::store::default_allocator, low_or_high, static_cast<int64_t>(high), shape_array, dtype, endpoint))) };
 			default:
 				ERR_FAIL_V_MSG({}, "high is not an int");
 		}
@@ -89,7 +91,7 @@ Ref<NDArray> NDRandomGenerator::randn(const Variant& shape, const va::DType dtyp
 	try {
 		const auto shape_array = variant_to_shape(shape);
 
-		return { memnew(NDArray(engine.random_normal(shape_array, dtype))) };
+		return { memnew(NDArray(engine.random_normal(va::store::default_allocator, shape_array, dtype))) };
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());

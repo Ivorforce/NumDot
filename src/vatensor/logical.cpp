@@ -10,41 +10,43 @@
 
 using namespace va;
 
-void assign_bool(VArrayTarget target, const VArray& a) {
+void assign_bool(VStoreAllocator& allocator, VArrayTarget target, const VArray& a) {
 	if (a.dtype() == Bool) {
-		va::assign(target, a.data);
+		va::assign(allocator, target, a.data);
 		return;
 	}
 
 	va::xoperation_inplace<promote::x_in_nat_out<bool>>(
 		XFunction<typename xt::detail::cast<bool>::functor> {},
+		allocator,
 		target,
 		a.data
 	);
 }
 
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
-void logical_and(VArrayTarget target, const VArray& a, const VScalar& b) {
+void logical_and(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VScalar& b) {
 	// Can shortcut the logic
 	if (!scalar_to_type<bool>(b)) {
 		assign(target, false);
 		return;
 	}
 
-	assign_bool(target, a);
+	assign_bool(allocator, target, a);
 }
 #endif
 
-void va::logical_and(VArrayTarget target, const VArray& a, const VArray& b) {
+void va::logical_and(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& b) {
 #ifdef NUMDOT_DISABLE_LOGICAL_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_LOGICAL_FUNCTIONS to enable it.");
 #else
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
-	OPTIMIZE_COMMUTATIVE(::logical_and, a, b);
+	OPTIMIZE_COMMUTATIVE(::logical_and, allocator, target, a, b);
 #endif
 
 	va::xoperation_inplace<promote::reject_complex<promote::x_in_nat_out<bool>>>(
 		XFunction<xt::detail::logical_and> {},
+		allocator,
 		target,
 		a.data,
 		b.data
@@ -53,27 +55,28 @@ void va::logical_and(VArrayTarget target, const VArray& a, const VArray& b) {
 }
 
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
-void logical_or(VArrayTarget target, const VArray& a, const VScalar& b) {
+void logical_or(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VScalar& b) {
 	// Can shortcut the logic
 	if (scalar_to_type<bool>(b)) {
 		assign(target, true);
 		return;
 	}
 
-	assign_bool(target, a);
+	assign_bool(allocator, target, a);
 }
 #endif
 
-void va::logical_or(VArrayTarget target, const VArray& a, const VArray& b) {
+void va::logical_or(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& b) {
 #ifdef NUMDOT_DISABLE_LOGICAL_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_LOGICAL_FUNCTIONS to enable it.");
 #else
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
-	OPTIMIZE_COMMUTATIVE(::logical_or, a, b);
+	OPTIMIZE_COMMUTATIVE(::logical_or, allocator, target, a, b);
 #endif
 
 	va::xoperation_inplace<promote::reject_complex<promote::x_in_nat_out<bool>>>(
 		XFunction<xt::detail::logical_or> {},
+		allocator,
 		target,
 		a.data,
 		b.data
@@ -82,27 +85,28 @@ void va::logical_or(VArrayTarget target, const VArray& a, const VArray& b) {
 }
 
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
-void logical_xor(VArrayTarget target, const VArray& a, const VScalar& b) {
+void logical_xor(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VScalar& b) {
 	// Can shortcut the logic
 	if (scalar_to_type<bool>(b)) {
-		va::logical_not(target, a);
+		va::logical_not(allocator, target, a);
 		return;
 	}
 
-	assign_bool(target, a);
+	assign_bool(allocator, target, a);
 }
 #endif
 
-void va::logical_xor(VArrayTarget target, const VArray& a, const VArray& b) {
+void va::logical_xor(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& b) {
 #ifdef NUMDOT_DISABLE_LOGICAL_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_LOGICAL_FUNCTIONS to enable it.");
 #else
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
-	OPTIMIZE_COMMUTATIVE(::logical_xor, a, b);
+	OPTIMIZE_COMMUTATIVE(::logical_xor, allocator, target, a, b);
 #endif
 
 	va::xoperation_inplace<promote::reject_complex<promote::x_in_nat_out<bool>>>(
 		XFunction<xt::detail::not_equal_to> {},
+		allocator,
 		target,
 		a.data,
 		b.data
@@ -110,12 +114,13 @@ void va::logical_xor(VArrayTarget target, const VArray& a, const VArray& b) {
 #endif
 }
 
-void va::logical_not(VArrayTarget target, const VArray& a) {
+void va::logical_not(VStoreAllocator& allocator, VArrayTarget target, const VArray& a) {
 #ifdef NUMDOT_DISABLE_LOGICAL_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_LOGICAL_FUNCTIONS to enable it.");
 #else
 	va::xoperation_inplace<promote::reject_complex<promote::x_in_nat_out<bool>>>(
 		XFunction<xt::detail::logical_not> {},
+		allocator,
 		target,
 		a.data
 	);

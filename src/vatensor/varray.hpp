@@ -36,25 +36,6 @@ namespace va {
     using strides_type = xt::get_strides_t<shape_type>;
     using axes_type = strides_type;
 
-    template<typename T>
-    using array_case = xt::xarray<T, xt::layout_type::row_major>;
-
-    using ArrayVariant = std::variant<
-        array_case<bool>,
-        array_case<float_t>,
-        array_case<double_t>,
-        array_case<std::complex<float_t>>,
-        array_case<std::complex<double_t>>,
-        array_case<int8_t>,
-        array_case<int16_t>,
-        array_case<int32_t>,
-        array_case<int64_t>,
-        array_case<uint8_t>,
-        array_case<uint16_t>,
-        array_case<uint32_t>,
-        array_case<uint64_t>
-    >;
-
     enum DType {
         Bool,
         Float32,
@@ -125,9 +106,15 @@ namespace va {
 
     class VStore {
         public:
+        virtual void* data() = 0;
         virtual void prepare_write(VData& data, std::ptrdiff_t data_offset) {}
-
         virtual ~VStore() = default;
+    };
+
+    class VStoreAllocator {
+    public:
+        virtual std::shared_ptr<VStore> allocate(DType dtype, std::size_t count) = 0;
+        virtual ~VStoreAllocator() = default;
     };
 
     class VArray {

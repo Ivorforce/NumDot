@@ -1,6 +1,6 @@
 #include "conversion_array.hpp"
 
-#include <vatensor/allocate.hpp>                         // for copy_as_dtype
+#include <vatensor/create.hpp>                         // for copy_as_dtype
 #include <vatensor/vassign.hpp>                          // for assign
 #include <cmath>                                       // for double_t, float_t
 #include <cstddef>                                     // for size_t
@@ -10,7 +10,7 @@
 #include <tuple>                                       // for tuple, make_tuple
 #include <utility>                                     // for move
 #include <vector>                                      // for allocator, vector
-#include <vatensor/xarray_store.hpp>
+#include <vatensor/xtensor_store.hpp>
 #include <vatensor/xscalar_store.hpp>
 #include "godot_cpp/classes/object.hpp"                // for Object
 #include "godot_cpp/core/defs.hpp"                     // for real_t
@@ -336,7 +336,7 @@ std::shared_ptr<va::VArray> array_as_varray(const Array& input_array) {
 
 	if (dtype == va::DTypeMax) dtype = va::Float64; // Default dtype
 
-	std::shared_ptr<va::VArray> varray = va::empty(dtype, shape);
+	std::shared_ptr<va::VArray> varray = va::empty(va::store::default_allocator, dtype, shape);
 	std::vector<std::tuple<xt::xstrided_slice_vector, Array>> next = { std::make_tuple(xt::xstrided_slice_vector {}, input_array) };
 
 	while (!next.empty()) {
@@ -668,7 +668,7 @@ std::shared_ptr<va::VArray> ndarray_as_dtype(const NDArray& ndarray, const va::D
 	if (dtype == va::DTypeMax || ndarray.array->dtype() == dtype)
 		return ndarray.array;
 
-	return va::copy_as_dtype(ndarray.array->data, dtype);
+	return va::copy_as_dtype(va::store::default_allocator, ndarray.array->data, dtype);
 }
 
 std::shared_ptr<va::VArray> variant_as_array(const Variant& array, const va::DType dtype, const bool copy) {
@@ -676,7 +676,7 @@ std::shared_ptr<va::VArray> variant_as_array(const Variant& array, const va::DTy
 		case Variant::OBJECT: {
 			if (const auto ndarray = Object::cast_to<NDArray>(array)) {
 				if (copy)
-					return va::copy_as_dtype(ndarray->array->data, dtype);
+					return va::copy_as_dtype(va::store::default_allocator, ndarray->array->data, dtype);
 
 				return ndarray_as_dtype(*ndarray, dtype);
 			}
@@ -690,7 +690,7 @@ std::shared_ptr<va::VArray> variant_as_array(const Variant& array, const va::DTy
 	if (dtype == va::DTypeMax || dtype == varray->dtype())
 		return varray;
 	else
-		return va::copy_as_dtype(varray->data, dtype);
+		return va::copy_as_dtype(va::store::default_allocator, varray->data, dtype);
 }
 
 std::vector<std::shared_ptr<va::VArray>> variant_to_vector(const Variant& array) {

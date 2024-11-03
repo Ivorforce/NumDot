@@ -5,8 +5,8 @@
 #include "varray.hpp"
 
 namespace va {
-	void dot(VArrayTarget target, const VArray& a, const VArray& b);
-	void matmul(VArrayTarget target, const VArray& a, const VArray& b);
+	void dot(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& b);
+	void matmul(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& b);
 }
 
 #endif //LINALG_H

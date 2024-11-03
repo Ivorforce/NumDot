@@ -5,11 +5,11 @@
 #include "varray.hpp"
 
 namespace va {
-	void ceil(VArrayTarget target, const VArray& array);
-	void floor(VArrayTarget target, const VArray& array);
-	void trunc(VArrayTarget target, const VArray& array);
-	void round(VArrayTarget target, const VArray& array);
-	void nearbyint(VArrayTarget target, const VArray& array);
+	void ceil(VStoreAllocator& allocator, VArrayTarget target, const VArray& array);
+	void floor(VStoreAllocator& allocator, VArrayTarget target, const VArray& array);
+	void trunc(VStoreAllocator& allocator, VArrayTarget target, const VArray& array);
+	void round(VStoreAllocator& allocator, VArrayTarget target, const VArray& array);
+	void nearbyint(VStoreAllocator& allocator, VArrayTarget target, const VArray& array);
 }
 
 #endif //ROUND_H

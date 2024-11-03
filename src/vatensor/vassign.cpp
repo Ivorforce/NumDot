@@ -3,10 +3,10 @@
 #include <type_traits>                                  // for decay_t
 #include <variant>                                      // for visit
 #include "varray.hpp"                            // for VData, VScalar
-#include "xarray_store.hpp"
+#include "create.hpp"
 #include <xtensor/xmasked_view.hpp>
 #include <xtensor/xindex_view.hpp>
-#include "allocate.hpp"
+#include "vcompute.hpp"
 #include "vpromote.hpp"
 #include "xscalar_store.hpp"
 
@@ -80,32 +80,6 @@ void va::assign(VData& array, const VData& value) {
 	);
 }
 
-void va::assign_nonoverlapping(VData& array, const ArrayVariant& value) {
-	std::visit(
-		[](auto& carray, const auto& cvalue) {
-			using VWrite = typename std::decay_t<decltype(carray)>::value_type;
-			using VRead = typename std::decay_t<decltype(cvalue)>::value_type;
-
-			if constexpr (!std::is_convertible_v<VRead, VWrite>) {
-				throw std::runtime_error("Cannot promote in this way.");
-			}
-#ifdef XTENSOR_USE_XSIMD
-			// See above
-			else if constexpr (std::is_same_v<VWrite, bool> && std::is_same_v<VRead, bool>) {
-				broadcasting_assign(carray, xt::cast<uint8_t>(cvalue));
-			}
-			else if constexpr (xtl::is_complex<VWrite>::value) {
-				broadcasting_assign(carray, xt::cast<VWrite>(cvalue));
-			}
-#endif
-			else
-			{
-				broadcasting_assign(carray, cvalue);
-			}
-		}, array, value
-	);
-}
-
 void va::assign(VData& array, VScalar value) {
 	std::visit(
 		[](auto& carray, const auto cvalue) {
@@ -134,14 +108,14 @@ void va::assign(VData& array, VScalar value) {
 	);
 }
 
-void va::assign(VArrayTarget target, const VData& value) {
+void va::assign(VStoreAllocator& allocator, VArrayTarget target, const VData& value) {
 	std::visit(
-		[&value](auto target) {
+		[&value, &allocator](auto target) {
 			if constexpr (std::is_same_v<decltype(target), VData*>) {
 				va::assign(*target, value);
 			}
 			else {
-				*target = va::copy(value);
+				*target = va::copy(allocator, value);
 			}
 		}, target
 	);
@@ -160,35 +134,40 @@ void va::assign(VArrayTarget target, VScalar value) {
 	);
 }
 
-std::shared_ptr<VArray> va::get_at_mask(const VData& varray, const VData& mask) {
+std::shared_ptr<VArray> va::get_at_mask(VStoreAllocator& allocator, const VData& data, const VData& mask) {
 #ifdef NUMDOT_DISABLE_INDEX_MASKS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_INDEX_MASKS to enable it.");
 #else
-	return std::visit(
-		[](const auto& array, const auto& mask) -> std::shared_ptr<VArray> {
-			using VTArray = typename std::decay_t<decltype(array)>::value_type;
+	return std::visit([&allocator, &data](const auto& mask) -> std::shared_ptr<VArray> {
 			using VTMask = typename std::decay_t<decltype(mask)>::value_type;
 
 			if constexpr (!std::is_same_v<VTMask, bool>) {
 				throw std::runtime_error("mask must be boolean dtype");
 			}
 			else {
-				// Masked views don't offer this functionality automatically.
 				const size_type array_size = xt::sum(mask)();
-				auto result = va::array_case<VTArray>(xt::empty<VTArray>({ array_size }));
-				const auto masked_view = xt::masked_view(array, mask);
 
-				auto iter_result = result.begin();
-				for (auto masked_value : masked_view) {
-					if (masked_value.visible()) {
-						*iter_result = masked_value.value();
-						++iter_result;
+				return std::visit([&mask, &allocator, array_size](const auto& array) -> std::shared_ptr<VArray> {
+					using VTArray = typename std::decay_t<decltype(array)>::value_type;
+
+					auto result_varray = va::empty(allocator, variant_to_dtype(VTArray{}), shape_type { array_size });
+					auto result_compute = std::get<compute_case<VTArray*>>(result_varray->data);
+
+					// Masked views don't offer this functionality automatically.
+					const auto masked_view = xt::masked_view(array, mask);
+
+					auto iter_result = result_compute.begin();
+					for (auto masked_value : masked_view) {
+						if (masked_value.visible()) {
+							*iter_result = masked_value.value();
+							++iter_result;
+						}
 					}
-				}
 
-				return store::from_store(std::move(result));
+					return result_varray;
+				}, data);
 			}
-		}, varray, mask
+		}, mask
 	);
 #endif
 }
@@ -283,31 +262,36 @@ xt::svector<xt::svector<size_type>> array_to_indices(const A& indices) {
 	return xindices;
 }
 
-std::shared_ptr<VArray> va::get_at_indices(const VData& varray, const VData& indices) {
+std::shared_ptr<VArray> va::get_at_indices(VStoreAllocator& allocator, const VData& data, const VData& indices) {
 #ifdef NUMDOT_DISABLE_INDEX_LISTS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_INDEX_LISTS to enable it.");
 #else
 	return std::visit(
-		[](const auto& array, const auto& indices) -> std::shared_ptr<VArray> {
-			using VTMask = typename std::decay_t<decltype(indices)>::value_type;
+		[&allocator, &data](const auto& indices) -> std::shared_ptr<VArray> {
+			using VTIndices = typename std::decay_t<decltype(indices)>::value_type;
 
-			if constexpr (!std::is_integral_v<VTMask> || std::is_same_v<VTMask, bool>) {
+			if constexpr (!std::is_integral_v<VTIndices> || std::is_same_v<VTIndices, bool>) {
 				throw std::runtime_error("mask must be integer dtype");
 			}
 			else {
-				if (indices.dimension() == 1) {
-					if (array.dimension() != 1) throw std::runtime_error("cannot use 1D index list for nd tensor");
-
-					return store::from_store(store::make_store(xt::index_view(array, indices)));
-				}
-				if (indices.dimension() != 2) throw std::runtime_error("index list must be 1d or 2d");
-				if (indices.shape()[1] != array.dimension()) throw std::runtime_error("index list dimension 2 must match array dimension");
-
 				// Index views need to be vectors of xindex.
 				xt::svector<xt::svector<size_type>> xindices = array_to_indices(indices);
-				return store::from_store(store::make_store(xt::index_view(array, xindices)));
+
+				return std::visit([&indices, &xindices, &allocator](const auto& array) -> std::shared_ptr<VArray> {
+					using VTArray = typename std::decay_t<decltype(array)>::value_type;
+
+					if (indices.dimension() == 1) {
+						if (array.dimension() != 1) throw std::runtime_error("cannot use 1D index list for nd tensor");
+
+						return va::create_varray<VTArray>(allocator, xt::index_view(array, xindices));
+					}
+					if (indices.dimension() != 2) throw std::runtime_error("index list must be 1d or 2d");
+					if (indices.shape()[1] != array.dimension()) throw std::runtime_error("index list dimension 2 must match array dimension");
+
+					return va::create_varray<VTArray>(allocator, xt::index_view(array, xindices));
+				}, data);
 			}
-		}, varray, indices
+		}, indices
 	);
 #endif
 }

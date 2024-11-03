@@ -6,7 +6,7 @@
 #include <tuple>                                        // for tuple
 #include <utility>                                      // for forward, move
 
-#include "allocate.hpp"
+#include "create.hpp"
 #include "varray.hpp"                            // for VArray, axes_...
 #include "vcompute.hpp"                                   // for vreduce, xope...
 #include "vmath.hpp"
@@ -49,13 +49,15 @@ VScalar va::sum(const VArray& array) {
 #endif
 }
 
-void va::sum(VArrayTarget target, const VArray& array, const axes_type& axes) {
+void va::sum(VStoreAllocator& allocator, VArrayTarget target, const VArray& array, const axes_type& axes) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
 	va::xoperation_inplace<promote::num_in_same_out>(
 		REDUCER_LAMBDA_AXES(axes, xt::sum),
-		target, array.data
+		allocator,
+		target,
+		array.data
 	);
 #endif
 }
@@ -71,13 +73,15 @@ VScalar va::prod(const VArray& array) {
 #endif
 }
 
-void va::prod(VArrayTarget target, const VArray& array, const axes_type& axes) {
+void va::prod(VStoreAllocator& allocator, VArrayTarget target, const VArray& array, const axes_type& axes) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
 	va::xoperation_inplace<promote::num_at_least_int32_in_same_out>(
 		REDUCER_LAMBDA_AXES(axes, xt::prod),
-		target, array.data
+		allocator,
+		target,
+		array.data
 	);
 #endif
 }
@@ -93,13 +97,15 @@ VScalar va::mean(const VArray& array) {
 #endif
 }
 
-void va::mean(VArrayTarget target, const VArray& array, const axes_type& axes) {
+void va::mean(VStoreAllocator& allocator, VArrayTarget target, const VArray& array, const axes_type& axes) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
 	va::xoperation_inplace<promote::num_matching_float_or_default_in_nat_out<double_t>>(
 		REDUCER_LAMBDA_AXES(axes, xt::mean),
-		target, array.data
+		allocator,
+		target,
+		array.data
 	);
 #endif
 }
@@ -115,7 +121,7 @@ VScalar va::median(const VArray& array) {
 #endif
 }
 
-void va::median(VArrayTarget target, const VArray& array, const axes_type& axes) {
+void va::median(VStoreAllocator& allocator, VArrayTarget target, const VArray& array, const axes_type& axes) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
@@ -124,7 +130,9 @@ void va::median(VArrayTarget target, const VArray& array, const axes_type& axes)
 		auto axis = axes[0];
 		va::xoperation_inplace<promote::reject_complex<promote::num_in_same_out>>(
 			REDUCER_LAMBDA_AXES_NOECS(axis, xt::median),
-			target, array.data
+			allocator,
+			target,
+			array.data
 		);
 		return;
 	}
@@ -135,16 +143,20 @@ void va::median(VArrayTarget target, const VArray& array, const axes_type& axes)
 
 	if (joined->layout() == xt::layout_type::dynamic) {
 		// xtensor does not support dynamic layout, so we need a copy first.
-		const auto joined_copy = copy_as_dtype(array.data, DTypeMax);
+		const auto joined_copy = va::copy(allocator, array.data);
 		va::xoperation_inplace<promote::reject_complex<promote::num_in_same_out>>(
 			REDUCER_LAMBDA_AXES_NOECS(axis, xt::median),
-			target, joined_copy->data
+			allocator,
+			target,
+			joined_copy->data
 		);
 	}
 	else {
 		va::xoperation_inplace<promote::reject_complex<promote::num_in_same_out>>(
 			REDUCER_LAMBDA_AXES_NOECS(axis, xt::median),
-			target, joined->data
+			allocator,
+			target,
+			joined->data
 		);
 	}
 #endif
@@ -161,13 +173,15 @@ VScalar va::var(const VArray& array) {
 #endif
 }
 
-void va::var(VArrayTarget target, const VArray& array, const axes_type& axes) {
+void va::var(VStoreAllocator& allocator, VArrayTarget target, const VArray& array, const axes_type& axes) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
 	va::xoperation_inplace<promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>>(
 		REDUCER_LAMBDA_AXES(axes, xt::variance),
-		target, array.data
+			allocator,
+		target,
+		array.data
 	);
 #endif
 }
@@ -183,13 +197,15 @@ VScalar va::std(const VArray& array) {
 #endif
 }
 
-void va::std(VArrayTarget target, const VArray& array, const axes_type& axes) {
+void va::std(VStoreAllocator& allocator, VArrayTarget target, const VArray& array, const axes_type& axes) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
 	va::xoperation_inplace<promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>>(
 		REDUCER_LAMBDA_AXES(axes, xt::stddev),
-		target, array.data
+			allocator,
+		target,
+		array.data
 	);
 #endif
 }
@@ -205,13 +221,15 @@ VScalar va::max(const VArray& array) {
 #endif
 }
 
-void va::max(VArrayTarget target, const VArray& array, const axes_type& axes) {
+void va::max(VStoreAllocator& allocator, VArrayTarget target, const VArray& array, const axes_type& axes) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
 	va::xoperation_inplace<promote::reject_complex<promote::common_in_same_out>>(
 		REDUCER_LAMBDA_AXES(axes, xt::amax),
-		target, array.data
+			allocator,
+		target,
+		array.data
 	);
 #endif
 }
@@ -227,13 +245,15 @@ VScalar va::min(const VArray& array) {
 #endif
 }
 
-void va::min(VArrayTarget target, const VArray& array, const axes_type& axes) {
+void va::min(VStoreAllocator& allocator, VArrayTarget target, const VArray& array, const axes_type& axes) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
 	va::xoperation_inplace<promote::reject_complex<promote::common_in_same_out>>(
 		REDUCER_LAMBDA_AXES(axes, xt::amin),
-		target, array.data
+			allocator,
+		target,
+		array.data
 	);
 #endif
 }
@@ -249,13 +269,15 @@ VScalar va::norm_l0(const VArray& array) {
 #endif
 }
 
-void va::norm_l0(VArrayTarget target, const VArray& array, const axes_type& axes) {
+void va::norm_l0(VStoreAllocator& allocator, VArrayTarget target, const VArray& array, const axes_type& axes) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
 	va::xoperation_inplace<promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>>(
 		REDUCER_LAMBDA_AXES(axes, xt::norm_l0),
-		target, array.data
+		allocator,
+		target,
+		array.data
 	);
 #endif
 }
@@ -271,13 +293,15 @@ VScalar va::norm_l1(const VArray& array) {
 #endif
 }
 
-void va::norm_l1(VArrayTarget target, const VArray& array, const axes_type& axes) {
+void va::norm_l1(VStoreAllocator& allocator, VArrayTarget target, const VArray& array, const axes_type& axes) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
 	va::xoperation_inplace<promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>>(
 		REDUCER_LAMBDA_AXES(axes, xt::norm_l1),
-		target, array.data
+		allocator,
+		target,
+		array.data
 	);
 #endif
 }
@@ -293,13 +317,15 @@ VScalar va::norm_l2(const VArray& array) {
 #endif
 }
 
-void va::norm_l2(VArrayTarget target, const VArray& array, const axes_type& axes) {
+void va::norm_l2(VStoreAllocator& allocator, VArrayTarget target, const VArray& array, const axes_type& axes) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
 	va::xoperation_inplace<promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>>(
 		REDUCER_LAMBDA_AXES(axes, xt::norm_l2),
-		target, array.data
+		allocator,
+		target,
+		array.data
 	);
 #endif
 }
@@ -315,38 +341,40 @@ VScalar va::norm_linf(const VArray& array) {
 #endif
 }
 
-void va::norm_linf(VArrayTarget target, const VArray& array, const axes_type& axes) {
+void va::norm_linf(VStoreAllocator& allocator, VArrayTarget target, const VArray& array, const axes_type& axes) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
 	va::xoperation_inplace<promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>>(
 		REDUCER_LAMBDA_AXES(axes, xt::norm_linf),
-		target, array.data
+		allocator,
+		target,
+		array.data
 	);
 #endif
 }
 
-VScalar va::count_nonzero(const VArray& array) {
+VScalar va::count_nonzero(VStoreAllocator& allocator, const VArray& array) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
 	if (array.dtype() == va::Bool)
 		return sum(array);
 
-	const auto is_nonzero = va::copy_as_dtype(array.data, va::Bool);
+	const auto is_nonzero = va::copy_as_dtype(allocator, array.data, va::Bool);
 	return va::sum(*is_nonzero);
 #endif
 }
 
-void va::count_nonzero(VArrayTarget target, const VArray& array, const axes_type& axes) {
+void va::count_nonzero(VStoreAllocator& allocator, VArrayTarget target, const VArray& array, const axes_type& axes) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
 	if (array.dtype() == va::Bool)
-		return sum(target, array, axes);
+		return va::sum(allocator, target, array, axes);
 
-	const auto is_nonzero = va::copy_as_dtype(array.data, va::Bool);
-	return va::sum(target, *is_nonzero, axes);
+	const auto is_nonzero = va::copy_as_dtype(allocator, array.data, va::Bool);
+	return va::sum(allocator, target, *is_nonzero, axes);
 #endif
 }
 
@@ -361,13 +389,15 @@ bool va::all(const VArray& array) {
 #endif
 }
 
-void va::all(VArrayTarget target, const VArray& array, const axes_type& axes) {
+void va::all(VStoreAllocator& allocator, VArrayTarget target, const VArray& array, const axes_type& axes) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
 	va::xoperation_inplace<promote::reject_complex<promote::x_in_nat_out<bool>>>(
 		REDUCER_LAMBDA_AXES(axes, va_all),
-		target, array.data
+		allocator,
+		target,
+		array.data
 	);
 #endif
 }
@@ -383,13 +413,15 @@ bool va::any(const VArray& array) {
 #endif
 }
 
-void va::any(VArrayTarget target, const VArray& array, const axes_type& axes) {
+void va::any(VStoreAllocator& allocator, VArrayTarget target, const VArray& array, const axes_type& axes) {
 #ifdef NUMDOT_DISABLE_REDUCTION_FUNCTIONS
 	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_REDUCTION_FUNCTIONS to enable it.");
 #else
 	va::xoperation_inplace<promote::reject_complex<promote::x_in_nat_out<bool>>>(
 		REDUCER_LAMBDA_AXES(axes, va_any),
-		target, array.data
+		allocator,
+		target,
+		array.data
 	);
 #endif
 }
@@ -414,7 +446,7 @@ va::VScalar va::reduce_dot(const VArray& a, const VArray& b) {
 	);
 }
 
-void va::reduce_dot(VArrayTarget target, const VArray& a, const VArray& b, const axes_type& axes) {
+void va::reduce_dot(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& b, const axes_type& axes) {
 	// Could also do this instead to avoid generating more code.
 	// std::shared_ptr<va::VArray> prod_cache;
 	// va::multiply(&prod_cache, a, b);
@@ -433,6 +465,6 @@ void va::reduce_dot(VArrayTarget target, const VArray& a, const VArray& b, const
 			 	std::tuple<xt::evaluation_strategy::lazy_type>()
 			);
 		},
-		target, a.data, b.data
+		allocator, target, a.data, b.data
 	);
 }

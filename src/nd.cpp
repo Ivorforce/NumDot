@@ -17,8 +17,10 @@
 #include <variant>                          // for visit
 #include <godot_cpp/variant/utility_functions.hpp>
 #include <vatensor/stride_tricks.hpp>
+#include <vatensor/vcompute.hpp>
 #include <vatensor/vsignal.hpp>
 #include <vatensor/xscalar_store.hpp>
+#include <vatensor/xtensor_store.hpp>
 #include "gdconvert/conversion_array.hpp"     // for variant_as_array
 #include "gdconvert/conversion_ints.hpp"      // for variant_to_axes, variant_...
 #include "gdconvert/conversion_slice.hpp"     // for ellipsis, newaxis
@@ -27,7 +29,7 @@
 #include "godot_cpp/core/memory.hpp"        // for _post_initialize, memnew
 #include "ndarray.hpp"                        // for NDArray
 #include "ndutil.hpp"
-#include "vatensor/allocate.hpp"              // for full, empty
+#include "vatensor/create.hpp"              // for full, empty
 #include "vatensor/rearrange.hpp"             // for moveaxis, reshape, transpose
 #include "vatensor/varray.hpp"                // for VArrayTarget, axes_type
 #include "xtensor/xbuilder.hpp"             // for arange, linspace
@@ -267,27 +269,27 @@ Ref<NDArray> like_visit(Visitor&& visitor, const Variant& model, nd::DType dtype
 
 #define VARRAY_MAP1(func, varray1) \
 	map_variants_as_arrays_with_target([](const va::VArrayTarget target, const std::shared_ptr<va::VArray>& varray) {\
-        va::func(target, *varray);\
+        va::func(va::store::default_allocator, target, *varray);\
     }, (varray1))
 
 #define VARRAY_MAP2(func, varray1, varray2) \
 	map_variants_as_arrays_with_target([](const va::VArrayTarget target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b) {\
-        va::func(target, *a, *b);\
+        va::func(va::store::default_allocator, target, *a, *b);\
     }, (varray1), (varray2))
 
 #define VARRAY_MAP3(func, varray1, varray2, varray3) \
 	map_variants_as_arrays_with_target([](const va::VArrayTarget target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b, const std::shared_ptr<va::VArray>& c) {\
-        va::func(target, *a, *b, *c);\
+        va::func(va::store::default_allocator, target, *a, *b, *c);\
     }, (varray1), (varray2), (varray3))
 
 #define REDUCTION1(func, varray1, axes1) \
 	reduction([](const va::VArrayTarget target, const va::axes_type& axes, const va::VArray& array) {\
-		va::func(target, array, axes);\
+		va::func(va::store::default_allocator, target, array, axes);\
 	}, [](const va::VArray& array) { return va::func(array); }, axes, (varray1))
 
 #define REDUCTION2(func, varray1, varray2, axes1) \
 	reduction([](const va::VArrayTarget target, const va::axes_type& axes, const va::VArray& carray1, const va::VArray& carray2) {\
-		va::func(target, carray1, carray2, axes);\
+		va::func(va::store::default_allocator, target, carray1, carray2, axes);\
 	}, [](const va::VArray& carray1, const va::VArray& carray2) {\
 		return va::func(carray1, carray2);\
 	}, axes, (varray1), (varray2))
@@ -376,7 +378,7 @@ Ref<NDArray> nd::uint64(const Variant& array) { return nd::as_array(array, DType
 Ref<NDArray> nd::empty_like(const Variant& model, nd::DType dtype, const Variant& shape) {
 	return like_visit(
 		[](va::shape_type& shape, nd::DType& dtype) -> Ref<NDArray> {
-			return { memnew(NDArray(va::empty(dtype, shape))) };
+			return { memnew(NDArray(va::empty(va::store::default_allocator, dtype, shape))) };
 		}, model, dtype, shape
 	);
 }
@@ -385,7 +387,7 @@ Ref<NDArray> nd::empty(const Variant& shape, const nd::DType dtype) {
 	try {
 		const auto shape_array = variant_to_shape(shape);
 
-		return { memnew(NDArray(va::empty(dtype, shape_array))) };
+		return { memnew(NDArray(va::empty(va::store::default_allocator, dtype, shape_array))) };
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
@@ -397,20 +399,20 @@ Ref<NDArray> full(const va::shape_type& shape, nd::DType dtype, const Variant& f
 		case Variant::BOOL: {
 			if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Bool;
 			const auto value = va::scalar_to_dtype(static_cast<bool>(fill_value), dtype);
-			return { memnew(NDArray(va::full(value, shape))) };
+			return { memnew(NDArray(va::full(va::store::default_allocator, value, shape))) };
 		}
 		case Variant::INT: {
 			if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Int64;
 			const auto value = va::scalar_to_dtype(static_cast<int64_t>(fill_value), dtype);
-			return { memnew(NDArray(va::full(value, shape))) };
+			return { memnew(NDArray(va::full(va::store::default_allocator, value, shape))) };
 		}
 		case Variant::FLOAT: {
 			if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Float64;
 			const auto value = va::scalar_to_dtype(static_cast<double_t>(fill_value), dtype);
-			return { memnew(NDArray(va::full(value, shape))) };
+			return { memnew(NDArray(va::full(va::store::default_allocator, value, shape))) };
 		}
 		default: {
-			std::shared_ptr<va::VArray> result = va::empty(dtype, shape);
+			std::shared_ptr<va::VArray> result = va::empty(va::store::default_allocator, dtype, shape);
 			result->prepare_write();
 			va::assign(result->data, variant_as_array(fill_value)->data);
 			return { memnew(NDArray(result)) };
@@ -460,7 +462,7 @@ Ref<NDArray> nd::eye(const Variant& shape, int64_t k, nd::DType dtype) {
 		                            ? va::shape_type { static_cast<va::size_type>(static_cast<int64_t>(shape)), static_cast<va::size_type>(static_cast<int64_t>(shape)) }
 		                            : variant_to_shape(shape);
 
-		auto result = va::eye(dtype, used_shape, k);
+		auto result = va::eye(va::store::default_allocator, dtype, used_shape, k);
 		return { memnew(NDArray(result)) };
 	}
 	catch (std::runtime_error& error) {
@@ -484,13 +486,15 @@ Ref<NDArray> nd::linspace(const Variant& start, const Variant& stop, const int64
 				using T = std::decay_t<decltype(t)>;
 
 				if constexpr (std::is_floating_point_v<T>) {
-					return va::store::from_store(
-						va::array_case<T>(xt::linspace(static_cast<double_t>(start), static_cast<double_t>(stop), num, endpoint))
+					return va::create_varray<T>(
+						va::store::default_allocator,
+						xt::linspace(static_cast<double_t>(start), static_cast<double_t>(stop), num, endpoint)
 					);
 				}
 				else {
-					return va::store::from_store(
-						va::array_case<T>(xt::linspace(static_cast<int64_t>(start), static_cast<int64_t>(stop), num, endpoint))
+					return va::create_varray<T>(
+						va::store::default_allocator,
+						xt::linspace(static_cast<int64_t>(start), static_cast<int64_t>(stop), num, endpoint)
 					);
 				}
 			}, va::dtype_to_variant(dtype)
@@ -523,13 +527,15 @@ Ref<NDArray> nd::arange(const Variant& start_or_stop, const Variant& stop, const
 				using T = std::decay_t<decltype(t)>;
 
 				if constexpr (std::is_floating_point_v<T>) {
-					return va::store::from_store(va::array_case<T>(
-						xt::arange(static_cast<double_t>(start_), static_cast<double_t>(stop_), static_cast<double_t>(step_)))
+					return va::create_varray<T>(
+						va::store::default_allocator,
+						xt::arange(static_cast<double_t>(start_), static_cast<double_t>(stop_), static_cast<double_t>(step_))
 					);
 				}
 				else {
-					return va::store::from_store(
-						va::array_case<T>(xt::arange(static_cast<int64_t>(start_), static_cast<int64_t>(stop_), static_cast<int64_t>(step_)))
+					return va::create_varray<T>(
+						va::store::default_allocator,
+						xt::arange(static_cast<int64_t>(start_), static_cast<int64_t>(stop_), static_cast<int64_t>(step_))
 					);
 				}
 			}, va::dtype_to_variant(dtype)
@@ -620,7 +626,7 @@ Ref<NDArray> concatenate_(nd::DType dtype, const std::vector<std::shared_ptr<va:
 		}
 	}
 
-	auto result = va::empty(dtype, shape);
+	auto result = va::empty(va::store::default_allocator, dtype, shape);
 
 	xt::xstrided_slice_vector slice(axis_ + 1);
 	std::fill(slice.begin(), slice.end() - 1, xt::all());
@@ -696,7 +702,7 @@ Ref<NDArray> nd::tile(const Variant& v, const Variant& reps, bool inner) {
 		// array is sliced as a[..., all, newaxis, all, newaxis, [...]]
 		// The result array is reshaped to array shape, with reps_ where array has newaxis.
 
-		const auto result = va::tile(*array, reps_, inner);
+		const auto result = va::tile(va::store::default_allocator, *array, reps_, inner);
 		return { memnew(NDArray(result)) };
 	}
 	catch (std::runtime_error& error) {
@@ -978,7 +984,9 @@ Ref<NDArray> nd::norm(const Variant& a, const Variant& ord, const Variant& axes)
 }
 
 Ref<NDArray> nd::count_nonzero(const Variant& a, const Variant& axes) {
-	return REDUCTION1(count_nonzero, a, axes);
+	return reduction([](const va::VArrayTarget target, const va::axes_type& axes, const va::VArray& array) {
+		va::count_nonzero(va::store::default_allocator, target, array, axes);
+	}, [](const va::VArray& array) { return va::count_nonzero(va::store::default_allocator, array); }, axes, a);
 }
 
 Ref<NDArray> nd::floor(const Variant& a) {
@@ -1090,6 +1098,6 @@ Ref<NDRandomGenerator> nd::default_rng(const Variant& seed) {
 
 Ref<NDArray> nd::fft(const Variant& array, const int64_t axis) {
 	return map_variants_as_arrays_with_target([axis](const va::VArrayTarget target, const std::shared_ptr<va::VArray>& a) {
-		va::fft(target, *a, axis);
+		va::fft(va::store::default_allocator, target, *a, axis);
 	}, array);
 }

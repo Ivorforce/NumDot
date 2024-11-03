@@ -10,60 +10,65 @@
 
 using namespace va;
 
-void va::ceil(const VArrayTarget target, const VArray& array) {
+void va::ceil(VStoreAllocator& allocator, VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_ROUNDING_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_ROUNDING_FUNCTIONS to enable it.");
 #else
 	xoperation_inplace<promote::reject_complex<promote::num_function_result_in_same_out<xt::math::ceil_fun>>>(
 		va::XFunction<xt::math::ceil_fun> {},
+		allocator,
 		target,
 		array.data
 	);
 #endif
 }
 
-void va::floor(VArrayTarget target, const VArray& array) {
+void va::floor(VStoreAllocator& allocator, VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_ROUNDING_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_ROUNDING_FUNCTIONS to enable it.");
 #else
 	xoperation_inplace<promote::reject_complex<promote::num_function_result_in_same_out<xt::math::floor_fun>>>(
 		va::XFunction<xt::math::floor_fun> {},
+		allocator,
 		target,
 		array.data
 	);
 #endif
 }
 
-void va::trunc(VArrayTarget target, const VArray& array) {
+void va::trunc(VStoreAllocator& allocator, VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_ROUNDING_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_ROUNDING_FUNCTIONS to enable it.");
 #else
 	xoperation_inplace<promote::reject_complex<promote::num_function_result_in_same_out<xt::math::trunc_fun>>>(
 		va::XFunction<xt::math::trunc_fun> {},
+		allocator,
 		target,
 		array.data
 	);
 #endif
 }
 
-void va::round(VArrayTarget target, const VArray& array) {
+void va::round(VStoreAllocator& allocator, VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_ROUNDING_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_ROUNDING_FUNCTIONS to enable it.");
 #else
 	xoperation_inplace<promote::reject_complex<promote::num_function_result_in_same_out<xt::math::round_fun>>>(
 		va::XFunction<xt::math::round_fun> {},
+		allocator,
 		target,
 		array.data
 	);
 #endif
 }
 
-void va::nearbyint(VArrayTarget target, const VArray& array) {
+void va::nearbyint(VStoreAllocator& allocator, VArrayTarget target, const VArray& array) {
 #ifdef NUMDOT_DISABLE_ROUNDING_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_ROUNDING_FUNCTIONS to enable it.");
 #else
 	xoperation_inplace<promote::reject_complex<promote::num_function_result_in_same_out<xt::math::nearbyint_fun>>>(
 		va::XFunction<xt::math::nearbyint_fun> {},
+		allocator,
 		target,
 		array.data
 	);

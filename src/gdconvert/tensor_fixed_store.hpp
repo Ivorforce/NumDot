@@ -13,7 +13,13 @@ namespace numdot {
 
 		Tensor tensor;
 		explicit XTensorFixedStore(Tensor&& tensor) : tensor(std::forward<Tensor>(tensor)) {}
+		void* data() override;
 	};
+
+	template<typename Type, typename FSH>
+	void* XTensorFixedStore<Type, FSH>::data() {
+		return tensor.data();
+	}
 
 	template<typename Store>
 	static std::shared_ptr<va::VArray> varray_from_tensor(typename Store::Tensor&& tensor) {

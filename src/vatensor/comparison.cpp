@@ -14,9 +14,10 @@ using namespace va;
 #if !(defined(__aarch64__) || defined(_M_ARM64) || defined(__ARM_NEON) || defined(_M_ARM))
 // FIXME NEON xtensor / xsimd has a compile-time bug, see
 // https://github.com/xtensor-stack/xtensor/issues/2733
-void equal_to(VArrayTarget target, const VArray& a, const VScalar& b) {
+void equal_to(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VScalar& b) {
 	va::xoperation_inplace<promote::common_in_nat_out>(
 		va::XFunction<xt::detail::equal_to> {},
+		allocator,
 		target,
 		a.data,
 		b
@@ -25,7 +26,7 @@ void equal_to(VArrayTarget target, const VArray& a, const VScalar& b) {
 #endif
 #endif
 
-void va::equal_to(VArrayTarget target, const VArray& a, const VArray& b) {
+void va::equal_to(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& b) {
 #ifdef NUMDOT_DISABLE_COMPARISON_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_COMPARISON_FUNCTIONS to enable it.");
 #else
@@ -33,13 +34,14 @@ void va::equal_to(VArrayTarget target, const VArray& a, const VArray& b) {
 
 // Doesn't work right now with NEON, see above.
 #if !(defined(__aarch64__) || defined(_M_ARM64) || defined(__ARM_NEON) || defined(_M_ARM))
-	OPTIMIZE_COMMUTATIVE(::equal_to, a, b);
+	OPTIMIZE_COMMUTATIVE(::equal_to, allocator, target, a, b);
 #endif
 
 #endif
 
 	va::xoperation_inplace<promote::common_in_nat_out>(
 		va::XFunction<xt::detail::equal_to> {},
+		allocator,
 		target,
 		a.data,
 		b.data
@@ -49,9 +51,10 @@ void va::equal_to(VArrayTarget target, const VArray& a, const VArray& b) {
 
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 #if !(defined(__aarch64__) || defined(_M_ARM64) || defined(__ARM_NEON) || defined(_M_ARM))
-void not_equal_to(VArrayTarget target, const VArray& a, const VScalar& b) {
+void not_equal_to(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VScalar& b) {
 	va::xoperation_inplace<promote::common_in_nat_out>(
 		va::XFunction<xt::detail::not_equal_to> {},
+		allocator,
 		target,
 		a.data,
 		b
@@ -60,19 +63,20 @@ void not_equal_to(VArrayTarget target, const VArray& a, const VScalar& b) {
 #endif
 #endif
 
-void va::not_equal_to(VArrayTarget target, const VArray& a, const VArray& b) {
+void va::not_equal_to(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& b) {
 #ifdef NUMDOT_DISABLE_COMPARISON_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_COMPARISON_FUNCTIONS to enable it.");
 #else
 
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 #if !(defined(__aarch64__) || defined(_M_ARM64) || defined(__ARM_NEON) || defined(_M_ARM))
-	OPTIMIZE_COMMUTATIVE(::not_equal_to, a, b);
+	OPTIMIZE_COMMUTATIVE(::not_equal_to, allocator, target, a, b);
 #endif
 #endif
 
 	va::xoperation_inplace<promote::common_in_nat_out>(
 		va::XFunction<xt::detail::not_equal_to> {},
+		allocator,
 		target,
 		a.data,
 		b.data
@@ -80,7 +84,7 @@ void va::not_equal_to(VArrayTarget target, const VArray& a, const VArray& b) {
 #endif
 }
 
-void va::greater(VArrayTarget target, const VArray& a, const VArray& b) {
+void va::greater(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& b) {
 #ifdef NUMDOT_DISABLE_COMPARISON_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_COMPARISON_FUNCTIONS to enable it.");
 #else
@@ -88,6 +92,7 @@ void va::greater(VArrayTarget target, const VArray& a, const VArray& b) {
 	if (a.dimension() == 0) {
 		va::xoperation_inplace<promote::reject_complex<promote::num_in_nat_out>>(
 			va::XFunction<xt::detail::greater> {},
+			allocator,
 			target,
 			a.to_single_value(),
 			b.data
@@ -97,6 +102,7 @@ void va::greater(VArrayTarget target, const VArray& a, const VArray& b) {
 	if (b.dimension() == 0) {
 		va::xoperation_inplace<promote::reject_complex<promote::num_in_nat_out>>(
 			va::XFunction<xt::detail::greater> {},
+			allocator,
 			target,
 			a.data,
 			b.to_single_value()
@@ -107,6 +113,7 @@ void va::greater(VArrayTarget target, const VArray& a, const VArray& b) {
 
 	va::xoperation_inplace<promote::reject_complex<promote::num_in_nat_out>>(
 		va::XFunction<xt::detail::greater> {},
+		allocator,
 		target,
 		a.data,
 		b.data
@@ -114,7 +121,7 @@ void va::greater(VArrayTarget target, const VArray& a, const VArray& b) {
 #endif
 }
 
-void va::greater_equal(VArrayTarget target, const VArray& a, const VArray& b) {
+void va::greater_equal(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& b) {
 #ifdef NUMDOT_DISABLE_COMPARISON_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_COMPARISON_FUNCTIONS to enable it.");
 #else
@@ -122,6 +129,7 @@ void va::greater_equal(VArrayTarget target, const VArray& a, const VArray& b) {
 	if (a.dimension() == 0) {
 		va::xoperation_inplace<promote::reject_complex<promote::num_in_nat_out>>(
 			va::XFunction<xt::detail::greater_equal> {},
+			allocator,
 			target,
 			a.to_single_value(),
 			b.data
@@ -131,6 +139,7 @@ void va::greater_equal(VArrayTarget target, const VArray& a, const VArray& b) {
 	if (b.dimension() == 0) {
 		va::xoperation_inplace<promote::reject_complex<promote::num_in_nat_out>>(
 			va::XFunction<xt::detail::greater_equal> {},
+			allocator,
 			target,
 			a.data,
 			b.to_single_value()
@@ -141,6 +150,7 @@ void va::greater_equal(VArrayTarget target, const VArray& a, const VArray& b) {
 
 	va::xoperation_inplace<promote::reject_complex<promote::num_in_nat_out>>(
 		va::XFunction<xt::detail::greater_equal> {},
+		allocator,
 		target,
 		a.data,
 		b.data
@@ -148,7 +158,7 @@ void va::greater_equal(VArrayTarget target, const VArray& a, const VArray& b) {
 #endif
 }
 
-void va::less(VArrayTarget target, const VArray& a, const VArray& b) {
+void va::less(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& b) {
 #ifdef NUMDOT_DISABLE_COMPARISON_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_COMPARISON_FUNCTIONS to enable it.");
 #else
@@ -156,6 +166,7 @@ void va::less(VArrayTarget target, const VArray& a, const VArray& b) {
 	if (a.dimension() == 0) {
 		va::xoperation_inplace<promote::reject_complex<promote::num_in_nat_out>>(
 			va::XFunction<xt::detail::less> {},
+			allocator,
 			target,
 			a.to_single_value(),
 			b.data
@@ -165,6 +176,7 @@ void va::less(VArrayTarget target, const VArray& a, const VArray& b) {
 	if (b.dimension() == 0) {
 		va::xoperation_inplace<promote::reject_complex<promote::num_in_nat_out>>(
 			va::XFunction<xt::detail::less> {},
+			allocator,
 			target,
 			a.data,
 			b.to_single_value()
@@ -175,6 +187,7 @@ void va::less(VArrayTarget target, const VArray& a, const VArray& b) {
 
 	va::xoperation_inplace<promote::reject_complex<promote::num_in_nat_out>>(
 		va::XFunction<xt::detail::less> {},
+			allocator,
 		target,
 		a.data,
 		b.data
@@ -182,7 +195,7 @@ void va::less(VArrayTarget target, const VArray& a, const VArray& b) {
 #endif
 }
 
-void va::less_equal(VArrayTarget target, const VArray& a, const VArray& b) {
+void va::less_equal(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& b) {
 #ifdef NUMDOT_DISABLE_COMPARISON_FUNCTIONS
     throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_COMPARISON_FUNCTIONS to enable it.");
 #else
@@ -190,6 +203,7 @@ void va::less_equal(VArrayTarget target, const VArray& a, const VArray& b) {
 	if (a.dimension() == 0) {
 		va::xoperation_inplace<promote::reject_complex<promote::num_in_nat_out>>(
 			va::XFunction<xt::detail::less_equal> {},
+			allocator,
 			target,
 			a.to_single_value(),
 			b.data
@@ -199,6 +213,7 @@ void va::less_equal(VArrayTarget target, const VArray& a, const VArray& b) {
 	if (b.dimension() == 0) {
 		va::xoperation_inplace<promote::reject_complex<promote::num_in_nat_out>>(
 			va::XFunction<xt::detail::less_equal> {},
+			allocator,
 			target,
 			a.data,
 			b.to_single_value()
@@ -209,6 +224,7 @@ void va::less_equal(VArrayTarget target, const VArray& a, const VArray& b) {
 
 	va::xoperation_inplace<promote::reject_complex<promote::num_in_nat_out>>(
 		va::XFunction<xt::detail::less_equal> {},
+		allocator,
 		target,
 		a.data,
 		b.data

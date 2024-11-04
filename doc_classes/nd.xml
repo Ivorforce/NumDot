@@ -694,9 +694,9 @@
 			<description>
 				Pad an array.
 				[param pad_width] can be one of the following:
-				1. number, shortcut for [number, number].
-				2. [before, after], pads all axes equally.
-				3. [[before_0, after_0], [before_1, after_1], ...], pads axes in order.
+				1. number, shortcut for [code][number, number][/code].
+				2. [code][before, after][/code], pads all axes equally.
+				3. [code][[before_0, after_0], [before_1, after_1], ...][/code], pads axes in order.
 			</description>
 		</method>
 		<method name="positive" qualifiers="static">

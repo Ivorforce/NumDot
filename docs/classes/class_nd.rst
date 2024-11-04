@@ -1529,11 +1529,11 @@ Pad an array.
 
 \ ``pad_width`` can be one of the following:
 
-1. number, shortcut for ``number, number``.
+1. number, shortcut for ``[number, number]``.
 
-2. ``before, after``, pads all axes equally.
+2. ``[before, after]``, pads all axes equally.
 
-3. ``[before_0, after_0``, ``before_1, after_1``, ...], pads axes in order.
+3. ``[[before_0, after_0], [before_1, after_1], ...]``, pads axes in order.
 
 .. rst-class:: classref-item-separator
 

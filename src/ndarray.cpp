@@ -45,7 +45,9 @@ void NDArray::_bind_methods() {
 	godot::ClassDB::bind_method(D_METHOD("dtype"), &NDArray::dtype);
 	godot::ClassDB::bind_method(D_METHOD("shape"), &NDArray::shape);
 	godot::ClassDB::bind_method(D_METHOD("size"), &NDArray::size);
-	godot::ClassDB::bind_method(D_METHOD("array_size_in_bytes"), &NDArray::array_size_in_bytes);
+	godot::ClassDB::bind_method(D_METHOD("buffer_dtype"), &NDArray::buffer_dtype);
+	godot::ClassDB::bind_method(D_METHOD("buffer_size"), &NDArray::buffer_size);
+	godot::ClassDB::bind_method(D_METHOD("buffer_size_in_bytes"), &NDArray::buffer_size_in_bytes);
 	godot::ClassDB::bind_method(D_METHOD("ndim"), &NDArray::ndim);
 	godot::ClassDB::bind_method(D_METHOD("strides"), &NDArray::strides);
 	godot::ClassDB::bind_method(D_METHOD("strides_layout"), &NDArray::strides_layout);
@@ -187,8 +189,19 @@ uint64_t NDArray::size() const {
 	return array->size();
 }
 
-uint64_t NDArray::array_size_in_bytes() const {
-	return array->size_of_array_in_bytes();
+uint64_t NDArray::buffer_dtype() const {
+	return array->store->dtype();
+}
+
+uint64_t NDArray::buffer_size() const {
+	return array->store->size();
+}
+
+uint64_t NDArray::buffer_size_in_bytes() const {
+	return array->store->size() * std::visit([](auto t) -> std::size_t {
+		using V = std::decay_t<decltype(t)>;
+		return sizeof(V);
+	}, va::dtype_to_variant(array->store->dtype()));
 }
 
 uint64_t NDArray::ndim() const {

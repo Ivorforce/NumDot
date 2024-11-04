@@ -107,6 +107,8 @@ namespace va {
     class VStore {
         public:
         virtual void* data() = 0;
+        virtual DType dtype() = 0;
+        virtual std::size_t size() = 0;
         virtual void prepare_write(VData& data, std::ptrdiff_t data_offset) {}
         virtual ~VStore() = default;
     };
@@ -132,7 +134,6 @@ namespace va {
         [[nodiscard]] DType dtype() const { return va::dtype(data); }
         [[nodiscard]] std::size_t size() const { return va::size(data); }
         [[nodiscard]] std::size_t dimension() const { return va::dimension(data); }
-        [[nodiscard]] std::size_t size_of_array_in_bytes() const { return va::size_of_array_in_bytes(data); }
 
         [[nodiscard]] VScalar to_single_value() const { return va::to_single_value(data); }
 

@@ -11,6 +11,8 @@ namespace va::store {
 		explicit VScalarStore(VScalar scalar) : scalar(scalar) {}
 
 		void* data() override;
+		DType dtype() override;
+		std::size_t size() override { return 1; }
 	};
 
 	class VScalarStoreNonwrite : public VScalarStore {

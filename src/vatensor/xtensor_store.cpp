@@ -8,6 +8,19 @@ void* store::XArrayStore::data() {
 	}, array);
 }
 
+DType store::XArrayStore::dtype() {
+	return std::visit([](auto& array) -> va::DType {
+		using V = typename std::decay_t<decltype(array)>::value_type;
+		return variant_to_dtype(V{});
+	}, array);
+}
+
+size_t store::XArrayStore::size() {
+	return std::visit([](auto& array) -> std::size_t {
+		return array.size();
+	}, array);
+}
+
 std::shared_ptr<VStore> store::XArrayStoreAllocator::allocate(DType dtype, std::size_t count) {
 	return std::visit([count](auto t) -> std::shared_ptr<VStore> {
 		using T = std::decay_t<decltype(t)>;

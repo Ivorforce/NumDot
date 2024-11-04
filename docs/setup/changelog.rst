@@ -19,10 +19,12 @@ Upcoming Changes (main branch)
 - Added ``any`` layout type, which may bring tiny speed improvements.
 - Added ``fft`` function.
 - Added ``pad`` function.
+- Added ``ndarray.buffer_size`` and ``ndarray.buffer_dtype`` functions for investigation of underlying buffer types.
 
 **Changed**
 
 - In-place adaptations of native godot types speed up conversions (to and from NumDot). In particular, in-place adaptations of packed arrays do not need to copy data on read, and will produce instantaneous copy-on-write copies on ``to_packed_xxx_array`` calls for the same type.
+- ``ndarray.array_size_in_bytes`` is now called ``ndarray.buffer_size_in_bytes``.
 
 **Fixed**
 

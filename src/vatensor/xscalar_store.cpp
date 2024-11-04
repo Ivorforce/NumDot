@@ -6,6 +6,12 @@ void* va::store::VScalarStore::data() {
 	}, scalar);
 }
 
+va::DType va::store::VScalarStore::dtype() {
+	return std::visit([](auto& value) -> va::DType {
+		return variant_to_dtype(value);
+	}, scalar);
+}
+
 void va::store::VScalarStoreNonwrite::prepare_write(VData& data, std::ptrdiff_t data_offset) {
 	throw std::runtime_error("attempted to write to read-only storage");
 }

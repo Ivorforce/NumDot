@@ -33,7 +33,10 @@ namespace va::store {
 		public:
 			XArrayStoreVariant array;
 			explicit XArrayStore(XArrayStoreVariant&& array) : array(std::forward<XArrayStoreVariant>(array)) {}
+
 			void* data() override;
+			DType dtype() override;
+			size_t size() override;
 	};
 
 	class XArrayStoreAllocator: public VStoreAllocator {

@@ -9,13 +9,6 @@
 	<tutorials>
 	</tutorials>
 	<methods>
-		<method name="array_size_in_bytes" qualifiers="const">
-			<return type="int" />
-			<description>
-				Returns the number of bytes used by the contiguous data block of this array.
-				This is equivalent to nd.size_of_dtype_in_bytes(x.dtype()) * x.size().
-			</description>
-		</method>
 		<method name="as_type" qualifiers="const">
 			<return type="Variant" />
 			<param index="0" name="type" type="int" enum="nd.DType" />
@@ -545,6 +538,25 @@
 			<description>
 				In-place version of [method nd.var].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
+			</description>
+		</method>
+		<method name="buffer_dtype" qualifiers="const">
+			<return type="int" />
+			<description>
+				Returns the natural dtype of the underlying buffer.
+			</description>
+		</method>
+		<method name="buffer_size" qualifiers="const">
+			<return type="int" />
+			<description>
+				Returns the natural number of elements in the underlying buffer.
+			</description>
+		</method>
+		<method name="buffer_size_in_bytes" qualifiers="const">
+			<return type="int" />
+			<description>
+				Returns the number of bytes used by the underlying buffer.
+				This is equivalent to [code]nd.size_of_dtype_in_bytes(x.buffer_dtype()) * x.buffer_size()[/code].
 			</description>
 		</method>
 		<method name="copy" qualifiers="const">

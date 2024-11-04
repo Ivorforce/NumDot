@@ -70,7 +70,9 @@ public:
 	[[nodiscard]] va::DType dtype() const;
 	[[nodiscard]] PackedInt64Array shape() const;
 	[[nodiscard]] uint64_t size() const;
-	[[nodiscard]] uint64_t array_size_in_bytes() const;
+	[[nodiscard]] uint64_t buffer_dtype() const;
+	[[nodiscard]] uint64_t buffer_size() const;
+	[[nodiscard]] uint64_t buffer_size_in_bytes() const;
 	[[nodiscard]] uint64_t ndim() const;
 	[[nodiscard]] PackedInt64Array strides() const;
 	[[nodiscard]] Layout strides_layout() const;

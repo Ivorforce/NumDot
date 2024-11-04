@@ -30,8 +30,6 @@ Methods
    :widths: auto
 
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
-   | ``int``                                                    | :ref:`array_size_in_bytes<class_NDArray_method_array_size_in_bytes>`\ (\ ) |const|                                                                |
-   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``Variant``                                                | :ref:`as_type<class_NDArray_method_as_type>`\ (\ type\: :ref:`DType<enum_nd_DType>`\ ) |const|                                                    |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`assign_abs<class_NDArray_method_assign_abs>`\ (\ a\: ``Variant``\ )                                                                         |
@@ -156,6 +154,12 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`assign_var<class_NDArray_method_assign_var>`\ (\ a\: ``Variant`` = null, axes\: ``Variant`` = null\ )                                       |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``int``                                                    | :ref:`buffer_dtype<class_NDArray_method_buffer_dtype>`\ (\ ) |const|                                                                              |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``int``                                                    | :ref:`buffer_size<class_NDArray_method_buffer_size>`\ (\ ) |const|                                                                                |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``int``                                                    | :ref:`buffer_size_in_bytes<class_NDArray_method_buffer_size_in_bytes>`\ (\ ) |const|                                                              |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``Variant``                                                | :ref:`copy<class_NDArray_method_copy>`\ (\ ) |const|                                                                                              |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`DType<enum_nd_DType>`                                | :ref:`dtype<class_NDArray_method_dtype>`\ (\ ) |const|                                                                                            |
@@ -278,20 +282,6 @@ Compatible with both row major and column major, i.e. 0D and 1D arrays.
 
 Method Descriptions
 -------------------
-
-.. _class_NDArray_method_array_size_in_bytes:
-
-.. rst-class:: classref-method
-
-``int`` **array_size_in_bytes**\ (\ ) |const| :ref:`🔗<class_NDArray_method_array_size_in_bytes>`
-
-Returns the number of bytes used by the contiguous data block of this array.
-
-This is equivalent to nd.size_of_dtype_in_bytes(x.dtype()) \* x.size().
-
-.. rst-class:: classref-item-separator
-
-----
 
 .. _class_NDArray_method_as_type:
 
@@ -1154,6 +1144,44 @@ Assigns the result to this array, and returns it. The shape of the result must b
 In-place version of :ref:`nd.var<class_nd_method_var>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_buffer_dtype:
+
+.. rst-class:: classref-method
+
+``int`` **buffer_dtype**\ (\ ) |const| :ref:`🔗<class_NDArray_method_buffer_dtype>`
+
+Returns the natural dtype of the underlying buffer.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_buffer_size:
+
+.. rst-class:: classref-method
+
+``int`` **buffer_size**\ (\ ) |const| :ref:`🔗<class_NDArray_method_buffer_size>`
+
+Returns the natural number of elements in the underlying buffer.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_buffer_size_in_bytes:
+
+.. rst-class:: classref-method
+
+``int`` **buffer_size_in_bytes**\ (\ ) |const| :ref:`🔗<class_NDArray_method_buffer_size_in_bytes>`
+
+Returns the number of bytes used by the underlying buffer.
+
+This is equivalent to ``nd.size_of_dtype_in_bytes(x.buffer_dtype()) * x.buffer_size()``.
 
 .. rst-class:: classref-item-separator
 

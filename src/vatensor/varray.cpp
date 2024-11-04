@@ -59,15 +59,6 @@ std::size_t va::dimension(const VData& read) {
     );
 }
 
-std::size_t va::size_of_array_in_bytes(const VData& read) {
-    return std::visit(
-        [](auto& carray) {
-            using V = typename std::decay_t<decltype(carray)>::value_type;
-            return carray.size() * sizeof(V);
-        }, read
-    );
-}
-
 va::VScalar va::to_single_value(const VData& read) {
     return std::visit(
         [](const auto& carray) -> va::VScalar {

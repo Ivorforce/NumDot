@@ -13,6 +13,16 @@
 #include <vatensor/varray.hpp>
 
 namespace numdot {
+	template<class T>
+	auto get_packed_content_type(const T& packed) {
+		using C = std::decay_t<decltype(*packed.ptr())>;
+		if constexpr (std::is_same_v<C, godot::Vector2>) return real_t{};
+		else if constexpr (std::is_same_v<C, godot::Vector3>) return real_t{};
+		else if constexpr (std::is_same_v<C, godot::Vector4>) return real_t{};
+		else if constexpr (std::is_same_v<C, godot::Color>) return float_t{};
+		else return C{};
+	}
+
 	template <typename Array>
 	class PackedArrayStore : public va::VStore {
 	public:
@@ -20,14 +30,11 @@ namespace numdot {
 		Array array;
 		explicit PackedArrayStore(Array&& array) : array(std::forward<Array>(array)) {}
 
-		void* data() override;
+		void* data() override { return const_cast<void*>(static_cast<const void*>(array.ptr())); }
+		va::DType dtype() override { return va::variant_to_dtype(decltype(get_packed_content_type(array)){}); }
+		std::size_t size() override { return static_cast<std::size_t>(array.size()); }
 		void prepare_write(va::VData& data, std::ptrdiff_t data_offset) override;
 	};
-
-	template<typename Array>
-	void* PackedArrayStore<Array>::data() {
-		return const_cast<void*>(static_cast<const void*>(array.ptr()));
-	}
 
 	template<typename Array>
 	void PackedArrayStore<Array>::prepare_write(va::VData& data, std::ptrdiff_t data_offset) {

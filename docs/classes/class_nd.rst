@@ -60,6 +60,14 @@ Methods
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`atanh<class_nd_method_atanh>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                                    |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`bitwise_and<class_nd_method_bitwise_and>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                       |
+   +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`bitwise_not<class_nd_method_bitwise_not>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                        |
+   +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`bitwise_or<class_nd_method_bitwise_or>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                         |
+   +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`bitwise_xor<class_nd_method_bitwise_xor>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                       |
+   +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`bool_<class_nd_method_bool_>`\ (\ array\: ``Variant``\ ) |static|                                                                                                                                |
    +------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`ceil<class_nd_method_ceil>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                                      |
@@ -616,6 +624,54 @@ The quadrant (i.e., branch) is chosen so that arctan2(x1, x2) is the signed angl
 :ref:`NDArray<class_NDArray>` **atanh**\ (\ a\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_atanh>`
 
 Inverse hyperbolic tangent element-wise.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_bitwise_and:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **bitwise_and**\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_bitwise_and>`
+
+Compute the bit-wise AND of two arrays element-wise.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_bitwise_not:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **bitwise_not**\ (\ a\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_bitwise_not>`
+
+Compute bit-wise inversion, or bit-wise NOT, element-wise.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_bitwise_or:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **bitwise_or**\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_bitwise_or>`
+
+Compute the bit-wise OR of two arrays element-wise.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_bitwise_xor:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **bitwise_xor**\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_bitwise_xor>`
+
+Compute the bit-wise XOR of two arrays element-wise.
 
 .. rst-class:: classref-item-separator
 

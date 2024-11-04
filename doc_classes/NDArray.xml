@@ -108,6 +108,41 @@
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
+		<method name="assign_bitwise_and">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+				In-place version of [method nd.bitwise_and].
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
+			</description>
+		</method>
+		<method name="assign_bitwise_not">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				In-place version of [method nd.bitwise_not].
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
+			</description>
+		</method>
+		<method name="assign_bitwise_or">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+				In-place version of [method nd.bitwise_or].
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
+			</description>
+		</method>
+		<method name="assign_bitwise_xor">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+				In-place version of [method nd.bitwise_xor].
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
+			</description>
+		</method>
 		<method name="assign_ceil">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />

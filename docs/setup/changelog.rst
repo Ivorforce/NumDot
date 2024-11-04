@@ -20,6 +20,7 @@ Upcoming Changes (main branch)
 - Added ``fft`` function.
 - Added ``pad`` function.
 - Added ``ndarray.buffer_size`` and ``ndarray.buffer_dtype`` functions for investigation of underlying buffer types.
+- Added bitwise functions (``bitwise_and``, ``bitwise_or``, ``bitwise_xor``, ``bitwise_not``).
 
 **Changed**
 

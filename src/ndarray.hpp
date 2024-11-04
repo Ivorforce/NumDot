@@ -192,6 +192,12 @@ public:
 	Ref<NDArray> assign_all(const Variant& a, const Variant& axes);
 	Ref<NDArray> assign_any(const Variant& a, const Variant& axes);
 
+	// Bitwise.
+	Ref<NDArray> assign_bitwise_and(const Variant& a, const Variant& b);
+	Ref<NDArray> assign_bitwise_or(const Variant& a, const Variant& b);
+	Ref<NDArray> assign_bitwise_xor(const Variant& a, const Variant& b);
+	Ref<NDArray> assign_bitwise_not(const Variant& a);
+
 	// Linalg.
 	Ref<NDArray> assign_dot(const Variant& a, const Variant& b);
 	Ref<NDArray> assign_reduce_dot(const Variant& a, const Variant& b, const Variant& axes);

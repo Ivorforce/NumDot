@@ -43,6 +43,12 @@ namespace va {
 		inline constexpr bool is_at_least_float_t = std::is_floating_point_v<T> || xtl::is_complex<T>::value;
 
 		template<typename T>
+		struct is_integer_t : std::conjunction<
+			std::is_integral<T>,
+			std::negation<std::is_same<T, bool>>
+		> {};
+
+		template<typename T>
 		struct is_number_t : std::conjunction<
 			std::disjunction<std::is_arithmetic<T>, xtl::is_complex<T>>,
 			std::negation<std::is_same<T, bool>>
@@ -185,6 +191,18 @@ namespace va {
 		struct common_in_nat_out {
 			template<typename... Args>
 			using input_type = std::common_type_t<Args...>;
+
+			template<typename InputType, typename NaturalOutputType>
+			using output_type = NaturalOutputType;
+		};
+
+		struct common_int_in_same_out {
+			template<typename... Args>
+			using input_type = std::conditional_t<
+				std::disjunction_v<std::negation<is_integer_t<Args>>...>,
+				void,
+				std::common_type_t<Args...>
+			>;
 
 			template<typename InputType, typename NaturalOutputType>
 			using output_type = NaturalOutputType;

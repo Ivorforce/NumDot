@@ -124,6 +124,37 @@
 				Inverse hyperbolic tangent element-wise.
 			</description>
 		</method>
+		<method name="bitwise_and" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+				Compute the bit-wise AND of two arrays element-wise.
+			</description>
+		</method>
+		<method name="bitwise_not" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				Compute bit-wise inversion, or bit-wise NOT, element-wise.
+			</description>
+		</method>
+		<method name="bitwise_or" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+				Compute the bit-wise OR of two arrays element-wise.
+			</description>
+		</method>
+		<method name="bitwise_xor" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+				Compute the bit-wise XOR of two arrays element-wise.
+			</description>
+		</method>
 		<method name="bool_" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="array" type="Variant" />

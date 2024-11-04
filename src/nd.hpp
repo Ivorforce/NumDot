@@ -180,6 +180,12 @@ public:
 	static Ref<NDArray> all(const Variant& a, const Variant& axes);
 	static Ref<NDArray> any(const Variant& a, const Variant& axes);
 
+	// Bitwise.
+	static Ref<NDArray> bitwise_and(const Variant& a, const Variant& b);
+	static Ref<NDArray> bitwise_or(const Variant& a, const Variant& b);
+	static Ref<NDArray> bitwise_xor(const Variant& a, const Variant& b);
+	static Ref<NDArray> bitwise_not(const Variant& a);
+
 	// Linalg.
 	static Ref<NDArray> dot(const Variant& a, const Variant& b);
 	static Ref<NDArray> reduce_dot(const Variant& a, const Variant& b, const Variant& axes);

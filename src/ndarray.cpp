@@ -4,6 +4,7 @@
 #include <vatensor/comparison.hpp>                   // for equal_to, greater
 #include <vatensor/linalg.hpp>                       // for reduce_dot, dot
 #include <vatensor/logical.hpp>                      // for logical_and, logic...
+#include <vatensor/bitwise.hpp>                      // for bitwise_and, bitwise...
 #include <vatensor/reduce.hpp>                       // for all, any, max, mean
 #include <vatensor/trigonometry.hpp>                 // for acos, acosh, asin
 #include <vatensor/vassign.hpp>                      // for assign
@@ -157,6 +158,11 @@ void NDArray::_bind_methods() {
 	godot::ClassDB::bind_method(D_METHOD("assign_logical_not", "a"), &NDArray::assign_logical_not);
 	godot::ClassDB::bind_method(D_METHOD("assign_all", "a", "axes"), &NDArray::assign_all, DEFVAL(nullptr), DEFVAL(nullptr));
 	godot::ClassDB::bind_method(D_METHOD("assign_any", "a", "axes"), &NDArray::assign_any, DEFVAL(nullptr), DEFVAL(nullptr));
+
+	godot::ClassDB::bind_method(D_METHOD("assign_bitwise_and", "a", "b"), &NDArray::assign_bitwise_and);
+	godot::ClassDB::bind_method(D_METHOD("assign_bitwise_or", "a", "b"), &NDArray::assign_bitwise_or);
+	godot::ClassDB::bind_method(D_METHOD("assign_bitwise_xor", "a", "b"), &NDArray::assign_bitwise_xor);
+	godot::ClassDB::bind_method(D_METHOD("assign_bitwise_not", "a"), &NDArray::assign_bitwise_not);
 
 	godot::ClassDB::bind_method(D_METHOD("assign_dot", "a", "b"), &NDArray::assign_dot);
 	godot::ClassDB::bind_method(D_METHOD("assign_reduce_dot", "a", "b", "axes"), &NDArray::assign_reduce_dot, DEFVAL(nullptr), DEFVAL(nullptr), DEFVAL(nullptr));
@@ -1028,6 +1034,22 @@ Ref<NDArray> NDArray::assign_all(const Variant& a, const Variant& axes) {
 
 Ref<NDArray> NDArray::assign_any(const Variant& a, const Variant& axes) {
 	REDUCTION1(any, a, axes);
+}
+
+Ref<NDArray> NDArray::assign_bitwise_and(const Variant& a, const Variant& b) {
+	VARRAY_MAP2(bitwise_and, a, b);
+}
+
+Ref<NDArray> NDArray::assign_bitwise_or(const Variant& a, const Variant& b) {
+	VARRAY_MAP2(bitwise_or, a, b);
+}
+
+Ref<NDArray> NDArray::assign_bitwise_xor(const Variant& a, const Variant& b) {
+	VARRAY_MAP2(bitwise_xor, a, b);
+}
+
+Ref<NDArray> NDArray::assign_bitwise_not(const Variant& a) {
+	VARRAY_MAP1(bitwise_not, a);
 }
 
 Ref<NDArray> NDArray::assign_dot(const Variant& a, const Variant& b) {

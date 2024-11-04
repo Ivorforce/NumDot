@@ -54,6 +54,14 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`assign_atanh<class_NDArray_method_assign_atanh>`\ (\ a\: ``Variant``\ )                                                                     |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`assign_bitwise_and<class_NDArray_method_assign_bitwise_and>`\ (\ a\: ``Variant``, b\: ``Variant``\ )                                        |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`assign_bitwise_not<class_NDArray_method_assign_bitwise_not>`\ (\ a\: ``Variant``\ )                                                         |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`assign_bitwise_or<class_NDArray_method_assign_bitwise_or>`\ (\ a\: ``Variant``, b\: ``Variant``\ )                                          |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`assign_bitwise_xor<class_NDArray_method_assign_bitwise_xor>`\ (\ a\: ``Variant``, b\: ``Variant``\ )                                        |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`assign_ceil<class_NDArray_method_assign_ceil>`\ (\ a\: ``Variant``\ )                                                                       |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`assign_clip<class_NDArray_method_assign_clip>`\ (\ a\: ``Variant``, min\: ``Variant``, max\: ``Variant``\ )                                 |
@@ -442,6 +450,62 @@ Assigns the result to this array, and returns it. The shape of the result must b
 :ref:`NDArray<class_NDArray>` **assign_atanh**\ (\ a\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_atanh>`
 
 In-place version of :ref:`nd.atanh<class_nd_method_atanh>`.
+
+Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_assign_bitwise_and:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **assign_bitwise_and**\ (\ a\: ``Variant``, b\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_bitwise_and>`
+
+In-place version of :ref:`nd.bitwise_and<class_nd_method_bitwise_and>`.
+
+Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_assign_bitwise_not:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **assign_bitwise_not**\ (\ a\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_bitwise_not>`
+
+In-place version of :ref:`nd.bitwise_not<class_nd_method_bitwise_not>`.
+
+Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_assign_bitwise_or:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **assign_bitwise_or**\ (\ a\: ``Variant``, b\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_bitwise_or>`
+
+In-place version of :ref:`nd.bitwise_or<class_nd_method_bitwise_or>`.
+
+Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_assign_bitwise_xor:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **assign_bitwise_xor**\ (\ a\: ``Variant``, b\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_bitwise_xor>`
+
+In-place version of :ref:`nd.bitwise_xor<class_nd_method_bitwise_xor>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 

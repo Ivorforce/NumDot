@@ -91,7 +91,7 @@ void va::bitwise_xor(VStoreAllocator& allocator, VArrayTarget target, const VArr
 #endif
 
 	va::xoperation_inplace<promote::common_int_in_same_out>(
-		XFunction<xt::detail::not_equal_to> {},
+		XFunction<xt::detail::bitwise_xor> {},
 		allocator,
 		target,
 		a.data,
@@ -109,6 +109,66 @@ void va::bitwise_not(VStoreAllocator& allocator, VArrayTarget target, const VArr
 		allocator,
 		target,
 		a.data
+	);
+#endif
+}
+
+#ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
+void bitwise_left_shift(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VScalar& b) {
+	va::xoperation_inplace<promote::left_of_ints_in_same_out>(
+		va::XFunction<xt::detail::left_shift> {},
+		allocator,
+		target,
+		a.data,
+		b
+	);
+}
+#endif
+
+void va::bitwise_left_shift(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& b) {
+#ifdef NUMDOT_DISABLE_BITWISE_FUNCTIONS
+	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_BITWISE_FUNCTIONS to enable it.");
+#else
+#ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
+	OPTIMIZE_COMMUTATIVE(::bitwise_left_shift, allocator, target, a, b);
+#endif
+
+	va::xoperation_inplace<promote::left_of_ints_in_same_out>(
+		XFunction<xt::detail::left_shift> {},
+		allocator,
+		target,
+		a.data,
+		b.data
+	);
+#endif
+}
+
+#ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
+void bitwise_right_shift(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VScalar& b) {
+	va::xoperation_inplace<promote::left_of_ints_in_same_out>(
+		va::XFunction<xt::detail::right_shift> {},
+		allocator,
+		target,
+		a.data,
+		b
+	);
+}
+#endif
+
+void va::bitwise_right_shift(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& b) {
+#ifdef NUMDOT_DISABLE_BITWISE_FUNCTIONS
+	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_BITWISE_FUNCTIONS to enable it.");
+#else
+#ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
+	OPTIMIZE_COMMUTATIVE(::bitwise_right_shift, allocator, target, a, b);
+#endif
+
+	va::xoperation_inplace<promote::left_of_ints_in_same_out>(
+		XFunction<xt::detail::right_shift> {},
+		allocator,
+		target,
+		a.data,
+		b.data
 	);
 #endif
 }

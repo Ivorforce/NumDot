@@ -185,6 +185,8 @@ public:
 	static Ref<NDArray> bitwise_or(const Variant& a, const Variant& b);
 	static Ref<NDArray> bitwise_xor(const Variant& a, const Variant& b);
 	static Ref<NDArray> bitwise_not(const Variant& a);
+	static Ref<NDArray> bitwise_left_shift(const Variant& a, const Variant& b);
+	static Ref<NDArray> bitwise_right_shift(const Variant& a, const Variant& b);
 
 	// Linalg.
 	static Ref<NDArray> dot(const Variant& a, const Variant& b);

@@ -194,6 +194,8 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("bitwise_or", "a", "b"), &nd::bitwise_or);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("bitwise_xor", "a", "b"), &nd::bitwise_xor);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("bitwise_not", "a"), &nd::bitwise_not);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("bitwise_left_shift", "a", "b"), &nd::bitwise_left_shift);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("bitwise_right_shift", "a", "b"), &nd::bitwise_right_shift);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("dot", "a", "b"), &nd::dot);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("reduce_dot", "a", "b", "axes"), &nd::reduce_dot, DEFVAL(nullptr), DEFVAL(nullptr), DEFVAL(nullptr));
@@ -1087,6 +1089,14 @@ Ref<NDArray> nd::bitwise_xor(const Variant& a, const Variant& b) {
 
 Ref<NDArray> nd::bitwise_not(const Variant& a) {
 	return VARRAY_MAP1(bitwise_not, a);
+}
+
+Ref<NDArray> nd::bitwise_left_shift(const Variant& a, const Variant& b) {
+	return VARRAY_MAP2(bitwise_left_shift, a, b);
+}
+
+Ref<NDArray> nd::bitwise_right_shift(const Variant& a, const Variant& b) {
+	return VARRAY_MAP2(bitwise_right_shift, a, b);
 }
 
 Ref<NDArray> nd::dot(const Variant& a, const Variant& b) {

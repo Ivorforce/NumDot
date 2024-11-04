@@ -208,6 +208,19 @@ namespace va {
 			using output_type = NaturalOutputType;
 		};
 
+		// e.g. for a << b, a type is more important than b type.
+		struct left_of_ints_in_same_out {
+			template<typename First, typename... Args>
+			using input_type = std::conditional_t<
+				std::disjunction_v<std::negation<is_integer_t<First>>, std::negation<is_integer_t<Args>>...>,
+				void,
+				First
+			>;
+
+			template<typename InputType, typename NaturalOutputType>
+			using output_type = NaturalOutputType;
+		};
+
 		template<typename Type>
 		struct x_in_nat_out {
 			template<typename... Args>

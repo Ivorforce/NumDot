@@ -117,6 +117,15 @@
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
+		<method name="assign_bitwise_left_shift">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+				In-place version of [method nd.bitwise_left_shift].
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
+			</description>
+		</method>
 		<method name="assign_bitwise_not">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
@@ -131,6 +140,15 @@
 			<param index="1" name="b" type="Variant" />
 			<description>
 				In-place version of [method nd.bitwise_or].
+				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
+			</description>
+		</method>
+		<method name="assign_bitwise_right_shift">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+				In-place version of [method nd.bitwise_right_shift].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>

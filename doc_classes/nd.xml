@@ -132,6 +132,14 @@
 				Compute the bit-wise AND of two arrays element-wise.
 			</description>
 		</method>
+		<method name="bitwise_left_shift" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+				Shift the bits of an integer to the left.
+			</description>
+		</method>
 		<method name="bitwise_not" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
@@ -145,6 +153,14 @@
 			<param index="1" name="b" type="Variant" />
 			<description>
 				Compute the bit-wise OR of two arrays element-wise.
+			</description>
+		</method>
+		<method name="bitwise_right_shift" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+				Shift the bits of an integer to the right.
 			</description>
 		</method>
 		<method name="bitwise_xor" qualifiers="static">

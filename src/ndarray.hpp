@@ -197,6 +197,8 @@ public:
 	Ref<NDArray> assign_bitwise_or(const Variant& a, const Variant& b);
 	Ref<NDArray> assign_bitwise_xor(const Variant& a, const Variant& b);
 	Ref<NDArray> assign_bitwise_not(const Variant& a);
+	Ref<NDArray> assign_bitwise_left_shift(const Variant& a, const Variant& b);
+	Ref<NDArray> assign_bitwise_right_shift(const Variant& a, const Variant& b);
 
 	// Linalg.
 	Ref<NDArray> assign_dot(const Variant& a, const Variant& b);

@@ -947,9 +947,10 @@
 		<method name="transpose" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
-			<param index="1" name="permutation" type="Variant" />
+			<param index="1" name="permutation" type="Variant" default="null" />
 			<description>
 				Returns an array with axes transposed.
+				If [param permutation] is not given, reverses the order of the axes.
 			</description>
 		</method>
 		<method name="trunc" qualifiers="static">

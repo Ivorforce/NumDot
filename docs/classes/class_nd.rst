@@ -248,7 +248,7 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``Vector4i``                                               | :ref:`to<class_nd_method_to>`\ (\ stop\: ``int``\ ) |static|                                                                                                                                |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`NDArray<class_NDArray>`                              | :ref:`transpose<class_nd_method_transpose>`\ (\ a\: ``Variant``, permutation\: ``Variant``\ ) |static|                                                                                      |
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`transpose<class_nd_method_transpose>`\ (\ a\: ``Variant``, permutation\: ``Variant`` = null\ ) |static|                                                                               |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`trunc<class_nd_method_trunc>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                         |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1939,9 +1939,11 @@ Create a range that starts at 0, and stops at the given index (exclusive).
 
 .. rst-class:: classref-method
 
-:ref:`NDArray<class_NDArray>` **transpose**\ (\ a\: ``Variant``, permutation\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_transpose>`
+:ref:`NDArray<class_NDArray>` **transpose**\ (\ a\: ``Variant``, permutation\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_transpose>`
 
 Returns an array with axes transposed.
+
+If ``permutation`` is not given, reverses the order of the axes.
 
 .. rst-class:: classref-item-separator
 

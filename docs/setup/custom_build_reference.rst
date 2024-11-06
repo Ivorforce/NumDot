@@ -60,10 +60,6 @@ That being said, here is some information about the most interesting options:
 
     - Disable optimization for scalar operations, like ``nd.add(array, 5)``. This reduces their performance to that of regular ndarray operations, but saves on some binary size.
 
-- ``define=NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS``
-
-    - Disables automatic conversion to and from godot types.
-
 **Note:** You can have as many ``define=[...]`` arguments as you wish.
 
 You can test building with these options locally. To get them to be permanent, edit the SConstruct file, and add your needed changes at the spot intended for it:

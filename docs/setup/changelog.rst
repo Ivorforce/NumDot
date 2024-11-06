@@ -27,6 +27,7 @@ Upcoming Changes (main branch)
 - In-place adaptations of native godot types speed up conversions (to and from NumDot). In particular, in-place adaptations of packed arrays do not need to copy data on read, and will produce instantaneous copy-on-write copies on ``to_packed_xxx_array`` calls for the same type.
 - ``ndarray.array_size_in_bytes`` is now called ``ndarray.buffer_size_in_bytes``.
 - Custom builds can now disable each function / feature individually. This allows for very fine control of what to include in a custom build, which can reduce NumDot builds down to almost 0mb.
+- Removed ``NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS`` to improve usability. A similar option may be re-added to de-optimize conversions to save space.
 
 **Fixed**
 

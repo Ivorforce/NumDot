@@ -134,6 +134,8 @@ namespace va {
         [[nodiscard]] DType dtype() const { return va::dtype(data); }
         [[nodiscard]] std::size_t size() const { return va::size(data); }
         [[nodiscard]] std::size_t dimension() const { return va::dimension(data); }
+        [[nodiscard]] std::size_t is_full_view() const { return dtype() == store->dtype() && data_offset == 0 && size() == store->size(); }
+        [[nodiscard]] std::size_t is_contiguous() const { return layout() == xt::layout_type::row_major; }
 
         [[nodiscard]] VScalar to_single_value() const { return va::to_single_value(data); }
 

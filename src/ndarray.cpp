@@ -455,9 +455,6 @@ catch (std::runtime_error& error) {\
 }\
 
 Vector2 NDArray::to_vector2() const {
-#ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
-    throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
-#else
 	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to vector");
 	ERR_FAIL_COND_V_MSG(array->shape()[0] != 2, {}, "array dimension must be size 2");
 
@@ -465,13 +462,9 @@ Vector2 NDArray::to_vector2() const {
 	TRY_CONVERT(&vector.coord[0], array->data);
 
 	return vector;
-#endif
 }
 
 Vector3 NDArray::to_vector3() const {
-#ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
-    throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
-#else
 	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to vector");
 	ERR_FAIL_COND_V_MSG(array->shape()[0] != 3, {}, "array dimension must be size 3");
 
@@ -479,13 +472,9 @@ Vector3 NDArray::to_vector3() const {
 	TRY_CONVERT(&vector.coord[0], array->data);
 
 	return vector;
-#endif
 }
 
 Vector4 NDArray::to_vector4() const {
-#ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
-    throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
-#else
 	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to vector");
 	ERR_FAIL_COND_V_MSG(array->shape()[0] != 4, {}, "array dimension must be size 4");
 
@@ -493,13 +482,9 @@ Vector4 NDArray::to_vector4() const {
 	TRY_CONVERT(&vector.components[0], array->data);
 
 	return vector;
-#endif
 }
 
 Vector2i NDArray::to_vector2i() const {
-#ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
-    throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
-#else
 	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to vector");
 	ERR_FAIL_COND_V_MSG(array->shape()[0] != 2, {}, "array dimension must be size 2");
 
@@ -507,13 +492,9 @@ Vector2i NDArray::to_vector2i() const {
 	TRY_CONVERT(&vector.coord[0], array->data);
 
 	return vector;
-#endif
 }
 
 Vector3i NDArray::to_vector3i() const {
-#ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
-    throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
-#else
 	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to vector");
 	ERR_FAIL_COND_V_MSG(array->shape()[0] != 3, {}, "array dimension must be size 3");
 
@@ -521,13 +502,9 @@ Vector3i NDArray::to_vector3i() const {
 	TRY_CONVERT(&vector.coord[0], array->data);
 
 	return vector;
-#endif
 }
 
 Vector4i NDArray::to_vector4i() const {
-#ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
-    throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
-#else
 	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to vector");
 	ERR_FAIL_COND_V_MSG(array->shape()[0] != 4, {}, "array dimension must be size 4");
 
@@ -535,13 +512,9 @@ Vector4i NDArray::to_vector4i() const {
 	TRY_CONVERT(&vector.coord[0], array->data);
 
 	return vector;
-#endif
 }
 
 Color NDArray::to_color() const {
-#ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
-    throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
-#else
 	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to color");
 	ERR_FAIL_COND_V_MSG(array->shape()[0] != 4, {}, "array dimension must be size 4");
 
@@ -549,165 +522,158 @@ Color NDArray::to_color() const {
 	TRY_CONVERT(&vector.components[0], array->data);
 
 	return vector;
-#endif
 }
 
 PackedFloat32Array NDArray::to_packed_float32_array() const {
-	if (auto* store = dynamic_cast<numdot::VStorePackedFloat32Array*>(&*array->store)) {
-		return store->array;
-	}
-#ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
-	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
-#else
 	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to packed");
+
+	if (array->is_contiguous() && array->is_full_view()) {
+		if (auto* store = dynamic_cast<numdot::VStorePackedFloat32Array*>(&*array->store)) {
+			return store->array;
+		}
+	}
 
 	PackedFloat32Array packed;
 	packed.resize(static_cast<int64_t>(array->shape()[0]));
 	TRY_CONVERT(packed.ptrw(), array->data);
 
 	return packed;
-#endif
 }
 
 PackedFloat64Array NDArray::to_packed_float64_array() const {
-	if (auto* store = dynamic_cast<numdot::VStorePackedFloat64Array*>(&*array->store)) {
-		return store->array;
-	}
-#ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
-	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
-#else
 	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to packed");
+
+	if (array->is_contiguous() && array->is_full_view()) {
+		if (auto* store = dynamic_cast<numdot::VStorePackedFloat64Array*>(&*array->store)) {
+			return store->array;
+		}
+	}
 
 	PackedFloat64Array packed;
 	packed.resize(static_cast<int64_t>(array->shape()[0]));
 	TRY_CONVERT(packed.ptrw(), array->data);
 
 	return packed;
-#endif
 }
 
 PackedByteArray NDArray::to_packed_byte_array() const {
-	if (auto* store = dynamic_cast<numdot::VStorePackedByteArray*>(&*array->store)) {
-		return store->array;
-	}
-#ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
-	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
-#else
 	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to packed");
+
+	if (array->is_contiguous() && array->is_full_view()) {
+		if (auto* store = dynamic_cast<numdot::VStorePackedByteArray*>(&*array->store)) {
+			return store->array;
+		}
+	}
 
 	PackedByteArray packed;
 	packed.resize(static_cast<int64_t>(array->shape()[0]));
 	TRY_CONVERT(packed.ptrw(), array->data);
 
 	return packed;
-#endif
 }
 
 PackedInt32Array NDArray::to_packed_int32_array() const {
-	if (auto* store = dynamic_cast<numdot::VStorePackedInt32Array*>(&*array->store)) {
-		return store->array;
-	}
-#ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
-	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
-#else
 	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to packed");
+
+	if (array->is_contiguous() && array->is_full_view()) {
+		if (auto* store = dynamic_cast<numdot::VStorePackedInt32Array*>(&*array->store)) {
+			return store->array;
+		}
+	}
 
 	PackedInt32Array packed;
 	packed.resize(static_cast<int64_t>(array->shape()[0]));
 	TRY_CONVERT(packed.ptrw(), array->data);
 
 	return packed;
-#endif
 }
 
 PackedInt64Array NDArray::to_packed_int64_array() const {
-	if (auto* store = dynamic_cast<numdot::VStorePackedInt64Array*>(&*array->store)) {
-		return store->array;
-	}
-#ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
-	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
-#else
 	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to packed");
+
+	if (array->is_contiguous() && array->is_full_view()) {
+		if (auto* store = dynamic_cast<numdot::VStorePackedInt64Array*>(&*array->store)) {
+			return store->array;
+		}
+	}
 
 	PackedInt64Array packed;
 	packed.resize(static_cast<int64_t>(array->shape()[0]));
 	TRY_CONVERT(packed.ptrw(), array->data);
 
 	return packed;
-#endif
 }
 
 PackedVector2Array NDArray::to_packed_vector2_array() const {
-	if (auto* store = dynamic_cast<numdot::VStorePackedVector2Array*>(&*array->store)) {
-		return store->array;
-	}
-#ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
-	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
-#else
 	ERR_FAIL_COND_V_MSG(array->dimension() != 2, {}, "flatten the array before converting to packed");
 	ERR_FAIL_COND_V_MSG(array->shape()[1] != 2, {}, "final array dimension must be size 2");
 	// TODO Handle row major/minor? This still assumes it's normal row-major, i think.
+
+	if (array->is_contiguous() && array->is_full_view()) {
+		if (auto* store = dynamic_cast<numdot::VStorePackedVector2Array*>(&*array->store)) {
+			return store->array;
+		}
+	}
 
 	PackedVector2Array packed;
 	packed.resize(static_cast<int64_t>(array->shape()[0]));
 	TRY_CONVERT(&packed.ptrw()->coord[0], array->data);
 
 	return packed;
-#endif
 }
 
 PackedVector3Array NDArray::to_packed_vector3_array() const {
-	if (auto* store = dynamic_cast<numdot::VStorePackedVector3Array*>(&*array->store)) {
-		return store->array;
-	}
-#ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
-	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
-#else
 	ERR_FAIL_COND_V_MSG(array->dimension() != 2, {}, "flatten the array before converting to packed");
 	ERR_FAIL_COND_V_MSG(array->shape()[1] != 3, {}, "final array dimension must be size 2");
 	// TODO Handle row major/minor? This still assumes it's normal row-major, i think.
+
+	if (array->is_contiguous() && array->is_full_view()) {
+		if (auto* store = dynamic_cast<numdot::VStorePackedVector3Array*>(&*array->store)) {
+			return store->array;
+		}
+	}
 
 	PackedVector3Array packed;
 	packed.resize(static_cast<int64_t>(array->shape()[0]));
 	TRY_CONVERT(&packed.ptrw()->coord[0], array->data);
 
 	return packed;
-#endif
 }
 
 PackedVector4Array NDArray::to_packed_vector4_array() const {
-	if (auto* store = dynamic_cast<numdot::VStorePackedVector4Array*>(&*array->store)) {
-		return store->array;
-	}
-#ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
-	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
-#else
 	ERR_FAIL_COND_V_MSG(array->dimension() != 2, {}, "flatten the array before converting to packed");
 	ERR_FAIL_COND_V_MSG(array->shape()[1] != 4, {}, "final array dimension must be size 2");
 	// TODO Handle row major/minor? This still assumes it's normal row-major, i think.
+
+	if (array->is_contiguous() && array->is_full_view()) {
+		if (auto* store = dynamic_cast<numdot::VStorePackedVector4Array*>(&*array->store)) {
+			return store->array;
+		}
+	}
 
 	PackedVector4Array packed;
 	packed.resize(static_cast<int64_t>(array->shape()[0]));
 	TRY_CONVERT(&packed.ptrw()->components[0], array->data);
 
 	return packed;
-#endif
 }
 
 PackedColorArray NDArray::to_packed_color_array() const {
-#ifdef NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS
-	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS to enable it.");
-#else
 	ERR_FAIL_COND_V_MSG(array->dimension() != 2, {}, "flatten the array before converting to packed");
 	ERR_FAIL_COND_V_MSG(array->shape()[1] != 4, {}, "final array dimension must be size 2");
 	// TODO Handle row major/minor? This still assumes it's normal row-major, i think.
+
+	if (array->is_contiguous() && array->is_full_view()) {
+		if (auto* store = dynamic_cast<numdot::VStorePackedColorArray*>(&*array->store)) {
+			return store->array;
+		}
+	}
 
 	PackedColorArray packed;
 	packed.resize(static_cast<int64_t>(array->shape()[0]));
 	TRY_CONVERT(&packed.ptrw()->components[0], array->data);
 
 	return packed;
-#endif
 }
 
 TypedArray<NDArray> NDArray::to_godot_array() const {

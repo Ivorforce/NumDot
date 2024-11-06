@@ -61,7 +61,7 @@ namespace va {
         }
         else {
             // TODO add what feature is missing
-            throw std::runtime_error("Function execution failed: Missing feature in NumDot build - " + feature_name(feature));
+            throw std::runtime_error(std::string("Function execution failed: Missing feature in NumDot build - ") + feature_name(feature));
         }
     }
 

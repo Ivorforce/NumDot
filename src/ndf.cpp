@@ -24,7 +24,7 @@ void ndf::_bind_methods() {
 	godot::ClassDB::bind_static_method("ndf", D_METHOD("std", "a"), &ndf::std);
 	godot::ClassDB::bind_static_method("ndf", D_METHOD("max", "a"), &ndf::max);
 	godot::ClassDB::bind_static_method("ndf", D_METHOD("min", "a"), &ndf::min);
-	godot::ClassDB::bind_static_method("ndf", D_METHOD("norm", "a", "ord"), &ndf::norm, DEFVAL(nullptr), DEFVAL(2));
+	godot::ClassDB::bind_static_method("ndf", D_METHOD("norm", "a", "ord"), &ndf::norm, DEFVAL(2));
 
 	godot::ClassDB::bind_static_method("ndf", D_METHOD("reduce_dot", "a", "b"), &ndf::reduce_dot);
 }

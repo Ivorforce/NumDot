@@ -42,7 +42,7 @@
 		</method>
 		<method name="all" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="a" type="Variant" default="null" />
+			<param index="0" name="a" type="Variant" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				Test whether all array elements along a given axis evaluate to True.
@@ -51,7 +51,7 @@
 		</method>
 		<method name="any" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="a" type="Variant" default="null" />
+			<param index="0" name="a" type="Variant" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				Test whether any array element along a given axis evaluates to True.
@@ -60,7 +60,7 @@
 		</method>
 		<method name="arange" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="start_or_stop" type="Variant" default="0" />
+			<param index="0" name="start_or_stop" type="Variant" />
 			<param index="1" name="stop" type="Variant" default="null" />
 			<param index="2" name="step" type="Variant" default="1" />
 			<param index="3" name="dtype" type="int" enum="nd.DType" default="13" />
@@ -70,7 +70,7 @@
 		</method>
 		<method name="array" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="array" type="Variant" default="null" />
+			<param index="0" name="array" type="Variant" />
 			<param index="1" name="dtype" type="int" enum="nd.DType" default="13" />
 			<description>
 				Create a new [NDArray] of the given DType from the given data.
@@ -79,7 +79,7 @@
 		</method>
 		<method name="as_array" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="array" type="Variant" default="null" />
+			<param index="0" name="array" type="Variant" />
 			<param index="1" name="dtype" type="int" enum="nd.DType" default="13" />
 			<description>
 				Convert the input to an array, but avoid copying data if possible.
@@ -201,7 +201,7 @@
 		</method>
 		<method name="concatenate" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="v" type="Variant" default="null" />
+			<param index="0" name="v" type="Variant" />
 			<param index="1" name="axis" type="int" default="0" />
 			<param index="2" name="dtype" type="int" enum="nd.DType" default="13" />
 			<description>
@@ -242,7 +242,7 @@
 		</method>
 		<method name="count_nonzero" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="a" type="Variant" default="null" />
+			<param index="0" name="a" type="Variant" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				Counts the number of non-zero values in the array a along the given axes.
@@ -292,7 +292,7 @@
 		</method>
 		<method name="empty" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="shape" type="Variant" default="null" />
+			<param index="0" name="shape" type="Variant" />
 			<param index="1" name="dtype" type="int" enum="nd.DType" default="2" />
 			<description>
 				Return a new array of given shape and type, without initializing entries.
@@ -300,7 +300,7 @@
 		</method>
 		<method name="empty_like" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="model" type="Variant" default="null" />
+			<param index="0" name="model" type="Variant" />
 			<param index="1" name="dtype" type="int" enum="nd.DType" default="13" />
 			<param index="2" name="shape" type="Variant" default="null" />
 			<description>
@@ -325,7 +325,7 @@
 		</method>
 		<method name="eye" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="shape" type="Variant" default="null" />
+			<param index="0" name="shape" type="Variant" />
 			<param index="1" name="k" type="int" default="0" />
 			<param index="2" name="dtype" type="int" enum="nd.DType" default="2" />
 			<description>
@@ -337,7 +337,7 @@
 		</method>
 		<method name="fft" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="v" type="Variant" default="null" />
+			<param index="0" name="v" type="Variant" />
 			<param index="1" name="axis" type="int" default="-1" />
 			<description>
 				Compute the one-dimensional discrete Fourier Transform.
@@ -385,8 +385,8 @@
 		</method>
 		<method name="full" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="shape" type="Variant" default="null" />
-			<param index="1" name="fill_value" type="Variant" default="null" />
+			<param index="0" name="shape" type="Variant" />
+			<param index="1" name="fill_value" type="Variant" />
 			<param index="2" name="dtype" type="int" enum="nd.DType" default="2" />
 			<description>
 				Return a new array of given shape and type, filled with fill_value.
@@ -394,8 +394,8 @@
 		</method>
 		<method name="full_like" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="model" type="Variant" default="null" />
-			<param index="1" name="fill_value" type="Variant" default="null" />
+			<param index="0" name="model" type="Variant" />
+			<param index="1" name="fill_value" type="Variant" />
 			<param index="2" name="dtype" type="int" enum="nd.DType" default="13" />
 			<param index="3" name="shape" type="Variant" default="null" />
 			<description>
@@ -430,7 +430,7 @@
 		</method>
 		<method name="hstack" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="v" type="Variant" default="null" />
+			<param index="0" name="v" type="Variant" />
 			<param index="1" name="dtype" type="int" enum="nd.DType" default="13" />
 			<description>
 				Stack arrays in sequence horizontally (column wise).
@@ -496,8 +496,8 @@
 		</method>
 		<method name="linspace" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="start" type="Variant" default="0" />
-			<param index="1" name="stop" type="Variant" default="null" />
+			<param index="0" name="start" type="Variant" />
+			<param index="1" name="stop" type="Variant" />
 			<param index="2" name="num" type="int" default="50" />
 			<param index="3" name="endpoint" type="bool" default="true" />
 			<param index="4" name="dtype" type="int" enum="nd.DType" default="13" />
@@ -563,7 +563,7 @@
 		</method>
 		<method name="max" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="a" type="Variant" default="null" />
+			<param index="0" name="a" type="Variant" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				Return the maximum of an array or maximum along an axis.
@@ -581,7 +581,7 @@
 		</method>
 		<method name="mean" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="a" type="Variant" default="null" />
+			<param index="0" name="a" type="Variant" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				Compute the arithmetic mean along the specified axis.
@@ -590,7 +590,7 @@
 		</method>
 		<method name="median" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="a" type="Variant" default="null" />
+			<param index="0" name="a" type="Variant" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				Compute the median along the specified axis. The median is the middle value when you sort the values.
@@ -599,7 +599,7 @@
 		</method>
 		<method name="min" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="a" type="Variant" default="null" />
+			<param index="0" name="a" type="Variant" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				Return the minimum of an array or minimum along an axis.
@@ -650,7 +650,7 @@
 		</method>
 		<method name="norm" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="a" type="Variant" default="null" />
+			<param index="0" name="a" type="Variant" />
 			<param index="1" name="ord" type="Variant" default="2" />
 			<param index="2" name="axes" type="Variant" default="null" />
 			<description>
@@ -669,7 +669,7 @@
 		</method>
 		<method name="ones" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="shape" type="Variant" default="null" />
+			<param index="0" name="shape" type="Variant" />
 			<param index="1" name="dtype" type="int" enum="nd.DType" default="2" />
 			<description>
 				Return a new array of given shape and type, filled with ones.
@@ -677,7 +677,7 @@
 		</method>
 		<method name="ones_like" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="model" type="Variant" default="null" />
+			<param index="0" name="model" type="Variant" />
 			<param index="1" name="dtype" type="int" enum="nd.DType" default="13" />
 			<param index="2" name="shape" type="Variant" default="null" />
 			<description>
@@ -687,8 +687,8 @@
 		</method>
 		<method name="pad" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="v" type="Variant" default="null" />
-			<param index="1" name="pad_width" type="Variant" default="0" />
+			<param index="0" name="v" type="Variant" />
+			<param index="1" name="pad_width" type="Variant" />
 			<param index="2" name="pad_mode" type="int" enum="nd.PadMode" default="0" />
 			<param index="3" name="pad_value" type="Variant" default="0" />
 			<description>
@@ -717,7 +717,7 @@
 		</method>
 		<method name="prod" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="a" type="Variant" default="null" />
+			<param index="0" name="a" type="Variant" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				Return the product of array elements over a given axis.
@@ -733,7 +733,7 @@
 		</method>
 		<method name="range" qualifiers="static">
 			<return type="Vector4i" />
-			<param index="0" name="start_or_stop" type="Variant" default="0" />
+			<param index="0" name="start_or_stop" type="Variant" />
 			<param index="1" name="stop" type="Variant" default="&amp;&quot;no_value&quot;" />
 			<param index="2" name="step" type="Variant" default="null" />
 			<description>
@@ -754,8 +754,8 @@
 		</method>
 		<method name="reduce_dot" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="a" type="Variant" default="null" />
-			<param index="1" name="b" type="Variant" default="null" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
 			<param index="2" name="axes" type="Variant" default="null" />
 			<description>
 				Dot product of two arrays along the given axes.
@@ -837,7 +837,7 @@
 		<method name="split" qualifiers="static">
 			<return type="NDArray[]" />
 			<param index="0" name="v" type="Variant" />
-			<param index="1" name="indices_or_section_size" type="Variant" default="null" />
+			<param index="1" name="indices_or_section_size" type="Variant" />
 			<param index="2" name="axis" type="int" default="0" />
 			<description>
 				Split an array into multiple sub-arrays as views into v.
@@ -863,7 +863,7 @@
 		</method>
 		<method name="stack" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="v" type="Variant" default="null" />
+			<param index="0" name="v" type="Variant" />
 			<param index="1" name="axis" type="int" default="0" />
 			<description>
 				Join a sequence of arrays along a new axis.
@@ -873,7 +873,7 @@
 		</method>
 		<method name="std" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="a" type="Variant" default="null" />
+			<param index="0" name="a" type="Variant" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				Compute the standard deviation along the specified axis.
@@ -891,7 +891,7 @@
 		</method>
 		<method name="sum" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="a" type="Variant" default="null" />
+			<param index="0" name="a" type="Variant" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				Sum of array elements over a given axis.
@@ -925,8 +925,8 @@
 		</method>
 		<method name="tile" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="v" type="Variant" default="null" />
-			<param index="1" name="reps" type="Variant" default="null" />
+			<param index="0" name="v" type="Variant" />
+			<param index="1" name="reps" type="Variant" />
 			<param index="2" name="inner" type="bool" default="false" />
 			<description>
 				Construct an array by repeating v the number of times given by reps.
@@ -994,7 +994,7 @@
 		</method>
 		<method name="unstack" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="v" type="Variant" default="null" />
+			<param index="0" name="v" type="Variant" />
 			<param index="1" name="axis" type="int" default="0" />
 			<description>
 				Unpacks the given dimension of a rank-R tensor into a sequence of R-1 tensors. Opposite of [method stack].
@@ -1003,7 +1003,7 @@
 		</method>
 		<method name="var" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="a" type="Variant" default="null" />
+			<param index="0" name="a" type="Variant" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				Compute the variance along the specified axis.
@@ -1022,7 +1022,7 @@
 		</method>
 		<method name="vstack" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="v" type="Variant" default="null" />
+			<param index="0" name="v" type="Variant" />
 			<param index="1" name="dtype" type="int" enum="nd.DType" default="13" />
 			<description>
 				Stack arrays in sequence vertically (row wise).
@@ -1032,7 +1032,7 @@
 		</method>
 		<method name="zeros" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="shape" type="Variant" default="null" />
+			<param index="0" name="shape" type="Variant" />
 			<param index="1" name="dtype" type="int" enum="nd.DType" default="2" />
 			<description>
 				Return a new array of given shape and type, filled with zeros.
@@ -1040,7 +1040,7 @@
 		</method>
 		<method name="zeros_like" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="model" type="Variant" default="null" />
+			<param index="0" name="model" type="Variant" />
 			<param index="1" name="dtype" type="int" enum="nd.DType" default="13" />
 			<param index="2" name="shape" type="Variant" default="null" />
 			<description>

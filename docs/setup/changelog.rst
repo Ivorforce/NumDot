@@ -28,6 +28,7 @@ Upcoming Changes (main branch)
 - ``ndarray.array_size_in_bytes`` is now called ``ndarray.buffer_size_in_bytes``.
 - Custom builds can now disable each function / feature individually. This allows for very fine control of what to include in a custom build, which can reduce NumDot builds down to almost 0mb.
 - Removed ``NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS`` to improve usability. A similar option may be re-added to de-optimize conversions to save space.
+- Functions no longer declare unnecessary default values.
 
 **Fixed**
 

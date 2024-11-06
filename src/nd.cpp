@@ -68,12 +68,12 @@ void nd::_bind_methods() {
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("from", "start"), &nd::from);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("to", "stop"), &nd::to);
-	godot::ClassDB::bind_static_method("nd", D_METHOD("range", "start_or_stop", "stop", "step"), &nd::range, static_cast<int64_t>(0), DEFVAL(no_value()), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("range", "start_or_stop", "stop", "step"), &nd::range, DEFVAL(no_value()), DEFVAL(nullptr));
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("size_of_dtype_in_bytes", "dtype"), &nd::size_of_dtype_in_bytes);
 
-	godot::ClassDB::bind_static_method("nd", D_METHOD("as_array", "array", "dtype"), &nd::as_array, DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("array", "array", "dtype"), &nd::array, DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("as_array", "array", "dtype"), &nd::as_array, DEFVAL(nd::DType::DTypeMax));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("array", "array", "dtype"), &nd::array, DEFVAL(nd::DType::DTypeMax));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("copy", "array"), &nd::copy);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("bool_", "array"), &nd::bool_);
@@ -88,31 +88,31 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("uint32", "array"), &nd::uint32);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("uint64", "array"), &nd::uint64);
 
-	godot::ClassDB::bind_static_method("nd", D_METHOD("empty", "shape", "dtype"), &nd::empty, DEFVAL(nullptr), DEFVAL(nd::DType::Float64));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("empty_like", "model", "dtype", "shape"), &nd::empty_like, DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax), DEFVAL(nullptr));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("full", "shape", "fill_value", "dtype"), &nd::full, DEFVAL(nullptr), DEFVAL(nullptr), DEFVAL(nd::DType::Float64));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("full_like", "model", "fill_value", "dtype", "shape"), &nd::full_like, DEFVAL(nullptr), DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax), DEFVAL(nullptr));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("zeros", "shape", "dtype"), &nd::zeros, DEFVAL(nullptr), DEFVAL(nd::DType::Float64));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("ones_like", "model", "dtype", "shape"), &nd::ones_like, DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax), DEFVAL(nullptr));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("ones", "shape", "dtype"), &nd::ones, DEFVAL(nullptr), DEFVAL(nd::DType::Float64));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("zeros_like", "model", "dtype", "shape"), &nd::zeros_like, DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("empty", "shape", "dtype"), &nd::empty, DEFVAL(nd::DType::Float64));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("empty_like", "model", "dtype", "shape"), &nd::empty_like, DEFVAL(nd::DType::DTypeMax), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("full", "shape", "fill_value", "dtype"), &nd::full, DEFVAL(nd::DType::Float64));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("full_like", "model", "fill_value", "dtype", "shape"), &nd::full_like, DEFVAL(nd::DType::DTypeMax), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("zeros", "shape", "dtype"), &nd::zeros, DEFVAL(nd::DType::Float64));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("ones_like", "model", "dtype", "shape"), &nd::ones_like, DEFVAL(nd::DType::DTypeMax), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("ones", "shape", "dtype"), &nd::ones, DEFVAL(nd::DType::Float64));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("zeros_like", "model", "dtype", "shape"), &nd::zeros_like, DEFVAL(nd::DType::DTypeMax), DEFVAL(nullptr));
 
-	godot::ClassDB::bind_static_method("nd", D_METHOD("eye", "shape", "k", "dtype"), &nd::eye, DEFVAL(nullptr), DEFVAL(0), DEFVAL(nd::DType::Float64));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("linspace", "start", "stop", "num", "endpoint", "dtype"), &nd::linspace, DEFVAL(0), DEFVAL(nullptr), DEFVAL(50), DEFVAL(true), DEFVAL(nd::DType::DTypeMax));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("arange", "start_or_stop", "stop", "step", "dtype"), &nd::arange, DEFVAL(0), DEFVAL(nullptr), DEFVAL(1), DEFVAL(nd::DType::DTypeMax));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("eye", "shape", "k", "dtype"), &nd::eye, DEFVAL(0), DEFVAL(nd::DType::Float64));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("linspace", "start", "stop", "num", "endpoint", "dtype"), &nd::linspace, DEFVAL(50), DEFVAL(true), DEFVAL(nd::DType::DTypeMax));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("arange", "start_or_stop", "stop", "step", "dtype"), &nd::arange, DEFVAL(nullptr), DEFVAL(1), DEFVAL(nd::DType::DTypeMax));
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("transpose", "a", "permutation"), &nd::transpose);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("reshape", "a", "shape"), &nd::reshape);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("swapaxes", "v", "a", "b"), &nd::swapaxes);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("moveaxis", "v", "src", "dst"), &nd::moveaxis);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("flip", "v", "axis"), &nd::flip);
-	godot::ClassDB::bind_static_method("nd", D_METHOD("stack", "v", "axis"), &nd::stack, DEFVAL(nullptr), DEFVAL(0));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("unstack", "v", "axis"), &nd::unstack, DEFVAL(nullptr), DEFVAL(0));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("concatenate", "v", "axis", "dtype"), &nd::concatenate, DEFVAL(nullptr), DEFVAL(0), DEFVAL(nd::DType::DTypeMax));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("hstack", "v", "dtype"), &nd::hstack, DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("vstack", "v", "dtype"), &nd::vstack, DEFVAL(nullptr), DEFVAL(nd::DType::DTypeMax));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("tile", "v", "reps", "inner"), &nd::tile, DEFVAL(nullptr), DEFVAL(nullptr), DEFVAL(false));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("split", "v", "indices_or_section_size", "axis"), &nd::split, DEFVAL(nullptr), DEFVAL(0));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("stack", "v", "axis"), &nd::stack, DEFVAL(0));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("unstack", "v", "axis"), &nd::unstack, DEFVAL(0));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("concatenate", "v", "axis", "dtype"), &nd::concatenate, DEFVAL(0), DEFVAL(nd::DType::DTypeMax));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("hstack", "v", "dtype"), &nd::hstack, DEFVAL(nd::DType::DTypeMax));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("vstack", "v", "dtype"), &nd::vstack, DEFVAL(nd::DType::DTypeMax));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("tile", "v", "reps", "inner"), &nd::tile, DEFVAL(false));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("split", "v", "indices_or_section_size", "axis"), &nd::split, DEFVAL(0));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("hsplit", "v", "indices_or_section_size"), &nd::hsplit);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("vsplit", "v", "indices_or_section_size"), &nd::vsplit);
 
@@ -158,16 +158,16 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("acosh", "a"), &nd::acosh);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("atanh", "a"), &nd::atanh);
 
-	godot::ClassDB::bind_static_method("nd", D_METHOD("sum", "a", "axes"), &nd::sum, DEFVAL(nullptr), DEFVAL(nullptr));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("prod", "a", "axes"), &nd::prod, DEFVAL(nullptr), DEFVAL(nullptr));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("mean", "a", "axes"), &nd::mean, DEFVAL(nullptr), DEFVAL(nullptr));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("median", "a", "axes"), &nd::median, DEFVAL(nullptr), DEFVAL(nullptr));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("var", "a", "axes"), &nd::var, DEFVAL(nullptr), DEFVAL(nullptr));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("std", "a", "axes"), &nd::std, DEFVAL(nullptr), DEFVAL(nullptr));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("max", "a", "axes"), &nd::max, DEFVAL(nullptr), DEFVAL(nullptr));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("min", "a", "axes"), &nd::min, DEFVAL(nullptr), DEFVAL(nullptr));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("norm", "a", "ord", "axes"), &nd::norm, DEFVAL(nullptr), DEFVAL(2), DEFVAL(nullptr));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("count_nonzero", "a", "axes"), &nd::count_nonzero, DEFVAL(nullptr), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("sum", "a", "axes"), &nd::sum, DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("prod", "a", "axes"), &nd::prod, DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("mean", "a", "axes"), &nd::mean, DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("median", "a", "axes"), &nd::median, DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("var", "a", "axes"), &nd::var, DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("std", "a", "axes"), &nd::std, DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("max", "a", "axes"), &nd::max, DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("min", "a", "axes"), &nd::min, DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("norm", "a", "ord", "axes"), &nd::norm, DEFVAL(2), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("count_nonzero", "a", "axes"), &nd::count_nonzero, DEFVAL(nullptr));
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("floor", "a"), &nd::floor);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("ceil", "a"), &nd::ceil);
@@ -186,8 +186,8 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("logical_or", "a", "b"), &nd::logical_or);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("logical_xor", "a", "b"), &nd::logical_xor);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("logical_not", "a"), &nd::logical_not);
-	godot::ClassDB::bind_static_method("nd", D_METHOD("all", "a", "axes"), &nd::all, DEFVAL(nullptr), DEFVAL(nullptr));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("any", "a", "axes"), &nd::any, DEFVAL(nullptr), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("all", "a", "axes"), &nd::all, DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("any", "a", "axes"), &nd::any, DEFVAL(nullptr));
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("bitwise_and", "a", "b"), &nd::bitwise_and);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("bitwise_or", "a", "b"), &nd::bitwise_or);
@@ -197,7 +197,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("bitwise_right_shift", "a", "b"), &nd::bitwise_right_shift);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("dot", "a", "b"), &nd::dot);
-	godot::ClassDB::bind_static_method("nd", D_METHOD("reduce_dot", "a", "b", "axes"), &nd::reduce_dot, DEFVAL(nullptr), DEFVAL(nullptr), DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("reduce_dot", "a", "b", "axes"), &nd::reduce_dot, DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("matmul", "a", "b"), &nd::matmul);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("sliding_window_view", "array", "window_shape"), &nd::sliding_window_view);
@@ -205,8 +205,8 @@ void nd::_bind_methods() {
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("default_rng", "seed"), &nd::default_rng, DEFVAL(nullptr));
 
-	godot::ClassDB::bind_static_method("nd", D_METHOD("fft", "v", "axis"), &nd::fft, DEFVAL(nullptr), DEFVAL(-1));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("pad", "v", "pad_width", "pad_mode", "pad_value"), &nd::pad, DEFVAL(nullptr), DEFVAL(0), DEFVAL(nd::PadMode::Constant), DEFVAL(0));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("fft", "v", "axis"), &nd::fft, DEFVAL(-1));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("pad", "v", "pad_width", "pad_mode", "pad_value"), &nd::pad, DEFVAL(nd::PadMode::Constant), DEFVAL(0));
 }
 
 nd::nd() = default;

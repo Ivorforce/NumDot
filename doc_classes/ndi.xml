@@ -39,7 +39,7 @@
 		</method>
 		<method name="norm" qualifiers="static">
 			<return type="int" />
-			<param index="0" name="a" type="Variant" default="null" />
+			<param index="0" name="a" type="Variant" />
 			<param index="1" name="ord" type="Variant" default="2" />
 			<description>
 				No-axis equivalent of [method nd.norm] that returns an int.

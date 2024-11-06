@@ -23,7 +23,7 @@ void ndi::_bind_methods() {
 	godot::ClassDB::bind_static_method("ndi", D_METHOD("median", "a"), &ndi::median);
 	godot::ClassDB::bind_static_method("ndi", D_METHOD("max", "a"), &ndi::max);
 	godot::ClassDB::bind_static_method("ndi", D_METHOD("min", "a"), &ndi::min);
-	godot::ClassDB::bind_static_method("ndi", D_METHOD("norm", "a", "ord"), &ndi::norm, DEFVAL(nullptr), DEFVAL(2));
+	godot::ClassDB::bind_static_method("ndi", D_METHOD("norm", "a", "ord"), &ndi::norm, DEFVAL(2));
 	godot::ClassDB::bind_static_method("ndi", D_METHOD("count_nonzero", "a"), &ndi::count_nonzero);
 
 	godot::ClassDB::bind_static_method("ndi", D_METHOD("reduce_dot", "a", "b"), &ndi::reduce_dot);

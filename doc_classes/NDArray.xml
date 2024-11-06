@@ -51,7 +51,7 @@
 		</method>
 		<method name="assign_all">
 			<return type="NDArray" />
-			<param index="0" name="a" type="Variant" default="null" />
+			<param index="0" name="a" type="Variant" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				In-place version of [method nd.all].
@@ -60,7 +60,7 @@
 		</method>
 		<method name="assign_any">
 			<return type="NDArray" />
-			<param index="0" name="a" type="Variant" default="null" />
+			<param index="0" name="a" type="Variant" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				In-place version of [method nd.any].
@@ -345,7 +345,7 @@
 		</method>
 		<method name="assign_max">
 			<return type="NDArray" />
-			<param index="0" name="a" type="Variant" default="null" />
+			<param index="0" name="a" type="Variant" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				In-place version of [method nd.max].
@@ -363,7 +363,7 @@
 		</method>
 		<method name="assign_mean">
 			<return type="NDArray" />
-			<param index="0" name="a" type="Variant" default="null" />
+			<param index="0" name="a" type="Variant" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				In-place version of [method nd.mean].
@@ -372,7 +372,7 @@
 		</method>
 		<method name="assign_min">
 			<return type="NDArray" />
-			<param index="0" name="a" type="Variant" default="null" />
+			<param index="0" name="a" type="Variant" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				In-place version of [method nd.min].
@@ -407,7 +407,7 @@
 		</method>
 		<method name="assign_norm">
 			<return type="NDArray" />
-			<param index="0" name="a" type="Variant" default="null" />
+			<param index="0" name="a" type="Variant" />
 			<param index="1" name="ord" type="Variant" default="2" />
 			<param index="2" name="axes" type="Variant" default="null" />
 			<description>
@@ -443,7 +443,7 @@
 		</method>
 		<method name="assign_prod">
 			<return type="NDArray" />
-			<param index="0" name="a" type="Variant" default="null" />
+			<param index="0" name="a" type="Variant" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				In-place version of [method nd.prod].
@@ -460,8 +460,8 @@
 		</method>
 		<method name="assign_reduce_dot">
 			<return type="NDArray" />
-			<param index="0" name="a" type="Variant" default="null" />
-			<param index="1" name="b" type="Variant" default="null" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
 			<param index="2" name="axes" type="Variant" default="null" />
 			<description>
 				In-place version of [method nd.reduce_dot].
@@ -535,7 +535,7 @@
 		</method>
 		<method name="assign_std">
 			<return type="NDArray" />
-			<param index="0" name="a" type="Variant" default="null" />
+			<param index="0" name="a" type="Variant" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				In-place version of [method nd.std].
@@ -553,7 +553,7 @@
 		</method>
 		<method name="assign_sum">
 			<return type="NDArray" />
-			<param index="0" name="a" type="Variant" default="null" />
+			<param index="0" name="a" type="Variant" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				In-place version of [method nd.sum].
@@ -586,7 +586,7 @@
 		</method>
 		<method name="assign_var">
 			<return type="NDArray" />
-			<param index="0" name="a" type="Variant" default="null" />
+			<param index="0" name="a" type="Variant" />
 			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
 				In-place version of [method nd.var].

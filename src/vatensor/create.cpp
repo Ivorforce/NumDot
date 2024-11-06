@@ -101,7 +101,7 @@ std::shared_ptr<VArray> va::copy_as_dtype(VStoreAllocator& allocator, const VDat
 	return array;
 }
 
-std::shared_ptr<VArray> linspace(VStoreAllocator& allocator, VScalar start, VScalar stop, std::size_t num, const bool endpoint, DType dtype) {
+std::shared_ptr<VArray> va::linspace(VStoreAllocator& allocator, VScalar start, VScalar stop, std::size_t num, const bool endpoint, DType dtype) {
 	if (dtype == DTypeMax) {
 		dtype = va::variant_to_dtype(start);
 		dtype = va::dtype_common_type(dtype, variant_to_dtype(stop));
@@ -126,7 +126,7 @@ std::shared_ptr<VArray> linspace(VStoreAllocator& allocator, VScalar start, VSca
 	);
 }
 
-std::shared_ptr<VArray> arange(VStoreAllocator& allocator, VScalar start, VScalar stop, VScalar step, DType dtype) {
+std::shared_ptr<VArray> va::arange(VStoreAllocator& allocator, VScalar start, VScalar stop, VScalar step, DType dtype) {
 	if (dtype == DTypeMax) {
 		dtype = va::variant_to_dtype(start);
 		dtype = va::dtype_common_type(dtype, variant_to_dtype(stop));

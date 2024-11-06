@@ -17,7 +17,7 @@ namespace va {
 		// arr.fill(true);
 
 		for (std::size_t i = 0; i < static_cast<std::size_t>(Feature::count); ++i) {
-			arr[i] = false;
+			arr[i] = true;
 		}
 
 		for (const auto& [key, value] : init) {

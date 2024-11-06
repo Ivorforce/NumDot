@@ -60,6 +60,10 @@ That being said, here is some information about the most interesting options:
 
     - Disable optimization for scalar operations, like ``nd.add(array, 5)``. This reduces their performance to that of regular ndarray operations, but saves on some binary size.
 
+- ``define=NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS``
+
+    - Disables automatic conversion to and from godot types.
+
 **Note:** You can have as many ``define=[...]`` arguments as you wish.
 
 You can test building with these options locally. To get them to be permanent, edit the SConstruct file, and add your needed changes at the spot intended for it:
@@ -76,39 +80,13 @@ You can test building with these options locally. To get them to be permanent, e
 Disabling Features
 ------------------
 
-One of the easiest ways to save space is to disable features you don't need. Any disabled functions will error when they are called, instead of evaluating. To disable a feature, pass its macro into a ``define`` argument, like above, e.g.:
+You can disable features one by one (or as groups) using a python script. Disabling features you don't need can reduce the binary size down to almost 0mb.
 
-``define=NUMDOT_DISABLE_ALL_OPTIONAL_FUNCTIONS``
+To get started, first copy `numdot_config.template.py <https://github.com/Ivorforce/NumDot/blob/main/numdot_config.template.py>`_ to any location on your computer (and rename it).
 
-**Toggleable features:**
+The file is written in `Python <https://www.python.org>`_. Don't worry, it's a very easy language to use - in fact, it's very similar to GDScript! The file contains a few examples to get you started. You can find all toggleable features in `vfeature.hpp <https://github.com/Ivorforce/NumDot/blob/main/src/vatensor/vfeature.hpp>`_.
 
-- ``NUMDOT_DISABLE_ALL_OPTIONAL_FUNCTIONS``: Same as passing all flags below individually. Brings the binary size to ~15% (~1.5mb).
-- ``NUMDOT_DISABLE_ALLOCATION_FUNCTIONS``
-- ``NUMDOT_DISABLE_COMPARISON_FUNCTIONS``
-- ``NUMDOT_DISABLE_LOGICAL_FUNCTIONS``
-- ``NUMDOT_DISABLE_REDUCTION_FUNCTIONS``
-- ``NUMDOT_DISABLE_ROUNDING_FUNCTIONS``
-- ``NUMDOT_DISABLE_TRIGONOMETRY_FUNCTIONS``
-- ``NUMDOT_DISABLE_MATH_FUNCTIONS``
-- ``NUMDOT_DISABLE_RANDOM_FUNCTIONS``
-- ``NUMDOT_DISABLE_GODOT_CONVERSION_FUNCTIONS``
-- ``NUMDOT_DISABLE_INDEX_LISTS``
-- ``NUMDOT_DISABLE_INDEX_MASKS``
-
-You can also pass ``NUMDOT_DISABLE_ALL_OPTIONAL_FUNCTIONS`` to disable all functions, and only enable those you need. Enable macros have precedence over disable macros.
-
-- ``NUMDOT_ENABLE_ALLOCATION_FUNCTIONS``
-- ``NUMDOT_ENABLE_COMPARISON_FUNCTIONS``
-- ``NUMDOT_ENABLE_LOGICAL_FUNCTIONS``
-- ``NUMDOT_ENABLE_REDUCTION_FUNCTIONS``
-- ``NUMDOT_ENABLE_ROUNDING_FUNCTIONS``
-- ``NUMDOT_ENABLE_TRIGONOMETRY_FUNCTIONS``
-- ``NUMDOT_ENABLE_MATH_FUNCTIONS``
-- ``NUMDOT_ENABLE_RANDOM_FUNCTIONS``
-- ``NUMDOT_ENABLE_GODOT_CONVERSION_FUNCTIONS``
-- ``NUMDOT_ENABLE_INDEX_LISTS``
-- ``NUMDOT_ENABLE_INDEX_MASKS``
-
+Finally, when you compile the project, pass the option ```numdot_config=path/to/numdot_config.py``.
 
 Editing Code
 ------------

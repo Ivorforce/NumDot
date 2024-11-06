@@ -1,7 +1,6 @@
 #ifndef VATENSOR_FILL_H
 #define VATENSOR_FILL_H
 
-#include "auto_defines.hpp"
 #include "varray.hpp"
 
 namespace va {
@@ -11,6 +10,9 @@ namespace va {
 
 	std::shared_ptr<VArray> copy(VStoreAllocator& allocator, const VData& read);
 	std::shared_ptr<VArray> copy_as_dtype(VStoreAllocator& allocator, const VData& other, DType dtype);
+
+	std::shared_ptr<VArray> linspace(VStoreAllocator& allocator, VScalar start, VScalar stop, std::size_t num, bool endpoint, DType dtype);
+	std::shared_ptr<VArray> arange(VStoreAllocator& allocator, VScalar start, VScalar stop, VScalar step, DType dtype);
 
 	std::shared_ptr<VArray> tile(VStoreAllocator& allocator, const VArray& array, const shape_type& reps, bool inner);
 }

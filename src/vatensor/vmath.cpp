@@ -13,34 +13,27 @@
 using namespace va;
 
 void va::positive(VStoreAllocator& allocator, VArrayTarget target, const VArray& a) {
-#ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
-	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
-#else
-	va::xoperation_inplace<promote::num_or_error_in_same_out>(
-		XFunction<xt::detail::identity> {},
-		allocator,
-		target,
-		a.data
-	);
-#endif
+	va::assign(allocator, target, a.data);
 }
 
 void va::negative(VStoreAllocator& allocator, VArrayTarget target, const VArray& a) {
-#ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
-	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
-#else
-	va::xoperation_inplace<promote::num_or_error_in_same_out>(
+	va::xoperation_inplace<
+		Feature::negative,
+		promote::num_or_error_in_same_out
+	>(
 		XFunction<xt::detail::negate> {},
 		allocator,
 		target,
 		a.data
 	);
-#endif
 }
 
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 void add(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VScalar& b) {
-	va::xoperation_inplace<promote::num_function_result_in_same_out<xt::detail::plus>>(
+	va::xoperation_inplace<
+		Feature::add,
+		promote::num_function_result_in_same_out<xt::detail::plus>
+	>(
 		XFunction<xt::detail::plus> {},
 		allocator,
 		target,
@@ -51,30 +44,29 @@ void add(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const
 #endif
 
 void va::add(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& b) {
-#ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
-    throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
-#else
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	OPTIMIZE_COMMUTATIVE(::add, allocator, target, a, b);
 #endif
 
-	va::xoperation_inplace<promote::num_function_result_in_same_out<xt::detail::plus>>(
+	va::xoperation_inplace<
+		Feature::add,
+		promote::num_function_result_in_same_out<xt::detail::plus>
+	>(
 		XFunction<xt::detail::plus> {},
 		allocator,
 		target,
 		a.data,
 		b.data
 	);
-#endif
 }
 
 void va::subtract(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& b) {
-#ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
-    throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
-#else
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	if (a.dimension() == 0) {
-		va::xoperation_inplace<promote::num_function_result_in_same_out<xt::detail::minus>>(
+		va::xoperation_inplace<
+			Feature::subtract,
+			promote::num_function_result_in_same_out<xt::detail::minus>
+		>(
 			XFunction<xt::detail::minus> {},
 			allocator,
 			target,
@@ -84,7 +76,10 @@ void va::subtract(VStoreAllocator& allocator, VArrayTarget target, const VArray&
 		return;
 	}
 	if (b.dimension() == 0) {
-		va::xoperation_inplace<promote::num_function_result_in_same_out<xt::detail::minus>>(
+		va::xoperation_inplace<
+			Feature::subtract,
+			promote::num_function_result_in_same_out<xt::detail::minus>
+		>(
 			XFunction<xt::detail::minus> {},
 			allocator,
 			target,
@@ -95,18 +90,23 @@ void va::subtract(VStoreAllocator& allocator, VArrayTarget target, const VArray&
 	}
 #endif
 
-	va::xoperation_inplace<promote::num_function_result_in_same_out<xt::detail::minus>>(
+	va::xoperation_inplace<
+		Feature::subtract,
+		promote::num_function_result_in_same_out<xt::detail::minus>
+	>(
 		XFunction<xt::detail::minus> {},
 		allocator,
 		target,
 		a.data,
 		b.data
 	);
-#endif
 }
 
 void multiply(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VScalar& b) {
-	va::xoperation_inplace<promote::num_function_result_in_same_out<xt::detail::multiplies>>(
+	va::xoperation_inplace<
+		Feature::multiply,
+		promote::num_function_result_in_same_out<xt::detail::multiplies>
+	>(
 		XFunction<xt::detail::multiplies> {},
 		allocator,
 		target,
@@ -116,30 +116,29 @@ void multiply(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, 
 }
 
 void va::multiply(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& b) {
-#ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
-    throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
-#else
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	OPTIMIZE_COMMUTATIVE(::multiply, allocator, target, a, b);
 #endif
 
-	va::xoperation_inplace<promote::num_function_result_in_same_out<xt::detail::multiplies>>(
+	va::xoperation_inplace<
+		Feature::multiply,
+		promote::num_function_result_in_same_out<xt::detail::multiplies>
+	>(
 		XFunction<xt::detail::multiplies> {},
 		allocator,
 		target,
 		a.data,
 		b.data
 	);
-#endif
 }
 
 void va::divide(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& b) {
-#ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
-    throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
-#else
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	if (a.dimension() == 0) {
-		va::xoperation_inplace<promote::num_function_result_in_same_out<xt::detail::divides>>(
+		va::xoperation_inplace<
+			Feature::divide,
+			promote::num_function_result_in_same_out<xt::detail::divides>
+		>(
 			XFunction<xt::detail::divides> {},
 			allocator,
 			target,
@@ -149,7 +148,10 @@ void va::divide(VStoreAllocator& allocator, VArrayTarget target, const VArray& a
 		return;
 	}
 	if (b.dimension() == 0) {
-		va::xoperation_inplace<promote::num_function_result_in_same_out<xt::detail::divides>>(
+		va::xoperation_inplace<
+			Feature::divide,
+			promote::num_function_result_in_same_out<xt::detail::divides>
+		>(
 			XFunction<xt::detail::divides> {},
 			allocator,
 			target,
@@ -160,23 +162,25 @@ void va::divide(VStoreAllocator& allocator, VArrayTarget target, const VArray& a
 	}
 #endif
 
-	va::xoperation_inplace<promote::num_function_result_in_same_out<xt::detail::divides>>(
+	va::xoperation_inplace<
+		Feature::divide,
+		promote::num_function_result_in_same_out<xt::detail::divides>
+	>(
 		XFunction<xt::detail::divides> {},
 		allocator,
 		target,
 		a.data,
 		b.data
 	);
-#endif
 }
 
 void va::remainder(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& b) {
-#ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
-    throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
-#else
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	if (a.dimension() == 0) {
-		va::xoperation_inplace<promote::reject_complex<promote::num_function_result_in_same_out<xt::math::remainder_fun>>>(
+		va::xoperation_inplace<
+			Feature::remainder,
+			promote::reject_complex<promote::num_function_result_in_same_out<xt::math::remainder_fun>>
+		>(
 			XFunction<xt::math::remainder_fun> {},
 			allocator,
 			target,
@@ -186,7 +190,10 @@ void va::remainder(VStoreAllocator& allocator, VArrayTarget target, const VArray
 		return;
 	}
 	if (b.dimension() == 0) {
-		va::xoperation_inplace<promote::reject_complex<promote::num_function_result_in_same_out<xt::math::remainder_fun>>>(
+		va::xoperation_inplace<
+			Feature::remainder,
+			promote::reject_complex<promote::num_function_result_in_same_out<xt::math::remainder_fun>>
+		>(
 			XFunction<xt::math::remainder_fun> {},
 			allocator,
 			target,
@@ -197,23 +204,25 @@ void va::remainder(VStoreAllocator& allocator, VArrayTarget target, const VArray
 	}
 #endif
 
-	va::xoperation_inplace<promote::reject_complex<promote::num_function_result_in_same_out<xt::math::remainder_fun>>>(
+	va::xoperation_inplace<
+		Feature::remainder,
+		promote::reject_complex<promote::num_function_result_in_same_out<xt::math::remainder_fun>>
+	>(
 		XFunction<xt::math::remainder_fun> {},
 		allocator,
 		target,
 		a.data,
 		b.data
 	);
-#endif
 }
 
 void va::pow(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& b) {
-#ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
-    throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
-#else
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	if (a.dimension() == 0) {
-		va::xoperation_inplace<promote::num_function_result_in_same_out<xt::math::pow_fun>>(
+		va::xoperation_inplace<
+			Feature::pow,
+			promote::num_function_result_in_same_out<xt::math::pow_fun>
+		>(
 			XFunction<xt::math::pow_fun> {},
 			allocator,
 			target,
@@ -223,7 +232,10 @@ void va::pow(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, c
 		return;
 	}
 	if (b.dimension() == 0) {
-		va::xoperation_inplace<promote::num_function_result_in_same_out<xt::math::pow_fun>>(
+		va::xoperation_inplace<
+			Feature::pow,
+			promote::num_function_result_in_same_out<xt::math::pow_fun>
+		>(
 			XFunction<xt::math::pow_fun> {},
 			allocator,
 			target,
@@ -234,18 +246,23 @@ void va::pow(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, c
 	}
 #endif
 
-	va::xoperation_inplace<promote::num_function_result_in_same_out<xt::math::pow_fun>>(
+	va::xoperation_inplace<
+		Feature::pow,
+		promote::num_function_result_in_same_out<xt::math::pow_fun>
+	>(
 		XFunction<xt::math::pow_fun> {},
 		allocator,
 		target,
 		a.data,
 		b.data
 	);
-#endif
 }
 
 void minimum(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VScalar& b) {
-	va::xoperation_inplace<promote::reject_complex<promote::common_in_same_out>>(
+	va::xoperation_inplace<
+		Feature::minimum,
+		promote::reject_complex<promote::common_in_same_out>
+	>(
 		XFunction<xt::math::minimum<void>> {},
 		allocator,
 		target,
@@ -255,25 +272,27 @@ void minimum(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, c
 }
 
 void va::minimum(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& b) {
-#ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
-    throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
-#else
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	OPTIMIZE_COMMUTATIVE(::minimum, allocator, target, a, b);
 #endif
 
-	va::xoperation_inplace<promote::reject_complex<promote::common_in_same_out>>(
+	va::xoperation_inplace<
+		Feature::minimum,
+		promote::reject_complex<promote::common_in_same_out>
+	>(
 		XFunction<xt::math::minimum<void>> {},
 		allocator,
 		target,
 		a.data,
 		b.data
 	);
-#endif
 }
 
 void maximum(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VScalar& b) {
-	va::xoperation_inplace<promote::reject_complex<promote::common_in_same_out>>(
+	va::xoperation_inplace<
+		Feature::maximum,
+		promote::reject_complex<promote::common_in_same_out>
+	>(
 		XFunction<xt::math::maximum<void>> {},
 		allocator,
 		target,
@@ -283,32 +302,31 @@ void maximum(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, c
 }
 
 void va::maximum(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& b) {
-#ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
-    throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
-#else
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	OPTIMIZE_COMMUTATIVE(::maximum, allocator, target, a, b);
 #endif
 
-	va::xoperation_inplace<promote::reject_complex<promote::common_in_same_out>>(
+	va::xoperation_inplace<
+		Feature::maximum,
+		promote::reject_complex<promote::common_in_same_out>
+	>(
 		XFunction<xt::math::maximum<void>> {},
 		allocator,
 		target,
 		a.data,
 		b.data
 	);
-#endif
 }
 
 void va::clip(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& lo, const VArray& hi) {
-#ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
-    throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
-#else
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	// TODO Check binary size add and perhaps just use min and max.
 
 	if (lo.dimension() == 0 && hi.dimension() == 0) {
-		va::xoperation_inplace<promote::reject_complex<promote::common_in_same_out>>(
+		va::xoperation_inplace<
+			Feature::clip,
+			promote::reject_complex<promote::common_in_same_out>
+		>(
 			XFunction<xt::math::clamp_fun> {},
 			allocator,
 			target,
@@ -320,7 +338,10 @@ void va::clip(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, 
 	}
 #endif
 
-	va::xoperation_inplace<promote::reject_complex<promote::common_in_same_out>>(
+	va::xoperation_inplace<
+		Feature::clip,
+		promote::reject_complex<promote::common_in_same_out>
+	>(
 		XFunction<xt::math::clamp_fun> {},
 		allocator,
 		target,
@@ -328,33 +349,30 @@ void va::clip(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, 
 		lo.data,
 		hi.data
 	);
-#endif
 }
 
 void va::sign(VStoreAllocator& allocator, VArrayTarget target, const VArray& array) {
-#ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
-    throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
-#else
-	xoperation_inplace<promote::reject_complex<promote::common_in_same_out>>(
+	xoperation_inplace<
+		Feature::sign,
+		promote::reject_complex<promote::common_in_same_out>
+	>(
 		va::XFunction<xt::math::sign_fun> {},
 		allocator,
 		target,
 		array.data
 	);
-#endif
 }
 
 void va::abs(VStoreAllocator& allocator, VArrayTarget target, const VArray& array) {
-#ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
-    throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
-#else
-	xoperation_inplace<promote::num_in_nat_out>(
+	xoperation_inplace<
+		Feature::abs,
+		promote::num_in_nat_out
+	>(
 		va::XFunction<xt::math::abs_fun> {},
 		allocator,
 		target,
 		array.data
 	);
-#endif
 }
 
 // TODO xt::square uses xt::square_fct, which is hidden behind an ifdef.
@@ -367,79 +385,73 @@ struct square_fun {
 };
 
 void va::square(VStoreAllocator& allocator, VArrayTarget target, const VArray& array) {
-#ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
-    throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
-#else
-	xoperation_inplace<promote::common_in_same_out>(
+	xoperation_inplace<
+		Feature::square,
+		promote::common_in_same_out
+	>(
 		va::XFunction<square_fun> {},
 		allocator,
 		target,
 		array.data
 	);
-#endif
 }
 
 void va::sqrt(VStoreAllocator& allocator, VArrayTarget target, const VArray& array) {
-#ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
-    throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
-#else
-	xoperation_inplace<promote::num_function_result_in_same_out<xt::math::sqrt_fun>>(
+	xoperation_inplace<
+		Feature::sqrt,
+		promote::num_function_result_in_same_out<xt::math::sqrt_fun>
+	>(
 		va::XFunction<xt::math::sqrt_fun> {},
 		allocator,
 		target,
 		array.data
 	);
-#endif
 }
 
 void va::exp(VStoreAllocator& allocator, VArrayTarget target, const VArray& array) {
-#ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
-    throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
-#else
-	xoperation_inplace<promote::num_function_result_in_same_out<xt::math::exp_fun>>(
+	xoperation_inplace<
+		Feature::exp,
+		promote::num_function_result_in_same_out<xt::math::exp_fun>
+	>(
 		va::XFunction<xt::math::exp_fun> {},
 		allocator,
 		target,
 		array.data
 	);
-#endif
 }
 
 void va::log(VStoreAllocator& allocator, VArrayTarget target, const VArray& array) {
-#ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
-    throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
-#else
-	xoperation_inplace<promote::num_function_result_in_same_out<xt::math::log_fun>>(
+	xoperation_inplace<
+		Feature::log,
+		promote::num_function_result_in_same_out<xt::math::log_fun>
+	>(
 		va::XFunction<xt::math::log_fun> {},
 		allocator,
 		target,
 		array.data
 	);
-#endif
 }
 
 void va::rad2deg(VStoreAllocator& allocator, VArrayTarget target, const VArray& array) {
-#ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
-    throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
-#else
-	xoperation_inplace<promote::reject_complex<promote::num_function_result_in_same_out<xt::math::rad2deg>>>(
+	xoperation_inplace<
+		Feature::rad2deg,
+		promote::reject_complex<promote::num_function_result_in_same_out<xt::math::rad2deg>>
+	>(
 		va::XFunction<xt::math::rad2deg> {},
 		allocator,
 		target,
 		array.data
 	);
-#endif
 }
 
 void va::deg2rad(VStoreAllocator& allocator, VArrayTarget target, const VArray& array) {
-#ifdef NUMDOT_DISABLE_MATH_FUNCTIONS
-    throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_MATH_FUNCTIONS to enable it.");
-#else
-	xoperation_inplace<promote::reject_complex<promote::num_function_result_in_same_out<xt::math::deg2rad>>>(
+	xoperation_inplace<
+		Feature::deg2rad,
+		promote::reject_complex<promote::num_function_result_in_same_out<xt::math::deg2rad>>
+	>(
 		va::XFunction<xt::math::deg2rad> {},
 		allocator,
 		target,
 		array.data
 	);
-#endif
 }

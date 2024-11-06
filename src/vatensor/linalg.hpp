@@ -1,7 +1,6 @@
 #ifndef LINALG_H
 #define LINALG_H
 
-#include "auto_defines.hpp"
 #include "varray.hpp"
 
 namespace va {

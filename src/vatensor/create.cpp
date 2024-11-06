@@ -15,9 +15,6 @@
 using namespace va;
 
 std::shared_ptr<VArray> va::full(VStoreAllocator& allocator, const VScalar fill_value, const shape_type& shape) {
-#ifdef NUMDOT_DISABLE_ALLOCATION_FUNCTIONS
-    throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_ALLOCATION_FUNCTIONS to enable it.");
-#else
 	// Technically for this function we could use va::create_varray, but it's way faster to store the array contiguously.
 
 	auto count = xt::compute_size(shape);
@@ -46,7 +43,6 @@ std::shared_ptr<VArray> va::full(VStoreAllocator& allocator, const VScalar fill_
 			);
 		}, fill_value
 	);
-#endif
 }
 
 std::shared_ptr<VArray> va::empty(VStoreAllocator& allocator, DType dtype, const shape_type& shape) {
@@ -79,9 +75,6 @@ std::shared_ptr<VArray> va::empty(VStoreAllocator& allocator, DType dtype, const
 }
 
 std::shared_ptr<VArray> va::eye(VStoreAllocator& allocator, DType dtype, const shape_type& shape, int k) {
-#ifdef NUMDOT_DISABLE_ALLOCATION_FUNCTIONS
-    throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_ALLOCATION_FUNCTIONS to enable it.");
-#else
 	// For some reason, xt::eye wants this specific type
 	auto shape_eye = std::vector<std::size_t>(shape.size());
 	std::copy(shape.begin(), shape.end(), shape_eye.begin());
@@ -92,7 +85,6 @@ std::shared_ptr<VArray> va::eye(VStoreAllocator& allocator, DType dtype, const s
 			return va::create_varray<T>(allocator, xt::eye<T>(shape_eye, k));
 		}, dtype_to_variant(dtype)
 	);
-#endif
 }
 
 std::shared_ptr<VArray> va::copy(VStoreAllocator& allocator, const VData& other) {
@@ -102,15 +94,63 @@ std::shared_ptr<VArray> va::copy(VStoreAllocator& allocator, const VData& other)
 }
 
 std::shared_ptr<VArray> va::copy_as_dtype(VStoreAllocator& allocator, const VData& other, DType dtype) {
-#ifdef NUMDOT_DISABLE_ALLOCATION_FUNCTIONS
-    throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_ALLOCATION_FUNCTIONS to enable it.");
-#else
 	if (dtype == DTypeMax) dtype = va::dtype(other);
 
 	auto array = empty(allocator, dtype, va::shape(other));
 	va::assign(array->data, other);
 	return array;
-#endif
+}
+
+std::shared_ptr<VArray> linspace(VStoreAllocator& allocator, VScalar start, VScalar stop, std::size_t num, const bool endpoint, DType dtype) {
+	if (dtype == DTypeMax) {
+		dtype = va::variant_to_dtype(start);
+		dtype = va::dtype_common_type(dtype, variant_to_dtype(stop));
+	}
+
+	return visit_if_enabled<Feature::linspace>(
+		[&allocator, &start, &stop, &num, &endpoint](auto t) -> std::shared_ptr<VArray> {
+			using T = std::decay_t<decltype(t)>;
+			if constexpr (xtl::is_complex<T>::value) {
+				throw std::invalid_argument("linspace cannot be used with this dtype");
+			}
+			else {
+				auto start_ = scalar_to_type<T>(start);
+				auto stop_ = scalar_to_type<T>(stop);
+
+				return va::create_varray<T>(
+					allocator,
+					xt::linspace(start_, stop_, num, endpoint)
+				);
+			}
+		}, dtype_to_variant(dtype)
+	);
+}
+
+std::shared_ptr<VArray> arange(VStoreAllocator& allocator, VScalar start, VScalar stop, VScalar step, DType dtype) {
+	if (dtype == DTypeMax) {
+		dtype = va::variant_to_dtype(start);
+		dtype = va::dtype_common_type(dtype, variant_to_dtype(stop));
+		dtype = va::dtype_common_type(dtype, variant_to_dtype(step));
+	}
+
+	return visit_if_enabled<Feature::arange>(
+		[&allocator, &start, &stop, &step](auto t) -> std::shared_ptr<VArray> {
+			using T = std::decay_t<decltype(t)>;
+			if constexpr (xtl::is_complex<T>::value) {
+				throw std::invalid_argument("linspace cannot be used with this dtype");
+			}
+			else {
+				auto start_ = scalar_to_type<T>(start);
+				auto stop_ = scalar_to_type<T>(stop);
+				auto step_ = scalar_to_type<T>(step);
+
+				return va::create_varray<T>(
+					allocator,
+					xt::linspace(start_, stop_, step_)
+				);
+			}
+		}, dtype_to_variant(dtype)
+	);
 }
 
 std::shared_ptr<VArray> va::tile(VStoreAllocator& allocator, const VArray& array, const shape_type& reps, bool inner) {

@@ -48,6 +48,7 @@ __pycache__
 # Scons generated
 /compile_commands.json
 /src/gen
+/src/vatensor/gen
 
 # Build
 /build/addons/numdot/**/*
@@ -60,3 +61,6 @@ __pycache__
 !/demo/addons/numdot/*
 !/demo/addons/numdot/**/
 !/demo/addons/numdot/**/*.plist
+
+# Custom config
+/numdot_config.py

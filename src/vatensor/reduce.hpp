@@ -1,7 +1,6 @@
 #ifndef REDUCE_H
 #define REDUCE_H
 
-#include "auto_defines.hpp"
 #include "varray.hpp"
 
 namespace va {

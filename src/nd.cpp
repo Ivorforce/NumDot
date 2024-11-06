@@ -20,7 +20,6 @@
 #include <gdconvert/conversion_scalar.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 #include <vatensor/stride_tricks.hpp>
-#include <vatensor/vcompute.hpp>
 #include <vatensor/vsignal.hpp>
 #include <vatensor/xscalar_store.hpp>
 #include <vatensor/xtensor_store.hpp>
@@ -488,81 +487,43 @@ Ref<NDArray> nd::eye(const Variant& shape, int64_t k, nd::DType dtype) {
 }
 
 Ref<NDArray> nd::linspace(const Variant& start, const Variant& stop, const int64_t num, const bool endpoint, DType dtype) {
-#ifdef NUMDOT_DISABLE_ALLOCATION_FUNCTIONS
-	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_ALLOCATION_FUNCTIONS to enable it.");
-#else
-	if (dtype == DType::DTypeMax) {
-		dtype = start.get_type() == Variant::FLOAT || stop.get_type() == Variant::FLOAT
-		        ? nd::DType::Float64
-		        : nd::DType::Float32;
-	}
-
 	try {
-		const auto result = std::visit(
-			[start, stop, num, endpoint](auto t) -> std::shared_ptr<va::VArray> {
-				using T = std::decay_t<decltype(t)>;
+		const auto start_ = variant_to_vscalar(start);
+		const auto stop_ = variant_to_vscalar(stop);
 
-				if constexpr (std::is_floating_point_v<T>) {
-					return va::create_varray<T>(
-						va::store::default_allocator,
-						xt::linspace(static_cast<double_t>(start), static_cast<double_t>(stop), num, endpoint)
-					);
-				}
-				else {
-					return va::create_varray<T>(
-						va::store::default_allocator,
-						xt::linspace(static_cast<int64_t>(start), static_cast<int64_t>(stop), num, endpoint)
-					);
-				}
-			}, va::dtype_to_variant(dtype)
+		auto result = va::linspace(
+			va::store::default_allocator,
+			start_,
+			stop_,
+			num,
+			endpoint,
+			dtype
 		);
 		return { memnew(NDArray(result)) };
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
 	}
-#endif
 }
 
-Ref<NDArray> nd::arange(const Variant& start_or_stop, const Variant& stop, const Variant& step, DType dtype) {
-#ifdef NUMDOT_DISABLE_ALLOCATION_FUNCTIONS
-	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_ALLOCATION_FUNCTIONS to enable it.");
-#else
-	if (dtype == DType::DTypeMax) {
-		dtype = start_or_stop.get_type() == Variant::FLOAT || stop.get_type() == Variant::FLOAT || step.get_type() == Variant::FLOAT
-		        ? nd::DType::Float64
-		        : nd::DType::Int64;
-	}
-	static const Variant zero = 0;
-	const Variant& start_ = stop.get_type() == Variant::NIL ? zero : start_or_stop;
-	const Variant& stop_ = stop.get_type() == Variant::NIL ? start_or_stop : stop;
-	const Variant& step_ = step;
-
+Ref<NDArray> nd::arange(const Variant& start_or_stop, const Variant& stop, const Variant& step, const DType dtype) {
 	try {
-		const auto result = std::visit(
-			[start_, stop_, step_](auto t) -> std::shared_ptr<va::VArray> {
-				using T = std::decay_t<decltype(t)>;
+		const auto start_ = stop.get_type() == Variant::NIL ? va::VScalar(0) : variant_to_vscalar(start_or_stop);
+		const auto stop_ = variant_to_vscalar(stop.get_type() == Variant::NIL ? start_or_stop : stop);
+		const auto step_ = variant_to_vscalar(step);
 
-				if constexpr (std::is_floating_point_v<T>) {
-					return va::create_varray<T>(
-						va::store::default_allocator,
-						xt::arange(static_cast<double_t>(start_), static_cast<double_t>(stop_), static_cast<double_t>(step_))
-					);
-				}
-				else {
-					return va::create_varray<T>(
-						va::store::default_allocator,
-						xt::arange(static_cast<int64_t>(start_), static_cast<int64_t>(stop_), static_cast<int64_t>(step_))
-					);
-				}
-			}, va::dtype_to_variant(dtype)
+		const auto result = va::arange(
+			va::store::default_allocator,
+			start_,
+			stop_,
+			step_,
+			dtype
 		);
 		return { memnew(NDArray(result)) };
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
 	}
-#endif
 }
 
 Ref<NDArray> nd::transpose(const Variant& a, const Variant& permutation) {

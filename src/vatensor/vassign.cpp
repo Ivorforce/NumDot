@@ -121,6 +121,28 @@ void va::assign(VStoreAllocator& allocator, VArrayTarget target, const VData& va
 	);
 }
 
+void va::assign_cast(VStoreAllocator& allocator, VArrayTarget target, const VData& value, DType dtype) {
+	if (va::dtype(value) == dtype) {
+		// No cast necessary, just assign.
+		va::assign(allocator, target, value);
+		return;
+	}
+
+	std::visit(
+		[&allocator, &value, dtype](auto target) {
+			if constexpr (std::is_same_v<decltype(target), VData*>) {
+				// Making a copy is slow, but it's also a bit unusual to in-place
+				// assign to a type that has another type.
+				const auto casted_copy = copy_as_dtype(allocator, value, dtype);
+				va::assign(*target, casted_copy->data);
+			}
+			else {
+				*target = copy_as_dtype(allocator, value, dtype);
+			}
+		}, target
+	);
+}
+
 void va::assign(VArrayTarget target, VScalar value) {
 	std::visit(
 		[value](auto target) {
@@ -135,10 +157,8 @@ void va::assign(VArrayTarget target, VScalar value) {
 }
 
 std::shared_ptr<VArray> va::get_at_mask(VStoreAllocator& allocator, const VData& data, const VData& mask) {
-#ifdef NUMDOT_DISABLE_INDEX_MASKS
-	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_INDEX_MASKS to enable it.");
-#else
-	return std::visit([&allocator, &data](const auto& mask) -> std::shared_ptr<VArray> {
+	return visit_if_enabled<Feature::index_masks>(
+		[&allocator, &data](const auto& mask) -> std::shared_ptr<VArray> {
 			using VTMask = typename std::decay_t<decltype(mask)>::value_type;
 
 			if constexpr (!std::is_same_v<VTMask, bool>) {
@@ -169,19 +189,15 @@ std::shared_ptr<VArray> va::get_at_mask(VStoreAllocator& allocator, const VData&
 			}
 		}, mask
 	);
-#endif
 }
 
 void va::set_at_mask(VData& varray, VData& mask, VData& value) {
-#ifdef NUMDOT_DISABLE_INDEX_MASKS
-	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_INDEX_MASKS to enable it.");
-#else
 	// This case is not handled again later, so we actually need this 'performance' check.
     if (va::dimension(value) == 0) {
 	    return set_at_mask(varray, mask, va::to_single_value(value));
     }
 
-	return std::visit(
+	return visit_if_enabled<Feature::index_masks>(
 		// Mask can't be const because of masked_view iterator.
 		[](auto& array, auto& mask, const auto& value) {
 			using VTArray = typename std::decay_t<decltype(array)>::value_type;
@@ -217,11 +233,10 @@ void va::set_at_mask(VData& varray, VData& mask, VData& value) {
 			}
 		}, varray, mask, value
 	);
-#endif
 }
 
 void va::set_at_mask(VData& varray, VData& mask, VScalar value) {
-	return std::visit(
+	return visit_if_enabled<Feature::index_masks>(
 		// Mask can't be const because of masked_view iterator.
 		[](auto& array, auto& mask, const auto value) {
 			using VTArray = typename std::decay_t<decltype(array)>::value_type;
@@ -263,10 +278,7 @@ xt::svector<xt::svector<size_type>> array_to_indices(const A& indices) {
 }
 
 std::shared_ptr<VArray> va::get_at_indices(VStoreAllocator& allocator, const VData& data, const VData& indices) {
-#ifdef NUMDOT_DISABLE_INDEX_LISTS
-	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_INDEX_LISTS to enable it.");
-#else
-	return std::visit(
+	return visit_if_enabled<Feature::index_lists>(
 		[&allocator, &data](const auto& indices) -> std::shared_ptr<VArray> {
 			using VTIndices = typename std::decay_t<decltype(indices)>::value_type;
 
@@ -293,14 +305,10 @@ std::shared_ptr<VArray> va::get_at_indices(VStoreAllocator& allocator, const VDa
 			}
 		}, indices
 	);
-#endif
 }
 
 void va::set_at_indices(VData& varray, VData& indices, VData& value) {
-#ifdef NUMDOT_DISABLE_INDEX_LISTS
-	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_INDEX_LISTS to enable it.");
-#else
-	std::visit(
+	visit_if_enabled<Feature::index_lists>(
 		[](auto& array, const auto& indices, const auto& value) {
 			using VTArray = typename std::decay_t<decltype(array)>::value_type;
 			using VTMask = typename std::decay_t<decltype(indices)>::value_type;
@@ -350,5 +358,4 @@ void va::set_at_indices(VData& varray, VData& indices, VData& value) {
 			}
 		}, varray, indices, value
 	);
-#endif
 }

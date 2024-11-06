@@ -51,6 +51,10 @@ opts.Add(
     "Enable all optimizations the arch supports, making the build incompatible with other machines. Use 'native' to optimize for this machine. Note that on macOS, setting this option also requires setting arch= to a specific arch, e.g. arch=x86_64 or arch=arm64.",
     "",
 )
+
+features_tool = Tool("features", toolpath=["scons_tools"])
+features_tool.options(opts, env)
+
 opts.Update(env)
 
 use_xsimd = env["use_xsimd"]
@@ -173,6 +177,8 @@ if openmp_threshold >= 0:
         env.Append(LINKFLAGS=['-fopenmp'])
 
     env.Append(CCFLAGS=["-DXTENSOR_USE_OPENMP", f"-DXTENSOR_OPENMP_TRESHOLD={openmp_threshold}"])
+
+features_tool.generate(env)
 
 # ============================= Actual source and lib setup =============================
 

@@ -1,7 +1,6 @@
 #ifndef VATENSOR_BITWISE_HPP
 #define VATENSOR_BITWISE_HPP
 
-#include "auto_defines.hpp"
 #include "varray.hpp"
 
 namespace va {

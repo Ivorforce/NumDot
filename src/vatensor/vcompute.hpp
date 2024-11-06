@@ -10,6 +10,7 @@
 #include "varray.hpp"                     // for VArrayTarget, VScalar, VData
 #include "vassign.hpp"                    // for assign_nonoverlapping, broadc...
 #include "vpromote.hpp"                   // for promote_value_type_if_needed
+#include "vconfig.hpp"
 #include "xtensor/xarray.hpp"           // for xarray_container
 #include "xtensor/xoperation.hpp"       // for xfunction_type_t
 #include "xtensor/xstorage.hpp"         // for uvector
@@ -52,6 +53,17 @@ namespace va {
             return xt::detail::make_xfunction<FX>(std::forward<Args>(args)...);
         }
     };
+
+    template <Feature feature, class Visitor, class... Vs>
+    constexpr auto visit_if_enabled(Visitor&& visitor, Vs&&... vs) -> decltype(std::visit(visitor, vs...)) {
+        if constexpr (va::is_feature_enabled(feature)) {
+            return std::visit(std::forward<Visitor>(visitor), std::forward<Vs>(vs)...);
+        }
+        else {
+            // TODO add what feature is missing
+            throw std::runtime_error("This build does not include this feature");
+        }
+    }
 
     template<typename OutputType, typename Result>
     std::shared_ptr<VArray> create_varray(VStoreAllocator& allocator, const Result& result) {
@@ -177,9 +189,9 @@ namespace va {
         }
     };
 
-    template<typename PromotionRule, typename FX, typename... Args>
+    template<Feature feature, typename PromotionRule, typename FX, typename... Args>
     static inline void xoperation_inplace(FX&& fx, VStoreAllocator& allocator, VArrayTarget target, const Args&... args) {
-        std::visit(
+        visit_if_enabled<feature>(
             VArrayFunctionInplace<PromotionRule, FX> { std::forward<FX>(fx), target, allocator },
             args...
         );
@@ -214,9 +226,9 @@ namespace va {
         }
     };
 
-    template<typename PromotionRule, typename ReturnType, typename FX, typename... Args>
+    template<Feature feature, typename PromotionRule, typename ReturnType, typename FX, typename... Args>
     static ReturnType vreduce(FX&& fx, const Args&... args) {
-        return std::visit(
+        return visit_if_enabled<feature>(
             VArrayReduction<PromotionRule, ReturnType, FX> { std::forward<FX>(fx) },
             args...
         );

@@ -1,7 +1,6 @@
 #ifndef LOGICAL_H
 #define LOGICAL_H
 
-#include "auto_defines.hpp"
 #include "varray.hpp"
 
 namespace va {

@@ -1,8 +1,6 @@
 #ifndef NUMDOT_AS_ARRAY_H
 #define NUMDOT_AS_ARRAY_H
 
-#include "vatensor/auto_defines.hpp"
-
 #include <cstddef>                        // for size_t
 #include <functional>                     // for multiplies
 #include <godot_cpp/variant/variant.hpp>  // for Variant

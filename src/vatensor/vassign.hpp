@@ -1,8 +1,6 @@
 #ifndef NUMDOT_VASSIGN_H
 #define NUMDOT_VASSIGN_H
 
-#include "auto_defines.hpp"
-
 #include "varray.hpp"               // for VData, VScalar, ArrayVariant, VArr...
 #include "xtensor/xassign.hpp"    // for assert_compatible_shape, assign_data
 #include "xtensor/xsemantic.hpp"  // for get_rhs_triviality
@@ -28,6 +26,7 @@ namespace va {
 	void assign(VData& array, VScalar value);
 
 	void assign(VStoreAllocator& allocator, VArrayTarget target, const VData& value);
+	void assign_cast(VStoreAllocator& allocator, VArrayTarget target, const VData& value, DType dtype);
 	void assign(VArrayTarget target, VScalar value);
 
 	std::shared_ptr<VArray> get_at_mask(VStoreAllocator& allocator, const VData& varray, const VData& mask);

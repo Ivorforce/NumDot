@@ -1,7 +1,6 @@
 #ifndef ROUND_H
 #define ROUND_H
 
-#include "auto_defines.hpp"
 #include "varray.hpp"
 
 namespace va {

@@ -1,8 +1,6 @@
 #ifndef VA_H
 #define VA_H
 
-#include "auto_defines.hpp"
-
 #include <cstddef>      // for ptrdiff_t, size_t
 #include <type_traits>  // for decay_t
 #include <variant>      // for visit

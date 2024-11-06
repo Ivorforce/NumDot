@@ -5,8 +5,6 @@
 #include <windows.h>
 #endif
 
-#include "vatensor/auto_defines.hpp"
-
 #include <cmath>                                       // for Layout
 #include <cstdint>                                     // for uint64_t, int64_t
 #include <godot_cpp/classes/ref_counted.hpp>           // for RefCounted

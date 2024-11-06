@@ -15,10 +15,7 @@ VRandomEngine VRandomEngine::spawn() {
 }
 
 std::shared_ptr<va::VArray> VRandomEngine::random_floats(VStoreAllocator& allocator, shape_type shape, const DType dtype) {
-#ifdef NUMDOT_DISABLE_RANDOM_FUNCTIONS
-	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_RANDOM_FUNCTIONS to enable it.");
-#else
-	return std::visit(
+	return visit_if_enabled<Feature::random_float>(
 		[shape, this, &allocator](auto t) -> std::shared_ptr<va::VArray> {
 			using T = decltype(t);
 
@@ -30,14 +27,10 @@ std::shared_ptr<va::VArray> VRandomEngine::random_floats(VStoreAllocator& alloca
 			}
 		}, dtype_to_variant(dtype)
 	);
-#endif
 }
 
 std::shared_ptr<VArray> VRandomEngine::random_integers(VStoreAllocator& allocator, long long low, long long high, shape_type shape, const DType dtype, bool endpoint) {
-#ifdef NUMDOT_DISABLE_RANDOM_FUNCTIONS
-	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_RANDOM_FUNCTIONS to enable it.");
-#else
-	return std::visit(
+	return visit_if_enabled<Feature::random_int>(
 		[low, high, shape, this, endpoint, &allocator](auto t) -> std::shared_ptr<VArray> {
 			using T = decltype(t);
 
@@ -66,14 +59,10 @@ std::shared_ptr<VArray> VRandomEngine::random_integers(VStoreAllocator& allocato
 			}
 		}, dtype_to_variant(dtype)
 	);
-#endif
 }
 
 std::shared_ptr<va::VArray> VRandomEngine::random_normal(VStoreAllocator& allocator, shape_type shape, const DType dtype) {
-#ifdef NUMDOT_DISABLE_RANDOM_FUNCTIONS
-	throw std::runtime_error("function explicitly disabled; recompile without NUMDOT_DISABLE_RANDOM_FUNCTIONS to enable it.");
-#else
-	return std::visit(
+	return visit_if_enabled<Feature::random_normal>(
 		[shape, this, &allocator](auto t) -> std::shared_ptr<va::VArray> {
 			using T = decltype(t);
 
@@ -85,5 +74,4 @@ std::shared_ptr<va::VArray> VRandomEngine::random_normal(VStoreAllocator& alloca
 			}
 		}, dtype_to_variant(dtype)
 	);
-#endif
 }

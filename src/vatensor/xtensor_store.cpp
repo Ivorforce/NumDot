@@ -11,7 +11,7 @@ void* store::XArrayStore::data() {
 DType store::XArrayStore::dtype() {
 	return std::visit([](auto& array) -> va::DType {
 		using V = typename std::decay_t<decltype(array)>::value_type;
-		return variant_to_dtype(V{});
+		return dtype_of_type<V>();
 	}, array);
 }
 

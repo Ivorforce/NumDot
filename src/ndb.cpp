@@ -27,7 +27,7 @@ inline bool reduction(Visitor&& visitor, const Args&... args) {
 		const auto result = std::forward<Visitor>(visitor)(*variant_as_array(args)...);
 
 		if constexpr (std::is_same_v<std::decay_t<decltype(result)>, va::VScalar>) {
-			return va::scalar_to_type<bool>(result);
+			return va::static_cast_scalar<bool>(result);
 		}
 		else {
 			return result;

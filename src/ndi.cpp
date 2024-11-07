@@ -39,7 +39,7 @@ inline int64_t reduction(Visitor&& visitor, const Args&... args) {
 		const auto result = std::forward<Visitor>(visitor)(*variant_as_array(args)...);
 
 		if constexpr (std::is_same_v<std::decay_t<decltype(result)>, va::VScalar>) {
-			return va::scalar_to_type<int64_t>(result);
+			return va::static_cast_scalar<int64_t>(result);
 		}
 		else {
 			return result;

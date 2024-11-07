@@ -15,7 +15,7 @@ namespace numdot {
 		explicit XTensorFixedStore(Tensor&& tensor) : tensor(std::forward<Tensor>(tensor)) {}
 
 		void* data() override { return tensor.data(); }
-		va::DType dtype() override { return va::variant_to_dtype(typename Tensor::value_type {}); }
+		va::DType dtype() override { return va::dtype_of_type<typename Tensor::value_type>(); }
 		size_t size() override { return tensor.size(); }
 	};
 

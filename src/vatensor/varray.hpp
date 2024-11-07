@@ -211,17 +211,25 @@ namespace va {
     using VArrayTarget = std::variant<std::shared_ptr<VArray>*, VData*>;
 
     VScalar dtype_to_variant(DType dtype);
-    DType variant_to_dtype(VScalar dtype);
+
+    // TODO Relying on the index isn't very glamorous
+    constexpr static DType variant_to_dtype(VScalar dtype) {
+        return static_cast<DType>(dtype.index());
+    }
+
+    // TODO Relying on the index isn't very glamorous
+    template <typename T>
+    constexpr DType dtype_of_type() {
+        return static_cast<DType>(VScalar(T()).index());
+    }
+
+    VScalar static_cast_scalar(VScalar v, DType dtype);
 
     std::size_t size_of_dtype_in_bytes(DType dtype);
-
-    VScalar scalar_to_dtype(VScalar v, DType dtype);
-
     DType dtype_common_type(DType a, DType b);
 
-    // TODO Can probably just be static_cast override or some such.
     template<typename V>
-    V scalar_to_type(VScalar v) {
+    V static_cast_scalar(VScalar v) {
         return std::visit([](auto v) -> V {
             if constexpr (!std::is_convertible_v<decltype(v), V>) {
                 throw std::runtime_error("Cannot promote in this way.");

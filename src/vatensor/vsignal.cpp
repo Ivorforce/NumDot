@@ -22,7 +22,7 @@ void va::pad(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, c
 	>(
 		[&pad_width, pad_mode, pad_value](auto&& a) {
 			using V = typename std::decay_t<decltype(a)>::value_type;
-			return xt::pad(std::forward<decltype(a)>(a), pad_width, pad_mode, va::scalar_to_type<V>(pad_value));
+			return xt::pad(std::forward<decltype(a)>(a), pad_width, pad_mode, va::static_cast_scalar<V>(pad_value));
 		},
 		allocator,
 		target,
@@ -37,7 +37,7 @@ void va::pad(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, c
 	>(
 		[&pad_width, pad_mode, pad_value](auto&& a) {
 			using V = typename std::decay_t<decltype(a)>::value_type;
-			return xt::pad(std::forward<decltype(a)>(a), pad_width, pad_mode, va::scalar_to_type<V>(pad_value));
+			return xt::pad(std::forward<decltype(a)>(a), pad_width, pad_mode, va::static_cast_scalar<V>(pad_value));
 		},
 		allocator,
 		target,
@@ -52,7 +52,7 @@ void va::pad(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, c
 	>(
 		[&pad_width, pad_mode, pad_value](auto&& a) {
 			using V = typename std::decay_t<decltype(a)>::value_type;
-			return xt::pad(std::forward<decltype(a)>(a), pad_width, pad_mode, va::scalar_to_type<V>(pad_value));
+			return xt::pad(std::forward<decltype(a)>(a), pad_width, pad_mode, va::static_cast_scalar<V>(pad_value));
 		},
 		allocator,
 		target,

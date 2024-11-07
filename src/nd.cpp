@@ -417,17 +417,17 @@ Ref<NDArray> full(const va::shape_type& shape, nd::DType dtype, const Variant& f
 	switch (fill_value.get_type()) {
 		case Variant::BOOL: {
 			if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Bool;
-			const auto value = va::scalar_to_dtype(static_cast<bool>(fill_value), dtype);
+			const auto value = va::static_cast_scalar(static_cast<bool>(fill_value), dtype);
 			return { memnew(NDArray(va::full(va::store::default_allocator, value, shape))) };
 		}
 		case Variant::INT: {
 			if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Int64;
-			const auto value = va::scalar_to_dtype(static_cast<int64_t>(fill_value), dtype);
+			const auto value = va::static_cast_scalar(static_cast<int64_t>(fill_value), dtype);
 			return { memnew(NDArray(va::full(va::store::default_allocator, value, shape))) };
 		}
 		case Variant::FLOAT: {
 			if (dtype == nd::DType::DTypeMax) dtype = nd::DType::Float64;
-			const auto value = va::scalar_to_dtype(static_cast<double_t>(fill_value), dtype);
+			const auto value = va::static_cast_scalar(static_cast<double_t>(fill_value), dtype);
 			return { memnew(NDArray(va::full(va::store::default_allocator, value, shape))) };
 		}
 		default: {
@@ -603,7 +603,7 @@ Ref<NDArray> nd::diag(const Variant& v, int64_t offset) {
 
 				auto new_array = va::full(
 					va::store::default_allocator,
-					va::scalar_to_dtype(0, diagonal->dtype()),
+					va::static_cast_scalar(0, diagonal->dtype()),
 					shape
 				);
 

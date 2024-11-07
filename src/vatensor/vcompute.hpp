@@ -79,7 +79,7 @@ namespace va {
 
         // Create new array, assign to our target pointer.
         // OutputType may be different from R, if we want different behavior than xtensor for computation.
-        std::shared_ptr<VStore> result_store = allocator.allocate(va::variant_to_dtype(OStorable{}), result.size());
+        std::shared_ptr<VStore> result_store = allocator.allocate(va::dtype_of_type<OStorable>(), result.size());
         auto data = make_compute<OStorable*>(
             static_cast<OStorable*>(result_store->data()),
             shape,

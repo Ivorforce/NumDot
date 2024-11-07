@@ -105,89 +105,89 @@ void find_shape_and_dtype_of_array(va::shape_type& shape, va::DType& dtype, cons
 						dtype = va::dtype_common_type(dtype, va::Float64);
 						continue;
 					case Variant::PACKED_BYTE_ARRAY: {
-						dtype = va::dtype_common_type(dtype, va::variant_to_dtype(uint8_t()));
+						dtype = va::dtype_common_type(dtype, va::dtype_of_type<uint8_t>());
 						PackedByteArray packed = array_element;
 						add_size_at_idx(shape, current_dim_idx + 1, packed.size());
 						continue;
 					}
 					case Variant::PACKED_INT32_ARRAY: {
-						dtype = va::dtype_common_type(dtype, va::variant_to_dtype(int32_t()));
+						dtype = va::dtype_common_type(dtype, va::dtype_of_type<int32_t>());
 						PackedInt32Array packed = array_element;
 						add_size_at_idx(shape, current_dim_idx + 1, packed.size());
 						continue;
 					}
 					case Variant::PACKED_INT64_ARRAY: {
-						dtype = va::dtype_common_type(dtype, va::variant_to_dtype(int64_t()));
+						dtype = va::dtype_common_type(dtype, va::dtype_of_type<int64_t>());
 						PackedInt64Array packed = array_element;
 						add_size_at_idx(shape, current_dim_idx + 1, packed.size());
 						continue;
 					}
 					case Variant::PACKED_FLOAT32_ARRAY: {
-						dtype = va::dtype_common_type(dtype, va::variant_to_dtype(float_t()));
+						dtype = va::dtype_common_type(dtype, va::dtype_of_type<float_t>());
 						PackedFloat32Array packed = array_element;
 						add_size_at_idx(shape, current_dim_idx + 1, packed.size());
 						continue;
 					}
 					case Variant::PACKED_FLOAT64_ARRAY: {
-						dtype = va::dtype_common_type(dtype, va::variant_to_dtype(double_t()));
+						dtype = va::dtype_common_type(dtype, va::dtype_of_type<double_t>());
 						PackedFloat64Array packed = array_element;
 						add_size_at_idx(shape, current_dim_idx + 1, packed.size());
 						continue;
 					}
 					case Variant::PACKED_VECTOR2_ARRAY: {
-						dtype = va::dtype_common_type(dtype, va::variant_to_dtype(real_t()));
+						dtype = va::dtype_common_type(dtype, va::dtype_of_type<real_t>());
 						PackedVector2Array packed = array_element;
 						add_size_at_idx(shape, current_dim_idx + 1, packed.size());
 						add_size_at_idx(shape, current_dim_idx + 2, 2);
 						continue;
 					}
 					case Variant::PACKED_VECTOR3_ARRAY: {
-						dtype = va::dtype_common_type(dtype, va::variant_to_dtype(real_t()));
+						dtype = va::dtype_common_type(dtype, va::dtype_of_type<real_t>());
 						PackedVector3Array packed = array_element;
 						add_size_at_idx(shape, current_dim_idx + 1, packed.size());
 						add_size_at_idx(shape, current_dim_idx + 2, 3);
 						continue;
 					}
 					case Variant::PACKED_VECTOR4_ARRAY: {
-						dtype = va::dtype_common_type(dtype, va::variant_to_dtype(real_t()));
+						dtype = va::dtype_common_type(dtype, va::dtype_of_type<real_t>());
 						PackedVector4Array packed = array_element;
 						add_size_at_idx(shape, current_dim_idx + 1, packed.size());
 						add_size_at_idx(shape, current_dim_idx + 2, 4);
 						continue;
 					}
 					case Variant::PACKED_COLOR_ARRAY: {
-						dtype = va::dtype_common_type(dtype, va::variant_to_dtype(float_t()));
+						dtype = va::dtype_common_type(dtype, va::dtype_of_type<float_t>());
 						PackedColorArray packed = array_element;
 						add_size_at_idx(shape, current_dim_idx + 1, packed.size());
 						add_size_at_idx(shape, current_dim_idx + 2, 4);
 						continue;
 					}
 					case Variant::VECTOR2I:
-						dtype = va::dtype_common_type(dtype, va::variant_to_dtype(int64_t()));
+						dtype = va::dtype_common_type(dtype, va::dtype_of_type<int64_t>());
 						add_size_at_idx(shape, current_dim_idx + 1, 2);
 						continue;
 					case Variant::VECTOR3I:
-						dtype = va::dtype_common_type(dtype, va::variant_to_dtype(int64_t()));
+						dtype = va::dtype_common_type(dtype, va::dtype_of_type<int64_t>());
 						add_size_at_idx(shape, current_dim_idx + 1, 3);
 						continue;
 					case Variant::VECTOR4I:
-						dtype = va::dtype_common_type(dtype, va::variant_to_dtype(int64_t()));
+						dtype = va::dtype_common_type(dtype, va::dtype_of_type<int64_t>());
 						add_size_at_idx(shape, current_dim_idx + 1, 4);
 						continue;
 					case Variant::VECTOR2:
-						dtype = va::dtype_common_type(dtype, va::variant_to_dtype(real_t()));
+						dtype = va::dtype_common_type(dtype, va::dtype_of_type<real_t>());
 						add_size_at_idx(shape, current_dim_idx + 1, 2);
 						continue;
 					case Variant::VECTOR3:
-						dtype = va::dtype_common_type(dtype, va::variant_to_dtype(real_t()));
+						dtype = va::dtype_common_type(dtype, va::dtype_of_type<real_t>());
 						add_size_at_idx(shape, current_dim_idx + 1, 3);
 						continue;
 					case Variant::VECTOR4:
-						dtype = va::dtype_common_type(dtype, va::variant_to_dtype(real_t()));
+						dtype = va::dtype_common_type(dtype, va::dtype_of_type<real_t>());
 						add_size_at_idx(shape, current_dim_idx + 1, 4);
 						continue;
 					case Variant::COLOR:
-						dtype = va::dtype_common_type(dtype, va::variant_to_dtype(float_t()));
+						dtype = va::dtype_common_type(dtype, va::dtype_of_type<float_t>());
 						add_size_at_idx(shape, current_dim_idx + 1, 4);
 						continue;
 					default:
@@ -266,19 +266,19 @@ void find_shape_and_dtype(va::shape_type& shape, va::DType& dtype, const Variant
 		case Variant::PACKED_VECTOR2_ARRAY: {
 			const auto packed = PackedVector2Array(array);
 			shape = { static_cast<std::size_t>(packed.size()), 2 };
-			dtype = va::variant_to_dtype(real_t());
+			dtype = va::dtype_of_type<real_t>();
 			return;
 		}
 		case Variant::PACKED_VECTOR3_ARRAY: {
 			const auto packed = PackedVector3Array(array);
 			shape = { static_cast<std::size_t>(packed.size()), 3 };
-			dtype = va::variant_to_dtype(real_t());
+			dtype = va::dtype_of_type<real_t>();
 			return;
 		}
 		case Variant::PACKED_VECTOR4_ARRAY: {
 			const auto packed = PackedVector4Array(array);
 			shape = { static_cast<std::size_t>(packed.size()), 4 };
-			dtype = va::variant_to_dtype(real_t());
+			dtype = va::dtype_of_type<real_t>();
 			return;
 		}
 		case Variant::PACKED_COLOR_ARRAY: {
@@ -304,17 +304,17 @@ void find_shape_and_dtype(va::shape_type& shape, va::DType& dtype, const Variant
 		}
 		case Variant::VECTOR2: {
 			shape = { 2 };
-			dtype = va::variant_to_dtype(real_t());
+			dtype = va::dtype_of_type<real_t>();
 			return;
 		}
 		case Variant::VECTOR3: {
 			shape = { 3 };
-			dtype = va::variant_to_dtype(real_t());
+			dtype = va::dtype_of_type<real_t>();
 			return;
 		}
 		case Variant::VECTOR4: {
 			shape = { 4 };
-			dtype = va::variant_to_dtype(real_t());
+			dtype = va::dtype_of_type<real_t>();
 			return;
 		}
 		case Variant::COLOR: {

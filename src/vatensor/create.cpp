@@ -115,8 +115,8 @@ std::shared_ptr<VArray> va::linspace(VStoreAllocator& allocator, VScalar start, 
 				throw std::invalid_argument("linspace cannot be used with this dtype");
 			}
 			else {
-				auto start_ = scalar_to_type<T>(start);
-				auto stop_ = scalar_to_type<T>(stop);
+				auto start_ = static_cast_scalar<T>(start);
+				auto stop_ = static_cast_scalar<T>(stop);
 
 				return va::create_varray<T>(
 					allocator,
@@ -141,9 +141,9 @@ std::shared_ptr<VArray> va::arange(VStoreAllocator& allocator, VScalar start, VS
 				throw std::invalid_argument("linspace cannot be used with this dtype");
 			}
 			else {
-				auto start_ = scalar_to_type<T>(start);
-				auto stop_ = scalar_to_type<T>(stop);
-				auto step_ = scalar_to_type<T>(step);
+				auto start_ = static_cast_scalar<T>(start);
+				auto stop_ = static_cast_scalar<T>(stop);
+				auto step_ = static_cast_scalar<T>(step);
 
 				return va::create_varray<T>(
 					allocator,

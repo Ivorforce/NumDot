@@ -15,7 +15,7 @@ using namespace va;
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 void logical_and(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VScalar& b) {
 	// Can shortcut the logic
-	if (!scalar_to_type<bool>(b)) {
+	if (!static_cast_scalar<bool>(b)) {
 		assign(target, false);
 		return;
 	}
@@ -44,7 +44,7 @@ void va::logical_and(VStoreAllocator& allocator, VArrayTarget target, const VArr
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 void logical_or(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VScalar& b) {
 	// Can shortcut the logic
-	if (scalar_to_type<bool>(b)) {
+	if (static_cast_scalar<bool>(b)) {
 		assign(target, true);
 		return;
 	}
@@ -73,7 +73,7 @@ void va::logical_or(VStoreAllocator& allocator, VArrayTarget target, const VArra
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 void logical_xor(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VScalar& b) {
 	// Can shortcut the logic
-	if (scalar_to_type<bool>(b)) {
+	if (static_cast_scalar<bool>(b)) {
 		va::logical_not(allocator, target, a);
 		return;
 	}

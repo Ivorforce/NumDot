@@ -31,7 +31,7 @@ namespace numdot {
 		explicit PackedArrayStore(Array&& array) : array(std::forward<Array>(array)) {}
 
 		void* data() override { return const_cast<void*>(static_cast<const void*>(array.ptr())); }
-		va::DType dtype() override { return va::variant_to_dtype(decltype(get_packed_content_type(array)){}); }
+		va::DType dtype() override { return va::dtype_of_type<decltype(get_packed_content_type(array))>(); }
 		std::size_t size() override { return static_cast<std::size_t>(array.size()); }
 		void prepare_write(va::VData& data, std::ptrdiff_t data_offset) override;
 	};

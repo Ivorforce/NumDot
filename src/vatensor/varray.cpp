@@ -130,10 +130,6 @@ va::VScalar va::dtype_to_variant(const DType dtype) {
     }
 }
 
-va::DType va::variant_to_dtype(const VScalar dtype) {
-    return static_cast<DType>(dtype.index());
-}
-
 std::size_t va::size_of_dtype_in_bytes(const DType dtype) {
     return std::visit(
         [](auto dtype) {
@@ -142,11 +138,11 @@ std::size_t va::size_of_dtype_in_bytes(const DType dtype) {
     );
 }
 
-va::VScalar va::scalar_to_dtype(const VScalar v, const DType dtype) {
+va::VScalar va::static_cast_scalar(const VScalar v, const DType dtype) {
     return std::visit(
         [v](const auto t) -> va::VScalar {
             using T = std::decay_t<decltype(t)>;
-            return va::scalar_to_type<T>(v);
+            return va::static_cast_scalar<T>(v);
         }, dtype_to_variant(dtype)
     );
 }
@@ -156,20 +152,22 @@ va::DType va::dtype_common_type(const DType a, const DType b) {
     if (b == DTypeMax) return a;
 
     return std::visit(
-        [](auto a, auto b) { return variant_to_dtype(std::common_type_t<decltype(a), decltype(b)>()); },
+        [](auto a, auto b) {
+            return dtype_of_type<std::common_type_t<decltype(a), decltype(b)>>();
+        },
         dtype_to_variant(a),
         dtype_to_variant(b)
     );
 }
 
-va::VArray::operator bool() const { return va::scalar_to_type<bool>(to_single_value()); }
-va::VArray::operator int64_t() const { return va::scalar_to_type<int64_t>(to_single_value()); }
-va::VArray::operator int32_t() const { return va::scalar_to_type<int32_t>(to_single_value()); }
-va::VArray::operator int16_t() const { return va::scalar_to_type<int16_t>(to_single_value()); }
-va::VArray::operator int8_t() const { return va::scalar_to_type<int8_t>(to_single_value()); }
-va::VArray::operator uint64_t() const { return va::scalar_to_type<uint64_t>(to_single_value()); }
-va::VArray::operator uint32_t() const { return va::scalar_to_type<uint32_t>(to_single_value()); }
-va::VArray::operator uint16_t() const { return va::scalar_to_type<uint16_t>(to_single_value()); }
-va::VArray::operator uint8_t() const { return va::scalar_to_type<uint8_t>(to_single_value()); }
-va::VArray::operator double() const { return va::scalar_to_type<double>(to_single_value()); }
-va::VArray::operator float() const { return va::scalar_to_type<float>(to_single_value()); }
+va::VArray::operator bool() const { return va::static_cast_scalar<bool>(to_single_value()); }
+va::VArray::operator int64_t() const { return va::static_cast_scalar<int64_t>(to_single_value()); }
+va::VArray::operator int32_t() const { return va::static_cast_scalar<int32_t>(to_single_value()); }
+va::VArray::operator int16_t() const { return va::static_cast_scalar<int16_t>(to_single_value()); }
+va::VArray::operator int8_t() const { return va::static_cast_scalar<int8_t>(to_single_value()); }
+va::VArray::operator uint64_t() const { return va::static_cast_scalar<uint64_t>(to_single_value()); }
+va::VArray::operator uint32_t() const { return va::static_cast_scalar<uint32_t>(to_single_value()); }
+va::VArray::operator uint16_t() const { return va::static_cast_scalar<uint16_t>(to_single_value()); }
+va::VArray::operator uint8_t() const { return va::static_cast_scalar<uint8_t>(to_single_value()); }
+va::VArray::operator double() const { return va::static_cast_scalar<double>(to_single_value()); }
+va::VArray::operator float() const { return va::static_cast_scalar<float>(to_single_value()); }

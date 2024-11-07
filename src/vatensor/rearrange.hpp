@@ -23,6 +23,7 @@ namespace va {
 	}
 
 	std::shared_ptr<VArray> transpose(const VArray& varray, strides_type permutation);
+	std::shared_ptr<VArray> transpose(const VArray& varray);
 	std::shared_ptr<VArray> reshape(const VArray& varray, strides_type new_shape);
 	std::shared_ptr<VArray> swapaxes(const VArray& varray, std::ptrdiff_t a, std::ptrdiff_t b);
 	std::shared_ptr<VArray> moveaxis(const VArray& varray, std::ptrdiff_t src, std::ptrdiff_t dst);

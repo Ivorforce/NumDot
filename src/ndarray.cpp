@@ -66,6 +66,7 @@ void NDArray::_bind_methods() {
 
 	godot::ClassDB::bind_method(D_METHOD("as_type", "type"), &NDArray::as_type);
 	godot::ClassDB::bind_method(D_METHOD("copy"), &NDArray::copy);
+	ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "transpose", &NDArray::transpose);
 
 	godot::ClassDB::bind_method(D_METHOD("to_bool"), &NDArray::to_bool);
 	godot::ClassDB::bind_method(D_METHOD("to_int"), &NDArray::to_int);
@@ -294,6 +295,26 @@ Variant NDArray::as_type(const va::DType dtype) const {
 Variant NDArray::copy() const {
 	const auto result = va::copy(va::store::default_allocator, array->data);
 	return { memnew(NDArray(result)) };
+}
+
+Ref<NDArray> NDArray::transpose(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {
+	try {
+		switch (arg_count) {
+			case 0:
+				return { memnew(NDArray(va::transpose(*array))) };
+			case 1: {
+				const auto axes = variant_to_axes(*args[0]);
+				return { memnew(NDArray(va::transpose(*array, axes))) };
+			}
+			default: {
+				const auto axes = variants_to_axes(args, arg_count, error);
+				return { memnew(NDArray(va::transpose(*array, axes))) };
+			}
+		}
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
 }
 
 va::VData& get_write(va::VArray& array, const std::nullptr_t& ptr) {

@@ -91,6 +91,7 @@ public:
 
 	[[nodiscard]] Variant as_type(va::DType dtype) const;
 	[[nodiscard]] Variant copy() const;
+	Ref<NDArray> transpose(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error);
 
 	[[nodiscard]] bool to_bool() const;
 	[[nodiscard]] int64_t to_int() const;

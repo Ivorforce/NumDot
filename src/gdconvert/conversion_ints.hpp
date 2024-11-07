@@ -21,6 +21,7 @@ using PadVariant = std::variant<
 >;
 
 va::shape_type variant_to_shape(const Variant& variant);
+std::ptrdiff_t variant_to_axis(const Variant& variant);
 va::axes_type variant_to_axes(const Variant& variant);
 va::axes_type variants_to_axes(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error);
 

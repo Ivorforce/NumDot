@@ -30,6 +30,16 @@ std::shared_ptr<VArray> va::transpose(const VArray& varray, strides_type permuta
 	);
 }
 
+std::shared_ptr<VArray> va::transpose(const VArray& varray) {
+	const auto dim = varray.dimension();
+	va::axes_type permutation_(dim);
+	for (std::size_t i = 0; i < dim; ++i) {
+		permutation_[i] = static_cast<int>(dim - 1 - i);
+	}
+
+	return va::transpose(varray, permutation_);
+}
+
 std::shared_ptr<VArray> va::reshape(const VArray& varray, strides_type new_shape) {
 	return map(
 		[new_shape](auto& array) {

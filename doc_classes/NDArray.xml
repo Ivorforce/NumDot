@@ -832,6 +832,14 @@
 				If shape is [lb]4[rb], converts this tensor to a Vector4.
 			</description>
 		</method>
+		<method name="transpose" qualifiers="const vararg">
+			<return type="NDArray" />
+			<description>
+				Returns a view of the array with axes transposed.
+				Refer to [method nd.transpose] for full documentation.
+				Axes can be passed without creating an array, e.g. [code]array.transpose(3, 1, 2)[/code].
+			</description>
+		</method>
 	</methods>
 	<constants>
 		<constant name="RowMajor" value="0" enum="Layout">

@@ -7,6 +7,8 @@
 #include <type_traits>                               // for decay_t
 #include <variant>                                   // for visit
 #include <vector>                                    // for vector
+#include <vatensor/vpromote.hpp>
+
 #include "conversion_array.hpp"
 #include "godot_cpp/classes/object.hpp"              // for Object
 #include "godot_cpp/core/object.hpp"                 // for Object::cast_to
@@ -32,20 +34,21 @@ C variant_as_int_strict(const Variant& variant) {
 					[](const auto& carray) -> C {
 						using V = typename std::decay_t<decltype(carray)>::value_type;
 
-						if constexpr (!std::is_integral_v<V>) {
+						if constexpr (!va::promote::is_integer_t<V>::value) {
 							throw std::runtime_error("incompatible dtype; must be int");
 						}
-
-						switch (carray.dimension()) {
-							case 0:
-								if constexpr (!std::is_convertible_v<V, C>) {
-									throw std::runtime_error("Cannot promote in this way.");
-								}
-								else {
-									return static_cast<C>(*carray.data());
-								}
-							default:
-								throw std::runtime_error("array must be zero-dimensional");
+						else {
+							switch (carray.dimension()) {
+								case 0:
+									if constexpr (!std::is_convertible_v<V, C>) {
+										throw std::runtime_error("Cannot promote in this way.");
+									}
+									else {
+										return static_cast<C>(*carray.data());
+									}
+								default:
+									throw std::runtime_error("array must be zero-dimensional");
+							}
 						}
 					}, ndarray->array->data
 				);
@@ -128,6 +131,10 @@ T variant_as_ints_(const Variant& variant) {
 
 va::shape_type variant_to_shape(const Variant& variant) {
 	return variant_as_ints_<std::size_t, std::vector<std::size_t>>(variant);
+}
+
+std::ptrdiff_t variant_to_axis(const Variant& variant) {
+	return variant_as_int_strict<std::ptrdiff_t>(variant);
 }
 
 va::strides_type variant_to_axes(const Variant& variant) {

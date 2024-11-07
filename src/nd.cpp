@@ -534,13 +534,7 @@ Ref<NDArray> nd::transpose(const Variant& a, const Variant& permutation) {
 		std::shared_ptr<va::VArray> a_ = variant_as_array(a);
 
 		if (permutation.get_type() == Variant::NIL) {
-			const auto dim = a_->dimension();
-			va::axes_type permutation_(dim);
-			for (std::size_t i = 0; i < dim; ++i) {
-				permutation_[i] = static_cast<int>(dim - 1 - i);
-			}
-
-			return { memnew(NDArray(va::transpose(*a_, permutation_))) };
+			return { memnew(NDArray(va::transpose(*a_))) };
 		}
 		else {
 			const auto permutation_ = variant_to_axes(permutation);

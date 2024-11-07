@@ -238,6 +238,8 @@ Methods
    +------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
    | ``Vector4i``                                               | :ref:`to_vector4i<class_NDArray_method_to_vector4i>`\ (\ ) |const|                                                                  |
    +------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`transpose<class_NDArray_method_transpose>`\ (\ ...\ ) |const| |vararg|                                                        |
+   +------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
 
 .. rst-class:: classref-section-separator
 
@@ -1718,6 +1720,22 @@ If shape is \[4\], converts this tensor to a Vector4.
 ``Vector4i`` **to_vector4i**\ (\ ) |const| :ref:`🔗<class_NDArray_method_to_vector4i>`
 
 If shape is \[4\], converts this tensor to a Vector4.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_transpose:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **transpose**\ (\ ...\ ) |const| |vararg| :ref:`🔗<class_NDArray_method_transpose>`
+
+Returns a view of the array with axes transposed.
+
+Refer to :ref:`nd.transpose<class_nd_method_transpose>` for full documentation.
+
+Axes can be passed without creating an array, e.g. ``array.transpose(3, 1, 2)``.
 
 .. |virtual| replace:: :abbr:`virtual (This method should typically be overridden by the user to have any effect.)`
 .. |const| replace:: :abbr:`const (This method has no side effects. It doesn't modify any of the instance's member variables.)`

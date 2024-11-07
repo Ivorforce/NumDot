@@ -77,20 +77,20 @@ namespace va {
 		}
 
 		template<typename NeededType, typename T, std::enable_if_t<std::is_same_v<NeededType, value_type_v<std::decay_t<T>>>, int> = 0>
-		auto& promote_value_type_if_needed(const T& arg) {
+		const auto& promote_value_type_if_needed(const T& arg) {
 			return arg;
 		}
 
-		template <typename Need, typename Have>
-		static Need promote_list_if_needed(Have& have) {
-			if constexpr (std::is_same_v<Have, Need>) {
-				return have;
-			}
-			else {
-				Need need(have.size());
-				std::copy_n(have.begin(), have.size(), need.begin());
-				return need;
-			}
+		template <typename Need, typename Have, std::enable_if_t<std::is_same_v<std::decay_t<Need>, std::decay_t<Have>>, int> = 0>
+		static const Need& promote_list_if_needed(const Have& have) {
+			return have;
+		}
+
+		template <typename Need, typename Have, std::enable_if_t<!std::is_same_v<std::decay_t<Need>, std::decay_t<Have>>, int> = 0>
+		static Need promote_list_if_needed(const Have& have) {
+			Need need(have.size());
+			std::copy_n(have.begin(), have.size(), need.begin());
+			return need;
 		}
 
 		// TODO We may want to support mixed-type input ops for some functions, to avoid explicitly promoting types.

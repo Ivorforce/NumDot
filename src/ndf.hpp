@@ -32,6 +32,7 @@ public:
 	static double_t max(const Variant& a);
 	static double_t min(const Variant& a);
 	static double_t norm(const Variant& a, const Variant& ord);
+	static double_t trace(const Variant& v, int64_t offset, int64_t axis1, int64_t axis2);
 
 	//	// Logical.
 	//	static bool all(const Variant& a);

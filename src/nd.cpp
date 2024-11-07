@@ -108,6 +108,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("flip", "v", "axis"), &nd::flip);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("diagonal", "v", "offset", "axis1", "axis2"), &nd::diagonal, DEFVAL(0), DEFVAL(0), DEFVAL(1));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("diag", "v", "offset"), &nd::diag, DEFVAL(0));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("trace", "v", "offset", "axis1", "axis2"), &nd::trace, DEFVAL(0), DEFVAL(0), DEFVAL(1));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("stack", "v", "axis"), &nd::stack, DEFVAL(0));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("unstack", "v", "axis"), &nd::unstack, DEFVAL(0));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("concatenate", "v", "axis", "dtype"), &nd::concatenate, DEFVAL(0), DEFVAL(nd::DType::DTypeMax));
@@ -626,6 +627,12 @@ Ref<NDArray> nd::diag(const Variant& v, int64_t offset) {
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
 	}
+}
+
+Ref<NDArray> nd::trace(const Variant& v, int64_t offset, int64_t axis1, int64_t axis2) {
+	return map_variants_as_arrays_with_target([offset, axis1, axis2](const va::VArrayTarget target, const std::shared_ptr<va::VArray>& varray) {
+		va::trace(va::store::default_allocator, target, *varray, offset, axis1, axis2);
+	}, v);
 }
 
 Ref<NDArray> nd::stack(const Variant& v, int64_t axis) {

@@ -965,6 +965,18 @@
 				Create a range that starts at 0, and stops at the given index (exclusive).
 			</description>
 		</method>
+		<method name="trace" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="v" type="Variant" />
+			<param index="1" name="offset" type="int" default="0" />
+			<param index="2" name="axis1" type="int" default="0" />
+			<param index="3" name="axis2" type="int" default="1" />
+			<description>
+				Return the sum of the k-th diagonal of a matrix.
+				The shape of the result will be the same as [param v], but with the two given axes removed.
+				Returns a 0-dimension scalar if [param v] is 2-D. In that case, consider [method ndi.trace] and [method ndf.trace].
+			</description>
+		</method>
 		<method name="transpose" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />

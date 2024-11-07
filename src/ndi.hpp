@@ -29,6 +29,7 @@ public:
 	static int64_t min(const Variant& a);
 	static int64_t norm(const Variant& a, const Variant& ord);
 	static int64_t count_nonzero(const Variant& a);
+	static int64_t trace(const Variant& v, int64_t offset, int64_t axis1, int64_t axis2);
 
 	// Linalg.
 	static int64_t reduce_dot(const Variant& a, const Variant& b);

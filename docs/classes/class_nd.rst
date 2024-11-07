@@ -252,6 +252,8 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``Vector4i``                                               | :ref:`to<class_nd_method_to>`\ (\ stop\: ``int``\ ) |static|                                                                                                                                |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`trace<class_nd_method_trace>`\ (\ v\: ``Variant``, offset\: ``int`` = 0, axis1\: ``int`` = 0, axis2\: ``int`` = 1\ ) |static|                                                         |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`transpose<class_nd_method_transpose>`\ (\ a\: ``Variant``, permutation\: ``Variant`` = null\ ) |static|                                                                               |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`trunc<class_nd_method_trunc>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                         |
@@ -1964,6 +1966,22 @@ When ``inner``\ =true, elements will repeat individually rather than element gro
 ``Vector4i`` **to**\ (\ stop\: ``int``\ ) |static| :ref:`🔗<class_nd_method_to>`
 
 Create a range that starts at 0, and stops at the given index (exclusive).
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_trace:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **trace**\ (\ v\: ``Variant``, offset\: ``int`` = 0, axis1\: ``int`` = 0, axis2\: ``int`` = 1\ ) |static| :ref:`🔗<class_nd_method_trace>`
+
+Return the sum of the k-th diagonal of a matrix.
+
+The shape of the result will be the same as ``v``, but with the two given axes removed.
+
+Returns a 0-dimension scalar if ``v`` is 2-D. In that case, consider :ref:`ndi.trace<class_ndi_method_trace>` and :ref:`ndf.trace<class_ndf_method_trace>`.
 
 .. rst-class:: classref-item-separator
 

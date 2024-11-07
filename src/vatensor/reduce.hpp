@@ -51,6 +51,9 @@ namespace va {
 
 	VScalar reduce_dot(const VArray& a, const VArray& b);
 	void reduce_dot(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& b, const axes_type& axes);
+
+	void trace(VStoreAllocator& allocator, VArrayTarget target, const VArray& varray, std::ptrdiff_t offset, std::ptrdiff_t axis1, std::ptrdiff_t axis2);
+	VScalar trace_to_scalar(const VArray& varray, std::ptrdiff_t offset, std::ptrdiff_t axis1, std::ptrdiff_t axis2);
 }
 
 #endif //REDUCE_H

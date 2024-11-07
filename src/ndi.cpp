@@ -25,6 +25,7 @@ void ndi::_bind_methods() {
 	godot::ClassDB::bind_static_method("ndi", D_METHOD("min", "a"), &ndi::min);
 	godot::ClassDB::bind_static_method("ndi", D_METHOD("norm", "a", "ord"), &ndi::norm, DEFVAL(2));
 	godot::ClassDB::bind_static_method("ndi", D_METHOD("count_nonzero", "a"), &ndi::count_nonzero);
+	godot::ClassDB::bind_static_method("ndi", D_METHOD("trace", "v", "offset", "axis1", "axis2"), &ndi::trace, DEFVAL(0), DEFVAL(0), DEFVAL(1));
 
 	godot::ClassDB::bind_static_method("ndi", D_METHOD("reduce_dot", "a", "b"), &ndi::reduce_dot);
 }
@@ -103,6 +104,12 @@ int64_t ndi::count_nonzero(const Variant& a) {
 	return reduction([](const va::VArray& array) {
 		return va::count_nonzero(va::store::default_allocator, array);
 	}, a);
+}
+
+int64_t ndi::trace(const Variant& v, int64_t offset, int64_t axis1, int64_t axis2) {
+	return reduction([offset, axis1, axis2](const va::VArray& array) {
+		return va::trace_to_scalar(array, offset, axis1, axis2);
+	}, v);
 }
 
 //int64_t ndi::all(const Variant& a) {

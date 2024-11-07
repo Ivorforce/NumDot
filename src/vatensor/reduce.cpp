@@ -459,3 +459,16 @@ void va::reduce_dot(VStoreAllocator& allocator, VArrayTarget target, const VArra
 		allocator, target, a.data, b.data
 	);
 }
+
+void va::trace(VStoreAllocator& allocator, VArrayTarget target, const VArray& varray, std::ptrdiff_t offset, std::ptrdiff_t axis1, std::ptrdiff_t axis2) {
+	const auto diagonal = va::diagonal(varray, offset, axis1, axis2);
+	va::sum(allocator, target, *diagonal, axes_type {-1});
+}
+
+VScalar va::trace_to_scalar(const VArray& varray, std::ptrdiff_t offset, std::ptrdiff_t axis1, std::ptrdiff_t axis2) {
+	if (varray.dimension() != 2) {
+		throw std::runtime_error("array must be 2-D for trace to collapse to a scalar");
+	}
+	const auto diagonal = va::diagonal(varray, offset, axis1, axis2);
+	return va::sum(*diagonal);
+}

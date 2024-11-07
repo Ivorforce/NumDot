@@ -29,23 +29,25 @@ Methods
 .. table::
    :widths: auto
 
-   +---------+-------------------------------------------------------------------------------------------------+
-   | ``int`` | :ref:`count_nonzero<class_ndi_method_count_nonzero>`\ (\ a\: ``Variant``\ ) |static|            |
-   +---------+-------------------------------------------------------------------------------------------------+
-   | ``int`` | :ref:`max<class_ndi_method_max>`\ (\ a\: ``Variant``\ ) |static|                                |
-   +---------+-------------------------------------------------------------------------------------------------+
-   | ``int`` | :ref:`median<class_ndi_method_median>`\ (\ a\: ``Variant``\ ) |static|                          |
-   +---------+-------------------------------------------------------------------------------------------------+
-   | ``int`` | :ref:`min<class_ndi_method_min>`\ (\ a\: ``Variant``\ ) |static|                                |
-   +---------+-------------------------------------------------------------------------------------------------+
-   | ``int`` | :ref:`norm<class_ndi_method_norm>`\ (\ a\: ``Variant``, ord\: ``Variant`` = 2\ ) |static|       |
-   +---------+-------------------------------------------------------------------------------------------------+
-   | ``int`` | :ref:`prod<class_ndi_method_prod>`\ (\ a\: ``Variant``\ ) |static|                              |
-   +---------+-------------------------------------------------------------------------------------------------+
-   | ``int`` | :ref:`reduce_dot<class_ndi_method_reduce_dot>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static| |
-   +---------+-------------------------------------------------------------------------------------------------+
-   | ``int`` | :ref:`sum<class_ndi_method_sum>`\ (\ a\: ``Variant``\ ) |static|                                |
-   +---------+-------------------------------------------------------------------------------------------------+
+   +---------+--------------------------------------------------------------------------------------------------------------------------------------+
+   | ``int`` | :ref:`count_nonzero<class_ndi_method_count_nonzero>`\ (\ a\: ``Variant``\ ) |static|                                                 |
+   +---------+--------------------------------------------------------------------------------------------------------------------------------------+
+   | ``int`` | :ref:`max<class_ndi_method_max>`\ (\ a\: ``Variant``\ ) |static|                                                                     |
+   +---------+--------------------------------------------------------------------------------------------------------------------------------------+
+   | ``int`` | :ref:`median<class_ndi_method_median>`\ (\ a\: ``Variant``\ ) |static|                                                               |
+   +---------+--------------------------------------------------------------------------------------------------------------------------------------+
+   | ``int`` | :ref:`min<class_ndi_method_min>`\ (\ a\: ``Variant``\ ) |static|                                                                     |
+   +---------+--------------------------------------------------------------------------------------------------------------------------------------+
+   | ``int`` | :ref:`norm<class_ndi_method_norm>`\ (\ a\: ``Variant``, ord\: ``Variant`` = 2\ ) |static|                                            |
+   +---------+--------------------------------------------------------------------------------------------------------------------------------------+
+   | ``int`` | :ref:`prod<class_ndi_method_prod>`\ (\ a\: ``Variant``\ ) |static|                                                                   |
+   +---------+--------------------------------------------------------------------------------------------------------------------------------------+
+   | ``int`` | :ref:`reduce_dot<class_ndi_method_reduce_dot>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                      |
+   +---------+--------------------------------------------------------------------------------------------------------------------------------------+
+   | ``int`` | :ref:`sum<class_ndi_method_sum>`\ (\ a\: ``Variant``\ ) |static|                                                                     |
+   +---------+--------------------------------------------------------------------------------------------------------------------------------------+
+   | ``int`` | :ref:`trace<class_ndi_method_trace>`\ (\ v\: ``Variant``, offset\: ``int`` = 0, axis1\: ``int`` = 0, axis2\: ``int`` = 1\ ) |static| |
+   +---------+--------------------------------------------------------------------------------------------------------------------------------------+
 
 .. rst-class:: classref-section-separator
 
@@ -147,6 +149,18 @@ No-axis equivalent of :ref:`nd.reduce_dot<class_nd_method_reduce_dot>` that retu
 ``int`` **sum**\ (\ a\: ``Variant``\ ) |static| :ref:`🔗<class_ndi_method_sum>`
 
 No-axis equivalent of :ref:`nd.sum<class_nd_method_sum>` that returns an int.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ndi_method_trace:
+
+.. rst-class:: classref-method
+
+``int`` **trace**\ (\ v\: ``Variant``, offset\: ``int`` = 0, axis1\: ``int`` = 0, axis2\: ``int`` = 1\ ) |static| :ref:`🔗<class_ndi_method_trace>`
+
+2-D only equivalent of :ref:`nd.trace<class_nd_method_trace>` that returns an int.
 
 .. |virtual| replace:: :abbr:`virtual (This method should typically be overridden by the user to have any effect.)`
 .. |const| replace:: :abbr:`const (This method has no side effects. It doesn't modify any of the instance's member variables.)`

@@ -25,6 +25,7 @@ void ndf::_bind_methods() {
 	godot::ClassDB::bind_static_method("ndf", D_METHOD("max", "a"), &ndf::max);
 	godot::ClassDB::bind_static_method("ndf", D_METHOD("min", "a"), &ndf::min);
 	godot::ClassDB::bind_static_method("ndf", D_METHOD("norm", "a", "ord"), &ndf::norm, DEFVAL(2));
+	godot::ClassDB::bind_static_method("ndf", D_METHOD("trace", "v", "offset", "axis1", "axis2"), &ndf::trace, DEFVAL(0), DEFVAL(0), DEFVAL(1));
 
 	godot::ClassDB::bind_static_method("ndf", D_METHOD("reduce_dot", "a", "b"), &ndf::reduce_dot);
 }
@@ -109,6 +110,12 @@ double_t ndf::norm(const Variant& a, const Variant& ord) {
 	}
 
 	ERR_FAIL_V_MSG({}, "This norm is currently not supported");
+}
+
+double_t ndf::trace(const Variant& v, int64_t offset, int64_t axis1, int64_t axis2) {
+	return reduction([offset, axis1, axis2](const va::VArray& array) {
+		return va::trace_to_scalar(array, offset, axis1, axis2);
+	}, v);
 }
 
 //double_t ndf::all(const Variant& a) {

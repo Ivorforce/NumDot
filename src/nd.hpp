@@ -90,6 +90,7 @@ public:
 	static Ref<NDArray> flip(const Variant& v, int64_t axis);
 	static Ref<NDArray> diagonal(const Variant& v, int64_t offset, int64_t axis1, int64_t axis2);
 	static Ref<NDArray> diag(const Variant& v, int64_t offset);
+	static Ref<NDArray> trace(const Variant& v, int64_t offset, int64_t axis1, int64_t axis2);
 	static Ref<NDArray> stack(const Variant& v, int64_t axis);
 	static Ref<NDArray> unstack(const Variant& v, int64_t axis);
 	static Ref<NDArray> concatenate(const Variant& v, int64_t axis, DType dtype = DType::DTypeMax);

@@ -287,12 +287,12 @@ Variant NDArray::_iter_get(const Variant& p_iter) {
 	return { memnew(NDArray(result)) };
 }
 
-Variant NDArray::as_type(const va::DType dtype) const {
+Ref<NDArray> NDArray::as_type(const va::DType dtype) const {
 	const auto result = ndarray_as_dtype(*this, dtype);
 	return { memnew(NDArray(result)) };
 }
 
-Variant NDArray::copy() const {
+Ref<NDArray> NDArray::copy() const {
 	const auto result = va::copy(va::store::default_allocator, array->data);
 	return { memnew(NDArray(result)) };
 }

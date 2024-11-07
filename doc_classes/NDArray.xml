@@ -10,7 +10,7 @@
 	</tutorials>
 	<methods>
 		<method name="as_type" qualifiers="const">
-			<return type="Variant" />
+			<return type="NDArray" />
 			<param index="0" name="type" type="int" enum="nd.DType" />
 			<description>
 				Convert to an array of the given type, but avoid copying data if possible.
@@ -613,7 +613,7 @@
 			</description>
 		</method>
 		<method name="copy" qualifiers="const">
-			<return type="Variant" />
+			<return type="NDArray" />
 			<description>
 				Creates a copy of this array.
 			</description>

@@ -30,7 +30,7 @@ Methods
    :widths: auto
 
    +------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
-   | ``Variant``                                                | :ref:`as_type<class_NDArray_method_as_type>`\ (\ type\: :ref:`DType<enum_nd_DType>`\ ) |const|                                      |
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`as_type<class_NDArray_method_as_type>`\ (\ type\: :ref:`DType<enum_nd_DType>`\ ) |const|                                      |
    +------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`assign_abs<class_NDArray_method_assign_abs>`\ (\ a\: ``Variant``\ )                                                           |
    +------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
@@ -172,7 +172,7 @@ Methods
    +------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
    | ``int``                                                    | :ref:`buffer_size_in_bytes<class_NDArray_method_buffer_size_in_bytes>`\ (\ ) |const|                                                |
    +------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
-   | ``Variant``                                                | :ref:`copy<class_NDArray_method_copy>`\ (\ ) |const|                                                                                |
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`copy<class_NDArray_method_copy>`\ (\ ) |const|                                                                                |
    +------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`DType<enum_nd_DType>`                                | :ref:`dtype<class_NDArray_method_dtype>`\ (\ ) |const|                                                                              |
    +------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
@@ -301,7 +301,7 @@ Method Descriptions
 
 .. rst-class:: classref-method
 
-``Variant`` **as_type**\ (\ type\: :ref:`DType<enum_nd_DType>`\ ) |const| :ref:`🔗<class_NDArray_method_as_type>`
+:ref:`NDArray<class_NDArray>` **as_type**\ (\ type\: :ref:`DType<enum_nd_DType>`\ ) |const| :ref:`🔗<class_NDArray_method_as_type>`
 
 Convert to an array of the given type, but avoid copying data if possible.
 
@@ -1289,7 +1289,7 @@ This is equivalent to ``nd.size_of_dtype_in_bytes(x.buffer_dtype()) * x.buffer_s
 
 .. rst-class:: classref-method
 
-``Variant`` **copy**\ (\ ) |const| :ref:`🔗<class_NDArray_method_copy>`
+:ref:`NDArray<class_NDArray>` **copy**\ (\ ) |const| :ref:`🔗<class_NDArray_method_copy>`
 
 Creates a copy of this array.
 

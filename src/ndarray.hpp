@@ -89,8 +89,8 @@ public:
 	int64_t get_int(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error);
 	double_t get_float(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error);
 
-	[[nodiscard]] Variant as_type(va::DType dtype) const;
-	[[nodiscard]] Variant copy() const;
+	[[nodiscard]] Ref<NDArray> as_type(va::DType dtype) const;
+	[[nodiscard]] Ref<NDArray> copy() const;
 	Ref<NDArray> transpose(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error);
 
 	[[nodiscard]] bool to_bool() const;

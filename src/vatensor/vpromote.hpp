@@ -84,22 +84,15 @@ namespace va {
 			}
 		}
 
-		// TODO We should merge this with the above
-		template<typename NeededType, typename T>
-		auto promote_value_type_if_needed_fast(T&& arg) {
-			using V = value_type_v<std::decay_t<decltype(arg)>>;
-
-			if constexpr (std::is_same_v<V, NeededType>) {
-				// Most common situation: the argument we need is the same as the argument that's given.
-				return std::forward<T>(arg);
+		template <typename Need, typename Have>
+		static Need promote_list_if_needed(Have& have) {
+			if constexpr (std::is_same_v<Have, Need>) {
+				return have;
 			}
 			else {
-				if constexpr (std::is_fundamental_v<T>) {
-					return static_cast<NeededType>(std::forward<T>(arg));
-				}
-				else {
-					return xt::cast<NeededType>(std::forward<T>(arg));
-				}
+				Need need(have.size());
+				std::copy_n(have.begin(), have.size(), need.begin());
+				return need;
 			}
 		}
 

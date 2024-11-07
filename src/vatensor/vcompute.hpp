@@ -74,15 +74,12 @@ namespace va {
 
         const auto dimension = result.dimension();
 
-        shape_type shape(dimension);
-        std::copy_n(result.shape().begin(), dimension, shape.begin());
-
         // Create new array, assign to our target pointer.
         // OutputType may be different from R, if we want different behavior than xtensor for computation.
         std::shared_ptr<VStore> result_store = allocator.allocate(va::dtype_of_type<OStorable>(), result.size());
         auto data = make_compute<OStorable*>(
             static_cast<OStorable*>(result_store->data()),
-            shape,
+            promote::promote_list_if_needed<shape_type>(result.shape()),
             strides_type{}, // unused
             dimension <= 1 ? xt::layout_type::any : xt::layout_type::row_major
         );

@@ -203,11 +203,11 @@ namespace va {
 
 		// e.g. for a << b, a type is more important than b type.
 		struct left_of_ints_in_same_out {
-			template<typename First, typename... Args>
+			template<typename... Args>
 			using input_type = std::conditional_t<
-				std::disjunction_v<std::negation<is_integer_t<First>>, std::negation<is_integer_t<Args>>...>,
+				std::disjunction_v<std::negation<is_integer_t<Args>>...>,
 				void,
-				First
+				std::tuple_element_t<0, std::tuple<Args...>>
 			>;
 
 			template<typename InputType, typename NaturalOutputType>

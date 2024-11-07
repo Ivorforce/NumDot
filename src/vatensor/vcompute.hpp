@@ -155,78 +155,77 @@ namespace va {
         );
     }
 
-    template<typename PromotionRule, typename Visitor>
-    struct VArrayFunctionInplace {
-        const Visitor visitor;
-        const VArrayTarget target;
-        VStoreAllocator& allocator;
+    // This function mostly exists to make it easier for the compiler to de-duplicate code.
+    template<typename PromotionRule, typename FX, typename... Args>
+    static void vfunction_monotype(FX&& fx, VStoreAllocator& allocator, VArrayTarget target, const Args&... args) {
+        using InputType = promote::value_type_v<std::tuple_element_t<0, std::tuple<std::decay_t<Args>...>>>;
+        static_assert(
+            (std::is_same_v<promote::value_type_v<std::decay_t<Args>>, InputType> && ...),
+            "All value types in monotype must be the same."
+        );
 
-        explicit VArrayFunctionInplace(const Visitor visitor, const VArrayTarget target, VStoreAllocator& allocator)
-            : visitor(std::move(visitor)), target(target), allocator(allocator) {}
+        // Result of visitor invocation
+        const auto result = fx(args...);
 
-        template<typename... Args>
-        void operator()(const Args&... args) {
-            using InputType = typename PromotionRule::template input_type<promote::value_type_v<std::decay_t<Args>>...>;
+        using NaturalOutputType = typename std::decay_t<decltype(result)>::value_type;
+        using OutputType = typename PromotionRule::template output_type<InputType, NaturalOutputType>;
 
-            if constexpr (std::is_same_v<InputType, void>) {
-                throw std::runtime_error("Unsupported type for operation.");
-            }
-            else if constexpr (!std::disjunction_v<std::is_convertible<promote::value_type_v<std::decay_t<Args>>, InputType>...>) {
-                throw std::runtime_error("Cannot promote in this way.");
-            }
-            else {
-                // Result of visitor invocation
-                const auto result = visitor(promote::promote_value_type_if_needed<InputType>(args)...);
-
-                using NaturalOutputType = typename std::decay_t<decltype(result)>::value_type;
-                using OutputType = typename PromotionRule::template output_type<InputType, NaturalOutputType>;
-
-                assign_to_target<OutputType>(target, allocator, result);
-            }
-        }
-    };
+        assign_to_target<OutputType>(target, allocator, result);
+    }
 
     template<Feature feature, typename PromotionRule, typename FX, typename... Args>
-    static inline void xoperation_inplace(FX&& fx, VStoreAllocator& allocator, VArrayTarget target, const Args&... args) {
+    static void xoperation_inplace(FX&& fx, VStoreAllocator& allocator, VArrayTarget target, const Args&... args) {
         visit_if_enabled<feature>(
-            VArrayFunctionInplace<PromotionRule, FX> { std::forward<FX>(fx), target, allocator },
+            [fx = std::forward<FX>(fx), &allocator, target](const auto&... args) {
+                using InputType = typename PromotionRule::template input_type<promote::value_type_v<std::decay_t<decltype(args)>>...>;
+
+                if constexpr (std::is_same_v<InputType, void>) {
+                    throw std::runtime_error("Unsupported type for operation.");
+                }
+                else if constexpr (!std::disjunction_v<std::is_convertible<promote::value_type_v<std::decay_t<decltype(args)>>, InputType>...>) {
+                    throw std::runtime_error("Cannot promote in this way.");
+                }
+                else {
+                    vfunction_monotype<PromotionRule>(std::move(fx), allocator, target, promote::promote_value_type_if_needed<InputType>(args)...);
+                }
+            },
             args...
         );
     }
 
-    template<typename PromotionRule, typename ReturnType, typename Visitor>
-    struct VArrayReduction {
-        const Visitor visitor;
+    // This function mostly exists to make it easier for the compiler to de-duplicate code.
+    template<typename PromotionRule, typename ReturnType, typename FX, typename... Args>
+    static ReturnType vreduction_monotype(FX&& fx, const Args&... args) {
+        using InputType = promote::value_type_v<std::tuple_element_t<0, std::tuple<std::decay_t<Args>...>>>;
+        static_assert(
+            (std::is_same_v<promote::value_type_v<std::decay_t<Args>>, InputType> && ...),
+            "All value types in monotype must be the same."
+        );
 
-        explicit VArrayReduction(const Visitor visitor)
-            : visitor(std::move(visitor)) {}
+        using NaturalOutputType = decltype(fx(args...));
+        using OutputType = typename PromotionRule::template output_type<InputType, NaturalOutputType>;
 
-        template<typename... Args>
-        ReturnType operator()(const Args&... args) const {
-            using InputType = typename PromotionRule::template input_type<typename std::decay_t<Args>::value_type...>;
-
-            if constexpr (std::is_same_v<InputType, void>) {
-                throw std::runtime_error("Unsupported type for operation.");
-            }
-            else if constexpr (!std::disjunction_v<std::is_convertible<promote::value_type_v<std::decay_t<Args>>, InputType>...>) {
-                throw std::runtime_error("Cannot promote in this way.");
-            }
-            else {
-                using NaturalOutputType = decltype(visitor(promote::promote_value_type_if_needed<InputType>(args)...));
-                using OutputType = typename PromotionRule::template output_type<InputType, NaturalOutputType>;
-
-                // Result of visitor invocation
-                // TODO Some xt functions support passing the output type. That would be FAR better than casting it afterwards as here.
-                const auto result = OutputType(visitor(promote::promote_value_type_if_needed<InputType>(args)...));
-                return static_cast<ReturnType>(result);
-            }
-        }
-    };
+        // TODO Some xt functions support passing the output type. That would be FAR better than casting it afterwards as here.
+        const auto result = OutputType(fx(args...));
+        return static_cast<ReturnType>(result);
+    }
 
     template<Feature feature, typename PromotionRule, typename ReturnType, typename FX, typename... Args>
     static ReturnType vreduce(FX&& fx, const Args&... args) {
         return visit_if_enabled<feature>(
-            VArrayReduction<PromotionRule, ReturnType, FX> { std::forward<FX>(fx) },
+            [fx = std::forward<FX>(fx)](const auto&... args) -> ReturnType {
+                using InputType = typename PromotionRule::template input_type<promote::value_type_v<std::decay_t<decltype(args)>>...>;
+
+                if constexpr (std::is_same_v<InputType, void>) {
+                    throw std::runtime_error("Unsupported type for operation.");
+                }
+                else if constexpr (!std::disjunction_v<std::is_convertible<promote::value_type_v<std::decay_t<decltype(args)>>, InputType>...>) {
+                    throw std::runtime_error("Cannot promote in this way.");
+                }
+                else {
+                    return vreduction_monotype<PromotionRule, ReturnType>(std::move(fx), promote::promote_value_type_if_needed<InputType>(args)...);
+                }
+            },
             args...
         );
     }

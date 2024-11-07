@@ -54,34 +54,31 @@ namespace va {
 			std::negation<std::is_same<T, bool>>
 		> {};
 
-		template<typename NeededType, typename T>
-		auto promote_value_type_if_needed(T&& arg) {
-			using V = value_type_v<std::decay_t<decltype(arg)>>;
-
-			if constexpr (std::is_same_v<V, NeededType>) {
-				// Most common situation: the argument we need is the same as the argument that's given.
-				return std::forward<T>(arg);
+		template<typename NeededType, typename T, std::enable_if_t<!std::is_same_v<NeededType, value_type_v<std::decay_t<T>>>, int> = 0>
+		auto promote_value_type_if_needed(const T& arg) {
+			if constexpr (std::is_fundamental_v<std::decay_t<T>> || xtl::is_complex<std::decay_t<T>>::value) {
+				return static_cast<NeededType>(arg);
+			}
+			else if constexpr (xtl::is_complex<NeededType>::value) {
+				// FIXME Not auto-convertible like below for some reason
+				return xt::xarray<NeededType>(xt::cast<NeededType>(arg));
 			}
 			else {
-				if constexpr (std::is_fundamental_v<std::decay_t<T>> || xtl::is_complex<std::decay_t<T>>::value) {
-					return static_cast<NeededType>(std::forward<T>(arg));
-				}
-				else if constexpr (xtl::is_complex<NeededType>::value) {
-					// FIXME Not auto-convertible like below for some reason
-					return xt::xarray<NeededType>(xt::cast<NeededType>(std::forward<T>(arg)));
-				}
-				else {
-					// Casting can considerably increase performance (from a small test, it was 25%).
-					// However, this is only relevant for operations that even need casting.
-					// The cost for casting instead of copying is a much larger binary size (100% increase).
-					// Most people will probably prefer the small binary, and accept less optimized wrong dtype operations.
+				// Casting can considerably increase performance (from a small test, it was 25%).
+				// However, this is only relevant for operations that even need casting.
+				// The cost for casting instead of copying is a much larger binary size (100% increase).
+				// Most people will probably prefer the small binary, and accept less optimized wrong dtype operations.
 #ifdef NUMDOT_CAST_INSTEAD_OF_COPY_FOR_ARGUMENTS
-			        return xt::cast<NeededType>(std::forward<T>(arg));
+				return xt::cast<NeededType>(std::forward<T>(arg));
 #else
-					return xt::xarray<NeededType>(std::forward<T>(arg));
+				return xt::xarray<NeededType>(arg);
 #endif
-				}
 			}
+		}
+
+		template<typename NeededType, typename T, std::enable_if_t<std::is_same_v<NeededType, value_type_v<std::decay_t<T>>>, int> = 0>
+		auto& promote_value_type_if_needed(const T& arg) {
+			return arg;
 		}
 
 		template <typename Need, typename Have>

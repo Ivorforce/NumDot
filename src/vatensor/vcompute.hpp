@@ -165,7 +165,7 @@ namespace va {
         );
 
         // Result of visitor invocation
-        const auto result = fx(args...);
+        const auto result = std::forward<FX>(fx)(args...);
 
         using NaturalOutputType = typename std::decay_t<decltype(result)>::value_type;
         using OutputType = typename PromotionRule::template output_type<InputType, NaturalOutputType>;
@@ -206,7 +206,7 @@ namespace va {
         using OutputType = typename PromotionRule::template output_type<InputType, NaturalOutputType>;
 
         // TODO Some xt functions support passing the output type. That would be FAR better than casting it afterwards as here.
-        const auto result = OutputType(fx(args...));
+        const auto result = OutputType(std::forward<FX>(fx)(args...));
         return static_cast<ReturnType>(result);
     }
 

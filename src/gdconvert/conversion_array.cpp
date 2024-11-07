@@ -10,6 +10,7 @@
 #include <tuple>                                       // for tuple, make_tuple
 #include <utility>                                     // for move
 #include <vector>                                      // for allocator, vector
+#include <vatensor/vcarray.hpp>
 #include <vatensor/xtensor_store.hpp>
 #include <vatensor/xscalar_store.hpp>
 #include "godot_cpp/classes/object.hpp"                // for Object
@@ -382,7 +383,7 @@ std::shared_ptr<va::VArray> array_as_varray(const Array& input_array) {
 					const auto packed = PackedByteArray(array_element);
 					va::assign(
 						compute,
-						adapt_c_array(const_cast<uint8_t*>(packed.ptr()), { static_cast<std::size_t>(packed.size()) })
+						va::util::adapt_c_array(const_cast<uint8_t*>(packed.ptr()), { static_cast<std::size_t>(packed.size()) })
 					);
 					continue;
 				}
@@ -391,7 +392,7 @@ std::shared_ptr<va::VArray> array_as_varray(const Array& input_array) {
 					const auto packed = PackedInt32Array(array_element);
 					va::assign(
 						compute,
-						adapt_c_array(const_cast<int32_t*>(packed.ptr()), { static_cast<std::size_t>(packed.size()) })
+						va::util::adapt_c_array(const_cast<int32_t*>(packed.ptr()), { static_cast<std::size_t>(packed.size()) })
 					);
 					continue;
 				}
@@ -400,7 +401,7 @@ std::shared_ptr<va::VArray> array_as_varray(const Array& input_array) {
 					const auto packed = PackedInt64Array(array_element);
 					va::assign(
 						compute,
-						adapt_c_array(const_cast<int64_t*>(packed.ptr()), { static_cast<std::size_t>(packed.size()) })
+						va::util::adapt_c_array(const_cast<int64_t*>(packed.ptr()), { static_cast<std::size_t>(packed.size()) })
 					);
 					continue;
 				}
@@ -409,7 +410,7 @@ std::shared_ptr<va::VArray> array_as_varray(const Array& input_array) {
 					const auto packed = PackedFloat32Array(array_element);
 					va::assign(
 						compute,
-						adapt_c_array(const_cast<float_t*>(packed.ptr()), { static_cast<std::size_t>(packed.size()) })
+						va::util::adapt_c_array(const_cast<float_t*>(packed.ptr()), { static_cast<std::size_t>(packed.size()) })
 					);
 					continue;
 				}
@@ -418,7 +419,7 @@ std::shared_ptr<va::VArray> array_as_varray(const Array& input_array) {
 					const auto packed = PackedFloat64Array(array_element);
 					va::assign(
 						compute,
-						adapt_c_array(const_cast<double_t*>(packed.ptr()), { static_cast<std::size_t>(packed.size()) })
+						va::util::adapt_c_array(const_cast<double_t*>(packed.ptr()), { static_cast<std::size_t>(packed.size()) })
 					);
 					continue;
 				}
@@ -427,7 +428,7 @@ std::shared_ptr<va::VArray> array_as_varray(const Array& input_array) {
 					const auto packed = PackedVector2Array(array_element);
 					va::assign(
 						compute,
-						adapt_c_array(const_cast<real_t*>(&packed.ptr()[0].coord[0]), { static_cast<std::size_t>(packed.size()), 2 })
+						va::util::adapt_c_array(const_cast<real_t*>(&packed.ptr()[0].coord[0]), { static_cast<std::size_t>(packed.size()), 2 })
 					);
 					continue;
 				}
@@ -436,7 +437,7 @@ std::shared_ptr<va::VArray> array_as_varray(const Array& input_array) {
 					const auto packed = PackedVector3Array(array_element);
 					va::assign(
 						compute,
-						adapt_c_array(const_cast<real_t*>(&packed.ptr()[0].coord[0]), { static_cast<std::size_t>(packed.size()), 3 })
+						va::util::adapt_c_array(const_cast<real_t*>(&packed.ptr()[0].coord[0]), { static_cast<std::size_t>(packed.size()), 3 })
 					);
 					continue;
 				}
@@ -445,7 +446,7 @@ std::shared_ptr<va::VArray> array_as_varray(const Array& input_array) {
 					const auto packed = PackedVector4Array(array_element);
 					va::assign(
 						compute,
-						adapt_c_array(const_cast<real_t*>(&packed.ptr()[0].components[0]), { static_cast<std::size_t>(packed.size()), 4 })
+						va::util::adapt_c_array(const_cast<real_t*>(&packed.ptr()[0].components[0]), { static_cast<std::size_t>(packed.size()), 4 })
 					);
 					continue;
 				}
@@ -454,7 +455,7 @@ std::shared_ptr<va::VArray> array_as_varray(const Array& input_array) {
 					const auto packed = PackedColorArray(array_element);
 					va::assign(
 						compute,
-						adapt_c_array(const_cast<float_t*>(&packed.ptr()[0].components[0]), { static_cast<std::size_t>(packed.size()), 4 })
+						va::util::adapt_c_array(const_cast<float_t*>(&packed.ptr()[0].components[0]), { static_cast<std::size_t>(packed.size()), 4 })
 					);
 					continue;
 				}
@@ -463,7 +464,7 @@ std::shared_ptr<va::VArray> array_as_varray(const Array& input_array) {
 					const Vector2i vector = array_element;
 					va::assign(
 						compute,
-						adapt_c_array(const_cast<int32_t*>(&vector.coord[0]), { std::size(vector.coord) })
+						va::util::adapt_c_array(const_cast<int32_t*>(&vector.coord[0]), { std::size(vector.coord) })
 					);
 					continue;
 				}
@@ -472,7 +473,7 @@ std::shared_ptr<va::VArray> array_as_varray(const Array& input_array) {
 					const Vector3i vector = array_element;
 					va::assign(
 						compute,
-						adapt_c_array(const_cast<int32_t*>(&vector.coord[0]), { std::size(vector.coord) })
+						va::util::adapt_c_array(const_cast<int32_t*>(&vector.coord[0]), { std::size(vector.coord) })
 					);
 					continue;
 				}
@@ -481,7 +482,7 @@ std::shared_ptr<va::VArray> array_as_varray(const Array& input_array) {
 					const Vector4i vector = array_element;
 					va::assign(
 						compute,
-						adapt_c_array(const_cast<int32_t*>(&vector.coord[0]), { std::size(vector.coord) })
+						va::util::adapt_c_array(const_cast<int32_t*>(&vector.coord[0]), { std::size(vector.coord) })
 					);
 					continue;
 				}
@@ -490,7 +491,7 @@ std::shared_ptr<va::VArray> array_as_varray(const Array& input_array) {
 					const Vector2 vector = array_element;
 					va::assign(
 						compute,
-						adapt_c_array(const_cast<real_t*>(&vector.coord[0]), { std::size(vector.coord) })
+						va::util::adapt_c_array(const_cast<real_t*>(&vector.coord[0]), { std::size(vector.coord) })
 					);
 					continue;
 				}
@@ -499,7 +500,7 @@ std::shared_ptr<va::VArray> array_as_varray(const Array& input_array) {
 					const Vector3 vector = array_element;
 					va::assign(
 						compute,
-						adapt_c_array(const_cast<real_t*>(&vector.coord[0]), { std::size(vector.coord) })
+						va::util::adapt_c_array(const_cast<real_t*>(&vector.coord[0]), { std::size(vector.coord) })
 					);
 					continue;
 				}
@@ -508,7 +509,7 @@ std::shared_ptr<va::VArray> array_as_varray(const Array& input_array) {
 					const Vector4 vector = array_element;
 					va::assign(
 						compute,
-						adapt_c_array(const_cast<real_t*>(&vector.components[0]), { std::size(vector.components) })
+						va::util::adapt_c_array(const_cast<real_t*>(&vector.components[0]), { std::size(vector.components) })
 					);
 					continue;
 				}
@@ -517,7 +518,7 @@ std::shared_ptr<va::VArray> array_as_varray(const Array& input_array) {
 					const Color vector = array_element;
 					va::assign(
 						compute,
-						adapt_c_array(const_cast<float_t*>(&vector.components[0]), { std::size(vector.components) })
+						va::util::adapt_c_array(const_cast<float_t*>(&vector.components[0]), { std::size(vector.components) })
 					);
 					continue;
 				}
@@ -555,63 +556,63 @@ std::shared_ptr<va::VArray> variant_as_array(const Variant& array) {
 		case Variant::PACKED_BYTE_ARRAY: {
 			auto packed = PackedByteArray(array);
 			return numdot::varray_from_packed(
-			adapt_c_array(const_cast<uint8_t*>(packed.ptr()), { static_cast<std::size_t>(packed.size()) }),
+			va::util::adapt_c_array(const_cast<uint8_t*>(packed.ptr()), { static_cast<std::size_t>(packed.size()) }),
 				std::move(packed)
 			);
 		}
 		case Variant::PACKED_INT32_ARRAY: {
 			auto packed = PackedInt32Array(array);
 			return numdot::varray_from_packed(
-					adapt_c_array(const_cast<int32_t*>(packed.ptr()), { static_cast<std::size_t>(packed.size()) }),
+					va::util::adapt_c_array(const_cast<int32_t*>(packed.ptr()), { static_cast<std::size_t>(packed.size()) }),
 				std::move(packed)
 			);
 		}
 		case Variant::PACKED_INT64_ARRAY: {
 			auto packed = PackedInt64Array(array);
 			return numdot::varray_from_packed(
-			adapt_c_array(const_cast<int64_t*>(packed.ptr()), { static_cast<std::size_t>(packed.size()) }),
+			va::util::adapt_c_array(const_cast<int64_t*>(packed.ptr()), { static_cast<std::size_t>(packed.size()) }),
 				std::move(packed)
 			);
 		}
 		case Variant::PACKED_FLOAT32_ARRAY: {
 			auto packed = PackedFloat32Array(array);
 			return numdot::varray_from_packed(
-			adapt_c_array(const_cast<float_t*>(packed.ptr()), { static_cast<std::size_t>(packed.size()) }),
+			va::util::adapt_c_array(const_cast<float_t*>(packed.ptr()), { static_cast<std::size_t>(packed.size()) }),
 				std::move(packed)
 			);
 		}
 		case Variant::PACKED_FLOAT64_ARRAY: {
 			auto packed = PackedFloat64Array(array);
 			return numdot::varray_from_packed(
-			adapt_c_array(const_cast<double_t*>(packed.ptr()), { static_cast<std::size_t>(packed.size()) }),
+			va::util::adapt_c_array(const_cast<double_t*>(packed.ptr()), { static_cast<std::size_t>(packed.size()) }),
 				std::move(packed)
 			);
 		}
 		case Variant::PACKED_VECTOR2_ARRAY: {
 			auto packed = PackedVector2Array(array);
 			return numdot::varray_from_packed(
-			adapt_c_array(const_cast<real_t*>(&packed.ptr()[0].coord[0]), { static_cast<std::size_t>(packed.size()), 2 }),
+			va::util::adapt_c_array(const_cast<real_t*>(&packed.ptr()[0].coord[0]), { static_cast<std::size_t>(packed.size()), 2 }),
 				std::move(packed)
 			);
 		}
 		case Variant::PACKED_VECTOR3_ARRAY: {
 			auto packed = PackedVector3Array(array);
 			return numdot::varray_from_packed(
-			adapt_c_array(const_cast<real_t*>(&packed.ptr()[0].coord[0]), { static_cast<std::size_t>(packed.size()), 3 }),
+			va::util::adapt_c_array(const_cast<real_t*>(&packed.ptr()[0].coord[0]), { static_cast<std::size_t>(packed.size()), 3 }),
 				std::move(packed)
 			);
 		}
 		case Variant::PACKED_VECTOR4_ARRAY: {
 			auto packed = PackedVector4Array(array);
 			return numdot::varray_from_packed(
-			adapt_c_array(const_cast<real_t*>(&packed.ptr()[0].components[0]), { static_cast<std::size_t>(packed.size()), 4 }),
+			va::util::adapt_c_array(const_cast<real_t*>(&packed.ptr()[0].components[0]), { static_cast<std::size_t>(packed.size()), 4 }),
 				std::move(packed)
 			);
 		}
 		case Variant::PACKED_COLOR_ARRAY: {
 			auto packed = PackedColorArray(array);
 			return numdot::varray_from_packed(
-			adapt_c_array(const_cast<float_t*>(&packed.ptr()[0].components[0]), { static_cast<std::size_t>(packed.size()), 4 }),
+			va::util::adapt_c_array(const_cast<float_t*>(&packed.ptr()[0].components[0]), { static_cast<std::size_t>(packed.size()), 4 }),
 				std::move(packed)
 			);
 		}

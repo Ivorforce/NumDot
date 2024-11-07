@@ -8,6 +8,7 @@
 #include "vassign.hpp"
 #include "vcompute.hpp"
 #include "vpromote.hpp"
+#include "vcarray.hpp"
 #include "xtensor/xbuilder.hpp"         // for empty
 #include "xtensor/xlayout.hpp"          // for layout_type
 #include "xtensor/xoperation.hpp"       // for cast
@@ -208,4 +209,31 @@ std::shared_ptr<VArray> va::tile(VStoreAllocator& allocator, const VArray& array
 	va::assign(result_broadcast->data, array_broadcast);
 
 	return result;
+}
+
+std::shared_ptr<VArray> va::flatten(VStoreAllocator& allocator, const VArray& varray) {
+	const auto count = varray.size();
+	auto store = allocator.allocate(varray.dtype(), count);
+
+	return std::visit(
+		[&store, count](const auto& read) -> std::shared_ptr<VArray> {
+			using VT = typename std::decay_t<decltype(read)>::value_type;
+
+			auto ptr = static_cast<VT*>(store->data());
+			util::fill_c_array_flat(ptr, read);
+
+			return std::make_shared<VArray>(
+				VArray {
+					store,
+					make_compute<VT*>(
+						std::move(ptr),
+						shape_type { count },
+						strides_type { 1 },
+						xt::layout_type::any
+					),
+					0
+				}
+			);
+		}, varray.data
+	);
 }

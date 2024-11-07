@@ -176,6 +176,8 @@ Methods
    +------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`DType<enum_nd_DType>`                                | :ref:`dtype<class_NDArray_method_dtype>`\ (\ ) |const|                                                                              |
    +------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`flatten<class_NDArray_method_flatten>`\ (\ ) |const|                                                                          |
+   +------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`get<class_NDArray_method_get>`\ (\ ...\ ) |const| |vararg|                                                                    |
    +------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
    | ``bool``                                                   | :ref:`get_bool<class_NDArray_method_get_bool>`\ (\ ...\ ) |const| |vararg|                                                          |
@@ -1304,6 +1306,18 @@ Creates a copy of this array.
 :ref:`DType<enum_nd_DType>` **dtype**\ (\ ) |const| :ref:`🔗<class_NDArray_method_dtype>`
 
 Data-type of the array’s elements.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_flatten:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **flatten**\ (\ ) |const| :ref:`🔗<class_NDArray_method_flatten>`
+
+Return a copy of the array collapsed into one dimension.
 
 .. rst-class:: classref-item-separator
 

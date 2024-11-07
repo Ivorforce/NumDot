@@ -22,7 +22,7 @@ Upcoming Changes (main branch)
 - Added ``ndarray.buffer_size`` and ``ndarray.buffer_dtype`` functions for investigation of underlying buffer types.
 - Added bitwise functions (``bitwise_and``, ``bitwise_or``, ``bitwise_xor``, ``bitwise_not``, ``bitwise_left_shift``, ``bitwise_right_shift``).
 - Added matrix ``diagonal``, ``diag`` and ``trace`` functions.
-- Added ``transpose`` to ``NDArray`` methods.
+- Added ``transpose`` and ``flatten`` to ``NDArray`` methods.
 
 **Changed**
 

@@ -25,33 +25,6 @@ std::shared_ptr<va::VArray> variant_as_array(const Variant& array, va::DType dty
 
 std::vector<std::shared_ptr<va::VArray>> variant_to_vector(const Variant& array);
 
-template<typename T, typename Compute>
-void fill_c_array_flat(T target, const Compute& carray) {
-	if constexpr (!std::is_convertible_v<typename Compute::value_type, std::remove_pointer_t<std::decay_t<T>>>) {
-		throw std::runtime_error("Cannot promote in this way.");
-	}
-	else {
-		std::copy(carray.begin(), carray.end(), target);
-	}
-}
-
-template<typename T>
-void fill_c_array_flat(T* target, const va::VData& array) {
-	std::visit(
-		[target](auto& carray) {
-            fill_c_array_flat(target, carray);
-		}, array
-	);
-}
-
-template<typename T>
-auto adapt_c_array(T&& ptr, const va::shape_type& shape) {
-	const auto size = std::accumulate(shape.begin(), shape.end(), static_cast<std::size_t>(1), std::multiplies<>());
-	return xt::adapt<xt::layout_type::dynamic, T, xt::no_ownership, va::shape_type>(
-		std::forward<T>(ptr), size, xt::no_ownership(), shape, xt::layout_type::row_major
-	);
-}
-
 void find_shape_and_dtype_of_array(va::shape_type& shape, va::DType& dtype, const Array& input_array);
 void find_shape_and_dtype(va::shape_type& shape, va::DType& dtype, const Variant& array);
 Array varray_to_godot_array(const va::VArray& array);

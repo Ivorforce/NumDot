@@ -10,6 +10,7 @@
 #include <vatensor/vassign.hpp>                      // for assign
 #include <vatensor/vmath.hpp>                        // for abs, add, clip
 #include <vatensor/xtensor_store.hpp>                        // for abs, add, clip
+#include <vatensor/vcarray.hpp>                        // fill_c_array_flat
 #include <algorithm>                               // for copy
 #include <cstddef>                                 // for size_t
 #include <stdexcept>                               // for runtime_error
@@ -67,6 +68,7 @@ void NDArray::_bind_methods() {
 	godot::ClassDB::bind_method(D_METHOD("as_type", "type"), &NDArray::as_type);
 	godot::ClassDB::bind_method(D_METHOD("copy"), &NDArray::copy);
 	ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "transpose", &NDArray::transpose);
+	godot::ClassDB::bind_method(D_METHOD("flatten"), &NDArray::flatten);
 
 	godot::ClassDB::bind_method(D_METHOD("to_bool"), &NDArray::to_bool);
 	godot::ClassDB::bind_method(D_METHOD("to_int"), &NDArray::to_int);
@@ -317,6 +319,16 @@ Ref<NDArray> NDArray::transpose(const Variant** args, GDExtensionInt arg_count, 
 	}
 }
 
+Ref<NDArray> NDArray::flatten() const {
+	try {
+		const auto result = va::flatten(va::store::default_allocator, *array);
+		return { memnew(NDArray(result)) };
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
+}
+
 va::VData& get_write(va::VArray& array, const std::nullptr_t& ptr) {
 	array.prepare_write();
 	return array.data;
@@ -469,7 +481,7 @@ double_t NDArray::to_float() const { return static_cast<double_t>(*this); }
 
 #define TRY_CONVERT(target, read)\
 try {\
-	fill_c_array_flat(target, read);\
+	va::util::fill_c_array_flat(target, read);\
 }\
 catch (std::runtime_error& error) {\
 	ERR_FAIL_V_MSG({}, error.what());\

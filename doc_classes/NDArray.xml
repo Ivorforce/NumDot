@@ -624,6 +624,12 @@
 				Data-type of the array’s elements.
 			</description>
 		</method>
+		<method name="flatten" qualifiers="const">
+			<return type="NDArray" />
+			<description>
+				Return a copy of the array collapsed into one dimension.
+			</description>
+		</method>
 		<method name="get" qualifiers="const vararg">
 			<return type="NDArray" />
 			<description>

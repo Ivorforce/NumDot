@@ -8,7 +8,7 @@
 #include <variant>                                   // for visit
 #include <vector>                                    // for vector
 #include <vatensor/vpromote.hpp>
-
+#include <vatensor/vcarray.hpp>                        // fill_c_array_flat
 #include "conversion_array.hpp"
 #include "godot_cpp/classes/object.hpp"              // for Object
 #include "godot_cpp/core/object.hpp"                 // for Object::cast_to
@@ -82,7 +82,7 @@ T variant_as_ints_(const Variant& variant) {
 								case 1: {
 									T ints;
 									ints.resize(carray.size());
-									fill_c_array_flat(ints.data(), carray);
+									va::util::fill_c_array_flat(ints.data(), carray);
 									return ints;
 								}
 								default:

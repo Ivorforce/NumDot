@@ -92,6 +92,7 @@ public:
 	[[nodiscard]] Ref<NDArray> as_type(va::DType dtype) const;
 	[[nodiscard]] Ref<NDArray> copy() const;
 	Ref<NDArray> transpose(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error);
+	[[nodiscard]] Ref<NDArray> flatten() const;
 
 	[[nodiscard]] bool to_bool() const;
 	[[nodiscard]] int64_t to_int() const;

@@ -94,6 +94,8 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`deg2rad<class_nd_method_deg2rad>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                     |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`diag<class_nd_method_diag>`\ (\ v\: ``Variant``, offset\: ``int`` = 0\ ) |static|                                                                                                     |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`diagonal<class_nd_method_diagonal>`\ (\ v\: ``Variant``, offset\: ``int`` = 0, axis1\: ``int`` = 0, axis2\: ``int`` = 1\ ) |static|                                                   |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`divide<class_nd_method_divide>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                      |
@@ -854,6 +856,22 @@ If no seed is provided, a fresh, unpredictable entropy will be pulled from the O
 :ref:`NDArray<class_NDArray>` **deg2rad**\ (\ a\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_deg2rad>`
 
 Convert angles from degrees to radians.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_diag:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **diag**\ (\ v\: ``Variant``, offset\: ``int`` = 0\ ) |static| :ref:`🔗<class_nd_method_diag>`
+
+This function does one of two things, depending on the dimension of the input array:
+
+1-D: Constructs a square matrix from a k-th diagonal, with all other positions being 0.
+
+2-D: Returns a view of the k-th diagonal, like :ref:`diagonal<class_nd_method_diagonal>`.
 
 .. rst-class:: classref-item-separator
 

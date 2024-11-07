@@ -264,6 +264,16 @@
 				Convert angles from degrees to radians.
 			</description>
 		</method>
+		<method name="diag" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="v" type="Variant" />
+			<param index="1" name="offset" type="int" default="0" />
+			<description>
+				This function does one of two things, depending on the dimension of the input array:
+				1-D: Constructs a square matrix from a k-th diagonal, with all other positions being 0.
+				2-D: Returns a view of the k-th diagonal, like [method diagonal].
+			</description>
+		</method>
 		<method name="diagonal" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="v" type="Variant" />

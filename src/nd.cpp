@@ -107,6 +107,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("moveaxis", "v", "src", "dst"), &nd::moveaxis);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("flip", "v", "axis"), &nd::flip);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("diagonal", "v", "offset", "axis1", "axis2"), &nd::diagonal, DEFVAL(0), DEFVAL(0), DEFVAL(1));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("diag", "v", "offset"), &nd::diag, DEFVAL(0));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("stack", "v", "axis"), &nd::stack, DEFVAL(0));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("unstack", "v", "axis"), &nd::unstack, DEFVAL(0));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("concatenate", "v", "axis", "dtype"), &nd::concatenate, DEFVAL(0), DEFVAL(nd::DType::DTypeMax));
@@ -594,6 +595,37 @@ Ref<NDArray> nd::diagonal(const Variant& v, int64_t offset, int64_t axis1, int64
 			return va::diagonal(*v, offset, axis1, axis2);
 		}, v
 	);
+}
+
+Ref<NDArray> nd::diag(const Variant& v, int64_t offset) {
+	try {
+		const auto diagonal = variant_as_array(v);
+
+		switch (diagonal->dimension()) {
+			case 1: {
+				const std::size_t size = diagonal->shape()[0] + std::abs(offset);
+				const va::shape_type shape { size, size };
+
+				auto new_array = va::full(
+					va::store::default_allocator,
+					va::scalar_to_dtype(0, diagonal->dtype()),
+					shape
+				);
+
+				auto new_array_diag = va::diagonal(*new_array, offset, 0, 1);
+				va::assign(new_array_diag->data, diagonal->data);
+
+				return { memnew(NDArray(new_array)) };
+			}
+			case 2:
+				return { memnew(NDArray(va::diagonal(*diagonal, offset, 0, 1))) };
+			default:
+				ERR_FAIL_V_MSG({}, "diag must be called with 1-D or 2-D arrays");
+		}
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
 }
 
 Ref<NDArray> nd::stack(const Variant& v, int64_t axis) {

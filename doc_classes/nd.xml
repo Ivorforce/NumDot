@@ -264,6 +264,17 @@
 				Convert angles from degrees to radians.
 			</description>
 		</method>
+		<method name="diagonal" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="v" type="Variant" />
+			<param index="1" name="offset" type="int" default="0" />
+			<param index="2" name="axis1" type="int" default="0" />
+			<param index="3" name="axis2" type="int" default="1" />
+			<description>
+				Return specified matrix diagonals. This is a view of the given array.
+				If the array has more than 2 dimensions, the given dimensions are removed, and the new dimension is inserted as the new last (innermost) dimension.
+			</description>
+		</method>
 		<method name="divide" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />

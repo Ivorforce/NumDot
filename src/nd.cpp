@@ -106,6 +106,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("swapaxes", "v", "a", "b"), &nd::swapaxes);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("moveaxis", "v", "src", "dst"), &nd::moveaxis);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("flip", "v", "axis"), &nd::flip);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("diagonal", "v", "offset", "axis1", "axis2"), &nd::diagonal, DEFVAL(0), DEFVAL(0), DEFVAL(1));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("stack", "v", "axis"), &nd::stack, DEFVAL(0));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("unstack", "v", "axis"), &nd::unstack, DEFVAL(0));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("concatenate", "v", "axis", "dtype"), &nd::concatenate, DEFVAL(0), DEFVAL(nd::DType::DTypeMax));
@@ -583,6 +584,14 @@ Ref<NDArray> nd::flip(const Variant& v, int64_t axis) {
 	return map_variants_as_arrays(
 		[axis](const std::shared_ptr<va::VArray>& v) {
 			return va::flip(*v, axis);
+		}, v
+	);
+}
+
+Ref<NDArray> nd::diagonal(const Variant& v, int64_t offset, int64_t axis1, int64_t axis2) {
+	return map_variants_as_arrays(
+		[offset, axis1, axis2](const std::shared_ptr<va::VArray>& v) {
+			return va::diagonal(*v, offset, axis1, axis2);
 		}, v
 	);
 }

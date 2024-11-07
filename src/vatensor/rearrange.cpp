@@ -8,7 +8,7 @@
 #include <functional>                 // for multiplies
 #include <numeric>                    // for accumulate, iota
 #include <set>                        // for operator==, set
-
+#include "util.hpp"
 #include "vpromote.hpp"
 #include "xscalar_store.hpp"
 #include "vatensor//varray.hpp"         // for VArray, strides_type, axes_type
@@ -60,6 +60,95 @@ std::shared_ptr<VArray> va::flip(const VArray& varray, std::size_t axis) {
 		[axis](auto& array) {
 			return xt::flip(array, axis);
 		}, varray
+	);
+}
+
+std::shared_ptr<VArray> va::diagonal(const VArray& varray, std::ptrdiff_t offset, std::ptrdiff_t axis1, std::ptrdiff_t axis2) {
+	const size_t dimension = varray.dimension();
+	if (dimension < 2) {
+		throw std::runtime_error("diagonal requires array must have at least two dimensions");
+	}
+
+	const auto axis1_ = va::util::normalize_axis(axis1, dimension);
+	const auto axis2_ = va::util::normalize_axis(axis2, dimension);
+	if (axis1_ == axis2_) {
+		throw std::runtime_error("axes cannot be the same");
+	}
+
+	std::size_t shape_size_1;
+	std::size_t shape_size_2;
+	std::ptrdiff_t strides_1;
+	std::ptrdiff_t strides_2;
+
+	const shape_type& shape = varray.shape();
+	const strides_type& strides = varray.strides();
+
+	shape_type new_shape(dimension - 1);
+	strides_type new_strides(dimension - 1);
+	for (int i = 0, j = 0; i < dimension; ++i) {
+		if (i == axis1_) {
+			shape_size_1 = shape[i];
+			strides_1 = strides[i];
+			continue;
+		}
+		if (i == axis2_) {
+			shape_size_2 = shape[i];
+			strides_2 = strides[i];
+			continue;
+		}
+		new_shape[j] = shape[i];
+		j++;
+	}
+
+	std::ptrdiff_t added_data_offset = 0;
+
+	if (offset < 0) {
+		// Move along axis1
+		if (shape_size_1 > -offset) {
+			shape_size_1 = shape_size_1 - -offset;
+			added_data_offset = -offset * strides_1;
+		}
+		else {
+			// We're cooked anyway, offset points us outside the array.
+			// Just make the size 0 and keep the data pointer where it is.
+			shape_size_1 = 0;
+		}
+	}
+	else if (offset > 0) {
+		// Move along axis2
+		if (shape_size_2 > offset) {
+			shape_size_2 = shape_size_2 - offset;
+			added_data_offset = offset * strides_2;
+		}
+		else {
+			// We're cooked anyway, offset points us outside the array.
+			// Just make the size 0 and keep the data pointer where it is.
+			shape_size_2 = 0;
+		}
+	}
+
+	// New shape is whatever both can provide.
+	new_shape[dimension - 2] = std::min(shape_size_1, shape_size_2);
+	// Strides is both strides at once.
+	new_strides[dimension - 2] = strides_1 + strides_2;
+
+	return std::visit(
+		[&varray, &new_shape, &new_strides, added_data_offset](const auto& read) -> std::shared_ptr<VArray> {
+			using VT = typename std::decay_t<decltype(read)>::value_type;
+
+			return std::make_shared<VArray>(
+				VArray {
+					std::shared_ptr(varray.store),
+					make_compute<VT*>(
+						const_cast<VT*>(read.data()) + added_data_offset,
+						new_shape,
+						new_strides,
+						xt::layout_type::dynamic
+					),
+					varray.data_offset + added_data_offset
+				}
+			);
+		}, varray.data
 	);
 }
 

@@ -49,7 +49,9 @@ config = dict(
         dict(
             platform="linux",
             os="ubuntu-20.04",
-            arch=["x86_64", "arm64", "rv64"],
+            arch="x86_64",
+            # TODO arm64 and rv64 are broken godot-cpp-side right now,
+            # see https://github.com/Ivorforce/NumDot/actions/runs/11745671842/job/32723646675
         ),
         dict(
             platform="windows",

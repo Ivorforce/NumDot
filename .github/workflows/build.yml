@@ -4,45 +4,30 @@ on:
   workflow_dispatch:
 
 jobs:
+  define-matrix:
+    runs-on: ubuntu-latest
+
+    outputs:
+      matrix-include: ${{ steps.make_matrix.outputs.include }}
+
+    steps:
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Load Matrix
+        id: make_matrix
+        run: |
+          echo 'include='$(python3 make_github_runner_config.py) >> "$GITHUB_OUTPUT"
+
   build:
+    needs: define-matrix
     strategy:
       fail-fast: false
       matrix:
-        # Double float precision builds are not needed by default;
-        # whoever needs them can recompile, but it would blow up our release zip to include them.
-        float-precision: [single]
-        build-target-type: [template_debug, template_release]
-        include:
-          - platform: linux
-            arch: x86_64
-            os: ubuntu-20.04
-          - platform: windows
-            arch: x86_32
-            os: windows-latest
-          - platform: windows
-            arch: x86_64
-            os: windows-latest
-          - platform: macos
-            arch: universal
-            os: macos-latest
-          - platform: android
-            arch: arm64
-            os: ubuntu-20.04
-          - platform: android
-            arch: arm32
-            os: ubuntu-20.04
-          - platform: android
-            arch: x86_64
-            os: ubuntu-20.04
-          - platform: android
-            arch: x86_32
-            os: ubuntu-20.04
-          - platform: ios
-            arch: arm64
-            os: macos-latest
-          - platform: web
-            arch: wasm32
-            os: ubuntu-20.04
+        include: ${{ fromJSON(needs.define-matrix.outputs.matrix-include) }}
 
     runs-on: ${{ matrix.os }}
     steps:

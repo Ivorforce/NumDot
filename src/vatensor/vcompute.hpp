@@ -207,7 +207,7 @@ namespace va {
 
         // TODO Some xt functions support passing the output type. That would be FAR better than casting it afterwards as here.
         const auto result = OutputType(std::forward<FX>(fx)(args...));
-        return static_cast<ReturnType>(result);
+        return ReturnType(result);
     }
 
     template<Feature feature, typename PromotionRule, typename ReturnType, typename FX, typename... Args>

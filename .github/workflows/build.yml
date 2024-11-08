@@ -47,7 +47,7 @@ jobs:
         with:
           submodules: true
       - name: 🔗 GDExtension Build
-        uses: godotengine/godot-cpp-template/.github/actions/build
+        uses: godotengine/godot-cpp-template/.github/actions/build@main
         with:
           platform: ${{ matrix.platform }}
           arch: ${{ matrix.arch }}

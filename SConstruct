@@ -66,7 +66,7 @@ else:
 if ARGUMENTS.get("platform", None) == "web":
     ARGUMENTS.setdefault("threads", "no")
     if _text2bool(ARGUMENTS.get("threads", "yes")):
-        # TODO Figure out why that is.
+        # TODO Figure out why that is. Does godot default to no threads exports?
         raise ValueError("NumDot does not currently support compiling web with threads.")
 
 optimize_for_arch = env["optimize_for_arch"]
@@ -87,27 +87,18 @@ if ARGUMENTS.get("disable_exceptions", None):
     raise ValueError("NumDot does not currently support compiling without exceptions.")
 ARGUMENTS["disable_exceptions"] = False
 
-target = ARGUMENTS.get("target", "template_debug")
-is_release = target == "template_release"
+# Clarification: template_debug and template_release are, from our perspective, both releases.
+# template_debug is just for in-editor
+is_release = not _text2bool(ARGUMENTS.get("dev_build", "no"))
 
-if ARGUMENTS.get("optimize", None) is None:
-    # The default godot-cpp optimizes for speed
-    if not is_release:
-        # In dev, prioritize fast builds.
-        # Godot-cpp defaults to optimizing speed (wat?).
-        ARGUMENTS["optimize"] = "none"
+if ARGUMENTS.get("optimize", None) is None and is_release:
+    # The default godot-cpp optimizes for speed for release builds.
+    if ARGUMENTS["platform"] == "web":
+        # For web, optimize binary size, can shrink by ~30%.
+        ARGUMENTS["optimize"] = "size"
     else:
-        # On release, optimize by default.
-        if ARGUMENTS["platform"] == "web":
-            # For web, optimize binary size, can shrink by ~30%.
-            ARGUMENTS["optimize"] = "size"
-        else:
-            # For download, optimize performance, can increase by 2% to 30%.
-            ARGUMENTS["optimize"] = "speed"
-
-# env["debug_symbols"] == False will strip debug symbols.
-# It is False by default, unless dev_build is True.
-# dev_build is a flag that should only be used by engine developers (supposedly).
+        # For pc, optimize performance, can increase by 2% to 30%.
+        ARGUMENTS["optimize"] = "speed"
 
 if optimize_for_arch:
     # Yo-march improves performance, makes the build incompatible with most other machines.
@@ -187,15 +178,16 @@ env.Append(CPPPATH=["xtl/include", "xsimd/include", "xtensor/include", "xtensor-
 env.Append(CPPPATH=["src/"])
 sources = Glob("src/*.cpp") + Glob("src/*/*.cpp")
 
-if env["target"] in ["editor", "template_debug", "template_release"]:
-    try:
-        doc_data = env.GodotCPPDocData("src/gen/doc_data.gen.cpp", source=Glob("doc_classes/*.xml"))
-        sources.append(doc_data)
-    except AttributeError:
-        print("Not including class reference as we're targeting a pre-4.3 baseline.")
+if env["target"] in ["editor", "template_debug"]:
+    doc_data = env.GodotCPPDocData("src/gen/doc_data.gen.cpp", source=Glob("doc_classes/*.xml"))
+    sources.append(doc_data)
+
+# .dev doesn't inhibit compatibility, so we don't need to key it.
+# .universal just means "compatible with all relevant arches" so we don't need to key it.
+suffix = env['suffix'].replace(".dev", "").replace(".universal", "")
 
 # Filename of the library.
-lib_filename = f"{env.subst('$SHLIBPREFIX')}{libname}.{env['platform']}.{env['arch']}{env.subst('$SHLIBSUFFIX')}"
+lib_filename = f"{env.subst('$SHLIBPREFIX')}{libname}{suffix}{env.subst('$SHLIBSUFFIX')}"
 # Build releases into build/, and debug into demo/.
 lib_filepath = ""
 
@@ -203,7 +195,7 @@ if env["platform"] == "macos" or env["platform"] == "ios":
     # The above defaults to creating a .dylib.
     # These are not supported on the iOS app store.
     # To make it consistent, we'll just use frameworks on both macOS and iOS.
-    framework_name = "{}.{}.{}".format(libname, env["platform"], env["arch"])
+    framework_name = f"{libname}{suffix}"
     lib_filename = framework_name
     lib_filepath = "{}.framework/".format(framework_name)
 

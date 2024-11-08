@@ -8,6 +8,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # Double float precision builds are not needed by default;
+        # whoever needs them can recompile, but it would blow up our release zip to include them.
+        float-precision: [single]
+        build-target-type: [template_debug, template_release]
         include:
           - platform: linux
             arch: x86_64
@@ -51,8 +55,8 @@ jobs:
         with:
           platform: ${{ matrix.platform }}
           arch: ${{ matrix.arch }}
-          float-precision: single
-          build-target-type: template_release
+          float-precision: ${{ matrix.float-precision }}
+          build-target-type: ${{ matrix.build-target-type }}
           gdextension-directory: ''
           em_version: '3.1.55'  # FIXME Doesn't compile on the newest, xtensor has problems
       - name: Mac Sign

@@ -1,23 +1,57 @@
 [configuration]
 
 entry_symbol = "numdot_library_init"
-compatibility_minimum = "4.1"
+compatibility_minimum = "4.3"
 reloadable = true
 
 [libraries]
 
-macos = "macos/numdot.macos.universal.framework/numdot.macos.universal"
+macos.single.debug = "macos/numdot.macos.template_debug.framework/numdot.macos.template_debug"
+macos.double.debug = "macos/numdot.macos.template_debug.double.framework/numdot.macos.template_debug.double"
+macos.single.release = "macos/numdot.macos.template_release.framework/numdot.macos.template_release"
+macos.double.release = "macos/numdot.macos.template_debug.double.framework/numdot.macos.template_release.double"
 
-ios = "macos/numdot.ios.arm64.framework/numdot.ios.arm64"
+ios.arm64.single.debug = "macos/numdot.ios.template_debug.arm64.framework/numdot.ios.template_debug.arm64"
+ios.arm64.double.debug = "macos/numdot.ios.template_debug.arm64.double.framework/numdot.ios.template_debug.arm64.double"
+ios.arm64.single.release = "macos/numdot.ios.template_release.arm64.framework/numdot.ios.template_release.arm64"
+ios.arm64.double.release = "macos/numdot.ios.template_release.arm64.double.framework/numdot.ios.template_release.arm64.double"
 
-windows.x86_32 = "windows/numdot.windows.x86_32.dll"
-windows.x86_64 = "windows/numdot.windows.x86_64.dll"
+windows.x86_32.single.debug = "windows/numdot.windows.template_debug.x86_32.dll"
+windows.x86_32.double.debug = "windows/numdot.windows.template_debug.x86_32.double.dll"
+windows.x86_32.single.release = "windows/numdot.windows.template_release.x86_32.dll"
+windows.x86_32.double.release = "windows/numdot.windows.template_release.x86_32.double.dll"
 
-linux.x86_64 = "linux/libnumdot.linux.x86_64.so"
-linux.arm64 = "linux/libnumdot.linux.arm64.so"
-linux.rv64 = "linux/libnumdot.linux.rv64.so"
+windows.x86_64.single.debug = "windows/numdot.windows.template_debug.x86_64.dll"
+windows.x86_64.double.debug = "windows/numdot.windows.template_debug.x86_64.double.dll"
+windows.x86_64.single.release = "windows/numdot.windows.template_release.x86_64.dll"
+windows.x86_64.double.release = "windows/numdot.windows.template_release.x86_64.double.dll"
 
-android.x86_64 = "android/libnumdot.android.x86_64.so"
-android.arm64 = "android/libnumdot.android.arm64.so"
+linux.x86_64.single.debug = "linux/libnumdot.linux.template_debug.x86_64.so"
+linux.x86_64.double.debug = "linux/libnumdot.linux.template_debug.x86_64.double.so"
+linux.x86_64.single.release = "linux/libnumdot.linux.template_release.x86_64.so"
+linux.x86_64.double.release = "linux/libnumdot.linux.template_release.x86_64.double.so"
 
-web.wasm32 = "web/libnumdot.web.wasm32.wasm"
+linux.arm64.single.debug = "linux/libnumdot.linux.template_debug.arm64.so"
+linux.arm64.double.debug = "linux/libnumdot.linux.template_debug.arm64.double.so"
+linux.arm64.single.release = "linux/libnumdot.linux.template_release.arm64.so"
+linux.arm64.double.release = "linux/libnumdot.linux.template_release.arm64.double.so"
+
+linux.rv64.single.debug = "linux/libnumdot.linux.template_debug.rv64.so"
+linux.rv64.double.debug = "linux/libnumdot.linux.template_debug.rv64.double.so"
+linux.rv64.single.release = "linux/libnumdot.linux.template_release.rv64.so"
+linux.rv64.double.release = "linux/libnumdot.linux.template_release.rv64.double.so"
+
+android.x86_64.single.debug = "android/libnumdot.android.template_debug.x86_64.so"
+android.x86_64.double.debug = "android/libnumdot.android.template_debug.x86_64.double.so"
+android.x86_64.single.release = "android/libnumdot.android.template_release.x86_64.so"
+android.x86_64.double.release = "android/libnumdot.android.template_release.x86_64.double.so"
+
+android.arm64.single.debug = "android/libnumdot.android.template_debug.arm64.so"
+android.arm64.double.debug = "android/libnumdot.android.template_debug.arm64.double.so"
+android.arm64.single.release = "android/libnumdot.android.template_release.arm64.so"
+android.arm64.double.release = "android/libnumdot.android.template_release.arm64.double.so"
+
+web.wasm32.single.debug = "web/libnumdot.web.template_debug.wasm32.nothreads.wasm"
+web.wasm32.double.debug = "web/libnumdot.web.template_release.wasm32.double.nothreads.wasm"
+web.wasm32.single.release = "web/libnumdot.web.template_release.wasm32.nothreads.wasm"
+web.wasm32.double.release = "web/libnumdot.web.template_release.wasm32.double.nothreads.wasm"

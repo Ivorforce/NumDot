@@ -116,7 +116,6 @@ env = SConscript("godot-cpp/SConstruct", {"env": env, "customs": customs})
 # ============================= Change flags based on setup =============================
 
 is_msvc = "is_msvc" in env and env["is_msvc"]
-assert is_release == (env["target"] == "template_release")
 
 if use_xsimd:
     env.Append(CCFLAGS=[

@@ -60,7 +60,7 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: GDExtension-${{ matrix.platform }}-${{ matrix.arch }}
+          name: GDExtension-${{ matrix.platform }}-${{ matrix.arch }}-${{ matrix.float_precision }}-${{ matrix.build_target_type }}
           path: |
             ${{ github.workspace }}/build/**
   merge:

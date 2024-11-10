@@ -16,6 +16,7 @@ Upcoming Changes (main branch)
 
 - Added complex numbers data types (``complex64`` and ``complex128``).
 - Added ``real``, ``imag``, ``conjugate`` and ``angle`` functions for complex numbers.
+- Added ``complex_as_vector`` and ``vector_as_complex`` functions for convenient complex number creation and manipulation, similar to ``real`` and ``imag``.
 - Added ``any`` layout type, which may bring tiny speed improvements.
 - Added ``fft`` function.
 - Added ``pad`` function.

@@ -207,6 +207,14 @@
 				No check is performed to ensure a_min &lt; a_max.
 			</description>
 		</method>
+		<method name="complex_as_vector" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="v" type="Variant" />
+			<description>
+				Reinterprets elements in a complex-typed array as a 2-D vector.
+				The new dimension is added in the back.
+			</description>
+		</method>
 		<method name="concatenate" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="v" type="Variant" />
@@ -1059,6 +1067,17 @@
 				Compute the variance along the specified axis.
 				Returns the variance of the array elements, a measure of the spread of a distribution. The variance is computed for the flattened array by default, otherwise over the specified axis.
 				Returns a 0-dimension scalar if axes is null. In that case, consider [method ndf.var].
+			</description>
+		</method>
+		<method name="vector_as_complex" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="v" type="Variant" />
+			<param index="1" name="keepdims" type="bool" default="false" />
+			<param index="2" name="dtype" type="int" enum="nd.DType" default="13" />
+			<description>
+				Reinterprets a real valued array with [code]shape[-1] == 2[/code] as a complex valued array.
+				If [param keepdims] is false (default), the last dimension will be consumed. Otherwise, it will be 1.
+				This function will return a view if possible, but create a new array otherwise.
 			</description>
 		</method>
 		<method name="vsplit" qualifiers="static">

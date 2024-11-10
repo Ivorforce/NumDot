@@ -80,6 +80,8 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`clip<class_nd_method_clip>`\ (\ a\: ``Variant``, min\: ``Variant``, max\: ``Variant``\ ) |static|                                                                                     |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`complex_as_vector<class_nd_method_complex_as_vector>`\ (\ v\: ``Variant``\ ) |static|                                                                                                 |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`concatenate<class_nd_method_concatenate>`\ (\ v\: ``Variant``, axis\: ``int`` = 0, dtype\: :ref:`DType<enum_nd_DType>` = 13\ ) |static|                                               |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`conjugate<class_nd_method_conjugate>`\ (\ v\: ``Variant``\ ) |static|                                                                                                                 |
@@ -273,6 +275,8 @@ Methods
    | :ref:`NDArray<class_NDArray>`                              | :ref:`unstack<class_nd_method_unstack>`\ (\ v\: ``Variant``, axis\: ``int`` = 0\ ) |static|                                                                                                 |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`var<class_nd_method_var>`\ (\ a\: ``Variant``, axes\: ``Variant`` = null\ ) |static|                                                                                                  |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`vector_as_complex<class_nd_method_vector_as_complex>`\ (\ v\: ``Variant``, keepdims\: ``bool`` = false, dtype\: :ref:`DType<enum_nd_DType>` = 13\ ) |static|                          |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`Array<class_Array>`\[:ref:`NDArray<class_NDArray>`\] | :ref:`vsplit<class_nd_method_vsplit>`\ (\ v\: ``Variant``, indices_or_section_size\: ``Variant``\ ) |static|                                                                                |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -770,6 +774,20 @@ Given an interval, values outside the interval are clipped to the interval edges
 Equivalent to but faster than nd.minimum(a_max, nd.maximum(a, a_min)).
 
 No check is performed to ensure a_min < a_max.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_complex_as_vector:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **complex_as_vector**\ (\ v\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_complex_as_vector>`
+
+Reinterprets elements in a complex-typed array as a 2-D vector.
+
+The new dimension is added in the back.
 
 .. rst-class:: classref-item-separator
 
@@ -2128,6 +2146,22 @@ Compute the variance along the specified axis.
 Returns the variance of the array elements, a measure of the spread of a distribution. The variance is computed for the flattened array by default, otherwise over the specified axis.
 
 Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.var<class_ndf_method_var>`.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_vector_as_complex:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **vector_as_complex**\ (\ v\: ``Variant``, keepdims\: ``bool`` = false, dtype\: :ref:`DType<enum_nd_DType>` = 13\ ) |static| :ref:`🔗<class_nd_method_vector_as_complex>`
+
+Reinterprets a real valued array with ``shape[-1] == 2`` as a complex valued array.
+
+If ``keepdims`` is false (default), the last dimension will be consumed. Otherwise, it will be 1.
+
+This function will return a view if possible, but create a new array otherwise.
 
 .. rst-class:: classref-item-separator
 

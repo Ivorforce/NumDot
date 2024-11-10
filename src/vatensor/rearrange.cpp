@@ -8,6 +8,8 @@
 #include <functional>                 // for multiplies
 #include <numeric>                    // for accumulate, iota
 #include <set>                        // for operator==, set
+
+#include "create.hpp"
 #include "util.hpp"
 #include "vpromote.hpp"
 #include "xscalar_store.hpp"
@@ -203,32 +205,31 @@ std::shared_ptr<VArray> va::join_axes_into_last_dimension(const VArray& varray, 
 	);
 }
 
-template <typename T>
-std::shared_ptr<VArray> reinterpret_complex_as_floats(const VArray& varray, const T& carray, std::ptrdiff_t offset) {
-    using V = typename std::decay_t<decltype(carray)>::value_type;
-
-	auto new_strides = carray.strides();
-	for (auto& stride : new_strides) { stride *= 2; }
-
-	return std::make_shared<VArray>(VArray {
-		std::shared_ptr(varray.store),
-		make_compute(
-			reinterpret_cast<typename V::value_type*>(const_cast<V*>(carray.data())) + offset,
-			carray.shape(),
-			new_strides,
-			xt::layout_type::dynamic
-		),
-		varray.data_offset * 2 + offset
-	});
-}
-
-std::shared_ptr<VArray> va::real(const std::shared_ptr<VArray>& varray) {
+std::shared_ptr<VArray> reinterpret_complex_as_floats(const std::shared_ptr<VArray>& varray, std::ptrdiff_t offset, bool add_dimension) {
 	return std::visit(
-		[&varray](auto& carray) -> std::shared_ptr<VArray> {
-		    using V = typename std::decay_t<decltype(carray)>::value_type;
+	[&varray, offset, add_dimension](auto& carray) -> std::shared_ptr<VArray> {
+			using V = typename std::decay_t<decltype(carray)>::value_type;
 
 			if constexpr (xtl::is_complex<V>::value) {
-				return reinterpret_complex_as_floats(*varray, carray, 0);
+				using V = typename std::decay_t<decltype(carray)>::value_type;
+
+				strides_type new_strides = carray.strides();
+				for (auto& stride : new_strides) { stride *= 2; }
+				if (add_dimension) new_strides.push_back(1);
+
+				shape_type new_shape = carray.shape();
+				if (add_dimension) new_shape.push_back(2);
+
+				return std::make_shared<VArray>(VArray {
+					std::shared_ptr(varray->store),
+					make_compute(
+						reinterpret_cast<typename V::value_type*>(const_cast<V*>(carray.data())) + offset,
+						new_shape,
+						new_strides,
+						(add_dimension && (carray.layout() == xt::layout_type::row_major || carray.layout() == xt::layout_type::any)) ? xt::layout_type::row_major : xt::layout_type::dynamic
+					),
+					varray->data_offset * 2 + offset
+				});
 			}
 			else {
 				return varray;
@@ -237,16 +238,88 @@ std::shared_ptr<VArray> va::real(const std::shared_ptr<VArray>& varray) {
 	);
 }
 
+std::shared_ptr<VArray> va::real(const std::shared_ptr<VArray>& varray) {
+	return reinterpret_complex_as_floats(varray, 0, false);
+}
+
 std::shared_ptr<VArray> va::imag(const std::shared_ptr<VArray>& varray) {
-	return std::visit(
-		[&varray](auto& carray) -> std::shared_ptr<VArray> {
-			using V = typename std::decay_t<decltype(carray)>::value_type;
-			if constexpr (xtl::is_complex<V>::value) {
-				return reinterpret_complex_as_floats(*varray, carray, 1);
-			}
-			else {
-				return va::store::full_dummy_like(0, carray);
-			}
-		}, varray->data
-	);
+	return reinterpret_complex_as_floats(varray, 1, false);
+}
+
+std::shared_ptr<VArray> va::complex_as_vector(const std::shared_ptr<VArray>& varray) {
+	return reinterpret_complex_as_floats(varray, 0, true);
+}
+
+std::shared_ptr<VArray> va::vector_as_complex(VStoreAllocator& allocator, const VArray& varray, DType dtype, bool keepdims) {
+	const auto dim_count = varray.dimension();
+
+	if (dim_count < 1) { throw std::invalid_argument("Array must have at least one dimension"); }
+
+	const auto& strides = varray.strides();
+	const auto& shape = varray.shape();
+
+	if (shape.back() != 2) { throw std::invalid_argument("Last dimension shape must be 2"); }
+
+	if (strides.back() == 1 && std::visit([dtype](auto& carray) -> bool {
+		using V = typename std::decay_t<decltype(carray)>::value_type;
+
+		if constexpr (xtl::is_complex<V>::value) {
+			throw std::runtime_error("Complex vector cannot be reinterpreted as real vector");
+		}
+		else if constexpr (std::is_floating_point_v<V>) {
+			return dtype == DTypeMax || dtype == dtype_of_type<std::complex<V>>();
+		}
+		else {
+			return false;
+		}
+	}, varray.data)) {
+		// Can return a view!
+
+		// Remove last dimension.
+		auto new_strides = strides_type(dim_count - (keepdims ? 0 : 1));
+		for (int i = 0; i < dim_count - 1; ++i) { new_strides[i] = strides[i] / 2; }
+		if (keepdims) { new_strides.back() = 0; }
+
+		auto new_shape = shape_type(dim_count - 1);
+		std::copy_n(shape.begin(), dim_count - 1, new_shape.begin());
+		if (keepdims) { new_shape.back() = 1; }
+
+		const auto new_layout = keepdims ? xt::layout_type::dynamic : varray.layout();
+
+		return std::make_shared<VArray>(VArray {
+			std::shared_ptr(varray.store),
+			std::visit([&new_shape, &new_strides, &new_layout](auto& carray) -> VData {
+				using V = typename std::decay_t<decltype(carray)>::value_type;
+
+				if constexpr (!std::is_floating_point_v<V>) {
+					throw std::runtime_error("internal error");
+				}
+				else {
+					return make_compute(
+						reinterpret_cast<std::complex<V>*>(const_cast<V*>(carray.data())),
+						new_shape,
+						new_strides,
+						new_layout
+					);
+				}
+			}, varray.data),
+			varray.data_offset * 2
+		});
+	}
+
+	// Need to return a copy.
+	if (dtype == DTypeMax) { dtype = DType::Complex128; }
+
+	const DType comp_dtype = std::visit([](auto t) -> DType {
+		if constexpr (xtl::is_complex<decltype(t)>::value) {
+			return dtype_of_type<typename decltype(t)::value_type>();
+		}
+		else {
+			throw std::runtime_error("DType must be complex");
+		}
+	}, dtype_to_variant(dtype));
+
+	const auto float_array = va::copy_as_dtype(allocator, varray.data, comp_dtype);
+	// Call ourselves again, though this time we should get a view for sure.
+	return vector_as_complex(allocator, *float_array, dtype, keepdims);
 }

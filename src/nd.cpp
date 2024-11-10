@@ -123,6 +123,8 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("imag", "v"), &nd::imag);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("conjugate", "v"), &nd::conjugate);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("angle", "v"), &nd::angle);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("vector_as_complex", "v", "keepdims", "dtype"), &nd::vector_as_complex, DEFVAL(false), DEFVAL(nd::DType::DTypeMax));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("complex_as_vector", "v"), &nd::complex_as_vector);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("positive", "a"), &nd::positive);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("negative", "a"), &nd::negative);
@@ -837,6 +839,18 @@ Ref<NDArray> nd::conjugate(const Variant& a) {
 Ref<NDArray> nd::angle(const Variant& a) {
 	return map_variants_as_arrays_with_target([](const va::VArrayTarget target, const std::shared_ptr<va::VArray>& varray) {
 		va::angle(va::store::default_allocator, target, varray);
+	}, a);
+}
+
+Ref<NDArray> nd::vector_as_complex(const Variant& a, bool keepdims, DType dtype) {
+	return map_variants_as_arrays([keepdims, dtype](const std::shared_ptr<va::VArray>& varray) {
+		return va::vector_as_complex(va::store::default_allocator, *varray, dtype, keepdims);
+	}, a);
+}
+
+Ref<NDArray> nd::complex_as_vector(const Variant& a) {
+	return map_variants_as_arrays([](const std::shared_ptr<va::VArray>& varray) {
+		return va::complex_as_vector(varray);
 	}, a);
 }
 

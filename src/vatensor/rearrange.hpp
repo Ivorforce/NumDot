@@ -33,6 +33,8 @@ namespace va {
 
 	std::shared_ptr<VArray> real(const std::shared_ptr<VArray>& varray);
 	std::shared_ptr<VArray> imag(const std::shared_ptr<VArray>& varray);
+	std::shared_ptr<VArray> complex_as_vector(const std::shared_ptr<VArray>& varray);
+	std::shared_ptr<VArray> vector_as_complex(VStoreAllocator& allocator, const VArray& varray, DType dtype, bool keepdims);
 }
 
 #endif //XV_H

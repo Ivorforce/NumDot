@@ -106,6 +106,8 @@ public:
 	static Ref<NDArray> imag(const Variant& a);
 	static Ref<NDArray> conjugate(const Variant& a);
 	static Ref<NDArray> angle(const Variant& a);
+	static Ref<NDArray> vector_as_complex(const Variant& a, bool keepdims, DType dtype = DType::DTypeMax);
+	static Ref<NDArray> complex_as_vector(const Variant& a);
 
 	// Basic math functions.
 	static Ref<NDArray> positive(const Variant& a);

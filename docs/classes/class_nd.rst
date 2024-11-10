@@ -42,6 +42,8 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`all<class_nd_method_all>`\ (\ a\: ``Variant``, axes\: ``Variant`` = null\ ) |static|                                                                                                  |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`angle<class_nd_method_angle>`\ (\ v\: ``Variant``\ ) |static|                                                                                                                         |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`any<class_nd_method_any>`\ (\ a\: ``Variant``, axes\: ``Variant`` = null\ ) |static|                                                                                                  |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`arange<class_nd_method_arange>`\ (\ start_or_stop\: ``Variant``, stop\: ``Variant`` = null, step\: ``Variant`` = 1, dtype\: :ref:`DType<enum_nd_DType>` = 13\ ) |static|              |
@@ -518,6 +520,20 @@ Add arguments element-wise.
 Test whether all array elements along a given axis evaluate to True.
 
 Returns a 0-dimension boolean if axes is null. In that case, :ref:`ndb.all<class_ndb_method_all>` is preferred.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_angle:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **angle**\ (\ v\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_angle>`
+
+Return the angle of the complex argument.
+
+This is equivalent to ``nd.atan2(nd.imag(x), nd.real(x))``.
 
 .. rst-class:: classref-item-separator
 

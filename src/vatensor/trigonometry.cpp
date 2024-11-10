@@ -1,6 +1,8 @@
 #include "trigonometry.hpp"
 
 #include <utility>                                       // for move
+
+#include "rearrange.hpp"
 #include "varray.hpp"                             // for VArray, VArr...
 #include "vcompute.hpp"                            // for XFunction
 #include "vpromote.hpp"                                    // for num_function...
@@ -165,4 +167,8 @@ void va::atanh(VStoreAllocator& allocator, VArrayTarget target, const VArray& ar
 		target,
 		array.data
 	);
+}
+
+void va::angle(VStoreAllocator& allocator, VArrayTarget target, const std::shared_ptr<VArray>& array) {
+	va::atan2(allocator, target, *va::imag(array), *va::real(array));
 }

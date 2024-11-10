@@ -105,6 +105,7 @@ public:
 	static Ref<NDArray> real(const Variant& a);
 	static Ref<NDArray> imag(const Variant& a);
 	static Ref<NDArray> conjugate(const Variant& a);
+	static Ref<NDArray> angle(const Variant& a);
 
 	// Basic math functions.
 	static Ref<NDArray> positive(const Variant& a);

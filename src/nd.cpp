@@ -122,6 +122,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("real", "v"), &nd::real);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("imag", "v"), &nd::imag);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("conjugate", "v"), &nd::conjugate);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("angle", "v"), &nd::angle);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("positive", "a"), &nd::positive);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("negative", "a"), &nd::negative);
@@ -831,6 +832,12 @@ Ref<NDArray> nd::imag(const Variant& v) {
 
 Ref<NDArray> nd::conjugate(const Variant& a) {
 	return VARRAY_MAP1(conjugate, a);
+}
+
+Ref<NDArray> nd::angle(const Variant& a) {
+	return map_variants_as_arrays_with_target([](const va::VArrayTarget target, const std::shared_ptr<va::VArray>& varray) {
+		va::angle(va::store::default_allocator, target, varray);
+	}, a);
 }
 
 Ref<NDArray> nd::positive(const Variant& a) {

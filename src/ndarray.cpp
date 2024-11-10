@@ -95,6 +95,7 @@ void NDArray::_bind_methods() {
 	godot::ClassDB::bind_method(D_METHOD("to_godot_array"), &NDArray::to_godot_array);
 
 	godot::ClassDB::bind_method(D_METHOD("assign_conjugate", "a"), &NDArray::assign_conjugate);
+	godot::ClassDB::bind_method(D_METHOD("assign_angle", "a"), &NDArray::assign_angle);
 
 	godot::ClassDB::bind_method(D_METHOD("assign_positive", "a"), &NDArray::assign_positive);
 	godot::ClassDB::bind_method(D_METHOD("assign_negative", "a"), &NDArray::assign_negative);
@@ -728,7 +729,7 @@ template<typename Visitor, typename... Args>
 void map_variants_as_arrays_inplace(Visitor&& visitor, va::VArray& target, const Args&... args) {
 	try {
 		target.prepare_write();
-		std::forward<Visitor>(visitor)(&target.data, *variant_as_array(args)...);
+		std::forward<Visitor>(visitor)(&target.data, variant_as_array(args)...);
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_MSG(error.what());
@@ -741,14 +742,14 @@ inline void reduction_inplace(Visitor&& visitor, VisitorNoaxes&& visitor_noaxes,
 		target.prepare_write();
 
 		if (axes.get_type() == Variant::NIL) {
-			const va::VScalar result = std::forward<VisitorNoaxes>(visitor_noaxes)(*variant_as_array(args)...);
+			const va::VScalar result = std::forward<VisitorNoaxes>(visitor_noaxes)(variant_as_array(args)...);
 			va::assign(target.data, result);
 			return;
 		}
 
 		const auto axes_ = variant_to_axes(axes);
 
-		std::forward<Visitor>(visitor)(static_cast<va::VArrayTarget>(&target.data), axes_, *variant_as_array(args)...);
+		std::forward<Visitor>(visitor)(static_cast<va::VArrayTarget>(&target.data), axes_, variant_as_array(args)...);
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_MSG(error.what());
@@ -756,41 +757,49 @@ inline void reduction_inplace(Visitor&& visitor, VisitorNoaxes&& visitor_noaxes,
 }
 
 #define VARRAY_MAP1(func, varray1) \
-	map_variants_as_arrays_inplace([this](va::VArrayTarget target, const va::VArray& varray) {\
-        va::func(va::store::default_allocator, target, varray);\
+	map_variants_as_arrays_inplace([this](va::VArrayTarget target, const std::shared_ptr<va::VArray>& varray) {\
+        va::func(va::store::default_allocator, target, *varray);\
     }, *this->array, (varray1));\
     return {this}
 
 #define VARRAY_MAP2(func, varray1, varray2) \
-	map_variants_as_arrays_inplace([this](va::VArrayTarget target, const va::VArray& a, const va::VArray& b) {\
-        va::func(va::store::default_allocator, target, a, b);\
+	map_variants_as_arrays_inplace([this](va::VArrayTarget target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b) {\
+        va::func(va::store::default_allocator, target, *a, *b);\
     }, *this->array, (varray1), (varray2));\
     return {this}
 
 #define VARRAY_MAP3(func, varray1, varray2, varray3) \
-	map_variants_as_arrays_inplace([this](va::VArrayTarget target, const va::VArray& a, const va::VArray& b, const va::VArray& c) {\
-        va::func(va::store::default_allocator, target, a, b, c);\
+	map_variants_as_arrays_inplace([this](va::VArrayTarget target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b, const std::shared_ptr<va::VArray>& c) {\
+        va::func(va::store::default_allocator, target, *a, *b, *c);\
     }, *this->array, (varray1), (varray2), (varray3));\
     return {this}
 
 #define REDUCTION1(func, varray1, axes1) \
-	reduction_inplace([this](va::VArrayTarget target, const va::axes_type& axes, const va::VArray& array) {\
-		va::func(va::store::default_allocator, target, array, axes);\
-	}, [this](const va::VArray& array) {\
-		return va::func(array);\
+	reduction_inplace([this](va::VArrayTarget target, const va::axes_type& axes, const std::shared_ptr<va::VArray>& array) {\
+		va::func(va::store::default_allocator, target, *array, axes);\
+	}, [this](const std::shared_ptr<va::VArray>& array) {\
+		return va::func(*array);\
 	}, *this->array, (axes1), (varray1));\
 	return {this}
 
 #define REDUCTION2(func, varray1, varray2, axes1) \
-	reduction_inplace([this](va::VArrayTarget target, const va::axes_type& axes, const va::VArray& carray1, const va::VArray& carray2) {\
-		va::func(va::store::default_allocator, target, carray1, carray2, axes);\
-	}, [this](const va::VArray& carray1, const va::VArray& carray2) {\
-		return va::func(carray1, carray2);\
+	reduction_inplace([this](va::VArrayTarget target, const va::axes_type& axes, const std::shared_ptr<va::VArray>& carray1, const std::shared_ptr<va::VArray>& carray2) {\
+		va::func(va::store::default_allocator, target, *carray1, *carray2, axes);\
+	}, [this](const std::shared_ptr<va::VArray>& carray1, const std::shared_ptr<va::VArray>& carray2) {\
+		return va::func(*carray1, *carray2);\
 	}, *this->array, (axes1), (varray1), (varray2));\
 	return {this}
 
 Ref<NDArray> NDArray::assign_conjugate(const Variant& a) {
 	VARRAY_MAP1(conjugate, a);
+}
+
+Ref<NDArray> NDArray::assign_angle(const Variant& a) {
+	map_variants_as_arrays_inplace(
+		[this](va::VArrayTarget target, const std::shared_ptr<va::VArray>& varray) {
+			va::angle(va::store::default_allocator, target, varray);
+		}, *this->array, a);
+	return {this};
 }
 
 Ref<NDArray> NDArray::assign_positive(const Variant& a) {

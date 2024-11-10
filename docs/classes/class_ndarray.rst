@@ -42,6 +42,8 @@ Methods
    +------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`assign_all<class_NDArray_method_assign_all>`\ (\ a\: ``Variant``, axes\: ``Variant`` = null\ )                                |
    +------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`assign_angle<class_NDArray_method_assign_angle>`\ (\ a\: ``Variant``\ )                                                       |
+   +------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`assign_any<class_NDArray_method_assign_any>`\ (\ a\: ``Variant``, axes\: ``Variant`` = null\ )                                |
    +------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`assign_asin<class_NDArray_method_assign_asin>`\ (\ a\: ``Variant``\ )                                                         |
@@ -376,6 +378,20 @@ Assigns the result to this array, and returns it. The shape of the result must b
 :ref:`NDArray<class_NDArray>` **assign_all**\ (\ a\: ``Variant``, axes\: ``Variant`` = null\ ) :ref:`🔗<class_NDArray_method_assign_all>`
 
 In-place version of :ref:`nd.all<class_nd_method_all>`.
+
+Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_assign_angle:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **assign_angle**\ (\ a\: ``Variant``\ ) :ref:`🔗<class_NDArray_method_assign_angle>`
+
+In-place version of :ref:`nd.angle<class_nd_method_angle>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 

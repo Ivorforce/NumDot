@@ -20,6 +20,8 @@ namespace va {
 	void asinh(VStoreAllocator& allocator, VArrayTarget target, const VArray& array);
 	void acosh(VStoreAllocator& allocator, VArrayTarget target, const VArray& array);
 	void atanh(VStoreAllocator& allocator, VArrayTarget target, const VArray& array);
+
+	void angle(VStoreAllocator& allocator, VArrayTarget target, const std::shared_ptr<VArray>& array);
 }
 
 #endif //TRIGONOMETRY_H

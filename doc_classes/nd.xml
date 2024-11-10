@@ -49,6 +49,14 @@
 				Returns a 0-dimension boolean if axes is null. In that case, [method ndb.all] is preferred.
 			</description>
 		</method>
+		<method name="angle" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="v" type="Variant" />
+			<description>
+				Return the angle of the complex argument.
+				This is equivalent to [code]nd.atan2(nd.imag(x), nd.real(x))[/code].
+			</description>
+		</method>
 		<method name="any" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />

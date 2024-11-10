@@ -120,6 +120,7 @@ public:
 
 	// Complex.
 	Ref<NDArray> assign_conjugate(const Variant& a);
+	Ref<NDArray> assign_angle(const Variant& a);
 
 	// Basic math functions.
 	Ref<NDArray> assign_positive(const Variant& a);

@@ -250,6 +250,21 @@ namespace va {
 			template<typename InputType, typename NaturalOutputType>
 			using output_type = typename Base::template output_type<InputType, NaturalOutputType>;
 		};
+
+		template<typename Base>
+		struct reject_non_complex {
+			template<bool, typename... Args>
+			struct input_type_impl { using type = void; };
+
+			template<typename... Args>
+			struct input_type_impl<false, Args...> { using type = typename Base::template input_type<Args...>; };
+
+			template<typename... Args>
+			using input_type = typename input_type_impl<std::disjunction_v<std::negation<xtl::is_complex<std::decay_t<Args>>...>>, Args...>::type;
+
+			template<typename InputType, typename NaturalOutputType>
+			using output_type = typename Base::template output_type<InputType, NaturalOutputType>;
+		};
 	}
 }
 

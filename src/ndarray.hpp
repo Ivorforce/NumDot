@@ -118,6 +118,9 @@ public:
 
 	[[nodiscard]] TypedArray<NDArray> to_godot_array() const;
 
+	// Complex.
+	Ref<NDArray> assign_conjugate(const Variant& a);
+
 	// Basic math functions.
 	Ref<NDArray> assign_positive(const Variant& a);
 	Ref<NDArray> assign_negative(const Variant& a);

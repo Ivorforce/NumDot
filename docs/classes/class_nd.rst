@@ -80,6 +80,8 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`concatenate<class_nd_method_concatenate>`\ (\ v\: ``Variant``, axis\: ``int`` = 0, dtype\: :ref:`DType<enum_nd_DType>` = 13\ ) |static|                                               |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`conjugate<class_nd_method_conjugate>`\ (\ v\: ``Variant``\ ) |static|                                                                                                                 |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`convolve<class_nd_method_convolve>`\ (\ array\: ``Variant``, kernel\: ``Variant``\ ) |static|                                                                                         |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`copy<class_nd_method_copy>`\ (\ array\: ``Variant``\ ) |static|                                                                                                                       |
@@ -766,6 +768,20 @@ No check is performed to ensure a_min < a_max.
 Join a sequence of arrays along an existing axis.
 
 The arrays must match in dimension except in the axis.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_conjugate:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **conjugate**\ (\ v\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_conjugate>`
+
+Return the complex conjugate, element-wise.
+
+The complex conjugate of a complex number is obtained by changing the sign of its imaginary part.
 
 .. rst-class:: classref-item-separator
 

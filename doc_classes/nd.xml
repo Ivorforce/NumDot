@@ -209,6 +209,14 @@
 				The arrays must match in dimension except in the axis.
 			</description>
 		</method>
+		<method name="conjugate" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="v" type="Variant" />
+			<description>
+				Return the complex conjugate, element-wise.
+				The complex conjugate of a complex number is obtained by changing the sign of its imaginary part.
+			</description>
+		</method>
 		<method name="convolve" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="array" type="Variant" />

@@ -27,6 +27,8 @@ namespace va {
 
 	void rad2deg(VStoreAllocator& allocator, VArrayTarget target, const VArray& array);
 	void deg2rad(VStoreAllocator& allocator, VArrayTarget target, const VArray& array);
+
+	void conjugate(VStoreAllocator& allocator, VArrayTarget target, const VArray& array);
 }
 
 #endif //MATH_H

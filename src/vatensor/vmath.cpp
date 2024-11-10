@@ -455,3 +455,30 @@ void va::deg2rad(VStoreAllocator& allocator, VArrayTarget target, const VArray& 
 		array.data
 	);
 }
+
+void va::conjugate(VStoreAllocator& allocator, VArrayTarget target, const VArray& array) {
+	if (!std::visit([](auto x) {
+		using VTValue = typename std::decay_t<decltype(x)>::value_type;
+		return xtl::is_complex<VTValue>::value;
+	}, array.data)) {
+		if (array.dtype() == va::Bool) {
+			// Need to make sure bools get int-ified.
+			va::assign_cast(allocator, target, array.data, va::Int64);
+		}
+		else {
+			va::assign(allocator, target, array.data);
+		}
+
+		return;
+	}
+
+	xoperation_inplace<
+		Feature::negative,
+		promote::reject_non_complex<promote::common_in_same_out>
+	>(
+		va::XFunction<xt::math::conj_fun> {},
+		allocator,
+		target,
+		array.data
+	);
+}

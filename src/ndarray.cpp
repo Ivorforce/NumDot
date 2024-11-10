@@ -94,6 +94,8 @@ void NDArray::_bind_methods() {
 
 	godot::ClassDB::bind_method(D_METHOD("to_godot_array"), &NDArray::to_godot_array);
 
+	godot::ClassDB::bind_method(D_METHOD("assign_conjugate", "a"), &NDArray::assign_conjugate);
+
 	godot::ClassDB::bind_method(D_METHOD("assign_positive", "a"), &NDArray::assign_positive);
 	godot::ClassDB::bind_method(D_METHOD("assign_negative", "a"), &NDArray::assign_negative);
 	godot::ClassDB::bind_method(D_METHOD("assign_add", "a", "b"), &NDArray::assign_add);
@@ -786,6 +788,10 @@ inline void reduction_inplace(Visitor&& visitor, VisitorNoaxes&& visitor_noaxes,
 		return va::func(carray1, carray2);\
 	}, *this->array, (axes1), (varray1), (varray2));\
 	return {this}
+
+Ref<NDArray> NDArray::assign_conjugate(const Variant& a) {
+	VARRAY_MAP1(conjugate, a);
+}
 
 Ref<NDArray> NDArray::assign_positive(const Variant& a) {
 	VARRAY_MAP1(positive, a);

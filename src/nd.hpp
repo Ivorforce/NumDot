@@ -101,9 +101,10 @@ public:
 	static TypedArray<NDArray> hsplit(const Variant& v, const Variant& indices_or_section_size);
 	static TypedArray<NDArray> vsplit(const Variant& v, const Variant& indices_or_section_size);
 
-	// Reinterpret.
+	// Complex.
 	static Ref<NDArray> real(const Variant& a);
 	static Ref<NDArray> imag(const Variant& a);
+	static Ref<NDArray> conjugate(const Variant& a);
 
 	// Basic math functions.
 	static Ref<NDArray> positive(const Variant& a);

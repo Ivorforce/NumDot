@@ -121,6 +121,7 @@ void nd::_bind_methods() {
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("real", "v"), &nd::real);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("imag", "v"), &nd::imag);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("conjugate", "v"), &nd::conjugate);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("positive", "a"), &nd::positive);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("negative", "a"), &nd::negative);
@@ -826,6 +827,10 @@ Ref<NDArray> nd::imag(const Variant& v) {
 			return va::imag(v);
 		}, v
 	);
+}
+
+Ref<NDArray> nd::conjugate(const Variant& a) {
+	return VARRAY_MAP1(conjugate, a);
 }
 
 Ref<NDArray> nd::positive(const Variant& a) {

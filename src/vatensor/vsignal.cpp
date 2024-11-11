@@ -49,11 +49,11 @@ void va::pad(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, c
 }
 
 void va::pad(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const std::vector<std::size_t>& pad_width, xt::pad_mode pad_mode, VScalar pad_value) {
-    std::vector pw(a.dimension(), pad_width);
+	const std::vector pw(a.dimension(), pad_width);
 	pad(allocator, target, a, pw, pad_mode, pad_value);
 }
 
 void va::pad(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const size_t& pad_width, xt::pad_mode pad_mode, VScalar pad_value) {
-	std::vector pw(a.dimension(), std::vector {pad_width, pad_width});
+	const std::vector pw(a.dimension(), std::vector {pad_width, pad_width});
 	pad(allocator, target, a, pw, pad_mode, pad_value);
 }

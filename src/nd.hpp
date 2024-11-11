@@ -209,6 +209,7 @@ public:
 
 	// Signal.
 	static Ref<NDArray> fft(const Variant& array, int64_t axis);
+	static Ref<NDArray> fft_freq(int64_t n, double_t freq);
 	static Ref<NDArray> pad(const Variant& array, const Variant& pad_width, PadMode pad_mode = PadMode::Constant, const Variant& pad_value = 0);
 };
 

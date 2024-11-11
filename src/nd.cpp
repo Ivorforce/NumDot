@@ -214,6 +214,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("default_rng", "seed"), &nd::default_rng, DEFVAL(nullptr));
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("fft", "v", "axis"), &nd::fft, DEFVAL(-1));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("fft_freq", "n", "d"), &nd::fft_freq, DEFVAL(1));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("pad", "v", "pad_width", "pad_mode", "pad_value"), &nd::pad, DEFVAL(nd::PadMode::Constant), DEFVAL(0));
 }
 
@@ -1188,6 +1189,10 @@ Ref<NDArray> nd::fft(const Variant& array, const int64_t axis) {
 	return map_variants_as_arrays_with_target([axis](const va::VArrayTarget target, const std::shared_ptr<va::VArray>& a) {
 		va::fft(va::store::default_allocator, target, *a, axis);
 	}, array);
+}
+
+Ref<NDArray> nd::fft_freq(const int64_t n, const double_t freq) {
+	return { memnew(NDArray(va::fft_freq(va::store::default_allocator, n, freq))) };
 }
 
 xt::pad_mode pad_mode_to_xt_pad_mode(const nd::PadMode pad_mode) {

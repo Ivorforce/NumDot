@@ -124,6 +124,8 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`fft<class_nd_method_fft>`\ (\ v\: ``Variant``, axis\: ``int`` = -1\ ) |static|                                                                                                        |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`fft_freq<class_nd_method_fft_freq>`\ (\ n\: ``int``, d\: ``float`` = 1\ ) |static|                                                                                                    |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`flip<class_nd_method_flip>`\ (\ v\: ``Variant``, axis\: ``int``\ ) |static|                                                                                                           |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`float32<class_nd_method_float32>`\ (\ array\: ``Variant``\ ) |static|                                                                                                                 |
@@ -1078,6 +1080,26 @@ k is the index of the diagonal: 0 (the default) refers to the main diagonal, a p
 :ref:`NDArray<class_NDArray>` **fft**\ (\ v\: ``Variant``, axis\: ``int`` = -1\ ) |static| :ref:`🔗<class_nd_method_fft>`
 
 Compute the one-dimensional discrete Fourier Transform.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_fft_freq:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **fft_freq**\ (\ n\: ``int``, d\: ``float`` = 1\ ) |static| :ref:`🔗<class_nd_method_fft_freq>`
+
+Return the Discrete Fourier Transform sample frequencies.
+
+The returned float array f contains the frequency bin centers in cycles per unit of the sample spacing (with zero at the start). For instance, if the sample spacing is in seconds, then the frequency unit is cycles/second.
+
+Given a window length n and a sample spacing d:
+
+\ ``f = [0, 1, ...,   n/2-1,     -n/2, ..., -1] / (d*n)   if n is even``\ 
+
+\ ``f = [0, 1, ..., (n-1)/2, -(n-1)/2, ..., -1] / (d*n)   if n is odd``
 
 .. rst-class:: classref-item-separator
 

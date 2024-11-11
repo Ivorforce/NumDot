@@ -18,7 +18,7 @@ Upcoming Changes (main branch)
 - Added ``real``, ``imag``, ``conjugate`` and ``angle`` functions for complex numbers.
 - Added ``complex_as_vector`` and ``vector_as_complex`` functions for convenient complex number creation and manipulation, similar to ``real`` and ``imag``.
 - Added ``any`` layout type, which may bring tiny speed improvements.
-- Added ``fft`` function.
+- Added ``fft`` and ``fft_freq`` functions.
 - Added ``pad`` function.
 - Added ``cross`` function.
 - Added ``ndarray.buffer_size`` and ``ndarray.buffer_dtype`` functions for investigation of underlying buffer types.

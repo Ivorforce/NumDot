@@ -11,11 +11,8 @@
 
 using namespace va;
 
-#ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
-#if !(defined(__aarch64__) || defined(_M_ARM64) || defined(__ARM_NEON) || defined(_M_ARM))
-// FIXME NEON xtensor / xsimd has a compile-time bug, see
-// https://github.com/xtensor-stack/xtensor/issues/2733
-void equal_to(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VScalar& b) {
+template <typename A, typename B>
+void equal_to(VStoreAllocator& allocator, VArrayTarget target, const A& a, const B& b) {
 	va::xoperation_inplace<
 		Feature::equal_to,
 		promote::common_in_nat_out
@@ -27,34 +24,23 @@ void equal_to(VStoreAllocator& allocator, VArrayTarget target, const VData& a, c
 		b
 	);
 }
-#endif
-#endif
 
 void va::equal_to(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b) {
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 
-// Doesn't work right now with NEON, see above.
+// FIXME NEON xtensor / xsimd has a compile-time bug, see
+// https://github.com/xtensor-stack/xtensor/issues/2733
 #if !(defined(__aarch64__) || defined(_M_ARM64) || defined(__ARM_NEON) || defined(_M_ARM))
 	OPTIMIZE_COMMUTATIVE(::equal_to, allocator, target, a, b);
 #endif
 
 #endif
 
-	va::xoperation_inplace<
-		Feature::equal_to,
-		promote::common_in_nat_out
-	>(
-		va::XFunction<xt::detail::equal_to> {},
-		allocator,
-		target,
-		a,
-		b
-	);
+	::equal_to(allocator, target, a, b);
 }
 
-#ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
-#if !(defined(__aarch64__) || defined(_M_ARM64) || defined(__ARM_NEON) || defined(_M_ARM))
-void not_equal_to(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VScalar& b) {
+template <typename A, typename B>
+void not_equal_to(VStoreAllocator& allocator, VArrayTarget target, const A& a, const B& b) {
 	va::xoperation_inplace<
 		Feature::not_equal_to,
 		promote::common_in_nat_out
@@ -66,8 +52,6 @@ void not_equal_to(VStoreAllocator& allocator, VArrayTarget target, const VData& 
 		b
 	);
 }
-#endif
-#endif
 
 void va::not_equal_to(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b) {
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
@@ -76,48 +60,11 @@ void va::not_equal_to(VStoreAllocator& allocator, VArrayTarget target, const VDa
 #endif
 #endif
 
-	va::xoperation_inplace<
-		Feature::not_equal_to,
-		promote::common_in_nat_out
-	>(
-		va::XFunction<xt::detail::not_equal_to> {},
-		allocator,
-		target,
-		a,
-		b
-	);
+	::not_equal_to(allocator, target, a, b);
 }
 
-void va::greater(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b) {
-#ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
-	if (va::dimension(a) == 0) {
-		va::xoperation_inplace<
-			Feature::greater,
-			promote::reject_complex<promote::num_in_nat_out>
-		>(
-			va::XFunction<xt::detail::greater> {},
-			allocator,
-			target,
-			va::to_single_value(a),
-			b
-		);
-		return;
-	}
-	if (va::dimension(b) == 0) {
-		va::xoperation_inplace<
-			Feature::greater,
-			promote::reject_complex<promote::num_in_nat_out>
-		>(
-			va::XFunction<xt::detail::greater> {},
-			allocator,
-			target,
-			a,
-			va::to_single_value(b)
-		);
-		return;
-	}
-#endif
-
+template <typename A, typename B>
+void greater(VStoreAllocator& allocator, VArrayTarget target, const A& a, const B& b) {
 	va::xoperation_inplace<
 		Feature::greater,
 		promote::reject_complex<promote::num_in_nat_out>
@@ -130,36 +77,16 @@ void va::greater(VStoreAllocator& allocator, VArrayTarget target, const VData& a
 	);
 }
 
-void va::greater_equal(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b) {
+void va::greater(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b) {
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
-	if (va::dimension(a) == 0) {
-		va::xoperation_inplace<
-			Feature::greater_equal,
-			promote::reject_complex<promote::num_in_nat_out>
-		>(
-			va::XFunction<xt::detail::greater_equal> {},
-			allocator,
-			target,
-			va::to_single_value(a),
-			b
-		);
-		return;
-	}
-	if (va::dimension(b) == 0) {
-		va::xoperation_inplace<
-			Feature::greater_equal,
-			promote::reject_complex<promote::num_in_nat_out>
-		>(
-			va::XFunction<xt::detail::greater_equal> {},
-			allocator,
-			target,
-			a,
-			va::to_single_value(b)
-		);
-		return;
-	}
+	OPTIMIZE_NONCOMMUTATIVE(::greater, allocator, target, a, b);
 #endif
 
+	::greater(allocator, target, a, b);
+}
+
+template <typename A, typename B>
+void greater_equal(VStoreAllocator& allocator, VArrayTarget target, const A& a, const B& b) {
 	va::xoperation_inplace<
 		Feature::greater_equal,
 		promote::reject_complex<promote::num_in_nat_out>
@@ -172,36 +99,16 @@ void va::greater_equal(VStoreAllocator& allocator, VArrayTarget target, const VD
 	);
 }
 
-void va::less(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b) {
+void va::greater_equal(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b) {
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
-	if (va::dimension(a) == 0) {
-		va::xoperation_inplace<
-			Feature::less,
-			promote::reject_complex<promote::num_in_nat_out>
-		>(
-			va::XFunction<xt::detail::less> {},
-			allocator,
-			target,
-			va::to_single_value(a),
-			b
-		);
-		return;
-	}
-	if (va::dimension(b) == 0) {
-		va::xoperation_inplace<
-			Feature::less,
-			promote::reject_complex<promote::num_in_nat_out>
-		>(
-			va::XFunction<xt::detail::less> {},
-			allocator,
-			target,
-			a,
-			va::to_single_value(b)
-		);
-		return;
-	}
+	OPTIMIZE_NONCOMMUTATIVE(::greater_equal, allocator, target, a, b);
 #endif
 
+	::greater_equal(allocator, target, a, b);
+}
+
+template <typename A, typename B>
+void less(VStoreAllocator& allocator, VArrayTarget target, const A& a, const B& b) {
 	va::xoperation_inplace<
 		Feature::less,
 		promote::reject_complex<promote::num_in_nat_out>
@@ -214,36 +121,16 @@ void va::less(VStoreAllocator& allocator, VArrayTarget target, const VData& a, c
 	);
 }
 
-void va::less_equal(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b) {
+void va::less(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b) {
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
-	if (va::dimension(a) == 0) {
-		va::xoperation_inplace<
-			Feature::less_equal,
-			promote::reject_complex<promote::num_in_nat_out>
-		>(
-			va::XFunction<xt::detail::less_equal> {},
-			allocator,
-			target,
-			va::to_single_value(a),
-			b
-		);
-		return;
-	}
-	if (va::dimension(b) == 0) {
-		va::xoperation_inplace<
-			Feature::less_equal,
-			promote::reject_complex<promote::num_in_nat_out>
-		>(
-			va::XFunction<xt::detail::less_equal> {},
-			allocator,
-			target,
-			a,
-			va::to_single_value(b)
-		);
-		return;
-	}
+	OPTIMIZE_NONCOMMUTATIVE(::less, allocator, target, a, b);
 #endif
 
+	::less(allocator, target, a, b);
+}
+
+template <typename A, typename B>
+void less_equal(VStoreAllocator& allocator, VArrayTarget target, const A& a, const B& b) {
 	va::xoperation_inplace<
 		Feature::less_equal,
 		promote::reject_complex<promote::num_in_nat_out>
@@ -254,6 +141,14 @@ void va::less_equal(VStoreAllocator& allocator, VArrayTarget target, const VData
 		a,
 		b
 	);
+}
+
+void va::less_equal(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b) {
+#ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
+	OPTIMIZE_NONCOMMUTATIVE(::less_equal, allocator, target, a, b);
+#endif
+
+	::less_equal(allocator, target, a, b);
 }
 
 template <typename A, typename B>

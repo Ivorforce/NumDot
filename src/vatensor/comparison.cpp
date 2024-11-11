@@ -8,6 +8,11 @@
 #include "xtensor/xmath.hpp"                           // for layout_type
 #include "xtensor/xlayout.hpp"                           // for layout_type
 #include "xtensor/xoperation.hpp"                        // for equal_to
+// See below
+#ifdef _WIN32
+#include "xtensor_store.hpp"
+#include "reduce.hpp"
+#endif
 
 using namespace va;
 
@@ -262,16 +267,8 @@ bool va::all_close(const VData& a, const VData& b, double rtol, double atol, boo
 
 	return ::all_close(a, b, rtol, atol, equal_nan);
 #else
-	return va::vreduce<
-		Feature::all_close,
-		promote::common_in_nat_out,
-		bool
-	>(
-		[rtol, atol, equal_nan](auto&& a, auto&& b) -> bool {
-			return xt::all(xt::isclose(std::forward<decltype(a)>(a), std::forward<decltype(b)>(b), rtol, atol, equal_nan));
-		},
-		a,
-		b
-	);
+	std::shared_ptr<VArray> intermediate;
+	::is_close(va::store::default_allocator, &intermediate, a, b, rtol, atol, equal_nan);
+	return va::all(intermediate->data);
 #endif
 }

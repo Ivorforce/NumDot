@@ -224,6 +224,7 @@ void va::is_inf(VStoreAllocator& allocator, VArrayTarget target, const VData& a)
 }
 
 bool va::array_equal(const VData& a, const VData& b) {
+#ifndef _WIN32
 	return va::vreduce<
 		Feature::array_equal,
 		promote::common_in_nat_out,
@@ -235,6 +236,11 @@ bool va::array_equal(const VData& a, const VData& b) {
 		a,
 		b
 	);
+#else
+	std::shared_ptr<VArray> intermediate;
+	::equal_to(va::store::default_allocator, &intermediate, a, b);
+	return va::all(intermediate->data);
+#endif
 }
 
 template <typename A, typename B>

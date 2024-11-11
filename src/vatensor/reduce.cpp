@@ -164,7 +164,7 @@ void va::median(VStoreAllocator& allocator, VArrayTarget target, const VData& ar
 	}
 }
 
-VScalar va::var(const VData& array) {
+VScalar va::variance(const VData& array) {
 	return vreduce<
 		Feature::var,
 		promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>,
@@ -175,7 +175,7 @@ VScalar va::var(const VData& array) {
 	);
 }
 
-void va::var(VStoreAllocator& allocator, VArrayTarget target, const VData& array, const axes_type& axes) {
+void va::variance(VStoreAllocator& allocator, VArrayTarget target, const VData& array, const axes_type& axes) {
 	va::xoperation_inplace<
 		Feature::var,
 		promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>
@@ -187,7 +187,7 @@ void va::var(VStoreAllocator& allocator, VArrayTarget target, const VData& array
 	);
 }
 
-VScalar va::std(const VData& array) {
+VScalar va::standard_deviation(const VData& array) {
 	return vreduce<
 		Feature::std,
 		promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>,
@@ -198,7 +198,7 @@ VScalar va::std(const VData& array) {
 	);
 }
 
-void va::std(VStoreAllocator& allocator, VArrayTarget target, const VData& array, const axes_type& axes) {
+void va::standard_deviation(VStoreAllocator& allocator, VArrayTarget target, const VData& array, const axes_type& axes) {
 	va::xoperation_inplace<
 		Feature::std,
 		promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>

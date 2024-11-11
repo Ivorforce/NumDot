@@ -139,8 +139,8 @@ void NDArray::_bind_methods() {
 	godot::ClassDB::bind_method(D_METHOD("assign_sum", "a", "axes"), &NDArray::assign_sum, DEFVAL(nullptr));
 	godot::ClassDB::bind_method(D_METHOD("assign_prod", "a", "axes"), &NDArray::assign_prod, DEFVAL(nullptr));
 	godot::ClassDB::bind_method(D_METHOD("assign_mean", "a", "axes"), &NDArray::assign_mean, DEFVAL(nullptr));
-	godot::ClassDB::bind_method(D_METHOD("assign_var", "a", "axes"), &NDArray::assign_var, DEFVAL(nullptr));
-	godot::ClassDB::bind_method(D_METHOD("assign_std", "a", "axes"), &NDArray::assign_std, DEFVAL(nullptr));
+	godot::ClassDB::bind_method(D_METHOD("assign_var", "a", "axes"), &NDArray::assign_variance, DEFVAL(nullptr));
+	godot::ClassDB::bind_method(D_METHOD("assign_std", "a", "axes"), &NDArray::assign_standard_deviation, DEFVAL(nullptr));
 	godot::ClassDB::bind_method(D_METHOD("assign_max", "a", "axes"), &NDArray::assign_max, DEFVAL(nullptr));
 	godot::ClassDB::bind_method(D_METHOD("assign_min", "a", "axes"), &NDArray::assign_min, DEFVAL(nullptr));
 	godot::ClassDB::bind_method(D_METHOD("assign_norm", "a", "ord", "axes"), &NDArray::assign_norm, DEFVAL(2), DEFVAL(nullptr));
@@ -944,12 +944,12 @@ Ref<NDArray> NDArray::assign_mean(const Variant& a, const Variant& axes) {
 	REDUCTION1(mean, a, axes);
 }
 
-Ref<NDArray> NDArray::assign_var(const Variant& a, const Variant& axes) {
-	REDUCTION1(var, a, axes);
+Ref<NDArray> NDArray::assign_variance(const Variant& a, const Variant& axes) {
+	REDUCTION1(variance, a, axes);
 }
 
-Ref<NDArray> NDArray::assign_std(const Variant& a, const Variant& axes) {
-	REDUCTION1(std, a, axes);
+Ref<NDArray> NDArray::assign_standard_deviation(const Variant& a, const Variant& axes) {
+	REDUCTION1(standard_deviation, a, axes);
 }
 
 Ref<NDArray> NDArray::assign_max(const Variant& a, const Variant& axes) {

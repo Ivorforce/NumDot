@@ -27,8 +27,8 @@ public:
 	static double_t prod(const Variant& a);
 	static double_t mean(const Variant& a);
 	static double_t median(const Variant& a);
-	static double_t var(const Variant& a);
-	static double_t std(const Variant& a);
+	static double_t variance(const Variant& a);
+	static double_t standard_deviation(const Variant& a);
 	static double_t max(const Variant& a);
 	static double_t min(const Variant& a);
 	static double_t norm(const Variant& a, const Variant& ord);

@@ -156,8 +156,8 @@ public:
 	static Ref<NDArray> prod(const Variant& a, const Variant& axes);
 	static Ref<NDArray> mean(const Variant& a, const Variant& axes);
 	static Ref<NDArray> median(const Variant& a, const Variant& axes);
-	static Ref<NDArray> var(const Variant& a, const Variant& axes);
-	static Ref<NDArray> std(const Variant& a, const Variant& axes);
+	static Ref<NDArray> variance(const Variant& a, const Variant& axes);
+	static Ref<NDArray> standard_deviation(const Variant& a, const Variant& axes);
 	static Ref<NDArray> max(const Variant& a, const Variant& axes);
 	static Ref<NDArray> min(const Variant& a, const Variant& axes);
 	static Ref<NDArray> norm(const Variant& a, const Variant& ord, const Variant& axes);

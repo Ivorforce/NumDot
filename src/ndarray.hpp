@@ -167,8 +167,8 @@ public:
 	Ref<NDArray> assign_sum(const Variant& a, const Variant& axes);
 	Ref<NDArray> assign_prod(const Variant& a, const Variant& axes);
 	Ref<NDArray> assign_mean(const Variant& a, const Variant& axes);
-	Ref<NDArray> assign_var(const Variant& a, const Variant& axes);
-	Ref<NDArray> assign_std(const Variant& a, const Variant& axes);
+	Ref<NDArray> assign_variance(const Variant& a, const Variant& axes);
+	Ref<NDArray> assign_standard_deviation(const Variant& a, const Variant& axes);
 	Ref<NDArray> assign_max(const Variant& a, const Variant& axes);
 	Ref<NDArray> assign_min(const Variant& a, const Variant& axes);
 	Ref<NDArray> assign_norm(const Variant& a, const Variant& ord, const Variant& axes);

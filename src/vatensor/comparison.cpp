@@ -248,6 +248,9 @@ bool all_close(const A& a, const B& b, double rtol, double atol, bool equal_nan)
 }
 
 bool va::all_close(const VData& a, const VData& b, double rtol, double atol, bool equal_nan) {
+	// TODO No idea why but the windows compiler refuses to compile this one for some reason,
+	//  claiming that vreduce's ReturnType does not exist.
+#ifndef WIN32
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	if (va::dimension(a) == 0) {
 		return ::all_close(b, va::to_single_value(a), rtol, atol, equal_nan);
@@ -258,4 +261,17 @@ bool va::all_close(const VData& a, const VData& b, double rtol, double atol, boo
 #endif
 
 	return ::all_close(a, b, rtol, atol, equal_nan);
+#else
+	return va::vreduce<
+		Feature::all_close,
+		promote::common_in_nat_out,
+		bool
+	>(
+		[rtol, atol, equal_nan](auto&& a, auto&& b) -> bool {
+			return xt::all(xt::isclose(std::forward<decltype(a)>(a), std::forward<decltype(b)>(b), rtol, atol, equal_nan));
+		},
+		a,
+		b
+	);
+#endif
 }

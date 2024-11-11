@@ -28,6 +28,9 @@ namespace va {
 		less,
 		less_equal,
 		is_close,
+		is_nan,
+		is_inf,
+		is_finite,
 		array_equal,
 		all_close,
 
@@ -132,6 +135,10 @@ namespace va {
 			FEATURE_NAME_CASE(greater_equal)
 			FEATURE_NAME_CASE(less)
 			FEATURE_NAME_CASE(less_equal)
+			FEATURE_NAME_CASE(is_close)
+			FEATURE_NAME_CASE(is_nan)
+			FEATURE_NAME_CASE(is_inf)
+			FEATURE_NAME_CASE(is_finite)
 			FEATURE_NAME_CASE(array_equal)
 			FEATURE_NAME_CASE(all_close)
 

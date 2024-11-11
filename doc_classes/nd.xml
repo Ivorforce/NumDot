@@ -559,6 +559,29 @@
 				The tolerance values are positive, typically very small numbers. The relative difference (rtol * abs(b)) and the absolute difference atol are added together to compare against the absolute difference between a and b.
 			</description>
 		</method>
+		<method name="is_finite" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				Test element-wise for finiteness (not infinity and not Not a Number).
+				The result is returned as a boolean array.
+			</description>
+		</method>
+		<method name="is_inf" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				Test element-wise for positive or negative infinity.
+				Returns a boolean array of the same shape as x, True where x == +/-inf, otherwise False.
+			</description>
+		</method>
+		<method name="is_nan" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				Test element-wise for NaN and return result as a boolean array.
+			</description>
+		</method>
 		<method name="less" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />

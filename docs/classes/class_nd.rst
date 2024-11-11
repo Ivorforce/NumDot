@@ -160,6 +160,12 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`is_close<class_nd_method_is_close>`\ (\ a\: ``Variant``, b\: ``Variant``, rtol\: ``float`` = 1e-05, atol\: ``float`` = 1e-08, equal_nan\: ``bool`` = false\ ) |static|                |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`is_finite<class_nd_method_is_finite>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                 |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`is_inf<class_nd_method_is_inf>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                       |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`is_nan<class_nd_method_is_nan>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                       |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`less<class_nd_method_less>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                          |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`less_equal<class_nd_method_less_equal>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                              |
@@ -1334,6 +1340,46 @@ Equivalent to ``nd.as_array(array, nd.DType.Int64)``.
 Returns a boolean array where two arrays are element-wise equal within a tolerance.
 
 The tolerance values are positive, typically very small numbers. The relative difference (rtol \* abs(b)) and the absolute difference atol are added together to compare against the absolute difference between a and b.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_is_finite:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **is_finite**\ (\ a\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_is_finite>`
+
+Test element-wise for finiteness (not infinity and not Not a Number).
+
+The result is returned as a boolean array.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_is_inf:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **is_inf**\ (\ a\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_is_inf>`
+
+Test element-wise for positive or negative infinity.
+
+Returns a boolean array of the same shape as x, True where x == +/-inf, otherwise False.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_is_nan:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **is_nan**\ (\ a\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_is_nan>`
+
+Test element-wise for NaN and return result as a boolean array.
 
 .. rst-class:: classref-item-separator
 

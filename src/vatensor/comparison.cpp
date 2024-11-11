@@ -182,6 +182,42 @@ void va::is_close(VStoreAllocator& allocator, VArrayTarget target, const VData& 
 	::is_close(allocator, target, a, b, rtol, atol, equal_nan);
 }
 
+void va::is_nan(VStoreAllocator& allocator, VArrayTarget target, const VData& a) {
+	va::xoperation_inplace<
+		Feature::is_nan,
+		promote::num_in_nat_out
+	>(
+		va::XFunction<xt::math::isnan_fun> {},
+		allocator,
+		target,
+		a
+	);
+}
+
+void va::is_finite(VStoreAllocator& allocator, VArrayTarget target, const VData& a) {
+	va::xoperation_inplace<
+		Feature::is_finite,
+		promote::num_in_nat_out
+	>(
+		va::XFunction<xt::math::isfinite_fun> {},
+		allocator,
+		target,
+		a
+	);
+}
+
+void va::is_inf(VStoreAllocator& allocator, VArrayTarget target, const VData& a) {
+	va::xoperation_inplace<
+		Feature::is_inf,
+		promote::num_in_nat_out
+	>(
+		va::XFunction<xt::math::isinf_fun> {},
+		allocator,
+		target,
+		a
+	);
+}
+
 bool va::array_equal(const VData& a, const VData& b) {
 	return va::vreduce<
 		Feature::array_equal,

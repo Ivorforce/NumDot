@@ -178,6 +178,9 @@ public:
 	static Ref<NDArray> less(const Variant& a, const Variant& b);
 	static Ref<NDArray> less_equal(const Variant& a, const Variant& b);
 	static Ref<NDArray> is_close(const Variant& a, const Variant& b, double_t rtol, double_t atol, bool equal_nan);
+	static Ref<NDArray> is_nan(const Variant& a);
+	static Ref<NDArray> is_inf(const Variant& a);
+	static Ref<NDArray> is_finite(const Variant& a);
 
 	// Logical.
 	static Ref<NDArray> logical_and(const Variant& a, const Variant& b);

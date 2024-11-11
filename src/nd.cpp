@@ -189,6 +189,9 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("less", "a", "b"), &nd::less);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("less_equal", "a", "b"), &nd::less_equal);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("is_close", "a", "b", "rtol", "atol", "equal_nan"), &nd::is_close, DEFVAL(1e-05), DEFVAL(1e-08), DEFVAL(false));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("is_nan", "a"), &nd::is_nan);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("is_inf", "a"), &nd::is_inf);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("is_finite", "a"), &nd::is_finite);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("logical_and", "a", "b"), &nd::logical_and);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("logical_or", "a", "b"), &nd::logical_or);
@@ -1096,6 +1099,18 @@ Ref<NDArray> nd::is_close(const Variant& a, const Variant& b, double_t rtol, dou
 	return map_variants_as_arrays_with_target([rtol, atol, equal_nan](const va::VArrayTarget target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b) {
 		va::is_close(va::store::default_allocator, target, a->data, b->data, rtol, atol, equal_nan);
 	}, a, b);
+}
+
+Ref<NDArray> nd::is_nan(const Variant& a) {
+	return VARRAY_MAP1(is_nan, a);
+}
+
+Ref<NDArray> nd::is_inf(const Variant& a) {
+	return VARRAY_MAP1(is_inf, a);
+}
+
+Ref<NDArray> nd::is_finite(const Variant& a) {
+	return VARRAY_MAP1(is_finite, a);
 }
 
 Ref<NDArray> nd::logical_and(const Variant& a, const Variant& b) {

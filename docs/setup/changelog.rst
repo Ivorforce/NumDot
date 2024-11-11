@@ -26,6 +26,7 @@ Upcoming Changes (main branch)
 - Added matrix ``diagonal``, ``diag`` and ``trace`` functions.
 - Added ``transpose`` and ``flatten`` to ``NDArray`` methods.
 - Added ``is_close``, ``array_equal`` and ``all_close`` functions.
+- Added ``is_nan``, ``is_inf`` and ``is_finite`` functions.
 
 **Changed**
 

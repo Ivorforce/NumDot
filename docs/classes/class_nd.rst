@@ -96,6 +96,8 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`count_nonzero<class_nd_method_count_nonzero>`\ (\ a\: ``Variant``, axes\: ``Variant`` = null\ ) |static|                                                                              |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`cross<class_nd_method_cross>`\ (\ a\: ``Variant``, b\: ``Variant``, axisa\: ``int`` = -1, axisb\: ``int`` = -1, axisc\: ``int`` = -1\ ) |static|                                      |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDRandomGenerator<class_NDRandomGenerator>`          | :ref:`default_rng<class_nd_method_default_rng>`\ (\ seed\: ``Variant`` = null\ ) |static|                                                                                                   |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`deg2rad<class_nd_method_deg2rad>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                     |
@@ -882,6 +884,20 @@ Equivalent to 0.5 \* (nd.exp(x) + nd.exp(-x)).
 Counts the number of non-zero values in the array a along the given axes.
 
 Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndi.count_nonzero<class_ndi_method_count_nonzero>`.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_cross:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **cross**\ (\ a\: ``Variant``, b\: ``Variant``, axisa\: ``int`` = -1, axisb\: ``int`` = -1, axisc\: ``int`` = -1\ ) |static| :ref:`🔗<class_nd_method_cross>`
+
+Return the cross product of two (arrays of) vectors.
+
+The cross product of a and b in R3 is a vector perpendicular to both a and b. If a and b are arrays of vectors, the vectors are defined by the last axis of a and b by default, and these axes can have dimensions 2 or 3. Where the dimension of either a or b is 2, the third component of the input vector is assumed to be zero and the cross product calculated accordingly. In cases where both input vectors have dimension 2, the z-component of the cross product is returned.
 
 .. rst-class:: classref-item-separator
 

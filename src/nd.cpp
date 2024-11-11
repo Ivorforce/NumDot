@@ -206,6 +206,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("dot", "a", "b"), &nd::dot);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("reduce_dot", "a", "b", "axes"), &nd::reduce_dot, DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("matmul", "a", "b"), &nd::matmul);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("cross", "a", "b", "axisa", "axisb", "axisc"), &nd::cross, DEFVAL(-1), DEFVAL(-1), DEFVAL(-1));
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("sliding_window_view", "array", "window_shape"), &nd::sliding_window_view);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("convolve", "array", "kernel"), &nd::convolve);
@@ -292,29 +293,29 @@ Ref<NDArray> like_visit(Visitor&& visitor, const Variant& model, nd::DType dtype
 
 #define VARRAY_MAP1(func, varray1) \
 	map_variants_as_arrays_with_target([](const va::VArrayTarget target, const std::shared_ptr<va::VArray>& varray) {\
-        va::func(va::store::default_allocator, target, *varray);\
+        va::func(va::store::default_allocator, target, varray->data);\
     }, (varray1))
 
 #define VARRAY_MAP2(func, varray1, varray2) \
 	map_variants_as_arrays_with_target([](const va::VArrayTarget target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b) {\
-        va::func(va::store::default_allocator, target, *a, *b);\
+        va::func(va::store::default_allocator, target, a->data, b->data);\
     }, (varray1), (varray2))
 
 #define VARRAY_MAP3(func, varray1, varray2, varray3) \
 	map_variants_as_arrays_with_target([](const va::VArrayTarget target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b, const std::shared_ptr<va::VArray>& c) {\
-        va::func(va::store::default_allocator, target, *a, *b, *c);\
+        va::func(va::store::default_allocator, target, a->data, b->data, c->data);\
     }, (varray1), (varray2), (varray3))
 
 #define REDUCTION1(func, varray1, axes1) \
 	reduction([](const va::VArrayTarget target, const va::axes_type& axes, const va::VArray& array) {\
-		va::func(va::store::default_allocator, target, array, axes);\
-	}, [](const va::VArray& array) { return va::func(array); }, axes, (varray1))
+		va::func(va::store::default_allocator, target, array.data, axes);\
+	}, [](const va::VArray& array) { return va::func(array.data); }, axes, (varray1))
 
 #define REDUCTION2(func, varray1, varray2, axes1) \
 	reduction([](const va::VArrayTarget target, const va::axes_type& axes, const va::VArray& carray1, const va::VArray& carray2) {\
-		va::func(va::store::default_allocator, target, carray1, carray2, axes);\
+		va::func(va::store::default_allocator, target, carray1.data, carray2.data, axes);\
 	}, [](const va::VArray& carray1, const va::VArray& carray2) {\
-		return va::func(carray1, carray2);\
+		return va::func(carray1.data, carray2.data);\
 	}, axes, (varray1), (varray2))
 
 StringName nd::newaxis() {
@@ -1040,8 +1041,8 @@ Ref<NDArray> nd::norm(const Variant& a, const Variant& ord, const Variant& axes)
 
 Ref<NDArray> nd::count_nonzero(const Variant& a, const Variant& axes) {
 	return reduction([](const va::VArrayTarget target, const va::axes_type& axes, const va::VArray& array) {
-		va::count_nonzero(va::store::default_allocator, target, array, axes);
-	}, [](const va::VArray& array) { return va::count_nonzero(va::store::default_allocator, array); }, axes, a);
+		va::count_nonzero(va::store::default_allocator, target, array.data, axes);
+	}, [](const va::VArray& array) { return va::count_nonzero(va::store::default_allocator, array.data); }, axes, a);
 }
 
 Ref<NDArray> nd::floor(const Variant& a) {
@@ -1149,6 +1150,12 @@ Ref<NDArray> nd::matmul(const Variant& a, const Variant& b) {
 	return VARRAY_MAP2(matmul, a, b);
 }
 
+Ref<NDArray> nd::cross(const Variant& a, const Variant& b, int64_t axisa, int64_t axisb, int64_t axisc) {
+	return map_variants_as_arrays_with_target([axisa, axisb, axisc](const va::VArrayTarget target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b) {
+		va::cross(va::store::default_allocator, target, a->data, b->data, axisa, axisb, axisc);
+	}, a, b);
+}
+
 Ref<NDArray> nd::sliding_window_view(const Variant& array, const Variant& window_shape) {
 	try {
 		const auto array_ = variant_as_array(array);
@@ -1162,7 +1169,9 @@ Ref<NDArray> nd::sliding_window_view(const Variant& array, const Variant& window
 }
 
 Ref<NDArray> nd::convolve(const Variant& array, const Variant& kernel) {
-	return VARRAY_MAP2(convolve, array, kernel);
+	return map_variants_as_arrays_with_target([](const va::VArrayTarget target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b) {
+		va::convolve(va::store::default_allocator, target, *a, *b);
+	}, array, kernel);
 }
 
 Ref<NDRandomGenerator> nd::default_rng(const Variant& seed) {

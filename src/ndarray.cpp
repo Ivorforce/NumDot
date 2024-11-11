@@ -175,6 +175,7 @@ void NDArray::_bind_methods() {
 	godot::ClassDB::bind_method(D_METHOD("assign_dot", "a", "b"), &NDArray::assign_dot);
 	godot::ClassDB::bind_method(D_METHOD("assign_reduce_dot", "a", "b", "axes"), &NDArray::assign_reduce_dot, DEFVAL(nullptr));
 	godot::ClassDB::bind_method(D_METHOD("assign_matmul", "a", "b"), &NDArray::assign_matmul);
+	godot::ClassDB::bind_method(D_METHOD("assign_cross", "a", "b", "axisa", "axisb", "axisc"), &NDArray::assign_cross, DEFVAL(-1), DEFVAL(-1), DEFVAL(-1));
 
 	godot::ClassDB::bind_method(D_METHOD("assign_convolve", "array", "kernel"), &NDArray::assign_convolve);
 }
@@ -758,35 +759,35 @@ inline void reduction_inplace(Visitor&& visitor, VisitorNoaxes&& visitor_noaxes,
 
 #define VARRAY_MAP1(func, varray1) \
 	map_variants_as_arrays_inplace([this](va::VArrayTarget target, const std::shared_ptr<va::VArray>& varray) {\
-        va::func(va::store::default_allocator, target, *varray);\
+        va::func(va::store::default_allocator, target, varray->data);\
     }, *this->array, (varray1));\
     return {this}
 
 #define VARRAY_MAP2(func, varray1, varray2) \
 	map_variants_as_arrays_inplace([this](va::VArrayTarget target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b) {\
-        va::func(va::store::default_allocator, target, *a, *b);\
+        va::func(va::store::default_allocator, target, a->data, b->data);\
     }, *this->array, (varray1), (varray2));\
     return {this}
 
 #define VARRAY_MAP3(func, varray1, varray2, varray3) \
 	map_variants_as_arrays_inplace([this](va::VArrayTarget target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b, const std::shared_ptr<va::VArray>& c) {\
-        va::func(va::store::default_allocator, target, *a, *b, *c);\
+        va::func(va::store::default_allocator, target, a->data, b->data, c->data);\
     }, *this->array, (varray1), (varray2), (varray3));\
     return {this}
 
 #define REDUCTION1(func, varray1, axes1) \
 	reduction_inplace([this](va::VArrayTarget target, const va::axes_type& axes, const std::shared_ptr<va::VArray>& array) {\
-		va::func(va::store::default_allocator, target, *array, axes);\
+		va::func(va::store::default_allocator, target, array->data, axes);\
 	}, [this](const std::shared_ptr<va::VArray>& array) {\
-		return va::func(*array);\
+		return va::func(array->data);\
 	}, *this->array, (axes1), (varray1));\
 	return {this}
 
 #define REDUCTION2(func, varray1, varray2, axes1) \
 	reduction_inplace([this](va::VArrayTarget target, const va::axes_type& axes, const std::shared_ptr<va::VArray>& carray1, const std::shared_ptr<va::VArray>& carray2) {\
-		va::func(va::store::default_allocator, target, *carray1, *carray2, axes);\
+		va::func(va::store::default_allocator, target, carray1->data, carray2->data, axes);\
 	}, [this](const std::shared_ptr<va::VArray>& carray1, const std::shared_ptr<va::VArray>& carray2) {\
-		return va::func(*carray1, *carray2);\
+		return va::func(carray1->data, carray2->data);\
 	}, *this->array, (axes1), (varray1), (varray2));\
 	return {this}
 
@@ -1088,8 +1089,18 @@ Ref<NDArray> NDArray::assign_matmul(const Variant& a, const Variant& b) {
 	VARRAY_MAP2(matmul, a, b);
 }
 
+Ref<NDArray> NDArray::assign_cross(const Variant& a, const Variant& b, int64_t axisa, int64_t axisb, int64_t axisc) {
+	map_variants_as_arrays_inplace([this, axisa, axisb, axisc](va::VArrayTarget target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b) {
+		va::cross(va::store::default_allocator, target, a->data, b->data, axisa, axisb, axisc);
+	}, *this->array, a, b);\
+	return {this};
+}
+
 Ref<NDArray> NDArray::assign_convolve(const Variant& array, const Variant& kernel) {
-	VARRAY_MAP2(convolve, array, kernel);
+	map_variants_as_arrays_inplace([this](va::VArrayTarget target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b) {\
+		va::convolve(va::store::default_allocator, target, *a, *b);\
+	}, *this->array, array, kernel);\
+	return {this};
 }
 
 #define CONVERT_TO_SCALAR(type)\

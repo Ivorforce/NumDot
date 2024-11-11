@@ -10,7 +10,7 @@
 
 using namespace va;
 
-void va::ceil(VStoreAllocator& allocator, VArrayTarget target, const VArray& array) {
+void va::ceil(VStoreAllocator& allocator, VArrayTarget target, const VData& array) {
 	xoperation_inplace<
 		Feature::ceil,
 		promote::reject_complex<promote::num_function_result_in_same_out<xt::math::ceil_fun>>
@@ -18,11 +18,11 @@ void va::ceil(VStoreAllocator& allocator, VArrayTarget target, const VArray& arr
 		va::XFunction<xt::math::ceil_fun> {},
 		allocator,
 		target,
-		array.data
+		array
 	);
 }
 
-void va::floor(VStoreAllocator& allocator, VArrayTarget target, const VArray& array) {
+void va::floor(VStoreAllocator& allocator, VArrayTarget target, const VData& array) {
 	xoperation_inplace<
 		Feature::floor,
 		promote::reject_complex<promote::num_function_result_in_same_out<xt::math::floor_fun>>
@@ -30,11 +30,11 @@ void va::floor(VStoreAllocator& allocator, VArrayTarget target, const VArray& ar
 		va::XFunction<xt::math::floor_fun> {},
 		allocator,
 		target,
-		array.data
+		array
 	);
 }
 
-void va::trunc(VStoreAllocator& allocator, VArrayTarget target, const VArray& array) {
+void va::trunc(VStoreAllocator& allocator, VArrayTarget target, const VData& array) {
 	xoperation_inplace<
 		Feature::trunc,
 		promote::reject_complex<promote::num_function_result_in_same_out<xt::math::trunc_fun>>
@@ -42,11 +42,11 @@ void va::trunc(VStoreAllocator& allocator, VArrayTarget target, const VArray& ar
 		va::XFunction<xt::math::trunc_fun> {},
 		allocator,
 		target,
-		array.data
+		array
 	);
 }
 
-void va::round(VStoreAllocator& allocator, VArrayTarget target, const VArray& array) {
+void va::round(VStoreAllocator& allocator, VArrayTarget target, const VData& array) {
 	xoperation_inplace<
 		Feature::round,
 		promote::reject_complex<promote::num_function_result_in_same_out<xt::math::round_fun>>
@@ -54,11 +54,11 @@ void va::round(VStoreAllocator& allocator, VArrayTarget target, const VArray& ar
 		va::XFunction<xt::math::round_fun> {},
 		allocator,
 		target,
-		array.data
+		array
 	);
 }
 
-void va::nearbyint(VStoreAllocator& allocator, VArrayTarget target, const VArray& array) {
+void va::nearbyint(VStoreAllocator& allocator, VArrayTarget target, const VData& array) {
 	xoperation_inplace<
 		Feature::nearbyint,
 		promote::reject_complex<promote::num_function_result_in_same_out<xt::math::nearbyint_fun>>\
@@ -66,6 +66,6 @@ void va::nearbyint(VStoreAllocator& allocator, VArrayTarget target, const VArray
 		va::XFunction<xt::math::nearbyint_fun> {},
 		allocator,
 		target,
-		array.data
+		array
 	);
 }

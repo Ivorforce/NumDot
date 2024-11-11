@@ -88,6 +88,8 @@ namespace va {
 		rad2deg,
 		deg2rad,
 
+		cross,
+
 		random_float,
 		random_int,
 		random_normal,

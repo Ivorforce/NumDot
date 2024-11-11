@@ -38,18 +38,18 @@ using namespace xt;
 XTENSOR_REDUCER_FUNCTION(va_any, xt::detail::logical_or, bool, true)
 XTENSOR_REDUCER_FUNCTION(va_all, xt::detail::logical_and, bool, false)
 
-VScalar va::sum(const VArray& array) {
+VScalar va::sum(const VData& array) {
 	return vreduce<
 		Feature::sum,
 		promote::num_in_same_out,
 		VScalar
 	>(
 		REDUCER_LAMBDA(xt::sum),
-		array.data
+		array
 	);
 }
 
-void va::sum(VStoreAllocator& allocator, VArrayTarget target, const VArray& array, const axes_type& axes) {
+void va::sum(VStoreAllocator& allocator, VArrayTarget target, const VData& array, const axes_type& axes) {
 	va::xoperation_inplace<
 		Feature::sum,
 		promote::num_in_same_out
@@ -57,22 +57,22 @@ void va::sum(VStoreAllocator& allocator, VArrayTarget target, const VArray& arra
 		REDUCER_LAMBDA_AXES(axes, xt::sum),
 		allocator,
 		target,
-		array.data
+		array
 	);
 }
 
-VScalar va::prod(const VArray& array) {
+VScalar va::prod(const VData& array) {
 	return vreduce<
 		Feature::prod,
 		promote::num_at_least_int32_in_same_out,
 		VScalar
 	>(
 		REDUCER_LAMBDA(xt::prod),
-		array.data
+		array
 	);
 }
 
-void va::prod(VStoreAllocator& allocator, VArrayTarget target, const VArray& array, const axes_type& axes) {
+void va::prod(VStoreAllocator& allocator, VArrayTarget target, const VData& array, const axes_type& axes) {
 	va::xoperation_inplace<
 		Feature::prod,
 		promote::num_at_least_int32_in_same_out
@@ -80,22 +80,22 @@ void va::prod(VStoreAllocator& allocator, VArrayTarget target, const VArray& arr
 		REDUCER_LAMBDA_AXES(axes, xt::prod),
 		allocator,
 		target,
-		array.data
+		array
 	);
 }
 
-VScalar va::mean(const VArray& array) {
+VScalar va::mean(const VData& array) {
 	return vreduce<
 		Feature::mean,
 		promote::num_matching_float_or_default_in_nat_out<double_t>,
 		VScalar
 	>(
 		REDUCER_LAMBDA(xt::mean),
-		array.data
+		array
 	);
 }
 
-void va::mean(VStoreAllocator& allocator, VArrayTarget target, const VArray& array, const axes_type& axes) {
+void va::mean(VStoreAllocator& allocator, VArrayTarget target, const VData& array, const axes_type& axes) {
 	va::xoperation_inplace<
 		Feature::mean,
 		promote::num_matching_float_or_default_in_nat_out<double_t>
@@ -103,23 +103,23 @@ void va::mean(VStoreAllocator& allocator, VArrayTarget target, const VArray& arr
 		REDUCER_LAMBDA_AXES(axes, xt::mean),
 		allocator,
 		target,
-		array.data
+		array
 	);
 }
 
-VScalar va::median(const VArray& array) {
+VScalar va::median(const VData& array) {
 	return vreduce<
 		Feature::median,
 		promote::reject_complex<promote::num_in_same_out>,
 		VScalar
 	>(
 		REDUCER_LAMBDA_NOECS(xt::median),
-		array.data
+		array
 	);
 }
 
-void va::median(VStoreAllocator& allocator, VArrayTarget target, const VArray& array, const axes_type& axes) {
-	if (axes.size() == 1 && array.layout() != xt::layout_type::dynamic) {
+void va::median(VStoreAllocator& allocator, VArrayTarget target, const VData& array, const axes_type& axes) {
+	if (axes.size() == 1 && va::layout(array) != xt::layout_type::dynamic) {
 		// Supported by xtensor.
 		auto axis = axes[0];
 		va::xoperation_inplace<
@@ -129,7 +129,7 @@ void va::median(VStoreAllocator& allocator, VArrayTarget target, const VArray& a
 			REDUCER_LAMBDA_AXES_NOECS(axis, xt::median),
 			allocator,
 			target,
-			array.data
+			array
 		);
 		return;
 	}
@@ -140,7 +140,7 @@ void va::median(VStoreAllocator& allocator, VArrayTarget target, const VArray& a
 
 	if (joined->layout() == xt::layout_type::dynamic) {
 		// xtensor does not support dynamic layout, so we need a copy first.
-		const auto joined_copy = va::copy(allocator, array.data);
+		const auto joined_copy = va::copy(allocator, array);
 		va::xoperation_inplace<
 			Feature::median,
 			promote::reject_complex<promote::num_in_same_out>
@@ -164,18 +164,18 @@ void va::median(VStoreAllocator& allocator, VArrayTarget target, const VArray& a
 	}
 }
 
-VScalar va::var(const VArray& array) {
+VScalar va::var(const VData& array) {
 	return vreduce<
 		Feature::var,
 		promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>,
 		VScalar
 	>(
 		REDUCER_LAMBDA(xt::variance),
-		array.data
+		array
 	);
 }
 
-void va::var(VStoreAllocator& allocator, VArrayTarget target, const VArray& array, const axes_type& axes) {
+void va::var(VStoreAllocator& allocator, VArrayTarget target, const VData& array, const axes_type& axes) {
 	va::xoperation_inplace<
 		Feature::var,
 		promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>
@@ -183,22 +183,22 @@ void va::var(VStoreAllocator& allocator, VArrayTarget target, const VArray& arra
 		REDUCER_LAMBDA_AXES(axes, xt::variance),
 		allocator,
 		target,
-		array.data
+		array
 	);
 }
 
-VScalar va::std(const VArray& array) {
+VScalar va::std(const VData& array) {
 	return vreduce<
 		Feature::std,
 		promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>,
 		VScalar
 	>(
 		REDUCER_LAMBDA(xt::stddev),
-		array.data
+		array
 	);
 }
 
-void va::std(VStoreAllocator& allocator, VArrayTarget target, const VArray& array, const axes_type& axes) {
+void va::std(VStoreAllocator& allocator, VArrayTarget target, const VData& array, const axes_type& axes) {
 	va::xoperation_inplace<
 		Feature::std,
 		promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>
@@ -206,22 +206,22 @@ void va::std(VStoreAllocator& allocator, VArrayTarget target, const VArray& arra
 		REDUCER_LAMBDA_AXES(axes, xt::stddev),
 		allocator,
 		target,
-		array.data
+		array
 	);
 }
 
-VScalar va::max(const VArray& array) {
+VScalar va::max(const VData& array) {
 	return vreduce<
 		Feature::max,
 		promote::reject_complex<promote::common_in_same_out>,
 		VScalar
 	>(
 		REDUCER_LAMBDA(xt::amax),
-		array.data
+		array
 	);
 }
 
-void va::max(VStoreAllocator& allocator, VArrayTarget target, const VArray& array, const axes_type& axes) {
+void va::max(VStoreAllocator& allocator, VArrayTarget target, const VData& array, const axes_type& axes) {
 	va::xoperation_inplace<
 		Feature::max,
 		promote::reject_complex<promote::common_in_same_out>
@@ -229,22 +229,22 @@ void va::max(VStoreAllocator& allocator, VArrayTarget target, const VArray& arra
 		REDUCER_LAMBDA_AXES(axes, xt::amax),
 		allocator,
 		target,
-		array.data
+		array
 	);
 }
 
-VScalar va::min(const VArray& array) {
+VScalar va::min(const VData& array) {
 	return vreduce<
 		Feature::min,
 		promote::reject_complex<promote::common_in_same_out>,
 		VScalar
 	>(
 		REDUCER_LAMBDA(xt::amin),
-		array.data
+		array
 	);
 }
 
-void va::min(VStoreAllocator& allocator, VArrayTarget target, const VArray& array, const axes_type& axes) {
+void va::min(VStoreAllocator& allocator, VArrayTarget target, const VData& array, const axes_type& axes) {
 	va::xoperation_inplace<
 		Feature::min,
 		promote::reject_complex<promote::common_in_same_out>
@@ -252,22 +252,22 @@ void va::min(VStoreAllocator& allocator, VArrayTarget target, const VArray& arra
 		REDUCER_LAMBDA_AXES(axes, xt::amin),
 		allocator,
 		target,
-		array.data
+		array
 	);
 }
 
-VScalar va::norm_l0(const VArray& array) {
+VScalar va::norm_l0(const VData& array) {
 	return vreduce<
 		Feature::norm_l0,
 		promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>,
 		VScalar
 	>(
 		REDUCER_LAMBDA(xt::norm_l0),
-		array.data
+		array
 	);
 }
 
-void va::norm_l0(VStoreAllocator& allocator, VArrayTarget target, const VArray& array, const axes_type& axes) {
+void va::norm_l0(VStoreAllocator& allocator, VArrayTarget target, const VData& array, const axes_type& axes) {
 	va::xoperation_inplace<
 		Feature::norm_l0,
 		promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>
@@ -275,22 +275,22 @@ void va::norm_l0(VStoreAllocator& allocator, VArrayTarget target, const VArray& 
 		REDUCER_LAMBDA_AXES(axes, xt::norm_l0),
 		allocator,
 		target,
-		array.data
+		array
 	);
 }
 
-VScalar va::norm_l1(const VArray& array) {
+VScalar va::norm_l1(const VData& array) {
 	return vreduce<
 		Feature::norm_l1,
 		promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>,
 		VScalar
 	>(
 		REDUCER_LAMBDA(xt::norm_l1),
-		array.data
+		array
 	);
 }
 
-void va::norm_l1(VStoreAllocator& allocator, VArrayTarget target, const VArray& array, const axes_type& axes) {
+void va::norm_l1(VStoreAllocator& allocator, VArrayTarget target, const VData& array, const axes_type& axes) {
 	va::xoperation_inplace<
 		Feature::norm_l1,
 		promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>
@@ -298,22 +298,22 @@ void va::norm_l1(VStoreAllocator& allocator, VArrayTarget target, const VArray& 
 		REDUCER_LAMBDA_AXES(axes, xt::norm_l1),
 		allocator,
 		target,
-		array.data
+		array
 	);
 }
 
-VScalar va::norm_l2(const VArray& array) {
+VScalar va::norm_l2(const VData& array) {
 	return vreduce<
 		Feature::norm_l2,
 		promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>,
 		VScalar
 	>(
 		REDUCER_LAMBDA(xt::norm_l2),
-		array.data
+		array
 	);
 }
 
-void va::norm_l2(VStoreAllocator& allocator, VArrayTarget target, const VArray& array, const axes_type& axes) {
+void va::norm_l2(VStoreAllocator& allocator, VArrayTarget target, const VData& array, const axes_type& axes) {
 	va::xoperation_inplace<
 		Feature::norm_l2,
 		promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>
@@ -321,22 +321,22 @@ void va::norm_l2(VStoreAllocator& allocator, VArrayTarget target, const VArray& 
 		REDUCER_LAMBDA_AXES(axes, xt::norm_l2),
 		allocator,
 		target,
-		array.data
+		array
 	);
 }
 
-VScalar va::norm_linf(const VArray& array) {
+VScalar va::norm_linf(const VData& array) {
 	return vreduce<
 		Feature::norm_linf,
 		promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>,
 		VScalar
 	>(
 		REDUCER_LAMBDA(xt::norm_linf),
-		array.data
+		array
 	);
 }
 
-void va::norm_linf(VStoreAllocator& allocator, VArrayTarget target, const VArray& array, const axes_type& axes) {
+void va::norm_linf(VStoreAllocator& allocator, VArrayTarget target, const VData& array, const axes_type& axes) {
 	va::xoperation_inplace<
 		Feature::norm_linf,
 		promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>
@@ -344,38 +344,38 @@ void va::norm_linf(VStoreAllocator& allocator, VArrayTarget target, const VArray
 		REDUCER_LAMBDA_AXES(axes, xt::norm_linf),
 		allocator,
 		target,
-		array.data
+		array
 	);
 }
 
-VScalar va::count_nonzero(VStoreAllocator& allocator, const VArray& array) {
-	if (array.dtype() == va::Bool)
+VScalar va::count_nonzero(VStoreAllocator& allocator, const VData& array) {
+	if (va::dtype(array) == va::Bool)
 		return sum(array);
 
-	const auto is_nonzero = va::copy_as_dtype(allocator, array.data, va::Bool);
-	return va::sum(*is_nonzero);
+	const auto is_nonzero = va::copy_as_dtype(allocator, array, va::Bool);
+	return va::sum(is_nonzero->data);
 }
 
-void va::count_nonzero(VStoreAllocator& allocator, VArrayTarget target, const VArray& array, const axes_type& axes) {
-	if (array.dtype() == va::Bool)
+void va::count_nonzero(VStoreAllocator& allocator, VArrayTarget target, const VData& array, const axes_type& axes) {
+	if (va::dtype(array) == va::Bool)
 		return va::sum(allocator, target, array, axes);
 
-	const auto is_nonzero = va::copy_as_dtype(allocator, array.data, va::Bool);
-	return va::sum(allocator, target, *is_nonzero, axes);
+	const auto is_nonzero = va::copy_as_dtype(allocator, array, va::Bool);
+	return va::sum(allocator, target, is_nonzero->data, axes);
 }
 
-bool va::all(const VArray& array) {
+bool va::all(const VData& array) {
 	return vreduce<
 		Feature::all,
 		promote::reject_complex<promote::x_in_nat_out<bool>>,
 		bool
 	>(
 		REDUCER_LAMBDA_NOECS(xt::all),
-		array.data
+		array
 	);
 }
 
-void va::all(VStoreAllocator& allocator, VArrayTarget target, const VArray& array, const axes_type& axes) {
+void va::all(VStoreAllocator& allocator, VArrayTarget target, const VData& array, const axes_type& axes) {
 	va::xoperation_inplace<
 		Feature::all,
 		promote::reject_complex<promote::x_in_nat_out<bool>>
@@ -383,22 +383,22 @@ void va::all(VStoreAllocator& allocator, VArrayTarget target, const VArray& arra
 		REDUCER_LAMBDA_AXES(axes, va_all),
 		allocator,
 		target,
-		array.data
+		array
 	);
 }
 
-bool va::any(const VArray& array) {
+bool va::any(const VData& array) {
 	return vreduce<
 		Feature::any,
 		promote::reject_complex<promote::x_in_nat_out<bool>>,
 		bool
 	>(
 		REDUCER_LAMBDA_NOECS(xt::any),
-		array.data
+		array
 	);
 }
 
-void va::any(VStoreAllocator& allocator, VArrayTarget target, const VArray& array, const axes_type& axes) {
+void va::any(VStoreAllocator& allocator, VArrayTarget target, const VData& array, const axes_type& axes) {
 	va::xoperation_inplace<
 		Feature::any,
 		promote::reject_complex<promote::x_in_nat_out<bool>>
@@ -406,11 +406,11 @@ void va::any(VStoreAllocator& allocator, VArrayTarget target, const VArray& arra
 		REDUCER_LAMBDA_AXES(axes, va_any),
 		allocator,
 		target,
-		array.data
+		array
 	);
 }
 
-va::VScalar va::reduce_dot(const VArray& a, const VArray& b) {
+va::VScalar va::reduce_dot(const VData& a, const VData& b) {
 	// Could also do this instead to avoid generating more code.
 	// std::shared_ptr<va::VArray> prod_cache;
 	// va::multiply(&prod_cache, a, b);
@@ -430,11 +430,11 @@ va::VScalar va::reduce_dot(const VArray& a, const VArray& b) {
 			 	std::tuple<xt::evaluation_strategy::lazy_type>()
 			)();
 	   },
-		a.data, b.data
+		a, b
 	);
 }
 
-void va::reduce_dot(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& b, const axes_type& axes) {
+void va::reduce_dot(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b, const axes_type& axes) {
 	// Could also do this instead to avoid generating more code.
 	// std::shared_ptr<va::VArray> prod_cache;
 	// va::multiply(&prod_cache, a, b);
@@ -456,13 +456,13 @@ void va::reduce_dot(VStoreAllocator& allocator, VArrayTarget target, const VArra
 			 	std::tuple<xt::evaluation_strategy::lazy_type>()
 			);
 		},
-		allocator, target, a.data, b.data
+		allocator, target, a, b
 	);
 }
 
 void va::trace(VStoreAllocator& allocator, VArrayTarget target, const VArray& varray, std::ptrdiff_t offset, std::ptrdiff_t axis1, std::ptrdiff_t axis2) {
 	const auto diagonal = va::diagonal(varray, offset, axis1, axis2);
-	va::sum(allocator, target, *diagonal, axes_type {-1});
+	va::sum(allocator, target, diagonal->data, axes_type {-1});
 }
 
 VScalar va::trace_to_scalar(const VArray& varray, std::ptrdiff_t offset, std::ptrdiff_t axis1, std::ptrdiff_t axis2) {
@@ -470,5 +470,5 @@ VScalar va::trace_to_scalar(const VArray& varray, std::ptrdiff_t offset, std::pt
 		throw std::runtime_error("array must be 2-D for trace to collapse to a scalar");
 	}
 	const auto diagonal = va::diagonal(varray, offset, axis1, axis2);
-	return va::sum(*diagonal);
+	return va::sum(diagonal->data);
 }

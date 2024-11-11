@@ -67,6 +67,14 @@ std::shared_ptr<VArray> va::moveaxis(const VArray& varray, std::ptrdiff_t src, s
 	);
 }
 
+VData va::moveaxis(const VData& data, std::ptrdiff_t src, std::ptrdiff_t dst) {
+	return map_compute(
+		[src, dst](auto& array) {
+			return xt::moveaxis(array, src, dst);
+		}, data
+	);
+}
+
 std::shared_ptr<VArray> va::flip(const VArray& varray, std::size_t axis) {
 	return map(
 		[axis](auto& array) {
@@ -177,32 +185,33 @@ void move_indices_to_back(T& vec, const I& indices) {
 	);
 }
 
-std::shared_ptr<VArray> va::join_axes_into_last_dimension(const VArray& varray, axes_type axes) {
-	const auto reduction_count = axes.size();
-
-	if (reduction_count == 0) {
-		return std::make_shared<VArray>(varray);
-	}
-
-	auto permutation = axes_type(varray.dimension());
-
-	std::iota(permutation.begin(), permutation.end(), 0);
-	move_indices_to_back(permutation, axes);
-
-	return map(
-		[permutation, reduction_count](auto& carray) {
-			auto transposed = xt::transpose(
-				carray,
-				permutation,
-				xt::check_policy::full {}
-			);
-			shape_type new_shape = transposed.shape();
-			auto reduction_begin = new_shape.end() - reduction_count;
-			*reduction_begin = std::accumulate(reduction_begin, new_shape.end(), static_cast<std::size_t>(1), std::multiplies());
-			new_shape.erase(reduction_begin + 1, new_shape.end());
-			return xt::reshape_view(transposed, new_shape);
-		}, varray
-	);
+std::shared_ptr<VArray> va::join_axes_into_last_dimension(const VData& varray, axes_type axes) {
+	throw std::runtime_error("join_axes_into_last_dimension not implemented");
+	// const auto reduction_count = axes.size();
+	//
+	// if (reduction_count == 0) {
+	// 	return std::make_shared<VArray>(varray);
+	// }
+	//
+	// auto permutation = axes_type(varray.dimension());
+	//
+	// std::iota(permutation.begin(), permutation.end(), 0);
+	// move_indices_to_back(permutation, axes);
+	//
+	// return map(
+	// 	[permutation, reduction_count](auto& carray) {
+	// 		auto transposed = xt::transpose(
+	// 			carray,
+	// 			permutation,
+	// 			xt::check_policy::full {}
+	// 		);
+	// 		shape_type new_shape = transposed.shape();
+	// 		auto reduction_begin = new_shape.end() - reduction_count;
+	// 		*reduction_begin = std::accumulate(reduction_begin, new_shape.end(), static_cast<std::size_t>(1), std::multiplies());
+	// 		new_shape.erase(reduction_begin + 1, new_shape.end());
+	// 		return xt::reshape_view(transposed, new_shape);
+	// 	}, varray
+	// );
 }
 
 std::shared_ptr<VArray> reinterpret_complex_as_floats(const std::shared_ptr<VArray>& varray, std::ptrdiff_t offset, bool add_dimension) {

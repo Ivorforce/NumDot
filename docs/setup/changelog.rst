@@ -20,6 +20,7 @@ Upcoming Changes (main branch)
 - Added ``any`` layout type, which may bring tiny speed improvements.
 - Added ``fft`` function.
 - Added ``pad`` function.
+- Added ``cross`` function.
 - Added ``ndarray.buffer_size`` and ``ndarray.buffer_dtype`` functions for investigation of underlying buffer types.
 - Added bitwise functions (``bitwise_and``, ``bitwise_or``, ``bitwise_xor``, ``bitwise_not``, ``bitwise_left_shift``, ``bitwise_right_shift``).
 - Added matrix ``diagonal``, ``diag`` and ``trace`` functions.

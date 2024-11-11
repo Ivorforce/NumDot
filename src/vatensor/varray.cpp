@@ -88,7 +88,7 @@ std::shared_ptr<va::VArray> va::VArray::sliced(const xt::xstrided_slice_vector& 
     );
 }
 
-va::VData va::VArray::sliced_data(const xt::xstrided_slice_vector& slices) const {
+va::VData va::sliced_data(const VData& data, const xt::xstrided_slice_vector& slices) {
     return std::visit(
         [&slices](const auto& read) -> va::VData {
             std::ptrdiff_t new_offset = 0;  // Not needed

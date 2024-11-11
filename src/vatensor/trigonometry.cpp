@@ -12,7 +12,7 @@
 
 using namespace va;
 
-void va::sin(VStoreAllocator& allocator, VArrayTarget target, const VArray& array) {
+void va::sin(VStoreAllocator& allocator, VArrayTarget target, const VData& array) {
 	xoperation_inplace<
 		Feature::sin,
 		promote::num_function_result_in_same_out<xt::math::sin_fun>
@@ -20,11 +20,11 @@ void va::sin(VStoreAllocator& allocator, VArrayTarget target, const VArray& arra
 		va::XFunction<xt::math::sin_fun> {},
 		allocator,
 		target,
-		array.data
+		array
 	);
 }
 
-void va::cos(VStoreAllocator& allocator, VArrayTarget target, const VArray& array) {
+void va::cos(VStoreAllocator& allocator, VArrayTarget target, const VData& array) {
 	xoperation_inplace<
 		Feature::cos,
 		promote::num_function_result_in_same_out<xt::math::cos_fun>
@@ -32,11 +32,11 @@ void va::cos(VStoreAllocator& allocator, VArrayTarget target, const VArray& arra
 		va::XFunction<xt::math::cos_fun> {},
 		allocator,
 		target,
-		array.data
+		array
 	);
 }
 
-void va::tan(VStoreAllocator& allocator, VArrayTarget target, const VArray& array) {
+void va::tan(VStoreAllocator& allocator, VArrayTarget target, const VData& array) {
 	xoperation_inplace<
 		Feature::tan,
 		promote::num_function_result_in_same_out<xt::math::tan_fun>
@@ -44,11 +44,11 @@ void va::tan(VStoreAllocator& allocator, VArrayTarget target, const VArray& arra
 		va::XFunction<xt::math::tan_fun> {},
 		allocator,
 		target,
-		array.data
+		array
 	);
 }
 
-void va::asin(VStoreAllocator& allocator, VArrayTarget target, const VArray& array) {
+void va::asin(VStoreAllocator& allocator, VArrayTarget target, const VData& array) {
 	xoperation_inplace<
 		Feature::asin,
 		promote::num_function_result_in_same_out<xt::math::asin_fun>
@@ -56,11 +56,11 @@ void va::asin(VStoreAllocator& allocator, VArrayTarget target, const VArray& arr
 		va::XFunction<xt::math::asin_fun> {},
 		allocator,
 		target,
-		array.data
+		array
 	);
 }
 
-void va::acos(VStoreAllocator& allocator, VArrayTarget target, const VArray& array) {
+void va::acos(VStoreAllocator& allocator, VArrayTarget target, const VData& array) {
 	xoperation_inplace<
 		Feature::acos,
 		promote::num_function_result_in_same_out<xt::math::acos_fun>
@@ -68,11 +68,11 @@ void va::acos(VStoreAllocator& allocator, VArrayTarget target, const VArray& arr
 		va::XFunction<xt::math::acos_fun> {},
 		allocator,
 		target,
-		array.data
+		array
 	);
 }
 
-void va::atan(VStoreAllocator& allocator, VArrayTarget target, const VArray& array) {
+void va::atan(VStoreAllocator& allocator, VArrayTarget target, const VData& array) {
 	xoperation_inplace<
 		Feature::atan,
 		promote::num_function_result_in_same_out<xt::math::atan_fun>
@@ -80,11 +80,11 @@ void va::atan(VStoreAllocator& allocator, VArrayTarget target, const VArray& arr
 		va::XFunction<xt::math::atan_fun> {},
 		allocator,
 		target,
-		array.data
+		array
 	);
 }
 
-void va::atan2(VStoreAllocator& allocator, VArrayTarget target, const VArray& x1, const VArray& x2) {
+void va::atan2(VStoreAllocator& allocator, VArrayTarget target, const VData& x1, const VData& x2) {
 	xoperation_inplace<
 		Feature::atan2,
 		promote::reject_complex<promote::num_function_result_in_same_out<xt::math::atan2_fun>>
@@ -92,12 +92,12 @@ void va::atan2(VStoreAllocator& allocator, VArrayTarget target, const VArray& x1
 		va::XFunction<xt::math::atan2_fun> {},
 		allocator,
 		target,
-		x1.data,
-		x2.data
+		x1,
+		x2
 	);
 }
 
-void va::sinh(VStoreAllocator& allocator, VArrayTarget target, const VArray& array) {
+void va::sinh(VStoreAllocator& allocator, VArrayTarget target, const VData& array) {
 	xoperation_inplace<
 		Feature::sinh,
 		promote::num_function_result_in_same_out<xt::math::sinh_fun>
@@ -105,11 +105,11 @@ void va::sinh(VStoreAllocator& allocator, VArrayTarget target, const VArray& arr
 		va::XFunction<xt::math::sinh_fun> {},
 		allocator,
 		target,
-		array.data
+		array
 	);
 }
 
-void va::cosh(VStoreAllocator& allocator, VArrayTarget target, const VArray& array) {
+void va::cosh(VStoreAllocator& allocator, VArrayTarget target, const VData& array) {
 	xoperation_inplace<
 		Feature::cosh,
 		promote::num_function_result_in_same_out<xt::math::cosh_fun>
@@ -117,11 +117,11 @@ void va::cosh(VStoreAllocator& allocator, VArrayTarget target, const VArray& arr
 		va::XFunction<xt::math::cosh_fun> {},
 		allocator,
 		target,
-		array.data
+		array
 	);
 }
 
-void va::tanh(VStoreAllocator& allocator, VArrayTarget target, const VArray& array) {
+void va::tanh(VStoreAllocator& allocator, VArrayTarget target, const VData& array) {
 	xoperation_inplace<
 		Feature::tanh,
 		promote::num_function_result_in_same_out<xt::math::tanh_fun>
@@ -129,11 +129,11 @@ void va::tanh(VStoreAllocator& allocator, VArrayTarget target, const VArray& arr
 		va::XFunction<xt::math::tanh_fun> {},
 		allocator,
 		target,
-		array.data
+		array
 	);
 }
 
-void va::asinh(VStoreAllocator& allocator, VArrayTarget target, const VArray& array) {
+void va::asinh(VStoreAllocator& allocator, VArrayTarget target, const VData& array) {
 	xoperation_inplace<
 		Feature::asinh,
 		promote::num_function_result_in_same_out<xt::math::asinh_fun>
@@ -141,11 +141,11 @@ void va::asinh(VStoreAllocator& allocator, VArrayTarget target, const VArray& ar
 		va::XFunction<xt::math::asinh_fun> {},
 		allocator,
 		target,
-		array.data
+		array
 	);
 }
 
-void va::acosh(VStoreAllocator& allocator, VArrayTarget target, const VArray& array) {
+void va::acosh(VStoreAllocator& allocator, VArrayTarget target, const VData& array) {
 	xoperation_inplace<
 		Feature::acosh,
 		promote::num_function_result_in_same_out<xt::math::acosh_fun>
@@ -153,11 +153,11 @@ void va::acosh(VStoreAllocator& allocator, VArrayTarget target, const VArray& ar
 		va::XFunction<xt::math::acosh_fun> {},
 		allocator,
 		target,
-		array.data
+		array
 	);
 }
 
-void va::atanh(VStoreAllocator& allocator, VArrayTarget target, const VArray& array) {
+void va::atanh(VStoreAllocator& allocator, VArrayTarget target, const VData& array) {
 	xoperation_inplace<
 		Feature::atanh,
 		promote::num_function_result_in_same_out<xt::math::atanh_fun>
@@ -165,10 +165,10 @@ void va::atanh(VStoreAllocator& allocator, VArrayTarget target, const VArray& ar
 		va::XFunction<xt::math::atanh_fun> {},
 		allocator,
 		target,
-		array.data
+		array
 	);
 }
 
 void va::angle(VStoreAllocator& allocator, VArrayTarget target, const std::shared_ptr<VArray>& array) {
-	va::atan2(allocator, target, *va::imag(array), *va::real(array));
+	va::atan2(allocator, target, va::imag(array)->data, va::real(array)->data);
 }

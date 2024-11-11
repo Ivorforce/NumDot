@@ -208,6 +208,7 @@ public:
 	Ref<NDArray> assign_dot(const Variant& a, const Variant& b);
 	Ref<NDArray> assign_reduce_dot(const Variant& a, const Variant& b, const Variant& axes);
 	Ref<NDArray> assign_matmul(const Variant& a, const Variant& b);
+	Ref<NDArray> assign_cross(const Variant& a, const Variant& b, int64_t axisa=-1, int64_t axisb=-1, int64_t axisc=-1);
 
 	// Convolutions
 	Ref<NDArray> assign_convolve(const Variant& array, const Variant& kernel);

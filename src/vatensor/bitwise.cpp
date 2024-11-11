@@ -12,7 +12,7 @@
 using namespace va;
 
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
-void bitwise_and(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VScalar& b) {
+void bitwise_and(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VScalar& b) {
 	va::xoperation_inplace<
 		Feature::bitwise_and,
 		promote::common_int_in_same_out
@@ -20,13 +20,13 @@ void bitwise_and(VStoreAllocator& allocator, VArrayTarget target, const VArray& 
 		va::XFunction<xt::detail::bitwise_and> {},
 		allocator,
 		target,
-		a.data,
+		a,
 		b
 	);
 }
 #endif
 
-void va::bitwise_and(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& b) {
+void va::bitwise_and(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b) {
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	OPTIMIZE_COMMUTATIVE(::bitwise_and, allocator, target, a, b);
 #endif
@@ -38,13 +38,13 @@ void va::bitwise_and(VStoreAllocator& allocator, VArrayTarget target, const VArr
 		XFunction<xt::detail::bitwise_and> {},
 		allocator,
 		target,
-		a.data,
-		b.data
+		a,
+		b
 	);
 }
 
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
-void bitwise_or(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VScalar& b) {
+void bitwise_or(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VScalar& b) {
 	va::xoperation_inplace<
 		Feature::bitwise_or,
 		promote::common_int_in_same_out
@@ -52,13 +52,13 @@ void bitwise_or(VStoreAllocator& allocator, VArrayTarget target, const VArray& a
 		va::XFunction<xt::detail::bitwise_or> {},
 		allocator,
 		target,
-		a.data,
+		a,
 		b
 	);
 }
 #endif
 
-void va::bitwise_or(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& b) {
+void va::bitwise_or(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b) {
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	OPTIMIZE_COMMUTATIVE(::bitwise_or, allocator, target, a, b);
 #endif
@@ -70,13 +70,13 @@ void va::bitwise_or(VStoreAllocator& allocator, VArrayTarget target, const VArra
 		XFunction<xt::detail::bitwise_or> {},
 		allocator,
 		target,
-		a.data,
-		b.data
+		a,
+		b
 	);
 }
 
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
-void bitwise_xor(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VScalar& b) {
+void bitwise_xor(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VScalar& b) {
 	va::xoperation_inplace<
 		Feature::bitwise_xor,
 		promote::common_int_in_same_out
@@ -84,13 +84,13 @@ void bitwise_xor(VStoreAllocator& allocator, VArrayTarget target, const VArray& 
 		va::XFunction<xt::detail::bitwise_xor> {},
 		allocator,
 		target,
-		a.data,
+		a,
 		b
 	);
 }
 #endif
 
-void va::bitwise_xor(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& b) {
+void va::bitwise_xor(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b) {
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	OPTIMIZE_COMMUTATIVE(::bitwise_xor, allocator, target, a, b);
 #endif
@@ -102,12 +102,12 @@ void va::bitwise_xor(VStoreAllocator& allocator, VArrayTarget target, const VArr
 		XFunction<xt::detail::bitwise_xor> {},
 		allocator,
 		target,
-		a.data,
-		b.data
+		a,
+		b
 	);
 }
 
-void va::bitwise_not(VStoreAllocator& allocator, VArrayTarget target, const VArray& a) {
+void va::bitwise_not(VStoreAllocator& allocator, VArrayTarget target, const VData& a) {
 	va::xoperation_inplace<
 		Feature::bitwise_not,
 		promote::common_int_in_same_out
@@ -115,12 +115,12 @@ void va::bitwise_not(VStoreAllocator& allocator, VArrayTarget target, const VArr
 		XFunction<xt::detail::bitwise_not> {},
 		allocator,
 		target,
-		a.data
+		a
 	);
 }
 
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
-void bitwise_left_shift(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VScalar& b) {
+void bitwise_left_shift(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VScalar& b) {
 	va::xoperation_inplace<
 		Feature::bitwise_left_shift,
 		promote::left_of_ints_in_same_out
@@ -128,13 +128,13 @@ void bitwise_left_shift(VStoreAllocator& allocator, VArrayTarget target, const V
 		va::XFunction<xt::detail::left_shift> {},
 		allocator,
 		target,
-		a.data,
+		a,
 		b
 	);
 }
 #endif
 
-void va::bitwise_left_shift(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& b) {
+void va::bitwise_left_shift(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b) {
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	OPTIMIZE_COMMUTATIVE(::bitwise_left_shift, allocator, target, a, b);
 #endif
@@ -146,13 +146,13 @@ void va::bitwise_left_shift(VStoreAllocator& allocator, VArrayTarget target, con
 		XFunction<xt::detail::left_shift> {},
 		allocator,
 		target,
-		a.data,
-		b.data
+		a,
+		b
 	);
 }
 
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
-void bitwise_right_shift(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VScalar& b) {
+void bitwise_right_shift(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VScalar& b) {
 	va::xoperation_inplace<
 		Feature::bitwise_right_shift,
 		promote::left_of_ints_in_same_out
@@ -160,13 +160,13 @@ void bitwise_right_shift(VStoreAllocator& allocator, VArrayTarget target, const 
 		va::XFunction<xt::detail::right_shift> {},
 		allocator,
 		target,
-		a.data,
+		a,
 		b
 	);
 }
 #endif
 
-void va::bitwise_right_shift(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const VArray& b) {
+void va::bitwise_right_shift(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b) {
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	OPTIMIZE_COMMUTATIVE(::bitwise_right_shift, allocator, target, a, b);
 #endif
@@ -178,7 +178,7 @@ void va::bitwise_right_shift(VStoreAllocator& allocator, VArrayTarget target, co
 		XFunction<xt::detail::right_shift> {},
 		allocator,
 		target,
-		a.data,
-		b.data
+		a,
+		b
 	);
 }

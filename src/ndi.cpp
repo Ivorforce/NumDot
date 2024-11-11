@@ -51,10 +51,10 @@ inline int64_t reduction(Visitor&& visitor, const Args&... args) {
 }
 
 #define REDUCTION1(func, varray1) \
-	reduction([](const va::VArray& array) { return va::func(array); }, (varray1))
+	reduction([](const va::VArray& array) { return va::func(array.data); }, (varray1))
 
 #define REDUCTION2(func, varray1, varray2) \
-	reduction([](const va::VArray& x1, const va::VArray& x2) { return va::func(x1, x2); }, (varray1), (varray2))
+	reduction([](const va::VArray& x1, const va::VArray& x2) { return va::func(x1.data, x2.data); }, (varray1), (varray2))
 
 int64_t ndi::sum(const Variant& a) {
 	return REDUCTION1(sum, a);
@@ -102,7 +102,7 @@ int64_t ndi::norm(const Variant& a, const Variant& ord) {
 
 int64_t ndi::count_nonzero(const Variant& a) {
 	return reduction([](const va::VArray& array) {
-		return va::count_nonzero(va::store::default_allocator, array);
+		return va::count_nonzero(va::store::default_allocator, array.data);
 	}, a);
 }
 

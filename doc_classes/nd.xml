@@ -273,6 +273,18 @@
 				Returns a 0-dimension scalar if axes is null. In that case, consider [method ndi.count_nonzero].
 			</description>
 		</method>
+		<method name="cross" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<param index="2" name="axisa" type="int" default="-1" />
+			<param index="3" name="axisb" type="int" default="-1" />
+			<param index="4" name="axisc" type="int" default="-1" />
+			<description>
+				Return the cross product of two (arrays of) vectors.
+				The cross product of a and b in R3 is a vector perpendicular to both a and b. If a and b are arrays of vectors, the vectors are defined by the last axis of a and b by default, and these axes can have dimensions 2 or 3. Where the dimension of either a or b is 2, the third component of the input vector is assumed to be zero and the cross product calculated accordingly. In cases where both input vectors have dimension 2, the z-component of the cross product is returned.
+			</description>
+		</method>
 		<method name="default_rng" qualifiers="static">
 			<return type="NDRandomGenerator" />
 			<param index="0" name="seed" type="Variant" default="null" />

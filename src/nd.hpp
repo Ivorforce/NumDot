@@ -198,6 +198,7 @@ public:
 	static Ref<NDArray> dot(const Variant& a, const Variant& b);
 	static Ref<NDArray> reduce_dot(const Variant& a, const Variant& b, const Variant& axes);
 	static Ref<NDArray> matmul(const Variant& a, const Variant& b);
+	static Ref<NDArray> cross(const Variant& a, const Variant& b, int64_t axisa=-1, int64_t axisb=-1, int64_t axisc=-1);
 
 	// Convolutions.
 	static Ref<NDArray> sliding_window_view(const Variant& array, const Variant& window_shape);

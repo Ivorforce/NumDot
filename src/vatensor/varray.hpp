@@ -102,6 +102,7 @@ namespace va {
     [[nodiscard]] std::size_t dimension(const VData& read);
     [[nodiscard]] std::size_t size_of_array_in_bytes(const VData& read);
 
+    VData sliced_data(const VData& data, const xt::xstrided_slice_vector& slices);
     [[nodiscard]] VScalar to_single_value(const VData& read);
 
     class VStore {
@@ -142,7 +143,9 @@ namespace va {
         void prepare_write() { store->prepare_write(data, data_offset); }
 
         [[nodiscard]] std::shared_ptr<VArray> sliced(const xt::xstrided_slice_vector& slices) const;
-        [[nodiscard]] VData sliced_data(const xt::xstrided_slice_vector& slices) const;
+        [[nodiscard]] VData sliced_data(const xt::xstrided_slice_vector& slices) const {
+            return va::sliced_data(data, slices);
+        };
 
         explicit operator bool() const;
         explicit operator int64_t() const;
@@ -190,16 +193,21 @@ namespace va {
     }
 
     template<typename S, typename VT = typename S::value_type>
+    static VData compute_from_surrogate(const S& surrogate, VT* data) {
+        return make_compute<VT*>(
+            data + surrogate.data_offset(),
+            surrogate.shape(),
+            surrogate.strides(),
+            surrogate.layout()
+        );
+    }
+
+    template<typename S, typename VT = typename S::value_type>
     static std::shared_ptr<VArray> from_surrogate(const VArray& varray, const S& surrogate, VT* data) {
         return std::make_shared<VArray>(
             VArray {
                 std::shared_ptr(varray.store),
-                make_compute<VT*>(
-                    data + surrogate.data_offset(),
-                    surrogate.shape(),
-                    surrogate.strides(),
-                    surrogate.layout()
-                ),
+                compute_from_surrogate(surrogate, data),
                 varray.data_offset + static_cast<std::ptrdiff_t>(surrogate.data_offset())
             }
         );

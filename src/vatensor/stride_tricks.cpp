@@ -68,5 +68,5 @@ void va::convolve(VStoreAllocator& allocator, VArrayTarget target, const VArray&
 	axes_type axes(convolve_dimensions);
 	for (int i = 0; i < convolve_dimensions; i++) axes[i] = -convolve_dimensions + i;
 
-	va::reduce_dot(allocator, target, *sliding_view, kernel, axes);
+	va::reduce_dot(allocator, target, sliding_view->data, kernel.data, axes);
 }

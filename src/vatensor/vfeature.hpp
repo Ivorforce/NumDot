@@ -27,6 +27,7 @@ namespace va {
 		greater_equal,
 		less,
 		less_equal,
+		is_close,
 		array_equal,
 		all_close,
 

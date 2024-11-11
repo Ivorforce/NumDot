@@ -547,6 +547,18 @@
 				Equivalent to [code]nd.as_array(array, nd.DType.Int64)[/code].
 			</description>
 		</method>
+		<method name="is_close" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<param index="2" name="rtol" type="float" default="1e-05" />
+			<param index="3" name="atol" type="float" default="1e-08" />
+			<param index="4" name="equal_nan" type="bool" default="false" />
+			<description>
+				Returns a boolean array where two arrays are element-wise equal within a tolerance.
+				The tolerance values are positive, typically very small numbers. The relative difference (rtol * abs(b)) and the absolute difference atol are added together to compare against the absolute difference between a and b.
+			</description>
+		</method>
 		<method name="less" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />

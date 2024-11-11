@@ -158,6 +158,8 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`int64<class_nd_method_int64>`\ (\ array\: ``Variant``\ ) |static|                                                                                                                     |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`is_close<class_nd_method_is_close>`\ (\ a\: ``Variant``, b\: ``Variant``, rtol\: ``float`` = 1e-05, atol\: ``float`` = 1e-08, equal_nan\: ``bool`` = false\ ) |static|                |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`less<class_nd_method_less>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                          |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`less_equal<class_nd_method_less_equal>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                              |
@@ -1318,6 +1320,20 @@ Equivalent to ``nd.as_array(array, nd.DType.Int32)``.
 Convert to an int64 dtype tensor.
 
 Equivalent to ``nd.as_array(array, nd.DType.Int64)``.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_is_close:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **is_close**\ (\ a\: ``Variant``, b\: ``Variant``, rtol\: ``float`` = 1e-05, atol\: ``float`` = 1e-08, equal_nan\: ``bool`` = false\ ) |static| :ref:`🔗<class_nd_method_is_close>`
+
+Returns a boolean array where two arrays are element-wise equal within a tolerance.
+
+The tolerance values are positive, typically very small numbers. The relative difference (rtol \* abs(b)) and the absolute difference atol are added together to compare against the absolute difference between a and b.
 
 .. rst-class:: classref-item-separator
 

@@ -177,6 +177,7 @@ public:
 	static Ref<NDArray> greater_equal(const Variant& a, const Variant& b);
 	static Ref<NDArray> less(const Variant& a, const Variant& b);
 	static Ref<NDArray> less_equal(const Variant& a, const Variant& b);
+	static Ref<NDArray> is_close(const Variant& a, const Variant& b, double_t rtol, double_t atol, bool equal_nan);
 
 	// Logical.
 	static Ref<NDArray> logical_and(const Variant& a, const Variant& b);

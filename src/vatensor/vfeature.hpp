@@ -27,6 +27,8 @@ namespace va {
 		greater_equal,
 		less,
 		less_equal,
+		array_equal,
+		all_close,
 
 		sum,
 		prod,
@@ -97,7 +99,7 @@ namespace va {
 		fft,
 		pad,
 
-		count
+		count,
 	};
 
 	#define FEATURE_NAME_CASE(feature_case) \
@@ -129,6 +131,8 @@ namespace va {
 			FEATURE_NAME_CASE(greater_equal)
 			FEATURE_NAME_CASE(less)
 			FEATURE_NAME_CASE(less_equal)
+			FEATURE_NAME_CASE(array_equal)
+			FEATURE_NAME_CASE(all_close)
 
 			FEATURE_NAME_CASE(sum)
 			FEATURE_NAME_CASE(prod)
@@ -189,6 +193,8 @@ namespace va {
 
 			FEATURE_NAME_CASE(rad2deg)
 			FEATURE_NAME_CASE(deg2rad)
+
+			FEATURE_NAME_CASE(cross)
 
 			FEATURE_NAME_CASE(random_float)
 			FEATURE_NAME_CASE(random_int)

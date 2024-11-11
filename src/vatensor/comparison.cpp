@@ -5,6 +5,7 @@
 #include "varray.hpp"                             // for VArray, VArr...
 #include "vcompute.hpp"                            // for XFunction
 #include "vpromote.hpp"                                    // for common_num_i...
+#include "xtensor/xmath.hpp"                           // for layout_type
 #include "xtensor/xlayout.hpp"                           // for layout_type
 #include "xtensor/xoperation.hpp"                        // for equal_to
 
@@ -253,4 +254,46 @@ void va::less_equal(VStoreAllocator& allocator, VArrayTarget target, const VData
 		a,
 		b
 	);
+}
+
+bool va::array_equal(const VData& a, const VData& b) {
+	return va::vreduce<
+		Feature::array_equal,
+		promote::common_in_nat_out,
+		bool
+	>(
+		[](auto&& a, auto&& b) -> bool {
+			return xt::all(xt::equal(std::forward<decltype(a)>(a), std::forward<decltype(b)>(b)));
+		},
+		a,
+		b
+	);
+}
+
+template <typename A, typename B>
+bool all_close(const A& a, const B& b, double rtol, double atol, bool equal_nan) {
+	return va::vreduce<
+		Feature::all_close,
+		promote::common_in_nat_out,
+		bool
+	>(
+		[rtol, atol, equal_nan](auto&& a, auto&& b) -> bool {
+			return xt::all(xt::isclose(std::forward<decltype(a)>(a), std::forward<decltype(b)>(b), rtol, atol, equal_nan));
+		},
+		a,
+		b
+	);
+}
+
+bool va::all_close(const VData& a, const VData& b, double rtol, double atol, bool equal_nan) {
+#ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
+	if (va::dimension(a) == 0) {
+		return ::all_close(b, va::to_single_value(a), rtol, atol, equal_nan);
+	}
+	if (va::dimension(b) == 0) {
+		return ::all_close(a, va::to_single_value(b), rtol, atol, equal_nan);
+	}
+#endif
+
+	return ::all_close(a, b, rtol, atol, equal_nan);
 }

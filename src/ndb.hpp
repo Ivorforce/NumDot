@@ -21,6 +21,9 @@ public:
 	// Logical.
 	static bool all(const Variant& a);
 	static bool any(const Variant& a);
+
+	static bool array_equal(const Variant& a, const Variant& b);
+	static bool all_close(const Variant& a, const Variant& b, double_t rtol, double_t atol, bool equal_nan);
 };
 
 #endif

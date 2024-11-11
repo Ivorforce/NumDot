@@ -25,6 +25,7 @@ Upcoming Changes (main branch)
 - Added bitwise functions (``bitwise_and``, ``bitwise_or``, ``bitwise_xor``, ``bitwise_not``, ``bitwise_left_shift``, ``bitwise_right_shift``).
 - Added matrix ``diagonal``, ``diag`` and ``trace`` functions.
 - Added ``transpose`` and ``flatten`` to ``NDArray`` methods.
+- Added ``array_equal`` and ``all_close`` functions.
 
 **Changed**
 

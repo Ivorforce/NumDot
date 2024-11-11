@@ -11,4 +11,12 @@ if (va::dimension(B_ARRAY) == 0) {\
 	return;\
 }
 
+#define OPTIMIZE_COMMUTATIVE_REDUCTION(FN_NAME, A_ARRAY, B_ARRAY)\
+if (va::dimension(A_ARRAY) == 0) {\
+	return FN_NAME(B_ARRAY, va::to_single_value(A_ARRAY));\
+}\
+if (va::dimension(B_ARRAY) == 0) {\
+	return FN_NAME(A_ARRAY, va::to_single_value(B_ARRAY));\
+}
+
 #endif //SCALAR_TRICKS_HPP

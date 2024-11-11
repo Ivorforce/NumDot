@@ -29,11 +29,15 @@ Methods
 .. table::
    :widths: auto
 
-   +----------+------------------------------------------------------------------+
-   | ``bool`` | :ref:`all<class_ndb_method_all>`\ (\ a\: ``Variant``\ ) |static| |
-   +----------+------------------------------------------------------------------+
-   | ``bool`` | :ref:`any<class_ndb_method_any>`\ (\ a\: ``Variant``\ ) |static| |
-   +----------+------------------------------------------------------------------+
+   +----------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool`` | :ref:`all<class_ndb_method_all>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                |
+   +----------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool`` | :ref:`all_close<class_ndb_method_all_close>`\ (\ a\: ``Variant``, b\: ``Variant``, rtol\: ``float`` = 1e-05, atol\: ``float`` = 1e-08, equal_nan\: ``bool`` = false\ ) |static| |
+   +----------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool`` | :ref:`any<class_ndb_method_any>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                |
+   +----------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool`` | :ref:`array_equal<class_ndb_method_array_equal>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                               |
+   +----------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 .. rst-class:: classref-section-separator
 
@@ -56,6 +60,22 @@ No-axis equivalent of :ref:`nd.all<class_nd_method_all>` that returns a bool.
 
 ----
 
+.. _class_ndb_method_all_close:
+
+.. rst-class:: classref-method
+
+``bool`` **all_close**\ (\ a\: ``Variant``, b\: ``Variant``, rtol\: ``float`` = 1e-05, atol\: ``float`` = 1e-08, equal_nan\: ``bool`` = false\ ) |static| :ref:`🔗<class_ndb_method_all_close>`
+
+Returns True if two arrays are element-wise equal within a tolerance.
+
+The tolerance values are positive, typically very small numbers. The relative difference (rtol \* abs(b)) and the absolute difference atol are added together to compare against the absolute difference between a and b.
+
+NaNs are treated as equal if they are in the same place and if equal_nan=true. Infs are treated as equal if they are in the same place and of the same sign in both arrays.
+
+.. rst-class:: classref-item-separator
+
+----
+
 .. _class_ndb_method_any:
 
 .. rst-class:: classref-method
@@ -63,6 +83,18 @@ No-axis equivalent of :ref:`nd.all<class_nd_method_all>` that returns a bool.
 ``bool`` **any**\ (\ a\: ``Variant``\ ) |static| :ref:`🔗<class_ndb_method_any>`
 
 No-axis equivalent of :ref:`nd.any<class_nd_method_any>` that returns a bool.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ndb_method_array_equal:
+
+.. rst-class:: classref-method
+
+``bool`` **array_equal**\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static| :ref:`🔗<class_ndb_method_array_equal>`
+
+true if two arrays have the same shape and elements, false otherwise.
 
 .. |virtual| replace:: :abbr:`virtual (This method should typically be overridden by the user to have any effect.)`
 .. |const| replace:: :abbr:`const (This method has no side effects. It doesn't modify any of the instance's member variables.)`

@@ -32,7 +32,7 @@ To set up the codebase, you need to build godot-cpp once:
 
     cd godot-cpp
     # Replace platform with one of [macos, windows, linux]
-    scons platform=<platform>
+    scons
     cd ..
 
 Building NumDot locally
@@ -43,19 +43,19 @@ You should test your changes locally before submitting anything. The ``demo`` pr
 .. code-block:: bash
 
    # Replace platform with one of [macos, windows, linux]
-   scons platform=<platform> install_dir=demo target=template_debug
+   scons dev_build=yes install_dir=demo
 
 **For macOS Users:** You should (currently) specify the target arch (``x86_64`` or ``arm64``) to avoid unnecessarily building a universal version, which takes twice as long.
 
 .. code-block:: bash
 
-   scons platform=windows install_dir=demo target=template_debug arch=x86_64
+   scons dev_build=yes install_dir=demo arch=x86_64
 
 **For Windows Users:** It is recommended to use `MinGW <https://www.mingw-w64.org/>`__ to compile the project, as it more closely mimics Unix build semantics than MSVC. MinGW must be added to ``PATH``, and specified in the build command like so:
 
 .. code-block:: bash
 
-   scons platform=windows install_dir=demo target=template_debug use-mingw=yes
+   scons dev_build=yes install_dir=demo use-mingw=yes
 
 You should now be able to open the Demo project (``demo`` in the repository) in Godot, and test your build.
 
@@ -67,7 +67,7 @@ You've set up your repository, and you've managed to test NumDot in the demo. Gr
 Making a cross-platform build
 -----------------------------
 
-If you've forked the repository before, all you need to do now is trigger a build. Click on the ``Actions`` tab in your GitHub repository page (e.g. ``https://github.com/YourName/NumDot/actions``), and navigate to ``Build GDExtension``. Click the button ``Run workflow``, and wait for it to complete. Click the finished workflow, and download the zip file offered at the bottom. All you need to do now is extract its contents into your game project.
+With a fork, all you need to do now is trigger a build. Click on the ``Actions`` tab in your GitHub repository page (e.g. ``https://github.com/YourName/NumDot/actions``), and navigate to ``Build GDExtension``. Click the button ``Run workflow``, and wait for it to complete. Click the finished workflow, and download the zip file offered at the bottom. All you need to do now is extract its contents into your game project.
 
 CLion Support
 -------------

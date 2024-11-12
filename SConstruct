@@ -93,7 +93,7 @@ is_release = not _text2bool(ARGUMENTS.get("dev_build", "no"))
 
 if ARGUMENTS.get("optimize", None) is None and is_release:
     # The default godot-cpp optimizes for speed for release builds.
-    if ARGUMENTS["platform"] == "web" and ARGUMENTS.get("target", "template_debug") == "template_debug":
+    if ARGUMENTS["platform"] == "web" and ARGUMENTS.get("target", "template_debug") == "template_release":
         # For web, optimize binary size, can shrink by ~30%.
         ARGUMENTS["optimize"] = "size"
 

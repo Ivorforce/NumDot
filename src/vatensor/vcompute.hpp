@@ -157,7 +157,7 @@ namespace va {
 
     // This function mostly exists to make it easier for the compiler to de-duplicate code.
     template<typename PromotionRule, typename FX, typename... Args>
-    static void vfunction_monotype(FX&& fx, VStoreAllocator& allocator, const VArrayTarget& target, const Args&... args) {
+    static void vfunction_monotype(const FX& fx, VStoreAllocator& allocator, const VArrayTarget& target, const Args&... args) {
         using InputType = promote::value_type_v<std::tuple_element_t<0, std::tuple<std::decay_t<Args>...>>>;
         static_assert(
             (std::is_same_v<promote::value_type_v<std::decay_t<Args>>, InputType> && ...),
@@ -165,7 +165,7 @@ namespace va {
         );
 
         // Result of visitor invocation
-        const auto result = std::forward<FX>(fx)(args...);
+        const auto result = fx(args...);
 
         using NaturalOutputType = typename std::decay_t<decltype(result)>::value_type;
         using OutputType = typename PromotionRule::template output_type<InputType, NaturalOutputType>;
@@ -174,9 +174,9 @@ namespace va {
     }
 
     template<Feature feature, typename PromotionRule, typename FX, typename... Args>
-    static void xoperation_inplace(FX&& fx, VStoreAllocator& allocator, const VArrayTarget& target, const Args&... args) {
+    static void xoperation_inplace(const FX& fx, VStoreAllocator& allocator, const VArrayTarget& target, const Args&... args) {
         visit_if_enabled<feature>(
-            [fx = std::forward<FX>(fx), &allocator, &target](const auto&... args) {
+            [&fx, &allocator, &target](const auto&... args) {
                 using InputType = typename PromotionRule::template input_type<promote::value_type_v<std::decay_t<decltype(args)>>...>;
 
                 if constexpr (std::is_same_v<InputType, void>) {
@@ -187,7 +187,7 @@ namespace va {
                 }
                 else {
                     vfunction_monotype<PromotionRule>(
-                        std::move(fx),
+                        fx,
                         allocator,
                         target,
                         promote::deref_promoted<InputType>(promote::promote_value_type_if_needed<InputType>(args))...
@@ -200,7 +200,7 @@ namespace va {
 
     // This function mostly exists to make it easier for the compiler to de-duplicate code.
     template<typename PromotionRule, typename ReturnType, typename FX, typename... Args>
-    static ReturnType vreduction_monotype(FX&& fx, const Args&... args) {
+    static ReturnType vreduction_monotype(const FX& fx, const Args&... args) {
         using InputType = promote::value_type_v<std::tuple_element_t<0, std::tuple<std::decay_t<Args>...>>>;
         static_assert(
             (std::is_same_v<promote::value_type_v<std::decay_t<Args>>, InputType> && ...),
@@ -212,14 +212,14 @@ namespace va {
         using OStorable = compatible_type_or_64_bit_t<OutputType, VScalar>;
 
         // TODO Some xt functions support passing the output type. That would be FAR better than casting it afterwards as here.
-        const auto result = OStorable(std::forward<FX>(fx)(args...));
+        const auto result = OStorable(fx(args...));
         return static_cast<ReturnType>(result);
     }
 
     template<Feature feature, typename PromotionRule, typename ReturnType, typename FX, typename... Args>
-    static ReturnType vreduce(FX&& fx, const Args&... args) {
+    static ReturnType vreduce(const FX& fx, const Args&... args) {
         return visit_if_enabled<feature>(
-            [fx = std::forward<FX>(fx)](const auto&... args) -> ReturnType {
+            [&fx](const auto&... args) -> ReturnType {
                 using InputType = typename PromotionRule::template input_type<promote::value_type_v<std::decay_t<decltype(args)>>...>;
 
                 if constexpr (std::is_same_v<InputType, void>) {
@@ -230,7 +230,7 @@ namespace va {
                 }
                 else {
                     return vreduction_monotype<PromotionRule, ReturnType>(
-                        std::move(fx),
+                        fx,
                         promote::deref_promoted<InputType>(promote::promote_value_type_if_needed<InputType>(args))...
                     );
                 }

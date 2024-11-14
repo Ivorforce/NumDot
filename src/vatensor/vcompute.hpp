@@ -186,7 +186,12 @@ namespace va {
                     throw std::runtime_error("Cannot promote in this way.");
                 }
                 else {
-                    vfunction_monotype<PromotionRule>(std::move(fx), allocator, target, promote::promote_value_type_if_needed<InputType>(args)...);
+                    vfunction_monotype<PromotionRule>(
+                        std::move(fx),
+                        allocator,
+                        target,
+                        promote::deref_promoted<InputType>(promote::promote_value_type_if_needed<InputType>(args))...
+                    );
                 }
             },
             args...
@@ -224,7 +229,10 @@ namespace va {
                     throw std::runtime_error("Cannot promote in this way.");
                 }
                 else {
-                    return vreduction_monotype<PromotionRule, ReturnType>(std::move(fx), promote::promote_value_type_if_needed<InputType>(args)...);
+                    return vreduction_monotype<PromotionRule, ReturnType>(
+                        std::move(fx),
+                        promote::deref_promoted<InputType>(promote::promote_value_type_if_needed<InputType>(args))...
+                    );
                 }
             },
             args...

@@ -10,8 +10,12 @@ Here you will find the release notes for each version of the library. Each secti
    :local:
    :backlinks: none
 
-.. Upcoming Changes (main branch)
-.. ------------------------------
+Upcoming Changes (main branch)
+------------------------------
+
+**Changed**
+
+- Reduction of duplicated generated code reduced the binary size by 15%.
 
 Version 0.7 - 2024-11-12
 ------------------------

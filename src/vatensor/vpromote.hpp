@@ -5,6 +5,8 @@
 #include <xtensor/xexpression.hpp>
 #include <xtensor/xoperation.hpp>
 #include <xtl/xcomplex.hpp>
+#include "create.hpp"
+#include "xtensor_store.hpp"
 
 namespace va {
 	namespace promote {
@@ -54,14 +56,10 @@ namespace va {
 			std::negation<std::is_same<T, bool>>
 		> {};
 
-		template<typename NeededType, typename T, std::enable_if_t<!std::is_same_v<NeededType, value_type_v<std::decay_t<T>>>, int> = 0>
+		template <typename NeededType, typename T, std::enable_if_t<!std::is_same_v<NeededType, value_type_v<std::decay_t<T>>>, int> = 0>
 		auto promote_value_type_if_needed(const T& arg) {
 			if constexpr (std::is_fundamental_v<std::decay_t<T>> || xtl::is_complex<std::decay_t<T>>::value) {
 				return static_cast<NeededType>(arg);
-			}
-			else if constexpr (xtl::is_complex<NeededType>::value) {
-				// FIXME Not auto-convertible like below for some reason
-				return xt::xarray<NeededType>(xt::cast<NeededType>(arg));
 			}
 			else {
 				// Casting can considerably increase performance (from a small test, it was 25%).
@@ -71,14 +69,31 @@ namespace va {
 #ifdef NUMDOT_CAST_INSTEAD_OF_COPY_FOR_ARGUMENTS
 				return xt::cast<NeededType>(std::forward<T>(arg));
 #else
-				return xt::xarray<NeededType>(arg);
+				return va::copy_as_dtype(va::store::default_allocator, arg, dtype_of_type<NeededType>());
 #endif
 			}
 		}
 
-		template<typename NeededType, typename T, std::enable_if_t<std::is_same_v<NeededType, value_type_v<std::decay_t<T>>>, int> = 0>
+		template <typename NeededType, typename T, std::enable_if_t<std::is_same_v<NeededType, value_type_v<std::decay_t<T>>>, int> = 0>
 		const auto& promote_value_type_if_needed(const T& arg) {
 			return arg;
+		}
+
+		template <typename NeededType, typename T, std::enable_if_t<std::is_same_v<NeededType, value_type_v<std::decay_t<T>>>, int> = 0>
+		T deref_promoted(T&& t) {
+			// Primitives etc.
+			return std::forward<T>(t);
+		}
+
+		template <typename NeededType, typename T, std::enable_if_t<std::is_same_v<NeededType, value_type_v<std::decay_t<T>>>, int> = 0>
+		const T& deref_promoted(const T& t) {
+			// Primitives etc.
+			return t;
+		}
+
+		template <typename NeededType>
+		const compute_case<NeededType*>& deref_promoted(const std::shared_ptr<VArray> &t) {
+			return std::get<compute_case<NeededType*>>(t->data);
 		}
 
 		template <typename Need, typename Have, std::enable_if_t<std::is_same_v<std::decay_t<Need>, std::decay_t<Have>>, int> = 0>

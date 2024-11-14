@@ -196,7 +196,7 @@ PackedInt64Array NDArray::shape() const {
 	PackedInt64Array packed;
 	const auto& shape = array->shape();
 	packed.resize(static_cast<int64_t>(shape.size()));
-	std::copy(shape.begin(), shape.end(), packed.ptrw());
+	std::copy_n(shape.begin(), shape.size(), packed.ptrw());
 	return packed;
 }
 
@@ -227,7 +227,7 @@ PackedInt64Array NDArray::strides() const {
 	PackedInt64Array packed;
 	const auto& strides = array->strides();
 	packed.resize(static_cast<int64_t>(strides.size()));
-	std::copy(strides.begin(), strides.end(), packed.ptrw());
+	std::copy_n(strides.begin(), strides.size(), packed.ptrw());
 	return packed;
 }
 

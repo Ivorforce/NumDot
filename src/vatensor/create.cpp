@@ -78,7 +78,7 @@ std::shared_ptr<VArray> va::empty(VStoreAllocator& allocator, DType dtype, const
 std::shared_ptr<VArray> va::eye(VStoreAllocator& allocator, DType dtype, const shape_type& shape, int k) {
 	// For some reason, xt::eye wants this specific type
 	auto shape_eye = std::vector<std::size_t>(shape.size());
-	std::copy(shape.begin(), shape.end(), shape_eye.begin());
+	std::copy_n(shape.begin(), shape.size(), shape_eye.begin());
 
 	return std::visit(
 		[&shape_eye, &allocator, k](auto t) -> std::shared_ptr<VArray> {

@@ -39,9 +39,9 @@ std::shared_ptr<va::VArray> va::sliding_window_view(const VArray& array, const s
 	std::copy_n(array_shape.begin(), overlap_start_dim_idx, new_shape.begin());
 	std::copy_n(array_strides.begin(), overlap_start_dim_idx, new_strides.begin());
 	// Copy the window shape over.
-	std::copy(window_shape.begin(), window_shape.end(), new_shape.begin() + dimension);
+	std::copy_n(window_shape.begin(), window_shape.size(), new_shape.begin() + dimension);
 	// Copy the strides over. They are the same for the old and new dimensions.
-	std::copy(array_strides.begin(), array_strides.end(), new_strides.begin());
+	std::copy_n(array_strides.begin(), array_strides.size(), new_strides.begin());
 	std::copy_n(array_strides.begin(), window_shape.size(), new_strides.begin() + dimension);
 
 	// Now for the overlapping parts. That's just shape for the array.

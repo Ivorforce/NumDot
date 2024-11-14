@@ -8,7 +8,7 @@ namespace va::util {
 			throw std::runtime_error("Cannot promote in this way.");
 		}
 		else {
-			std::copy(carray.begin(), carray.end(), target);
+			std::copy_n(carray.begin(), carray.size(), target);
 		}
 	}
 

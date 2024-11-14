@@ -271,8 +271,8 @@ xt::svector<xt::svector<size_type>> array_to_indices(const A& indices) {
 	xt::svector<xt::svector<size_type>> xindices(num_indices);
 	for (int i = 0; i < xindices.size(); ++i) {
 		xt::svector<size_type> xidx(num_dimensions);
-		std::copy(indices.begin() + i * strides[0], indices.begin() + (i + 1) * strides[0], xidx.begin());
-		xindices[i] = xidx;
+		std::copy_n(indices.begin() + i * strides[0], (i + 1) * strides[0], xidx.begin());
+		xindices[i] = std::move(xidx);
 	}
 	return xindices;
 }

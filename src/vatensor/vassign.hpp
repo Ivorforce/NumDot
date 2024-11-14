@@ -25,9 +25,9 @@ namespace va {
 	void assign(VData& array, const VData& value);
 	void assign(VData& array, VScalar value);
 
-	void assign(VStoreAllocator& allocator, VArrayTarget target, const VData& value);
-	void assign_cast(VStoreAllocator& allocator, VArrayTarget target, const VData& value, DType dtype);
-	void assign(VArrayTarget target, VScalar value);
+	void assign(VStoreAllocator& allocator, const VArrayTarget& target, const VData& value);
+	void assign_cast(VStoreAllocator& allocator, const VArrayTarget& target, const VData& value, DType dtype);
+	void assign(const VArrayTarget& target, VScalar value);
 
 	std::shared_ptr<VArray> get_at_mask(VStoreAllocator& allocator, const VData& varray, const VData& mask);
 	void set_at_mask(VData& varray, VData& mask, VData& value);

@@ -108,7 +108,7 @@ void va::assign(VData& array, VScalar value) {
 	);
 }
 
-void va::assign(VStoreAllocator& allocator, VArrayTarget target, const VData& value) {
+void va::assign(VStoreAllocator& allocator, const VArrayTarget& target, const VData& value) {
 	std::visit(
 		[&value, &allocator](auto target) {
 			if constexpr (std::is_same_v<decltype(target), VData*>) {
@@ -121,7 +121,7 @@ void va::assign(VStoreAllocator& allocator, VArrayTarget target, const VData& va
 	);
 }
 
-void va::assign_cast(VStoreAllocator& allocator, VArrayTarget target, const VData& value, DType dtype) {
+void va::assign_cast(VStoreAllocator& allocator, const VArrayTarget& target, const VData& value, DType dtype) {
 	if (va::dtype(value) == dtype) {
 		// No cast necessary, just assign.
 		va::assign(allocator, target, value);
@@ -143,7 +143,7 @@ void va::assign_cast(VStoreAllocator& allocator, VArrayTarget target, const VDat
 	);
 }
 
-void va::assign(VArrayTarget target, VScalar value) {
+void va::assign(const VArrayTarget& target, VScalar value) {
 	std::visit(
 		[value](auto target) {
 			if constexpr (std::is_same_v<decltype(target), VData*>) {

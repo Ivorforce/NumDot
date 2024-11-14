@@ -17,7 +17,7 @@
 using namespace va;
 
 template <typename A, typename B>
-void equal_to(VStoreAllocator& allocator, VArrayTarget target, const A& a, const B& b) {
+void equal_to(VStoreAllocator& allocator, const VArrayTarget& target, const A& a, const B& b) {
 	va::xoperation_inplace<
 		Feature::equal_to,
 		promote::common_in_nat_out
@@ -30,7 +30,7 @@ void equal_to(VStoreAllocator& allocator, VArrayTarget target, const A& a, const
 	);
 }
 
-void va::equal_to(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b) {
+void va::equal_to(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b) {
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 
 // FIXME NEON xtensor / xsimd has a compile-time bug, see
@@ -45,7 +45,7 @@ void va::equal_to(VStoreAllocator& allocator, VArrayTarget target, const VData& 
 }
 
 template <typename A, typename B>
-void not_equal_to(VStoreAllocator& allocator, VArrayTarget target, const A& a, const B& b) {
+void not_equal_to(VStoreAllocator& allocator, const VArrayTarget& target, const A& a, const B& b) {
 	va::xoperation_inplace<
 		Feature::not_equal_to,
 		promote::common_in_nat_out
@@ -58,7 +58,7 @@ void not_equal_to(VStoreAllocator& allocator, VArrayTarget target, const A& a, c
 	);
 }
 
-void va::not_equal_to(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b) {
+void va::not_equal_to(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b) {
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 #if !(defined(__aarch64__) || defined(_M_ARM64) || defined(__ARM_NEON) || defined(_M_ARM))
 	OPTIMIZE_COMMUTATIVE(::not_equal_to, allocator, target, a, b);
@@ -69,7 +69,7 @@ void va::not_equal_to(VStoreAllocator& allocator, VArrayTarget target, const VDa
 }
 
 template <typename A, typename B>
-void greater(VStoreAllocator& allocator, VArrayTarget target, const A& a, const B& b) {
+void greater(VStoreAllocator& allocator, const VArrayTarget& target, const A& a, const B& b) {
 	va::xoperation_inplace<
 		Feature::greater,
 		promote::reject_complex<promote::num_in_nat_out>
@@ -82,7 +82,7 @@ void greater(VStoreAllocator& allocator, VArrayTarget target, const A& a, const 
 	);
 }
 
-void va::greater(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b) {
+void va::greater(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b) {
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	OPTIMIZE_NONCOMMUTATIVE(::greater, allocator, target, a, b);
 #endif
@@ -91,7 +91,7 @@ void va::greater(VStoreAllocator& allocator, VArrayTarget target, const VData& a
 }
 
 template <typename A, typename B>
-void greater_equal(VStoreAllocator& allocator, VArrayTarget target, const A& a, const B& b) {
+void greater_equal(VStoreAllocator& allocator, const VArrayTarget& target, const A& a, const B& b) {
 	va::xoperation_inplace<
 		Feature::greater_equal,
 		promote::reject_complex<promote::num_in_nat_out>
@@ -104,7 +104,7 @@ void greater_equal(VStoreAllocator& allocator, VArrayTarget target, const A& a, 
 	);
 }
 
-void va::greater_equal(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b) {
+void va::greater_equal(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b) {
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	OPTIMIZE_NONCOMMUTATIVE(::greater_equal, allocator, target, a, b);
 #endif
@@ -113,7 +113,7 @@ void va::greater_equal(VStoreAllocator& allocator, VArrayTarget target, const VD
 }
 
 template <typename A, typename B>
-void less(VStoreAllocator& allocator, VArrayTarget target, const A& a, const B& b) {
+void less(VStoreAllocator& allocator, const VArrayTarget& target, const A& a, const B& b) {
 	va::xoperation_inplace<
 		Feature::less,
 		promote::reject_complex<promote::num_in_nat_out>
@@ -126,7 +126,7 @@ void less(VStoreAllocator& allocator, VArrayTarget target, const A& a, const B& 
 	);
 }
 
-void va::less(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b) {
+void va::less(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b) {
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	OPTIMIZE_NONCOMMUTATIVE(::less, allocator, target, a, b);
 #endif
@@ -135,7 +135,7 @@ void va::less(VStoreAllocator& allocator, VArrayTarget target, const VData& a, c
 }
 
 template <typename A, typename B>
-void less_equal(VStoreAllocator& allocator, VArrayTarget target, const A& a, const B& b) {
+void less_equal(VStoreAllocator& allocator, const VArrayTarget& target, const A& a, const B& b) {
 	va::xoperation_inplace<
 		Feature::less_equal,
 		promote::reject_complex<promote::num_in_nat_out>
@@ -148,7 +148,7 @@ void less_equal(VStoreAllocator& allocator, VArrayTarget target, const A& a, con
 	);
 }
 
-void va::less_equal(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b) {
+void va::less_equal(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b) {
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	OPTIMIZE_NONCOMMUTATIVE(::less_equal, allocator, target, a, b);
 #endif
@@ -157,7 +157,7 @@ void va::less_equal(VStoreAllocator& allocator, VArrayTarget target, const VData
 }
 
 template <typename A, typename B>
-void is_close(VStoreAllocator& allocator, VArrayTarget target, const A& a, const B& b, double rtol, double atol, bool equal_nan) {
+void is_close(VStoreAllocator& allocator, const VArrayTarget& target, const A& a, const B& b, double rtol, double atol, bool equal_nan) {
 	va::xoperation_inplace<
 		Feature::is_close,
 		promote::common_in_nat_out
@@ -172,7 +172,7 @@ void is_close(VStoreAllocator& allocator, VArrayTarget target, const A& a, const
 	);
 }
 
-void va::is_close(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b, double rtol, double atol, bool equal_nan) {
+void va::is_close(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b, double rtol, double atol, bool equal_nan) {
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	if (va::dimension(a) == 0) {
 		::is_close(allocator, target, b, va::to_single_value(a), rtol, atol, equal_nan);
@@ -187,7 +187,7 @@ void va::is_close(VStoreAllocator& allocator, VArrayTarget target, const VData& 
 	::is_close(allocator, target, a, b, rtol, atol, equal_nan);
 }
 
-void va::is_nan(VStoreAllocator& allocator, VArrayTarget target, const VData& a) {
+void va::is_nan(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a) {
 	va::xoperation_inplace<
 		Feature::is_nan,
 		promote::num_in_nat_out
@@ -199,7 +199,7 @@ void va::is_nan(VStoreAllocator& allocator, VArrayTarget target, const VData& a)
 	);
 }
 
-void va::is_finite(VStoreAllocator& allocator, VArrayTarget target, const VData& a) {
+void va::is_finite(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a) {
 	va::xoperation_inplace<
 		Feature::is_finite,
 		promote::num_in_nat_out
@@ -211,7 +211,7 @@ void va::is_finite(VStoreAllocator& allocator, VArrayTarget target, const VData&
 	);
 }
 
-void va::is_inf(VStoreAllocator& allocator, VArrayTarget target, const VData& a) {
+void va::is_inf(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a) {
 	va::xoperation_inplace<
 		Feature::is_inf,
 		promote::num_in_nat_out

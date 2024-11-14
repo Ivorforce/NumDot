@@ -4,7 +4,7 @@
 #include "vcompute.hpp"
 #include "xtensor-signal/fft.hpp"
 
-void va::fft(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, std::ptrdiff_t axis) {
+void va::fft(VStoreAllocator& allocator, const VArrayTarget& target, const VArray& a, std::ptrdiff_t axis) {
 	va::xoperation_inplace<
 		Feature::fft,
 		promote::num_matching_complex_or_default_in_same_out<double_t>
@@ -33,7 +33,7 @@ std::shared_ptr<va::VArray> va::fft_freq(VStoreAllocator& allocator, std::size_t
 	return array;
 }
 
-void va::pad(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const std::vector<std::vector<std::size_t>>& pad_width, xt::pad_mode pad_mode, VScalar pad_value) {
+void va::pad(VStoreAllocator& allocator, const VArrayTarget& target, const VArray& a, const std::vector<std::vector<std::size_t>>& pad_width, xt::pad_mode pad_mode, VScalar pad_value) {
 	va::xoperation_inplace<
 		Feature::pad,
 		promote::common_in_same_out
@@ -48,12 +48,12 @@ void va::pad(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, c
 	);
 }
 
-void va::pad(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const std::vector<std::size_t>& pad_width, xt::pad_mode pad_mode, VScalar pad_value) {
+void va::pad(VStoreAllocator& allocator, const VArrayTarget& target, const VArray& a, const std::vector<std::size_t>& pad_width, xt::pad_mode pad_mode, VScalar pad_value) {
 	const std::vector pw(a.dimension(), pad_width);
 	pad(allocator, target, a, pw, pad_mode, pad_value);
 }
 
-void va::pad(VStoreAllocator& allocator, VArrayTarget target, const VArray& a, const size_t& pad_width, xt::pad_mode pad_mode, VScalar pad_value) {
+void va::pad(VStoreAllocator& allocator, const VArrayTarget& target, const VArray& a, const size_t& pad_width, xt::pad_mode pad_mode, VScalar pad_value) {
 	const std::vector pw(a.dimension(), std::vector {pad_width, pad_width});
 	pad(allocator, target, a, pw, pad_mode, pad_value);
 }

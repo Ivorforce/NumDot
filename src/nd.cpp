@@ -297,27 +297,27 @@ Ref<NDArray> like_visit(Visitor&& visitor, const Variant& model, nd::DType dtype
 }
 
 #define VARRAY_MAP1(func, varray1) \
-	map_variants_as_arrays_with_target([](const va::VArrayTarget target, const std::shared_ptr<va::VArray>& varray) {\
+	map_variants_as_arrays_with_target([](const va::VArrayTarget& target, const std::shared_ptr<va::VArray>& varray) {\
         va::func(va::store::default_allocator, target, varray->data);\
     }, (varray1))
 
 #define VARRAY_MAP2(func, varray1, varray2) \
-	map_variants_as_arrays_with_target([](const va::VArrayTarget target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b) {\
+	map_variants_as_arrays_with_target([](const va::VArrayTarget& target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b) {\
         va::func(va::store::default_allocator, target, a->data, b->data);\
     }, (varray1), (varray2))
 
 #define VARRAY_MAP3(func, varray1, varray2, varray3) \
-	map_variants_as_arrays_with_target([](const va::VArrayTarget target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b, const std::shared_ptr<va::VArray>& c) {\
+	map_variants_as_arrays_with_target([](const va::VArrayTarget& target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b, const std::shared_ptr<va::VArray>& c) {\
         va::func(va::store::default_allocator, target, a->data, b->data, c->data);\
     }, (varray1), (varray2), (varray3))
 
 #define REDUCTION1(func, varray1, axes1) \
-	reduction([](const va::VArrayTarget target, const va::axes_type& axes, const va::VArray& array) {\
+	reduction([](const va::VArrayTarget& target, const va::axes_type& axes, const va::VArray& array) {\
 		va::func(va::store::default_allocator, target, array.data, axes);\
 	}, [](const va::VArray& array) { return va::func(array.data); }, axes, (varray1))
 
 #define REDUCTION2(func, varray1, varray2, axes1) \
-	reduction([](const va::VArrayTarget target, const va::axes_type& axes, const va::VArray& carray1, const va::VArray& carray2) {\
+	reduction([](const va::VArrayTarget& target, const va::axes_type& axes, const va::VArray& carray1, const va::VArray& carray2) {\
 		va::func(va::store::default_allocator, target, carray1.data, carray2.data, axes);\
 	}, [](const va::VArray& carray1, const va::VArray& carray2) {\
 		return va::func(carray1.data, carray2.data);\
@@ -634,7 +634,7 @@ Ref<NDArray> nd::diag(const Variant& v, int64_t offset) {
 }
 
 Ref<NDArray> nd::trace(const Variant& v, int64_t offset, int64_t axis1, int64_t axis2) {
-	return map_variants_as_arrays_with_target([offset, axis1, axis2](const va::VArrayTarget target, const std::shared_ptr<va::VArray>& varray) {
+	return map_variants_as_arrays_with_target([offset, axis1, axis2](const va::VArrayTarget& target, const std::shared_ptr<va::VArray>& varray) {
 		va::trace(va::store::default_allocator, target, *varray, offset, axis1, axis2);
 	}, v);
 }
@@ -843,7 +843,7 @@ Ref<NDArray> nd::conjugate(const Variant& a) {
 }
 
 Ref<NDArray> nd::angle(const Variant& a) {
-	return map_variants_as_arrays_with_target([](const va::VArrayTarget target, const std::shared_ptr<va::VArray>& varray) {
+	return map_variants_as_arrays_with_target([](const va::VArrayTarget& target, const std::shared_ptr<va::VArray>& varray) {
 		va::angle(va::store::default_allocator, target, varray);
 	}, a);
 }
@@ -1045,7 +1045,7 @@ Ref<NDArray> nd::norm(const Variant& a, const Variant& ord, const Variant& axes)
 }
 
 Ref<NDArray> nd::count_nonzero(const Variant& a, const Variant& axes) {
-	return reduction([](const va::VArrayTarget target, const va::axes_type& axes, const va::VArray& array) {
+	return reduction([](const va::VArrayTarget& target, const va::axes_type& axes, const va::VArray& array) {
 		va::count_nonzero(va::store::default_allocator, target, array.data, axes);
 	}, [](const va::VArray& array) { return va::count_nonzero(va::store::default_allocator, array.data); }, axes, a);
 }
@@ -1096,7 +1096,7 @@ Ref<NDArray> nd::less_equal(const Variant& a, const Variant& b) {
 }
 
 Ref<NDArray> nd::is_close(const Variant& a, const Variant& b, double_t rtol, double_t atol, bool equal_nan) {
-	return map_variants_as_arrays_with_target([rtol, atol, equal_nan](const va::VArrayTarget target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b) {
+	return map_variants_as_arrays_with_target([rtol, atol, equal_nan](const va::VArrayTarget& target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b) {
 		va::is_close(va::store::default_allocator, target, a->data, b->data, rtol, atol, equal_nan);
 	}, a, b);
 }
@@ -1174,7 +1174,7 @@ Ref<NDArray> nd::matmul(const Variant& a, const Variant& b) {
 }
 
 Ref<NDArray> nd::cross(const Variant& a, const Variant& b, int64_t axisa, int64_t axisb, int64_t axisc) {
-	return map_variants_as_arrays_with_target([axisa, axisb, axisc](const va::VArrayTarget target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b) {
+	return map_variants_as_arrays_with_target([axisa, axisb, axisc](const va::VArrayTarget& target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b) {
 		va::cross(va::store::default_allocator, target, a->data, b->data, axisa, axisb, axisc);
 	}, a, b);
 }
@@ -1192,7 +1192,7 @@ Ref<NDArray> nd::sliding_window_view(const Variant& array, const Variant& window
 }
 
 Ref<NDArray> nd::convolve(const Variant& array, const Variant& kernel) {
-	return map_variants_as_arrays_with_target([](const va::VArrayTarget target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b) {
+	return map_variants_as_arrays_with_target([](const va::VArrayTarget& target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b) {
 		va::convolve(va::store::default_allocator, target, *a, *b);
 	}, array, kernel);
 }
@@ -1208,7 +1208,7 @@ Ref<NDRandomGenerator> nd::default_rng(const Variant& seed) {
 }
 
 Ref<NDArray> nd::fft(const Variant& array, const int64_t axis) {
-	return map_variants_as_arrays_with_target([axis](const va::VArrayTarget target, const std::shared_ptr<va::VArray>& a) {
+	return map_variants_as_arrays_with_target([axis](const va::VArrayTarget& target, const std::shared_ptr<va::VArray>& a) {
 		va::fft(va::store::default_allocator, target, *a, axis);
 	}, array);
 }
@@ -1235,7 +1235,7 @@ xt::pad_mode pad_mode_to_xt_pad_mode(const nd::PadMode pad_mode) {
 }
 
 Ref<NDArray> nd::pad(const Variant& array, const Variant& pad_width, PadMode pad_mode, const Variant& pad_value) {
-	return map_variants_as_arrays_with_target([pad_mode, &pad_value, &pad_width](const va::VArrayTarget target, const std::shared_ptr<va::VArray>& a) {
+	return map_variants_as_arrays_with_target([pad_mode, &pad_value, &pad_width](const va::VArrayTarget& target, const std::shared_ptr<va::VArray>& a) {
 		const auto pad_value_scalar = variant_to_vscalar(pad_value);
 		const auto pad_width_variant = variant_to_pad_variant(pad_width);
 		const auto pad_mode_xt = pad_mode_to_xt_pad_mode(pad_mode);

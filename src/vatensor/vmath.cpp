@@ -12,11 +12,11 @@
 
 using namespace va;
 
-void va::positive(VStoreAllocator& allocator, VArrayTarget target, const VData& a) {
+void va::positive(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a) {
 	va::assign(allocator, target, a);
 }
 
-void va::negative(VStoreAllocator& allocator, VArrayTarget target, const VData& a) {
+void va::negative(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a) {
 	va::xoperation_inplace<
 		Feature::negative,
 		promote::num_or_error_in_same_out
@@ -29,7 +29,7 @@ void va::negative(VStoreAllocator& allocator, VArrayTarget target, const VData& 
 }
 
 template <typename A, typename B>
-void add(VStoreAllocator& allocator, VArrayTarget target, const A& a, const B& b) {
+void add(VStoreAllocator& allocator, const VArrayTarget& target, const A& a, const B& b) {
 	va::xoperation_inplace<
 		Feature::add,
 		promote::num_function_result_in_same_out<xt::detail::plus>
@@ -42,7 +42,7 @@ void add(VStoreAllocator& allocator, VArrayTarget target, const A& a, const B& b
 	);
 }
 
-void va::add(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b) {
+void va::add(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b) {
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	OPTIMIZE_COMMUTATIVE(::add, allocator, target, a, b);
 #endif
@@ -51,7 +51,7 @@ void va::add(VStoreAllocator& allocator, VArrayTarget target, const VData& a, co
 }
 
 template <typename A, typename B>
-void subtract(VStoreAllocator& allocator, VArrayTarget target, const A& a, const B& b) {
+void subtract(VStoreAllocator& allocator, const VArrayTarget& target, const A& a, const B& b) {
 	va::xoperation_inplace<
 		Feature::subtract,
 		promote::num_function_result_in_same_out<xt::detail::minus>
@@ -64,7 +64,7 @@ void subtract(VStoreAllocator& allocator, VArrayTarget target, const A& a, const
 	);
 }
 
-void va::subtract(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b) {
+void va::subtract(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b) {
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	OPTIMIZE_NONCOMMUTATIVE(::subtract, allocator, target, a, b);
 #endif
@@ -73,7 +73,7 @@ void va::subtract(VStoreAllocator& allocator, VArrayTarget target, const VData& 
 }
 
 template <typename A, typename B>
-void multiply(VStoreAllocator& allocator, VArrayTarget target, const A& a, const B& b) {
+void multiply(VStoreAllocator& allocator, const VArrayTarget& target, const A& a, const B& b) {
 	va::xoperation_inplace<
 		Feature::multiply,
 		promote::num_function_result_in_same_out<xt::detail::multiplies>
@@ -86,7 +86,7 @@ void multiply(VStoreAllocator& allocator, VArrayTarget target, const A& a, const
 	);
 }
 
-void va::multiply(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b) {
+void va::multiply(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b) {
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	OPTIMIZE_COMMUTATIVE(::multiply, allocator, target, a, b);
 #endif
@@ -95,7 +95,7 @@ void va::multiply(VStoreAllocator& allocator, VArrayTarget target, const VData& 
 }
 
 template <typename A, typename B>
-void divide(VStoreAllocator& allocator, VArrayTarget target, const A& a, const B& b) {
+void divide(VStoreAllocator& allocator, const VArrayTarget& target, const A& a, const B& b) {
 	va::xoperation_inplace<
 		Feature::divide,
 		promote::num_function_result_in_same_out<xt::detail::divides>
@@ -108,7 +108,7 @@ void divide(VStoreAllocator& allocator, VArrayTarget target, const A& a, const B
 	);
 }
 
-void va::divide(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b) {
+void va::divide(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b) {
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	OPTIMIZE_NONCOMMUTATIVE(::divide, allocator, target, a, b);
 #endif
@@ -117,7 +117,7 @@ void va::divide(VStoreAllocator& allocator, VArrayTarget target, const VData& a,
 }
 
 template <typename A, typename B>
-void remainder(VStoreAllocator& allocator, VArrayTarget target, const A& a, const B& b) {
+void remainder(VStoreAllocator& allocator, const VArrayTarget& target, const A& a, const B& b) {
 	va::xoperation_inplace<
 		Feature::remainder,
 		promote::reject_complex<promote::num_function_result_in_same_out<xt::math::remainder_fun>>
@@ -130,7 +130,7 @@ void remainder(VStoreAllocator& allocator, VArrayTarget target, const A& a, cons
 	);
 }
 
-void va::remainder(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b) {
+void va::remainder(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b) {
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	OPTIMIZE_NONCOMMUTATIVE(::remainder, allocator, target, a, b);
 #endif
@@ -139,7 +139,7 @@ void va::remainder(VStoreAllocator& allocator, VArrayTarget target, const VData&
 }
 
 template <typename A, typename B>
-void pow(VStoreAllocator& allocator, VArrayTarget target, const A& a, const B& b) {
+void pow(VStoreAllocator& allocator, const VArrayTarget& target, const A& a, const B& b) {
 	va::xoperation_inplace<
 		Feature::pow,
 		promote::num_function_result_in_same_out<xt::math::pow_fun>
@@ -152,7 +152,7 @@ void pow(VStoreAllocator& allocator, VArrayTarget target, const A& a, const B& b
 	);
 }
 
-void va::pow(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b) {
+void va::pow(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b) {
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	OPTIMIZE_NONCOMMUTATIVE(::pow, allocator, target, a, b);
 #endif
@@ -161,7 +161,7 @@ void va::pow(VStoreAllocator& allocator, VArrayTarget target, const VData& a, co
 }
 
 template <typename A, typename B>
-void minimum(VStoreAllocator& allocator, VArrayTarget target, const A& a, const B& b) {
+void minimum(VStoreAllocator& allocator, const VArrayTarget& target, const A& a, const B& b) {
 	va::xoperation_inplace<
 		Feature::minimum,
 		promote::reject_complex<promote::common_in_same_out>
@@ -174,7 +174,7 @@ void minimum(VStoreAllocator& allocator, VArrayTarget target, const A& a, const 
 	);
 }
 
-void va::minimum(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b) {
+void va::minimum(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b) {
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	OPTIMIZE_COMMUTATIVE(::minimum, allocator, target, a, b);
 #endif
@@ -183,7 +183,7 @@ void va::minimum(VStoreAllocator& allocator, VArrayTarget target, const VData& a
 }
 
 template <typename A, typename B>
-void maximum(VStoreAllocator& allocator, VArrayTarget target, const A& a, const B& b) {
+void maximum(VStoreAllocator& allocator, const VArrayTarget& target, const A& a, const B& b) {
 	va::xoperation_inplace<
 		Feature::maximum,
 		promote::reject_complex<promote::common_in_same_out>
@@ -196,7 +196,7 @@ void maximum(VStoreAllocator& allocator, VArrayTarget target, const A& a, const 
 	);
 }
 
-void va::maximum(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b) {
+void va::maximum(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b) {
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	OPTIMIZE_COMMUTATIVE(::maximum, allocator, target, a, b);
 #endif
@@ -205,7 +205,7 @@ void va::maximum(VStoreAllocator& allocator, VArrayTarget target, const VData& a
 }
 
 template <typename A, typename B, typename C>
-void clip(VStoreAllocator& allocator, VArrayTarget target, const A& a, const B& lo, const C& hi) {
+void clip(VStoreAllocator& allocator, const VArrayTarget& target, const A& a, const B& lo, const C& hi) {
 	va::xoperation_inplace<
 		Feature::clip,
 		promote::reject_complex<promote::common_in_same_out>
@@ -219,7 +219,7 @@ void clip(VStoreAllocator& allocator, VArrayTarget target, const A& a, const B& 
 	);
 }
 
-void va::clip(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& lo, const VData& hi) {
+void va::clip(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& lo, const VData& hi) {
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	// TODO Check binary size add and perhaps just use min and max.
 
@@ -232,7 +232,7 @@ void va::clip(VStoreAllocator& allocator, VArrayTarget target, const VData& a, c
 	::clip(allocator, target, a, lo, hi);
 }
 
-void va::sign(VStoreAllocator& allocator, VArrayTarget target, const VData& array) {
+void va::sign(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
 	xoperation_inplace<
 		Feature::sign,
 		promote::reject_complex<promote::common_in_same_out>
@@ -244,7 +244,7 @@ void va::sign(VStoreAllocator& allocator, VArrayTarget target, const VData& arra
 	);
 }
 
-void va::abs(VStoreAllocator& allocator, VArrayTarget target, const VData& array) {
+void va::abs(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
 	xoperation_inplace<
 		Feature::abs,
 		promote::num_in_nat_out
@@ -265,7 +265,7 @@ struct square_fun {
 	}
 };
 
-void va::square(VStoreAllocator& allocator, VArrayTarget target, const VData& array) {
+void va::square(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
 	xoperation_inplace<
 		Feature::square,
 		promote::common_in_same_out
@@ -277,7 +277,7 @@ void va::square(VStoreAllocator& allocator, VArrayTarget target, const VData& ar
 	);
 }
 
-void va::sqrt(VStoreAllocator& allocator, VArrayTarget target, const VData& array) {
+void va::sqrt(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
 	xoperation_inplace<
 		Feature::sqrt,
 		promote::num_function_result_in_same_out<xt::math::sqrt_fun>
@@ -289,7 +289,7 @@ void va::sqrt(VStoreAllocator& allocator, VArrayTarget target, const VData& arra
 	);
 }
 
-void va::exp(VStoreAllocator& allocator, VArrayTarget target, const VData& array) {
+void va::exp(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
 	xoperation_inplace<
 		Feature::exp,
 		promote::num_function_result_in_same_out<xt::math::exp_fun>
@@ -301,7 +301,7 @@ void va::exp(VStoreAllocator& allocator, VArrayTarget target, const VData& array
 	);
 }
 
-void va::log(VStoreAllocator& allocator, VArrayTarget target, const VData& array) {
+void va::log(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
 	xoperation_inplace<
 		Feature::log,
 		promote::num_function_result_in_same_out<xt::math::log_fun>
@@ -313,7 +313,7 @@ void va::log(VStoreAllocator& allocator, VArrayTarget target, const VData& array
 	);
 }
 
-void va::rad2deg(VStoreAllocator& allocator, VArrayTarget target, const VData& array) {
+void va::rad2deg(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
 	xoperation_inplace<
 		Feature::rad2deg,
 		promote::reject_complex<promote::num_function_result_in_same_out<xt::math::rad2deg>>
@@ -325,7 +325,7 @@ void va::rad2deg(VStoreAllocator& allocator, VArrayTarget target, const VData& a
 	);
 }
 
-void va::deg2rad(VStoreAllocator& allocator, VArrayTarget target, const VData& array) {
+void va::deg2rad(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
 	xoperation_inplace<
 		Feature::deg2rad,
 		promote::reject_complex<promote::num_function_result_in_same_out<xt::math::deg2rad>>
@@ -337,7 +337,7 @@ void va::deg2rad(VStoreAllocator& allocator, VArrayTarget target, const VData& a
 	);
 }
 
-void va::conjugate(VStoreAllocator& allocator, VArrayTarget target, const VData& array) {
+void va::conjugate(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
 	if (!std::visit([](auto x) {
 		using VTValue = typename std::decay_t<decltype(x)>::value_type;
 		return xtl::is_complex<VTValue>::value;
@@ -364,7 +364,7 @@ void va::conjugate(VStoreAllocator& allocator, VArrayTarget target, const VData&
 	);
 }
 
-void va::a0xb1_minus_a1xb0(va::VStoreAllocator& allocator, va::VArrayTarget target, const va::VData& a, const va::VData& b, const std::ptrdiff_t i0, const std::ptrdiff_t i1) {
+void va::a0xb1_minus_a1xb0(va::VStoreAllocator& allocator, const va::VArrayTarget& target, const va::VData& a, const va::VData& b, const std::ptrdiff_t i0, const std::ptrdiff_t i1) {
 	va::xoperation_inplace<
 		va::Feature::cross,
 		va::promote::num_in_same_out

@@ -95,7 +95,7 @@ namespace va {
     }
 
     template<typename OutputType, typename Result>
-    void assign_to_target(VArrayTarget target, VStoreAllocator& allocator, const Result& result) {
+    void assign_to_target(const VArrayTarget& target, VStoreAllocator& allocator, const Result& result) {
         // Some functions (or compilers) may offer 128 bit types as results from functions.
         // We may not be able to store them. This is not the best way to go about it
         // (as incompatible types COULD be less than the supported ones, prompting us to upcast), but it's good enough for now.
@@ -157,7 +157,7 @@ namespace va {
 
     // This function mostly exists to make it easier for the compiler to de-duplicate code.
     template<typename PromotionRule, typename FX, typename... Args>
-    static void vfunction_monotype(FX&& fx, VStoreAllocator& allocator, VArrayTarget target, const Args&... args) {
+    static void vfunction_monotype(FX&& fx, VStoreAllocator& allocator, const VArrayTarget& target, const Args&... args) {
         using InputType = promote::value_type_v<std::tuple_element_t<0, std::tuple<std::decay_t<Args>...>>>;
         static_assert(
             (std::is_same_v<promote::value_type_v<std::decay_t<Args>>, InputType> && ...),
@@ -174,9 +174,9 @@ namespace va {
     }
 
     template<Feature feature, typename PromotionRule, typename FX, typename... Args>
-    static void xoperation_inplace(FX&& fx, VStoreAllocator& allocator, VArrayTarget target, const Args&... args) {
+    static void xoperation_inplace(FX&& fx, VStoreAllocator& allocator, const VArrayTarget& target, const Args&... args) {
         visit_if_enabled<feature>(
-            [fx = std::forward<FX>(fx), &allocator, target](const auto&... args) {
+            [fx = std::forward<FX>(fx), &allocator, &target](const auto&... args) {
                 using InputType = typename PromotionRule::template input_type<promote::value_type_v<std::decay_t<decltype(args)>>...>;
 
                 if constexpr (std::is_same_v<InputType, void>) {

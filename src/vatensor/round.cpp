@@ -10,7 +10,7 @@
 
 using namespace va;
 
-void va::ceil(VStoreAllocator& allocator, VArrayTarget target, const VData& array) {
+void va::ceil(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
 	xoperation_inplace<
 		Feature::ceil,
 		promote::reject_complex<promote::num_function_result_in_same_out<xt::math::ceil_fun>>
@@ -22,7 +22,7 @@ void va::ceil(VStoreAllocator& allocator, VArrayTarget target, const VData& arra
 	);
 }
 
-void va::floor(VStoreAllocator& allocator, VArrayTarget target, const VData& array) {
+void va::floor(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
 	xoperation_inplace<
 		Feature::floor,
 		promote::reject_complex<promote::num_function_result_in_same_out<xt::math::floor_fun>>
@@ -34,7 +34,7 @@ void va::floor(VStoreAllocator& allocator, VArrayTarget target, const VData& arr
 	);
 }
 
-void va::trunc(VStoreAllocator& allocator, VArrayTarget target, const VData& array) {
+void va::trunc(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
 	xoperation_inplace<
 		Feature::trunc,
 		promote::reject_complex<promote::num_function_result_in_same_out<xt::math::trunc_fun>>
@@ -46,7 +46,7 @@ void va::trunc(VStoreAllocator& allocator, VArrayTarget target, const VData& arr
 	);
 }
 
-void va::round(VStoreAllocator& allocator, VArrayTarget target, const VData& array) {
+void va::round(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
 	xoperation_inplace<
 		Feature::round,
 		promote::reject_complex<promote::num_function_result_in_same_out<xt::math::round_fun>>
@@ -58,7 +58,7 @@ void va::round(VStoreAllocator& allocator, VArrayTarget target, const VData& arr
 	);
 }
 
-void va::nearbyint(VStoreAllocator& allocator, VArrayTarget target, const VData& array) {
+void va::nearbyint(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
 	xoperation_inplace<
 		Feature::nearbyint,
 		promote::reject_complex<promote::num_function_result_in_same_out<xt::math::nearbyint_fun>>\

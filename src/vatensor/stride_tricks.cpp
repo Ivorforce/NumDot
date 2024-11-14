@@ -56,7 +56,7 @@ std::shared_ptr<va::VArray> va::sliding_window_view(const VArray& array, const s
 	return as_strided(array, new_shape, new_strides);
 }
 
-void va::convolve(VStoreAllocator& allocator, VArrayTarget target, const VArray& array, const VArray& kernel) {
+void va::convolve(VStoreAllocator& allocator, const VArrayTarget& target, const VArray& array, const VArray& kernel) {
 	// TODO Could use support for kernel size > array, which is still a valid convolution.
 	// In that case it's just the kernel that acts as the array.
 

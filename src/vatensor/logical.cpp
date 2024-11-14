@@ -13,7 +13,7 @@
 using namespace va;
 
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
-void logical_and(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VScalar& b) {
+void logical_and(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VScalar& b) {
 	// Can shortcut the logic
 	if (!static_cast_scalar<bool>(b)) {
 		assign(target, false);
@@ -24,7 +24,7 @@ void logical_and(VStoreAllocator& allocator, VArrayTarget target, const VData& a
 }
 #endif
 
-void va::logical_and(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b) {
+void va::logical_and(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b) {
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	OPTIMIZE_COMMUTATIVE(::logical_and, allocator, target, a, b);
 #endif
@@ -42,7 +42,7 @@ void va::logical_and(VStoreAllocator& allocator, VArrayTarget target, const VDat
 }
 
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
-void logical_or(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VScalar& b) {
+void logical_or(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VScalar& b) {
 	// Can shortcut the logic
 	if (static_cast_scalar<bool>(b)) {
 		assign(target, true);
@@ -53,7 +53,7 @@ void logical_or(VStoreAllocator& allocator, VArrayTarget target, const VData& a,
 }
 #endif
 
-void va::logical_or(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b) {
+void va::logical_or(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b) {
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	OPTIMIZE_COMMUTATIVE(::logical_or, allocator, target, a, b);
 #endif
@@ -71,7 +71,7 @@ void va::logical_or(VStoreAllocator& allocator, VArrayTarget target, const VData
 }
 
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
-void logical_xor(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VScalar& b) {
+void logical_xor(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VScalar& b) {
 	// Can shortcut the logic
 	if (static_cast_scalar<bool>(b)) {
 		va::logical_not(allocator, target, a);
@@ -82,7 +82,7 @@ void logical_xor(VStoreAllocator& allocator, VArrayTarget target, const VData& a
 }
 #endif
 
-void va::logical_xor(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b) {
+void va::logical_xor(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b) {
 #ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
 	OPTIMIZE_COMMUTATIVE(::logical_xor, allocator, target, a, b);
 #endif
@@ -99,7 +99,7 @@ void va::logical_xor(VStoreAllocator& allocator, VArrayTarget target, const VDat
 	);
 }
 
-void va::logical_not(VStoreAllocator& allocator, VArrayTarget target, const VData& a) {
+void va::logical_not(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a) {
 	va::xoperation_inplace<
 		Feature::logical_not,
 		promote::reject_complex<promote::x_in_nat_out<bool>>

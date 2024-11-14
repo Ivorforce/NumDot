@@ -19,7 +19,7 @@
 #include "xtensor/xslice.hpp"     // for all, ellipsis, newaxis, xall_tag
 
 
-void va::dot(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b) {
+void va::dot(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b) {
 	if (va::dimension(a) == 0 || va::dimension(b) == 0) {
 		va::multiply(allocator, target, a, b);
 		return;
@@ -113,7 +113,7 @@ void assign_cross(va::VData& target, const va::VData& a, const va::VData& b, con
 	a0xb1_minus_a1xb0(dummy_allocator, &t2, a, b, 0, 1);
 }
 
-void va::cross(::va::VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b, std::ptrdiff_t axisa, std::ptrdiff_t axisb, std::ptrdiff_t axisc) {
+void va::cross(::va::VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b, std::ptrdiff_t axisa, std::ptrdiff_t axisb, std::ptrdiff_t axisc) {
 	const auto a_ = va::moveaxis(a, axisa, -1);
 	const auto b_ = va::moveaxis(b, axisb, -1);
 
@@ -152,7 +152,7 @@ void va::cross(::va::VStoreAllocator& allocator, VArrayTarget target, const VDat
 	}, target);
 }
 
-void va::matmul(VStoreAllocator& allocator, VArrayTarget target, const VData& a, const VData& b) {
+void va::matmul(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b) {
 	if (va::dimension(a) == 0 || va::dimension(b) == 0) {
 		throw std::runtime_error("matmul does not accept scalars");
 	}

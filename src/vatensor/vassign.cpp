@@ -170,7 +170,7 @@ std::shared_ptr<VArray> va::get_at_mask(VStoreAllocator& allocator, const VData&
 				return std::visit([&mask, &allocator, array_size](const auto& array) -> std::shared_ptr<VArray> {
 					using VTArray = typename std::decay_t<decltype(array)>::value_type;
 
-					auto result_varray = va::empty(allocator, variant_to_dtype(VTArray{}), shape_type { array_size });
+					auto result_varray = va::empty(allocator, dtype_of_type<VTArray>(), shape_type { array_size });
 					auto result_compute = std::get<compute_case<VTArray*>>(result_varray->data);
 
 					// Masked views don't offer this functionality automatically.

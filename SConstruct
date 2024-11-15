@@ -55,6 +55,9 @@ opts.Add(
 features_tool = Tool("features", toolpath=["scons_tools"])
 features_tool.options(opts, env)
 
+scu_tool = Tool("scu", toolpath=["scons_tools"])
+scu_tool.options(opts, env)
+
 opts.Update(env)
 
 use_xsimd = env["use_xsimd"]
@@ -79,6 +82,8 @@ ARGUMENTS.pop("define", None)
 ARGUMENTS.pop("use_xsimd", None)
 ARGUMENTS.pop("optimize_for_arch", None)
 ARGUMENTS.pop("openmp_threshold", None)
+ARGUMENTS.pop("scu", None)
+ARGUMENTS.pop("numdot_config", None)
 
 # ============================= Change defaults of godot-cpp =============================
 
@@ -173,6 +178,8 @@ env.Append(CPPPATH=["xtl/include", "xsimd/include", "xtensor/include", "xtensor-
 
 env.Append(CPPPATH=["src/"])
 sources = Glob("src/*.cpp") + Glob("src/*/*.cpp")
+
+scu_tool.generate(env, sources)
 
 if env["target"] in ["editor", "template_debug"]:
     doc_data = env.GodotCPPDocData("src/gen/doc_data.gen.cpp", source=Glob("doc_classes/*.xml"))

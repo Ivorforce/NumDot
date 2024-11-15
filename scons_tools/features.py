@@ -60,7 +60,12 @@ def generate(env):
 
     features_hpp_text = pathlib.Path("src/vatensor/vfeature.hpp").read_text()
     features_expr = re.search(r"enum\s+class\s+Feature\s*{([^}]*)}", features_hpp_text, re.MULTILINE)
-    features.all = [f.strip() for f in features_expr.group(1).split(",")]
+    features.all = [
+        f_
+        for f in features_expr.group(1).split(",")
+        for f_ in [f.strip()]
+        if f_ and f_ != "count"
+    ]
 
     features.bitwise = [f for f in features.all if f.startswith("bitwise")]
     features.logical = [f for f in features.all if f.startswith("logical")]

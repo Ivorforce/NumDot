@@ -18,6 +18,7 @@ using namespace godot;
 void ndb::_bind_methods() {
 	godot::ClassDB::bind_static_method("ndb", D_METHOD("all", "a"), &ndb::all);
 	godot::ClassDB::bind_static_method("ndb", D_METHOD("any", "a"), &ndb::any);
+	godot::ClassDB::bind_static_method("ndb", D_METHOD("array_equiv", "a", "b"), &ndb::array_equiv);
 	godot::ClassDB::bind_static_method("ndb", D_METHOD("array_equal", "a", "b"), &ndb::array_equal);
 	godot::ClassDB::bind_static_method("ndb", D_METHOD("all_close", "a", "b", "rtol", "atol", "equal_nan"), &ndb::all_close, DEFVAL(1e-05), DEFVAL(1e-08), DEFVAL(false));
 }
@@ -37,6 +38,10 @@ bool ndb::all(const Variant& a) {
 
 bool ndb::any(const Variant& a) {
 	return REDUCTION1(any, a);
+}
+
+bool ndb::array_equiv(const Variant& a, const Variant& b) {
+	return REDUCTION2(array_equiv, a, b);
 }
 
 bool ndb::array_equal(const Variant& a, const Variant& b) {

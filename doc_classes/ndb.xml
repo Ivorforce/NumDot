@@ -44,5 +44,13 @@
 				true if two arrays have the same shape and elements, false otherwise.
 			</description>
 		</method>
+		<method name="array_equiv" qualifiers="static">
+			<return type="bool" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+				true if two arrays have the same elements, if broadcast to each other, false otherwise.
+			</description>
+		</method>
 	</methods>
 </class>

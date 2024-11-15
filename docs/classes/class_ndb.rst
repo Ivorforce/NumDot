@@ -38,6 +38,8 @@ Methods
    +----------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``bool`` | :ref:`array_equal<class_ndb_method_array_equal>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                               |
    +----------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool`` | :ref:`array_equiv<class_ndb_method_array_equiv>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                               |
+   +----------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 .. rst-class:: classref-section-separator
 
@@ -95,6 +97,18 @@ No-axis equivalent of :ref:`nd.any<class_nd_method_any>` that returns a bool.
 ``bool`` **array_equal**\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static| :ref:`🔗<class_ndb_method_array_equal>`
 
 true if two arrays have the same shape and elements, false otherwise.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ndb_method_array_equiv:
+
+.. rst-class:: classref-method
+
+``bool`` **array_equiv**\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static| :ref:`🔗<class_ndb_method_array_equiv>`
+
+true if two arrays have the same elements, if broadcast to each other, false otherwise.
 
 .. |virtual| replace:: :abbr:`virtual (This method should typically be overridden by the user to have any effect.)`
 .. |const| replace:: :abbr:`const (This method has no side effects. It doesn't modify any of the instance's member variables.)`

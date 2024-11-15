@@ -223,19 +223,25 @@ void va::is_inf(VStoreAllocator& allocator, const VArrayTarget& target, const VD
 	);
 }
 
-bool va::array_equal(const VData& a, const VData& b) {
+bool va::array_equiv(const VData& a, const VData& b) {
 #ifndef _WIN32
-	return vreduce<
-		Feature::array_equal,
-		promote::common_in_nat_out,
-		bool
-	>(
-		[](auto&& a, auto&& b) -> bool {
-			return xt::all(xt::equal(std::forward<decltype(a)>(a), std::forward<decltype(b)>(b)));
-		},
-		a,
-		b
-	);
+	try {
+		return vreduce<
+			Feature::array_equal,
+			promote::common_in_nat_out,
+			bool
+		>(
+			[](auto&& a, auto&& b) -> bool {
+				return xt::all(xt::equal(std::forward<decltype(a)>(a), std::forward<decltype(b)>(b)));
+			},
+			a,
+			b
+		);
+	}
+	catch (std::runtime_error& e) {
+		// Should be broadcast error or cast error.
+		return false;
+	}
 #else
 	std::shared_ptr<VArray> intermediate;
 	::equal_to(va::store::default_allocator, &intermediate, a, b);
@@ -243,9 +249,16 @@ bool va::array_equal(const VData& a, const VData& b) {
 #endif
 }
 
+bool va::array_equal(const VData& a, const VData& b) {
+	if (shape(a) != shape(b)) {
+		return false;
+	}
+
+	return array_equiv(a, b);
+}
+
 template <typename A, typename B>
 bool all_close(const A& a, const B& b, double rtol, double atol, bool equal_nan) {
-	return true;  // FIXME
 	return vreduce<
 		Feature::all_close,
 		promote::common_in_nat_out,

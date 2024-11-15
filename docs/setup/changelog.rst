@@ -12,10 +12,14 @@ Here you will find the release notes for each version of the library. Each secti
 
 Upcoming Changes (main branch)
 ------------------------------
+**Added**
+
+- ``array_equiv`` function.
 
 **Changed**
 
 - Optimizations in the build scheme and code architecture reduced the binary size by 50%.
+- ``array_equal`` now also checks for shape equivalence, and doesn't fail if the shapes are not broadcastable.
 
 Version 0.7 - 2024-11-12
 ------------------------

@@ -263,23 +263,26 @@ void va::set_at_mask(VData& varray, VData& mask, VScalar value) {
 
 template<typename A>
 xt::svector<xt::svector<size_type>> array_to_indices(const A& indices) {
+	// TODO we could optimize 1d indices, xtensor supports this.
+	if (indices.dimension() != 1 && indices.dimension() != 2) throw std::runtime_error("index list must be 1d or 2d");
+
 	const auto num_indices = indices.shape()[0];
-	const auto num_dimensions = indices.shape()[1];
-	const auto& strides = indices.strides();
+	const auto num_dimensions = indices.dimension() == 2 ? indices.shape()[1] : 1;
+	const auto stride = indices.strides()[0];
 
 	// TODO This should be possible without allocating separately for each xidx, no?
 	xt::svector<xt::svector<size_type>> xindices(num_indices);
-	for (int i = 0; i < xindices.size(); ++i) {
+	for (int i = 0; i < num_indices; ++i) {
 		xt::svector<size_type> xidx(num_dimensions);
-		std::copy_n(indices.begin() + i * strides[0], (i + 1) * strides[0], xidx.begin());
+		std::copy_n(indices.begin() + i * stride, num_dimensions, xidx.begin());
 		xindices[i] = std::move(xidx);
 	}
 	return xindices;
 }
 
-std::shared_ptr<VArray> va::get_at_indices(VStoreAllocator& allocator, const VData& data, const VData& indices) {
+xt::svector<xt::svector<size_type>> get_as_indices(const VData& indices) {
 	return visit_if_enabled<Feature::index_lists>(
-		[&allocator, &data](const auto& indices) -> std::shared_ptr<VArray> {
+		[](const auto& indices) -> xt::svector<xt::svector<size_type>> {
 			using VTIndices = typename std::decay_t<decltype(indices)>::value_type;
 
 			if constexpr (!std::is_integral_v<VTIndices> || std::is_same_v<VTIndices, bool>) {
@@ -287,63 +290,46 @@ std::shared_ptr<VArray> va::get_at_indices(VStoreAllocator& allocator, const VDa
 			}
 			else {
 				// Index views need to be vectors of xindex.
-				xt::svector<xt::svector<size_type>> xindices = array_to_indices(indices);
-
-				return std::visit([&indices, &xindices, &allocator](const auto& array) -> std::shared_ptr<VArray> {
-					using VTArray = typename std::decay_t<decltype(array)>::value_type;
-
-					if (indices.dimension() == 1) {
-						if (array.dimension() != 1) throw std::runtime_error("cannot use 1D index list for nd tensor");
-
-						return va::create_varray<VTArray>(allocator, xt::index_view(array, xindices));
-					}
-					if (indices.dimension() != 2) throw std::runtime_error("index list must be 1d or 2d");
-					if (indices.shape()[1] != array.dimension()) throw std::runtime_error("index list dimension 2 must match array dimension");
-
-					return va::create_varray<VTArray>(allocator, xt::index_view(array, xindices));
-				}, data);
+				return array_to_indices(indices);
 			}
 		}, indices
 	);
 }
 
-void va::set_at_indices(VData& varray, VData& indices, VData& value) {
+std::shared_ptr<VArray> va::get_at_indices(VStoreAllocator& allocator, const VData& data, const VData& indices) {
+	const auto indices_norm = get_as_indices(indices);
+	const auto array_dimension = va::dimension(data);
+	const auto& indices_shape = va::shape(indices);
+
+	if (indices_shape.size() == 1 && array_dimension != 1) throw std::runtime_error("cannot use 1D index list for nd tensor");
+	if (va::shape(indices)[1] != array_dimension) throw std::runtime_error("index list dimension 2 must match array dimension");
+
+	return std::visit([&indices_norm, &allocator](const auto& array) -> std::shared_ptr<VArray> {
+		using VTArray = typename std::decay_t<decltype(array)>::value_type;
+		return va::create_varray<VTArray>(allocator, xt::index_view(array, indices_norm));
+	}, data);
+}
+
+void va::set_at_indices(VData& data, VData& indices, VData& value) {
+	const auto indices_norm = get_as_indices(indices);
+	const auto array_dimension = va::dimension(data);
+	const auto& indices_shape = va::shape(indices);
+
+	if (indices_shape.size() == 1 && array_dimension != 1) throw std::runtime_error("cannot use 1D index list for nd tensor");
+	if (indices_shape[1] != array_dimension) throw std::runtime_error("index list dimension 2 must match array dimension");
+
 	visit_if_enabled<Feature::index_lists>(
-		[](auto& array, const auto& indices, const auto& value) {
+		[&indices_norm](auto& array, const auto& value) {
 			using VTArray = typename std::decay_t<decltype(array)>::value_type;
-			using VTMask = typename std::decay_t<decltype(indices)>::value_type;
 			using VTValue = typename std::decay_t<decltype(value)>::value_type;
 
-			if constexpr (!std::is_integral_v<VTMask> || std::is_same_v<VTMask, bool>) {
-				throw std::runtime_error("mask must be integer dtype");
-			}
-			else if constexpr (!std::is_convertible_v<VTValue, VTArray>) {
+			if constexpr (!std::is_convertible_v<VTValue, VTArray>) {
 				throw std::runtime_error("Cannot promote this way.");
 			}
 			else {
-				if (indices.dimension() == 1) {
-					if (array.dimension() != 1) throw std::runtime_error("cannot use 1D index list for nd tensor");
-
-					auto index_view = xt::index_view(array, indices);
-
-#ifdef XTENSOR_USE_XSIMD
-					if constexpr (xtl::is_complex<VTArray>::value) {
-						// See above; xsimd cannot auto-convert to complex types
-						index_view = xt::cast<VTArray>(value);
-					}
-					else
-#endif
-					{
-						index_view = value;
-					}
-					return;
-				}
-				if (indices.dimension() != 2) throw std::runtime_error("index list must be 1d or 2d");
-				if (indices.shape()[1] != array.dimension()) throw std::runtime_error("index list dimension 2 must match array dimension");
 
 				// Index views need to be vectors of xindex.
-				xt::svector<xt::svector<size_type>> xindices = array_to_indices(indices);
-				auto index_view = xt::index_view(array, xindices);
+				auto index_view = xt::index_view(array, indices_norm);
 
 #ifdef XTENSOR_USE_XSIMD
 				if constexpr (xtl::is_complex<VTArray>::value) {
@@ -356,6 +342,6 @@ void va::set_at_indices(VData& varray, VData& indices, VData& value) {
 					index_view = value;
 				}
 			}
-		}, varray, indices, value
+		}, data, value
 	);
 }

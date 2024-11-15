@@ -47,7 +47,7 @@ jobs:
           path: |
             ${{ github.workspace }}/.scons_cache
           key: ${{ matrix.platform }}_${{ matrix.arch }}_${{ matrix.float_precision }}_${{ matrix.build_target_type }}_cache
-      - name: Build GDExtension Debug Build
+      - name: Build NumDot library
         shell: sh
         env:
           SCONS_CACHE: ${{ github.workspace }}/.scons_cache

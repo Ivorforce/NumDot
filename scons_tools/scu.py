@@ -8,8 +8,8 @@ def exists(env):
 def options(opts, env):
     opts.Add(
         BoolVariable(
-            "scu",
-            "Whether to dump all the sources into a single compilation unit (SCU).",
+            "scu_build",
+            "Use single compilation unit build.",
             False
         )
     )

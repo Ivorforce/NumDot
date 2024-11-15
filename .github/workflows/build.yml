@@ -52,7 +52,7 @@ jobs:
         env:
           SCONS_CACHE: ${{ github.workspace }}/.scons_cache
         run: |
-          scons target=${{ matrix.build_target_type }} platform=${{ matrix.platform }} arch=${{ matrix.arch }} precision=${{ matrix.float_precision }} scu=yes
+          scons target=${{ matrix.build_target_type }} platform=${{ matrix.platform }} arch=${{ matrix.arch }} precision=${{ matrix.float_precision }} scu_build=yes
       - name: Mac Sign
         if: ${{ matrix.platform == 'macos' && env.APPLE_CERT_BASE64 }}
         env:

@@ -82,7 +82,7 @@ ARGUMENTS.pop("define", None)
 ARGUMENTS.pop("use_xsimd", None)
 ARGUMENTS.pop("optimize_for_arch", None)
 ARGUMENTS.pop("openmp_threshold", None)
-ARGUMENTS.pop("scu", None)
+ARGUMENTS.pop("scu_build", None)
 ARGUMENTS.pop("numdot_config", None)
 
 # ============================= Change defaults of godot-cpp =============================

@@ -1245,3 +1245,9 @@ Ref<NDArray> nd::pad(const Variant& array, const Variant& pad_width, PadMode pad
 		}, pad_width_variant);
 	}, array);
 }
+
+#undef VARRAY_MAP1
+#undef VARRAY_MAP2
+#undef VARRAY_MAP3
+#undef REDUCTION1
+#undef REDUCTION2

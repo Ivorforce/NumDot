@@ -170,16 +170,19 @@ if openmp_threshold >= 0:
 
     env.Append(CCFLAGS=["-DXTENSOR_USE_OPENMP", f"-DXTENSOR_OPENMP_TRESHOLD={openmp_threshold}"])
 
-features_tool.generate(env)
-
 # ============================= Actual source and lib setup =============================
 
 env.Append(CPPPATH=["xtl/include", "xsimd/include", "xtensor/include", "xtensor-signal/include"])
-
 env.Append(CPPPATH=["src/"])
-sources = Glob("src/*.cpp") + Glob("src/*/*.cpp")
+
+sources = [
+    f for f in Glob("src/*.cpp") + Glob("src/*/*.cpp")
+    # Generated files will be added selectively and maintained by tools.
+    if not "/gen/" in str(f.path)
+]
 
 scu_tool.generate(env, sources)
+features_tool.generate(env)
 
 if env["target"] in ["editor", "template_debug"]:
     doc_data = env.GodotCPPDocData("src/gen/doc_data.gen.cpp", source=Glob("doc_classes/*.xml"))

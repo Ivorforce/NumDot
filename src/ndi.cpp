@@ -98,3 +98,6 @@ int64_t ndi::trace(const Variant& v, int64_t offset, int64_t axis1, int64_t axis
 int64_t ndi::reduce_dot(const Variant& a, const Variant& b) {
 	return REDUCTION2(reduce_dot, a, b);
 }
+
+#undef REDUCTION1
+#undef REDUCTION2

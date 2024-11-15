@@ -48,3 +48,6 @@ bool ndb::all_close(const Variant& a, const Variant& b, double_t rtol, double_t 
 		return va::all_close(a.data, b.data, rtol, atol, equal_nan);
 	}, a, b);
 }
+
+#undef REDUCTION1
+#undef REDUCTION2

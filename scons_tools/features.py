@@ -74,7 +74,8 @@ def generate(env):
 
     custom_config_tool.generate(env, features)
 
-    pathlib.Path("src/vatensor/gen/userconfig.hpp").write_text(
+    dest_path = pathlib.Path("src/vatensor/gen/userconfig.hpp")
+    dest_path.write_text(
 f"""#ifndef USERCONFIG_HPP
 #define USERCONFIG_HPP
 

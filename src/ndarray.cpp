@@ -1122,3 +1122,11 @@ NDArray::operator uint16_t() const { CONVERT_TO_SCALAR(uint16_t); }
 NDArray::operator uint8_t() const { CONVERT_TO_SCALAR(uint8_t); }
 NDArray::operator double() const { CONVERT_TO_SCALAR(double); }
 NDArray::operator float() const { CONVERT_TO_SCALAR(float); }
+
+#undef VARRAY_MAP1
+#undef VARRAY_MAP2
+#undef VARRAY_MAP3
+#undef REDUCTION1
+#undef REDUCTION2
+#undef TRY_CONVERT
+#undef CONVERT_TO_SCALAR

@@ -19,6 +19,8 @@ def generate(env, sources):
         return
 
     scu_path = pathlib.Path('src/gen/scu.cpp')
+    scu_path.parent.mkdir(exist_ok=True)
+
     scu_path.write_text(
         '\n'.join(
             f'#include "{pathlib.Path(source.path).relative_to("src")}"'

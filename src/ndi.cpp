@@ -7,8 +7,8 @@
 #include <type_traits>                        // for decay_t
 #include <utility>                            // for forward
 #include <vatensor/xtensor_store.hpp>
-
 #include "gdconvert/conversion_array.hpp"       // for variant_as_array
+#include "gdconvert/util.hpp"
 #include "godot_cpp/core/class_db.hpp"        // for D_METHOD, ClassDB, Meth...
 #include "godot_cpp/core/error_macros.hpp"    // for ERR_FAIL_V_MSG
 #include "godot_cpp/variant/string_name.hpp"  // for StringName
@@ -33,28 +33,11 @@ void ndi::_bind_methods() {
 ndi::ndi() = default;
 ndi::~ndi() = default;
 
-template<typename Visitor, typename... Args>
-inline int64_t reduction(Visitor&& visitor, const Args&... args) {
-	try {
-		const auto result = std::forward<Visitor>(visitor)(*variant_as_array(args)...);
-
-		if constexpr (std::is_same_v<std::decay_t<decltype(result)>, va::VScalar>) {
-			return va::static_cast_scalar<int64_t>(result);
-		}
-		else {
-			return result;
-		}
-	}
-	catch (std::runtime_error& error) {
-		ERR_FAIL_V_MSG({}, error.what());
-	}
-}
-
 #define REDUCTION1(func, varray1) \
-	reduction([](const va::VArray& array) { return va::func(array.data); }, (varray1))
+	numdot::reduction<int64_t>([](const va::VArray& array) { return va::func(array.data); }, (varray1))
 
 #define REDUCTION2(func, varray1, varray2) \
-	reduction([](const va::VArray& x1, const va::VArray& x2) { return va::func(x1.data, x2.data); }, (varray1), (varray2))
+	numdot::reduction<int64_t>([](const va::VArray& x1, const va::VArray& x2) { return va::func(x1.data, x2.data); }, (varray1), (varray2))
 
 int64_t ndi::sum(const Variant& a) {
 	return REDUCTION1(sum, a);
@@ -101,24 +84,16 @@ int64_t ndi::norm(const Variant& a, const Variant& ord) {
 }
 
 int64_t ndi::count_nonzero(const Variant& a) {
-	return reduction([](const va::VArray& array) {
+	return numdot::reduction<int64_t>([](const va::VArray& array) {
 		return va::count_nonzero(va::store::default_allocator, array.data);
 	}, a);
 }
 
 int64_t ndi::trace(const Variant& v, int64_t offset, int64_t axis1, int64_t axis2) {
-	return reduction([offset, axis1, axis2](const va::VArray& array) {
+	return numdot::reduction<int64_t>([offset, axis1, axis2](const va::VArray& array) {
 		return va::trace_to_scalar(array, offset, axis1, axis2);
 	}, v);
 }
-
-//int64_t ndi::all(const Variant& a) {
-//    return REDUCTION1(all, a);
-//}
-//
-//int64_t ndi::any(const Variant& a) {
-//    return REDUCTION1(any, a);
-//}
 
 int64_t ndi::reduce_dot(const Variant& a, const Variant& b) {
 	return REDUCTION2(reduce_dot, a, b);

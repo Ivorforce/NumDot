@@ -15,7 +15,7 @@ Upcoming Changes (main branch)
 
 **Changed**
 
-- Reduction of duplicated generated code reduced the binary size by 15%.
+- Optimizations in the build scheme and code architecture reduced the binary size by 50%.
 
 Version 0.7 - 2024-11-12
 ------------------------

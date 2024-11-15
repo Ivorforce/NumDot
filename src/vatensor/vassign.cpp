@@ -6,6 +6,8 @@
 #include "create.hpp"
 #include <xtensor/xmasked_view.hpp>
 #include <xtensor/xindex_view.hpp>
+
+#include "reduce.hpp"
 #include "vcompute.hpp"
 #include "vpromote.hpp"
 #include "xscalar_store.hpp"
@@ -157,38 +159,32 @@ void va::assign(const VArrayTarget& target, VScalar value) {
 }
 
 std::shared_ptr<VArray> va::get_at_mask(VStoreAllocator& allocator, const VData& data, const VData& mask) {
-	return visit_if_enabled<Feature::index_masks>(
-		[&allocator, &data](const auto& mask) -> std::shared_ptr<VArray> {
-			using VTMask = typename std::decay_t<decltype(mask)>::value_type;
+	if (va::dtype(mask) != va::DType::Bool) throw std::runtime_error("mask must be boolean dtype");
 
-			if constexpr (!std::is_same_v<VTMask, bool>) {
-				throw std::runtime_error("mask must be boolean dtype");
+	auto& mask_ = std::get<compute_case<bool*>>(mask);
+	const auto array_size = static_cast_scalar<size_type>(va::sum(mask));
+
+	auto result_varray = va::empty(allocator, va::dtype(data), shape_type { array_size });
+	auto& result_data = result_varray->data;
+
+	std::visit([&mask_, &result_data](const auto& array) {
+		using VTArray = typename std::decay_t<decltype(array)>::value_type;
+
+		auto result_compute = std::get<compute_case<VTArray*>>(result_data);
+
+		// Masked views don't offer this functionality automatically.
+		const auto masked_view = xt::masked_view(array, mask_);
+
+		auto iter_result = result_compute.begin();
+		for (auto masked_value : masked_view) {
+			if (masked_value.visible()) {
+				*iter_result = masked_value.value();
+				++iter_result;
 			}
-			else {
-				const size_type array_size = xt::sum(mask)();
+		}
+	}, data);
 
-				return std::visit([&mask, &allocator, array_size](const auto& array) -> std::shared_ptr<VArray> {
-					using VTArray = typename std::decay_t<decltype(array)>::value_type;
-
-					auto result_varray = va::empty(allocator, dtype_of_type<VTArray>(), shape_type { array_size });
-					auto result_compute = std::get<compute_case<VTArray*>>(result_varray->data);
-
-					// Masked views don't offer this functionality automatically.
-					const auto masked_view = xt::masked_view(array, mask);
-
-					auto iter_result = result_compute.begin();
-					for (auto masked_value : masked_view) {
-						if (masked_value.visible()) {
-							*iter_result = masked_value.value();
-							++iter_result;
-						}
-					}
-
-					return result_varray;
-				}, data);
-			}
-		}, mask
-	);
+	return result_varray;
 }
 
 void va::set_at_mask(VData& varray, VData& mask, VData& value) {
@@ -197,30 +193,32 @@ void va::set_at_mask(VData& varray, VData& mask, VData& value) {
 	    return set_at_mask(varray, mask, va::to_single_value(value));
     }
 
-	return visit_if_enabled<Feature::index_masks>(
+	if (va::dtype(mask) != va::DType::Bool) throw std::runtime_error("mask must be boolean dtype");
+
+	auto& mask_ = std::get<compute_case<bool*>>(mask);
+	const auto array_size = static_cast_scalar<size_type>(va::sum(mask));
+	const auto& array_shape = va::shape(varray);
+
+	if (array_shape != mask_.shape()) {
+		throw std::runtime_error("mask must be same shape as array");
+	}
+
+	// Masked views don't offer array fill functionality automatically.
+	if (va::shape(value) != shape_type { array_size }) {
+		throw std::runtime_error("mask must be single value or match the mask sum");
+	}
+
+	visit_if_enabled<Feature::index_masks>(
 		// Mask can't be const because of masked_view iterator.
-		[](auto& array, auto& mask, const auto& value) {
+		[&mask_](auto& array, const auto& value) {
 			using VTArray = typename std::decay_t<decltype(array)>::value_type;
-			using VTMask = typename std::decay_t<decltype(mask)>::value_type;
 			using VTValue = typename std::decay_t<decltype(value)>::value_type;
 
-			if constexpr (!std::is_same_v<VTMask, bool>) {
-				throw std::runtime_error("mask must be boolean dtype");
-			}
-			else if constexpr (!std::is_convertible_v<VTValue, VTArray>) {
+			if constexpr (!std::is_convertible_v<VTValue, VTArray>) {
 				throw std::runtime_error("Cannot promote this way.");
 			}
 			else {
-				if (array.shape() != mask.shape()) {
-					throw std::runtime_error("mask must be same shape as array");
-				}
-
-				auto masked_view = xt::masked_view(array, mask);
-
-				// Masked views don't offer array fill functionality automatically.
-				const size_type array_size = xt::sum(mask)();
-				if (value.shape() != shape_type { array_size })
-					throw std::runtime_error("mask must be single value or match the mask sum");
+				auto masked_view = xt::masked_view(array, mask_);
 
 				const auto stride = value.strides()[0];
 				auto iter_value = value.begin();
@@ -231,33 +229,34 @@ void va::set_at_mask(VData& varray, VData& mask, VData& value) {
 					}
 				}
 			}
-		}, varray, mask, value
+		}, varray, value
 	);
 }
 
 void va::set_at_mask(VData& varray, VData& mask, VScalar value) {
+	if (va::dtype(mask) != va::DType::Bool) throw std::runtime_error("mask must be boolean dtype");
+
+	auto& mask_ = std::get<compute_case<bool*>>(mask);
+	const auto& array_shape = va::shape(varray);
+
+	if (array_shape != mask_.shape()) {
+		throw std::runtime_error("mask must be same shape as array");
+	}
+
 	return visit_if_enabled<Feature::index_masks>(
 		// Mask can't be const because of masked_view iterator.
-		[](auto& array, auto& mask, const auto value) {
+		[&mask_](auto& array, const auto value) {
 			using VTArray = typename std::decay_t<decltype(array)>::value_type;
-			using VTMask = typename std::decay_t<decltype(mask)>::value_type;
 			using VTValue = std::decay_t<decltype(value)>;
 
-			if constexpr (!std::is_same_v<VTMask, bool>) {
-				throw std::runtime_error("mask must be boolean dtype");
-			}
-			else if constexpr (!std::is_convertible_v<VTValue, VTArray>) {
+			if constexpr (!std::is_convertible_v<VTValue, VTArray>) {
 				throw std::runtime_error("Cannot promote this way.");
 			}
 			else {
-				if (array.shape() != mask.shape()) {
-					throw std::runtime_error("mask must be same shape as array");
-				}
-
-				auto masked_view = xt::masked_view(array, mask);
+				auto masked_view = xt::masked_view(array, mask_);
 				masked_view = value;
 			}
-		}, varray, mask, value
+		}, varray, value
 	);
 }
 

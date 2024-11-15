@@ -5,7 +5,7 @@
 #include "xtensor-signal/fft.hpp"
 
 void va::fft(VStoreAllocator& allocator, const VArrayTarget& target, const VArray& a, std::ptrdiff_t axis) {
-	va::xoperation_inplace<
+	va::xoperation_single<
 		Feature::fft,
 		promote::num_matching_complex_or_default_in_same_out<double_t>
 	>(
@@ -34,7 +34,7 @@ std::shared_ptr<va::VArray> va::fft_freq(VStoreAllocator& allocator, std::size_t
 }
 
 void va::pad(VStoreAllocator& allocator, const VArrayTarget& target, const VArray& a, const std::vector<std::vector<std::size_t>>& pad_width, xt::pad_mode pad_mode, VScalar pad_value) {
-	va::xoperation_inplace<
+	va::xoperation_single<
 		Feature::pad,
 		promote::common_in_same_out
 	>(

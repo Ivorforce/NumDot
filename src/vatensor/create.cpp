@@ -19,7 +19,7 @@ std::shared_ptr<VArray> va::full(VStoreAllocator& allocator, const VScalar fill_
 	// Technically for this function we could use va::create_varray, but it's way faster to store the array contiguously.
 
 	auto count = xt::compute_size(shape);
-	auto store = allocator.allocate(variant_to_dtype(fill_value), count);
+	auto store = allocator.allocate(va::dtype(fill_value), count);
 	auto ptr = store->data();
 
 	return std::visit(
@@ -104,8 +104,8 @@ std::shared_ptr<VArray> va::copy_as_dtype(VStoreAllocator& allocator, const VDat
 
 std::shared_ptr<VArray> va::linspace(VStoreAllocator& allocator, VScalar start, VScalar stop, std::size_t num, const bool endpoint, DType dtype) {
 	if (dtype == DTypeMax) {
-		dtype = va::variant_to_dtype(start);
-		dtype = va::dtype_common_type(dtype, variant_to_dtype(stop));
+		dtype = va::dtype(start);
+		dtype = va::dtype_common_type(dtype, va::dtype(stop));
 	}
 
 	return visit_if_enabled<Feature::linspace>(
@@ -129,9 +129,9 @@ std::shared_ptr<VArray> va::linspace(VStoreAllocator& allocator, VScalar start, 
 
 std::shared_ptr<VArray> va::arange(VStoreAllocator& allocator, VScalar start, VScalar stop, VScalar step, DType dtype) {
 	if (dtype == DTypeMax) {
-		dtype = va::variant_to_dtype(start);
-		dtype = va::dtype_common_type(dtype, variant_to_dtype(stop));
-		dtype = va::dtype_common_type(dtype, variant_to_dtype(step));
+		dtype = va::dtype(start);
+		dtype = va::dtype_common_type(dtype, va::dtype(stop));
+		dtype = va::dtype_common_type(dtype, va::dtype(step));
 	}
 
 	return visit_if_enabled<Feature::arange>(

@@ -7,7 +7,7 @@ void* va::store::VScalarStore::data() {
 }
 
 va::DType va::store::VScalarStore::dtype() {
-	return variant_to_dtype(scalar);
+	return va::dtype(scalar);
 }
 
 void va::store::VScalarStoreNonwrite::prepare_write(VData& data, std::ptrdiff_t data_offset) {

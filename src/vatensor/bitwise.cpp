@@ -78,7 +78,7 @@ void va::bitwise_xor(VStoreAllocator& allocator, const VArrayTarget& target, con
 }
 
 void va::bitwise_not(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a) {
-	va::xoperation_inplace<
+	va::xoperation_single<
 		Feature::bitwise_not,
 		promote::common_int_in_same_out
 	>(

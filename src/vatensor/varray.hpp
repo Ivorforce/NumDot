@@ -221,7 +221,7 @@ namespace va {
     VScalar dtype_to_variant(DType dtype);
 
     // TODO Relying on the index isn't very glamorous
-    constexpr static DType variant_to_dtype(VScalar dtype) {
+    constexpr static DType dtype(VScalar dtype) {
         return static_cast<DType>(dtype.index());
     }
 

@@ -17,33 +17,6 @@
 #include "xtensor/xtensor_forward.hpp"  // for xarray
 
 namespace va {
-    // Type trait to check if T is in std::variant<Args...>
-    template<typename T, typename Variant>
-    struct is_in_variant;
-
-    template<typename T, typename... Ts>
-    struct is_in_variant<T, std::variant<Ts...>> : std::disjunction<std::is_same<T, Ts>...> {};
-
-    // Helper variable template
-    template<typename T, typename Variant>
-    inline constexpr bool is_in_variant_v = is_in_variant<T, Variant>::value;
-
-    template<typename T>
-    struct to_64_bit {
-        using type = std::conditional_t<std::is_floating_point_v<T>, double_t, int64_t>;
-    };
-
-    template<typename T>
-    using to_64_bit_t = typename to_64_bit<T>::type;
-
-    template<typename T, typename Variant>
-    struct compatible_type_or_64_bit {
-        using type = std::conditional_t<is_in_variant_v<T, Variant>, T, to_64_bit_t<T>>;
-    };
-
-    template<typename T, typename Variant>
-    using compatible_type_or_64_bit_t = typename compatible_type_or_64_bit<T, Variant>::type;
-
     template<typename FX>
     struct XFunction {
         // This is analogous to xt::add etc., with the main difference that in our setup it's easier to use this function with the
@@ -68,7 +41,7 @@ namespace va {
     template<typename OutputType, typename Result>
     std::shared_ptr<VArray> create_varray(VStoreAllocator& allocator, const Result& result) {
         using RNatural = typename std::decay_t<decltype(result)>::value_type;
-        using OStorable = compatible_type_or_64_bit_t<OutputType, VScalar>;
+        using OStorable = promote::compatible_type_or_64_bit_t<OutputType, VScalar>;
 
         static_assert(std::is_convertible_v<RNatural, OStorable>, "Cannot store the function result.");
 
@@ -100,7 +73,7 @@ namespace va {
         // We may not be able to store them. This is not the best way to go about it
         // (as incompatible types COULD be less than the supported ones, prompting us to upcast), but it's good enough for now.
         using RNatural = typename std::decay_t<decltype(result)>::value_type;
-        using RStorable = compatible_type_or_64_bit_t<RNatural, VScalar>;
+        using RStorable = promote::compatible_type_or_64_bit_t<RNatural, VScalar>;
 
         std::visit(
             [&result, &allocator](auto& target) {
@@ -173,16 +146,37 @@ namespace va {
         assign_to_target<OutputType>(target, allocator, result);
     }
 
-    template<Feature feature, typename PromotionRule, typename FX, typename... Args>
-    static void xoperation_inplace(const FX& fx, VStoreAllocator& allocator, const VArrayTarget& target, const Args&... args) {
-        visit_if_enabled<feature>(
-            [&fx, &allocator, &target](const auto&... args) {
+    template <Feature feature, typename PromotionRule, typename... Args>
+    static DType dtype_for_operation(const Args&... args) {
+        return visit_if_enabled<feature>(
+            [](const auto&... args) -> DType {
                 using InputType = typename PromotionRule::template input_type<promote::value_type_v<std::decay_t<decltype(args)>>...>;
 
                 if constexpr (std::is_same_v<InputType, void>) {
                     throw std::runtime_error("Unsupported type for operation.");
                 }
-                else if constexpr (!std::disjunction_v<std::is_convertible<promote::value_type_v<std::decay_t<decltype(args)>>, InputType>...>) {
+                else {
+                    return dtype_of_type<InputType>();
+                }
+            },
+            args...
+        );
+    }
+
+    using BoolVariant = std::variant<std::true_type, std::false_type>;
+
+    static BoolVariant variant_from_bool(const bool b) { return b ? BoolVariant {std::true_type{}} : BoolVariant {std::false_type{}}; };
+
+    template<Feature feature, typename PromotionRule, typename FX, typename Arg>
+    static void xoperation_single(const FX& fx, VStoreAllocator& allocator, const VArrayTarget& target, const Arg arg) {
+        visit_if_enabled<feature>(
+            [&fx, &allocator, &target](const auto& arg) {
+                using InputType = typename PromotionRule::template input_type<promote::value_type_v<std::decay_t<decltype(arg)>>>;
+
+                if constexpr (std::is_same_v<InputType, void>) {
+                    throw std::runtime_error("Unsupported type for operation.");
+                }
+                else if constexpr (!std::disjunction_v<std::is_convertible<promote::value_type_v<std::decay_t<decltype(arg)>>, InputType>>) {
                     throw std::runtime_error("Cannot promote in this way.");
                 }
                 else {
@@ -190,12 +184,56 @@ namespace va {
                         fx,
                         allocator,
                         target,
-                        promote::deref_promoted<InputType>(promote::promote_value_type_if_needed<InputType>(args))...
+                        promote::deref_promoted<InputType>(
+                            promote::deref_data(promote::promote_value_type_if_needed<InputType>(arg))
+                        )
                     );
                 }
             },
-            args...
+            arg
         );
+    }
+
+    template<typename A, typename B>
+    struct get_left {
+        using value = A;
+    };
+
+    template<typename PromotionRule, typename FX, typename... Args>
+    static void xoperation_precast(const FX& fx, VStoreAllocator& allocator, const VArrayTarget& target, const DType dtype, const Args&... args) {
+        std::visit(
+            [&fx, &allocator, &target, &args...](auto t) {
+                using InputType = typename PromotionRule::template input_type<typename get_left<decltype(t), Args>::value...>;
+
+                if constexpr (!std::is_same_v<InputType, decltype(t)>) {
+                    throw std::runtime_error("Internal error (post-cast type isn't the same as pre-cast type).");
+                }
+                else {
+                    vfunction_monotype<PromotionRule>(
+                        fx,
+                        allocator,
+                        target,
+                        promote::deref_promoted<InputType>(args)...
+                    );
+                }
+            },
+            dtype_to_variant(dtype)
+        );
+    }
+
+    template<Feature feature, typename PromotionRule, typename FX, typename... Args>
+    static void xoperation_inplace(const FX& fx, VStoreAllocator& allocator, const VArrayTarget& target, const Args&... args) {
+        DType dtype = dtype_for_operation<feature, PromotionRule>(args...);
+
+        visit_if_enabled<feature>([&fx, &allocator, &target, dtype, &args...](auto... is_wrong_dtype) {
+            xoperation_precast<PromotionRule>(
+                fx,
+                allocator,
+                target,
+                dtype,
+                promote::deref_data(promote::promote_contents_if<decltype(is_wrong_dtype)>(args, dtype))...
+            );
+        }, variant_from_bool(va::dtype(args) != dtype)...);
     }
 
     // This function mostly exists to make it easier for the compiler to de-duplicate code.
@@ -209,34 +247,69 @@ namespace va {
 
         using NaturalOutputType = decltype(fx(args...));
         using OutputType = typename PromotionRule::template output_type<InputType, NaturalOutputType>;
-        using OStorable = compatible_type_or_64_bit_t<OutputType, VScalar>;
+        using OStorable = promote::compatible_type_or_64_bit_t<OutputType, VScalar>;
 
         // TODO Some xt functions support passing the output type. That would be FAR better than casting it afterwards as here.
         const auto result = OStorable(fx(args...));
         return static_cast<ReturnType>(result);
     }
 
-    template<Feature feature, typename PromotionRule, typename ReturnType, typename FX, typename... Args>
-    static ReturnType vreduce(const FX& fx, const Args&... args) {
+    template<Feature feature, typename PromotionRule, typename ReturnType, typename FX, typename Arg>
+    static ReturnType vreduce_single(const FX& fx, const Arg& arg) {
         return visit_if_enabled<feature>(
-            [&fx](const auto&... args) -> ReturnType {
-                using InputType = typename PromotionRule::template input_type<promote::value_type_v<std::decay_t<decltype(args)>>...>;
+            [&fx](const auto& arg) -> ReturnType {
+                using InputType = typename PromotionRule::template input_type<promote::value_type_v<std::decay_t<decltype(arg)>>>;
 
                 if constexpr (std::is_same_v<InputType, void>) {
                     throw std::runtime_error("Unsupported type for operation.");
                 }
-                else if constexpr (!std::disjunction_v<std::is_convertible<promote::value_type_v<std::decay_t<decltype(args)>>, InputType>...>) {
+                else if constexpr (!std::disjunction_v<std::is_convertible<promote::value_type_v<std::decay_t<decltype(arg)>>, InputType>>) {
                     throw std::runtime_error("Cannot promote in this way.");
                 }
                 else {
                     return vreduction_monotype<PromotionRule, ReturnType>(
                         fx,
-                        promote::deref_promoted<InputType>(promote::promote_value_type_if_needed<InputType>(args))...
+                        promote::deref_promoted<InputType>(
+                            promote::deref_data(promote::promote_value_type_if_needed<InputType>(arg))
+                        )
                     );
                 }
             },
-            args...
+            arg
         );
+    }
+
+    template<typename PromotionRule, typename ReturnType, typename FX, typename... Args>
+    static ReturnType vreduce_precast(const FX& fx, const DType dtype, const Args&... args) {
+        return std::visit(
+            [&fx, &args...](auto t) -> ReturnType {
+                using InputType = typename PromotionRule::template input_type<typename get_left<decltype(t), Args>::value...>;
+
+                if constexpr (!std::is_same_v<InputType, decltype(t)>) {
+                    throw std::runtime_error("Internal error (post-cast type isn't the same as pre-cast type).");
+                }
+                else {
+                    return vreduction_monotype<PromotionRule, ReturnType>(
+                        fx,
+                        promote::deref_promoted<InputType>(args)...
+                    );
+                }
+            },
+            dtype_to_variant(dtype)
+        );
+    }
+
+    template<Feature feature, typename PromotionRule, typename ReturnType, typename FX, typename... Args>
+    static ReturnType vreduce(const FX& fx, const Args&... args) {
+        DType dtype = dtype_for_operation<feature, PromotionRule>(args...);
+
+        return visit_if_enabled<feature>([&fx, dtype, &args...](auto... is_wrong_dtype) -> ReturnType {
+            return vreduce_precast<PromotionRule, ReturnType>(
+                fx,
+                dtype,
+                promote::deref_data(promote::promote_contents_if<decltype(is_wrong_dtype)>(args, dtype))...
+            );
+        }, variant_from_bool(va::dtype(args) != dtype)...);
     }
 }
 

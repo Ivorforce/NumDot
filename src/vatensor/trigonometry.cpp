@@ -13,7 +13,7 @@
 using namespace va;
 
 void va::sin(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
-	xoperation_inplace<
+	xoperation_single<
 		Feature::sin,
 		promote::num_function_result_in_same_out<xt::math::sin_fun>
 	>(
@@ -25,7 +25,7 @@ void va::sin(VStoreAllocator& allocator, const VArrayTarget& target, const VData
 }
 
 void va::cos(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
-	xoperation_inplace<
+	xoperation_single<
 		Feature::cos,
 		promote::num_function_result_in_same_out<xt::math::cos_fun>
 	>(
@@ -37,7 +37,7 @@ void va::cos(VStoreAllocator& allocator, const VArrayTarget& target, const VData
 }
 
 void va::tan(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
-	xoperation_inplace<
+	xoperation_single<
 		Feature::tan,
 		promote::num_function_result_in_same_out<xt::math::tan_fun>
 	>(
@@ -49,7 +49,7 @@ void va::tan(VStoreAllocator& allocator, const VArrayTarget& target, const VData
 }
 
 void va::asin(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
-	xoperation_inplace<
+	xoperation_single<
 		Feature::asin,
 		promote::num_function_result_in_same_out<xt::math::asin_fun>
 	>(
@@ -61,7 +61,7 @@ void va::asin(VStoreAllocator& allocator, const VArrayTarget& target, const VDat
 }
 
 void va::acos(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
-	xoperation_inplace<
+	xoperation_single<
 		Feature::acos,
 		promote::num_function_result_in_same_out<xt::math::acos_fun>
 	>(
@@ -73,7 +73,7 @@ void va::acos(VStoreAllocator& allocator, const VArrayTarget& target, const VDat
 }
 
 void va::atan(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
-	xoperation_inplace<
+	xoperation_single<
 		Feature::atan,
 		promote::num_function_result_in_same_out<xt::math::atan_fun>
 	>(
@@ -98,7 +98,7 @@ void va::atan2(VStoreAllocator& allocator, const VArrayTarget& target, const VDa
 }
 
 void va::sinh(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
-	xoperation_inplace<
+	xoperation_single<
 		Feature::sinh,
 		promote::num_function_result_in_same_out<xt::math::sinh_fun>
 	>(
@@ -110,7 +110,7 @@ void va::sinh(VStoreAllocator& allocator, const VArrayTarget& target, const VDat
 }
 
 void va::cosh(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
-	xoperation_inplace<
+	xoperation_single<
 		Feature::cosh,
 		promote::num_function_result_in_same_out<xt::math::cosh_fun>
 	>(
@@ -122,7 +122,7 @@ void va::cosh(VStoreAllocator& allocator, const VArrayTarget& target, const VDat
 }
 
 void va::tanh(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
-	xoperation_inplace<
+	xoperation_single<
 		Feature::tanh,
 		promote::num_function_result_in_same_out<xt::math::tanh_fun>
 	>(
@@ -134,7 +134,7 @@ void va::tanh(VStoreAllocator& allocator, const VArrayTarget& target, const VDat
 }
 
 void va::asinh(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
-	xoperation_inplace<
+	xoperation_single<
 		Feature::asinh,
 		promote::num_function_result_in_same_out<xt::math::asinh_fun>
 	>(
@@ -146,7 +146,7 @@ void va::asinh(VStoreAllocator& allocator, const VArrayTarget& target, const VDa
 }
 
 void va::acosh(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
-	xoperation_inplace<
+	xoperation_single<
 		Feature::acosh,
 		promote::num_function_result_in_same_out<xt::math::acosh_fun>
 	>(
@@ -158,7 +158,7 @@ void va::acosh(VStoreAllocator& allocator, const VArrayTarget& target, const VDa
 }
 
 void va::atanh(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
-	xoperation_inplace<
+	xoperation_single<
 		Feature::atanh,
 		promote::num_function_result_in_same_out<xt::math::atanh_fun>
 	>(

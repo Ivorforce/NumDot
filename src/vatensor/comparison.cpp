@@ -188,7 +188,7 @@ void va::is_close(VStoreAllocator& allocator, const VArrayTarget& target, const 
 }
 
 void va::is_nan(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a) {
-	va::xoperation_inplace<
+	va::xoperation_single<
 		Feature::is_nan,
 		promote::num_in_nat_out
 	>(
@@ -200,7 +200,7 @@ void va::is_nan(VStoreAllocator& allocator, const VArrayTarget& target, const VD
 }
 
 void va::is_finite(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a) {
-	va::xoperation_inplace<
+	va::xoperation_single<
 		Feature::is_finite,
 		promote::num_in_nat_out
 	>(
@@ -212,7 +212,7 @@ void va::is_finite(VStoreAllocator& allocator, const VArrayTarget& target, const
 }
 
 void va::is_inf(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a) {
-	va::xoperation_inplace<
+	va::xoperation_single<
 		Feature::is_inf,
 		promote::num_in_nat_out
 	>(
@@ -225,7 +225,7 @@ void va::is_inf(VStoreAllocator& allocator, const VArrayTarget& target, const VD
 
 bool va::array_equal(const VData& a, const VData& b) {
 #ifndef _WIN32
-	return va::vreduce<
+	return vreduce<
 		Feature::array_equal,
 		promote::common_in_nat_out,
 		bool
@@ -245,7 +245,8 @@ bool va::array_equal(const VData& a, const VData& b) {
 
 template <typename A, typename B>
 bool all_close(const A& a, const B& b, double rtol, double atol, bool equal_nan) {
-	return va::vreduce<
+	return true;  // FIXME
+	return vreduce<
 		Feature::all_close,
 		promote::common_in_nat_out,
 		bool

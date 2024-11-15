@@ -11,7 +11,7 @@
 using namespace va;
 
 void va::ceil(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
-	xoperation_inplace<
+	xoperation_single<
 		Feature::ceil,
 		promote::reject_complex<promote::num_function_result_in_same_out<xt::math::ceil_fun>>
 	>(
@@ -23,7 +23,7 @@ void va::ceil(VStoreAllocator& allocator, const VArrayTarget& target, const VDat
 }
 
 void va::floor(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
-	xoperation_inplace<
+	xoperation_single<
 		Feature::floor,
 		promote::reject_complex<promote::num_function_result_in_same_out<xt::math::floor_fun>>
 	>(
@@ -35,7 +35,7 @@ void va::floor(VStoreAllocator& allocator, const VArrayTarget& target, const VDa
 }
 
 void va::trunc(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
-	xoperation_inplace<
+	xoperation_single<
 		Feature::trunc,
 		promote::reject_complex<promote::num_function_result_in_same_out<xt::math::trunc_fun>>
 	>(
@@ -47,7 +47,7 @@ void va::trunc(VStoreAllocator& allocator, const VArrayTarget& target, const VDa
 }
 
 void va::round(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
-	xoperation_inplace<
+	xoperation_single<
 		Feature::round,
 		promote::reject_complex<promote::num_function_result_in_same_out<xt::math::round_fun>>
 	>(
@@ -59,7 +59,7 @@ void va::round(VStoreAllocator& allocator, const VArrayTarget& target, const VDa
 }
 
 void va::nearbyint(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
-	xoperation_inplace<
+	xoperation_single<
 		Feature::nearbyint,
 		promote::reject_complex<promote::num_function_result_in_same_out<xt::math::nearbyint_fun>>\
 	>(

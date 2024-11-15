@@ -17,7 +17,7 @@ void va::positive(VStoreAllocator& allocator, const VArrayTarget& target, const 
 }
 
 void va::negative(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a) {
-	va::xoperation_inplace<
+	va::xoperation_single<
 		Feature::negative,
 		promote::num_or_error_in_same_out
 	>(
@@ -233,7 +233,7 @@ void va::clip(VStoreAllocator& allocator, const VArrayTarget& target, const VDat
 }
 
 void va::sign(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
-	xoperation_inplace<
+	xoperation_single<
 		Feature::sign,
 		promote::reject_complex<promote::common_in_same_out>
 	>(
@@ -245,7 +245,7 @@ void va::sign(VStoreAllocator& allocator, const VArrayTarget& target, const VDat
 }
 
 void va::abs(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
-	xoperation_inplace<
+	xoperation_single<
 		Feature::abs,
 		promote::num_in_nat_out
 	>(
@@ -266,7 +266,7 @@ struct square_fun {
 };
 
 void va::square(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
-	xoperation_inplace<
+	xoperation_single<
 		Feature::square,
 		promote::common_in_same_out
 	>(
@@ -278,7 +278,7 @@ void va::square(VStoreAllocator& allocator, const VArrayTarget& target, const VD
 }
 
 void va::sqrt(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
-	xoperation_inplace<
+	xoperation_single<
 		Feature::sqrt,
 		promote::num_function_result_in_same_out<xt::math::sqrt_fun>
 	>(
@@ -290,7 +290,7 @@ void va::sqrt(VStoreAllocator& allocator, const VArrayTarget& target, const VDat
 }
 
 void va::exp(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
-	xoperation_inplace<
+	xoperation_single<
 		Feature::exp,
 		promote::num_function_result_in_same_out<xt::math::exp_fun>
 	>(
@@ -302,7 +302,7 @@ void va::exp(VStoreAllocator& allocator, const VArrayTarget& target, const VData
 }
 
 void va::log(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
-	xoperation_inplace<
+	xoperation_single<
 		Feature::log,
 		promote::num_function_result_in_same_out<xt::math::log_fun>
 	>(
@@ -314,7 +314,7 @@ void va::log(VStoreAllocator& allocator, const VArrayTarget& target, const VData
 }
 
 void va::rad2deg(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
-	xoperation_inplace<
+	xoperation_single<
 		Feature::rad2deg,
 		promote::reject_complex<promote::num_function_result_in_same_out<xt::math::rad2deg>>
 	>(
@@ -326,7 +326,7 @@ void va::rad2deg(VStoreAllocator& allocator, const VArrayTarget& target, const V
 }
 
 void va::deg2rad(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
-	xoperation_inplace<
+	xoperation_single<
 		Feature::deg2rad,
 		promote::reject_complex<promote::num_function_result_in_same_out<xt::math::deg2rad>>
 	>(
@@ -353,6 +353,7 @@ void va::conjugate(VStoreAllocator& allocator, const VArrayTarget& target, const
 		return;
 	}
 
+	// TODO Can do this with a[imag] = -a[imag]
 	xoperation_inplace<
 		Feature::negative,
 		promote::reject_non_complex<promote::common_in_same_out>

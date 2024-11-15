@@ -10,6 +10,33 @@
 
 namespace va {
 	namespace promote {
+		// Type trait to check if T is in std::variant<Args...>
+		template<typename T, typename Variant>
+		struct is_in_variant;
+
+		template<typename T, typename... Ts>
+		struct is_in_variant<T, std::variant<Ts...>> : std::disjunction<std::is_same<T, Ts>...> {};
+
+		// Helper variable template
+		template<typename T, typename Variant>
+		inline constexpr bool is_in_variant_v = is_in_variant<T, Variant>::value;
+
+		template<typename T>
+		struct to_64_bit {
+			using type = std::conditional_t<std::is_floating_point_v<T>, double_t, int64_t>;
+		};
+
+		template<typename T>
+		using to_64_bit_t = typename to_64_bit<T>::type;
+
+		template<typename T, typename Variant>
+		struct compatible_type_or_64_bit {
+			using type = std::conditional_t<is_in_variant_v<T, Variant>, T, to_64_bit_t<T>>;
+		};
+
+		template<typename T, typename Variant>
+		using compatible_type_or_64_bit_t = typename compatible_type_or_64_bit<T, Variant>::type;
+
 		template <typename T, typename Enable = void>
 		struct ValueType;
 
@@ -56,6 +83,21 @@ namespace va {
 			std::negation<std::is_same<T, bool>>
 		> {};
 
+		template <typename Cond, typename T, std::enable_if_t<std::is_same_v<Cond, std::true_type>, int> = 0>
+		auto promote_contents_if(const T& arg, const DType dtype) {
+			if constexpr (std::is_same_v<T, VScalar>) {
+				return va::static_cast_scalar(arg, dtype);
+			}
+			else {
+				return va::copy_as_dtype(va::store::default_allocator, arg, dtype);
+			}
+		}
+
+		template <typename Cond, typename T, std::enable_if_t<!std::is_same_v<Cond, std::true_type>, int> = 0>
+		const T& promote_contents_if(const T& arg, const DType dtype) {
+			return arg;
+		}
+
 		template <typename NeededType, typename T, std::enable_if_t<!std::is_same_v<NeededType, value_type_v<std::decay_t<T>>>, int> = 0>
 		auto promote_value_type_if_needed(const T& arg) {
 			if constexpr (std::is_fundamental_v<std::decay_t<T>> || xtl::is_complex<std::decay_t<T>>::value) {
@@ -79,21 +121,36 @@ namespace va {
 			return arg;
 		}
 
-		template <typename NeededType, typename T, std::enable_if_t<std::is_same_v<NeededType, value_type_v<std::decay_t<T>>>, int> = 0>
-		T deref_promoted(T&& t) {
-			// Primitives etc.
+		template <typename T, std::enable_if_t<is_in_variant_v<T, va::VScalar>, int> = 0>
+		T deref_data(T&& t) {
 			return std::forward<T>(t);
 		}
 
-		template <typename NeededType, typename T, std::enable_if_t<std::is_same_v<NeededType, value_type_v<std::decay_t<T>>>, int> = 0>
-		const T& deref_promoted(const T& t) {
-			// Primitives etc.
+		static const VData& deref_data(const std::shared_ptr<VArray>& t) {
+			return t->data;
+		}
+
+		static const VData& deref_data(const VData& t) {
+			return t;
+		}
+
+		static const VScalar& deref_data(const VScalar &t) {
 			return t;
 		}
 
 		template <typename NeededType>
-		const compute_case<NeededType*>& deref_promoted(const std::shared_ptr<VArray> &t) {
-			return std::get<compute_case<NeededType*>>(t->data);
+		NeededType deref_promoted(NeededType&& t) {
+			return std::forward<NeededType>(t);
+		}
+
+		template <typename NeededType>
+		const compute_case<NeededType*>& deref_promoted(const VData& t) {
+			return std::get<compute_case<NeededType*>>(t);
+		}
+
+		template <typename NeededType>
+		NeededType deref_promoted(const VScalar &t) {
+			return std::get<NeededType>(t);
 		}
 
 		template <typename Need, typename Have, std::enable_if_t<std::is_same_v<std::decay_t<Need>, std::decay_t<Have>>, int> = 0>

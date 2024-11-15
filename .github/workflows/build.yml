@@ -35,15 +35,24 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: true
-      - name: 🔗 GDExtension Build
-        uses: godotengine/godot-cpp-template/.github/actions/build@main
+      - name: Setup godot-cpp
+        uses: Ivorforce/godot-cpp-template/.github/actions/setup-godot-cpp@action-setup-separate
         with:
           platform: ${{ matrix.platform }}
-          arch: ${{ matrix.arch }}
-          float-precision: ${{ matrix.float_precision }}
-          build-target-type: ${{ matrix.build_target_type }}
-          gdextension-directory: ''
-          em_version: '3.1.55'  # FIXME Doesn't compile on the newest, xtensor has problems
+          em-version: '3.1.55'  # FIXME Doesn't compile on the newest, xtensor has problems
+          em-cache-directory: emsdk-cache.${{ matrix.float_precision }}.${{ matrix.build_target_type }}
+      - name: Cache .scons_cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ${{ github.workspace }}/.scons_cache
+          key: ${{ matrix.platform }}_${{ matrix.arch }}_${{ matrix.float_precision }}_${{ matrix.build_target_type }}_cache
+      - name: Build GDExtension Debug Build
+        shell: sh
+        env:
+          SCONS_CACHE: ${{ github.workspace }}/.scons_cache
+        run: |
+          scons target=${{ matrix.build_target_type }} platform=${{ matrix.platform }} arch=${{ matrix.arch }} precision=${{ matrix.float_precision }} scu=yes
       - name: Mac Sign
         if: ${{ matrix.platform == 'macos' && env.APPLE_CERT_BASE64 }}
         env:

@@ -14,10 +14,10 @@ Upcoming Changes (main branch)
 ------------------------------
 **Added**
 
-- ``array_equiv`` function.
-- Conversion functions for ``Plane``, ``Quaternion``, ``Projection`` and ``Basis``.
-- ``NDArray`` functions for getting slices as variant types (if shape is compatible).
-- ``complex64`` and ``complex128`` array creation shorthand functions.
+- Added ``array_equiv`` function.
+- Added conversion functions for ``Plane``, ``Quaternion``, ``Projection`` and ``Basis``.
+- Added ``NDArray`` functions for getting slices as variant types (if shape is compatible).
+- Added ``complex64`` and ``complex128`` array creation shorthand functions.
 
 **Changed**
 

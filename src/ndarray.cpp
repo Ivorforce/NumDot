@@ -13,6 +13,7 @@
 #include <vatensor/vcarray.hpp>                        // fill_c_array_flat
 #include <algorithm>                               // for copy
 #include <cstddef>                                 // for size_t
+#include <ndutil.hpp>
 #include <stdexcept>                               // for runtime_error
 #include <variant>                                 // for visit
 #include <gdconvert/packed_array_store.hpp>
@@ -22,6 +23,7 @@
 #include "gdconvert/conversion_slice.hpp"            // for variants_to_slice_...
 #include "gdconvert/conversion_string.hpp"           // for xt_to_string
 #include "gdconvert/conversion_scalar.hpp"
+#include "gdconvert/variant_tensor.hpp"
 #include "godot_cpp/classes/global_constants.hpp"  // for MethodFlags
 #include "godot_cpp/core/class_db.hpp"             // for D_METHOD, ClassDB
 #include "godot_cpp/core/error_macros.hpp"         // for ERR_FAIL_COND_V_MSG
@@ -59,15 +61,15 @@ void NDArray::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("_iter_get"), &NDArray::_iter_get);
 	ClassDB::bind_method(D_METHOD("_iter_next"), &NDArray::_iter_next);
 
-	ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "set", &NDArray::set);
-	ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "get", &NDArray::get);
-	ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "get_bool", &NDArray::get_bool);
-	ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "get_int", &NDArray::get_int);
-	ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "get_float", &NDArray::get_float);
+	numdot::bind_vararg_method(numdot::VD_METHOD("set", PropertyInfo(Variant::NIL, "value")), &NDArray::set);
+	numdot::bind_vararg_method(numdot::VD_METHOD("get"), &NDArray::get);
+	numdot::bind_vararg_method(numdot::VD_METHOD("get_bool"), &NDArray::get_bool);
+	numdot::bind_vararg_method(numdot::VD_METHOD("get_int"), &NDArray::get_int);
+	numdot::bind_vararg_method(numdot::VD_METHOD("get_float"), &NDArray::get_float);
 
 	godot::ClassDB::bind_method(D_METHOD("as_type", "type"), &NDArray::as_type);
 	godot::ClassDB::bind_method(D_METHOD("copy"), &NDArray::copy);
-	ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "transpose", &NDArray::transpose);
+	numdot::bind_vararg_method(numdot::VD_METHOD("transpose"), &NDArray::transpose);
 	godot::ClassDB::bind_method(D_METHOD("flatten"), &NDArray::flatten);
 
 	godot::ClassDB::bind_method(D_METHOD("to_bool"), &NDArray::to_bool);
@@ -483,168 +485,87 @@ bool NDArray::to_bool() const { return static_cast<bool>(*this); }
 int64_t NDArray::to_int() const { return static_cast<int64_t>(*this); }
 double_t NDArray::to_float() const { return static_cast<double_t>(*this); }
 
-#define TRY_CONVERT(target, read)\
-try {\
-	va::util::fill_c_array_flat(target, read);\
-}\
-catch (std::runtime_error& error) {\
-	ERR_FAIL_V_MSG({}, error.what());\
-}\
-
 Vector2 NDArray::to_vector2() const {
-	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to vector");
-	ERR_FAIL_COND_V_MSG(array->shape()[0] != 2, {}, "array dimension must be size 2");
-
-	Vector2 vector;
-	TRY_CONVERT(&vector.coord[0], array->data);
-
-	return vector;
+	return numdot::to_variant_tensor<Vector2, real_t, 2>(array->data);
 }
 
 Vector3 NDArray::to_vector3() const {
-	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to vector");
-	ERR_FAIL_COND_V_MSG(array->shape()[0] != 3, {}, "array dimension must be size 3");
-
-	Vector3 vector;
-	TRY_CONVERT(&vector.coord[0], array->data);
-
-	return vector;
+	return numdot::to_variant_tensor<Vector3, real_t, 3>(array->data);
 }
 
 Vector4 NDArray::to_vector4() const {
-	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to vector");
-	ERR_FAIL_COND_V_MSG(array->shape()[0] != 4, {}, "array dimension must be size 4");
-
-	Vector4 vector;
-	TRY_CONVERT(&vector.components[0], array->data);
-
-	return vector;
+	return numdot::to_variant_tensor<Vector4, real_t, 4>(array->data);
 }
 
 Vector2i NDArray::to_vector2i() const {
-	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to vector");
-	ERR_FAIL_COND_V_MSG(array->shape()[0] != 2, {}, "array dimension must be size 2");
-
-	Vector2i vector;
-	TRY_CONVERT(&vector.coord[0], array->data);
-
-	return vector;
+	return numdot::to_variant_tensor<Vector2i, int32_t, 2>(array->data);
 }
 
 Vector3i NDArray::to_vector3i() const {
-	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to vector");
-	ERR_FAIL_COND_V_MSG(array->shape()[0] != 3, {}, "array dimension must be size 3");
-
-	Vector3i vector;
-	TRY_CONVERT(&vector.coord[0], array->data);
-
-	return vector;
+	return numdot::to_variant_tensor<Vector3i, int32_t, 3>(array->data);
 }
 
 Vector4i NDArray::to_vector4i() const {
-	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to vector");
-	ERR_FAIL_COND_V_MSG(array->shape()[0] != 4, {}, "array dimension must be size 4");
-
-	Vector4i vector;
-	TRY_CONVERT(&vector.coord[0], array->data);
-
-	return vector;
+	return numdot::to_variant_tensor<Vector4i, int32_t, 4>(array->data);
 }
 
 Color NDArray::to_color() const {
-	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to color");
-	ERR_FAIL_COND_V_MSG(array->shape()[0] != 4, {}, "array dimension must be size 4");
-
-	Color vector;
-	TRY_CONVERT(&vector.components[0], array->data);
-
-	return vector;
+	return numdot::to_variant_tensor<Color, float_t, 4>(array->data);
 }
 
 PackedFloat32Array NDArray::to_packed_float32_array() const {
-	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to packed");
-
 	if (array->is_contiguous() && array->is_full_view()) {
 		if (auto* store = dynamic_cast<numdot::VStorePackedFloat32Array*>(&*array->store)) {
 			return store->array;
 		}
 	}
 
-	PackedFloat32Array packed;
-	packed.resize(static_cast<int64_t>(array->shape()[0]));
-	TRY_CONVERT(packed.ptrw(), array->data);
-
-	return packed;
+	return numdot::to_packed<PackedFloat32Array, float_t>(array->data);
 }
 
 PackedFloat64Array NDArray::to_packed_float64_array() const {
-	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to packed");
-
 	if (array->is_contiguous() && array->is_full_view()) {
 		if (auto* store = dynamic_cast<numdot::VStorePackedFloat64Array*>(&*array->store)) {
 			return store->array;
 		}
 	}
 
-	PackedFloat64Array packed;
-	packed.resize(static_cast<int64_t>(array->shape()[0]));
-	TRY_CONVERT(packed.ptrw(), array->data);
-
-	return packed;
+	return numdot::to_packed<PackedFloat64Array, double_t>(array->data);
 }
 
 PackedByteArray NDArray::to_packed_byte_array() const {
-	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to packed");
-
 	if (array->is_contiguous() && array->is_full_view()) {
 		if (auto* store = dynamic_cast<numdot::VStorePackedByteArray*>(&*array->store)) {
 			return store->array;
 		}
 	}
 
-	PackedByteArray packed;
-	packed.resize(static_cast<int64_t>(array->shape()[0]));
-	TRY_CONVERT(packed.ptrw(), array->data);
-
-	return packed;
+	return numdot::to_packed<PackedByteArray, uint8_t>(array->data);
 }
 
 PackedInt32Array NDArray::to_packed_int32_array() const {
-	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to packed");
-
 	if (array->is_contiguous() && array->is_full_view()) {
 		if (auto* store = dynamic_cast<numdot::VStorePackedInt32Array*>(&*array->store)) {
 			return store->array;
 		}
 	}
 
-	PackedInt32Array packed;
-	packed.resize(static_cast<int64_t>(array->shape()[0]));
-	TRY_CONVERT(packed.ptrw(), array->data);
-
-	return packed;
+	return numdot::to_packed<PackedInt32Array, int32_t>(array->data);
 }
 
 PackedInt64Array NDArray::to_packed_int64_array() const {
-	ERR_FAIL_COND_V_MSG(array->dimension() != 1, {}, "flatten the array before converting to packed");
-
 	if (array->is_contiguous() && array->is_full_view()) {
 		if (auto* store = dynamic_cast<numdot::VStorePackedInt64Array*>(&*array->store)) {
 			return store->array;
 		}
 	}
 
-	PackedInt64Array packed;
-	packed.resize(static_cast<int64_t>(array->shape()[0]));
-	TRY_CONVERT(packed.ptrw(), array->data);
-
-	return packed;
+	return numdot::to_packed<PackedInt64Array, int64_t>(array->data);
 }
 
 PackedVector2Array NDArray::to_packed_vector2_array() const {
 	ERR_FAIL_COND_V_MSG(array->dimension() != 2, {}, "flatten the array before converting to packed");
 	ERR_FAIL_COND_V_MSG(array->shape()[1] != 2, {}, "final array dimension must be size 2");
-	// TODO Handle row major/minor? This still assumes it's normal row-major, i think.
 
 	if (array->is_contiguous() && array->is_full_view()) {
 		if (auto* store = dynamic_cast<numdot::VStorePackedVector2Array*>(&*array->store)) {
@@ -652,17 +573,12 @@ PackedVector2Array NDArray::to_packed_vector2_array() const {
 		}
 	}
 
-	PackedVector2Array packed;
-	packed.resize(static_cast<int64_t>(array->shape()[0]));
-	TRY_CONVERT(&packed.ptrw()->coord[0], array->data);
-
-	return packed;
+	return numdot::to_packed<PackedVector2Array, real_t, 2>(array->data);
 }
 
 PackedVector3Array NDArray::to_packed_vector3_array() const {
 	ERR_FAIL_COND_V_MSG(array->dimension() != 2, {}, "flatten the array before converting to packed");
 	ERR_FAIL_COND_V_MSG(array->shape()[1] != 3, {}, "final array dimension must be size 2");
-	// TODO Handle row major/minor? This still assumes it's normal row-major, i think.
 
 	if (array->is_contiguous() && array->is_full_view()) {
 		if (auto* store = dynamic_cast<numdot::VStorePackedVector3Array*>(&*array->store)) {
@@ -670,17 +586,12 @@ PackedVector3Array NDArray::to_packed_vector3_array() const {
 		}
 	}
 
-	PackedVector3Array packed;
-	packed.resize(static_cast<int64_t>(array->shape()[0]));
-	TRY_CONVERT(&packed.ptrw()->coord[0], array->data);
-
-	return packed;
+	return numdot::to_packed<PackedVector3Array, real_t, 3>(array->data);
 }
 
 PackedVector4Array NDArray::to_packed_vector4_array() const {
 	ERR_FAIL_COND_V_MSG(array->dimension() != 2, {}, "flatten the array before converting to packed");
 	ERR_FAIL_COND_V_MSG(array->shape()[1] != 4, {}, "final array dimension must be size 2");
-	// TODO Handle row major/minor? This still assumes it's normal row-major, i think.
 
 	if (array->is_contiguous() && array->is_full_view()) {
 		if (auto* store = dynamic_cast<numdot::VStorePackedVector4Array*>(&*array->store)) {
@@ -688,17 +599,12 @@ PackedVector4Array NDArray::to_packed_vector4_array() const {
 		}
 	}
 
-	PackedVector4Array packed;
-	packed.resize(static_cast<int64_t>(array->shape()[0]));
-	TRY_CONVERT(&packed.ptrw()->components[0], array->data);
-
-	return packed;
+	return numdot::to_packed<PackedVector4Array, real_t, 4>(array->data);
 }
 
 PackedColorArray NDArray::to_packed_color_array() const {
 	ERR_FAIL_COND_V_MSG(array->dimension() != 2, {}, "flatten the array before converting to packed");
 	ERR_FAIL_COND_V_MSG(array->shape()[1] != 4, {}, "final array dimension must be size 2");
-	// TODO Handle row major/minor? This still assumes it's normal row-major, i think.
 
 	if (array->is_contiguous() && array->is_full_view()) {
 		if (auto* store = dynamic_cast<numdot::VStorePackedColorArray*>(&*array->store)) {
@@ -706,11 +612,7 @@ PackedColorArray NDArray::to_packed_color_array() const {
 		}
 	}
 
-	PackedColorArray packed;
-	packed.resize(static_cast<int64_t>(array->shape()[0]));
-	TRY_CONVERT(&packed.ptrw()->components[0], array->data);
-
-	return packed;
+	return numdot::to_packed<PackedColorArray, float_t, 4>(array->data);
 }
 
 TypedArray<NDArray> NDArray::to_godot_array() const {

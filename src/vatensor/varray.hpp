@@ -101,6 +101,10 @@ namespace va {
     [[nodiscard]] std::size_t size(const VData& read);
     [[nodiscard]] std::size_t dimension(const VData& read);
     [[nodiscard]] std::size_t size_of_array_in_bytes(const VData& read);
+    [[nodiscard]] static bool is_contiguous(const VData& read) {
+        const auto layout = va::layout(read);
+        return layout == xt::layout_type::any || layout == xt::layout_type::row_major;
+    }
 
     VData sliced_data(const VData& data, const xt::xstrided_slice_vector& slices);
     [[nodiscard]] VScalar to_single_value(const VData& read);
@@ -136,7 +140,7 @@ namespace va {
         [[nodiscard]] std::size_t size() const { return va::size(data); }
         [[nodiscard]] std::size_t dimension() const { return va::dimension(data); }
         [[nodiscard]] std::size_t is_full_view() const { return dtype() == store->dtype() && data_offset == 0 && size() == store->size(); }
-        [[nodiscard]] std::size_t is_contiguous() const { return layout() == xt::layout_type::row_major; }
+        [[nodiscard]] bool is_contiguous() const { return va::is_contiguous(data); }
 
         [[nodiscard]] VScalar to_single_value() const { return va::to_single_value(data); }
 

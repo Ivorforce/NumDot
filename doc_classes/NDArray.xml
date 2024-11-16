@@ -695,6 +695,7 @@
 		</method>
 		<method name="set" qualifiers="const vararg">
 			<return type="void" />
+			<param index="0" name="value" type="Variant" />
 			<description>
 				Indexes into the array, sets the element to the given value.
 				The first value is the value to be set, all following values are indexes into the array.
@@ -732,6 +733,12 @@
 			<return type="int" />
 			<description>
 				The offset of the first element in this array in the underlying data buffer.
+			</description>
+		</method>
+		<method name="to_basis" qualifiers="const">
+			<return type="Basis" />
+			<description>
+				If shape is [lb]3, 3[rb], converts this tensor to a Basis.
 			</description>
 		</method>
 		<method name="to_bool" qualifiers="const">
@@ -828,6 +835,24 @@
 			<description>
 				If shape is [lb]?, 4[rb], converts this tensor to a PackedVector4Array.
 				If the backing array is PackedVector4Array, it will produce an instantaneous copy-on-write copy.
+			</description>
+		</method>
+		<method name="to_plane" qualifiers="const">
+			<return type="Plane" />
+			<description>
+				If shape is [lb]4[rb], converts this tensor to a Plane.
+			</description>
+		</method>
+		<method name="to_projection" qualifiers="const">
+			<return type="Projection" />
+			<description>
+				If shape is [lb]4, 4[rb], converts this tensor to a Projection.
+			</description>
+		</method>
+		<method name="to_quaternion" qualifiers="const">
+			<return type="Quaternion" />
+			<description>
+				If shape is [lb]4[rb], converts this tensor to a Quaternion.
 			</description>
 		</method>
 		<method name="to_vector2" qualifiers="const">

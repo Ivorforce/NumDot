@@ -106,6 +106,11 @@ public:
 	[[nodiscard]] Vector4i to_vector4i() const;
 	[[nodiscard]] Color to_color() const;
 
+	[[nodiscard]] Quaternion to_quaternion() const;
+	[[nodiscard]] Plane to_plane() const;
+	[[nodiscard]] Basis to_basis() const;
+	[[nodiscard]] Projection to_projection() const;
+
 	[[nodiscard]] PackedFloat32Array to_packed_float32_array() const;
 	[[nodiscard]] PackedFloat64Array to_packed_float64_array() const;
 	[[nodiscard]] PackedByteArray to_packed_byte_array() const;

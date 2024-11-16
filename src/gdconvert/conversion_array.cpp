@@ -183,13 +183,25 @@ void find_shape_and_dtype_of_array(va::shape_type& shape, va::DType& dtype, cons
 						dtype = va::dtype_common_type(dtype, va::dtype_of_type<real_t>());
 						add_size_at_idx(shape, current_dim_idx + 1, 3);
 						continue;
-					case Variant::VECTOR4:
-						dtype = va::dtype_common_type(dtype, va::dtype_of_type<real_t>());
-						add_size_at_idx(shape, current_dim_idx + 1, 4);
-						continue;
 					case Variant::COLOR:
 						dtype = va::dtype_common_type(dtype, va::dtype_of_type<float_t>());
 						add_size_at_idx(shape, current_dim_idx + 1, 4);
+						continue;
+					case Variant::VECTOR4:
+					case Variant::QUATERNION:
+					case Variant::PLANE:
+						dtype = va::dtype_common_type(dtype, va::dtype_of_type<real_t>());
+						add_size_at_idx(shape, current_dim_idx + 1, 4);
+						continue;
+					case Variant::BASIS:
+						dtype = va::dtype_common_type(dtype, va::dtype_of_type<real_t>());
+						add_size_at_idx(shape, current_dim_idx + 1, 3);
+						add_size_at_idx(shape, current_dim_idx + 2, 3);
+						continue;
+					case Variant::PROJECTION:
+						dtype = va::dtype_common_type(dtype, va::dtype_of_type<real_t>());
+						add_size_at_idx(shape, current_dim_idx + 1, 4);
+						add_size_at_idx(shape, current_dim_idx + 2, 4);
 						continue;
 					default:
 						break;
@@ -341,10 +353,15 @@ static auto adapt_packed(const T& packed) {
 template <typename T>
 static auto adapt_array_tensor(const T& t) {
 	const auto& array = numdot::VariantAsArray<T>::get(t);
+	using Tensor = numdot::ArrayAsTensor<std::remove_reference_t<decltype(array)>>;
+
+	const auto nat_shape = typename Tensor::shape {};
+	va::shape_type shape(Tensor::shape::size());
+	std::copy_n(nat_shape.begin(), nat_shape.size(), shape.begin());
 
 	return va::util::adapt_c_array(
-		const_cast<numdot::array_value_type<decltype(array)>*>(&*array),
-		{ sizeof(array) / sizeof(*array) }
+		const_cast<std::remove_const_t<typename Tensor::value_type>*>(reinterpret_cast<typename Tensor::value_type*>(&*array)),
+		shape
 	);
 }
 
@@ -452,44 +469,57 @@ std::shared_ptr<va::VArray> array_as_varray(const Array& input_array) {
 				}
 				case Variant::VECTOR2I: {
 					auto compute = varray->sliced_data(element_idx);
-					const Vector2i vector = array_element;
-					va::assign(compute, adapt_array_tensor(vector));
+					va::assign(compute, adapt_array_tensor(Vector2i(array_element)));
 					continue;
 				}
 				case Variant::VECTOR3I: {
 					auto compute = varray->sliced_data(element_idx);
-					const Vector3i vector = array_element;
-					va::assign(compute, adapt_array_tensor(vector));
+					va::assign(compute, adapt_array_tensor(Vector3i(array_element)));
 					continue;
 				}
 				case Variant::VECTOR4I: {
 					auto compute = varray->sliced_data(element_idx);
-					const Vector4i vector = array_element;
-					va::assign(compute, adapt_array_tensor(vector));
+					va::assign(compute, adapt_array_tensor(Vector4i(array_element)));
 					continue;
 				}
 				case Variant::VECTOR2: {
 					auto compute = varray->sliced_data(element_idx);
-					const Vector2 vector = array_element;
-					va::assign(compute, adapt_array_tensor(vector));
+					va::assign(compute, adapt_array_tensor(Vector2(array_element)));
 					continue;
 				}
 				case Variant::VECTOR3: {
 					auto compute = varray->sliced_data(element_idx);
-					const Vector3 vector = array_element;
-					va::assign(compute, adapt_array_tensor(vector));
+					va::assign(compute, adapt_array_tensor(Vector3(array_element)));
 					continue;
 				}
 				case Variant::VECTOR4: {
 					auto compute = varray->sliced_data(element_idx);
-					const Vector4 vector = array_element;
-					va::assign(compute, adapt_array_tensor(vector));
+					va::assign(compute, adapt_array_tensor(Vector4(array_element)));
 					continue;
 				}
 				case Variant::COLOR: {
 					auto compute = varray->sliced_data(element_idx);
-					const Color vector = array_element;
-					va::assign(compute, adapt_array_tensor(vector));
+					va::assign(compute, adapt_array_tensor(Color(array_element)));
+					continue;
+				}
+				case Variant::QUATERNION: {
+					auto compute = varray->sliced_data(element_idx);
+					va::assign(compute, adapt_array_tensor(Quaternion(array_element)));
+					continue;
+				}
+				case Variant::PLANE: {
+					auto compute = varray->sliced_data(element_idx);
+					va::assign(compute, adapt_array_tensor(Plane(array_element)));
+					continue;
+				}
+				case Variant::BASIS: {
+					auto compute = varray->sliced_data(element_idx);
+					va::assign(compute, adapt_array_tensor(Basis(array_element)));
+					continue;
+				}
+				case Variant::PROJECTION: {
+					auto compute = varray->sliced_data(element_idx);
+					va::assign(compute, adapt_array_tensor(Projection(array_element)));
 					continue;
 				}
 				default:
@@ -587,46 +617,37 @@ std::shared_ptr<va::VArray> variant_as_array(const Variant& array) {
 			);
 		}
 		case Variant::VECTOR2I: {
-			auto vector = Vector2i(array);
-			return numdot::varray_from_tensor<numdot::VStoreVector2i>(
-				{ vector.x, vector.y }
-			);
+			return numdot::varray_from_tensor(Vector2i(array));
 		}
 		case Variant::VECTOR3I: {
-			auto vector = Vector3i(array);
-			return numdot::varray_from_tensor<numdot::VStoreVector3i>(
-				{ vector.x, vector.y, vector.z }
-			);
+			return numdot::varray_from_tensor(Vector3i(array));
 		}
 		case Variant::VECTOR4I: {
-			auto vector = Vector4i(array);
-			return numdot::varray_from_tensor<numdot::VStoreVector4i>(
-				{ vector.x, vector.y, vector.z, vector.w }
-			);
+			return numdot::varray_from_tensor(Vector4i(array));
 		}
 		case Variant::VECTOR2: {
-			auto vector = Vector2(array);
-			return numdot::varray_from_tensor<numdot::VStoreVector2>(
-				{ vector.x, vector.y }
-			);
+			return numdot::varray_from_tensor(Vector2(array));
 		}
 		case Variant::VECTOR3: {
-			auto vector = Vector3(array);
-			return numdot::varray_from_tensor<numdot::VStoreVector3>(
-				{ vector.x, vector.y, vector.z }
-			);
+			return numdot::varray_from_tensor(Vector3(array));
 		}
 		case Variant::VECTOR4: {
-			auto vector = Vector4(array);
-			return numdot::varray_from_tensor<numdot::VStoreVector4>(
-				{ vector.x, vector.y, vector.z, vector.w }
-			);
+			return numdot::varray_from_tensor(Vector4(array));
 		}
 		case Variant::COLOR: {
-			auto vector = Color(array);
-			return numdot::varray_from_tensor<numdot::VStoreColor>(
-				{ vector.r, vector.g, vector.b, vector.a }
-			);
+			return numdot::varray_from_tensor(Color(array));
+		}
+		case Variant::QUATERNION: {
+			return numdot::varray_from_tensor(Quaternion(array));
+		}
+		case Variant::BASIS: {
+			return numdot::varray_from_tensor(Basis(array));
+		}
+		case Variant::PROJECTION: {
+			return numdot::varray_from_tensor(Projection(array));
+		}
+		case Variant::PLANE: {
+			return numdot::varray_from_tensor(Plane(array));
 		}
 		default:
 			break;

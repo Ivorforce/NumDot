@@ -13,7 +13,7 @@ namespace va::util {
 	}
 
 	template<typename T>
-	void fill_c_array_flat(T* target, const va::VData& array) {
+	void fill_c_array_flat(T target, const va::VData& array) {
 		std::visit(
 			[target](auto& carray) {
 				fill_c_array_flat(target, carray);

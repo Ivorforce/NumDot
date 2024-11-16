@@ -194,7 +194,7 @@ Methods
    +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``int``                                                    | :ref:`ndim<class_NDArray_method_ndim>`\ (\ ) |const|                                                                                                             |
    +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                                                     | :ref:`set<class_NDArray_method_set>`\ (\ ...\ ) |const| |vararg|                                                                                                 |
+   | |void|                                                     | :ref:`set<class_NDArray_method_set>`\ (\ value\: ``Variant``, ...\ ) |const| |vararg|                                                                            |
    +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``PackedInt64Array``                                       | :ref:`shape<class_NDArray_method_shape>`\ (\ ) |const|                                                                                                           |
    +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -205,6 +205,8 @@ Methods
    | :ref:`Layout<enum_NDArray_Layout>`                         | :ref:`strides_layout<class_NDArray_method_strides_layout>`\ (\ ) |const|                                                                                         |
    +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``int``                                                    | :ref:`strides_offset<class_NDArray_method_strides_offset>`\ (\ ) |const|                                                                                         |
+   +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``Basis``                                                  | :ref:`to_basis<class_NDArray_method_to_basis>`\ (\ ) |const|                                                                                                     |
    +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``bool``                                                   | :ref:`to_bool<class_NDArray_method_to_bool>`\ (\ ) |const|                                                                                                       |
    +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -233,6 +235,12 @@ Methods
    | ``PackedVector3Array``                                     | :ref:`to_packed_vector3_array<class_NDArray_method_to_packed_vector3_array>`\ (\ ) |const|                                                                       |
    +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``PackedVector4Array``                                     | :ref:`to_packed_vector4_array<class_NDArray_method_to_packed_vector4_array>`\ (\ ) |const|                                                                       |
+   +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``Plane``                                                  | :ref:`to_plane<class_NDArray_method_to_plane>`\ (\ ) |const|                                                                                                     |
+   +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``Projection``                                             | :ref:`to_projection<class_NDArray_method_to_projection>`\ (\ ) |const|                                                                                           |
+   +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``Quaternion``                                             | :ref:`to_quaternion<class_NDArray_method_to_quaternion>`\ (\ ) |const|                                                                                           |
    +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``Vector2``                                                | :ref:`to_vector2<class_NDArray_method_to_vector2>`\ (\ ) |const|                                                                                                 |
    +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1445,7 +1453,7 @@ Number of array dimensions.
 
 .. rst-class:: classref-method
 
-|void| **set**\ (\ ...\ ) |const| |vararg| :ref:`🔗<class_NDArray_method_set>`
+|void| **set**\ (\ value\: ``Variant``, ...\ ) |const| |vararg| :ref:`🔗<class_NDArray_method_set>`
 
 Indexes into the array, sets the element to the given value.
 
@@ -1518,6 +1526,18 @@ All arrays start with RowMajor layout, but rearranging (like :ref:`nd.transpose<
 ``int`` **strides_offset**\ (\ ) |const| :ref:`🔗<class_NDArray_method_strides_offset>`
 
 The offset of the first element in this array in the underlying data buffer.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_to_basis:
+
+.. rst-class:: classref-method
+
+``Basis`` **to_basis**\ (\ ) |const| :ref:`🔗<class_NDArray_method_to_basis>`
+
+If shape is \[3, 3\], converts this tensor to a Basis.
 
 .. rst-class:: classref-item-separator
 
@@ -1710,6 +1730,42 @@ If the backing array is PackedVector3Array, it will produce an instantaneous cop
 If shape is \[?, 4\], converts this tensor to a PackedVector4Array.
 
 If the backing array is PackedVector4Array, it will produce an instantaneous copy-on-write copy.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_to_plane:
+
+.. rst-class:: classref-method
+
+``Plane`` **to_plane**\ (\ ) |const| :ref:`🔗<class_NDArray_method_to_plane>`
+
+If shape is \[4\], converts this tensor to a Plane.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_to_projection:
+
+.. rst-class:: classref-method
+
+``Projection`` **to_projection**\ (\ ) |const| :ref:`🔗<class_NDArray_method_to_projection>`
+
+If shape is \[4, 4\], converts this tensor to a Projection.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_to_quaternion:
+
+.. rst-class:: classref-method
+
+``Quaternion`` **to_quaternion**\ (\ ) |const| :ref:`🔗<class_NDArray_method_to_quaternion>`
+
+If shape is \[4\], converts this tensor to a Quaternion.
 
 .. rst-class:: classref-item-separator
 

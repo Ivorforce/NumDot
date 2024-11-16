@@ -84,6 +84,11 @@ void NDArray::_bind_methods() {
 	godot::ClassDB::bind_method(D_METHOD("to_vector4i"), &NDArray::to_vector4i);
 	godot::ClassDB::bind_method(D_METHOD("to_color"), &NDArray::to_color);
 
+	godot::ClassDB::bind_method(D_METHOD("to_quaternion"), &NDArray::to_quaternion);
+	godot::ClassDB::bind_method(D_METHOD("to_plane"), &NDArray::to_plane);
+	godot::ClassDB::bind_method(D_METHOD("to_basis"), &NDArray::to_basis);
+	godot::ClassDB::bind_method(D_METHOD("to_projection"), &NDArray::to_projection);
+
 	godot::ClassDB::bind_method(D_METHOD("to_packed_float32_array"), &NDArray::to_packed_float32_array);
 	godot::ClassDB::bind_method(D_METHOD("to_packed_float64_array"), &NDArray::to_packed_float64_array);
 	godot::ClassDB::bind_method(D_METHOD("to_packed_byte_array"), &NDArray::to_packed_byte_array);
@@ -511,6 +516,22 @@ Vector4i NDArray::to_vector4i() const {
 
 Color NDArray::to_color() const {
 	return numdot::to_variant_tensor<Color>(array->data);
+}
+
+Quaternion NDArray::to_quaternion() const {
+	return numdot::to_variant_tensor<Quaternion>(array->data);
+}
+
+Plane NDArray::to_plane() const {
+	return numdot::to_variant_tensor<Plane>(array->data);
+}
+
+Basis NDArray::to_basis() const {
+	return numdot::to_variant_tensor<Basis>(array->data);
+}
+
+Projection NDArray::to_projection() const {
+	return numdot::to_variant_tensor<Projection>(array->data);
 }
 
 PackedFloat32Array NDArray::to_packed_float32_array() const {

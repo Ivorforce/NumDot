@@ -15,6 +15,7 @@ Upcoming Changes (main branch)
 **Added**
 
 - ``array_equiv`` function.
+- Conversion functions for ``Plane``, ``Quaternion``, ``Projection`` and ``Basis``.
 
 **Changed**
 

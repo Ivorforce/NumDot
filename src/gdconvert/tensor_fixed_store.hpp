@@ -5,6 +5,8 @@
 #include <xtensor/xtensor_forward.hpp>
 #include <vatensor/varray.hpp>
 
+#include "variant_tensor.hpp"
+
 namespace numdot {
 	template <typename Type, typename FSH>
 	class XTensorFixedStore : public va::VStore {
@@ -18,6 +20,12 @@ namespace numdot {
 		va::DType dtype() override { return va::dtype_of_type<typename Tensor::value_type>(); }
 		size_t size() override { return tensor.size(); }
 	};
+
+	template <typename T>
+	using VStoreVariant = XTensorFixedStore<
+		std::remove_const_t<typename ArrayAsTensor<std::remove_reference_t<decltype(VariantAsArray<T>::get(std::declval<T>()))>>::value_type>,
+		typename ArrayAsTensor<std::remove_reference_t<decltype(VariantAsArray<T>::get(std::declval<T>()))>>::shape
+	>;
 
 	template<typename Store>
 	static std::shared_ptr<va::VArray> varray_from_tensor(typename Store::Tensor&& tensor) {
@@ -48,13 +56,12 @@ namespace numdot {
 		);
 	}
 
-	using VStoreVector2i = XTensorFixedStore<int32_t, xt::xshape<2>>;
-	using VStoreVector3i = XTensorFixedStore<int32_t, xt::xshape<3>>;
-	using VStoreVector4i = XTensorFixedStore<int32_t, xt::xshape<4>>;
-	using VStoreVector2 = XTensorFixedStore<real_t, xt::xshape<2>>;
-	using VStoreVector3 = XTensorFixedStore<real_t, xt::xshape<3>>;
-	using VStoreVector4 = XTensorFixedStore<real_t, xt::xshape<4>>;
-	using VStoreColor = XTensorFixedStore<float_t, xt::xshape<4>>;
+	template<typename T>
+	static std::shared_ptr<va::VArray> varray_from_tensor(const T& tensor) {
+		return numdot::varray_from_tensor<VStoreVariant<T>>(
+			{ numdot::adapt_tensor(VariantAsArray<T>::get(tensor)) }
+		);
+	}
 }
 
 #endif //TENSOR_FIXED_STORE_HPP

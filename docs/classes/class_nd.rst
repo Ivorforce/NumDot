@@ -80,6 +80,10 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`clip<class_nd_method_clip>`\ (\ a\: ``Variant``, min\: ``Variant``, max\: ``Variant``\ ) |static|                                                                                     |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`complex64<class_nd_method_complex64>`\ (\ array\: ``Variant``\ ) |static|                                                                                                             |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`complex128<class_nd_method_complex128>`\ (\ array\: ``Variant``\ ) |static|                                                                                                           |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`complex_as_vector<class_nd_method_complex_as_vector>`\ (\ v\: ``Variant``\ ) |static|                                                                                                 |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`concatenate<class_nd_method_concatenate>`\ (\ v\: ``Variant``, axis\: ``int`` = 0, dtype\: :ref:`DType<enum_nd_DType>` = 13\ ) |static|                                               |
@@ -786,6 +790,34 @@ Given an interval, values outside the interval are clipped to the interval edges
 Equivalent to but faster than nd.minimum(a_max, nd.maximum(a, a_min)).
 
 No check is performed to ensure a_min < a_max.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_complex64:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **complex64**\ (\ array\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_complex64>`
+
+Convert to a complex64 dtype tensor.
+
+Equivalent to ``nd.as_array(array, nd.DType.Complex64)``.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_complex128:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **complex128**\ (\ array\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_complex128>`
+
+Convert to a complex128 dtype tensor.
+
+Equivalent to ``nd.as_array(array, nd.DType.Complex128)``.
 
 .. rst-class:: classref-item-separator
 

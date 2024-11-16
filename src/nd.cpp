@@ -79,6 +79,8 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("bool_", "array"), &nd::bool_);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("float32", "array"), &nd::float32);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("float64", "array"), &nd::float64);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("complex64", "array"), &nd::complex64);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("complex128", "array"), &nd::complex128);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("int8", "array"), &nd::int8);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("int16", "array"), &nd::int16);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("int32", "array"), &nd::int32);
@@ -395,6 +397,8 @@ Ref<NDArray> nd::copy(const Variant& array) {
 Ref<NDArray> nd::bool_(const Variant& array) { return nd::as_array(array, DType::Bool); }
 Ref<NDArray> nd::float32(const Variant& array) { return nd::as_array(array, DType::Float32); }
 Ref<NDArray> nd::float64(const Variant& array) { return nd::as_array(array, DType::Float64); }
+Ref<NDArray> nd::complex64(const Variant& array) { return nd::as_array(array, DType::Complex64); }
+Ref<NDArray> nd::complex128(const Variant& array) { return nd::as_array(array, DType::Complex128); }
 Ref<NDArray> nd::int8(const Variant& array) { return nd::as_array(array, DType::Int8); }
 Ref<NDArray> nd::int16(const Variant& array) { return nd::as_array(array, DType::Int16); }
 Ref<NDArray> nd::int32(const Variant& array) { return nd::as_array(array, DType::Int32); }

@@ -59,6 +59,8 @@ public:
 	static Ref<NDArray> bool_(const Variant& array);
 	static Ref<NDArray> float32(const Variant& array);
 	static Ref<NDArray> float64(const Variant& array);
+	static Ref<NDArray> complex64(const Variant& array);
+	static Ref<NDArray> complex128(const Variant& array);
 	static Ref<NDArray> int8(const Variant& array);
 	static Ref<NDArray> int16(const Variant& array);
 	static Ref<NDArray> int32(const Variant& array);

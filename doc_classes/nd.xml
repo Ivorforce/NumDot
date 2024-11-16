@@ -207,6 +207,22 @@
 				No check is performed to ensure a_min &lt; a_max.
 			</description>
 		</method>
+		<method name="complex64" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="array" type="Variant" />
+			<description>
+				Convert to a complex64 dtype tensor.
+				Equivalent to [code]nd.as_array(array, nd.DType.Complex64)[/code].
+			</description>
+		</method>
+		<method name="complex128" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="array" type="Variant" />
+			<description>
+				Convert to a complex128 dtype tensor.
+				Equivalent to [code]nd.as_array(array, nd.DType.Complex128)[/code].
+			</description>
+		</method>
 		<method name="complex_as_vector" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="v" type="Variant" />

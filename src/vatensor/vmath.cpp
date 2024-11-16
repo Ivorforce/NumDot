@@ -342,6 +342,7 @@ void va::conjugate(VStoreAllocator& allocator, const VArrayTarget& target, const
 		using VTValue = typename std::decay_t<decltype(x)>::value_type;
 		return xtl::is_complex<VTValue>::value;
 	}, array)) {
+		// It's not even a complex value; let's just assign in-place.
 		if (va::dtype(array) == va::Bool) {
 			// Need to make sure bools get int-ified.
 			va::assign_cast(allocator, target, array, va::Int64);
@@ -353,7 +354,9 @@ void va::conjugate(VStoreAllocator& allocator, const VArrayTarget& target, const
 		return;
 	}
 
-	// TODO Can do this with a[imag] = -a[imag]
+	// This is technically just b = a; b[imag] = -a[imag]
+	// But it may be slower to do it in 2 steps.
+	// TODO We should find out how much space this saves, and if alloc - assign - assign_sub isn't actually faster.
 	xoperation_inplace<
 		Feature::negative,
 		promote::reject_non_complex<promote::common_in_same_out>

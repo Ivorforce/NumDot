@@ -329,6 +329,22 @@ void find_shape_and_dtype(va::shape_type& shape, va::DType& dtype, const Variant
 	throw std::runtime_error("Unsupported type");
 }
 
+template <typename E, std::size_t... axes, typename T>
+static auto adapt_packed(const T& packed) {
+	return va::util::adapt_c_array(
+		const_cast<E*>(reinterpret_cast<const E*>(packed.ptr())),
+		{ static_cast<std::size_t>(packed.size()), axes... }
+	);
+}
+
+template <typename T, std::size_t N>
+static auto adapt_array_tensor(const T (&tensor)[N]) {
+	return va::util::adapt_c_array(
+		const_cast<T*>(&tensor[0]),
+		{ N }
+	);
+}
+
 std::shared_ptr<va::VArray> array_as_varray(const Array& input_array) {
 	va::shape_type shape;
 	va::DType dtype = va::DTypeMax;
@@ -381,145 +397,96 @@ std::shared_ptr<va::VArray> array_as_varray(const Array& input_array) {
 				case Variant::PACKED_BYTE_ARRAY: {
 					auto compute = varray->sliced_data(element_idx);
 					const auto packed = PackedByteArray(array_element);
-					va::assign(
-						compute,
-						va::util::adapt_c_array(const_cast<uint8_t*>(packed.ptr()), { static_cast<std::size_t>(packed.size()) })
-					);
+					va::assign(compute, adapt_packed<uint8_t>(packed));
 					continue;
 				}
 				case Variant::PACKED_INT32_ARRAY: {
 					auto compute = varray->sliced_data(element_idx);
 					const auto packed = PackedInt32Array(array_element);
-					va::assign(
-						compute,
-						va::util::adapt_c_array(const_cast<int32_t*>(packed.ptr()), { static_cast<std::size_t>(packed.size()) })
-					);
+					va::assign(compute, adapt_packed<int32_t>(packed));
 					continue;
 				}
 				case Variant::PACKED_INT64_ARRAY: {
 					auto compute = varray->sliced_data(element_idx);
 					const auto packed = PackedInt64Array(array_element);
-					va::assign(
-						compute,
-						va::util::adapt_c_array(const_cast<int64_t*>(packed.ptr()), { static_cast<std::size_t>(packed.size()) })
-					);
+					va::assign(compute, adapt_packed<int64_t>(packed));
 					continue;
 				}
 				case Variant::PACKED_FLOAT32_ARRAY: {
 					auto compute = varray->sliced_data(element_idx);
 					const auto packed = PackedFloat32Array(array_element);
-					va::assign(
-						compute,
-						va::util::adapt_c_array(const_cast<float_t*>(packed.ptr()), { static_cast<std::size_t>(packed.size()) })
-					);
+					va::assign(compute, adapt_packed<float_t>(packed));
 					continue;
 				}
 				case Variant::PACKED_FLOAT64_ARRAY: {
 					auto compute = varray->sliced_data(element_idx);
 					const auto packed = PackedFloat64Array(array_element);
-					va::assign(
-						compute,
-						va::util::adapt_c_array(const_cast<double_t*>(packed.ptr()), { static_cast<std::size_t>(packed.size()) })
-					);
+					va::assign(compute, adapt_packed<double_t>(packed));
 					continue;
 				}
 				case Variant::PACKED_VECTOR2_ARRAY: {
 					auto compute = varray->sliced_data(element_idx);
 					const auto packed = PackedVector2Array(array_element);
-					va::assign(
-						compute,
-						va::util::adapt_c_array(const_cast<real_t*>(&packed.ptr()[0].coord[0]), { static_cast<std::size_t>(packed.size()), 2 })
-					);
-					continue;
+					va::assign(compute, adapt_packed<real_t, 2>(packed));
 				}
 				case Variant::PACKED_VECTOR3_ARRAY: {
 					auto compute = varray->sliced_data(element_idx);
 					const auto packed = PackedVector3Array(array_element);
-					va::assign(
-						compute,
-						va::util::adapt_c_array(const_cast<real_t*>(&packed.ptr()[0].coord[0]), { static_cast<std::size_t>(packed.size()), 3 })
-					);
+					va::assign(compute, adapt_packed<real_t, 3>(packed));
 					continue;
 				}
 				case Variant::PACKED_VECTOR4_ARRAY: {
 					auto compute = varray->sliced_data(element_idx);
 					const auto packed = PackedVector4Array(array_element);
-					va::assign(
-						compute,
-						va::util::adapt_c_array(const_cast<real_t*>(&packed.ptr()[0].components[0]), { static_cast<std::size_t>(packed.size()), 4 })
-					);
+					va::assign(compute, adapt_packed<real_t, 4>(packed));
 					continue;
 				}
 				case Variant::PACKED_COLOR_ARRAY: {
 					auto compute = varray->sliced_data(element_idx);
 					const auto packed = PackedColorArray(array_element);
-					va::assign(
-						compute,
-						va::util::adapt_c_array(const_cast<float_t*>(&packed.ptr()[0].components[0]), { static_cast<std::size_t>(packed.size()), 4 })
-					);
+					va::assign(compute, adapt_packed<float_t, 4>(packed));
 					continue;
 				}
 				case Variant::VECTOR2I: {
 					auto compute = varray->sliced_data(element_idx);
 					const Vector2i vector = array_element;
-					va::assign(
-						compute,
-						va::util::adapt_c_array(const_cast<int32_t*>(&vector.coord[0]), { std::size(vector.coord) })
-					);
+					va::assign(compute, adapt_array_tensor(vector.coord));
 					continue;
 				}
 				case Variant::VECTOR3I: {
 					auto compute = varray->sliced_data(element_idx);
 					const Vector3i vector = array_element;
-					va::assign(
-						compute,
-						va::util::adapt_c_array(const_cast<int32_t*>(&vector.coord[0]), { std::size(vector.coord) })
-					);
+					va::assign(compute, adapt_array_tensor(vector.coord));
 					continue;
 				}
 				case Variant::VECTOR4I: {
 					auto compute = varray->sliced_data(element_idx);
 					const Vector4i vector = array_element;
-					va::assign(
-						compute,
-						va::util::adapt_c_array(const_cast<int32_t*>(&vector.coord[0]), { std::size(vector.coord) })
-					);
+					va::assign(compute, adapt_array_tensor(vector.coord));
 					continue;
 				}
 				case Variant::VECTOR2: {
 					auto compute = varray->sliced_data(element_idx);
 					const Vector2 vector = array_element;
-					va::assign(
-						compute,
-						va::util::adapt_c_array(const_cast<real_t*>(&vector.coord[0]), { std::size(vector.coord) })
-					);
+					va::assign(compute, adapt_array_tensor(vector.coord));
 					continue;
 				}
 				case Variant::VECTOR3: {
 					auto compute = varray->sliced_data(element_idx);
 					const Vector3 vector = array_element;
-					va::assign(
-						compute,
-						va::util::adapt_c_array(const_cast<real_t*>(&vector.coord[0]), { std::size(vector.coord) })
-					);
+					va::assign(compute, adapt_array_tensor(vector.coord));
 					continue;
 				}
 				case Variant::VECTOR4: {
 					auto compute = varray->sliced_data(element_idx);
 					const Vector4 vector = array_element;
-					va::assign(
-						compute,
-						va::util::adapt_c_array(const_cast<real_t*>(&vector.components[0]), { std::size(vector.components) })
-					);
+					va::assign(compute, adapt_array_tensor(vector.components));
 					continue;
 				}
 				case Variant::COLOR: {
 					auto compute = varray->sliced_data(element_idx);
 					const Color vector = array_element;
-					va::assign(
-						compute,
-						va::util::adapt_c_array(const_cast<float_t*>(&vector.components[0]), { std::size(vector.components) })
-					);
+					va::assign(compute, adapt_array_tensor(vector.components));
 					continue;
 				}
 				default:

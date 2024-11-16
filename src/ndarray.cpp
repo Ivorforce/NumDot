@@ -72,6 +72,19 @@ void NDArray::_bind_methods() {
 	numdot::bind_vararg_method(numdot::VD_METHOD("transpose"), &NDArray::transpose);
 	godot::ClassDB::bind_method(D_METHOD("flatten"), &NDArray::flatten);
 
+	numdot::bind_vararg_method(numdot::VD_METHOD("get_vector2"), &NDArray::get_vector2);
+	numdot::bind_vararg_method(numdot::VD_METHOD("get_vector3"), &NDArray::get_vector3);
+	numdot::bind_vararg_method(numdot::VD_METHOD("get_vector4"), &NDArray::get_vector4);
+	numdot::bind_vararg_method(numdot::VD_METHOD("get_vector2i"), &NDArray::get_vector2i);
+	numdot::bind_vararg_method(numdot::VD_METHOD("get_vector3i"), &NDArray::get_vector3i);
+	numdot::bind_vararg_method(numdot::VD_METHOD("get_vector4i"), &NDArray::get_vector4i);
+	numdot::bind_vararg_method(numdot::VD_METHOD("get_color"), &NDArray::get_color);
+
+	numdot::bind_vararg_method(numdot::VD_METHOD("get_quaternion"), &NDArray::get_quaternion);
+	numdot::bind_vararg_method(numdot::VD_METHOD("get_plane"), &NDArray::get_plane);
+	numdot::bind_vararg_method(numdot::VD_METHOD("get_basis"), &NDArray::get_basis);
+	numdot::bind_vararg_method(numdot::VD_METHOD("get_projection"), &NDArray::get_projection);
+
 	godot::ClassDB::bind_method(D_METHOD("to_bool"), &NDArray::to_bool);
 	godot::ClassDB::bind_method(D_METHOD("to_int"), &NDArray::to_int);
 	godot::ClassDB::bind_method(D_METHOD("to_float"), &NDArray::to_float);
@@ -427,29 +440,29 @@ void NDArray::set(const Variant** args, GDExtensionInt arg_count, GDExtensionCal
 	}
 }
 
+std::shared_ptr<va::VArray> get_varray(const std::shared_ptr<va::VArray>& array, const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {
+	return std::visit([&array](auto slice) -> std::shared_ptr<va::VArray> {
+		using T = std::decay_t<decltype(slice)>;
+
+		if constexpr (std::is_same_v<T, xt::xstrided_slice_vector>) {
+			return array->sliced(slice);
+		}
+		else if constexpr (std::is_same_v<T, std::nullptr_t>) {
+			return array;
+		}
+		else if constexpr (std::is_same_v<T, SliceIndexList>) {
+			return va::get_at_indices(va::store::default_allocator, array->data, slice.index_list->data);
+		}
+		else {
+			// Mask
+			return va::get_at_mask(va::store::default_allocator, array->data, slice.mask->data);
+		}
+	}, variants_to_slice_variant(args, arg_count, error));
+}
+
 Ref<NDArray> NDArray::get(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {
 	try {
-		return std::visit([this](auto slice) -> Ref<NDArray> {
-			using T = std::decay_t<decltype(slice)>;
-
-			if constexpr (std::is_same_v<T, xt::xstrided_slice_vector>) {
-				const auto result = array->sliced(slice);
-				return { memnew(NDArray(result)) };
-			}
-			else if constexpr (std::is_same_v<T, std::nullptr_t>) {
-				const auto result = array;
-				return { memnew(NDArray(result)) };
-			}
-			else if constexpr (std::is_same_v<T, SliceIndexList>) {
-				const auto result = va::get_at_indices(va::store::default_allocator, array->data, slice.index_list->data);
-				return { memnew(NDArray(result)) };
-			}
-			else {
-				// Mask
-				const auto result = va::get_at_mask(va::store::default_allocator, array->data, slice.mask->data);
-				return { memnew(NDArray(result)) };
-			}
-		}, variants_to_slice_variant(args, arg_count, error));
+		return { memnew(NDArray(get_varray(array, args, arg_count, error))) };
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG(Ref<NDArray>(), error.what());
@@ -484,6 +497,61 @@ double_t NDArray::get_float(const Variant** args, GDExtensionInt arg_count, GDEx
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG(0, error.what());
 	}
+}
+
+template <typename T>
+T get_slice_tensor(const std::shared_ptr<va::VArray>& array, const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {
+	try {
+		const auto slice = get_varray(array, args, arg_count, error);
+		return numdot::to_variant_tensor<T>(slice->data);
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
+}
+
+Vector2 NDArray::get_vector2(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {
+	return get_slice_tensor<Vector2>(array, args, arg_count, error);
+}
+
+Vector3 NDArray::get_vector3(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {
+	return get_slice_tensor<Vector3>(array, args, arg_count, error);
+}
+
+Vector4 NDArray::get_vector4(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {
+	return get_slice_tensor<Vector4>(array, args, arg_count, error);
+}
+
+Vector2i NDArray::get_vector2i(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {
+	return get_slice_tensor<Vector2i>(array, args, arg_count, error);
+}
+
+Vector3i NDArray::get_vector3i(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {
+	return get_slice_tensor<Vector3i>(array, args, arg_count, error);
+}
+
+Vector4i NDArray::get_vector4i(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {
+	return get_slice_tensor<Vector4i>(array, args, arg_count, error);
+}
+
+Color NDArray::get_color(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {
+	return get_slice_tensor<Color>(array, args, arg_count, error);
+}
+
+Quaternion NDArray::get_quaternion(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {
+	return get_slice_tensor<Quaternion>(array, args, arg_count, error);
+}
+
+Plane NDArray::get_plane(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {
+	return get_slice_tensor<Plane>(array, args, arg_count, error);
+}
+
+Basis NDArray::get_basis(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {
+	return get_slice_tensor<Basis>(array, args, arg_count, error);
+}
+
+Projection NDArray::get_projection(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {
+	return get_slice_tensor<Projection>(array, args, arg_count, error);
 }
 
 bool NDArray::to_bool() const { return static_cast<bool>(*this); }

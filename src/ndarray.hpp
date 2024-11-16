@@ -89,6 +89,19 @@ public:
 	int64_t get_int(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error);
 	double_t get_float(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error);
 
+	Vector2 get_vector2(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error);
+	Vector3 get_vector3(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error);
+	Vector4 get_vector4(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error);
+	Vector2i get_vector2i(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error);
+	Vector3i get_vector3i(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error);
+	Vector4i get_vector4i(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error);
+	Color get_color(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error);
+
+	Quaternion get_quaternion(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error);
+	Plane get_plane(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error);
+	Basis get_basis(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error);
+	Projection get_projection(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error);
+
 	[[nodiscard]] Ref<NDArray> as_type(va::DType dtype) const;
 	[[nodiscard]] Ref<NDArray> copy() const;
 	Ref<NDArray> transpose(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error);

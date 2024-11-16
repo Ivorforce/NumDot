@@ -16,6 +16,7 @@ Upcoming Changes (main branch)
 
 - ``array_equiv`` function.
 - Conversion functions for ``Plane``, ``Quaternion``, ``Projection`` and ``Basis``.
+- ``NDArray`` functions for getting slices as variant types (if shape is compatible).
 
 **Changed**
 

@@ -666,11 +666,25 @@
 				If the index is a single integer array, it is treated as an index list.
 			</description>
 		</method>
+		<method name="get_basis" qualifiers="const vararg">
+			<return type="Basis" />
+			<description>
+				Indexes into the array, and return the resulting tensor as a Basis, if the shape is compatible.
+				See [method get] for documentation of slicing.
+			</description>
+		</method>
 		<method name="get_bool" qualifiers="const vararg">
 			<return type="bool" />
 			<description>
 				Indexes into the array, and return the resulting value as bool.
 				Errors if the index does not yield a single value.
+			</description>
+		</method>
+		<method name="get_color" qualifiers="const vararg">
+			<return type="Color" />
+			<description>
+				Indexes into the array, and return the resulting tensor as a Color, if the shape is compatible.
+				See [method get] for documentation of slicing.
 			</description>
 		</method>
 		<method name="get_float" qualifiers="const vararg">
@@ -685,6 +699,69 @@
 			<description>
 				Indexes into the array, and return the resulting value as int.
 				Errors if the index does not yield a single value.
+			</description>
+		</method>
+		<method name="get_plane" qualifiers="const vararg">
+			<return type="Plane" />
+			<description>
+				Indexes into the array, and return the resulting tensor as a Plane, if the shape is compatible.
+				See [method get] for documentation of slicing.
+			</description>
+		</method>
+		<method name="get_projection" qualifiers="const vararg">
+			<return type="Projection" />
+			<description>
+				Indexes into the array, and return the resulting tensor as a Projection, if the shape is compatible.
+				See [method get] for documentation of slicing.
+			</description>
+		</method>
+		<method name="get_quaternion" qualifiers="const vararg">
+			<return type="Quaternion" />
+			<description>
+				Indexes into the array, and return the resulting tensor as a Quaternion, if the shape is compatible.
+				See [method get] for documentation of slicing.
+			</description>
+		</method>
+		<method name="get_vector2" qualifiers="const vararg">
+			<return type="Vector2" />
+			<description>
+				Indexes into the array, and return the resulting tensor as a Vector2, if the shape is compatible.
+				See [method get] for documentation of slicing.
+			</description>
+		</method>
+		<method name="get_vector2i" qualifiers="const vararg">
+			<return type="Vector2i" />
+			<description>
+				Indexes into the array, and return the resulting tensor as a Vector2i, if the shape is compatible.
+				See [method get] for documentation of slicing.
+			</description>
+		</method>
+		<method name="get_vector3" qualifiers="const vararg">
+			<return type="Vector3" />
+			<description>
+				Indexes into the array, and return the resulting tensor as a Vector3, if the shape is compatible.
+				See [method get] for documentation of slicing.
+			</description>
+		</method>
+		<method name="get_vector3i" qualifiers="const vararg">
+			<return type="Vector3i" />
+			<description>
+				Indexes into the array, and return the resulting tensor as a Vector3i, if the shape is compatible.
+				See [method get] for documentation of slicing.
+			</description>
+		</method>
+		<method name="get_vector4" qualifiers="const vararg">
+			<return type="Vector4" />
+			<description>
+				Indexes into the array, and return the resulting tensor as a Vector4, if the shape is compatible.
+				See [method get] for documentation of slicing.
+			</description>
+		</method>
+		<method name="get_vector4i" qualifiers="const vararg">
+			<return type="Vector4i" />
+			<description>
+				Indexes into the array, and return the resulting tensor as a Vector4i, if the shape is compatible.
+				See [method get] for documentation of slicing.
 			</description>
 		</method>
 		<method name="ndim" qualifiers="const">

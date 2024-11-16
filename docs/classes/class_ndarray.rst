@@ -186,11 +186,33 @@ Methods
    +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`get<class_NDArray_method_get>`\ (\ ...\ ) |const| |vararg|                                                                                                 |
    +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``Basis``                                                  | :ref:`get_basis<class_NDArray_method_get_basis>`\ (\ ...\ ) |const| |vararg|                                                                                     |
+   +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``bool``                                                   | :ref:`get_bool<class_NDArray_method_get_bool>`\ (\ ...\ ) |const| |vararg|                                                                                       |
+   +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``Color``                                                  | :ref:`get_color<class_NDArray_method_get_color>`\ (\ ...\ ) |const| |vararg|                                                                                     |
    +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``float``                                                  | :ref:`get_float<class_NDArray_method_get_float>`\ (\ ...\ ) |const| |vararg|                                                                                     |
    +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``int``                                                    | :ref:`get_int<class_NDArray_method_get_int>`\ (\ ...\ ) |const| |vararg|                                                                                         |
+   +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``Plane``                                                  | :ref:`get_plane<class_NDArray_method_get_plane>`\ (\ ...\ ) |const| |vararg|                                                                                     |
+   +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``Projection``                                             | :ref:`get_projection<class_NDArray_method_get_projection>`\ (\ ...\ ) |const| |vararg|                                                                           |
+   +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``Quaternion``                                             | :ref:`get_quaternion<class_NDArray_method_get_quaternion>`\ (\ ...\ ) |const| |vararg|                                                                           |
+   +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``Vector2``                                                | :ref:`get_vector2<class_NDArray_method_get_vector2>`\ (\ ...\ ) |const| |vararg|                                                                                 |
+   +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``Vector2i``                                               | :ref:`get_vector2i<class_NDArray_method_get_vector2i>`\ (\ ...\ ) |const| |vararg|                                                                               |
+   +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``Vector3``                                                | :ref:`get_vector3<class_NDArray_method_get_vector3>`\ (\ ...\ ) |const| |vararg|                                                                                 |
+   +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``Vector3i``                                               | :ref:`get_vector3i<class_NDArray_method_get_vector3i>`\ (\ ...\ ) |const| |vararg|                                                                               |
+   +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``Vector4``                                                | :ref:`get_vector4<class_NDArray_method_get_vector4>`\ (\ ...\ ) |const| |vararg|                                                                                 |
+   +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``Vector4i``                                               | :ref:`get_vector4i<class_NDArray_method_get_vector4i>`\ (\ ...\ ) |const| |vararg|                                                                               |
    +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``int``                                                    | :ref:`ndim<class_NDArray_method_ndim>`\ (\ ) |const|                                                                                                             |
    +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1395,6 +1417,20 @@ If the index is a single integer array, it is treated as an index list.
 
 ----
 
+.. _class_NDArray_method_get_basis:
+
+.. rst-class:: classref-method
+
+``Basis`` **get_basis**\ (\ ...\ ) |const| |vararg| :ref:`🔗<class_NDArray_method_get_basis>`
+
+Indexes into the array, and return the resulting tensor as a Basis, if the shape is compatible.
+
+See :ref:`get<class_NDArray_method_get>` for documentation of slicing.
+
+.. rst-class:: classref-item-separator
+
+----
+
 .. _class_NDArray_method_get_bool:
 
 .. rst-class:: classref-method
@@ -1404,6 +1440,20 @@ If the index is a single integer array, it is treated as an index list.
 Indexes into the array, and return the resulting value as bool.
 
 Errors if the index does not yield a single value.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_get_color:
+
+.. rst-class:: classref-method
+
+``Color`` **get_color**\ (\ ...\ ) |const| |vararg| :ref:`🔗<class_NDArray_method_get_color>`
+
+Indexes into the array, and return the resulting tensor as a Color, if the shape is compatible.
+
+See :ref:`get<class_NDArray_method_get>` for documentation of slicing.
 
 .. rst-class:: classref-item-separator
 
@@ -1432,6 +1482,132 @@ Errors if the index does not yield a single value.
 Indexes into the array, and return the resulting value as int.
 
 Errors if the index does not yield a single value.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_get_plane:
+
+.. rst-class:: classref-method
+
+``Plane`` **get_plane**\ (\ ...\ ) |const| |vararg| :ref:`🔗<class_NDArray_method_get_plane>`
+
+Indexes into the array, and return the resulting tensor as a Plane, if the shape is compatible.
+
+See :ref:`get<class_NDArray_method_get>` for documentation of slicing.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_get_projection:
+
+.. rst-class:: classref-method
+
+``Projection`` **get_projection**\ (\ ...\ ) |const| |vararg| :ref:`🔗<class_NDArray_method_get_projection>`
+
+Indexes into the array, and return the resulting tensor as a Projection, if the shape is compatible.
+
+See :ref:`get<class_NDArray_method_get>` for documentation of slicing.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_get_quaternion:
+
+.. rst-class:: classref-method
+
+``Quaternion`` **get_quaternion**\ (\ ...\ ) |const| |vararg| :ref:`🔗<class_NDArray_method_get_quaternion>`
+
+Indexes into the array, and return the resulting tensor as a Quaternion, if the shape is compatible.
+
+See :ref:`get<class_NDArray_method_get>` for documentation of slicing.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_get_vector2:
+
+.. rst-class:: classref-method
+
+``Vector2`` **get_vector2**\ (\ ...\ ) |const| |vararg| :ref:`🔗<class_NDArray_method_get_vector2>`
+
+Indexes into the array, and return the resulting tensor as a Vector2, if the shape is compatible.
+
+See :ref:`get<class_NDArray_method_get>` for documentation of slicing.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_get_vector2i:
+
+.. rst-class:: classref-method
+
+``Vector2i`` **get_vector2i**\ (\ ...\ ) |const| |vararg| :ref:`🔗<class_NDArray_method_get_vector2i>`
+
+Indexes into the array, and return the resulting tensor as a Vector2i, if the shape is compatible.
+
+See :ref:`get<class_NDArray_method_get>` for documentation of slicing.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_get_vector3:
+
+.. rst-class:: classref-method
+
+``Vector3`` **get_vector3**\ (\ ...\ ) |const| |vararg| :ref:`🔗<class_NDArray_method_get_vector3>`
+
+Indexes into the array, and return the resulting tensor as a Vector3, if the shape is compatible.
+
+See :ref:`get<class_NDArray_method_get>` for documentation of slicing.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_get_vector3i:
+
+.. rst-class:: classref-method
+
+``Vector3i`` **get_vector3i**\ (\ ...\ ) |const| |vararg| :ref:`🔗<class_NDArray_method_get_vector3i>`
+
+Indexes into the array, and return the resulting tensor as a Vector3i, if the shape is compatible.
+
+See :ref:`get<class_NDArray_method_get>` for documentation of slicing.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_get_vector4:
+
+.. rst-class:: classref-method
+
+``Vector4`` **get_vector4**\ (\ ...\ ) |const| |vararg| :ref:`🔗<class_NDArray_method_get_vector4>`
+
+Indexes into the array, and return the resulting tensor as a Vector4, if the shape is compatible.
+
+See :ref:`get<class_NDArray_method_get>` for documentation of slicing.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_method_get_vector4i:
+
+.. rst-class:: classref-method
+
+``Vector4i`` **get_vector4i**\ (\ ...\ ) |const| |vararg| :ref:`🔗<class_NDArray_method_get_vector4i>`
+
+Indexes into the array, and return the resulting tensor as a Vector4i, if the shape is compatible.
+
+See :ref:`get<class_NDArray_method_get>` for documentation of slicing.
 
 .. rst-class:: classref-item-separator
 

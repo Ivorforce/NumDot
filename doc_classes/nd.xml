@@ -627,6 +627,13 @@
 				The endpoint of the interval can optionally be excluded.
 			</description>
 		</method>
+		<method name="load" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="file_access" type="FileAccess" />
+			<description>
+				Load arrays from [code].npy[/code].
+			</description>
+		</method>
 		<method name="log" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />

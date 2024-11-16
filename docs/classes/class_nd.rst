@@ -176,6 +176,8 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`linspace<class_nd_method_linspace>`\ (\ start\: ``Variant``, stop\: ``Variant``, num\: ``int`` = 50, endpoint\: ``bool`` = true, dtype\: :ref:`DType<enum_nd_DType>` = 13\ ) |static| |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`load<class_nd_method_load>`\ (\ file_access\: ``FileAccess``\ ) |static|                                                                                                              |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`log<class_nd_method_log>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                             |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`logical_and<class_nd_method_logical_and>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                            |
@@ -1452,6 +1454,18 @@ Return evenly spaced numbers over a specified interval.
 Returns num evenly spaced samples, calculated over the interval \[start, stop\].
 
 The endpoint of the interval can optionally be excluded.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_load:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **load**\ (\ file_access\: ``FileAccess``\ ) |static| :ref:`🔗<class_nd_method_load>`
+
+Load arrays from ``.npy``.
 
 .. rst-class:: classref-item-separator
 

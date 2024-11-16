@@ -14,6 +14,7 @@ Upcoming Changes (main branch)
 ------------------------------
 **Added**
 
+- Added ``nd.load`` function, to read files from ``.npy``.
 - Added ``array_equiv`` function.
 - Added conversion functions for ``Plane``, ``Quaternion``, ``Projection`` and ``Basis``.
 - Added ``NDArray`` functions for getting slices as variant types (if shape is compatible).

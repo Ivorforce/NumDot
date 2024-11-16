@@ -2,9 +2,9 @@
 #define NUMDOT_ND_H
 
 #include <cstdint>                            // for int64_t, uint64_t
+#include <godot_cpp/classes/file_access.hpp>
 #include <godot_cpp/classes/ref.hpp>          // for Ref
 #include <godot_cpp/core/binder_common.hpp>   // for VARIANT_ENUM_CAST
-
 #include "godot_cpp/classes/object.hpp"       // for Object
 #include "godot_cpp/classes/wrapped.hpp"      // for GDCLASS
 #include "godot_cpp/core/class_db.hpp"        // for ClassDB (ptr only), DEFVAL
@@ -217,6 +217,9 @@ public:
 	static Ref<NDArray> fft(const Variant& array, int64_t axis);
 	static Ref<NDArray> fft_freq(int64_t n, double_t freq);
 	static Ref<NDArray> pad(const Variant& array, const Variant& pad_width, PadMode pad_mode = PadMode::Constant, const Variant& pad_value = 0);
+
+	// IO.
+	static Ref<NDArray> load(const Ref<FileAccess>& file_access);
 };
 
 VARIANT_ENUM_CAST(nd::DType);

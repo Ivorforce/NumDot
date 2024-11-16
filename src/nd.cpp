@@ -20,6 +20,7 @@
 #include <gdconvert/conversion_scalar.hpp>
 #include <vatensor/stride_tricks.hpp>
 #include <vatensor/vsignal.hpp>
+#include <vatensor/vio.hpp>
 #include <vatensor/xscalar_store.hpp>
 #include <vatensor/xtensor_store.hpp>
 #include "gdconvert/conversion_array.hpp"     // for variant_as_array
@@ -221,6 +222,8 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("fft", "v", "axis"), &nd::fft, DEFVAL(-1));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("fft_freq", "n", "d"), &nd::fft_freq, DEFVAL(1));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("pad", "v", "pad_width", "pad_mode", "pad_value"), &nd::pad, DEFVAL(nd::PadMode::Constant), DEFVAL(0));
+
+	godot::ClassDB::bind_static_method("nd", D_METHOD("load", "file_access"), &nd::load);
 }
 
 nd::nd() = default;
@@ -1247,6 +1250,17 @@ Ref<NDArray> nd::pad(const Variant& array, const Variant& pad_width, PadMode pad
 			va::pad(va::store::default_allocator, target, *a, pad_width, pad_mode_xt, pad_value_scalar);
 		}, pad_width_variant);
 	}, array);
+}
+
+Ref<NDArray> nd::load(const Ref<FileAccess>& file_access) {
+	try {
+		const auto bytes = file_access->get_buffer(file_access->get_length());
+		const auto result = va::load_npy(reinterpret_cast<char*>(const_cast<uint8_t*>(bytes.ptr())), bytes.size());
+		return { memnew(NDArray(result)) };
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
 }
 
 #undef VARRAY_MAP1

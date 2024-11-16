@@ -18,7 +18,6 @@
 #include <utility>                          // for forward
 #include <variant>                          // for visit
 #include <gdconvert/conversion_scalar.hpp>
-#include <godot_cpp/variant/utility_functions.hpp>
 #include <vatensor/stride_tricks.hpp>
 #include <vatensor/vsignal.hpp>
 #include <vatensor/xscalar_store.hpp>

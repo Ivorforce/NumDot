@@ -1,7 +1,7 @@
 #ifndef VARIANT_TENSOR_HPP
 #define VARIANT_TENSOR_HPP
 
-#include <godot_cpp/variant/utility_functions.hpp>
+#include "godot_cpp/variant/variant.hpp"
 #include <xtensor/xadapt.hpp>
 #include "vatensor/vcarray.hpp"
 
@@ -11,6 +11,7 @@ namespace numdot {
 	struct ArrayAsTensor {
 		using value_type = T;
 		using shape = xt::fixed_shape<Dims...>;
+		static constexpr std::size_t dimension = sizeof...(Dims);
 	};
 
 	// Recursive case
@@ -126,7 +127,6 @@ namespace numdot {
 
 	template <typename P>
 	P to_variant_tensor(va::VData& data) {
-
 		P tensor;
 		auto& array = numdot::VariantAsArray<P>::get(tensor);
 

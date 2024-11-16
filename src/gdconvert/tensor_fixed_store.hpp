@@ -58,8 +58,14 @@ namespace numdot {
 
 	template<typename T>
 	static std::shared_ptr<va::VArray> varray_from_tensor(const T& tensor) {
+		using Array = VariantAsArray<T>;
+		using StoreTensor = typename VStoreVariant<T>::Tensor;
+
+		StoreTensor store_tensor;
+		std::copy_n(reinterpret_cast<const typename StoreTensor::value_type*>(Array::get(tensor)), store_tensor.size(), store_tensor.linear_begin());
+
 		return numdot::varray_from_tensor<VStoreVariant<T>>(
-			{ numdot::adapt_tensor(VariantAsArray<T>::get(tensor)) }
+			std::move(store_tensor)
 		);
 	}
 }

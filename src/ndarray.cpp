@@ -486,31 +486,31 @@ int64_t NDArray::to_int() const { return static_cast<int64_t>(*this); }
 double_t NDArray::to_float() const { return static_cast<double_t>(*this); }
 
 Vector2 NDArray::to_vector2() const {
-	return numdot::to_variant_tensor<Vector2, real_t, 2>(array->data);
+	return numdot::to_variant_tensor<Vector2>(array->data);
 }
 
 Vector3 NDArray::to_vector3() const {
-	return numdot::to_variant_tensor<Vector3, real_t, 3>(array->data);
+	return numdot::to_variant_tensor<Vector3>(array->data);
 }
 
 Vector4 NDArray::to_vector4() const {
-	return numdot::to_variant_tensor<Vector4, real_t, 4>(array->data);
+	return numdot::to_variant_tensor<Vector4>(array->data);
 }
 
 Vector2i NDArray::to_vector2i() const {
-	return numdot::to_variant_tensor<Vector2i, int32_t, 2>(array->data);
+	return numdot::to_variant_tensor<Vector2i>(array->data);
 }
 
 Vector3i NDArray::to_vector3i() const {
-	return numdot::to_variant_tensor<Vector3i, int32_t, 3>(array->data);
+	return numdot::to_variant_tensor<Vector3i>(array->data);
 }
 
 Vector4i NDArray::to_vector4i() const {
-	return numdot::to_variant_tensor<Vector4i, int32_t, 4>(array->data);
+	return numdot::to_variant_tensor<Vector4i>(array->data);
 }
 
 Color NDArray::to_color() const {
-	return numdot::to_variant_tensor<Color, float_t, 4>(array->data);
+	return numdot::to_variant_tensor<Color>(array->data);
 }
 
 PackedFloat32Array NDArray::to_packed_float32_array() const {

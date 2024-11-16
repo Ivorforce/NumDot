@@ -36,6 +36,7 @@
 #include "ndarray.hpp"                                   // for NDArray
 #include "tensor_fixed_store.hpp"
 #include "packed_array_store.hpp"
+#include "variant_tensor.hpp"
 #include "xtensor/xarray.hpp"                          // for xarray_adaptor
 #include "xtensor/xbuffer_adaptor.hpp"                 // for xbuffer_adaptor
 #include "xtensor/xlayout.hpp"                         // for layout_type
@@ -337,11 +338,13 @@ static auto adapt_packed(const T& packed) {
 	);
 }
 
-template <typename T, std::size_t N>
-static auto adapt_array_tensor(const T (&tensor)[N]) {
+template <typename T>
+static auto adapt_array_tensor(const T& t) {
+	const auto& array = numdot::VariantAsArray<T>::get(t);
+
 	return va::util::adapt_c_array(
-		const_cast<T*>(&tensor[0]),
-		{ N }
+		const_cast<numdot::array_value_type<decltype(array)>*>(&*array),
+		{ sizeof(array) / sizeof(*array) }
 	);
 }
 
@@ -450,43 +453,43 @@ std::shared_ptr<va::VArray> array_as_varray(const Array& input_array) {
 				case Variant::VECTOR2I: {
 					auto compute = varray->sliced_data(element_idx);
 					const Vector2i vector = array_element;
-					va::assign(compute, adapt_array_tensor(vector.coord));
+					va::assign(compute, adapt_array_tensor(vector));
 					continue;
 				}
 				case Variant::VECTOR3I: {
 					auto compute = varray->sliced_data(element_idx);
 					const Vector3i vector = array_element;
-					va::assign(compute, adapt_array_tensor(vector.coord));
+					va::assign(compute, adapt_array_tensor(vector));
 					continue;
 				}
 				case Variant::VECTOR4I: {
 					auto compute = varray->sliced_data(element_idx);
 					const Vector4i vector = array_element;
-					va::assign(compute, adapt_array_tensor(vector.coord));
+					va::assign(compute, adapt_array_tensor(vector));
 					continue;
 				}
 				case Variant::VECTOR2: {
 					auto compute = varray->sliced_data(element_idx);
 					const Vector2 vector = array_element;
-					va::assign(compute, adapt_array_tensor(vector.coord));
+					va::assign(compute, adapt_array_tensor(vector));
 					continue;
 				}
 				case Variant::VECTOR3: {
 					auto compute = varray->sliced_data(element_idx);
 					const Vector3 vector = array_element;
-					va::assign(compute, adapt_array_tensor(vector.coord));
+					va::assign(compute, adapt_array_tensor(vector));
 					continue;
 				}
 				case Variant::VECTOR4: {
 					auto compute = varray->sliced_data(element_idx);
 					const Vector4 vector = array_element;
-					va::assign(compute, adapt_array_tensor(vector.components));
+					va::assign(compute, adapt_array_tensor(vector));
 					continue;
 				}
 				case Variant::COLOR: {
 					auto compute = varray->sliced_data(element_idx);
 					const Color vector = array_element;
-					va::assign(compute, adapt_array_tensor(vector.components));
+					va::assign(compute, adapt_array_tensor(vector));
 					continue;
 				}
 				default:

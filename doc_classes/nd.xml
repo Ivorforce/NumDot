@@ -634,11 +634,12 @@
 				The endpoint of the interval can optionally be excluded.
 			</description>
 		</method>
-		<method name="loadb" qualifiers="static">
+		<method name="load" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="buffer" type="PackedByteArray" />
+			<param index="0" name="file_or_buffer" type="Variant" />
 			<description>
-				Load arrays from buffer in npy format.
+				Load arrays in npy format.
+				Supports [code]FileAccess[/code], [code]PackedByteArray[/code] and [code]String[/code] path parameters.
 			</description>
 		</method>
 		<method name="log" qualifiers="static">

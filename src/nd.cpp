@@ -18,6 +18,7 @@
 #include <utility>                          // for forward
 #include <variant>                          // for visit
 #include <gdconvert/conversion_scalar.hpp>
+#include <godot_cpp/classes/file_access.hpp>
 #include <vatensor/stride_tricks.hpp>
 #include <vatensor/vcarray.hpp>
 #include <vatensor/vsignal.hpp>
@@ -224,7 +225,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("fft_freq", "n", "d"), &nd::fft_freq, DEFVAL(1));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("pad", "v", "pad_width", "pad_mode", "pad_value"), &nd::pad, DEFVAL(nd::PadMode::Constant), DEFVAL(0));
 
-	godot::ClassDB::bind_static_method("nd", D_METHOD("loadb", "buffer"), &nd::loadb);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("load", "file_or_buffer"), &nd::load);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("dumpb", "array"), &nd::dumpb);
 }
 
@@ -1254,10 +1255,32 @@ Ref<NDArray> nd::pad(const Variant& array, const Variant& pad_width, PadMode pad
 	}, array);
 }
 
-Ref<NDArray> nd::loadb(const PackedByteArray& data) {
+Ref<NDArray> nd::load(const Variant& variant) {
 	try {
-		const auto result = va::load_npy(reinterpret_cast<const char*>(data.ptr()), data.size());
-		return { memnew(NDArray(result)) };
+		switch (variant.get_type()) {
+			case Variant::PACKED_BYTE_ARRAY: {
+				const PackedByteArray data = variant;
+				const auto result = va::load_npy(reinterpret_cast<const char*>(data.ptr()), data.size());
+				return { memnew(NDArray(result)) };
+			}
+			case Variant::STRING: {
+				const String path = variant;
+				const PackedByteArray data = FileAccess::get_file_as_bytes(path);
+				const auto result = va::load_npy(reinterpret_cast<const char*>(data.ptr()), data.size());
+				return { memnew(NDArray(result)) };
+			}
+			case Variant::OBJECT: {
+				if (const auto file_access = Object::cast_to<FileAccess>(variant)) {
+					const PackedByteArray data = file_access->get_buffer(file_access->get_length());
+					const auto result = va::load_npy(reinterpret_cast<const char*>(data.ptr()), data.size());
+					return { memnew(NDArray(result)) };
+				}
+			}
+			default:
+				break;
+		}
+
+		ERR_FAIL_V_MSG({}, "Unsupported type.");
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());

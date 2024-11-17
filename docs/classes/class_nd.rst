@@ -114,6 +114,8 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`dot<class_nd_method_dot>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                            |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``PackedByteArray``                                        | :ref:`dumpb<class_nd_method_dumpb>`\ (\ array\: ``Variant``\ ) |static|                                                                                                                     |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``StringName``                                             | :ref:`ellipsis<class_nd_method_ellipsis>`\ (\ ) |static|                                                                                                                                    |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`empty<class_nd_method_empty>`\ (\ shape\: ``Variant``, dtype\: :ref:`DType<enum_nd_DType>` = 2\ ) |static|                                                                            |
@@ -176,7 +178,7 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`linspace<class_nd_method_linspace>`\ (\ start\: ``Variant``, stop\: ``Variant``, num\: ``int`` = 50, endpoint\: ``bool`` = true, dtype\: :ref:`DType<enum_nd_DType>` = 13\ ) |static| |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`NDArray<class_NDArray>`                              | :ref:`load<class_nd_method_load>`\ (\ file_access\: ``PackedByteArray``\ ) |static|                                                                                                         |
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`loadb<class_nd_method_loadb>`\ (\ buffer\: ``PackedByteArray``\ ) |static|                                                                                                            |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`log<class_nd_method_log>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                             |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1035,6 +1037,18 @@ Otherwise, it would be equivalent to tensordot, but currently fails.
 
 ----
 
+.. _class_nd_method_dumpb:
+
+.. rst-class:: classref-method
+
+``PackedByteArray`` **dumpb**\ (\ array\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_dumpb>`
+
+Save an array to a buffer in NumPy .npy format.
+
+.. rst-class:: classref-item-separator
+
+----
+
 .. _class_nd_method_ellipsis:
 
 .. rst-class:: classref-method
@@ -1459,13 +1473,13 @@ The endpoint of the interval can optionally be excluded.
 
 ----
 
-.. _class_nd_method_load:
+.. _class_nd_method_loadb:
 
 .. rst-class:: classref-method
 
-:ref:`NDArray<class_NDArray>` **load**\ (\ file_access\: ``PackedByteArray``\ ) |static| :ref:`🔗<class_nd_method_load>`
+:ref:`NDArray<class_NDArray>` **loadb**\ (\ buffer\: ``PackedByteArray``\ ) |static| :ref:`🔗<class_nd_method_loadb>`
 
-Load arrays from ``.npy``.
+Load arrays from buffer in npy format.
 
 .. rst-class:: classref-item-separator
 

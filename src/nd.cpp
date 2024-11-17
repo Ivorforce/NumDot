@@ -19,6 +19,7 @@
 #include <variant>                          // for visit
 #include <gdconvert/conversion_scalar.hpp>
 #include <vatensor/stride_tricks.hpp>
+#include <vatensor/vcarray.hpp>
 #include <vatensor/vsignal.hpp>
 #include <vatensor/vio.hpp>
 #include <vatensor/xscalar_store.hpp>
@@ -223,7 +224,8 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("fft_freq", "n", "d"), &nd::fft_freq, DEFVAL(1));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("pad", "v", "pad_width", "pad_mode", "pad_value"), &nd::pad, DEFVAL(nd::PadMode::Constant), DEFVAL(0));
 
-	godot::ClassDB::bind_static_method("nd", D_METHOD("load", "file_access"), &nd::load);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("loadb", "buffer"), &nd::loadb);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("dumpb", "array"), &nd::dumpb);
 }
 
 nd::nd() = default;
@@ -1252,10 +1254,23 @@ Ref<NDArray> nd::pad(const Variant& array, const Variant& pad_width, PadMode pad
 	}, array);
 }
 
-Ref<NDArray> nd::load(const PackedByteArray& data) {
+Ref<NDArray> nd::loadb(const PackedByteArray& data) {
 	try {
 		const auto result = va::load_npy(reinterpret_cast<const char*>(data.ptr()), data.size());
 		return { memnew(NDArray(result)) };
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
+}
+
+PackedByteArray nd::dumpb(const Variant& array) {
+	try {
+		const auto array_ = variant_as_array(array);
+		auto packed = PackedByteArray();
+		packed.resize(static_cast<int64_t>(array_->size()));
+		va::util::fill_c_array_flat(packed.ptrw(), array_->data);
+		return packed;
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());

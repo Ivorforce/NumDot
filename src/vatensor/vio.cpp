@@ -75,3 +75,9 @@ std::shared_ptr<va::VArray> va::load_npy(const char* data, std::size_t size) {
 		file.m_fortran_order ? xt::layout_type::column_major : xt::layout_type::row_major
 	);
 }
+
+std::string va::save_npy(VData& data) {
+	std::visit([](const auto& data) {
+		return xt::dump_npy(data);
+	}, data);
+}

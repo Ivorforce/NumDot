@@ -218,7 +218,8 @@ public:
 	static Ref<NDArray> pad(const Variant& array, const Variant& pad_width, PadMode pad_mode = PadMode::Constant, const Variant& pad_value = 0);
 
 	// IO.
-	static Ref<NDArray> load(const PackedByteArray& data);
+	static Ref<NDArray> loadb(const PackedByteArray& data);
+	static PackedByteArray dumpb(const Variant& array);
 };
 
 VARIANT_ENUM_CAST(nd::DType);

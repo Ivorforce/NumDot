@@ -357,6 +357,13 @@
 				Otherwise, it would be equivalent to tensordot, but currently fails.
 			</description>
 		</method>
+		<method name="dumpb" qualifiers="static">
+			<return type="PackedByteArray" />
+			<param index="0" name="array" type="Variant" />
+			<description>
+				Save an array to a buffer in NumPy .npy format.
+			</description>
+		</method>
 		<method name="ellipsis" qualifiers="static">
 			<return type="StringName" />
 			<description>
@@ -627,11 +634,11 @@
 				The endpoint of the interval can optionally be excluded.
 			</description>
 		</method>
-		<method name="load" qualifiers="static">
+		<method name="loadb" qualifiers="static">
 			<return type="NDArray" />
-			<param index="0" name="file_access" type="PackedByteArray" />
+			<param index="0" name="buffer" type="PackedByteArray" />
 			<description>
-				Load arrays from [code].npy[/code].
+				Load arrays from buffer in npy format.
 			</description>
 		</method>
 		<method name="log" qualifiers="static">

@@ -77,7 +77,7 @@ std::shared_ptr<va::VArray> va::load_npy(const char* data, std::size_t size) {
 }
 
 std::string va::save_npy(VData& data) {
-	std::visit([](const auto& data) {
+	return std::visit([](const auto& data) {
 		return xt::dump_npy(data);
 	}, data);
 }

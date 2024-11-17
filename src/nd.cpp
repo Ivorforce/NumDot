@@ -1254,7 +1254,7 @@ Ref<NDArray> nd::pad(const Variant& array, const Variant& pad_width, PadMode pad
 
 Ref<NDArray> nd::load(const PackedByteArray& data) {
 	try {
-		const auto result = va::load_npy(reinterpret_cast<char*>(const_cast<uint8_t*>(data.ptr())), data.size());
+		const auto result = va::load_npy(reinterpret_cast<const char*>(data.ptr()), data.size());
 		return { memnew(NDArray(result)) };
 	}
 	catch (std::runtime_error& error) {

@@ -178,7 +178,7 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`linspace<class_nd_method_linspace>`\ (\ start\: ``Variant``, stop\: ``Variant``, num\: ``int`` = 50, endpoint\: ``bool`` = true, dtype\: :ref:`DType<enum_nd_DType>` = 13\ ) |static| |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`NDArray<class_NDArray>`                              | :ref:`loadb<class_nd_method_loadb>`\ (\ buffer\: ``PackedByteArray``\ ) |static|                                                                                                            |
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`load<class_nd_method_load>`\ (\ file_or_buffer\: ``Variant``\ ) |static|                                                                                                              |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`log<class_nd_method_log>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                             |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1045,6 +1045,8 @@ Otherwise, it would be equivalent to tensordot, but currently fails.
 
 Save an array to a buffer in NumPy .npy format.
 
+See :ref:`load<class_nd_method_load>` to load an array in the same format.
+
 .. rst-class:: classref-item-separator
 
 ----
@@ -1473,13 +1475,17 @@ The endpoint of the interval can optionally be excluded.
 
 ----
 
-.. _class_nd_method_loadb:
+.. _class_nd_method_load:
 
 .. rst-class:: classref-method
 
-:ref:`NDArray<class_NDArray>` **loadb**\ (\ buffer\: ``PackedByteArray``\ ) |static| :ref:`🔗<class_nd_method_loadb>`
+:ref:`NDArray<class_NDArray>` **load**\ (\ file_or_buffer\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_load>`
 
-Load arrays from buffer in npy format.
+Load arrays in npy format.
+
+Supports ``FileAccess``, ``PackedByteArray`` and ``String`` path parameters.
+
+See :ref:`dumpb<class_nd_method_dumpb>` to write an array to the same format.
 
 .. rst-class:: classref-item-separator
 

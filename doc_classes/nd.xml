@@ -362,6 +362,7 @@
 			<param index="0" name="array" type="Variant" />
 			<description>
 				Save an array to a buffer in NumPy .npy format.
+				See [method load] to load an array in the same format.
 			</description>
 		</method>
 		<method name="ellipsis" qualifiers="static">
@@ -640,6 +641,7 @@
 			<description>
 				Load arrays in npy format.
 				Supports [code]FileAccess[/code], [code]PackedByteArray[/code] and [code]String[/code] path parameters.
+				See [method dumpb] to write an array to the same format.
 			</description>
 		</method>
 		<method name="log" qualifiers="static">

@@ -74,10 +74,6 @@ def generate(env, godot_cpp_env, sources):
         else:
             env.Append(CCFLAGS=["-Wa,-mbig-obj"])
 
-    if godot_cpp_env['platform'] == "web":
-        # FIXME Can remove when https://github.com/godotengine/godot-cpp/pull/1614 is merged.
-        env.Append(LINKFLAGS=["-sWASM_BIGINT"])
-
     if godot_cpp_env['platform'] == "web" and use_xsimd:
         # Not enabled by default, and xsimd doesn't have guards against it so we have to force-add it.
         # See https://github.com/emscripten-core/emscripten/issues/12714.

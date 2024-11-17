@@ -66,6 +66,7 @@ godot_cpp_env = SConscript("godot-cpp/SConstruct", {"customs": customs})
 
 local_env = godot_cpp_env.Clone()
 opts.Update(local_env)
+Help(opts.GenerateHelpText(local_env))
 
 is_msvc = "is_msvc" in godot_cpp_env and godot_cpp_env["is_msvc"]
 

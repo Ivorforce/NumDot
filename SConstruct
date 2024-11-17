@@ -84,12 +84,9 @@ if is_release:
         local_env.Append(LINKFLAGS=["-flto"])
 
 sources = []
+targets = []
 
 numdot_tool.generate(local_env, godot_cpp_env, sources)
-
-if godot_cpp_env["target"] in ["editor", "template_debug"]:
-    doc_data = godot_cpp_env.GodotCPPDocData("src/gen/doc_data.gen.cpp", source=Glob("doc_classes/*.xml"))
-    sources.append(doc_data)
 
 # .dev doesn't inhibit compatibility, so we don't need to key it.
 # .universal just means "compatible with all relevant arches" so we don't need to key it.
@@ -115,8 +112,7 @@ library = local_env.SharedLibrary(
     f"build/addons/{libname}/{godot_cpp_env['platform']}/{lib_filepath}{lib_filename}",
     source=sources,
 )
-
-targets = [library]
+targets.append(library)
 
 if local_env.get("install_dir", None) is not None:
     targets.append(local_env.Install(f"{local_env["install_dir"]}/addons/{libname}/{godot_cpp_env['platform']}/{lib_filepath}", library))

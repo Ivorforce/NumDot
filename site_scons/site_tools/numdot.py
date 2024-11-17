@@ -99,10 +99,14 @@ def generate(env, godot_cpp_env, sources):
     env.Append(CPPPATH=["src/"])
 
     sources.extend([
-        f for f in env.Glob("src/*.cpp") + env.Glob("src/*/*.cpp")
+        f for f in env.Glob("src/*.cpp") + env.Glob("src/**/*.cpp")
         # Generated files will be added selectively and maintained by tools.
         if not "/gen/" in str(f.path)
     ])
 
     scu_tool.generate(env, sources)
     features_tool.generate(env)
+
+    if godot_cpp_env["target"] in ["editor", "template_debug"]:
+        doc_data = godot_cpp_env.GodotCPPDocData("src/gen/doc_data.gen.cpp", source=env.Glob("doc_classes/*.xml"))
+        sources.append(doc_data)

@@ -17,75 +17,34 @@ Run the following command to download godot-cpp:
 
 libname = "numdot"
 
-# Allow additional defines, see https://scons.org/doc/production/HTML/scons-user/ch10s02.html
-cppdefines = []
-for key, value in ARGLIST:
-    if key == 'define':
-        cppdefines.append(value)
-
-env = Environment(tools=["default"], PLATFORM="", CPPDEFINES=cppdefines)
-
 # Load variables from custom.py, in case someone wants to store their own arguments.
+# See https://scons.org/doc/production/HTML/scons-user.html#app-tools // search custom.py
 customs = ["custom.py"]
 customs = [os.path.abspath(path) for path in customs]
 opts = Variables(customs, ARGUMENTS)
+
 opts.Add(
     PathVariable(
         key="install_dir",
         help="Optional target project location the binary. The binary always builds in build/, but if this argument is supplied, the binary will be copied to the target location.",
-        default=env.get("install_dir", None),
+        default=None,
     )
 )
-opts.Add(
-    "use_xsimd",
-    "Whether to use xsimd, accelerating contiguous memory computation. Defaults to no on web and yes elsewhere.",
-    "auto"
-)
-opts.Add(
-    "openmp_threshold",
-    "If 0 or above, use OpenMP, for parallel assignment for operation sizes above or equal to the threshold. Defaults to -1 (no OpenMP).",
-    "-1"
- )
-opts.Add(
-    "optimize_for_arch",
-    "Enable all optimizations the arch supports, making the build incompatible with other machines. Use 'native' to optimize for this machine. Note that on macOS, setting this option also requires setting arch= to a specific arch, e.g. arch=x86_64 or arch=arm64.",
-    "",
-)
 
-features_tool = Tool("features", toolpath=["scons_tools"])
-features_tool.options(opts, env)
+numdot_tool = Tool("numdot")
+numdot_tool.options(opts)
 
-scu_tool = Tool("scu", toolpath=["scons_tools"])
-scu_tool.options(opts, env)
+# Remove our custom options to avoid passing to godot-cpp; godot-cpp has its own check for unknown options.
+for opt in opts.options:
+    ARGUMENTS.pop(opt.key, None)
 
-opts.Update(env)
-
-use_xsimd = env["use_xsimd"]
-if ARGUMENTS.get("use_xsimd", "auto") == "auto":
-    use_xsimd = True
-else:
-    use_xsimd = _text2bool(use_xsimd)
+# ============================= Change defaults of godot-cpp =============================
 
 if ARGUMENTS.get("platform", None) == "web":
     ARGUMENTS.setdefault("threads", "no")
     if _text2bool(ARGUMENTS.get("threads", "yes")):
         # TODO Figure out why that is. Does godot default to no threads exports?
         raise ValueError("NumDot does not currently support compiling web with threads.")
-
-optimize_for_arch = env["optimize_for_arch"]
-openmp_threshold = int(env["openmp_threshold"])
-
-# TODO If we don't delete our own arguments, the godot-cpp SConscript will complain.
-# There must be a better way?
-ARGUMENTS.pop("install_dir", None)
-ARGUMENTS.pop("define", None)
-ARGUMENTS.pop("use_xsimd", None)
-ARGUMENTS.pop("optimize_for_arch", None)
-ARGUMENTS.pop("openmp_threshold", None)
-ARGUMENTS.pop("scu_build", None)
-ARGUMENTS.pop("numdot_config", None)
-
-# ============================= Change defaults of godot-cpp =============================
 
 # To read up on why exceptions should be enabled, read further below.
 if ARGUMENTS.get("disable_exceptions", None):
@@ -102,102 +61,45 @@ if ARGUMENTS.get("optimize", None) is None and is_release:
         # For web, optimize binary size, can shrink by ~30%.
         ARGUMENTS["optimize"] = "size"
 
-if optimize_for_arch:
-    # Yo-march improves performance, makes the build incompatible with most other machines.
-    env.Append(CPPFLAGS=[f"-march={optimize_for_arch}"])
-
-# CUSTOM BUILD FLAGS
-# Add your build flags here:
-# if is_release:
-#     ARGUMENTS["optimize"] = "speed"  # For normal flags, like optimize
-#     env.Append(CPPDEFINES=["NUMDOT_XXX"])  # For all C macros (``define=``).
-
 # Load godot-cpp
-env = SConscript("godot-cpp/SConstruct", {"env": env, "customs": customs})
+godot_cpp_env = SConscript("godot-cpp/SConstruct", {"customs": customs})
 
-# ============================= Change flags based on setup =============================
+local_env = godot_cpp_env.Clone()
+opts.Update(local_env)
 
-is_msvc = "is_msvc" in env and env["is_msvc"]
+is_msvc = "is_msvc" in godot_cpp_env and godot_cpp_env["is_msvc"]
 
-if use_xsimd:
-    env.Append(CCFLAGS=[
-        # See https://xtensor.readthedocs.io/en/latest/build-options.html
-        # See https://github.com/xtensor-stack/xsimd for supported list of simd extensions.
-        # Choosing more will make your program faster, but also more incompatible to older machines.
-        "-DXTENSOR_USE_XSIMD=1",
-        # This adds some sanity checks which will throw if failed.
-        # It claims to do bounds checks but it only does it VERY sparsely as of yet.
-        "-DXTENSOR_ENABLE_ASSERT=1",
-    ])
-
-if env["platform"] == "windows":
-    # At least the github runner needs bigobj to be enabled (otherwise it crashes).
-    # is_msvc is set by godot-cpp.
-    if is_msvc:
-        env.Append(CCFLAGS=["/bigobj"])
-    else:
-        env.Append(CCFLAGS=["-Wa,-mbig-obj"])
-
-if env['platform'] == "web":
-    # FIXME Can remove when https://github.com/godotengine/godot-cpp/pull/1614 is merged.
-    env.Append(LINKFLAGS=["-sWASM_BIGINT"])
-
-if env['platform'] == "web" and use_xsimd:
-    # Not enabled by default, and xsimd doesn't have guards against it so we have to force-add it.
-    # See https://github.com/emscripten-core/emscripten/issues/12714.
-    env.Append(CPPFLAGS=["-msimd128"])
-    # TODO We could also pass -fno-vectorize for size-optimizing builds, as discussed in the linked issue.
+# ============================= Actual source and lib setup =============================
 
 # TODO Can replace when https://github.com/godotengine/godot-cpp/pull/1601 is merged.
 if is_release:
     # Enable link-time optimization.
     # This further lets the compiler optimize, reduce binary size (~.5mb) or inline functions (possibly improving speeds).
     if is_msvc:
-        env.Append(CCFLAGS=["/GL"])
-        env.Append(LINKFLAGS=["/LTCG"])
+        local_env.Append(CCFLAGS=["/GL"])
+        local_env.Append(LINKFLAGS=["/LTCG"])
     else:
-        env.Append(CCFLAGS=["-flto"])
-        env.Append(LINKFLAGS=["-flto"])
+        local_env.Append(CCFLAGS=["-flto"])
+        local_env.Append(LINKFLAGS=["-flto"])
 
-if openmp_threshold >= 0:
-    # TODO Support is not yet complete. We somehow need include paths for each OS.
-    if is_msvc:
-        env.Append(CCFLAGS=['/openmp'])
-        env.Append(LINKFLAGS=['/openmp'])
-    else:
-        env.Append(CCFLAGS=['-fopenmp'])
-        env.Append(LINKFLAGS=['-fopenmp'])
+sources = []
 
-    env.Append(CCFLAGS=["-DXTENSOR_USE_OPENMP", f"-DXTENSOR_OPENMP_TRESHOLD={openmp_threshold}"])
+numdot_tool.generate(local_env, godot_cpp_env, sources)
 
-# ============================= Actual source and lib setup =============================
-
-env.Append(CPPPATH=["xtl/include", "xsimd/include", "xtensor/include", "xtensor-signal/include"])
-env.Append(CPPPATH=["src/"])
-
-sources = [
-    f for f in Glob("src/*.cpp") + Glob("src/*/*.cpp")
-    # Generated files will be added selectively and maintained by tools.
-    if not "/gen/" in str(f.path)
-]
-
-scu_tool.generate(env, sources)
-features_tool.generate(env)
-
-if env["target"] in ["editor", "template_debug"]:
-    doc_data = env.GodotCPPDocData("src/gen/doc_data.gen.cpp", source=Glob("doc_classes/*.xml"))
+if godot_cpp_env["target"] in ["editor", "template_debug"]:
+    doc_data = godot_cpp_env.GodotCPPDocData("src/gen/doc_data.gen.cpp", source=Glob("doc_classes/*.xml"))
     sources.append(doc_data)
 
 # .dev doesn't inhibit compatibility, so we don't need to key it.
 # .universal just means "compatible with all relevant arches" so we don't need to key it.
-suffix = env['suffix'].replace(".dev", "").replace(".universal", "")
+suffix = godot_cpp_env['suffix'].replace(".dev", "").replace(".universal", "")
 
 # Filename of the library.
-lib_filename = f"{env.subst('$SHLIBPREFIX')}{libname}{suffix}{env.subst('$SHLIBSUFFIX')}"
+lib_filename = f"{local_env.subst('$SHLIBPREFIX')}{libname}{suffix}{local_env.subst('$SHLIBSUFFIX')}"
 # Build releases into build/, and debug into demo/.
 lib_filepath = ""
 
-if env["platform"] == "macos" or env["platform"] == "ios":
+if godot_cpp_env["platform"] == "macos" or godot_cpp_env["platform"] == "ios":
     # The above defaults to creating a .dylib.
     # These are not supported on the iOS app store.
     # To make it consistent, we'll just use frameworks on both macOS and iOS.
@@ -205,17 +107,17 @@ if env["platform"] == "macos" or env["platform"] == "ios":
     lib_filename = framework_name
     lib_filepath = "{}.framework/".format(framework_name)
 
-    env["SHLIBPREFIX"] = ""
-    env["SHLIBSUFFIX"] = ""
+    local_env["SHLIBPREFIX"] = ""
+    local_env["SHLIBSUFFIX"] = ""
 
-library = env.SharedLibrary(
-    f"build/addons/{libname}/{env['platform']}/{lib_filepath}{lib_filename}",
+library = local_env.SharedLibrary(
+    f"build/addons/{libname}/{godot_cpp_env['platform']}/{lib_filepath}{lib_filename}",
     source=sources,
 )
 
 targets = [library]
 
-if env.get("install_dir", None) is not None:
-    targets.append(env.Install(f"{env["install_dir"]}/addons/{libname}/{env['platform']}/{lib_filepath}", library))
+if local_env.get("install_dir", None) is not None:
+    targets.append(local_env.Install(f"{local_env["install_dir"]}/addons/{libname}/{godot_cpp_env['platform']}/{lib_filepath}", library))
 
 Default(targets)

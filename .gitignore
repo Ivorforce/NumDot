@@ -63,4 +63,5 @@ __pycache__
 !/demo/addons/numdot/**/*.plist
 
 # Custom config
+/custom.py
 /numdot_config.py

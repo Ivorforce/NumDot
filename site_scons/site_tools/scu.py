@@ -5,7 +5,7 @@ from SCons.Variables import BoolVariable
 def exists(env):
     return True
 
-def options(opts, env):
+def options(opts):
     opts.Add(
         BoolVariable(
             "scu_build",

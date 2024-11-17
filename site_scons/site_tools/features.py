@@ -36,12 +36,12 @@ class Features:
 def exists(env):
     return True
 
-def options(opts, env):
+def options(opts):
     opts.Add(
         PathVariable(
             key="numdot_config",
             help="Path to a .py file that sets up custom NumDot configuration.",
-            default=env.get("numdot_config", None),
+            default=None,
         )
     )
 

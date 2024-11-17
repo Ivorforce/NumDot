@@ -1252,10 +1252,9 @@ Ref<NDArray> nd::pad(const Variant& array, const Variant& pad_width, PadMode pad
 	}, array);
 }
 
-Ref<NDArray> nd::load(const Ref<FileAccess>& file_access) {
+Ref<NDArray> nd::load(const PackedByteArray& data) {
 	try {
-		const auto bytes = file_access->get_buffer(file_access->get_length());
-		const auto result = va::load_npy(reinterpret_cast<char*>(const_cast<uint8_t*>(bytes.ptr())), bytes.size());
+		const auto result = va::load_npy(reinterpret_cast<char*>(const_cast<uint8_t*>(data.ptr())), data.size());
 		return { memnew(NDArray(result)) };
 	}
 	catch (std::runtime_error& error) {

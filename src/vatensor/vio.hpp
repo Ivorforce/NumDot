@@ -5,7 +5,7 @@
 #include <memory>
 
 namespace va {
-	std::shared_ptr<VArray> load_npy(char* data, std::size_t size);
+	std::shared_ptr<VArray> load_npy(const char* data, std::size_t size);
 }
 
 #endif //VATENSOR_VIO_HPP

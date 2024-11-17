@@ -7,6 +7,22 @@ struct membuf : std::streambuf {
 	membuf(char* begin, char* end) {
 		this->setg(begin, begin, end);
 	}
+
+	pos_type seekoff(off_type off, std::ios_base::seekdir dir, std::ios_base::openmode which = std::ios_base::in) override
+	{
+		if (dir == std::ios_base::cur)
+			gbump(off);
+		else if (dir == std::ios_base::end)
+			setg(eback(), egptr() + off, egptr());
+		else if (dir == std::ios_base::beg)
+			setg(eback(), eback() + off, egptr());
+		return gptr() - eback();
+	}
+
+	pos_type seekpos(pos_type sp, std::ios_base::openmode which) override
+	{
+		return seekoff(sp - pos_type(off_type(0)), std::ios_base::beg, which);
+	}
 };
 
 va::DType dtype_from_typestring(std::string& type_string) {
@@ -29,8 +45,8 @@ va::DType dtype_from_typestring(std::string& type_string) {
 	else return va::DTypeMax;
 }
 
-std::shared_ptr<va::VArray> va::load_npy(char* data, std::size_t size) {
-	auto sbuf = membuf(data, data + size);
+std::shared_ptr<va::VArray> va::load_npy(const char* data, std::size_t size) {
+	auto sbuf = membuf(const_cast<char*>(data), const_cast<char*>(data) + size);
 	std::istream in(&sbuf);
 
 	xt::detail::npy_file file = xt::detail::load_npy_file(in);

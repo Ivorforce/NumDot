@@ -176,7 +176,7 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`linspace<class_nd_method_linspace>`\ (\ start\: ``Variant``, stop\: ``Variant``, num\: ``int`` = 50, endpoint\: ``bool`` = true, dtype\: :ref:`DType<enum_nd_DType>` = 13\ ) |static| |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`NDArray<class_NDArray>`                              | :ref:`load<class_nd_method_load>`\ (\ file_access\: ``FileAccess``\ ) |static|                                                                                                              |
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`load<class_nd_method_load>`\ (\ file_access\: ``PackedByteArray``\ ) |static|                                                                                                         |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`log<class_nd_method_log>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                             |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1463,7 +1463,7 @@ The endpoint of the interval can optionally be excluded.
 
 .. rst-class:: classref-method
 
-:ref:`NDArray<class_NDArray>` **load**\ (\ file_access\: ``FileAccess``\ ) |static| :ref:`🔗<class_nd_method_load>`
+:ref:`NDArray<class_NDArray>` **load**\ (\ file_access\: ``PackedByteArray``\ ) |static| :ref:`🔗<class_nd_method_load>`
 
 Load arrays from ``.npy``.
 

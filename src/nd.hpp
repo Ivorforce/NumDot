@@ -2,7 +2,6 @@
 #define NUMDOT_ND_H
 
 #include <cstdint>                            // for int64_t, uint64_t
-#include <godot_cpp/classes/file_access.hpp>
 #include <godot_cpp/classes/ref.hpp>          // for Ref
 #include <godot_cpp/core/binder_common.hpp>   // for VARIANT_ENUM_CAST
 #include "godot_cpp/classes/object.hpp"       // for Object
@@ -219,7 +218,7 @@ public:
 	static Ref<NDArray> pad(const Variant& array, const Variant& pad_width, PadMode pad_mode = PadMode::Constant, const Variant& pad_value = 0);
 
 	// IO.
-	static Ref<NDArray> load(const Ref<FileAccess>& file_access);
+	static Ref<NDArray> load(const PackedByteArray& data);
 };
 
 VARIANT_ENUM_CAST(nd::DType);

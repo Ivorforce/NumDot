@@ -77,6 +77,8 @@ def generate(env):
     dest_path = pathlib.Path("src/vatensor/gen/userconfig.hpp")
     dest_path.parent.mkdir(exist_ok=True)
 
+    features_lines = ",\n".join(f"\t\t{{ Feature::{feature}, {bool_to_string(value)} }}" for feature, value in features.mappings.items())
+
     dest_path.write_text(
 f"""#ifndef USERCONFIG_HPP
 #define USERCONFIG_HPP
@@ -85,7 +87,7 @@ f"""#ifndef USERCONFIG_HPP
 
 namespace va::userconfig {{
 	constexpr std::initializer_list<std::pair<Feature, bool>> is_enabled_by_feature_initializer = {{
-{ ",\n".join(f"\t\t{{ Feature::{feature}, {bool_to_string(value)} }}" for feature, value in features.mappings.items()) }
+{features_lines}
 	}};
 }}
 

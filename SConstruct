@@ -57,7 +57,7 @@ is_release = not _text2bool(ARGUMENTS.get("dev_build", "no"))
 
 if ARGUMENTS.get("optimize", None) is None and is_release:
     # The default godot-cpp optimizes for speed for release builds.
-    if ARGUMENTS["platform"] == "web" and ARGUMENTS.get("target", "template_debug") == "template_release":
+    if ARGUMENTS.get("platform", None) == "web" and ARGUMENTS.get("target", "template_debug") == "template_release":
         # For web, optimize binary size, can shrink by ~30%.
         ARGUMENTS["optimize"] = "size"
 
@@ -115,6 +115,6 @@ library = local_env.SharedLibrary(
 targets.append(library)
 
 if local_env.get("install_dir", None) is not None:
-    targets.append(local_env.Install(f"{local_env["install_dir"]}/addons/{libname}/{godot_cpp_env['platform']}/{lib_filepath}", library))
+    targets.append(local_env.Install(f"{local_env['install_dir']}/addons/{libname}/{godot_cpp_env['platform']}/{lib_filepath}", library))
 
 Default(targets)

@@ -9,7 +9,7 @@ namespace va::util {
 		}
 		else {
 			// Similar logic to va::assign with VScalar
-			if (carray.layout() == xt::layout_type::row_major || carray.layout() == xt::layout_type::any)
+			if (carray.layout() == xt::layout_type::row_major || carray.layout() == xt::layout_type::any && carray.is_contiguous())
 			{
 				// Contiguous assign.
 				std::copy(carray.linear_begin(), carray.linear_end(), target);

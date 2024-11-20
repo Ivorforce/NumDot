@@ -17,7 +17,7 @@ namespace va::util {
 		if (index >= 0 && index >= size) {
 			throw std::runtime_error("index out of range");
 		}
-  		if (index < 0 && -index > size) {
+		if (index < 0 && -index > size) {
 			throw std::runtime_error("index out of range");
 		}
 

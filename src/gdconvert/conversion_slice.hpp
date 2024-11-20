@@ -14,8 +14,11 @@ using namespace godot;
 struct SliceMask { std::shared_ptr<va::VArray> mask; };
 struct SliceIndexList { std::shared_ptr<va::VArray> index_list; };
 
+using single_axis_slice = std::tuple<xt::xstrided_slice<std::ptrdiff_t>, std::ptrdiff_t>;
+
 using SliceVariant = std::variant<
 	std::nullptr_t,
+	single_axis_slice,
 	xt::xstrided_slice_vector,
 	SliceMask,
 	SliceIndexList

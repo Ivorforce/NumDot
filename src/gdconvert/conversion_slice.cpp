@@ -83,8 +83,11 @@ SliceVariant variants_to_slice_variant(const Variant** args, GDExtensionInt arg_
 			default:
 				break;
 		}
+
+		return single_axis_slice(variant_to_slice_part(first_arg), 0);
 	}
 
+	// TODO Handle cases like [..., 0] or [all(), 0] with single_axis_slice
 	xt::xstrided_slice_vector sv(arg_count);
 	for (int i = 0; i < arg_count; i++) {
 		sv[i] = variant_to_slice_part(*args[i]);

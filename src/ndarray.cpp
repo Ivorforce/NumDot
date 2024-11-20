@@ -360,6 +360,10 @@ va::VData get_write(va::VArray& array, const xt::xstrided_slice_vector& sv) {
 	return array.sliced_data(sv);
 }
 
+va::VData get_write(va::VArray& array, const single_axis_slice& sv) {
+	return array.sliced_data(std::get<0>(sv), std::get<1>(sv));
+}
+
 void NDArray::set(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {
 	ERR_FAIL_COND_MSG(arg_count < 1, "At least one argument must be passed to NDarray->set(). Ignoring assignment.");
 
@@ -383,7 +387,7 @@ void NDArray::set(const Variant** args, GDExtensionInt arg_count, GDExtensionCal
 				}
 			}
 
-			if constexpr (std::is_same_v<T, xt::xstrided_slice_vector> || std::is_same_v<T, std::nullptr_t>) {
+			if constexpr (std::is_same_v<T, xt::xstrided_slice_vector> || std::is_same_v<T, std::nullptr_t> || std::is_same_v<T, single_axis_slice>) {
 				auto compute = get_write(*array, slice);
 
 				switch (value.get_type()) {
@@ -447,6 +451,9 @@ std::shared_ptr<va::VArray> get_varray(const std::shared_ptr<va::VArray>& array,
 		}
 		else if constexpr (std::is_same_v<T, std::nullptr_t>) {
 			return array;
+		}
+		else if constexpr (std::is_same_v<T, single_axis_slice>) {
+			return array->sliced(std::get<0>(slice), std::get<1>(slice));
 		}
 		else if constexpr (std::is_same_v<T, SliceIndexList>) {
 			return va::get_at_indices(va::store::default_allocator, array->data, slice.index_list->data);

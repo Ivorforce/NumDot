@@ -82,11 +82,35 @@ std::shared_ptr<va::VArray> va::VArray::sliced(const xt::xstrided_slice_vector& 
     );
 }
 
+std::shared_ptr<va::VArray> va::VArray::sliced(const xt::xstrided_slice<std::ptrdiff_t>& slice, std::ptrdiff_t axis) const {
+    return std::visit(
+    [this, &slice, axis](const auto& read) -> std::shared_ptr<VArray> {
+        std::ptrdiff_t new_offset = 0;
+        return std::make_shared<VArray>(
+            VArray {
+                store,
+                slice_compute(read, slice, axis, new_offset),
+                data_offset + new_offset
+            }
+        );
+    }, data
+);
+}
+
 va::VData va::sliced_data(const VData& data, const xt::xstrided_slice_vector& slices) {
     return std::visit(
         [&slices](const auto& read) -> va::VData {
             std::ptrdiff_t new_offset = 0;  // Not needed
             return slice_compute(read, slices, new_offset);
+        }, data
+    );
+}
+
+va::VData va::sliced_data(const VData& data, const xt::xstrided_slice<std::ptrdiff_t>& slice, std::ptrdiff_t axis) {
+    return std::visit(
+    [&slice, axis](const auto& read) -> va::VData {
+            std::ptrdiff_t new_offset = 0;  // Not needed
+            return slice_compute(read, slice, axis, new_offset);
         }, data
     );
 }

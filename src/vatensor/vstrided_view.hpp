@@ -3,6 +3,8 @@
 
 #include <xtensor/xstrided_view.hpp>
 
+#include "util.hpp"
+
 namespace va {
     // Like xt::strided_view_args, but fill_args does bounds checks and suppors negative indices.
 	template <class adj_strides_policy>
@@ -134,6 +136,82 @@ namespace va {
                 new_strides[idx] = old_strides[i_ax];
                 base_type::set_fake_slice(idx);
             }
+
+            new_layout = do_strides_match(new_shape, new_strides, layout, true) ? layout : xt::layout_type::dynamic;
+        }
+
+	    // We added this function!
+        template <class S, class ST, class V>
+        void
+        fill_args(const S& shape, const ST& old_strides, std::size_t base_offset, xt::layout_type layout, const xt::xstrided_slice<V>& slice, std::ptrdiff_t axis_)
+        {
+	        const auto dimension = shape.size();
+	        auto axis = va::util::normalize_axis(axis_, dimension);
+	    	auto axis_ptrdiff = static_cast<std::ptrdiff_t>(axis);
+
+	    	auto old_stride = old_strides[axis_ptrdiff];
+
+	        if (auto idx = xtl::get_if<V>(&slice)) {
+	        	// Remove one dimension by selection.
+
+	            auto slice0 = *idx;
+	            mod_idx(slice0, shape[axis]);
+	            new_offset += static_cast<std::size_t>(slice0 * old_stride);
+
+	            new_shape.resize(dimension - 1);
+	            std::copy_n(shape.begin(), axis, new_shape.begin());
+	            std::copy_n(shape.begin() + axis, dimension - axis, new_shape.begin() + axis);
+
+	            new_strides.resize(dimension - 1);
+	            std::copy_n(old_strides.begin(), axis, new_strides.begin());
+	            std::copy_n(old_strides.begin() + axis, dimension - axis, new_strides.begin() + axis);
+
+	            base_type::resize(dimension - 1);
+	            new_layout = do_strides_match(new_shape, new_strides, layout, true) ? layout : xt::layout_type::dynamic;
+
+	        	return;
+	        }
+	    	else if (xtl::get_if<xt::xnewaxis_tag>(&slice)) {
+	    		// Add one dimension by newaxis.
+
+	    		new_offset += base_offset;
+
+	    		new_shape.resize(dimension + 1);
+	    		std::copy_n(shape.begin(), axis, new_shape.begin());
+	    		new_shape[axis] = 1;
+	    		std::copy_n(shape.begin() + axis + 1, dimension - axis, new_shape.begin() + axis);
+
+	    		new_strides.resize(dimension + 1);
+	    		std::copy_n(old_strides.begin(), axis, new_strides.begin());
+	    		new_strides[axis] = 0;
+	    		std::copy_n(old_strides.begin() + axis + 1, dimension - axis, new_strides.begin() + axis);
+
+	    		base_type::resize(dimension + 1);
+				new_layout = do_strides_match(new_shape, new_strides, layout, true) ? layout : xt::layout_type::dynamic;
+
+	    		return;
+	    	}
+
+	    	new_offset = base_offset;
+	    	new_shape = shape;
+	    	new_strides = old_strides;
+	    	base_type::resize(dimension);
+
+	        if (xtl::get_if<xt::xellipsis_tag>(&slice) || xtl::get_if<xt::xall_tag>(&slice)) {
+	        	// Trivial, no-op selection.
+		        new_layout = layout;
+                return;
+	        }
+
+	    	// Dimension-preserving slice
+
+            auto slice_getter = xt::detail::slice_getter_impl<S>(shape);
+	        slice_getter.idx = axis;
+	        auto info = xtl::visit(slice_getter, slice);
+
+	        new_offset += static_cast<std::size_t>(info[0] * old_stride);
+	        new_shape[axis] = static_cast<std::size_t>(info[1]);
+	        new_strides[axis_ptrdiff] = info[2] * old_stride;
 
             new_layout = do_strides_match(new_shape, new_strides, layout, true) ? layout : xt::layout_type::dynamic;
         }

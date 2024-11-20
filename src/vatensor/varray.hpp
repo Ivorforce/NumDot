@@ -66,6 +66,7 @@ namespace va {
     }
 
     VData sliced_data(const VData& data, const xt::xstrided_slice_vector& slices);
+    VData sliced_data(const VData& data, const xt::xstrided_slice<std::ptrdiff_t>& slice, std::ptrdiff_t axis);
     [[nodiscard]] VScalar to_single_value(const VData& read);
 
     class VStore {
@@ -106,9 +107,13 @@ namespace va {
         void prepare_write() { store->prepare_write(data, data_offset); }
 
         [[nodiscard]] std::shared_ptr<VArray> sliced(const xt::xstrided_slice_vector& slices) const;
+        [[nodiscard]] std::shared_ptr<VArray> sliced(const xt::xstrided_slice<std::ptrdiff_t>& slice, std::ptrdiff_t axis) const;
         [[nodiscard]] VData sliced_data(const xt::xstrided_slice_vector& slices) const {
             return va::sliced_data(data, slices);
-        };
+        }
+        [[nodiscard]] VData sliced_data(const xt::xstrided_slice<std::ptrdiff_t>& slice, std::ptrdiff_t axis) const {
+            return va::sliced_data(data, slice, axis);
+        }
 
         explicit operator bool() const;
         explicit operator int64_t() const;
@@ -149,6 +154,24 @@ namespace va {
             compute.data_offset(),
             compute.layout(),
             slices
+        );
+
+        new_offset = static_cast<std::ptrdiff_t>(args.new_offset);
+        return make_compute(const_cast<V*>(compute.data()) + args.new_offset, args.new_shape, args.new_strides, args.new_layout);
+    }
+
+    template<typename CC>
+    static auto slice_compute(CC& compute, const xt::xstrided_slice<std::ptrdiff_t>& slice, std::ptrdiff_t axis, std::ptrdiff_t& new_offset) {
+		using V = typename std::decay_t<decltype(compute)>::value_type;
+
+        va::strided_view_args<xt::detail::no_adj_strides_policy> args;
+        args.fill_args(
+            compute.shape(),
+            compute.strides(),
+            compute.data_offset(),
+            compute.layout(),
+            slice,
+            axis
         );
 
         new_offset = static_cast<std::ptrdiff_t>(args.new_offset);

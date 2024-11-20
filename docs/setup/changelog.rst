@@ -25,6 +25,7 @@ Upcoming Changes (main branch)
 - Optimizations in the build scheme and code architecture reduced the binary size by 50%.
 - ``array_equal`` now also checks for shape equivalence, and doesn't fail if the shapes are not broadcastable.
 - 1-D array assignment is now about 3.5 times faster.
+- Single-slice indexing now has a lower latency.
 
 **Fixed**
 

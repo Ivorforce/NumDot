@@ -351,17 +351,34 @@ Ref<NDArray> NDArray::flatten() const {
 	}
 }
 
-va::VData& get_write(va::VArray& array, const std::nullptr_t& ptr) {
-	array.prepare_write();
-	return array.data;
-}
-
 va::VData get_write(va::VArray& array, const xt::xstrided_slice_vector& sv) {
+	// TODO Need to prepare_write()?
 	return array.sliced_data(sv);
 }
 
 va::VData get_write(va::VArray& array, const single_axis_slice& sv) {
+	// TODO Need to prepare_write()?
 	return array.sliced_data(std::get<0>(sv), std::get<1>(sv));
+}
+
+static void set_vdata_variant(va::VData& data, const Variant& value) {
+	switch (value.get_type()) {
+		case Variant::BOOL:
+			va::assign(data, static_cast<bool>(value));
+			return;
+		case Variant::INT:
+			va::assign(data, static_cast<int64_t>(value));
+			return;
+		case Variant::FLOAT:
+			va::assign(data, static_cast<double_t>(value));
+			return;
+		// TODO We could optimize more assignments of literals.
+		//  Just need to figure out how, ideally without duplicating code - as_array already does much type checking work.
+		default:
+			const auto value_ = variant_as_array(value);
+			va::assign(data, value_->data);
+			return;
+	}
 }
 
 void NDArray::set(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {
@@ -370,7 +387,7 @@ void NDArray::set(const Variant** args, GDExtensionInt arg_count, GDExtensionCal
 	try {
 		const Variant& value = *args[0];
 
-		std::visit([this, value](auto slice) {
+		std::visit([this, &value](auto slice) {
 			using T = std::decay_t<decltype(slice)>;
 
 			if constexpr (std::is_same_v<T, xt::xstrided_slice_vector>) {
@@ -387,26 +404,13 @@ void NDArray::set(const Variant** args, GDExtensionInt arg_count, GDExtensionCal
 				}
 			}
 
-			if constexpr (std::is_same_v<T, xt::xstrided_slice_vector> || std::is_same_v<T, std::nullptr_t> || std::is_same_v<T, single_axis_slice>) {
-				auto compute = get_write(*array, slice);
-
-				switch (value.get_type()) {
-					case Variant::BOOL:
-						va::assign(compute, static_cast<bool>(value));
-						return;
-					case Variant::INT:
-						va::assign(compute, static_cast<int64_t>(value));
-						return;
-					case Variant::FLOAT:
-						va::assign(compute, static_cast<double_t>(value));
-						return;
-					// TODO We could optimize more assignments of literals.
-					//  Just need to figure out how, ideally without duplicating code - as_array already does much type checking work.
-					default:
-						const auto value_ = variant_as_array(value);
-						va::assign(compute, value_->data);
-						return;
-				}
+			if constexpr (std::is_same_v<T, std::nullptr_t>) {
+				array->prepare_write();
+				set_vdata_variant(array->data, value);
+			}
+			else if constexpr (std::is_same_v<T, xt::xstrided_slice_vector> || std::is_same_v<T, single_axis_slice>) {
+				auto data = get_write(*array, slice);
+				set_vdata_variant(data, value);
 			}
 			else if constexpr (std::is_same_v<T, SliceIndexList>) {
 				array->prepare_write();

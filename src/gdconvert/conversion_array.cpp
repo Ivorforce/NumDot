@@ -13,6 +13,7 @@
 #include <vatensor/vcarray.hpp>
 #include <vatensor/xtensor_store.hpp>
 #include <vatensor/xscalar_store.hpp>
+#include <vatensor/dtype.hpp>
 #include "godot_cpp/classes/object.hpp"                // for Object
 #include "godot_cpp/core/defs.hpp"                     // for real_t
 #include "godot_cpp/core/object.hpp"                   // for Object::cast_to
@@ -70,6 +71,8 @@ void add_size_at_idx(va::shape_type& shape, const std::size_t idx, const std::si
 }
 
 void find_shape_and_dtype_of_array(va::shape_type& shape, va::DType& dtype, const Array& input_array) {
+	if (!va::is_any_dtype(dtype)) throw std::runtime_error("Invalid dtype.");
+
 	std::vector<Array> current_dim_arrays = { input_array };
 
 	for (std::size_t current_dim_idx = 0; true; ++current_dim_idx) {
@@ -85,6 +88,7 @@ void find_shape_and_dtype_of_array(va::shape_type& shape, va::DType& dtype, cons
 				switch (array_element.get_type()) {
 					case Variant::OBJECT: {
 						if (const auto ndarray = Object::cast_to<NDArray>(array_element)) {
+							dtype = va::dtype_common_type_unchecked(dtype, ndarray->array->dtype());
 							auto varray_dim_idx = current_dim_idx + 1;
 							for (const auto size : ndarray->array->shape()) {
 								add_size_at_idx(shape, varray_dim_idx, size);
@@ -92,95 +96,96 @@ void find_shape_and_dtype_of_array(va::shape_type& shape, va::DType& dtype, cons
 							}
 							continue;
 						}
+						break;
 					}
 					case Variant::ARRAY:
 						next_dim_arrays.push_back(array_element);
 						continue;
 					case Variant::BOOL:
-						dtype = va::dtype_common_type(dtype, va::Bool);
+						dtype = va::dtype_common_type_unchecked(dtype, va::dtype_of_type<bool>());
 						continue;
 					case Variant::INT:
-						dtype = va::dtype_common_type(dtype, va::Int64);
+						dtype = va::dtype_common_type_unchecked(dtype, va::dtype_of_type<int64_t>());
 						continue;
 					case Variant::FLOAT:
-						dtype = va::dtype_common_type(dtype, va::Float64);
+						dtype = va::dtype_common_type_unchecked(dtype, va::dtype_of_type<double_t>());
 						continue;
 					case Variant::PACKED_BYTE_ARRAY: {
-						dtype = va::dtype_common_type(dtype, va::dtype_of_type<uint8_t>());
+						dtype = va::dtype_common_type_unchecked(dtype, va::dtype_of_type<uint8_t>());
 						PackedByteArray packed = array_element;
 						add_size_at_idx(shape, current_dim_idx + 1, packed.size());
 						continue;
 					}
 					case Variant::PACKED_INT32_ARRAY: {
-						dtype = va::dtype_common_type(dtype, va::dtype_of_type<int32_t>());
+						dtype = va::dtype_common_type_unchecked(dtype, va::dtype_of_type<int32_t>());
 						PackedInt32Array packed = array_element;
 						add_size_at_idx(shape, current_dim_idx + 1, packed.size());
 						continue;
 					}
 					case Variant::PACKED_INT64_ARRAY: {
-						dtype = va::dtype_common_type(dtype, va::dtype_of_type<int64_t>());
+						dtype = va::dtype_common_type_unchecked(dtype, va::dtype_of_type<int64_t>());
 						PackedInt64Array packed = array_element;
 						add_size_at_idx(shape, current_dim_idx + 1, packed.size());
 						continue;
 					}
 					case Variant::PACKED_FLOAT32_ARRAY: {
-						dtype = va::dtype_common_type(dtype, va::dtype_of_type<float_t>());
+						dtype = va::dtype_common_type_unchecked(dtype, va::dtype_of_type<float_t>());
 						PackedFloat32Array packed = array_element;
 						add_size_at_idx(shape, current_dim_idx + 1, packed.size());
 						continue;
 					}
 					case Variant::PACKED_FLOAT64_ARRAY: {
-						dtype = va::dtype_common_type(dtype, va::dtype_of_type<double_t>());
+						dtype = va::dtype_common_type_unchecked(dtype, va::dtype_of_type<double_t>());
 						PackedFloat64Array packed = array_element;
 						add_size_at_idx(shape, current_dim_idx + 1, packed.size());
 						continue;
 					}
 					case Variant::PACKED_VECTOR2_ARRAY: {
-						dtype = va::dtype_common_type(dtype, va::dtype_of_type<real_t>());
+						dtype = va::dtype_common_type_unchecked(dtype, va::dtype_of_type<real_t>());
 						PackedVector2Array packed = array_element;
 						add_size_at_idx(shape, current_dim_idx + 1, packed.size());
 						add_size_at_idx(shape, current_dim_idx + 2, 2);
 						continue;
 					}
 					case Variant::PACKED_VECTOR3_ARRAY: {
-						dtype = va::dtype_common_type(dtype, va::dtype_of_type<real_t>());
+						dtype = va::dtype_common_type_unchecked(dtype, va::dtype_of_type<real_t>());
 						PackedVector3Array packed = array_element;
 						add_size_at_idx(shape, current_dim_idx + 1, packed.size());
 						add_size_at_idx(shape, current_dim_idx + 2, 3);
 						continue;
 					}
 					case Variant::PACKED_VECTOR4_ARRAY: {
-						dtype = va::dtype_common_type(dtype, va::dtype_of_type<real_t>());
+						dtype = va::dtype_common_type_unchecked(dtype, va::dtype_of_type<real_t>());
 						PackedVector4Array packed = array_element;
 						add_size_at_idx(shape, current_dim_idx + 1, packed.size());
 						add_size_at_idx(shape, current_dim_idx + 2, 4);
 						continue;
 					}
 					case Variant::PACKED_COLOR_ARRAY: {
-						dtype = va::dtype_common_type(dtype, va::dtype_of_type<float_t>());
+						dtype = va::dtype_common_type_unchecked(dtype, va::dtype_of_type<float_t>());
 						PackedColorArray packed = array_element;
 						add_size_at_idx(shape, current_dim_idx + 1, packed.size());
 						add_size_at_idx(shape, current_dim_idx + 2, 4);
 						continue;
 					}
 					case Variant::VECTOR2I:
-						dtype = va::dtype_common_type(dtype, va::dtype_of_type<int64_t>());
+						dtype = va::dtype_common_type_unchecked(dtype, va::dtype_of_type<int64_t>());
 						add_size_at_idx(shape, current_dim_idx + 1, 2);
 						continue;
 					case Variant::VECTOR3I:
-						dtype = va::dtype_common_type(dtype, va::dtype_of_type<int64_t>());
+						dtype = va::dtype_common_type_unchecked(dtype, va::dtype_of_type<int64_t>());
 						add_size_at_idx(shape, current_dim_idx + 1, 3);
 						continue;
 					case Variant::VECTOR4I:
-						dtype = va::dtype_common_type(dtype, va::dtype_of_type<int64_t>());
+						dtype = va::dtype_common_type_unchecked(dtype, va::dtype_of_type<int64_t>());
 						add_size_at_idx(shape, current_dim_idx + 1, 4);
 						continue;
 					case Variant::VECTOR2:
-						dtype = va::dtype_common_type(dtype, va::dtype_of_type<real_t>());
+						dtype = va::dtype_common_type_unchecked(dtype, va::dtype_of_type<real_t>());
 						add_size_at_idx(shape, current_dim_idx + 1, 2);
 						continue;
 					case Variant::VECTOR3:
-						dtype = va::dtype_common_type(dtype, va::dtype_of_type<real_t>());
+						dtype = va::dtype_common_type_unchecked(dtype, va::dtype_of_type<real_t>());
 						add_size_at_idx(shape, current_dim_idx + 1, 3);
 						continue;
 					case Variant::COLOR:
@@ -190,16 +195,16 @@ void find_shape_and_dtype_of_array(va::shape_type& shape, va::DType& dtype, cons
 					case Variant::VECTOR4:
 					case Variant::QUATERNION:
 					case Variant::PLANE:
-						dtype = va::dtype_common_type(dtype, va::dtype_of_type<real_t>());
+						dtype = va::dtype_common_type_unchecked(dtype, va::dtype_of_type<real_t>());
 						add_size_at_idx(shape, current_dim_idx + 1, 4);
 						continue;
 					case Variant::BASIS:
-						dtype = va::dtype_common_type(dtype, va::dtype_of_type<real_t>());
+						dtype = va::dtype_common_type_unchecked(dtype, va::dtype_of_type<real_t>());
 						add_size_at_idx(shape, current_dim_idx + 1, 3);
 						add_size_at_idx(shape, current_dim_idx + 2, 3);
 						continue;
 					case Variant::PROJECTION:
-						dtype = va::dtype_common_type(dtype, va::dtype_of_type<real_t>());
+						dtype = va::dtype_common_type_unchecked(dtype, va::dtype_of_type<real_t>());
 						add_size_at_idx(shape, current_dim_idx + 1, 4);
 						add_size_at_idx(shape, current_dim_idx + 2, 4);
 						continue;

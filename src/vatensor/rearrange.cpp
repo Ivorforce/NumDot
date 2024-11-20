@@ -13,6 +13,7 @@
 #include "util.hpp"
 #include "vpromote.hpp"
 #include "xscalar_store.hpp"
+#include "dtype.hpp"
 #include "vatensor//varray.hpp"         // for VArray, strides_type, axes_type
 #include "xtensor/xlayout.hpp"        // for layout_type
 #include "xtensor/xmanipulation.hpp"  // for full, transpose, flip, moveaxis
@@ -319,14 +320,7 @@ std::shared_ptr<VArray> va::vector_as_complex(VStoreAllocator& allocator, const 
 	// Need to return a copy.
 	if (dtype == DTypeMax) { dtype = DType::Complex128; }
 
-	const DType comp_dtype = std::visit([](auto t) -> DType {
-		if constexpr (xtl::is_complex<decltype(t)>::value) {
-			return dtype_of_type<typename decltype(t)::value_type>();
-		}
-		else {
-			throw std::runtime_error("DType must be complex");
-		}
-	}, dtype_to_variant(dtype));
+	const DType comp_dtype = complex_dtype_value_type(dtype);
 
 	const auto float_array = va::copy_as_dtype(allocator, varray.data, comp_dtype);
 	// Call ourselves again, though this time we should get a view for sure.

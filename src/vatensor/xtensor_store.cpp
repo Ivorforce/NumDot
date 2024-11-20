@@ -1,4 +1,5 @@
 #include "xtensor_store.hpp"
+#include "dtype.hpp"
 
 using namespace va;
 
@@ -21,7 +22,7 @@ size_t store::XArrayStore::size() {
 	}, array);
 }
 
-std::shared_ptr<VStore> store::XArrayStoreAllocator::allocate(DType dtype, std::size_t count) {
+std::shared_ptr<VStore> store::XArrayStoreAllocator::allocate(const DType dtype, std::size_t count) {
 	return std::visit([count](auto t) -> std::shared_ptr<VStore> {
 		using T = std::decay_t<decltype(t)>;
 		return make_store<T>(count);

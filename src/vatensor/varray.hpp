@@ -222,23 +222,16 @@ namespace va {
     // The second case will assign to the compute variant.
     using VArrayTarget = std::variant<std::shared_ptr<VArray>*, VData*>;
 
-    VScalar dtype_to_variant(DType dtype);
-
-    // TODO Relying on the index isn't very glamorous
     constexpr static DType dtype(VScalar dtype) {
         return static_cast<DType>(dtype.index());
     }
 
-    // TODO Relying on the index isn't very glamorous
     template <typename T>
     constexpr DType dtype_of_type() {
         return static_cast<DType>(VScalar(T()).index());
     }
 
     VScalar static_cast_scalar(VScalar v, DType dtype);
-
-    std::size_t size_of_dtype_in_bytes(DType dtype);
-    DType dtype_common_type(DType a, DType b);
 
     template<typename V>
     V static_cast_scalar(VScalar v) {

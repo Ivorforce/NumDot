@@ -25,6 +25,10 @@ Upcoming Changes (main branch)
 - Optimizations in the build scheme and code architecture reduced the binary size by 50%.
 - ``array_equal`` now also checks for shape equivalence, and doesn't fail if the shapes are not broadcastable.
 
+**Fixed**
+
+- ``NDArray`` found in godot arrays will now properly type hint the resulting array, avoiding accidental promotion.
+
 Version 0.7 - 2024-11-12
 ------------------------
 **Added**

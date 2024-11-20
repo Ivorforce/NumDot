@@ -11,6 +11,7 @@
 #include "vassign.hpp"                    // for assign_nonoverlapping, broadc...
 #include "vpromote.hpp"                   // for promote_value_type_if_needed
 #include "vconfig.hpp"
+#include "dtype.hpp"
 #include "xtensor/xarray.hpp"           // for xarray_container
 #include "xtensor/xoperation.hpp"       // for xfunction_type_t
 #include "xtensor/xstorage.hpp"         // for uvector
@@ -217,7 +218,7 @@ namespace va {
                     );
                 }
             },
-            dtype_to_variant(dtype)
+            dtype_to_variant_unchecked(dtype)
         );
     }
 
@@ -295,7 +296,7 @@ namespace va {
                     );
                 }
             },
-            dtype_to_variant(dtype)
+            dtype_to_variant_unchecked(dtype)
         );
     }
 

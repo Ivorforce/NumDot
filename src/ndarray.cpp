@@ -18,6 +18,7 @@
 #include <variant>                                 // for visit
 #include <gdconvert/packed_array_store.hpp>
 #include <vatensor/create.hpp>
+#include <vatensor/dtype.hpp>
 #include <vatensor/rearrange.hpp>
 #include "gdconvert/conversion_array.hpp"            // for fill_c_array_flat
 #include "gdconvert/conversion_slice.hpp"            // for variants_to_slice_...
@@ -233,10 +234,7 @@ uint64_t NDArray::buffer_size() const {
 }
 
 uint64_t NDArray::buffer_size_in_bytes() const {
-	return array->store->size() * std::visit([](auto t) -> std::size_t {
-		using V = std::decay_t<decltype(t)>;
-		return sizeof(V);
-	}, va::dtype_to_variant(array->store->dtype()));
+	return array->store->size() * va::size_of_dtype_in_bytes_unchecked(array->store->dtype());
 }
 
 uint64_t NDArray::ndim() const {

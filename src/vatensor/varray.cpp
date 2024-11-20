@@ -6,6 +6,7 @@
 #include <type_traits>                     // for decay_t, common_type_t
 #include "xscalar_store.hpp"
 #include "xtensor/xstrided_view_base.hpp"  // for strided_view_args
+#include "dtype.hpp"
 
 const va::shape_type& va::shape(const VData& read) {
     return std::visit(
@@ -97,66 +98,12 @@ va::VData va::sliced_data(const VData& data, const xt::xstrided_slice_vector& sl
     );
 }
 
-va::VScalar va::dtype_to_variant(const DType dtype) {
-    switch (dtype) {
-        case DType::Bool:
-            return bool();
-        case DType::Float32:
-            return float_t();
-        case DType::Float64:
-            return double_t();
-        case DType::Complex64:
-            return std::complex<float_t>();
-        case DType::Complex128:
-            return std::complex<double_t>();
-        case DType::Int8:
-            return int8_t();
-        case DType::Int16:
-            return int16_t();
-        case DType::Int32:
-            return int32_t();
-        case DType::Int64:
-            return int64_t();
-        case DType::UInt8:
-            return uint8_t();
-        case DType::UInt16:
-            return uint16_t();
-        case DType::UInt32:
-            return uint32_t();
-        case DType::UInt64:
-            return int64_t();
-        default:
-            throw std::runtime_error("Invalid dtype.");
-    }
-}
-
-std::size_t va::size_of_dtype_in_bytes(const DType dtype) {
-    return std::visit(
-        [](auto dtype) {
-            return sizeof(dtype);
-        }, dtype_to_variant(dtype)
-    );
-}
-
 va::VScalar va::static_cast_scalar(const VScalar v, const DType dtype) {
     return std::visit(
         [v](const auto t) -> va::VScalar {
             using T = std::decay_t<decltype(t)>;
             return va::static_cast_scalar<T>(v);
         }, dtype_to_variant(dtype)
-    );
-}
-
-va::DType va::dtype_common_type(const DType a, const DType b) {
-    if (a == DTypeMax) return b;
-    if (b == DTypeMax) return a;
-
-    return std::visit(
-        [](auto a, auto b) {
-            return dtype_of_type<std::common_type_t<decltype(a), decltype(b)>>();
-        },
-        dtype_to_variant(a),
-        dtype_to_variant(b)
     );
 }
 

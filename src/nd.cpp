@@ -23,6 +23,7 @@
 #include <vatensor/vcarray.hpp>
 #include <vatensor/vsignal.hpp>
 #include <vatensor/vio.hpp>
+#include <vatensor/dtype.hpp>
 #include <vatensor/xscalar_store.hpp>
 #include <vatensor/xtensor_store.hpp>
 #include "gdconvert/conversion_array.hpp"     // for variant_as_array
@@ -58,6 +59,7 @@ void nd::_bind_methods() {
 	BIND_ENUM_CONSTANT(UInt16);
 	BIND_ENUM_CONSTANT(UInt32);
 	BIND_ENUM_CONSTANT(UInt64);
+	BIND_ENUM_CONSTANT(DTypeMax);
 
 	BIND_ENUM_CONSTANT(Constant);
 	BIND_ENUM_CONSTANT(Symmetric);
@@ -657,6 +659,8 @@ Ref<NDArray> nd::unstack(const Variant& v, int64_t axis) {
 }
 
 Ref<NDArray> concatenate_(nd::DType dtype, const std::vector<std::shared_ptr<va::VArray>>& vector, const std::size_t axis_) {
+	ERR_FAIL_COND_V_MSG(!va::is_any_dtype(dtype), {}, "Invalid dtype.");
+
 	auto shape = vector[0]->shape();
 	for (auto it = vector.begin() + 1; it != vector.end(); ++it) {
 		ERR_FAIL_COND_V_MSG((*it)->dimension() != shape.size(), {}, "Dimensions of given arrays must match.");
@@ -670,7 +674,7 @@ Ref<NDArray> concatenate_(nd::DType dtype, const std::vector<std::shared_ptr<va:
 
 	if (dtype == nd::DType::DTypeMax) {
 		for (auto& array : vector) {
-			dtype = va::dtype_common_type(dtype, array->dtype());
+			dtype = va::dtype_common_type_unchecked(dtype, array->dtype());
 		}
 	}
 

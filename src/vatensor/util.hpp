@@ -12,6 +12,17 @@ namespace va::util {
 
 		return xt::normalize_axis(dimension, axis);
     };
+
+	static std::size_t normalize_index(const std::ptrdiff_t index, const std::size_t size) {
+		if (index >= 0 && index >= size) {
+			throw std::runtime_error("index out of range");
+		}
+  		if (index < 0 && -index > size) {
+			throw std::runtime_error("index out of range");
+		}
+
+		return xt::normalize_axis(size, index);
+    };
 }
 
 #endif //VATENSOR_UTIL_HPP

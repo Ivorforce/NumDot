@@ -48,7 +48,7 @@ def generate(env, godot_cpp_env, sources):
         # Yo-march improves performance, makes the build incompatible with most other machines.
         env.Append(CPPFLAGS=[f"-march={optimize_for_arch}"])
 
-    is_msvc = "is_msvc" in godot_cpp_env and godot_cpp_env["is_msvc"]
+    is_msvc = "is_msvc" in env and env["is_msvc"]
 
     if env["use_xsimd"] == "auto":
         use_xsimd = True
@@ -66,7 +66,7 @@ def generate(env, godot_cpp_env, sources):
             "-DXTENSOR_ENABLE_ASSERT=1",
         ])
 
-    if godot_cpp_env["platform"] == "windows":
+    if env["platform"] == "windows":
         # At least the github runner needs bigobj to be enabled (otherwise it crashes).
         # is_msvc is set by godot-cpp.
         if is_msvc:
@@ -74,7 +74,7 @@ def generate(env, godot_cpp_env, sources):
         else:
             env.Append(CCFLAGS=["-Wa,-mbig-obj"])
 
-    if godot_cpp_env['platform'] == "web" and use_xsimd:
+    if env['platform'] == "web" and use_xsimd:
         # Not enabled by default, and xsimd doesn't have guards against it so we have to force-add it.
         # See https://github.com/emscripten-core/emscripten/issues/12714.
         env.Append(CPPFLAGS=["-msimd128"])
@@ -103,6 +103,6 @@ def generate(env, godot_cpp_env, sources):
     scu_tool.generate(env, sources)
     features_tool.generate(env)
 
-    if godot_cpp_env["target"] in ["editor", "template_debug"]:
-        doc_data = godot_cpp_env.GodotCPPDocData("src/gen/doc_data.gen.cpp", source=env.Glob("doc_classes/*.xml"))
+    if env["target"] in ["editor", "template_debug"]:
+        doc_data = env.GodotCPPDocData("src/gen/doc_data.gen.cpp", source=env.Glob("doc_classes/*.xml"))
         sources.append(doc_data)

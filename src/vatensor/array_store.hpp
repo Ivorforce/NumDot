@@ -3,6 +3,7 @@
 
 #include "varray.hpp"
 #include "xscalar_store.hpp"
+#include "dtype.hpp"
 
 namespace va::store {
 	class VCharPtrStore : public VStore {
@@ -31,7 +32,7 @@ namespace va::store {
 				strides,
 				layout
 			);
-		}, va::dtype_to_variant(store.ptr_dtype));
+		}, va::dtype_to_variant_unchecked(store.ptr_dtype));
 
 		auto store_ = std::make_shared<VCharPtrStore>(std::forward<VCharPtrStore>(store));
 

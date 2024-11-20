@@ -34,6 +34,11 @@ opts.Add(
 numdot_tool = Tool("numdot")
 numdot_tool.options(opts)
 
+# Only used to evaluate our own options, lol
+options_env = Environment(tools=["default"], PLATFORM="")
+opts.Update(options_env)
+Help(opts.GenerateHelpText(options_env))
+
 # Remove our custom options to avoid passing to godot-cpp; godot-cpp has its own check for unknown options.
 for opt in opts.options:
     ARGUMENTS.pop(opt.key, None)
@@ -64,11 +69,12 @@ if ARGUMENTS.get("optimize", None) is None and is_release:
 # Load godot-cpp
 godot_cpp_env = SConscript("godot-cpp/SConstruct", {"customs": customs})
 
-local_env = godot_cpp_env.Clone()
-opts.Update(local_env)
-Help(opts.GenerateHelpText(local_env))
+env = godot_cpp_env.Clone()
+for opt in opts.options:
+    if opt.key in options_env:
+        env[opt.key] = options_env[opt.key]
 
-is_msvc = "is_msvc" in godot_cpp_env and godot_cpp_env["is_msvc"]
+is_msvc = "is_msvc" in env and env["is_msvc"]
 
 # ============================= Actual source and lib setup =============================
 
@@ -77,27 +83,27 @@ if is_release:
     # Enable link-time optimization.
     # This further lets the compiler optimize, reduce binary size (~.5mb) or inline functions (possibly improving speeds).
     if is_msvc:
-        local_env.Append(CCFLAGS=["/GL"])
-        local_env.Append(LINKFLAGS=["/LTCG"])
+        env.Append(CCFLAGS=["/GL"])
+        env.Append(LINKFLAGS=["/LTCG"])
     else:
-        local_env.Append(CCFLAGS=["-flto"])
-        local_env.Append(LINKFLAGS=["-flto"])
+        env.Append(CCFLAGS=["-flto"])
+        env.Append(LINKFLAGS=["-flto"])
 
 sources = []
 targets = []
 
-numdot_tool.generate(local_env, godot_cpp_env, sources)
+numdot_tool.generate(env, godot_cpp_env, sources)
 
 # .dev doesn't inhibit compatibility, so we don't need to key it.
 # .universal just means "compatible with all relevant arches" so we don't need to key it.
-suffix = godot_cpp_env['suffix'].replace(".dev", "").replace(".universal", "")
+suffix = env['suffix'].replace(".dev", "").replace(".universal", "")
 
 # Filename of the library.
-lib_filename = f"{local_env.subst('$SHLIBPREFIX')}{libname}{suffix}{local_env.subst('$SHLIBSUFFIX')}"
+lib_filename = f"{env.subst('$SHLIBPREFIX')}{libname}{suffix}{env.subst('$SHLIBSUFFIX')}"
 # Build releases into build/, and debug into demo/.
 lib_filepath = ""
 
-if godot_cpp_env["platform"] == "macos" or godot_cpp_env["platform"] == "ios":
+if env["platform"] == "macos" or env["platform"] == "ios":
     # The above defaults to creating a .dylib.
     # These are not supported on the iOS app store.
     # To make it consistent, we'll just use frameworks on both macOS and iOS.
@@ -105,16 +111,16 @@ if godot_cpp_env["platform"] == "macos" or godot_cpp_env["platform"] == "ios":
     lib_filename = framework_name
     lib_filepath = "{}.framework/".format(framework_name)
 
-    local_env["SHLIBPREFIX"] = ""
-    local_env["SHLIBSUFFIX"] = ""
+    env["SHLIBPREFIX"] = ""
+    env["SHLIBSUFFIX"] = ""
 
-library = local_env.SharedLibrary(
-    f"build/addons/{libname}/{godot_cpp_env['platform']}/{lib_filepath}{lib_filename}",
+library = env.SharedLibrary(
+    f"build/addons/{libname}/{env['platform']}/{lib_filepath}{lib_filename}",
     source=sources,
 )
 targets.append(library)
 
-if local_env.get("install_dir", None) is not None:
-    targets.append(local_env.Install(f"{local_env['install_dir']}/addons/{libname}/{godot_cpp_env['platform']}/{lib_filepath}", library))
+if env.get("install_dir", None) is not None:
+    targets.append(env.Install(f"{env['install_dir']}/addons/{libname}/{env['platform']}/{lib_filepath}", library))
 
 Default(targets)

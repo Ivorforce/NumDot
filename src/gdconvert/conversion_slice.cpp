@@ -68,7 +68,7 @@ SliceVariant variants_to_slice_variant(const Variant** args, GDExtensionInt arg_
 					// Mask access?
 					if (ndarray->array->dtype() == va::Bool) return SliceMask { ndarray->array };
 
-					// Could be float, but we'll notice later.
+					// Could be incompatible dtype, but we'll notice later.
 					return SliceIndexList { ndarray->array };
 				}
 			}

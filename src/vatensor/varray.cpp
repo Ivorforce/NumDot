@@ -63,9 +63,6 @@ va::VScalar va::to_single_value(const VData& read) {
                 throw std::runtime_error("Expected a single element after slicing.");
             }
             return *carray.data();
-            // TODO I expected this to work, but it doesn't. See https://xtensor.readthedocs.io/en/latest/indices.html#operator
-            // But at least the above is a view, so no copy is made.
-            // return V(array[slice]);
         }, read
     );
 }

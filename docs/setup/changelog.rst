@@ -26,6 +26,7 @@ Upcoming Changes (main branch)
 - ``array_equal`` now also checks for shape equivalence, and doesn't fail if the shapes are not broadcastable.
 - 1-D array assignment is now about 3.5 times faster.
 - Single-slice indexing now has a lower latency.
+- Contiguous array conversions (from ``NDArray`` to godot arrays) has been optimized, and can be several times faster.
 
 **Fixed**
 

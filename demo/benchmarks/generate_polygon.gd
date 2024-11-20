@@ -22,7 +22,7 @@ func run_numdot(
 	num_sides: int,
 	position: Vector2
 ) -> PackedVector2Array:
-	var angle_delta := nd.linspace(0, PI * 2, num_sides, nd.DType.Float32)
+	var angle_delta := nd.linspace(0, PI * 2, num_sides)
 	
 	# TODO Would be better as a PackedVector2Array backed NDArray
 	#  because it could immediately return after the math, rather than needing
@@ -40,7 +40,7 @@ func run_numdot(
 
 func run_benchmark():
 	const RADIUS := 1.0
-	const NUM_SIDES := 2000
+	const NUM_SIDES := 20000
 	const POSITION := Vector2(0.0, 0.0)
 
 	# Examples from my computer:

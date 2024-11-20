@@ -8,7 +8,27 @@ namespace va::util {
 			throw std::runtime_error("Cannot promote in this way.");
 		}
 		else {
-			std::copy_n(carray.begin(), carray.size(), target);
+			// Similar logic to va::assign with VScalar
+			if (carray.layout() == xt::layout_type::row_major || carray.layout() == xt::layout_type::any)
+			{
+				// Contiguous assign.
+				std::copy(carray.linear_begin(), carray.linear_end(), target);
+			}
+			else if (carray.dimension() == 1) {
+				// Strided assign.
+				const auto stride = carray.strides()[0];
+				auto ptr = carray.linear_begin();
+				const auto end = ptr + carray.shape()[0] * stride;
+
+				for (; ptr < end; ptr += stride, ++target) {
+					*target = *ptr;
+				}
+			}
+			else
+			{
+				// Stepper assign.
+				std::copy(carray.begin(), carray.end(), target);
+			}
 		}
 	}
 

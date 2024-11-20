@@ -14,6 +14,7 @@
 #include <utility>                         // for forward
 #include <variant>                         // for variant, visit
 #include <vector>                          // for vector
+#include "dtype.hpp"
 #include "xtensor/xadapt.hpp"              // for adapt, default_allocator_f...
 #include "xtensor/xarray.hpp"              // for xarray_container, xarray_a...
 #include "xtensor/xbuffer_adaptor.hpp"     // for no_ownership, xbuffer_adaptor
@@ -27,48 +28,6 @@
 #include "vstrided_view.hpp"
 
 namespace va {
-    // We should be using the same default types as xarray does, so we know for sure the ones we create /
-    //  pass around are the ones we need in the end.
-    using size_type = std::size_t;
-    // Refer to xarray
-    using shape_type = xt::dynamic_shape<size_type>;
-    // Refer to xarray xcontainer_inner_types.
-    using strides_type = xt::get_strides_t<shape_type>;
-    using axes_type = strides_type;
-
-    enum DType {
-        Bool,
-        Float32,
-        Float64,
-        Complex64,
-        Complex128,
-        Int8,
-        Int16,
-        Int32,
-        Int64,
-        UInt8,
-        UInt16,
-        UInt32,
-        UInt64,
-        DTypeMax
-    };
-
-    using VScalar = std::variant<
-        bool,
-        float_t,
-        double_t,
-        std::complex<float_t>,
-        std::complex<double_t>,
-        int8_t,
-        int16_t,
-        int32_t,
-        int64_t,
-        uint8_t,
-        uint16_t,
-        uint32_t,
-        uint64_t
-    >;
-
     // P&& pointer, typename A::size_type size, O ownership, SC&& shape, SS&& strides, const A& alloc = A()
     template<typename T>
     using compute_case = xt::xarray_adaptor<
@@ -97,7 +56,7 @@ namespace va {
     [[nodiscard]] const strides_type& strides(const VData& read);
     [[nodiscard]] size_type offset(const VData& read);
     [[nodiscard]] xt::layout_type layout(const VData& read);
-    [[nodiscard]] DType dtype(const VData& read);
+    [[nodiscard]] static constexpr DType dtype(const VData& read) { return static_cast<DType>(read.index()); }
     [[nodiscard]] std::size_t size(const VData& read);
     [[nodiscard]] std::size_t dimension(const VData& read);
     [[nodiscard]] std::size_t size_of_array_in_bytes(const VData& read);
@@ -221,29 +180,6 @@ namespace va {
     // The first case will place the array in the optional.
     // The second case will assign to the compute variant.
     using VArrayTarget = std::variant<std::shared_ptr<VArray>*, VData*>;
-
-    constexpr static DType dtype(VScalar dtype) {
-        return static_cast<DType>(dtype.index());
-    }
-
-    template <typename T>
-    constexpr DType dtype_of_type() {
-        return static_cast<DType>(VScalar(T()).index());
-    }
-
-    VScalar static_cast_scalar(VScalar v, DType dtype);
-
-    template<typename V>
-    V static_cast_scalar(VScalar v) {
-        return std::visit([](auto v) -> V {
-            if constexpr (!std::is_convertible_v<decltype(v), V>) {
-                throw std::runtime_error("Cannot promote in this way.");
-            }
-            else {
-                return static_cast<V>(v);
-            }
-        }, v);
-    }
 }
 
 #endif //VARRAY_H

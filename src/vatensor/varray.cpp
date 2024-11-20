@@ -40,10 +40,6 @@ xt::layout_type va::layout(const VData& read) {
     );
 }
 
-va::DType va::dtype(const VData& read) {
-    return static_cast<DType>(read.index());
-}
-
 std::size_t va::size(const VData& read) {
     return std::visit(
         [](const auto& carray) -> std::size_t {
@@ -95,15 +91,6 @@ va::VData va::sliced_data(const VData& data, const xt::xstrided_slice_vector& sl
             std::ptrdiff_t new_offset = 0;  // Not needed
             return slice_compute(read, slices, new_offset);
         }, data
-    );
-}
-
-va::VScalar va::static_cast_scalar(const VScalar v, const DType dtype) {
-    return std::visit(
-        [v](const auto t) -> va::VScalar {
-            using T = std::decay_t<decltype(t)>;
-            return va::static_cast_scalar<T>(v);
-        }, dtype_to_variant(dtype)
     );
 }
 

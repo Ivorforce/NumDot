@@ -1,9 +1,63 @@
 #ifndef VATENSOR_DTYPE_HPP
 #define VATENSOR_DTYPE_HPP
 
-#include "varray.hpp"
+#include <variant>
+#include <exception>
+#include <xtensor/xshape.hpp>
+#include <xtensor/xcomplex.hpp>
 
 namespace va {
+	// We should be using the same default types as xarray does, so we know for sure the ones we create /
+	//  pass around are the ones we need in the end.
+	using size_type = std::size_t;
+	// Refer to xarray
+	using shape_type = xt::dynamic_shape<size_type>;
+	// Refer to xarray xcontainer_inner_types.
+	using strides_type = xt::get_strides_t<shape_type>;
+	using axes_type = strides_type;
+
+	enum DType {
+		Bool,
+		Float32,
+		Float64,
+		Complex64,
+		Complex128,
+		Int8,
+		Int16,
+		Int32,
+		Int64,
+		UInt8,
+		UInt16,
+		UInt32,
+		UInt64,
+		DTypeMax
+	};
+
+	using VScalar = std::variant<
+		bool,
+		float_t,
+		double_t,
+		std::complex<float_t>,
+		std::complex<double_t>,
+		int8_t,
+		int16_t,
+		int32_t,
+		int64_t,
+		uint8_t,
+		uint16_t,
+		uint32_t,
+		uint64_t
+	>;
+
+	constexpr static DType dtype(VScalar dtype) {
+		return static_cast<DType>(dtype.index());
+	}
+
+	template <typename T>
+	constexpr DType dtype_of_type() {
+		return static_cast<DType>(VScalar(T()).index());
+	}
+
 	static constexpr bool is_any_dtype(const DType dtype) noexcept {
 		return static_cast<size_t>(dtype) <= DTypeMax;
 	}
@@ -101,6 +155,20 @@ namespace va {
 				throw std::runtime_error("DType must be complex");
 			}
 		}, dtype_to_variant(dtype));
+	}
+
+	VScalar static_cast_scalar(VScalar v, DType dtype);
+
+	template<typename V>
+	V static_cast_scalar(VScalar v) {
+		return std::visit([](auto v) -> V {
+			if constexpr (!std::is_convertible_v<decltype(v), V>) {
+				throw std::runtime_error("Cannot promote in this way.");
+			}
+			else {
+				return static_cast<V>(v);
+			}
+		}, v);
 	}
 }
 

@@ -94,15 +94,28 @@ void va::assign(VData& array, VScalar value) {
 			else {
 				const auto value = static_cast<V>(cvalue);
 
-				// TODO The .fill makes this check statically only, so is_contiguous() isn't called.
+				// The .fill makes this check statically only, so is_contiguous() isn't called.
+				// But it also doesn't optimize for 1-D strided assign or 1-D strided fill.
 				// See https://github.com/xtensor-stack/xtensor/pull/2809
 				// carray.fill(static_cast<V>(cvalue));
 				if (T::contiguous_layout || carray.is_contiguous())
 				{
+					// Contiguous assign.
 					std::fill(carray.linear_begin(), carray.linear_end(), value);
+				}
+				else if (carray.dimension() == 1) {
+					// Strided assign.
+					const auto stride = carray.strides()[0];
+					auto ptr = carray.linear_begin();
+					const auto end = ptr + carray.shape()[0] * stride;
+
+					for (; ptr < end; ptr += stride) {
+						*ptr = value;
+					}
 				}
 				else
 				{
+					// Stepper assign.
 					std::fill(carray.begin(), carray.end(), value);
 				}
 			}

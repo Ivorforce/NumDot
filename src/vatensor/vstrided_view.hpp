@@ -146,6 +146,32 @@ namespace va {
         fill_args(const S& shape, const ST& old_strides, std::size_t base_offset, xt::layout_type layout, const xt::xstrided_slice<V>& slice, std::ptrdiff_t axis_)
         {
 	        const auto dimension = shape.size();
+
+	    	if (xtl::get_if<xt::xnewaxis_tag>(&slice)) {
+	    		// Add one dimension by newaxis.
+
+	    		// Dimension + 1 because newaxis at -1 should insert it at the very back.
+	    		auto axis = va::util::normalize_axis(axis_, dimension + 1);
+	    		auto axis_ptrdiff = static_cast<std::ptrdiff_t>(axis);
+
+	    		new_offset += base_offset;
+
+	    		new_shape.resize(dimension + 1);
+	    		std::copy_n(shape.begin(), axis, new_shape.begin());
+	    		new_shape[axis] = 1;
+	    		std::copy_n(shape.begin() + axis + 1, dimension - axis, new_shape.begin() + axis);
+
+	    		new_strides.resize(dimension + 1);
+	    		std::copy_n(old_strides.begin(), axis, new_strides.begin());
+	    		new_strides[axis] = 0;
+	    		std::copy_n(old_strides.begin() + axis + 1, dimension - axis, new_strides.begin() + axis);
+
+	    		base_type::resize(dimension + 1);
+	    		new_layout = do_strides_match(new_shape, new_strides, layout, true) ? layout : xt::layout_type::dynamic;
+
+	    		return;
+	    	}
+
 	        auto axis = va::util::normalize_axis(axis_, dimension);
 	    	auto axis_ptrdiff = static_cast<std::ptrdiff_t>(axis);
 
@@ -171,26 +197,6 @@ namespace va {
 
 	        	return;
 	        }
-	    	else if (xtl::get_if<xt::xnewaxis_tag>(&slice)) {
-	    		// Add one dimension by newaxis.
-
-	    		new_offset += base_offset;
-
-	    		new_shape.resize(dimension + 1);
-	    		std::copy_n(shape.begin(), axis, new_shape.begin());
-	    		new_shape[axis] = 1;
-	    		std::copy_n(shape.begin() + axis + 1, dimension - axis, new_shape.begin() + axis);
-
-	    		new_strides.resize(dimension + 1);
-	    		std::copy_n(old_strides.begin(), axis, new_strides.begin());
-	    		new_strides[axis] = 0;
-	    		std::copy_n(old_strides.begin() + axis + 1, dimension - axis, new_strides.begin() + axis);
-
-	    		base_type::resize(dimension + 1);
-				new_layout = do_strides_match(new_shape, new_strides, layout, true) ? layout : xt::layout_type::dynamic;
-
-	    		return;
-	    	}
 
 	    	new_offset = base_offset;
 	    	new_shape = shape;

@@ -107,9 +107,9 @@ void va::assign(VData& array, VScalar value) {
 					// Strided assign.
 					const auto stride = carray.strides()[0];
 					auto ptr = carray.linear_begin();
-					const auto end = ptr + carray.shape()[0] * stride;
+					const auto len = carray.shape()[0];
 
-					for (; ptr < end; ptr += stride) {
+					for (int i = 0; i < len; ++i, ptr += stride) {
 						*ptr = value;
 					}
 				}

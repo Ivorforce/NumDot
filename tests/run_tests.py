@@ -61,19 +61,21 @@ def as_file_path(string):
 
 def unary_func_to_gdscript(func, is_complex):
 	if func == "positive":
-		return "+{}"
+		return "{} = +{}"
 	if func == "negative":
-		return "-{}"
+		return "{} = -{}"
 	if func == "square":
-		return "{0} * {0}"
+		return "{0} = {1} * {1}"
 	if is_complex and (
 			"sin" in func
 			or "cos" in func
 			or "tan" in func
 			or func == "sqrt"
 	):
-		return f"Vector2({func}({{0}}.x), {func}({{0}}.y))"
-	return func + "({})"
+		return f"{{0}} = Vector2({func}({{1}}.x), {func}({{1}}.y))"
+	if is_complex and func == "abs":
+		return f"var _x = sqrt({1} * {1} + {2} * {2})"  # TODO should be set in some array to be fair
+	return f"{{}} = {func}({{}})"
 
 def binary_func_to_gdscript(func, is_complex):
 	if func == "maximum":
@@ -85,20 +87,20 @@ def binary_func_to_gdscript(func, is_complex):
 			or func == "max"
 			or func == "min"
 	):
-		return f"Vector2({func}({{0}}.x, {{1}}.x), {func}({{0}}.y, {{1}}.y))"
+		return f"{{0}} = Vector2({func}({{1}}.x, {{2}}.x), {func}({{1}}.y, {{2}}.y))"
 	if func == "add":
-		return "{} + {}"
+		return "{} = {} + {}"
 	if func == "subtract":
-		return "{} - {}"
+		return "{} = {} - {}"
 	if func == "multiply":
-		return "{} * {}"
+		return "{} = {} * {}"
 	if func == "divide":
-		return "{} / {}"
+		return "{} = {} / {}"
 	if func == "greater":
-		return "{} > {}"
+		return "{} = {} > {}"
 	if func == "equal":
-		return "{} == {}"
-	return func + "({}, {})"
+		return "{} = {} == {}"
+	return f"{{}} = {func}({{}}, {{}})"
 
 
 def make_test_func_np(name, args, stmt):
@@ -207,9 +209,9 @@ func to_packed(array: NDArray):
 	def make_normal_test_func_gd(name, function, replacer, args):
 		nonlocal test_code_gd
 		for is_complex in [True, False]:
-			test_code = "\t\tfor i in x.size():\n\t\t\tx[i] = """
+			test_code = "\t\tfor i in x.size():\n\t\t\t"""
 
-			test_code += replacer(function, is_complex).format(*[f"{arg}[i]" for arg in args])
+			test_code += replacer(function, is_complex).format(*[f"{arg}[i]" for arg in [args[0], *args]])
 
 			args_str_def = "".join(f"{arg}, " for arg in args)
 			test_code_gd += make_test_func_gd(name + ("_complex" if is_complex else ""), args_str_def, test_code)

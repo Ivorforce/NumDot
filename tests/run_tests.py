@@ -259,7 +259,7 @@ func to_packed(array: NDArray):
 		make_normal_test_func_gd(bin_function_name, bin_function_name, binary_func_to_gdscript, "xy")
 
 		for dtype in all_dtypes:
-			for s in [50, 1_000, 10000]:
+			for s in [50, 1_000, 20000]:
 				append_test(f"{bin_function_name}_{dtype.name}_{s}", bin_function_name, {"x": Full(s, value="0.5", dtype=dtype), "y": Full(s, value="2", dtype=dtype)}, n=normal_n // s)
 
 	py_test_file_path = pathlib.Path(__file__).parent / "gen" / "tests.py"

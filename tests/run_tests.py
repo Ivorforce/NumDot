@@ -74,7 +74,7 @@ def unary_func_to_gdscript(func, is_complex):
 	):
 		return f"{{0}} = Vector2({func}({{1}}.x), {func}({{1}}.y))"
 	if is_complex and func == "abs":
-		return f"var _x = sqrt({1} * {1} + {2} * {2})"  # TODO should be set in some array to be fair
+		return f"{{0}} = Vector2(sqrt({{1}}.x * {{1}}.x + {{1}}.y * {{1}}.y), 0)"  # TODO should be set in a float array to be fair
 	return f"{{}} = {func}({{}})"
 
 def binary_func_to_gdscript(func, is_complex):

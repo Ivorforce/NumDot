@@ -20,6 +20,8 @@ dtype_names_nd: dict[np.dtype, str] = {
 	np.dtype(np.uint32): "UInt32",
 	np.dtype(np.uint64): "UInt64",
 	np.dtype(np.bool): "Bool",
+	np.dtype(np.float32): "Float32",
+	np.dtype(np.float64): "Float64",
 	np.dtype(np.complex64): "Complex64",
 	np.dtype(np.complex128): "Complex128",
 }
@@ -47,36 +49,41 @@ def as_file_path(string):
 	else:
 		raise FileNotFoundError(string)
 
-def func_to_gdscript(func, nin, is_complex):
+def _func_to_gdscript(func, nin, dtype_out):
+	# TODO This is a bad proxy for is_complex...
+	is_complex = dtype_out == np.dtype(np.complex64) or dtype_out == np.dtype(np.complex128)
+
 	if nin == 1:
 		if func == "positive":
-			return "{} = +{}"
+			return "+{}"
 		if func == "negative":
-			return "{} = -{}"
+			return "-{}"
 		if func == "square":
-			return "{0} = {1} * {1}"
+			return "{1} * {1}"
 		if func == "bitwise_not":
-			return "{} = ~{}"
+			return "~{}"
 		if func == "logical_not":
-			return "{} = not {}"
+			return "not {}"
 		if func == "rad2deg":
-			return "{} = rad_to_deg({})"
+			return "rad_to_deg({})"
 		if func == "deg2rad":
-			return "{} = deg_to_rad({})"
+			return "deg_to_rad({})"
 		if func == "rint":
-			return "{} = round({})"
+			return "round({})"
 		if func == "trunc":
-			return "{} = int({})"
+			return "int({})"
 		if is_complex and (
 				"sin" in func
 				or "cos" in func
 				or "tan" in func
 				or func == "sqrt"
+				or func == "exp"
+				or func == "log"
 		):
-			return f"{{0}} = Vector2({func}({{1}}.x), {func}({{1}}.y))"
+			return f"Vector2({func}({{1}}.x), {func}({{1}}.y))"
 		if is_complex and func == "abs":
-			return f"{{0}} = Vector2(sqrt({{1}}.x * {{1}}.x + {{1}}.y * {{1}}.y), 0)"  # TODO should be set in a float array to be fair
-		return f"{{}} = {func}({{}})"
+			return f"Vector2(sqrt({{1}}.x * {{1}}.x + {{1}}.y * {{1}}.y), 0)"  # TODO should be set in a float array to be fair
+		return f"{func}({{}})"
 	elif nin == 2:
 		if func == "maximum":
 			func = "max"
@@ -87,51 +94,66 @@ def func_to_gdscript(func, nin, is_complex):
 				or func == "max"
 				or func == "min"
 		):
-			return f"{{0}} = Vector2({func}({{1}}.x, {{2}}.x), {func}({{1}}.y, {{2}}.y))"
+			return f"Vector2({func}({{1}}.x, {{2}}.x), {func}({{1}}.y, {{2}}.y))"
 		if func == "add":
-			return "{} = {} + {}"
+			return "{} + {}"
 		if func == "subtract":
-			return "{} = {} - {}"
+			return "{} - {}"
 		if func == "multiply":
-			return "{} = {} * {}"
+			return "{} * {}"
 		if func == "divide":
-			return "{} = {} / {}"
+			return "{} / {}"
 		if func == "greater":
-			return "{} = {} > {}"
+			return "{} > {}"
 		if func == "greater_equal":
-			return "{} = {} <= {}"
+			return "{} <= {}"
 		if func == "less":
-			return "{} = {} < {}"
+			return "{} < {}"
 		if func == "less_equal":
-			return "{} = {} >= {}"
+			return "{} >= {}"
 		if func == "equal":
-			return "{} = {} == {}"
+			return "{} == {}"
 		if func == "not_equal":
-			return "{} = {} != {}"
+			return "{} != {}"
 		if func == "logical_and":
-			return "{} = {} and {}"
+			return "{} and {}"
 		if func == "logical_or":
-			return "{} = {} or {}"
+			return "{} or {}"
 		if func == "logical_xor":
-			return "{} = bool({}) != bool({})"
+			return "bool({}) != bool({})"
 		if func == "bitwise_and":
-			return "{} = {} & {}"
+			return "{} & {}"
 		if func == "bitwise_or":
-			return "{} = {} | {}"
+			return "{} | {}"
 		if func == "bitwise_xor":
-			return "{} = {} ^ {}"
+			return "{} ^ {}"
 		if func == "bitwise_left_shift":
-			return "{} = {} << {}"
+			return "{} << {}"
 		if func == "bitwise_right_shift":
-			return "{} = {} >> {}"
+			return "{} >> {}"
 		if func == "matmul":
 			return None
 		if func == "remainder":
-			return None  # TODO different for float vs int
-		return f"{{}} = {func}({{}}, {{}})"
+			if dtype_out in [np.dtype(np.float32), np.dtype(np.float64)]:
+				return "fmod({}, {})"
+			else:
+				return "{} % {}"
+		return f"{func}({{}}, {{}})"
 	else:
 		raise NotImplementedError
 
+def func_to_gdscript(func, nin, dtype_out):
+	create_string = _func_to_gdscript(func, nin, dtype_out)
+	if create_string is None:
+		return None
+
+	if dtype_out == np.dtype(np.bool):
+		# Bools don't have dedicated packed arrays, so we're using byte array
+		create_string = f"int({create_string})"
+	if "{}" in create_string:
+		return "{} = " + create_string
+	else:
+		return "{0} = " + create_string
 
 def make_test_func_np(name, args, stmt):
 	return \
@@ -144,10 +166,24 @@ def {name}({args}n):
 \treturn _t1 - _t0
 """
 
-def make_test_func_gd(name, args, stmt):
+def make_test_func_nd(name, args, stmt):
 	return \
 f"""
 func __{name}({args}n):
+\tvar _t0 = Time.get_ticks_usec()
+\tfor _n in n:
+{stmt}
+\tvar _t1 = Time.get_ticks_usec()
+\treturn _t1 - _t0
+"""
+
+def make_test_func_gd(name, args, dtype_out, stmt):
+	# We don't count array creation to the time because the user may assign to the array itself, or pre-allocate.
+	return \
+f"""
+func __{name}({args}n):
+\tvar out = to_packed(nd.full([x.size()], 0, nd.{dtype_names_nd[dtype_out]}))
+\tout.resize(x.size())
 \tvar _t0 = Time.get_ticks_usec()
 \tfor _n in n:
 {stmt}
@@ -174,9 +210,6 @@ def make_nd_call(function_name, test_number: int, kwargs: dict[str, Arg], n: int
 	return f"\tprint(\"{test_number} \", __{function_name}({args_str}{n}))"
 
 def make_gd_call(function_name, test_number: int, kwargs: dict[str, Arg], n: int):
-	if any(arg.dtype in [np.dtype(np.complex64), np.dtype(np.complex128)] for arg in kwargs.values()):
-		function_name = function_name + "_complex"
-
 	args_str = "".join(f'to_packed({nd_arg_to_str(value)}), ' for name, value in kwargs.items())
 	return f"\tprint(\"{test_number} \", __{function_name}({args_str}{n}))"
 
@@ -229,25 +262,25 @@ func to_packed(array: NDArray):
 
 	tests: list[Test] = []
 
-	def append_normal_test_func(name, function, args):
+	def append_normal_test_func(name, function, dtype_out, args):
 		nonlocal test_code_np
 		args_str = "".join(f"{arg}, " for arg in args)
 		test_code_np += make_test_func_np(name, args_str, f"np.{function}({args_str})")
 
 		nonlocal test_code_nd
-		test_code_nd += make_test_func_gd(name, args_str, f"\t\tnd.{function}({args_str})")
+		test_code_nd += make_test_func_nd(name, args_str, f"\t\tnd.{function}({args_str})")
 
 		nonlocal test_code_gd
-		for is_complex in [True, False]:
-			gdscript_code = func_to_gdscript(function, len(args), is_complex)
-			if gdscript_code is None:
-				continue
 
-			test_code = "\t\tfor i in x.size():\n\t\t\t"""
-			test_code += gdscript_code.format(*[f"{arg}[i]" for arg in [args[0], *args]])
+		gdscript_code = func_to_gdscript(function, len(args), dtype_out)
+		if gdscript_code is None:
+			return
 
-			args_str_def = "".join(f"{arg}, " for arg in args)
-			test_code_gd += make_test_func_gd(name + ("_complex" if is_complex else ""), args_str_def, test_code)
+		test_code = "\t\tfor i in x.size():\n\t\t\t"""
+		test_code += gdscript_code.format("out[i]", *[f"{arg}[i]" for arg in args])
+
+		args_str_def = "".join(f"{arg}, " for arg in args)
+		test_code_gd += make_test_func_gd(name, args_str_def, dtype_out, test_code)
 
 	current_test_number = 0
 
@@ -264,10 +297,11 @@ func to_packed(array: NDArray):
 		current_test_number += 1
 
 	normal_n = 40_000
+	added_functions = set()
 
 	# TODO No support for reductions yet
 	# TODO Should automatically (?) determine what NumDot has?
-	for un_function_name in [
+	for ufunc_name in [
 		"abs",
 		"acos",
 		"acosh",
@@ -342,24 +376,29 @@ func to_packed(array: NDArray):
 		"trunc",
 		# "var",  # TODO Not a ufunc
 	]:
-		np_ufunc = eval(f"np.{un_function_name}")
-		print(un_function_name)
+		np_ufunc = eval(f"np.{ufunc_name}")
 		ufunc_args = "xyz"[:np_ufunc.nin]
-
-		append_normal_test_func(un_function_name, un_function_name, ufunc_args)
 
 		for type_str in np_ufunc.types:
 			dtype_in = np.dtype(type_str[0])
 			dtype_out = np.dtype(type_str[-1])
 
-			if dtype_in not in dtype_names_nd:
-				continue  # Skip what weNumDot doesn't support anyway.
+			if dtype_in not in dtype_names_nd or dtype_out not in dtype_names_nd:
+				continue  # Skip what NumDot doesn't support anyway.
+
+			test_function_name = f"{ufunc_name}_{dtype_in}"
+
+			if test_function_name in added_functions:
+				continue  # TODO Figure out why
+			added_functions.add(test_function_name)
+
+			append_normal_test_func(test_function_name, ufunc_name, dtype_out, ufunc_args)
 
 			for s in [50, 1_000, 20000]:
 				append_test(
-					f"{un_function_name}_{dtype_in}_{s}",
-					un_function_name,
-					{arg: Full(s, value="0.5", dtype=dtype_in) for arg in ufunc_args},
+					f"{ufunc_name}_{dtype_in}_{s}",
+					test_function_name,
+					{arg: Full(s, value="1", dtype=dtype_in) for arg in ufunc_args},
 					n=normal_n // s
 				)
 

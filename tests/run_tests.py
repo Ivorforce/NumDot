@@ -55,6 +55,18 @@ def func_to_gdscript(func, nin, is_complex):
 			return "{} = -{}"
 		if func == "square":
 			return "{0} = {1} * {1}"
+		if func == "bitwise_not":
+			return "{} = ~{}"
+		if func == "logical_not":
+			return "{} = not {}"
+		if func == "rad2deg":
+			return "{} = rad_to_deg({})"
+		if func == "deg2rad":
+			return "{} = deg_to_rad({})"
+		if func == "rint":
+			return "{} = round({})"
+		if func == "trunc":
+			return "{} = int({})"
 		if is_complex and (
 				"sin" in func
 				or "cos" in func
@@ -86,8 +98,36 @@ def func_to_gdscript(func, nin, is_complex):
 			return "{} = {} / {}"
 		if func == "greater":
 			return "{} = {} > {}"
+		if func == "greater_equal":
+			return "{} = {} <= {}"
+		if func == "less":
+			return "{} = {} < {}"
+		if func == "less_equal":
+			return "{} = {} >= {}"
 		if func == "equal":
 			return "{} = {} == {}"
+		if func == "not_equal":
+			return "{} = {} != {}"
+		if func == "logical_and":
+			return "{} = {} and {}"
+		if func == "logical_or":
+			return "{} = {} or {}"
+		if func == "logical_xor":
+			return "{} = bool({}) != bool({})"
+		if func == "bitwise_and":
+			return "{} = {} & {}"
+		if func == "bitwise_or":
+			return "{} = {} | {}"
+		if func == "bitwise_xor":
+			return "{} = {} ^ {}"
+		if func == "bitwise_left_shift":
+			return "{} = {} << {}"
+		if func == "bitwise_right_shift":
+			return "{} = {} >> {}"
+		if func == "matmul":
+			return None
+		if func == "remainder":
+			return None  # TODO different for float vs int
 		return f"{{}} = {func}({{}}, {{}})"
 	else:
 		raise NotImplementedError
@@ -131,14 +171,14 @@ def nd_arg_to_str(arg: Arg):
 
 def make_nd_call(function_name, test_number: int, kwargs: dict[str, Arg], n: int):
 	args_str = "".join(f'{nd_arg_to_str(value)}, ' for name, value in kwargs.items())
-	return f"\tprint({test_number}, __{function_name}({args_str}{n}))"
+	return f"\tprint(\"{test_number} \", __{function_name}({args_str}{n}))"
 
 def make_gd_call(function_name, test_number: int, kwargs: dict[str, Arg], n: int):
 	if any(arg.dtype in [np.dtype(np.complex64), np.dtype(np.complex128)] for arg in kwargs.values()):
 		function_name = function_name + "_complex"
 
 	args_str = "".join(f'to_packed({nd_arg_to_str(value)}), ' for name, value in kwargs.items())
-	return f"\tprint({test_number}, __{function_name}({args_str}{n}))"
+	return f"\tprint(\"{test_number} \", __{function_name}({args_str}{n}))"
 
 arg_parser = argparse.ArgumentParser()
 arg_parser.add_argument('--godot', type=as_file_path, required=True, help='Godot binary location')
@@ -199,9 +239,12 @@ func to_packed(array: NDArray):
 
 		nonlocal test_code_gd
 		for is_complex in [True, False]:
-			test_code = "\t\tfor i in x.size():\n\t\t\t"""
+			gdscript_code = func_to_gdscript(function, len(args), is_complex)
+			if gdscript_code is None:
+				continue
 
-			test_code += func_to_gdscript(function, len(args), is_complex).format(*[f"{arg}[i]" for arg in [args[0], *args]])
+			test_code = "\t\tfor i in x.size():\n\t\t\t"""
+			test_code += gdscript_code.format(*[f"{arg}[i]" for arg in [args[0], *args]])
 
 			args_str_def = "".join(f"{arg}, " for arg in args)
 			test_code_gd += make_test_func_gd(name + ("_complex" if is_complex else ""), args_str_def, test_code)
@@ -214,38 +257,93 @@ func to_packed(array: NDArray):
 		tests.append(Test(
 			name=f"{test_name}",
 			np_code=make_np_call(function_name, kwargs, n),
-			nd_code=make_nd_call(function_name, current_test_number, kwargs, n),
-			gd_code=make_gd_call(function_name, current_test_number, kwargs, n)
+			# TODO Should find a better way to cascade-remove tests we aren't compatible with
+			nd_code=make_nd_call(function_name, current_test_number, kwargs, n) if f"__{function_name}(" in test_code_nd else None,
+			gd_code=make_gd_call(function_name, current_test_number, kwargs, n) if f"__{function_name}(" in test_code_gd else None,
 		))
 		current_test_number += 1
 
 	normal_n = 40_000
 
+	# TODO No support for reductions yet
+	# TODO Should automatically (?) determine what NumDot has?
 	for un_function_name in [
-		# Unary
-		# "positive",
-		# "negative",
-		"square",
-		"sqrt",
 		"abs",
-		# "sign",
-		"sin", "cos", "tan",
-		"asin", "acos", "atan",
-		"sinh", "cosh", "tanh",
-		"asinh", "acosh", "atanh",
-
-		# Binary
+		"acos",
+		"acosh",
 		"add",
-		"subtract",
-		"multiply",
+		# "all",
+		# "angle",  # Not a ufunc apparently
+		# "any",
+		"asin",
+		"asinh",
+		"atan",
+		"atan2",
+		"atanh",
+		"bitwise_and",
+		"bitwise_left_shift",
+		"bitwise_not",
+		"bitwise_or",
+		"bitwise_right_shift",
+		"bitwise_xor",
+		"ceil",
+		# "clip",  # Not a ufunc apparently
+		"cos",
+		"cosh",
+		# "count_nonzero",
+		"deg2rad",
 		"divide",
+		# "dot",  # Not a ufunc apparently
+		"equal",
+		"exp",
+		# "fft",  # Not a ufunc apparently
+		"floor",
+		"greater",
+		"greater_equal",
+		# "is_close",  # TODO Renamed
+		# "is_finite",  # TODO Renamed
+		# "is_inf",  # TODO Renamed
+		# "is_nan",  # TODO Renamed
+		"less",
+		"less_equal",
+		"log",
+		"logical_and",
+		"logical_not",
+		"logical_or",
+		"logical_xor",
+		"matmul",
+		# "max",
+		"maximum",
+		# "mean",  # TODO Not a ufunc
+		# "median",  # TODO Not a ufunc
+		# "min",  # TODO Not a ufunc
+		"minimum",
+		"multiply",
+		"negative",
+		# "norm",  # TODO Not a ufunc
+		"not_equal",
+		"positive",
 		"pow",
-		# "greater",
-		# "equal",
-		# "minimum",
-		# "maximum",
+		# "prod",  # TODO Not a ufunc
+		"rad2deg",
+		"remainder",
+		"rint",
+		# "round",  # TODO Not a ufunc
+		"sign",
+		"sin",
+		"sinh",
+		"sqrt",
+		"square",
+		# "std",  # TODO Not a ufunc
+		"subtract",
+		# "sum",  # TODO Not a ufunc
+		"tan",
+		"tanh",
+		"trunc",
+		# "var",  # TODO Not a ufunc
 	]:
 		np_ufunc = eval(f"np.{un_function_name}")
+		print(un_function_name)
 		ufunc_args = "xyz"[:np_ufunc.nin]
 
 		append_normal_test_func(un_function_name, un_function_name, ufunc_args)
@@ -256,8 +354,6 @@ func to_packed(array: NDArray):
 			if dtype_in != dtype_out:
 				continue  # TODO Our godot test generation can't handle this yet lol
 			if dtype_in not in dtype_names_nd:
-				print(dtype_in)
-				print(list(dtype_names_nd.keys()))
 				continue  # Skip what weNumDot doesn't support anyway.
 
 			for s in [50, 1_000, 20000]:
@@ -280,7 +376,8 @@ func _ready():
 \tprint("{start_numdot_tests_string}")
 """
 		for test in tests:
-			text += f"{getattr(test, test_prop)}\n"
+			if test_code := getattr(test, test_prop):
+				text += f"{test_code}\n"
 
 		godot_test_file_path = pathlib.Path(__file__).parent.parent / "demo" / "tests" / "run_tests.gd"
 		godot_test_file_path.write_text(text)
@@ -294,19 +391,20 @@ func _ready():
 		)
 		gd_out_lines = gd_out[gd_out.index(start_numdot_tests_string):].split("\n")[1:]
 
-		def parse_seconds(s):
-			try:
-				return int(s) / 1_000_000
-			except:
-				return np.nan
+		res = dict()
+		for line in gd_out_lines:
+			split = line.split(" ")
+			if len(split) == 1:
+				continue
+			test_num = int(split[0])
 
-		return {
-			# microseconds to seconds
-			tests[test_num].name: parse_seconds(test_duration_us)
-			for line in gd_out_lines
-			if " " in line
-			for test_num, test_duration_us in line.split(" ")
-		}
+			try:
+				test_duration_s =  int(split[1]) / 1_000_000
+			except:
+				continue
+
+			res[tests[test_num].name] = test_duration_s
+		return res
 
 	results_gd = run_godot_tests(test_code_gd, "gd_code")
 	results_nd = run_godot_tests(test_code_nd, "nd_code")

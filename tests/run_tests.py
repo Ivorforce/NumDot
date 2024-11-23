@@ -129,16 +129,16 @@ def nd_arg_to_str(arg: Arg):
 		return f"nd.full([{arg.size}], {arg.value}, nd.{dtype_names_nd[arg.dtype]})"
 	raise Exception()
 
-def make_nd_call(function_name, kwargs: dict[str, Arg], n: int):
+def make_nd_call(function_name, test_number: int, kwargs: dict[str, Arg], n: int):
 	args_str = "".join(f'{nd_arg_to_str(value)}, ' for name, value in kwargs.items())
-	return f"\tprint(__{function_name}({args_str}{n}))"
+	return f"\tprint({test_number}, __{function_name}({args_str}{n}))"
 
-def make_gd_call(function_name, kwargs: dict[str, Arg], n: int):
+def make_gd_call(function_name, test_number: int, kwargs: dict[str, Arg], n: int):
 	if any(arg.dtype in [np.dtype(np.complex64), np.dtype(np.complex128)] for arg in kwargs.values()):
 		function_name = function_name + "_complex"
 
 	args_str = "".join(f'to_packed({nd_arg_to_str(value)}), ' for name, value in kwargs.items())
-	return f"\tprint(__{function_name}({args_str}{n}))"
+	return f"\tprint({test_number}, __{function_name}({args_str}{n}))"
 
 arg_parser = argparse.ArgumentParser()
 arg_parser.add_argument('--godot', type=as_file_path, required=True, help='Godot binary location')
@@ -206,13 +206,18 @@ func to_packed(array: NDArray):
 			args_str_def = "".join(f"{arg}, " for arg in args)
 			test_code_gd += make_test_func_gd(name + ("_complex" if is_complex else ""), args_str_def, test_code)
 
+	current_test_number = 0
+
 	def append_test(test_name, function_name, kwargs: dict[str, Arg], n: int):
+		nonlocal current_test_number
+
 		tests.append(Test(
 			name=f"{test_name}",
 			np_code=make_np_call(function_name, kwargs, n),
-			nd_code=make_nd_call(function_name, kwargs, n),
-			gd_code=make_gd_call(function_name, kwargs, n)
+			nd_code=make_nd_call(function_name, current_test_number, kwargs, n),
+			gd_code=make_gd_call(function_name, current_test_number, kwargs, n)
 		))
+		current_test_number += 1
 
 	normal_n = 40_000
 
@@ -297,8 +302,10 @@ func _ready():
 
 		return {
 			# microseconds to seconds
-			test.name: parse_seconds(line)
-			for line, test in zip(gd_out_lines, tests)
+			tests[test_num].name: parse_seconds(test_duration_us)
+			for line in gd_out_lines
+			if " " in line
+			for test_num, test_duration_us in line.split(" ")
 		}
 
 	results_gd = run_godot_tests(test_code_gd, "gd_code")

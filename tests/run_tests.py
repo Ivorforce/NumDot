@@ -351,8 +351,7 @@ func to_packed(array: NDArray):
 		for type_str in np_ufunc.types:
 			dtype_in = np.dtype(type_str[0])
 			dtype_out = np.dtype(type_str[-1])
-			if dtype_in != dtype_out:
-				continue  # TODO Our godot test generation can't handle this yet lol
+
 			if dtype_in not in dtype_names_nd:
 				continue  # Skip what weNumDot doesn't support anyway.
 

@@ -2,6 +2,7 @@ import enum
 import pathlib
 import importlib
 from dataclasses import dataclass
+from typing import Optional
 
 import numpy as np
 import pandas as pd
@@ -29,9 +30,9 @@ dtype_names_nd: dict[np.dtype, str] = {
 @dataclass
 class Test:
 	name: str
-	np_code: str
-	nd_code: str
-	gd_code: str
+	np_code: Optional[str] = None
+	nd_code: Optional[str] = None
+	gd_code: Optional[str] = None
 
 @dataclass
 class Arg:
@@ -262,39 +263,7 @@ func to_packed(array: NDArray):
 
 	tests: list[Test] = []
 
-	def append_normal_test_func(name, function, dtype_out, args):
-		nonlocal test_code_np
-		args_str = "".join(f"{arg}, " for arg in args)
-		test_code_np += make_test_func_np(name, args_str, f"np.{function}({args_str})")
-
-		nonlocal test_code_nd
-		test_code_nd += make_test_func_nd(name, args_str, f"\t\tnd.{function}({args_str})")
-
-		nonlocal test_code_gd
-
-		gdscript_code = func_to_gdscript(function, len(args), dtype_out)
-		if gdscript_code is None:
-			return
-
-		test_code = "\t\tfor i in x.size():\n\t\t\t"""
-		test_code += gdscript_code.format("out[i]", *[f"{arg}[i]" for arg in args])
-
-		args_str_def = "".join(f"{arg}, " for arg in args)
-		test_code_gd += make_test_func_gd(name, args_str_def, dtype_out, test_code)
-
 	current_test_number = 0
-
-	def append_test(test_name, function_name, kwargs: dict[str, Arg], n: int):
-		nonlocal current_test_number
-
-		tests.append(Test(
-			name=f"{test_name}",
-			np_code=make_np_call(function_name, kwargs, n),
-			# TODO Should find a better way to cascade-remove tests we aren't compatible with
-			nd_code=make_nd_call(function_name, current_test_number, kwargs, n) if f"__{function_name}(" in test_code_nd else None,
-			gd_code=make_gd_call(function_name, current_test_number, kwargs, n) if f"__{function_name}(" in test_code_gd else None,
-		))
-		current_test_number += 1
 
 	normal_n = 40_000
 	added_functions = set()
@@ -392,15 +361,34 @@ func to_packed(array: NDArray):
 				continue  # TODO Figure out why
 			added_functions.add(test_function_name)
 
-			append_normal_test_func(test_function_name, ufunc_name, dtype_out, ufunc_args)
+			args_str = "".join(f"{arg}, " for arg in ufunc_args)
+			test_code_np += make_test_func_np(test_function_name, args_str, f"np.{ufunc_name}({args_str})")
+
+			test_code_nd += make_test_func_nd(test_function_name, args_str, f"\t\tnd.{ufunc_name}({args_str})")
+
+			has_gd_test = False
+			gdscript_code = func_to_gdscript(ufunc_name, len(ufunc_args), dtype_out)
+			if gdscript_code is not None:
+				test_code = "\t\tfor i in x.size():\n\t\t\t"""
+				test_code += gdscript_code.format("out[i]", *[f"{arg}[i]" for arg in ufunc_args])
+
+				args_str_def = "".join(f"{arg}, " for arg in ufunc_args)
+				test_code_gd += make_test_func_gd(test_function_name, args_str_def, dtype_out, test_code)
+				has_gd_test = True
 
 			for s in [50, 1_000, 20000]:
-				append_test(
-					f"{ufunc_name}_{dtype_in}_{s}",
-					test_function_name,
-					{arg: Full(s, value="1", dtype=dtype_in) for arg in ufunc_args},
-					n=normal_n // s
-				)
+				test = Test(f"{ufunc_name}_{dtype_in}_{s}")
+				test_kwargs = {arg: Full(s, value="1", dtype=dtype_in) for arg in ufunc_args}
+				test_n = normal_n // s
+
+				test.np_code = make_np_call(test_function_name, test_kwargs, test_n)
+				test.nd_code = make_nd_call(test_function_name, current_test_number, test_kwargs, test_n)
+				if has_gd_test:
+					test.gd_code = make_gd_call(test_function_name, current_test_number, test_kwargs, test_n)
+
+				tests.append(test)
+				current_test_number += 1
+
 
 	py_test_file_path = pathlib.Path(__file__).parent / "gen" / "tests.py"
 	py_test_file_path.parent.mkdir(exist_ok=True)

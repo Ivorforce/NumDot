@@ -318,6 +318,12 @@ _timer = time.perf_counter
 		np_ufunc = eval(f"np.{ufunc_name}")
 		ufunc_args = "xyz"[:np_ufunc.nin]
 
+		test_function_name_untyped = f"{ufunc_name}"
+
+		args_str = "".join(f"{arg}, " for arg in ufunc_args)
+		test_code_np += make_test_func_np(test_function_name_untyped, args_str, f"np.{ufunc_name}({args_str})")
+		test_code_nd += make_test_func_nd(test_function_name_untyped, args_str, f"\t\tnd.{ufunc_name}({args_str})")
+
 		for type_str in np_ufunc.types:
 			dtype_in = np.dtype(type_str[0])
 			dtype_out = np.dtype(type_str[-1])
@@ -325,16 +331,11 @@ _timer = time.perf_counter
 			if dtype_in not in dtype_names_nd or dtype_out not in dtype_names_nd:
 				continue  # Skip what NumDot doesn't support anyway.
 
-			test_function_name = f"{ufunc_name}_{dtype_in}"
+			test_function_name_typed = f"{ufunc_name}_{dtype_in}"
 
-			if test_function_name in added_functions:
+			if test_function_name_typed in added_functions:
 				continue  # TODO Figure out why
-			added_functions.add(test_function_name)
-
-			args_str = "".join(f"{arg}, " for arg in ufunc_args)
-			test_code_np += make_test_func_np(test_function_name, args_str, f"np.{ufunc_name}({args_str})")
-
-			test_code_nd += make_test_func_nd(test_function_name, args_str, f"\t\tnd.{ufunc_name}({args_str})")
+			added_functions.add(test_function_name_typed)
 
 			has_gd_test = False
 			gdscript_code = func_to_gdscript(ufunc_name, len(ufunc_args), dtype_out)
@@ -343,7 +344,7 @@ _timer = time.perf_counter
 				test_code += gdscript_code.format("out[i]", *[f"{arg}[i]" for arg in ufunc_args])
 
 				args_str_def = "".join(f"{arg}, " for arg in ufunc_args)
-				test_code_gd += make_test_func_gd(test_function_name, args_str_def, dtype_out, test_code)
+				test_code_gd += make_test_func_gd(test_function_name_typed, args_str_def, dtype_out, test_code)
 				has_gd_test = True
 
 			for s in [50, 1_000, 20000]:
@@ -351,10 +352,10 @@ _timer = time.perf_counter
 				test_kwargs = {arg: Full(s, value="1", dtype=dtype_in) for arg in ufunc_args}
 				test_n = normal_n // s
 
-				test.np_code = make_np_call(test_function_name, test_kwargs, test_n)
-				test.nd_code = make_nd_call(test_function_name, current_test_number, test_kwargs, test_n)
+				test.np_code = make_np_call(test_function_name_untyped, test_kwargs, test_n)
+				test.nd_code = make_nd_call(test_function_name_untyped, current_test_number, test_kwargs, test_n)
 				if has_gd_test:
-					test.gd_code = make_gd_call(test_function_name, current_test_number, test_kwargs, test_n)
+					test.gd_code = make_gd_call(test_function_name_typed, current_test_number, test_kwargs, test_n)
 
 				tests.append(test)
 				current_test_number += 1

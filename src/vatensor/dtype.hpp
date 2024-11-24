@@ -159,15 +159,24 @@ namespace va {
 
 	VScalar static_cast_scalar(VScalar v, DType dtype);
 
-	template<typename V>
-	V static_cast_scalar(VScalar v) {
-		return std::visit([](auto v) -> V {
-			if constexpr (!std::is_convertible_v<decltype(v), V>) {
-				throw std::runtime_error("Cannot promote in this way.");
-			}
-			else {
-				return static_cast<V>(v);
-			}
+	template<typename VWrite, typename VRead>
+	VWrite static_cast_scalar(VRead v) {
+		if constexpr (std::is_same_v<VWrite, bool> and xtl::is_complex<VRead>::value) {
+			// This helps mostly complex dtypes to booleanize
+			return v != static_cast<decltype(v)>(0);
+		}
+		else if constexpr (!std::is_convertible_v<VRead, VWrite>) {
+			throw std::runtime_error("Cannot promote in this way.");
+		}
+		else {
+			return static_cast<VWrite>(v);
+		}
+	}
+
+	template<typename VWrite>
+	VWrite static_cast_scalar(const VScalar& v) {
+		return std::visit([](const auto& v) -> VWrite {
+			return static_cast_scalar<VWrite>(v);
 		}, v);
 	}
 }

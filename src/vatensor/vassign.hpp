@@ -19,7 +19,7 @@ namespace va {
 		xt::assign_data(t, e, xt::detail::get_rhs_triviality(e.derived_cast()));
 	}
 
-	void set_single_value(VData& array, axes_type& index, VScalar value);
+	void set_single_value(VData& array, axes_type& index, const VScalar& value);
 	VScalar get_single_value(const VData& array, axes_type& index);
 
 	void assign(VData& array, const VData& value);

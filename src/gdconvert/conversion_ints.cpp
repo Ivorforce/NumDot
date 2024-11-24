@@ -40,12 +40,7 @@ C variant_as_int_strict(const Variant& variant) {
 						else {
 							switch (carray.dimension()) {
 								case 0:
-									if constexpr (!std::is_convertible_v<V, C>) {
-										throw std::runtime_error("Cannot promote in this way.");
-									}
-									else {
-										return static_cast<C>(*carray.data());
-									}
+									return va::static_cast_scalar<C>(*carray.data());
 								default:
 									throw std::runtime_error("array must be zero-dimensional");
 							}

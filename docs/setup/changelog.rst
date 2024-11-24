@@ -28,6 +28,7 @@ Upcoming Changes (main branch)
 - Single-slice indexing now has a lower latency.
 - Contiguous array conversions (from ``NDArray`` to godot arrays) has been optimized, and can be several times faster.
 - ``nd.add`` and ``nd.abs`` no longer promote values to higher bit counts.
+- ``complex`` numbers can now be booleanized in some situations.
 
 **Fixed**
 

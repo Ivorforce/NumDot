@@ -31,7 +31,7 @@ void va::logical_and(VStoreAllocator& allocator, const VArrayTarget& target, con
 
 	va::xoperation_inplace<
 		Feature::logical_and,
-		promote::reject_complex<promote::x_in_nat_out<bool>>
+		promote::x_in_nat_out<bool>
 	>(
 		XFunction<xt::detail::logical_and> {},
 		allocator,
@@ -60,7 +60,7 @@ void va::logical_or(VStoreAllocator& allocator, const VArrayTarget& target, cons
 
 	va::xoperation_inplace<
 		Feature::logical_or,
-		promote::reject_complex<promote::x_in_nat_out<bool>>
+		promote::x_in_nat_out<bool>
 	>(
 		XFunction<xt::detail::logical_or> {},
 		allocator,
@@ -89,7 +89,7 @@ void va::logical_xor(VStoreAllocator& allocator, const VArrayTarget& target, con
 
 	va::xoperation_inplace<
 		Feature::logical_xor,
-		promote::reject_complex<promote::x_in_nat_out<bool>>
+		promote::x_in_nat_out<bool>
 	>(
 		XFunction<xt::detail::not_equal_to> {},
 		allocator,
@@ -102,7 +102,7 @@ void va::logical_xor(VStoreAllocator& allocator, const VArrayTarget& target, con
 void va::logical_not(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a) {
 	va::xoperation_single<
 		Feature::logical_not,
-		promote::reject_complex<promote::x_in_nat_out<bool>>
+		promote::x_in_nat_out<bool>
 	>(
 		XFunction<xt::detail::logical_not> {},
 		allocator,

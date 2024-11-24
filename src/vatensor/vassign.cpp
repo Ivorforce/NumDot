@@ -24,16 +24,12 @@ static void mod_index(axes_type& index, const shape_type& shape) {
 	}
 }
 
-void va::set_single_value(VData& array, axes_type& index, VScalar value) {
+void va::set_single_value(VData& array, axes_type& index, const VScalar& value) {
 	std::visit(
-		[&index](auto& carray, auto value) -> void {
-			if constexpr (!std::is_convertible_v<decltype(value), typename std::decay_t<decltype(carray)>::value_type>) {
-				throw std::runtime_error("Cannot promote in this way.");
-			}
-			else {
-				mod_index(index, carray.shape());
-				carray[index] = value;
-			}
+		[&index](auto& carray, const auto& value) -> void {
+			using VWrite = typename std::decay_t<decltype(carray)>::value_type;
+			mod_index(index, carray.shape());
+			carray[index] = static_cast_scalar<VWrite>(value);
 		}, array, value
 	);
 }
@@ -59,7 +55,11 @@ void va::assign(VData& array, const VData& value) {
 			using VWrite = typename std::decay_t<decltype(carray)>::value_type;
 			using VRead = typename std::decay_t<decltype(cvalue)>::value_type;
 
-			if constexpr (!std::is_convertible_v<VRead, VWrite>) {
+			if constexpr (std::is_same_v<VWrite, bool> and xtl::is_complex<VRead>::value) {
+				// This helps mostly complex dtypes to booleanize
+				broadcasting_assign(carray, xt::cast<uint8_t>(xt::equal(cvalue, static_cast<VRead>(0))));
+			}
+			else if constexpr (!std::is_convertible_v<VRead, VWrite>) {
 				throw std::runtime_error("Cannot promote in this way.");
 			}
 #ifdef XTENSOR_USE_XSIMD
@@ -88,36 +88,31 @@ void va::assign(VData& array, VScalar value) {
 			using T = std::decay_t<decltype(carray)>;
 			using V = typename T::value_type;
 
-			if constexpr (!std::is_convertible_v<decltype(cvalue), V>) {
-				throw std::runtime_error("Cannot promote in this way.");
+			const auto value = static_cast_scalar<V>(cvalue);
+
+			// The .fill makes this check statically only, so is_contiguous() isn't called.
+			// But it also doesn't optimize for 1-D strided assign or 1-D strided fill.
+			// See https://github.com/xtensor-stack/xtensor/pull/2809
+			// carray.fill(static_cast<V>(cvalue));
+			if (T::contiguous_layout || carray.is_contiguous())
+			{
+				// Contiguous assign.
+				std::fill(carray.linear_begin(), carray.linear_end(), value);
 			}
-			else {
-				const auto value = static_cast<V>(cvalue);
+			else if (carray.dimension() == 1) {
+				// Strided assign.
+				const auto stride = carray.strides()[0];
+				auto ptr = carray.linear_begin();
+				const auto len = carray.shape()[0];
 
-				// The .fill makes this check statically only, so is_contiguous() isn't called.
-				// But it also doesn't optimize for 1-D strided assign or 1-D strided fill.
-				// See https://github.com/xtensor-stack/xtensor/pull/2809
-				// carray.fill(static_cast<V>(cvalue));
-				if (T::contiguous_layout || carray.is_contiguous())
-				{
-					// Contiguous assign.
-					std::fill(carray.linear_begin(), carray.linear_end(), value);
+				for (int i = 0; i < len; ++i, ptr += stride) {
+					*ptr = value;
 				}
-				else if (carray.dimension() == 1) {
-					// Strided assign.
-					const auto stride = carray.strides()[0];
-					auto ptr = carray.linear_begin();
-					const auto len = carray.shape()[0];
-
-					for (int i = 0; i < len; ++i, ptr += stride) {
-						*ptr = value;
-					}
-				}
-				else
-				{
-					// Stepper assign.
-					std::fill(carray.begin(), carray.end(), value);
-				}
+			}
+			else
+			{
+				// Stepper assign.
+				std::fill(carray.begin(), carray.end(), value);
 			}
 		}, array, value
 	);

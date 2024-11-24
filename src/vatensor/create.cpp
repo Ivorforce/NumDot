@@ -137,13 +137,17 @@ std::shared_ptr<VArray> va::arange(VStoreAllocator& allocator, VScalar start, VS
 	return visit_if_enabled<Feature::arange>(
 		[&allocator, &start, &stop, &step](auto t) -> std::shared_ptr<VArray> {
 			using T = std::decay_t<decltype(t)>;
+
 			if constexpr (xtl::is_complex<T>::value) {
-				throw std::invalid_argument("linspace cannot be used with this dtype");
+				throw std::invalid_argument("arange cannot be used with this dtype");
 			}
 			else {
-				auto start_ = static_cast_scalar<T>(start);
-				auto stop_ = static_cast_scalar<T>(stop);
-				auto step_ = static_cast_scalar<T>(step);
+				// Using TUpper prevents unexpectedly not wrapping around when e.g. using arange of 5000 for uint8.
+				using TUpper = va::promote::num_at_least_int32_in_same_out::input_type<T>;
+
+				auto start_ = static_cast_scalar<TUpper>(start);
+				auto stop_ = static_cast_scalar<TUpper>(stop);
+				auto step_ = static_cast_scalar<TUpper>(step);
 
 				return va::create_varray<T>(
 					allocator,

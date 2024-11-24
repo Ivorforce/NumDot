@@ -31,6 +31,7 @@ Upcoming Changes (main branch)
 
 **Fixed**
 
+- Various functions resulting in bools were broken. This is now fixed.
 - ``NDArray`` found in godot arrays will now properly type hint the resulting array, avoiding accidental promotion.
 - ``arange`` was producing garbage data.
 - ``bitwise_left_shift`` and ``bitwise_right_shift`` were incorrectly promoting, and producing undefined behavior when the shift was larger than the bit count (now it defaults to 0).

@@ -247,7 +247,7 @@ void va::sign(VStoreAllocator& allocator, const VArrayTarget& target, const VDat
 void va::abs(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
 	xoperation_single<
 		Feature::abs,
-		promote::num_in_nat_out
+		promote::num_in_same_out
 	>(
 		va::XFunction<xt::math::abs_fun> {},
 		allocator,

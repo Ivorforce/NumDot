@@ -1,7 +1,7 @@
 workspace.xml
 tasks.xml
 editor.xml
-numdot.iml
+*.iml
 misc.xml
 modules.xml
 csv-editor.xml

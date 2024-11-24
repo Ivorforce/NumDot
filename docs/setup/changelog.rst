@@ -27,7 +27,7 @@ Upcoming Changes (main branch)
 - 1-D array assignment is now about 3.5 times faster.
 - Single-slice indexing now has a lower latency.
 - Contiguous array conversions (from ``NDArray`` to godot arrays) has been optimized, and can be several times faster.
-- ``nd.add`` and ``nd.abs`` no longer promote values to higher bit counts.
+- ``nd.add`` and ``nd.abs``, ``nd.remainder``, ``nd.pow`` and ``nd.remainder`` no longer promote values to higher bit counts.
 - ``complex`` numbers can now be booleanized in some situations.
 
 **Fixed**

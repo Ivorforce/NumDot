@@ -76,7 +76,7 @@ template <typename A, typename B>
 void multiply(VStoreAllocator& allocator, const VArrayTarget& target, const A& a, const B& b) {
 	va::xoperation_inplace<
 		Feature::multiply,
-		promote::num_function_result_in_same_out<xt::detail::multiplies>
+		promote::num_in_same_out
 	>(
 		XFunction<xt::detail::multiplies> {},
 		allocator,
@@ -120,7 +120,7 @@ template <typename A, typename B>
 void remainder(VStoreAllocator& allocator, const VArrayTarget& target, const A& a, const B& b) {
 	va::xoperation_inplace<
 		Feature::remainder,
-		promote::reject_complex<promote::num_function_result_in_same_out<xt::math::remainder_fun>>
+		promote::reject_complex<promote::num_in_same_out>
 	>(
 		XFunction<xt::math::remainder_fun> {},
 		allocator,
@@ -142,7 +142,7 @@ template <typename A, typename B>
 void pow(VStoreAllocator& allocator, const VArrayTarget& target, const A& a, const B& b) {
 	va::xoperation_inplace<
 		Feature::pow,
-		promote::num_function_result_in_same_out<xt::math::pow_fun>
+		promote::num_in_same_out
 	>(
 		XFunction<xt::math::pow_fun> {},
 		allocator,

@@ -44,6 +44,12 @@ class Full(Arg):
 	value: str
 	dtype: np.dtype
 
+@dataclass
+class ARange(Arg):
+	size: int
+	start: int
+	dtype: np.dtype
+
 def as_file_path(string):
 	if os.path.isfile(string):
 		return pathlib.Path(string)
@@ -201,7 +207,7 @@ def make_test_func_gd(name, args, dtype_out, stmt):
 	return \
 f"""
 func __{name}({args}n):
-\tvar out = TestUtil.to_packed(nd.full([x.size()], 0, nd.{dtype_names_nd[dtype_out]}))
+\tvar out = TestUtil.to_packed(nd.empty([x.size()], nd.{dtype_names_nd[dtype_out]}))
 \tout.resize(x.size())
 \tvar _t0 = Time.get_ticks_usec()
 \tfor _n in n:
@@ -212,7 +218,9 @@ func __{name}({args}n):
 
 def make_np_call(function_name, kwargs: dict[str, Arg], n: str):
 	def arg_to_str(arg: Arg):
-		if isinstance(arg, Full):
+		if isinstance(arg, ARange):
+			return f"np.arange({arg.start}, {arg.start + arg.size}, dtype=np.{arg.dtype})"
+		elif isinstance(arg, Full):
 			return f"np.full([{arg.size}], fill_value={arg.value}, dtype=np.{arg.dtype})"
 		raise Exception()
 
@@ -220,7 +228,9 @@ def make_np_call(function_name, kwargs: dict[str, Arg], n: str):
 	return f"gen.tests.{function_name}({args_str}{n})"
 
 def nd_arg_to_str(arg: Arg):
-	if isinstance(arg, Full):
+	if isinstance(arg, ARange):
+		return f"nd.arange({arg.start}, {arg.start + arg.size}, 1, nd.{dtype_names_nd[arg.dtype]})"
+	elif isinstance(arg, Full):
 		return f"nd.full([{arg.size}], {arg.value}, nd.{dtype_names_nd[arg.dtype]})"
 	raise Exception()
 
@@ -373,7 +383,17 @@ _timer = time.perf_counter
 
 			for s in [50, 1_000, 20000]:
 				test = Test(f"{ufunc_name}_{dtype_in}_{s}")
-				test_kwargs = {arg: Full(s, value="1", dtype=dtype_in) for arg in ufunc_args}
+				can_use_arange = (
+					dtype_in not in [np.dtype(bool), np.dtype(np.complex64), np.dtype(np.complex128)]
+					and "atan" not in ufunc_name
+					and "sinh" not in ufunc_name
+					and "cosh" not in ufunc_name
+					and "tanh" not in ufunc_name
+				)
+				test_kwargs = {
+					arg: ARange(start=1, size=s, dtype=dtype_in) if can_use_arange else Full(s, "0", dtype=dtype_in)
+					for arg in ufunc_args
+				}
 				test_n = normal_n // s
 
 				current_test_number = len(tests)
@@ -439,24 +459,24 @@ func _ready():
 		passed_tests_num = 0
 		for test in tests:
 			try:
-				test_result_gd: np.ndarray = np.load(f"gen/results/{test.name}.npy")
+				test_result_nd: np.ndarray = np.load(f"gen/results/{test.name}.npy")
 				test_result_np: np.ndarray = eval(test.np_code)
-				if test_result_gd.shape != test_result_np.shape:
-					print(f"Shape unequal for {test.name}")
+				if test_result_nd.shape != test_result_np.shape:
+					print(f"Shape unequal for {test.name} (nd: {test_result_nd.shape}), np: {test_result_np.shape}")
 					failed_tests_num += 1
 					continue
 
 				if test_result_np.dtype in [np.dtype(np.float32), np.dtype(np.float64), np.dtype(np.complex64), np.dtype(np.complex128)]:
-					if not np.allclose(test_result_gd, test_result_np, equal_nan=True):
-						print(f"Array unequal for {test.name}; max-diff: {np.max(np.abs(test_result_gd - test_result_np))}")
+					if not np.allclose(test_result_nd, test_result_np, equal_nan=True):
+						print(f"Array unequal for {test.name}; max-diff: {np.max(np.abs(test_result_nd - test_result_np))}")
 						failed_tests_num += 1
 						continue
 				else:
-					if not np.array_equal(test_result_gd, test_result_np):
+					if not np.array_equal(test_result_nd, test_result_np):
 						if test_result_np.dtype == np.dtype(np.bool):
-							print(f"Array unequal for {test.name}; {np.sum(test_result_gd != test_result_np)} mismatched bool elements")
+							print(f"Array unequal for {test.name}; {np.sum(test_result_nd != test_result_np)} mismatched bool elements")
 						else:
-							print(f"Array unequal for {test.name}; max-diff: {np.max(np.abs(test_result_gd - test_result_np))}")
+							print(f"Array unequal for {test.name}; max-diff: {np.max(np.abs(test_result_nd - test_result_np))}")
 						failed_tests_num += 1
 						continue
 

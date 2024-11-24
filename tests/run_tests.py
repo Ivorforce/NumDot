@@ -159,6 +159,15 @@ def func_to_gdscript(func, nin, dtype_out):
 def make_test_func_np(name, args, stmt):
 	return \
 f"""
+def {name}({args}test_name):
+\tresult = {stmt}
+\tresult_nd = np.load(f"gen/results/{{test_name}}.npy")
+\treturn np.allclose(result_nd, result)
+"""
+
+def make_test_func_np_benchmark(name, args, stmt):
+	return \
+f"""
 def {name}({args}n):
 \t_t0 = _timer()
 \tfor _n in range(n):
@@ -168,12 +177,23 @@ def {name}({args}n):
 """
 
 def make_test_func_nd(name, args, stmt):
+	result_path = pathlib.Path(f"gen/results").absolute()
+	return \
+f"""
+func __{name}({args}test_name):
+\tvar result = {stmt}
+\tvar data = nd.dumpb(result)
+\tvar file = FileAccess.open("{result_path}/" + test_name + ".npy", FileAccess.WRITE)
+\tfile.store_buffer(data)
+"""
+
+def make_test_func_nd_benchmark(name, args, stmt):
 	return \
 f"""
 func __{name}({args}n):
 \tvar _t0 = Time.get_ticks_usec()
 \tfor _n in n:
-{stmt}
+\t\t{stmt}
 \tvar _t1 = Time.get_ticks_usec()
 \treturn _t1 - _t0
 """
@@ -192,21 +212,21 @@ func __{name}({args}n):
 \treturn _t1 - _t0
 """
 
-def make_np_call(function_name, kwargs: dict[str, Arg], n: int):
+def make_np_call(function_name, kwargs: dict[str, Arg], n: str):
 	def arg_to_str(arg: Arg):
 		if isinstance(arg, Full):
 			return f"np.full([{arg.size}], fill_value={arg.value}, dtype=np.{arg.dtype})"
 		raise Exception()
 
 	args_str = "".join(f'{name}={arg_to_str(value)}, ' for name, value in kwargs.items())
-	return f"gen.tests.{function_name}({args_str}n={n})"
+	return f"gen.tests.{function_name}({args_str}{n})"
 
 def nd_arg_to_str(arg: Arg):
 	if isinstance(arg, Full):
 		return f"nd.full([{arg.size}], {arg.value}, nd.{dtype_names_nd[arg.dtype]})"
 	raise Exception()
 
-def make_nd_call(function_name, test_number: int, kwargs: dict[str, Arg], n: int):
+def make_nd_call(function_name, test_number: int, kwargs: dict[str, Arg], n: str):
 	args_str = "".join(f'{nd_arg_to_str(value)}, ' for name, value in kwargs.items())
 	return f"\tprint(\"{test_number} \", __{function_name}({args_str}{n}))"
 
@@ -292,9 +312,12 @@ TEST_UFUNCS = [
 
 arg_parser = argparse.ArgumentParser()
 arg_parser.add_argument('--godot', type=as_file_path, required=True, help='Godot binary location')
+arg_parser.add_argument('--benchmark', action="store_true", help='Run benchmark tests instead of unit tests.')
 
 def main():
 	cli_args = arg_parser.parse_args()
+	godot_location = cli_args.godot
+	is_benchmark = cli_args.benchmark
 
 	test_code_np = \
 """import numpy as np
@@ -306,8 +329,6 @@ _timer = time.perf_counter
 	test_code_gd = "extends Node\n\n"
 
 	tests: list[Test] = []
-
-	current_test_number = 0
 
 	normal_n = 40_000
 	added_functions = set()
@@ -321,8 +342,12 @@ _timer = time.perf_counter
 		test_function_name_untyped = f"{ufunc_name}"
 
 		args_str = "".join(f"{arg}, " for arg in ufunc_args)
-		test_code_np += make_test_func_np(test_function_name_untyped, args_str, f"np.{ufunc_name}({args_str})")
-		test_code_nd += make_test_func_nd(test_function_name_untyped, args_str, f"\t\tnd.{ufunc_name}({args_str})")
+		if not is_benchmark:
+			test_code_np += make_test_func_np(test_function_name_untyped, args_str, f"np.{ufunc_name}({args_str})")
+			test_code_nd += make_test_func_nd(test_function_name_untyped, args_str, f"nd.{ufunc_name}({args_str})")
+		else:
+			test_code_np += make_test_func_np_benchmark(test_function_name_untyped, args_str, f"np.{ufunc_name}({args_str})")
+			test_code_nd += make_test_func_nd_benchmark(test_function_name_untyped, args_str, f"nd.{ufunc_name}({args_str})")
 
 		for type_str in np_ufunc.types:
 			dtype_in = np.dtype(type_str[0])
@@ -338,28 +363,28 @@ _timer = time.perf_counter
 			added_functions.add(test_function_name_typed)
 
 			has_gd_test = False
-			gdscript_code = func_to_gdscript(ufunc_name, len(ufunc_args), dtype_out)
-			if gdscript_code is not None:
-				test_code = "\t\tfor i in x.size():\n\t\t\t"""
-				test_code += gdscript_code.format("out[i]", *[f"{arg}[i]" for arg in ufunc_args])
+			if is_benchmark:
+				gdscript_code = func_to_gdscript(ufunc_name, len(ufunc_args), dtype_out)
+				if gdscript_code is not None:
+					test_code = "\t\tfor i in x.size():\n\t\t\t"""
+					test_code += gdscript_code.format("out[i]", *[f"{arg}[i]" for arg in ufunc_args])
 
-				args_str_def = "".join(f"{arg}, " for arg in ufunc_args)
-				test_code_gd += make_test_func_gd(test_function_name_typed, args_str_def, dtype_out, test_code)
-				has_gd_test = True
+					args_str_def = "".join(f"{arg}, " for arg in ufunc_args)
+					test_code_gd += make_test_func_gd(test_function_name_typed, args_str_def, dtype_out, test_code)
+					has_gd_test = True
 
 			for s in [50, 1_000, 20000]:
 				test = Test(f"{ufunc_name}_{dtype_in}_{s}")
 				test_kwargs = {arg: Full(s, value="1", dtype=dtype_in) for arg in ufunc_args}
 				test_n = normal_n // s
 
-				test.np_code = make_np_call(test_function_name_untyped, test_kwargs, test_n)
-				test.nd_code = make_nd_call(test_function_name_untyped, current_test_number, test_kwargs, test_n)
+				current_test_number = len(tests)
+				test.np_code = make_np_call(test_function_name_untyped, test_kwargs, f"n={test_n}" if is_benchmark else f"test_name=\"{test.name}\"")
+				test.nd_code = make_nd_call(test_function_name_untyped, current_test_number, test_kwargs, str(s) if is_benchmark else f"\"{test.name}\"")
 				if has_gd_test:
 					test.gd_code = make_gd_call(test_function_name_typed, current_test_number, test_kwargs, test_n)
 
 				tests.append(test)
-				current_test_number += 1
-
 
 	py_test_file_path = pathlib.Path(__file__).parent / "gen" / "tests.py"
 	py_test_file_path.parent.mkdir(exist_ok=True)
@@ -383,43 +408,61 @@ func _ready():
 
 		demo_path = pathlib.Path(__file__).parent / ".." / "demo"
 		gd_out = subprocess.check_output(
-			[cli_args.godot, "--path", demo_path, "--headless", "res://tests/run_tests.tscn", "--quit"],
+			[godot_location, "--path", demo_path, "--headless", "res://tests/run_tests.tscn", "--quit"],
 			encoding='UTF-8'
 		)
-		gd_out_lines = gd_out[gd_out.index(start_numdot_tests_string):].split("\n")[1:]
+		if is_benchmark:
+			gd_out_lines = gd_out[gd_out.index(start_numdot_tests_string):].split("\n")[1:]
 
-		res = dict()
-		for line in gd_out_lines:
-			split = line.split(" ")
-			if len(split) == 1:
-				continue
-			test_num = int(split[0])
+			res = dict()
+			for line in gd_out_lines:
+				split = line.split(" ")
+				if len(split) == 1:
+					continue
+				test_num = int(split[0])
 
+				try:
+					test_duration_s =  int(split[1]) / 1_000_000
+				except:
+					continue
+
+				res[tests[test_num].name] = test_duration_s
+			return res
+
+	if not is_benchmark:
+		for test_result_path in pathlib.Path("gen/results/").glob("*.npy"):
+			test_result_path.unlink()
+
+		run_godot_tests(test_code_nd, "nd_code")
+
+		print(f"Running {len(tests)} tests in python...")
+		import gen.tests
+		for test in tests:
 			try:
-				test_duration_s =  int(split[1]) / 1_000_000
-			except:
+				test_result = eval(test.np_code)
+				if not test_result:
+					print(f"Array unequal for {test.name}")
+			except KeyboardInterrupt:
+				raise
+	else:
+		results_gd = run_godot_tests(test_code_gd, "gd_code")
+
+		results_nd = run_godot_tests(test_code_nd, "nd_code")
+
+		print(f"Running {len(tests)} tests in python...")
+		import gen.tests
+		results = dict()
+		for test in tests:
+			try:
+				results[test.name] = eval(test.np_code)
+			except KeyboardInterrupt:
+				raise
+			except Exception:
 				continue
 
-			res[tests[test_num].name] = test_duration_s
-		return res
-
-	results_gd = run_godot_tests(test_code_gd, "gd_code")
-	results_nd = run_godot_tests(test_code_nd, "nd_code")
-
-	print(f"Running {len(tests)} tests in python...")
-	import gen.tests
-	results = dict()
-	for test in tests:
-		try:
-			results[test.name] = eval(test.np_code)
-		except KeyboardInterrupt:
-			raise
-		except Exception:
-			results[test.name] = np.nan
-
-	df = pd.DataFrame({"numpy": results, "numdot": results_nd, "godot": results_gd})
-	df.to_csv("gen/results.csv")
-	print("gen/results.csv")
+		df = pd.DataFrame({"numpy": results, "numdot": results_nd, "godot": results_gd})
+		df.to_csv("gen/results.csv")
+		print("gen/results.csv")
 
 if __name__ == "__main__":
 	main()

@@ -32,7 +32,7 @@ template <typename A, typename B>
 void add(VStoreAllocator& allocator, const VArrayTarget& target, const A& a, const B& b) {
 	va::xoperation_inplace<
 		Feature::add,
-		promote::num_function_result_in_same_out<xt::detail::plus>
+		promote::common_in_same_out
 	>(
 		XFunction<xt::detail::plus> {},
 		allocator,

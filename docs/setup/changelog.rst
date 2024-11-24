@@ -31,6 +31,7 @@ Upcoming Changes (main branch)
 **Fixed**
 
 - ``NDArray`` found in godot arrays will now properly type hint the resulting array, avoiding accidental promotion.
+- ``arange`` was producing garbage data.
 
 Version 0.7 - 2024-11-12
 ------------------------

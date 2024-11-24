@@ -147,7 +147,7 @@ std::shared_ptr<VArray> va::arange(VStoreAllocator& allocator, VScalar start, VS
 
 				return va::create_varray<T>(
 					allocator,
-					xt::linspace(start_, stop_, step_)
+					xt::arange(start_, stop_, step_)
 				);
 			}
 		}, dtype_to_variant(dtype)

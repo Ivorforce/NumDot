@@ -159,10 +159,8 @@ def func_to_gdscript(func, nin, dtype_out):
 def make_test_func_np(name, args, stmt):
 	return \
 f"""
-def {name}({args}test_name):
-\tresult = {stmt}
-\tresult_nd = np.load(f"gen/results/{{test_name}}.npy")
-\treturn np.allclose(result_nd, result)
+def {name}({args}):
+\treturn {stmt}
 """
 
 def make_test_func_np_benchmark(name, args, stmt):
@@ -379,7 +377,7 @@ _timer = time.perf_counter
 				test_n = normal_n // s
 
 				current_test_number = len(tests)
-				test.np_code = make_np_call(test_function_name_untyped, test_kwargs, f"n={test_n}" if is_benchmark else f"test_name=\"{test.name}\"")
+				test.np_code = make_np_call(test_function_name_untyped, test_kwargs, f"n={test_n}" if is_benchmark else f"")
 				test.nd_code = make_nd_call(test_function_name_untyped, current_test_number, test_kwargs, str(s) if is_benchmark else f"\"{test.name}\"")
 				if has_gd_test:
 					test.gd_code = make_gd_call(test_function_name_typed, current_test_number, test_kwargs, test_n)
@@ -437,13 +435,29 @@ func _ready():
 
 		print(f"Running {len(tests)} tests in python...")
 		import gen.tests
+		failed_tests_num = 0
+		passed_tests_num = 0
 		for test in tests:
 			try:
-				test_result = eval(test.np_code)
-				if not test_result:
+				test_result_gd = np.load(f"gen/results/{test.name}.npy")
+				test_result_np = eval(test.np_code)
+				if test_result_gd.shape != test_result_np.shape:
+					print(f"Shape unequal for {test.name}")
+					failed_tests_num += 1
+				elif not np.array_equal(test_result_gd, test_result_np):
 					print(f"Array unequal for {test.name}")
+					failed_tests_num += 1
+				else:
+					passed_tests_num += 1
 			except KeyboardInterrupt:
 				raise
+			except Exception as e:
+				print(f"Error loading npy file for test {test.name}: {e}")
+				failed_tests_num += 1
+				continue
+
+		print("Tests completed.")
+		print(f"Passed: {passed_tests_num}; Failed: {failed_tests_num}")
 	else:
 		results_gd = run_godot_tests(test_code_gd, "gd_code")
 

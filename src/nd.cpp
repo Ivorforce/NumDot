@@ -1295,8 +1295,9 @@ PackedByteArray nd::dumpb(const Variant& array) {
 	try {
 		const auto array_ = variant_as_array(array);
 		auto packed = PackedByteArray();
-		packed.resize(static_cast<int64_t>(array_->size()));
-		va::util::fill_c_array_flat(packed.ptrw(), array_->data);
+		const auto string = va::save_npy(array_->data);
+		packed.resize(static_cast<int64_t>(string.size()));
+		std::copy_n(string.data(), string.size(), packed.ptrw());
 		return packed;
 	}
 	catch (std::runtime_error& error) {

@@ -183,7 +183,7 @@ def make_test_func_gd(name, args, dtype_out, stmt):
 	return \
 f"""
 func __{name}({args}n):
-\tvar out = to_packed(nd.full([x.size()], 0, nd.{dtype_names_nd[dtype_out]}))
+\tvar out = TestUtil.to_packed(nd.full([x.size()], 0, nd.{dtype_names_nd[dtype_out]}))
 \tout.resize(x.size())
 \tvar _t0 = Time.get_ticks_usec()
 \tfor _n in n:
@@ -211,8 +211,84 @@ def make_nd_call(function_name, test_number: int, kwargs: dict[str, Arg], n: int
 	return f"\tprint(\"{test_number} \", __{function_name}({args_str}{n}))"
 
 def make_gd_call(function_name, test_number: int, kwargs: dict[str, Arg], n: int):
-	args_str = "".join(f'to_packed({nd_arg_to_str(value)}), ' for name, value in kwargs.items())
+	args_str = "".join(f'TestUtil.to_packed({nd_arg_to_str(value)}), ' for name, value in kwargs.items())
 	return f"\tprint(\"{test_number} \", __{function_name}({args_str}{n}))"
+
+TEST_UFUNCS = [
+	"abs",
+	"acos",
+	"acosh",
+	"add",
+	# "all",
+	# "angle",  # Not a ufunc apparently
+	# "any",
+	"asin",
+	"asinh",
+	"atan",
+	"atan2",
+	"atanh",
+	"bitwise_and",
+	"bitwise_left_shift",
+	"bitwise_not",
+	"bitwise_or",
+	"bitwise_right_shift",
+	"bitwise_xor",
+	"ceil",
+	# "clip",  # Not a ufunc apparently
+	"cos",
+	"cosh",
+	# "count_nonzero",
+	"deg2rad",
+	"divide",
+	# "dot",  # Not a ufunc apparently
+	"equal",
+	"exp",
+	# "fft",  # Not a ufunc apparently
+	"floor",
+	"greater",
+	"greater_equal",
+	# "is_close",  # TODO Renamed
+	# "is_finite",  # TODO Renamed
+	# "is_inf",  # TODO Renamed
+	# "is_nan",  # TODO Renamed
+	"less",
+	"less_equal",
+	"log",
+	"logical_and",
+	"logical_not",
+	"logical_or",
+	"logical_xor",
+	"matmul",
+	# "max",
+	"maximum",
+	# "mean",  # TODO Not a ufunc
+	# "median",  # TODO Not a ufunc
+	# "min",  # TODO Not a ufunc
+	"minimum",
+	"multiply",
+	"negative",
+	# "norm",  # TODO Not a ufunc
+	"not_equal",
+	"positive",
+	"pow",
+	# "prod",  # TODO Not a ufunc
+	"rad2deg",
+	"remainder",
+	"rint",
+	# "round",  # TODO Not a ufunc
+	"sign",
+	"sin",
+	"sinh",
+	"sqrt",
+	"square",
+	# "std",  # TODO Not a ufunc
+	"subtract",
+	# "sum",  # TODO Not a ufunc
+	"tan",
+	"tanh",
+	"trunc",
+	# "var",  # TODO Not a ufunc
+]
 
 arg_parser = argparse.ArgumentParser()
 arg_parser.add_argument('--godot', type=as_file_path, required=True, help='Godot binary location')
@@ -227,39 +303,7 @@ _timer = time.perf_counter
 """
 
 	test_code_nd = "extends Node\n\n"
-	test_code_gd = \
-"""extends Node\n\n
-
-func to_packed(array: NDArray):
-	var dtype := array.dtype()
-	if dtype == nd.Int8:
-		return array.to_packed_int32_array()
-	if dtype == nd.Int16:
-		return array.to_packed_int32_array()
-	if dtype == nd.Int32:
-		return array.to_packed_int64_array()
-	if dtype == nd.Int64:
-		return array.to_packed_int64_array()
-	if dtype == nd.UInt8:
-		return array.to_packed_byte_array()
-	if dtype == nd.UInt16:
-		return array.to_packed_int32_array()
-	if dtype == nd.UInt32:
-		return array.to_packed_int32_array()
-	if dtype == nd.UInt64:
-		return array.to_packed_int64_array()
-	if dtype == nd.Float32:
-		return array.to_packed_float32_array()
-	if dtype == nd.Float64:
-		return array.to_packed_float64_array()
-	if dtype == nd.Bool:
-		return array.to_packed_byte_array()
-	if dtype == nd.Complex64:
-		return nd.complex_as_vector(array).to_packed_vector2_array()
-	if dtype == nd.Complex128:  # Not technically correct because it's not double, but eh...
-		return nd.complex_as_vector(array).to_packed_vector2_array()
-	assert(false)
-"""
+	test_code_gd = "extends Node\n\n"
 
 	tests: list[Test] = []
 
@@ -270,81 +314,7 @@ func to_packed(array: NDArray):
 
 	# TODO No support for reductions yet
 	# TODO Should automatically (?) determine what NumDot has?
-	for ufunc_name in [
-		"abs",
-		"acos",
-		"acosh",
-		"add",
-		# "all",
-		# "angle",  # Not a ufunc apparently
-		# "any",
-		"asin",
-		"asinh",
-		"atan",
-		"atan2",
-		"atanh",
-		"bitwise_and",
-		"bitwise_left_shift",
-		"bitwise_not",
-		"bitwise_or",
-		"bitwise_right_shift",
-		"bitwise_xor",
-		"ceil",
-		# "clip",  # Not a ufunc apparently
-		"cos",
-		"cosh",
-		# "count_nonzero",
-		"deg2rad",
-		"divide",
-		# "dot",  # Not a ufunc apparently
-		"equal",
-		"exp",
-		# "fft",  # Not a ufunc apparently
-		"floor",
-		"greater",
-		"greater_equal",
-		# "is_close",  # TODO Renamed
-		# "is_finite",  # TODO Renamed
-		# "is_inf",  # TODO Renamed
-		# "is_nan",  # TODO Renamed
-		"less",
-		"less_equal",
-		"log",
-		"logical_and",
-		"logical_not",
-		"logical_or",
-		"logical_xor",
-		"matmul",
-		# "max",
-		"maximum",
-		# "mean",  # TODO Not a ufunc
-		# "median",  # TODO Not a ufunc
-		# "min",  # TODO Not a ufunc
-		"minimum",
-		"multiply",
-		"negative",
-		# "norm",  # TODO Not a ufunc
-		"not_equal",
-		"positive",
-		"pow",
-		# "prod",  # TODO Not a ufunc
-		"rad2deg",
-		"remainder",
-		"rint",
-		# "round",  # TODO Not a ufunc
-		"sign",
-		"sin",
-		"sinh",
-		"sqrt",
-		"square",
-		# "std",  # TODO Not a ufunc
-		"subtract",
-		# "sum",  # TODO Not a ufunc
-		"tan",
-		"tanh",
-		"trunc",
-		# "var",  # TODO Not a ufunc
-	]:
+	for ufunc_name in TEST_UFUNCS:
 		np_ufunc = eval(f"np.{ufunc_name}")
 		ufunc_args = "xyz"[:np_ufunc.nin]
 

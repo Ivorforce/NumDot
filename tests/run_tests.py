@@ -398,7 +398,7 @@ _timer = time.perf_counter
 
 				current_test_number = len(tests)
 				test.np_code = make_np_call(test_function_name_untyped, test_kwargs, f"n={test_n}" if is_benchmark else f"")
-				test.nd_code = make_nd_call(test_function_name_untyped, current_test_number, test_kwargs, str(s) if is_benchmark else f"\"{test.name}\"")
+				test.nd_code = make_nd_call(test_function_name_untyped, current_test_number, test_kwargs, str(test_n) if is_benchmark else f"\"{test.name}\"")
 				if has_gd_test:
 					test.gd_code = make_gd_call(test_function_name_typed, current_test_number, test_kwargs, test_n)
 

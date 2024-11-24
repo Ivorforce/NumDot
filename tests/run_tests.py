@@ -468,7 +468,8 @@ func _ready():
 
 				if test_result_np.dtype in [np.dtype(np.float32), np.dtype(np.float64), np.dtype(np.complex64), np.dtype(np.complex128)]:
 					if not np.allclose(test_result_nd, test_result_np, equal_nan=True):
-						print(f"Array unequal for {test.name}; max-diff: {np.max(np.abs(test_result_nd - test_result_np))}")
+						diff = np.abs(test_result_nd - test_result_np)
+						print(f"Array unequal for {test.name}; max-diff: {np.max(diff[~np.isnan(diff)])}")
 						failed_tests_num += 1
 						continue
 				else:

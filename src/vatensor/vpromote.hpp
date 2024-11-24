@@ -280,7 +280,7 @@ namespace va {
 			>;
 
 			template<typename InputType, typename NaturalOutputType>
-			using output_type = NaturalOutputType;
+			using output_type = InputType;
 		};
 
 		template<typename Type>

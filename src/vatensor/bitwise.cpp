@@ -89,13 +89,26 @@ void va::bitwise_not(VStoreAllocator& allocator, const VArrayTarget& target, con
 	);
 }
 
+#define SHIFT_SAFE(NAME, OP)\
+struct NAME {\
+	template <class T1, class T2>\
+	constexpr auto operator()(T1&& arg1, T2&& arg2) const\
+	{\
+		constexpr auto bit_count = sizeof(arg1) * CHAR_BIT;\
+		return arg2 >= bit_count ? 0 : (std::forward<T1>(arg1) OP std::forward<T2>(arg2));\
+	}\
+};
+
+SHIFT_SAFE(left_shift_safe, <<)
+SHIFT_SAFE(right_shift_safe, >>)
+
 template <typename A, typename B>
 void bitwise_left_shift(VStoreAllocator& allocator, const VArrayTarget& target, const A& a, const B& b) {
 	va::xoperation_inplace<
 		Feature::bitwise_left_shift,
 		promote::left_of_ints_in_same_out
 	>(
-		va::XFunction<xt::detail::left_shift> {},
+		va::XFunction<left_shift_safe> {},
 		allocator,
 		target,
 		a,
@@ -117,7 +130,7 @@ void bitwise_right_shift(VStoreAllocator& allocator, const VArrayTarget& target,
 		Feature::bitwise_right_shift,
 		promote::left_of_ints_in_same_out
 	>(
-		va::XFunction<xt::detail::right_shift> {},
+		va::XFunction<right_shift_safe> {},
 		allocator,
 		target,
 		a,

@@ -344,7 +344,9 @@ _timer = time.perf_counter
 	# TODO No support for reductions yet
 	# TODO Should automatically (?) determine what NumDot has?
 	for ufunc_name in TEST_UFUNCS:
-		np_ufunc = eval(f"np.{ufunc_name}")
+		np_ufunc = getattr(np, ufunc_name)
+		if ufunc_name == "bitwise_left_shift":
+			print(np_ufunc)
 		ufunc_args = "xyz"[:np_ufunc.nin]
 
 		test_function_name_untyped = f"{ufunc_name}"

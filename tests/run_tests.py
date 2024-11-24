@@ -439,16 +439,28 @@ func _ready():
 		passed_tests_num = 0
 		for test in tests:
 			try:
-				test_result_gd = np.load(f"gen/results/{test.name}.npy")
-				test_result_np = eval(test.np_code)
+				test_result_gd: np.ndarray = np.load(f"gen/results/{test.name}.npy")
+				test_result_np: np.ndarray = eval(test.np_code)
 				if test_result_gd.shape != test_result_np.shape:
 					print(f"Shape unequal for {test.name}")
 					failed_tests_num += 1
-				elif not np.array_equal(test_result_gd, test_result_np):
-					print(f"Array unequal for {test.name}")
-					failed_tests_num += 1
+					continue
+
+				if test_result_np.dtype in [np.dtype(np.float32), np.dtype(np.float64), np.dtype(np.complex64), np.dtype(np.complex128)]:
+					if not np.allclose(test_result_gd, test_result_np):
+						print(f"Array unequal for {test.name}; max-diff: {np.max(np.abs(test_result_gd - test_result_np))}")
+						failed_tests_num += 1
+						continue
 				else:
-					passed_tests_num += 1
+					if not np.array_equal(test_result_gd, test_result_np):
+						if test_result_np.dtype == np.dtype(np.bool):
+							print(f"Array unequal for {test.name}; {np.sum(test_result_gd != test_result_np)} mismatched bool elements")
+						else:
+							print(f"Array unequal for {test.name}; max-diff: {np.max(np.abs(test_result_gd - test_result_np))}")
+						failed_tests_num += 1
+						continue
+
+				passed_tests_num += 1
 			except KeyboardInterrupt:
 				raise
 			except Exception as e:

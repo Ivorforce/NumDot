@@ -32,7 +32,7 @@ template <typename A, typename B>
 void add(VStoreAllocator& allocator, const VArrayTarget& target, const A& a, const B& b) {
 	va::xoperation_inplace<
 		Feature::add,
-		promote::common_in_same_out
+		promote::num_in_same_out
 	>(
 		XFunction<xt::detail::plus> {},
 		allocator,
@@ -268,7 +268,7 @@ struct square_fun {
 void va::square(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
 	xoperation_single<
 		Feature::square,
-		promote::common_in_same_out
+		promote::num_in_same_out
 	>(
 		va::XFunction<square_fun> {},
 		allocator,

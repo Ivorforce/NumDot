@@ -164,18 +164,17 @@ def generate(env, sources):
 				# TODO We need to cast, at least if we want to accelerate these
 				continue
 
-			# TODO Unequal inputs unsupported by macros right now
-			assert len(set(specialization.input)) == 1, f"{ufunc_name} has a specialization of unequal types: {specialization_str}"
-
-			input_type_cpp = dtype_to_c_type[specialization.input[0]]
+			input_types_cpp = [dtype_to_c_type[dtype] for dtype in specialization.input]
 			output_type_cpp = dtype_to_c_type[specialization.output]
 
 			if nin == 1:
-				declare_str += f"\tDECLARE_NATIVE_UNARY({ufunc_name}, {input_type_cpp}, {output_type_cpp});\n"
-				configure_str += f"\tADD_NATIVE_UNARY({ufunc_name}, {input_type_cpp}, {output_type_cpp});\n"
+				assert len(input_types_cpp) == 1
+				declare_str += f"\tDECLARE_NATIVE_UNARY({ufunc_name}, {output_type_cpp}, {input_types_cpp[0]});\n"
+				configure_str += f"\tADD_NATIVE_UNARY({ufunc_name}, {output_type_cpp}, {input_types_cpp[0]});\n"
 			elif nin == 2:
-				declare_str += f"\tDECLARE_NATIVE_BINARY{commutative_str}({ufunc_name}, {input_type_cpp}, {output_type_cpp});\n"
-				configure_str += f"\tADD_NATIVE_BINARY{commutative_str}({ufunc_name}, {input_type_cpp}, {output_type_cpp});\n"
+				assert len(input_types_cpp) == 2
+				declare_str += f"\tDECLARE_NATIVE_BINARY{commutative_str}({ufunc_name}, {output_type_cpp}, {input_types_cpp[0]}, {input_types_cpp[1]});\n"
+				configure_str += f"\tADD_NATIVE_BINARY{commutative_str}({ufunc_name}, {output_type_cpp}, {input_types_cpp[0]}, {input_types_cpp[1]});\n"
 			else:
 				raise ValueError
 
@@ -192,9 +191,13 @@ def generate(env, sources):
 			model_in_cpp = [dtype_to_c_type[dtype] for dtype in model.input]
 			in_types_cpp = [dtype_to_c_type[dtype] for dtype in in_types]
 			if nin == 1:
-				configure_str += f"\tADD_CAST_UNARY({ufunc_name}, {in_types_cpp[0]}, {model_in_cpp[0]});\n"
+				assert len(model_in_cpp) == 1
+				assert len(in_types_cpp) == 1
+				configure_str += f"\tADD_CAST_UNARY({ufunc_name}, {model_in_cpp[0]}, {in_types_cpp[0]});\n"
 			elif nin == 2:
-				configure_str += f"\tADD_CAST_BINARY{commutative_str}({ufunc_name}, {model_in_cpp[0]}, {in_types_cpp[0]}, {in_types_cpp[1]});\n"
+				assert len(model_in_cpp) == 2
+				assert len(in_types_cpp) == 2
+				configure_str += f"\tADD_CAST_BINARY{commutative_str}({ufunc_name}, {model_in_cpp[0]}, {model_in_cpp[1]}, {in_types_cpp[0]}, {in_types_cpp[1]});\n"
 			else:
 				raise ValueError
 

@@ -130,8 +130,6 @@ def main():
 			specialization = UFuncSpecialization.parse(type)
 			if any(dtype not in supported_dtypes for dtype in [*specialization.input, specialization.output]):
 				continue  # Skip unsupported dtype
-			if len(set(specialization.input)) != 1:
-				continue  # TODO Cannot specialize unequal type inputs right now.
 			specializations[specialization.input] = specialization
 
 		if ufunc.nin == 2:

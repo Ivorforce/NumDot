@@ -182,8 +182,6 @@ def generate(env, sources):
 			in_str, model_str = cast_str.split("->", maxsplit=1)
 			model = UFuncSpecialization.parse(model_str)
 			in_types = tuple(code_to_dtype[dtype_str] for dtype_str in in_str)
-			# TODO Unequal inputs unsupported by macros right now
-			assert len(set(model.input)) == 1, "Casts must point to common-input specializations for now"
 
 			assert model.input in covered_types, f"{ufunc_name} has a cast {in_str} to {model_str} even though the specialization does not exist"
 			assert in_types not in covered_types, f"{ufunc_name} has a cast {in_str} to {model_str} even though it was already specialized for these types"

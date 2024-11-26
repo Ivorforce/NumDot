@@ -2,13 +2,12 @@
 
 #include <vatensor/comparison.hpp>            // for equal_to, greater, greate...
 #include <vatensor/linalg.hpp>                // for reduce_dot, dot, matmul
-#include <vatensor/logical.hpp>               // for logical_and, logical_not
-#include <vatensor/bitwise.hpp>               // for bitwise_and, bitwise_not
 #include <vatensor/reduce.hpp>                // for all, any, max, mean, median
 #include <vatensor/round.hpp>                 // for ceil, floor, nearbyint
 #include <vatensor/trigonometry.hpp>          // for acos, acosh, asin, asinh
 #include <vatensor/vassign.hpp>               // for assign
 #include <vatensor/vmath.hpp>                 // for abs, add, clip, deg2rad
+#include "vatensor/ufunc/ufunc_features.hpp"
 #include <cmath>                            // for double_t, isinf
 #include <optional>                         // for optional
 #include <stdexcept>                        // for runtime_error
@@ -1080,16 +1079,15 @@ Ref<NDArray> nd::trunc(const Variant& a) {
 }
 
 Ref<NDArray> nd::rint(const Variant& a) {
-	// Actually uses nearbyint because rint can throw, which is undesirable in our case, and unlike numpy's behavior.
-	return VARRAY_MAP1(nearbyint, a);
+	return VARRAY_MAP1(rint, a);
 }
 
 Ref<NDArray> nd::equal(const Variant& a, const Variant& b) {
-	return VARRAY_MAP2(equal_to, a, b);
+	return VARRAY_MAP2(equal, a, b);
 }
 
 Ref<NDArray> nd::not_equal(const Variant& a, const Variant& b) {
-	return VARRAY_MAP2(not_equal_to, a, b);
+	return VARRAY_MAP2(not_equal, a, b);
 }
 
 Ref<NDArray> nd::greater(const Variant& a, const Variant& b) {
@@ -1115,15 +1113,15 @@ Ref<NDArray> nd::is_close(const Variant& a, const Variant& b, double_t rtol, dou
 }
 
 Ref<NDArray> nd::is_nan(const Variant& a) {
-	return VARRAY_MAP1(is_nan, a);
+	return VARRAY_MAP1(isnan, a);
 }
 
 Ref<NDArray> nd::is_inf(const Variant& a) {
-	return VARRAY_MAP1(is_inf, a);
+	return VARRAY_MAP1(isinf, a);
 }
 
 Ref<NDArray> nd::is_finite(const Variant& a) {
-	return VARRAY_MAP1(is_finite, a);
+	return VARRAY_MAP1(isfinite, a);
 }
 
 Ref<NDArray> nd::logical_and(const Variant& a, const Variant& b) {

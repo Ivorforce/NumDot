@@ -26,6 +26,7 @@ def options(opts):
     )
 
     features_tool = Tool("features")
+    features2_tool = Tool("features2")
     scu_tool = Tool("scu")
 
     features_tool.options(opts)
@@ -33,6 +34,7 @@ def options(opts):
 
 def generate(env, godot_cpp_env, sources):
     features_tool = Tool("features")
+    features2_tool = Tool("features2")
     scu_tool = Tool("scu")
 
     # Allow additional defines, see https://scons.org/doc/production/HTML/scons-user/ch10s02.html
@@ -95,10 +97,12 @@ def generate(env, godot_cpp_env, sources):
     env.Append(CPPPATH=["src/"])
 
     sources.extend([
-        f for f in env.Glob("src/*.cpp") + env.Glob("src/**/*.cpp")
+        f for f in env.Glob("src/*.cpp") + env.Glob("src/*/*.cpp") + env.Glob("src/*/*/*.cpp")
         # Generated files will be added selectively and maintained by tools.
         if not "/gen/" in str(f.path)
     ])
+    # FIXME
+    features2_tool.generate(env, sources)
 
     scu_tool.generate(env, sources)
     features_tool.generate(env)

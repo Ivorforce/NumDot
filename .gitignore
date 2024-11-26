@@ -49,6 +49,7 @@ __pycache__
 /compile_commands.json
 /src/gen
 /src/vatensor/gen
+/src/vatensor/ufunc/gen
 
 # Build
 /build/addons/numdot/**/*

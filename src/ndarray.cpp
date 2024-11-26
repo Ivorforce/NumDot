@@ -3,14 +3,13 @@
 #include <gdconvert/conversion_ints.hpp>             // for variants_to_axes
 #include <vatensor/comparison.hpp>                   // for equal_to, greater
 #include <vatensor/linalg.hpp>                       // for reduce_dot, dot
-#include <vatensor/logical.hpp>                      // for logical_and, logic...
-#include <vatensor/bitwise.hpp>                      // for bitwise_and, bitwise...
 #include <vatensor/reduce.hpp>                       // for all, any, max, mean
 #include <vatensor/trigonometry.hpp>                 // for acos, acosh, asin
 #include <vatensor/vassign.hpp>                      // for assign
 #include <vatensor/vmath.hpp>                        // for abs, add, clip
 #include <vatensor/xtensor_store.hpp>                        // for abs, add, clip
 #include <vatensor/vcarray.hpp>                        // fill_c_array_flat
+#include "vatensor/ufunc/ufunc_features.hpp"
 #include <algorithm>                               // for copy
 #include <cstddef>                                 // for size_t
 #include <ndutil.hpp>
@@ -1001,16 +1000,15 @@ Ref<NDArray> NDArray::assign_trunc(const Variant& a) {
 }
 
 Ref<NDArray> NDArray::assign_rint(const Variant& a) {
-	// Actually uses nearbyint because rint can throw, which is undesirable in our case, and unlike numpy's behavior.
-	VARRAY_MAP1(nearbyint, a);
+	VARRAY_MAP1(rint, a);
 }
 
 Ref<NDArray> NDArray::assign_equal(const Variant& a, const Variant& b) {
-	VARRAY_MAP2(equal_to, a, b);
+	VARRAY_MAP2(equal, a, b);
 }
 
 Ref<NDArray> NDArray::assign_not_equal(const Variant& a, const Variant& b) {
-	VARRAY_MAP2(not_equal_to, a, b);
+	VARRAY_MAP2(not_equal, a, b);
 }
 
 Ref<NDArray> NDArray::assign_greater(const Variant& a, const Variant& b) {

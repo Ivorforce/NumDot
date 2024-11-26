@@ -3,7 +3,6 @@
 #include <gdconvert/conversion_ints.hpp>             // for variants_to_axes
 #include <vatensor/comparison.hpp>                   // for equal_to, greater
 #include <vatensor/linalg.hpp>                       // for reduce_dot, dot
-#include <vatensor/logical.hpp>                      // for logical_and, logic...
 #include <vatensor/reduce.hpp>                       // for all, any, max, mean
 #include <vatensor/trigonometry.hpp>                 // for acos, acosh, asin
 #include <vatensor/vassign.hpp>                      // for assign

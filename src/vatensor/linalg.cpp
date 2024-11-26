@@ -5,9 +5,7 @@
 #include <stdexcept>              // for runtime_error
 #include <vector>                 // for vector
 #include <xtensor/xview.hpp>
-
-#include "bitwise.hpp"
-#include "bitwise.hpp"
+#include "ufunc/ufunc_features.hpp"
 #include "create.hpp"
 #include "rearrange.hpp"
 #include "reduce.hpp"               // for sum

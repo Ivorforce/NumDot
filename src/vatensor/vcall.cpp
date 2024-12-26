@@ -53,7 +53,7 @@ void va::call_ufunc_unary(VStoreAllocator& allocator, const ufunc::tables::UFunc
 	const auto& ufunc = table[a_type];
 	if (ufunc.function_ptr == nullptr) throw std::runtime_error("Unsupported dtype for ufunc.");
 
-	std::shared_ptr<VArray> temp = nullptr;
+	std::shared_ptr<VArray> temp(nullptr);
 	auto& target_ = evaluate_target(allocator, target, ufunc.output_dtype, va::shape(a), temp);
 
 	if (a_type == ufunc.input_types[0]) {
@@ -84,7 +84,7 @@ void call_ufunc_binary(VStoreAllocator& allocator, const ufunc::tables::UFuncTab
 	const auto& ufunc = table[a_type][b_type];
 	if (ufunc.function_ptr == nullptr) throw std::runtime_error("Unsupported dtype for ufunc.");
 
-	std::shared_ptr<VArray> temp = nullptr;
+	std::shared_ptr<VArray> temp(nullptr);
 	auto& target_ = evaluate_target(allocator, target, ufunc.output_dtype, result_shape, temp);
 
 	switch ((static_cast<uint8_t>(a_type == ufunc.input_types[0]) << 1) | static_cast<uint8_t>(b_type == ufunc.input_types[1])) {

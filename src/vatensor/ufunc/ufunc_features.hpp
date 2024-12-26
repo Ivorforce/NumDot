@@ -4,6 +4,22 @@
 #include "ufunc.hpp"
 #include "util.hpp"
 #include "vatensor/vcall.hpp"
+#include "xtensor/xoperation.hpp"
+
+#define BIT_SHIFT_SAFE(NAME, OP)\
+struct NAME {\
+	template <class T1, class T2>\
+	constexpr std::decay_t<T1> operator()(T1&& arg1, T2&& arg2) const\
+	{\
+		constexpr std::decay_t<T2> bit_count = sizeof(arg1) * CHAR_BIT;\
+		return (arg2 >= bit_count) ? 0 : (std::forward<T1>(arg1) OP std::forward<T2>(arg2));\
+	}\
+};
+
+namespace va::op {
+	BIT_SHIFT_SAFE(left_shift_safe, <<)
+	BIT_SHIFT_SAFE(right_shift_safe, >>)
+}
 
 UNARY_UFUNC(negative, -a)
 UNARY_UFUNC(sign, xt::sign(a))
@@ -14,7 +30,7 @@ UNARY_UFUNC(exp, xt::exp(a))
 UNARY_UFUNC(log, xt::log(a))
 UNARY_UFUNC(rad2deg, xt::rad2deg(a))
 UNARY_UFUNC(deg2rad, xt::deg2rad(a))
-// TODO plus etc. are broken because of the DEFINE_COMPLEX_OVERLOAD
+// TODO calling xt::add directly etc. is broken because of the DEFINE_COMPLEX_OVERLOAD
 BINARY_UFUNC(add, xt::detail::make_xfunction<xt::detail::plus>(a, b))
 BINARY_CALLER_COMMUTATIVE(add)
 BINARY_UFUNC(subtract, xt::detail::make_xfunction<xt::detail::minus>(a, b))
@@ -70,9 +86,9 @@ BINARY_UFUNC(bitwise_or, a | b)
 BINARY_CALLER_COMMUTATIVE(bitwise_or)
 BINARY_UFUNC(bitwise_xor, a ^ b)
 BINARY_CALLER_COMMUTATIVE(bitwise_xor)
-BINARY_UFUNC(bitwise_left_shift, xt::detail::make_xfunction<xt::detail::left_shift>(a, b))
+BINARY_UFUNC(bitwise_left_shift, xt::detail::make_xfunction<va::op::left_shift_safe>(a, b))
 BINARY_CALLER(bitwise_left_shift)
-BINARY_UFUNC(bitwise_right_shift, xt::detail::make_xfunction<xt::detail::right_shift>(a, b))
+BINARY_UFUNC(bitwise_right_shift, xt::detail::make_xfunction<va::op::right_shift_safe>(a, b))
 BINARY_CALLER(bitwise_right_shift)
 
 BINARY_UFUNC(equal, xt::equal(a, b))

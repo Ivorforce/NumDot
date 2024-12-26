@@ -71,13 +71,13 @@ UNARY_UFUNC(trunc, xt::trunc(va::promote::to_num(a)))
 // Actually uses nearbyint because rint can throw, which is undesirable in our case, and unlike numpy's behavior.
 UNARY_UFUNC(rint, xt::nearbyint(va::promote::to_num(a)))
 
-UNARY_UFUNC(logical_not, !a)
+UNARY_UFUNC(logical_not, !va::promote::to_bool(a))
 // TODO RE-optimize these to short circuit on scalars
-BINARY_UFUNC(logical_and, a && b)
+BINARY_UFUNC(logical_and, va::promote::to_bool(a) && va::promote::to_bool(b))
 BINARY_CALLER_COMMUTATIVE(logical_and)
-BINARY_UFUNC(logical_or, a || b)
+BINARY_UFUNC(logical_or, va::promote::to_bool(a) || va::promote::to_bool(b))
 BINARY_CALLER_COMMUTATIVE(logical_or)
-BINARY_UFUNC(logical_xor, xt::detail::make_xfunction<xt::detail::not_equal_to>(a, b))
+BINARY_UFUNC(logical_xor, xt::detail::make_xfunction<xt::detail::not_equal_to>(va::promote::to_bool(a), va::promote::to_bool(b)))
 BINARY_CALLER_COMMUTATIVE(logical_xor)
 
 UNARY_UFUNC(bitwise_not, ~a)

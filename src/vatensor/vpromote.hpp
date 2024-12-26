@@ -352,6 +352,21 @@ namespace va {
 				return b.derived_cast();
 			}
 		}
+
+		template<typename T>
+		std::enable_if_t<is_number_t<T>::value, bool> to_bool(T&& b) {
+			return std::forward<T>(b) != T(0);
+		}
+		inline bool to_bool(const bool b) { return b; }
+		template <typename T>
+		auto to_bool(const xt::xexpression<T>& b) {
+			if constexpr (std::is_same_v<value_type_v<T>, bool>) {
+				return b.derived_cast();
+			}
+			else {
+				return xt::not_equal(b.derived_cast(), 0);
+			}
+		}
 	}
 }
 

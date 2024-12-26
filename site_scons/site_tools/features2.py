@@ -161,7 +161,7 @@ def generate(env, sources):
 				continue
 
 			if any(dtype != DType.Bool for dtype in specialization.input) and "logical" in ufunc_name:
-				# TODO We need to cast, at least if we want to accelerate these
+				# TODO We need to cast inputs from bool to the other type, at least if we want to accelerate these
 				continue
 
 			input_types_cpp = [dtype_to_c_type[dtype] for dtype in specialization.input]

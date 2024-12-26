@@ -158,10 +158,11 @@ def generate(env, sources):
 
 			# FIXME SIMD troubles aboard
 			if any(dtype == DType.Bool for dtype in specialization.input):
+				# TODO We need to cast inputs from bool to the other type.
 				continue
 
 			if any(dtype != DType.Bool for dtype in specialization.input) and "logical" in ufunc_name:
-				# TODO We need to cast inputs from bool to the other type, at least if we want to accelerate these
+				# TODO We need to cast inputs to bool for these to work.
 				continue
 
 			input_types_cpp = [dtype_to_c_type[dtype] for dtype in specialization.input]

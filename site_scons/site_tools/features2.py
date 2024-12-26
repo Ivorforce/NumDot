@@ -143,7 +143,7 @@ def generate(env, sources):
 				continue
 			covered_types.add(specialization.input)
 
-			# FIXME
+			# FIXME Need to test how these functions are computed with complex dtypes in numpy.
 			if any(dtype in complex_dtypes for dtype in specialization.input) and (
 				ufunc_name == "minimum"
 				or ufunc_name == "maximum"

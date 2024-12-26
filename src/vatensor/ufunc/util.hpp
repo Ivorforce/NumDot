@@ -13,13 +13,13 @@ namespace VA_UFUNC_MODULE { CODE }
 #define IMPLEMENT_UNARY_UFUNC(UFUNC_NAME, OP)\
 template <typename R, typename A>\
 void UFUNC_NAME(R& ret, const A& a) {\
-	va::broadcasting_assign(ret, OP);\
+	va::broadcasting_assign_typesafe(ret, OP);\
 }
 
 #define IMPLEMENT_BINARY_UFUNC(UFUNC_NAME, OP)\
 template <typename R, typename A, typename B>\
 void UFUNC_NAME(R& ret, const A& a, const B& b) {\
-	va::broadcasting_assign(ret, OP);\
+	va::broadcasting_assign_typesafe(ret, OP);\
 }
 
 #define UNARY_TABLES(UFUNC_NAME)\

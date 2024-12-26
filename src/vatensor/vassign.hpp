@@ -19,6 +19,16 @@ namespace va {
 		xt::assign_data(t, e, xt::detail::get_rhs_triviality(e.derived_cast()));
 	}
 
+	// Some implicit casts are not possible, see https://github.com/xtensor-stack/xtensor/issues/2815.
+	template<typename R, typename E>
+	inline void broadcasting_assign_typesafe(R& t, const E& e) {
+		using RT = typename std::decay_t<decltype(t)>::value_type;
+		using ET = typename std::decay_t<decltype(e)>::value_type;
+
+		if constexpr (std::is_same_v<RT, ET>) va::broadcasting_assign(t, e);
+		else va::broadcasting_assign(t, xt::cast<RT>(e));
+	}
+
 	void set_single_value(VData& array, axes_type& index, const VScalar& value);
 	VScalar get_single_value(const VData& array, axes_type& index);
 

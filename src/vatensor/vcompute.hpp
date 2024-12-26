@@ -58,13 +58,7 @@ namespace va {
             dimension <= 1 ? xt::layout_type::any : xt::layout_type::row_major
         );
 
-        // FIXME bools are kinda unreliable right now, see https://github.com/xtensor-stack/xtensor/issues/2815
-        if constexpr (std::is_same_v<OStorable, bool> && std::is_same_v<RNatural, bool>) {
-            broadcasting_assign(data, xt::cast<uint8_t>(result));
-        }
-        else {
-            va::broadcasting_assign(data, result);
-        }
+        va::broadcasting_assign_typesafe(data, result);
 
         return std::make_shared<VArray>(
             VArray {

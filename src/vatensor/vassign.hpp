@@ -25,8 +25,8 @@ namespace va {
 		using RT = typename std::decay_t<decltype(t)>::value_type;
 		using ET = typename std::decay_t<decltype(e)>::value_type;
 
-		if constexpr (std::is_same_v<RT, ET>) va::broadcasting_assign(t, e);
-		else va::broadcasting_assign(t, xt::cast<RT>(e));
+		if constexpr (std::is_same_v<RT, bool>) va::broadcasting_assign(t, xt::cast<bool>(e));
+		else va::broadcasting_assign(t, e);
 	}
 
 	void set_single_value(VData& array, axes_type& index, const VScalar& value);

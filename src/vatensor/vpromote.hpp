@@ -337,6 +337,21 @@ namespace va {
 			template<typename InputType, typename NaturalOutputType>
 			using output_type = typename Base::template output_type<InputType, NaturalOutputType>;
 		};
+
+		template<typename T>
+		std::enable_if_t<is_number_t<T>::value, T> to_num(T&& b) {
+			return std::forward<T>(b);
+		}
+		inline auto to_num(bool b) { return static_cast<int64_t>(b); }
+		template <typename T>
+		auto to_num(const xt::xexpression<T>& b) {
+			if constexpr (std::is_same_v<value_type_v<T>, bool>) {
+				return xt::cast<int64_t>(b.derived_cast());
+			}
+			else {
+				return b.derived_cast();
+			}
+		}
 	}
 }
 

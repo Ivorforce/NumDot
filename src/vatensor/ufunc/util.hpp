@@ -44,7 +44,7 @@ namespace va::ufunc::tables { extern UFuncTableBinary UFUNC_NAME; extern UFuncTa
 BINARY_TABLES(UFUNC_NAME)\
 namespace va {\
 	inline void UFUNC_NAME(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b) {\
-		if (va::dimension(a) == 0) return call_ufunc_binary(allocator, ufunc::tables::UFUNC_NAME##_scalarLeft, target, a, va::to_single_value(b));\
+		if (va::dimension(a) == 0) return call_ufunc_binary(allocator, ufunc::tables::UFUNC_NAME##_scalarLeft, target, va::to_single_value(a), b);\
 		if (va::dimension(b) == 0) return call_ufunc_binary(allocator, ufunc::tables::UFUNC_NAME##_scalarRight, target, a, va::to_single_value(b));\
 		call_ufunc_binary(allocator, ufunc::tables::UFUNC_NAME, target, a, b);\
 	}\

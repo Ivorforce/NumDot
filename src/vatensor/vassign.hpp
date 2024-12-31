@@ -23,7 +23,7 @@ namespace va {
 	template<typename R, typename E>
 	inline void broadcasting_assign_typesafe(R& t, const E& e) {
 		using RT = typename std::decay_t<decltype(t)>::value_type;
-		using ET = typename std::decay_t<decltype(e)>::value_type;
+		// using ET = typename std::decay_t<decltype(e)>::value_type;
 
 		if constexpr (std::is_same_v<RT, bool>) va::broadcasting_assign(t, xt::cast<bool>(e));
 		else va::broadcasting_assign(t, e);

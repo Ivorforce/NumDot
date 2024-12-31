@@ -339,10 +339,12 @@ namespace va {
 		};
 
 		template<typename T>
-		std::enable_if_t<is_number_t<T>::value, T> to_num(T&& b) {
+		std::enable_if_t<is_number_t<std::decay_t<T>>::value, T> to_num(T&& b) {
 			return std::forward<T>(b);
 		}
-		inline auto to_num(bool b) { return static_cast<int64_t>(b); }
+		// Can't be bool proper because otherwise it will be selected for other primitives by implicit conversion.
+		template<typename T>
+		std::enable_if_t<std::is_same_v<T, bool>, int64_t> to_num(T b) { return b; }
 		template <typename T>
 		auto to_num(const xt::xexpression<T>& b) {
 			if constexpr (std::is_same_v<value_type_v<T>, bool>) {
@@ -354,10 +356,12 @@ namespace va {
 		}
 
 		template<typename T>
-		std::enable_if_t<is_number_t<T>::value, bool> to_bool(T&& b) {
+		std::enable_if_t<is_number_t<std::decay_t<T>>::value, bool> to_bool(T&& b) {
 			return std::forward<T>(b) != T(0);
 		}
-		inline bool to_bool(const bool b) { return b; }
+		// Can't be bool proper because otherwise it will be selected for other primitives by implicit conversion.
+		template<typename T>
+		std::enable_if_t<std::is_same_v<T, bool>, bool> to_bool(T b) { return b; }
 		template <typename T>
 		auto to_bool(const xt::xexpression<T>& b) {
 			if constexpr (std::is_same_v<value_type_v<T>, bool>) {

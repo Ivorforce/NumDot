@@ -459,8 +459,8 @@ func _ready():
 		passed_tests_num = 0
 		for test in tests:
 			try:
-				test_result_nd: np.ndarray = np.load(f"gen/results/{test.name}.npy")
 				test_result_np: np.ndarray = eval(test.np_code)
+				test_result_nd: np.ndarray = np.load(f"gen/results/{test.name}.npy")
 				if test_result_nd.shape != test_result_np.shape:
 					print(f"Shape unequal for {test.name} (nd: {test_result_nd.shape}), np: {test_result_np.shape}")
 					failed_tests_num += 1

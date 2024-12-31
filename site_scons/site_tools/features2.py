@@ -147,7 +147,6 @@ def generate(env, sources):
 			if any(dtype in complex_dtypes for dtype in specialization.input) and (
 				ufunc_name == "minimum"
 				or ufunc_name == "maximum"
-				or ufunc_name == "abs"
 				or ufunc_name == "rint"
 				or ufunc_name == "less_equal"
 				or ufunc_name == "less"

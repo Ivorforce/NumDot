@@ -39,6 +39,11 @@ class Arg:
 	pass
 
 @dataclass
+class Scalar(Arg):
+	value: str
+	dtype: np.dtype
+
+@dataclass
 class Full(Arg):
 	size: int
 	value: str
@@ -222,6 +227,8 @@ def make_np_call(function_name, kwargs: dict[str, Arg], n: str):
 			return f"np.arange({arg.start}, {arg.start + arg.size}, dtype=np.{arg.dtype})"
 		elif isinstance(arg, Full):
 			return f"np.full([{arg.size}], fill_value={arg.value}, dtype=np.{arg.dtype})"
+		elif isinstance(arg, Scalar):
+			return f"np.array({arg.value}, dtype=np.{arg.dtype})"
 		raise Exception()
 
 	args_str = "".join(f'{name}={arg_to_str(value)}, ' for name, value in kwargs.items())
@@ -232,6 +239,8 @@ def nd_arg_to_str(arg: Arg):
 		return f"nd.arange({arg.start}, {arg.start + arg.size}, 1, nd.{dtype_names_nd[arg.dtype]})"
 	elif isinstance(arg, Full):
 		return f"nd.full([{arg.size}], {arg.value}, nd.{dtype_names_nd[arg.dtype]})"
+	elif isinstance(arg, Scalar):
+		return f"nd.array({arg.value}, nd.{dtype_names_nd[arg.dtype]})"
 	raise Exception()
 
 def make_nd_call(function_name, test_number: int, kwargs: dict[str, Arg], n: str):
@@ -381,7 +390,7 @@ _timer = time.perf_counter
 					test_code_gd += make_test_func_gd(test_function_name_typed, args_str_def, dtype_out, test_code)
 					has_gd_test = True
 
-			for s in [50, 1_000, 20000]:
+			for s in [1, 50, 1_000, 20000]:
 				test = Test(f"{ufunc_name}_{dtype_in}_{s}")
 				can_use_arange = (
 					dtype_in not in [np.dtype(bool), np.dtype(np.complex64), np.dtype(np.complex128)]
@@ -391,7 +400,9 @@ _timer = time.perf_counter
 					and "tanh" not in ufunc_name
 				)
 				test_kwargs = {
-					arg: ARange(start=1, size=s, dtype=dtype_in) if can_use_arange else Full(s, "0", dtype=dtype_in)
+					arg: Scalar(value="5", dtype=dtype_in) if s == 1
+						else ARange(start=1, size=s, dtype=dtype_in) if can_use_arange
+						else Full(s, "0", dtype=dtype_in)
 					for arg in ufunc_args
 				}
 				test_n = normal_n // s

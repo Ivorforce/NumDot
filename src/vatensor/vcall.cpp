@@ -27,6 +27,16 @@ inline const VData& deref(const std::shared_ptr<VArray>& a) {
 	return a->data;
 }
 
+template <typename... Args>
+void *get_value_ptr(std::variant<Args...>& variant) {
+	return std::visit([](auto &arg) -> void* { return &arg; }, variant);
+}
+
+template <typename... Args>
+const void *get_value_ptr(const std::variant<Args...>& variant) {
+	return std::visit([](auto &arg) -> const void* { return &arg; }, variant);
+}
+
 VData& va::evaluate_target(VStoreAllocator& allocator, const VArrayTarget& target, DType dtype, const shape_type& result_shape, std::shared_ptr<VArray>& temp) {
 	if (const auto target_data = std::get_if<VData*>(&target)) {
 		VData& data = **target_data;
@@ -48,7 +58,7 @@ VData& va::evaluate_target(VStoreAllocator& allocator, const VArrayTarget& targe
 }
 
 void va::call_ufunc_unary(VStoreAllocator& allocator, const ufunc::tables::UFuncTableUnary& table, const VArrayTarget& target, const VData& a) {
-	DType a_type = va::dtype(a);
+	const DType a_type = va::dtype(a);
 
 	const auto& ufunc = table[a_type];
 	if (ufunc.function_ptr == nullptr) throw std::runtime_error("Unsupported dtype for ufunc.");
@@ -58,15 +68,15 @@ void va::call_ufunc_unary(VStoreAllocator& allocator, const ufunc::tables::UFunc
 
 	if (a_type == ufunc.input_types[0]) {
 		reinterpret_cast<UnaryDummy>(ufunc.function_ptr)(
-			reinterpret_cast<Dummy&>(target_),
-			reinterpret_cast<const Dummy&>(a)
+			*static_cast<Dummy*>(get_value_ptr(target_)),
+			*static_cast<const Dummy*>(get_value_ptr(a))
 		);
 	}
 	else {
 		const auto a_ = copy_as_dtype(allocator, a, ufunc.input_types[0]);
 		reinterpret_cast<UnaryDummy>(ufunc.function_ptr)(
-			reinterpret_cast<Dummy&>(target_),
-			reinterpret_cast<const Dummy&>(a_->data)
+			*static_cast<Dummy*>(get_value_ptr(target_)),
+			*static_cast<const Dummy*>(get_value_ptr(a_->data))
 		);
 	}
 
@@ -78,8 +88,8 @@ void va::call_ufunc_unary(VStoreAllocator& allocator, const ufunc::tables::UFunc
 
 template <typename A, typename B>
 void call_ufunc_binary(VStoreAllocator& allocator, const ufunc::tables::UFuncTableBinary& table, const VArrayTarget& target, const shape_type& result_shape, const A& a, const B& b) {
-	DType a_type = va::dtype(a);
-	DType b_type = va::dtype(b);
+	const DType a_type = va::dtype(a);
+	const DType b_type = va::dtype(b);
 
 	const auto& ufunc = table[a_type][b_type];
 	if (ufunc.function_ptr == nullptr) throw std::runtime_error("Unsupported dtype for ufunc.");
@@ -90,27 +100,27 @@ void call_ufunc_binary(VStoreAllocator& allocator, const ufunc::tables::UFuncTab
 	switch ((static_cast<uint8_t>(a_type == ufunc.input_types[0]) << 1) | static_cast<uint8_t>(b_type == ufunc.input_types[1])) {
 		case 0b11: {
 			reinterpret_cast<BinaryDummy>(ufunc.function_ptr)(
-				reinterpret_cast<Dummy&>(target_),
-				reinterpret_cast<const Dummy&>(a),
-				reinterpret_cast<const Dummy&>(b)
+				*static_cast<Dummy*>(get_value_ptr(target_)),
+				*static_cast<const Dummy*>(get_value_ptr(a)),
+				*static_cast<const Dummy*>(get_value_ptr(b))
 			);
 			break;
 		}
 		case 0b10: {
 			const auto b_ = ::copy_as_dtype(allocator, b, ufunc.input_types[1]);
 			reinterpret_cast<BinaryDummy>(ufunc.function_ptr)(
-				reinterpret_cast<Dummy&>(target_),
-				reinterpret_cast<const Dummy&>(a),
-				reinterpret_cast<const Dummy&>(::deref(b_))
+				*static_cast<Dummy*>(get_value_ptr(target_)),
+				*static_cast<const Dummy*>(get_value_ptr(a)),
+				*static_cast<const Dummy*>(get_value_ptr(::deref(b_)))
 			);
 			break;
 		}
 		case 0b01: {
 			const auto a_ = ::copy_as_dtype(allocator, a, ufunc.input_types[0]);
 			reinterpret_cast<BinaryDummy>(ufunc.function_ptr)(
-				reinterpret_cast<Dummy&>(target_),
-				reinterpret_cast<const Dummy&>(::deref(a_)),
-				reinterpret_cast<const Dummy&>(b)
+				*static_cast<Dummy*>(get_value_ptr(target_)),
+				*static_cast<const Dummy*>(get_value_ptr(::deref(a_))),
+				*static_cast<const Dummy*>(get_value_ptr(b))
 			);
 			break;
 		}
@@ -118,9 +128,9 @@ void call_ufunc_binary(VStoreAllocator& allocator, const ufunc::tables::UFuncTab
 			const auto a_ = ::copy_as_dtype(allocator, a, ufunc.input_types[0]);
 			const auto b_ = ::copy_as_dtype(allocator, b, ufunc.input_types[1]);
 			reinterpret_cast<BinaryDummy>(ufunc.function_ptr)(
-				reinterpret_cast<Dummy&>(target_),
-				reinterpret_cast<const Dummy&>(::deref(a_)),
-				reinterpret_cast<const Dummy&>(::deref(b_))
+				*static_cast<Dummy*>(get_value_ptr(target_)),
+				*static_cast<const Dummy*>(get_value_ptr(::deref(a_))),
+				*static_cast<const Dummy*>(get_value_ptr(::deref(b_)))
 			);
 			break;
 		}

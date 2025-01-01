@@ -11,11 +11,11 @@ using Dummy = char;
 using UnaryDummy = void (*)(Dummy& a, const Dummy& b);
 using BinaryDummy = void (*)(Dummy& a, const Dummy& b, const Dummy& c);
 
-inline std::shared_ptr<VArray> copy_as_dtype(VStoreAllocator& allocator, const VData& a, DType dtype) {
+inline std::shared_ptr<VArray> _copy_as_dtype(VStoreAllocator& allocator, const VData& a, DType dtype) {
 	return va::copy_as_dtype(allocator, a, dtype);
 }
 
-inline VScalar copy_as_dtype(VStoreAllocator& allocator, const VScalar& a, DType dtype) {
+inline VScalar _copy_as_dtype(VStoreAllocator& allocator, const VScalar& a, DType dtype) {
 	return va::static_cast_scalar(a, dtype);
 }
 
@@ -73,7 +73,7 @@ void va::call_ufunc_unary(VStoreAllocator& allocator, const ufunc::tables::UFunc
 		);
 	}
 	else {
-		const auto a_ = copy_as_dtype(allocator, a, ufunc.input_types[0]);
+		const auto a_ = ::_copy_as_dtype(allocator, a, ufunc.input_types[0]);
 		reinterpret_cast<UnaryDummy>(ufunc.function_ptr)(
 			*static_cast<Dummy*>(get_value_ptr(target_)),
 			*static_cast<const Dummy*>(get_value_ptr(a_->data))
@@ -107,7 +107,7 @@ void call_ufunc_binary(VStoreAllocator& allocator, const ufunc::tables::UFuncTab
 			break;
 		}
 		case 0b10: {
-			const auto b_ = ::copy_as_dtype(allocator, b, ufunc.input_types[1]);
+			const auto b_ = ::_copy_as_dtype(allocator, b, ufunc.input_types[1]);
 			reinterpret_cast<BinaryDummy>(ufunc.function_ptr)(
 				*static_cast<Dummy*>(get_value_ptr(target_)),
 				*static_cast<const Dummy*>(get_value_ptr(a)),
@@ -116,7 +116,7 @@ void call_ufunc_binary(VStoreAllocator& allocator, const ufunc::tables::UFuncTab
 			break;
 		}
 		case 0b01: {
-			const auto a_ = ::copy_as_dtype(allocator, a, ufunc.input_types[0]);
+			const auto a_ = ::_copy_as_dtype(allocator, a, ufunc.input_types[0]);
 			reinterpret_cast<BinaryDummy>(ufunc.function_ptr)(
 				*static_cast<Dummy*>(get_value_ptr(target_)),
 				*static_cast<const Dummy*>(get_value_ptr(::deref(a_))),
@@ -125,8 +125,8 @@ void call_ufunc_binary(VStoreAllocator& allocator, const ufunc::tables::UFuncTab
 			break;
 		}
 		case 0b00: {
-			const auto a_ = ::copy_as_dtype(allocator, a, ufunc.input_types[0]);
-			const auto b_ = ::copy_as_dtype(allocator, b, ufunc.input_types[1]);
+			const auto a_ = ::_copy_as_dtype(allocator, a, ufunc.input_types[0]);
+			const auto b_ = ::_copy_as_dtype(allocator, b, ufunc.input_types[1]);
 			reinterpret_cast<BinaryDummy>(ufunc.function_ptr)(
 				*static_cast<Dummy*>(get_value_ptr(target_)),
 				*static_cast<const Dummy*>(get_value_ptr(::deref(a_))),

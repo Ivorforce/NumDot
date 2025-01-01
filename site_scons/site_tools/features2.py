@@ -219,8 +219,11 @@ void {namespace_name}::configure() {{
 {configure_str}}}
 """.strip()
 
-	pathlib.Path(f"src/vatensor/gen/{module_name}.hpp").write_text(hpp_contents)
-	cpp_path = pathlib.Path(f"src/vatensor/gen/{module_name}.cpp")
+	gen_path = pathlib.Path(f"src/vatensor/gen/")
+	gen_path.mkdir(exist_ok=True)
+
+	pathlib.Path(gen_path / f"{module_name}.hpp").write_text(hpp_contents)
+	cpp_path = pathlib.Path(gen_path / f"{module_name}.cpp")
 	cpp_path.write_text(cpp_contents)
 
 	# TODO Shouldn't use glob for this lol

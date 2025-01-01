@@ -473,7 +473,11 @@ func _ready():
 				test_result_np: np.ndarray = eval(test.np_code)
 				test_result_nd: np.ndarray = np.load(f"gen/results/{test.name}.npy")
 				if test_result_nd.shape != test_result_np.shape:
-					print(f"Shape unequal for {test.name} (nd: {test_result_nd.shape}), np: {test_result_np.shape}")
+					print(f"Shape unequal for {test.name} (nd: {test_result_nd.shape}, np: {test_result_np.shape})")
+					failed_tests_num += 1
+					continue
+				if test_result_nd.dtype != test_result_np.dtype:
+					print(f"DType unequal for {test.name} (nd: {test_result_nd.dtype}, np: {test_result_np.dtype})")
 					failed_tests_num += 1
 					continue
 

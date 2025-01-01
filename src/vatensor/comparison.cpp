@@ -10,6 +10,7 @@
 #include "xtensor/xoperation.hpp"                        // for equal_to
 // See below
 #ifdef _WIN32
+#include "ufunc/ufunc_features.hpp"
 #include "xtensor_store.hpp"
 #include "reduce.hpp"
 #endif
@@ -68,7 +69,7 @@ bool va::array_equiv(const VData& a, const VData& b) {
 	}
 #else
 	std::shared_ptr<VArray> intermediate;
-	::equal_to(va::store::default_allocator, &intermediate, a, b);
+	va::equal(va::store::default_allocator, &intermediate, a, b);
 	return va::all(intermediate->data);
 #endif
 }

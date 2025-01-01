@@ -1,4 +1,4 @@
-/gen/benchmark.csv
+/gen/*.csv
 /gen/tests.py
 /gen/results/*
 !/gen/results/.gitkeep

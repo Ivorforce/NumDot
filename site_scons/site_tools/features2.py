@@ -117,13 +117,8 @@ def exists(env):
 def options(opts):
 	pass
 
-def generate(env, sources):
-	module_name = "base"
-	namespace_name = "va::ufunc::base"
-	ifndef_macro = f"VATENSOR_UFUNC_{module_name}_HPP".upper()
-
-	with pathlib.Path("configure/ufuncs.json").open("r") as f:
-		ufuncs_json = json.load(f)
+def make_module(env, sources, module_name: str, ufuncs_json: dict):
+	namespace_name = f"va::ufunc::{module_name}"
 
 	declare_str = ""
 	configure_str = ""
@@ -190,6 +185,7 @@ def generate(env, sources):
 			else:
 				raise ValueError
 
+	ifndef_macro = f"VATENSOR_UFUNC_{module_name}_HPP".upper()
 	hpp_contents = \
 f"""
 #ifndef {ifndef_macro}
@@ -228,3 +224,9 @@ void {namespace_name}::configure() {{
 
 	# TODO Shouldn't use glob for this lol
 	sources.append(env.Glob(str(cpp_path)))
+
+def generate(env, sources):
+	with pathlib.Path("configure/ufuncs.json").open("r") as f:
+		ufuncs_json = json.load(f)
+
+	make_module(env, sources, module_name="base", ufuncs_json=ufuncs_json)

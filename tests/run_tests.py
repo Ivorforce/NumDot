@@ -523,8 +523,8 @@ func _ready():
 				continue
 
 		df = pd.DataFrame({"numpy": results, "numdot": results_nd, "godot": results_gd})
-		df.to_csv("gen/results.csv")
-		print("gen/results.csv")
+		df.to_csv("gen/benchmark.csv")
+		print("gen/benchmark.csv")
 
 if __name__ == "__main__":
 	main()

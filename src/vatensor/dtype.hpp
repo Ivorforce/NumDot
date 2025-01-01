@@ -161,7 +161,7 @@ namespace va {
 
 	template<typename VWrite, typename VRead>
 	VWrite static_cast_scalar(VRead v) {
-		if constexpr (std::is_same_v<VWrite, bool> and xtl::is_complex<VRead>::value) {
+		if constexpr (std::is_same_v<VWrite, bool> && xtl::is_complex<VRead>::value) {
 			// This helps mostly complex dtypes to booleanize
 			return v != static_cast<decltype(v)>(0);
 		}

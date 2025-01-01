@@ -330,11 +330,13 @@ TEST_UFUNCS = [
 arg_parser = argparse.ArgumentParser()
 arg_parser.add_argument('--godot', type=as_file_path, required=True, help='Godot binary location')
 arg_parser.add_argument('--benchmark', action="store_true", help='Run benchmark tests instead of unit tests.')
+arg_parser.add_argument('--benchmark-numdot-only', action="store_true", help='Run benchmark tests instead of unit tests, but only NumDot.')
 
 def main():
 	cli_args = arg_parser.parse_args()
 	godot_location = cli_args.godot
-	is_benchmark = cli_args.benchmark
+	is_benchmark_numdot_only = cli_args.benchmark_numdot_only
+	is_benchmark = cli_args.benchmark or is_benchmark_numdot_only
 
 	test_code_np = \
 """import numpy as np
@@ -347,7 +349,7 @@ _timer = time.perf_counter
 
 	tests: list[Test] = []
 
-	normal_n = 40_000
+	normal_n = 40_000  # for benchmarks
 	added_functions = set()
 
 	# TODO No support for reductions yet
@@ -405,7 +407,7 @@ _timer = time.perf_counter
 						else Full(s, "0", dtype=dtype_in)
 					for arg in ufunc_args
 				}
-				test_n = normal_n // s
+				test_n = 20 * normal_n // s  # a bunch of iterations, but normalized by array size
 
 				current_test_number = len(tests)
 				test.np_code = make_np_call(test_function_name_untyped, test_kwargs, f"n={test_n}" if is_benchmark else f"")
@@ -507,23 +509,29 @@ func _ready():
 		print("Tests completed.")
 		print(f"Passed: {passed_tests_num}; Failed: {failed_tests_num}")
 	else:
-		results_gd = run_godot_tests(test_code_gd, "gd_code")
+		result_columns = dict()
 
-		results_nd = run_godot_tests(test_code_nd, "nd_code")
+		result_columns["numdot"] = run_godot_tests(test_code_nd, "nd_code")
 
-		print(f"Running {len(tests)} tests in python...")
-		import gen.tests
-		results = dict()
-		for test in tests:
-			try:
-				results[test.name] = eval(test.np_code)
-			except KeyboardInterrupt:
-				raise
-			except Exception:
-				continue
+		if not is_benchmark_numdot_only:
+			result_columns["godot"] = run_godot_tests(test_code_gd, "gd_code")
 
-		df = pd.DataFrame({"numpy": results, "numdot": results_nd, "godot": results_gd})
-		df.to_csv("gen/benchmark.csv")
+			def run_numpy_benchmark():
+				print(f"Running {len(tests)} tests in python...")
+				import gen.tests
+				results_np = dict()
+				for test in tests:
+					try:
+						results_np[test.name] = eval(test.np_code)
+					except KeyboardInterrupt:
+						raise
+					except Exception:
+						continue
+				return results_np
+
+			result_columns["numpy"] = run_numpy_benchmark()
+
+		pd.DataFrame(result_columns).to_csv("gen/benchmark.csv")
 		print("gen/benchmark.csv")
 
 if __name__ == "__main__":

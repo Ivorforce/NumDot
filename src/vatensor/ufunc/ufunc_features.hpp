@@ -12,8 +12,8 @@ struct NAME {\
 	template <class T1, class T2>\
 	constexpr std::decay_t<T1> operator()(T1&& arg1, T2&& arg2) const\
 	{\
-		constexpr std::decay_t<T2> bit_count = sizeof(arg1) * CHAR_BIT;\
-		return (arg2 >= bit_count) ? 0 : (std::forward<T1>(arg1) OP std::forward<T2>(arg2));\
+		constexpr std::decay_t<T2> bit_count = sizeof(arg1) * CHAR_BIT - std::is_signed<T1>::value;\
+		return (arg2 < 0 || arg2 >= bit_count) ? 0 : (std::forward<T1>(arg1) OP std::forward<T2>(arg2));\
 	}\
 };
 

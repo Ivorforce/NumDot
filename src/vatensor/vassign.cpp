@@ -55,7 +55,7 @@ void va::assign(VData& array, const VData& value) {
 			using VWrite = typename std::decay_t<decltype(carray)>::value_type;
 			using VRead = typename std::decay_t<decltype(cvalue)>::value_type;
 
-			if constexpr (std::is_same_v<VWrite, bool> and xtl::is_complex<VRead>::value) {
+			if constexpr (std::is_same_v<VWrite, bool> && xtl::is_complex<VRead>::value) {
 				// This helps mostly complex dtypes to booleanize
 				broadcasting_assign(carray, xt::cast<uint8_t>(xt::equal(cvalue, static_cast<VRead>(0))));
 			}

@@ -51,17 +51,9 @@ __pycache__
 /src/vatensor/gen
 /src/vatensor/ufunc/gen
 
-# Build
-/build/addons/numdot/**/*
-!/build/addons/numdot/*
-!/build/addons/numdot/**/
-!/build/addons/numdot/**/*.plist
-
-# Demo build
-/demo/addons/numdot/**/*
-!/demo/addons/numdot/*
-!/demo/addons/numdot/**/
-!/demo/addons/numdot/**/*.plist
+# Build folders (excluding metadata files)
+/build/addons/numdot/**
+/demo/addons/numdot/**
 
 # Custom config
 /custom.py

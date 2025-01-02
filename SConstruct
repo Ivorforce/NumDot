@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import os
+import pathlib
 import sys
 from pathlib import Path
 from SCons.Variables.BoolVariable import _text2bool
@@ -26,8 +27,8 @@ opts = Variables(customs, ARGUMENTS)
 opts.Add(
     PathVariable(
         key="install_dir",
-        help="Optional target project location the binary. The binary always builds in build/, but if this argument is supplied, the binary will be copied to the target location.",
-        default=None,
+        help="Target location for the addon. It will be appended with addons/numdot/ automatically.",
+        default="build",
     )
 )
 
@@ -98,29 +99,30 @@ numdot_tool.generate(env, godot_cpp_env, sources)
 # .universal just means "compatible with all relevant arches" so we don't need to key it.
 suffix = env['suffix'].replace(".dev", "").replace(".universal", "")
 
-# Filename of the library.
-lib_filename = f"{env.subst('$SHLIBPREFIX')}{libname}{suffix}{env.subst('$SHLIBSUFFIX')}"
-# Build releases into build/, and debug into demo/.
-lib_filepath = ""
+addon_dir = f"{env['install_dir']}/addons/{libname}/{env['platform']}"
 
 if env["platform"] == "macos" or env["platform"] == "ios":
     # The above defaults to creating a .dylib.
     # These are not supported on the iOS app store.
     # To make it consistent, we'll just use frameworks on both macOS and iOS.
-    framework_name = f"{libname}{suffix}"
-    lib_filename = framework_name
-    lib_filepath = "{}.framework/".format(framework_name)
+    framework_tool = Tool("macos-framework")
 
-    env["SHLIBPREFIX"] = ""
-    env["SHLIBSUFFIX"] = ""
+    lib_filename = f"{libname}{suffix}"
+    library_targets = framework_tool.generate(
+        f"{addon_dir}/{lib_filename}.framework",
+        env=env,
+        source=sources,
+        bundle_identifier=f"de.ivorius.{lib_filename}"
+    )
+else:
+    lib_filename = f"{env.subst('$SHLIBPREFIX')}{libname}{suffix}{env.subst('$SHLIBSUFFIX')}"
+    library_targets = env.SharedLibrary(
+        f"{addon_dir}/{lib_filename}",
+        source=sources,
+    )
 
-library = env.SharedLibrary(
-    f"build/addons/{libname}/{env['platform']}/{lib_filepath}{lib_filename}",
-    source=sources,
-)
-targets.append(library)
-
-if env.get("install_dir", None) is not None:
-    targets.append(env.Install(f"{env['install_dir']}/addons/{libname}/{env['platform']}/{lib_filepath}", library))
+targets.extend(library_targets)
+# Don't remove the file while building.
+env.Precious(library_targets)
 
 Default(targets)

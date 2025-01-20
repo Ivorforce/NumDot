@@ -10,6 +10,7 @@
 
 using namespace va;
 
+// Not a NumPy ufunc because it takes a 'decimals' parameter.
 void va::round(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
 	xoperation_single<
 		Feature::round,

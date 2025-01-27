@@ -23,7 +23,6 @@
 #include "godot_cpp/variant/string_name.hpp"       // for StringName
 #include "godot_cpp/variant/variant.hpp"           // for Variant
 #include "nd.hpp"                                    // for nd
-#include "vatensor/round.hpp"                        // for ceil, floor, nearb...
 #include "vatensor/varray.hpp"                       // for VArray, VArrayTarget
 #include "xtensor/xiterator.hpp"                   // for operator==
 #include "xtensor/xstrided_view.hpp"               // for xstrided_slice_vector

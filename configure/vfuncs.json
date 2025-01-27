@@ -3711,6 +3711,16 @@
 				"q->?"
 			],
 			"casts": []
+		},
+		{
+			"name": "round",
+			"specializations": [
+				"f->f",
+				"d->d",
+				"F->F",
+				"D->D"
+			],
+			"casts": []
 		}
 	]
 }

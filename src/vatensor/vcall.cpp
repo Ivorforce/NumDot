@@ -2,7 +2,7 @@
 
 #include "array_store.hpp"
 #include "create.hpp"
-#include "ufunc/ufunc_features.hpp"
+#include "vfunc/ufunc_features.hpp"
 
 using namespace va;
 

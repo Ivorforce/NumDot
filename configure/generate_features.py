@@ -154,6 +154,13 @@ def main():
 			"casts": [f"{dump_dtypes(input)}->{model.dumps()}" for input, model in casts.items()]
 		})
 
+	# Not a ufunc because (in NumPy), it accepts a 'decimals' int parameter.
+	ufuncs.append({
+		"name": "round",
+		"specializations": ["f->f", "d->d", "F->F", "D->D"],
+		"casts": []
+	})
+
 	with (pathlib.Path(__file__).parent / "vfuncs.json").open("w") as f:
 		json.dump({
 			"vfuncs": ufuncs,

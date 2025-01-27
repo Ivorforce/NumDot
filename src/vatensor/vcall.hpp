@@ -4,7 +4,7 @@
 #include "create.hpp"
 #include "varray.hpp"
 #include "vassign.hpp"
-#include "ufunc/ufunc.hpp"
+#include "vfunc/ufunc.hpp"
 
 namespace va {
 	namespace _call {

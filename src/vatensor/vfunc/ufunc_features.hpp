@@ -26,6 +26,14 @@ namespace va::op {
 		constexpr std::decay_t<T1> operator()(T1&& arg1) const { return ~arg1; }
 		constexpr bool operator()(bool arg1) const { return !arg1; }
 	};
+
+	struct round_fun {
+		template <class T1>
+		constexpr std::decay_t<T1> operator()(T1&& arg1) const { return ::round(std::forward<T1>(arg1)); }
+
+		template <class T1>
+		constexpr std::decay_t<std::complex<T1>> operator()(const std::complex<T1>& arg1) const { return std::complex(::round(arg1.real()), ::round(arg1.imag())); }
+	};
 }
 
 UNARY_UFUNC(negative, -va::promote::to_num(a))
@@ -73,7 +81,7 @@ UNARY_UFUNC(atanh, xt::atanh(va::promote::to_num(a)))
 UNARY_UFUNC(ceil, xt::ceil(va::promote::to_num(a)))
 UNARY_UFUNC(floor, xt::floor(va::promote::to_num(a)))
 UNARY_UFUNC(trunc, xt::trunc(va::promote::to_num(a)))
-// UNARY_UFUNC(round, xt::round(va::promote::to_num(a)))
+UNARY_UFUNC(round, xt::detail::make_xfunction<va::op::round_fun>(a))
 // Actually uses nearbyint because rint can throw, which is undesirable in our case, and unlike numpy's behavior.
 UNARY_UFUNC(rint, xt::nearbyint(va::promote::to_num(a)))
 

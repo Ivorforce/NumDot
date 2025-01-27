@@ -3,7 +3,7 @@
 
 #include "varray.hpp"
 #include "rearrange.hpp"
-#include "ufunc/ufunc_features.hpp"
+#include "vfunc/ufunc_features.hpp"
 
 namespace va {
 	static void angle(VStoreAllocator& allocator, const VArrayTarget& target, const std::shared_ptr<VArray>& array) {

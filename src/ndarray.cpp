@@ -9,7 +9,7 @@
 #include <vatensor/vmath.hpp>                        // for abs, add, clip
 #include <vatensor/xtensor_store.hpp>                        // for abs, add, clip
 #include <vatensor/vcarray.hpp>                        // fill_c_array_flat
-#include "vatensor/ufunc/ufunc_features.hpp"
+#include "vatensor/vfunc/ufunc_features.hpp"
 #include <algorithm>                               // for copy
 #include <cstddef>                                 // for size_t
 #include <ndutil.hpp>
@@ -31,7 +31,6 @@
 #include "godot_cpp/variant/string_name.hpp"       // for StringName
 #include "godot_cpp/variant/variant.hpp"           // for Variant
 #include "nd.hpp"                                    // for nd
-#include "vatensor/round.hpp"                        // for ceil, floor, nearb...
 #include "vatensor/varray.hpp"                       // for VArray, VArrayTarget
 #include "xtensor/xiterator.hpp"                   // for operator==
 #include "xtensor/xstrided_view.hpp"               // for xstrided_slice_vector

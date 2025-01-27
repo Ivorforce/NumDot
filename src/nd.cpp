@@ -3,11 +3,10 @@
 #include <vatensor/comparison.hpp>            // for equal_to, greater, greate...
 #include <vatensor/linalg.hpp>                // for reduce_dot, dot, matmul
 #include <vatensor/reduce.hpp>                // for all, any, max, mean, median
-#include <vatensor/round.hpp>                 // for ceil, floor, nearbyint
 #include <vatensor/trigonometry.hpp>          // for acos, acosh, asin, asinh
 #include <vatensor/vassign.hpp>               // for assign
 #include <vatensor/vmath.hpp>                 // for abs, add, clip, deg2rad
-#include "vatensor/ufunc/ufunc_features.hpp"
+#include "vatensor/vfunc/ufunc_features.hpp"
 #include <cmath>                            // for double_t, isinf
 #include <optional>                         // for optional
 #include <stdexcept>                        // for runtime_error

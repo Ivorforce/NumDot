@@ -122,8 +122,8 @@ def make_module(env, sources, module_name: str, ufuncs_json: dict):
 
 	declare_str = ""
 	configure_str = ""
-	for ufunc_obj in ufuncs_json["ufuncs"]:
-		ufunc_name = ufunc_obj["ufunc"]
+	for ufunc_obj in ufuncs_json["vfuncs"]:
+		ufunc_name = ufunc_obj["name"]
 		specializations = ufunc_obj["specializations"]
 		nin = specializations[0].index("->")
 		is_commutative = ufunc_name in commutative_functions
@@ -226,7 +226,7 @@ void {namespace_name}::configure() {{
 	sources.append(env.Glob(str(cpp_path)))
 
 def generate(env, sources):
-	with pathlib.Path("configure/ufuncs.json").open("r") as f:
+	with pathlib.Path("configure/vfuncs.json").open("r") as f:
 		ufuncs_json = json.load(f)
 
 	make_module(env, sources, module_name="base", ufuncs_json=ufuncs_json)

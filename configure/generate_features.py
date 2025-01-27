@@ -127,7 +127,9 @@ def main():
 		casts = dict()
 		specializations = dict()
 		for type in ufunc.types:
-			specialization = UFuncSpecialization.parse(type)
+			# FIXME Not sure why but at some point, NumPy started using long double instead of double for many normal operations (probably v2).
+			# We do not support long double yet.
+			specialization = UFuncSpecialization.parse(type.replace("g", "d").replace("G", "D"))
 			if any(dtype not in supported_dtypes for dtype in [*specialization.input, specialization.output]):
 				continue  # Skip unsupported dtype
 			specializations[specialization.input] = specialization
@@ -145,14 +147,14 @@ def main():
 						print(f"Skipping cast {ufunc_name}({l.name}, {r.name}); not found.")
 
 		ufuncs.append({
-			"ufunc": ufunc_name,
+			"name": ufunc_name,
 			"specializations": [specialization.dumps() for specialization in specializations.values()],
 			"casts": [f"{dump_dtypes(input)}->{model.dumps()}" for input, model in casts.items()]
 		})
 
-	with pathlib.Path("ufuncs.json").open("w") as f:
+	with (pathlib.Path(__file__).parent / "vfuncs.json").open("w") as f:
 		json.dump({
-			"ufuncs": ufuncs,
+			"vfuncs": ufuncs,
 		}, f, indent='\t')
 
 if __name__ == "__main__":

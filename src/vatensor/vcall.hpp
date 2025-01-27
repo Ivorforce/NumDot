@@ -44,7 +44,7 @@ namespace va {
 	VData& evaluate_target(VStoreAllocator& allocator, const VArrayTarget& target, DType dtype, const shape_type& result_shape, std::shared_ptr<VArray>& temp);
 
 	template<typename... Args>
-	void call_vfunc_unary(VStoreAllocator& allocator, const ufunc::tables::UFuncTableUnary& table, const VArrayTarget& target, const VData& a, Args&&... args) {
+	void call_vfunc_unary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableUnary& table, const VArrayTarget& target, const VData& a, Args&&... args) {
 		const DType a_type = va::dtype(a);
 
 		const auto& ufunc = table[a_type];
@@ -76,7 +76,7 @@ namespace va {
 	}
 
 	template<typename A, typename B, typename... Args>
-	void call_vfunc_binary(VStoreAllocator& allocator, const ufunc::tables::UFuncTableBinary& table, const VArrayTarget& target, const shape_type& result_shape, const A& a, const B& b, Args&&... args) {
+	void call_vfunc_binary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableBinary& table, const VArrayTarget& target, const shape_type& result_shape, const A& a, const B& b, Args&&... args) {
 		const DType a_type = va::dtype(a);
 		const DType b_type = va::dtype(b);
 
@@ -135,11 +135,11 @@ namespace va {
 		}
 	}
 
-	void call_ufunc_unary(VStoreAllocator& allocator, const ufunc::tables::UFuncTableUnary& table, const VArrayTarget& target, const VData& a);
-	void call_ufunc_binary(VStoreAllocator& allocator, const ufunc::tables::UFuncTableBinary& table, const VArrayTarget& target, const VData& a, const VData& b);
+	void call_ufunc_unary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableUnary& table, const VArrayTarget& target, const VData& a);
+	void call_ufunc_binary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableBinary& table, const VArrayTarget& target, const VData& a, const VData& b);
 
-	void call_ufunc_binary(VStoreAllocator& allocator, const ufunc::tables::UFuncTableBinary& table, const VArrayTarget& target, const VScalar& a, const VData& b);
-	void call_ufunc_binary(VStoreAllocator& allocator, const ufunc::tables::UFuncTableBinary& table, const VArrayTarget& target, const VData& a, const VScalar& b);
+	void call_ufunc_binary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableBinary& table, const VArrayTarget& target, const VScalar& a, const VData& b);
+	void call_ufunc_binary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableBinary& table, const VArrayTarget& target, const VData& a, const VScalar& b);
 }
 
 #endif //VCALL_HPP

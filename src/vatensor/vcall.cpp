@@ -26,16 +26,16 @@ VData& va::evaluate_target(VStoreAllocator& allocator, const VArrayTarget& targe
 	}
 }
 
-void va::call_ufunc_unary(VStoreAllocator& allocator, const ufunc::tables::UFuncTableUnary& table, const VArrayTarget& target, const VData& a) {
+void va::call_ufunc_unary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableUnary& table, const VArrayTarget& target, const VData& a) {
 	call_vfunc_unary(allocator, table, target, a);
 }
 
 template <typename A, typename B>
-void call_ufunc_binary(VStoreAllocator& allocator, const ufunc::tables::UFuncTableBinary& table, const VArrayTarget& target, const shape_type& result_shape, const A& a, const B& b) {
+void call_ufunc_binary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableBinary& table, const VArrayTarget& target, const shape_type& result_shape, const A& a, const B& b) {
 	call_vfunc_binary(allocator, table, target, result_shape, a, b);
 }
 
-void va::call_ufunc_binary(VStoreAllocator& allocator, const ufunc::tables::UFuncTableBinary& table, const VArrayTarget& target, const VData& a, const VData& b) {
+void va::call_ufunc_binary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableBinary& table, const VArrayTarget& target, const VData& a, const VData& b) {
 	const auto& a_shape = va::shape(a);
 	const auto& b_shape = va::shape(b);
 
@@ -47,10 +47,10 @@ void va::call_ufunc_binary(VStoreAllocator& allocator, const ufunc::tables::UFun
 	::call_ufunc_binary(allocator, table, target, result_shape, a, b);
 }
 
-void va::call_ufunc_binary(VStoreAllocator& allocator, const ufunc::tables::UFuncTableBinary& table, const VArrayTarget& target, const VScalar& a, const VData& b) {
+void va::call_ufunc_binary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableBinary& table, const VArrayTarget& target, const VScalar& a, const VData& b) {
 	::call_ufunc_binary(allocator, table, target, va::shape(b), a, b);
 }
 
-void va::call_ufunc_binary(VStoreAllocator& allocator, const ufunc::tables::UFuncTableBinary& table, const VArrayTarget& target, const VData& a, const VScalar& b) {
+void va::call_ufunc_binary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableBinary& table, const VArrayTarget& target, const VData& a, const VScalar& b) {
 	::call_ufunc_binary(allocator, table, target, va::shape(a), a, b);
 }

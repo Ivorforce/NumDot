@@ -45,7 +45,7 @@ namespace va::op {
 	};
 }
 
-namespace va::ufunc::impl {
+namespace va::vfunc::impl {
 	IMPLEMENT_UNARY_UFUNC(negative, -va::promote::to_num(a))
 	IMPLEMENT_UNARY_UFUNC(sign, xt::sign(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_UFUNC(abs, xt::abs(va::promote::to_num(a)))
@@ -93,7 +93,7 @@ namespace va::ufunc::impl {
 	IMPLEMENT_BINARY_UFUNC(logical_or, va::promote::to_bool(a) || va::promote::to_bool(b))
 	IMPLEMENT_BINARY_UFUNC(logical_xor, xt::detail::make_xfunction<xt::detail::not_equal_to>(va::promote::to_bool(a), va::promote::to_bool(b)))
 
-	IMPLEMENT_BINARY_UFUNC(bitwise_not, xt::detail::make_xfunction<va::op::bitwise_not_boolsafe>(a))
+	IMPLEMENT_UNARY_UFUNC(bitwise_not, xt::detail::make_xfunction<va::op::bitwise_not_boolsafe>(a))
 	IMPLEMENT_BINARY_UFUNC(bitwise_and, a & b)
 	IMPLEMENT_BINARY_UFUNC(bitwise_or, a | b)
 	IMPLEMENT_BINARY_UFUNC(bitwise_xor, a ^ b)
@@ -110,6 +110,6 @@ namespace va::ufunc::impl {
 	IMPLEMENT_UNARY_UFUNC(isnan, xt::isnan(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_UFUNC(isfinite, xt::isfinite(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_UFUNC(isinf, xt::isinf(va::promote::to_num(a)))
-} // namespace VA_UFUNC_MODULE
+} // namespace va::vfunc::impl
 
 #endif //VFUNCS_HPP

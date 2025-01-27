@@ -118,7 +118,7 @@ def options(opts):
 	pass
 
 def make_module(env, sources, module_name: str, ufuncs_json: dict):
-	namespace_name = f"va::ufunc::{module_name}"
+	namespace_name = f"va::vfunc::{module_name}"
 
 	declare_str = ""
 	configure_str = ""
@@ -202,14 +202,13 @@ namespace {namespace_name} {{
 f"""
 #include "{module_name}.hpp"
 
-#define VA_UFUNC_MODULE {namespace_name}
 #include "vatensor/vfunc/ufunc_features.hpp"
 #include "vatensor/vfunc/vfuncs.hpp"
 
 #include "vatensor/vfunc/arch_util.hpp"
 #include "xtensor/xoperation.hpp"
 
-namespace VA_UFUNC_MODULE {{
+namespace {namespace_name} {{
 {declare_str}}}
 
 void {namespace_name}::configure() {{

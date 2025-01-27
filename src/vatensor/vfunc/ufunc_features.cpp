@@ -12,7 +12,7 @@ UFuncTableBinary UFUNC_NAME; UFuncTableBinary UFUNC_NAME##_scalarRight; UFuncTab
 #define BINARY_TABLES_COMMUTATIVE(UFUNC_NAME)\
 UFuncTableBinary UFUNC_NAME; UFuncTableBinary UFUNC_NAME##_scalarRight;
 
-namespace va::ufunc::tables {
+namespace va::vfunc::tables {
 	UNARY_TABLES(negative)
 	UNARY_TABLES(sign)
 	UNARY_TABLES(abs)

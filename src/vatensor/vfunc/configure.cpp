@@ -3,23 +3,23 @@
 #include "vatensor/gen/base.hpp"
 #include "ufunc_features.hpp"
 
-void va::ufunc::configure() {
-	va::ufunc::base::configure();
+void va::vfunc::configure() {
+	va::vfunc::base::configure();
 	// TODO
 	// if (true) {
-	// 	va::ufunc::avx2::configure();
+	// 	va::vfunc::avx2::configure();
 	// }
 	// if (true) {
-	// 	va::ufunc::avx512::configure();
+	// 	va::vfunc::avx512::configure();
 	// }
 	// if (true) {
-	// 	va::ufunc::sve::configure();
+	// 	va::vfunc::sve::configure();
 	// }
 }
 
 // Let us configure ourselves.
 class Initializer { public: Initializer() {
-	va::ufunc::configure();
+	va::vfunc::configure();
 }};
 
 Initializer initializer;

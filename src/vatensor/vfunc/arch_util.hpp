@@ -2,7 +2,9 @@
 #define VATENSOR_ARCH_UTIL_HPP
 
 #define DECLARE_NATIVE_UNARY(UFUNC_NAME, RETURN_TYPE, IN0)\
-template void UFUNC_NAME<compute_case<RETURN_TYPE*>, compute_case<IN0*>>(compute_case<RETURN_TYPE*>& ret, const compute_case<IN0*>& a)
+void UFUNC_NAME(compute_case<RETURN_TYPE*>& ret, const compute_case<IN0*>& a) {\
+	UFUNC_NAME(ret, a);\
+}
 
 #define ADD_NATIVE_UNARY(UFUNC_NAME, RETURN_TYPE, IN0)\
 tables::UFUNC_NAME[va::dtype_of_type<IN0>()] = UFunc<1> {\
@@ -16,13 +18,23 @@ tables::UFUNC_NAME[va::dtype_of_type<IN0>()] = tables::UFUNC_NAME[va::dtype_of_t
 
 
 #define DECLARE_NATIVE_BINARY(UFUNC_NAME, RETURN_TYPE, IN0, IN1)\
-template void UFUNC_NAME<compute_case<RETURN_TYPE*>, compute_case<IN0*>, compute_case<IN1*>>(compute_case<RETURN_TYPE*>& ret, const compute_case<IN0*>& a, const compute_case<IN1*>& b);\
-template void UFUNC_NAME<compute_case<RETURN_TYPE*>, IN0, compute_case<IN1*>>(compute_case<RETURN_TYPE*>& ret, const IN0& a, const compute_case<IN1*>& b);\
-template void UFUNC_NAME<compute_case<RETURN_TYPE*>, compute_case<IN0*>, IN1>(compute_case<RETURN_TYPE*>& ret, const compute_case<IN0*>& a, const IN1& b)\
+void UFUNC_NAME(compute_case<RETURN_TYPE*>& ret, const compute_case<IN0*>& a, const compute_case<IN1*>& b) {\
+	UFUNC_NAME(ret, a, b);\
+}\
+void UFUNC_NAME(compute_case<RETURN_TYPE*>& ret, const IN0& a, const compute_case<IN1*>& b) {\
+	UFUNC_NAME(ret, a, b);\
+}\
+void UFUNC_NAME(compute_case<RETURN_TYPE*>& ret, const compute_case<IN0*>& a, const IN1& b) {\
+	UFUNC_NAME(ret, a, b);\
+}\
 
 #define DECLARE_NATIVE_BINARY_COMMUTATIVE(UFUNC_NAME, RETURN_TYPE, IN0, IN1)\
-template void UFUNC_NAME<compute_case<RETURN_TYPE*>, compute_case<IN0*>, compute_case<IN1*>>(compute_case<RETURN_TYPE*>& ret, const compute_case<IN0*>& a, const compute_case<IN1*>& b);\
-template void UFUNC_NAME<compute_case<RETURN_TYPE*>, compute_case<IN0*>, IN1>(compute_case<RETURN_TYPE*>& ret, const compute_case<IN0*>& a, const IN1& b)\
+void UFUNC_NAME(compute_case<RETURN_TYPE*>& ret, const compute_case<IN0*>& a, const compute_case<IN1*>& b) {\
+	UFUNC_NAME(ret, a, b);\
+}\
+void UFUNC_NAME(compute_case<RETURN_TYPE*>& ret, const compute_case<IN0*>& a, const IN1& b) {\
+	UFUNC_NAME(ret, a, b);\
+}
 
 #define ADD_NATIVE_BINARY(UFUNC_NAME, RETURN_TYPE, IN0, IN1)\
 tables::UFUNC_NAME[va::dtype_of_type<IN0>()][va::dtype_of_type<IN1>()] = UFunc<2> {\

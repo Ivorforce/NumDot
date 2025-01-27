@@ -204,6 +204,7 @@ f"""
 
 #define VA_UFUNC_MODULE {namespace_name}
 #include "vatensor/vfunc/ufunc_features.hpp"
+#include "vatensor/vfunc/vfuncs.hpp"
 
 #include "vatensor/vfunc/arch_util.hpp"
 #include "xtensor/xoperation.hpp"

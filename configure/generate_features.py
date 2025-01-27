@@ -3,8 +3,10 @@ import json
 import pathlib
 
 import numpy as np
+from typing_extensions import OrderedDict
 
-supported_dtypes: set[np.dtype] = {
+# Should be set but must be ordered.
+supported_dtypes: list[np.dtype] = [
 	np.dtype(np.bool),
 	np.dtype(np.float32),
 	np.dtype(np.float64),
@@ -18,7 +20,7 @@ supported_dtypes: set[np.dtype] = {
 	np.dtype(np.uint16),
 	np.dtype(np.uint32),
 	np.dtype(np.uint64),
-}
+]
 
 all_features = [
 	"negative",
@@ -124,9 +126,9 @@ def main():
 		if not isinstance(ufunc, np.ufunc):
 			raise ValueError(f"Not a ufunc: {ufunc_name}")
 
-		casts = dict()
-		specializations = dict()
-		for type in ufunc.types:
+		casts = OrderedDict()
+		specializations = OrderedDict()
+		for type in sorted(ufunc.types):
 			# FIXME Not sure why but at some point, NumPy started using long double instead of double for many normal operations (probably v2).
 			# We do not support long double yet.
 			specialization = UFuncSpecialization.parse(type.replace("g", "d").replace("G", "D"))

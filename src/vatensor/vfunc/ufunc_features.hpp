@@ -4,8 +4,6 @@
 #include "ufunc.hpp"
 #include "util.hpp"
 #include "vatensor/vcall.hpp"
-#include "vatensor/vpromote.hpp"
-#include "xtensor/xoperation.hpp"
 
 namespace va {
 	DEFINE_UFUNC_CALLER_UNARY(negative)

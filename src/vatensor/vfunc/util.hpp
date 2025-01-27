@@ -3,12 +3,6 @@
 
 #include <vatensor/vassign.hpp>
 
-#define IMPLEMENT_UNARY_UFUNC(UFUNC_NAME, OP)\
-template <typename R, typename A>\
-inline void UFUNC_NAME(R& ret, const A& a) {\
-	va::broadcasting_assign_typesafe(ret, OP);\
-}
-
 #define UNARY_TABLES(UFUNC_NAME)\
 extern UFuncTableUnary UFUNC_NAME;
 
@@ -16,12 +10,6 @@ extern UFuncTableUnary UFUNC_NAME;
 namespace ufunc::tables { UNARY_TABLES(UFUNC_NAME) }\
 inline void UFUNC_NAME(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a) {\
 	call_ufunc_unary(allocator, ufunc::tables::UFUNC_NAME, target, a);\
-}
-
-#define IMPLEMENT_BINARY_UFUNC(UFUNC_NAME, OP)\
-template <typename R, typename A, typename B>\
-inline void UFUNC_NAME(R& ret, const A& a, const B& b) {\
-	va::broadcasting_assign_typesafe(ret, OP);\
 }
 
 #define BINARY_TABLES(UFUNC_NAME)\

@@ -1,6 +1,21 @@
 #ifndef VFUNCS_HPP
 #define VFUNCS_HPP
 
+#include "vatensor/vpromote.hpp"
+#include "xtensor/xoperation.hpp"
+
+#define IMPLEMENT_BINARY_UFUNC(UFUNC_NAME, OP)\
+template <typename R, typename A, typename B>\
+inline void UFUNC_NAME(R& ret, const A& a, const B& b) {\
+	va::broadcasting_assign_typesafe(ret, OP);\
+}
+
+#define IMPLEMENT_UNARY_UFUNC(UFUNC_NAME, OP)\
+template <typename R, typename A>\
+inline void UFUNC_NAME(R& ret, const A& a) {\
+	va::broadcasting_assign_typesafe(ret, OP);\
+}
+
 #define BIT_SHIFT_SAFE(NAME, OP)\
 struct NAME {\
 	template <class T1, class T2>\

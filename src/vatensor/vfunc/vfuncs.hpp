@@ -43,6 +43,15 @@ namespace va::op {
 		template <class T1>
 		constexpr std::decay_t<std::complex<T1>> operator()(const std::complex<T1>& arg1) const { return std::complex(::round(arg1.real()), ::round(arg1.imag())); }
 	};
+
+	struct conj_fun {
+		// TODO Maybe these cases should just use identity (in the generator script).
+		template <class T1>
+		constexpr std::decay_t<T1> operator()(T1&& arg1) const { return std::forward<T1>(arg1); }
+
+		template <class T1>
+		constexpr std::decay_t<std::complex<T1>> operator()(const std::complex<T1>& arg1) const { return std::conj(arg1); }
+	};
 }
 
 namespace va::vfunc::impl {
@@ -55,6 +64,8 @@ namespace va::vfunc::impl {
 	IMPLEMENT_UNARY_UFUNC(log, xt::log(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_UFUNC(rad2deg, xt::rad2deg(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_UFUNC(deg2rad, xt::deg2rad(va::promote::to_num(a)))
+
+	IMPLEMENT_UNARY_UFUNC(conjugate, xt::detail::make_xfunction<va::op::conj_fun>(va::promote::to_num(a)))
 
 	// TODO calling xt::add directly etc. is broken because of the DEFINE_COMPLEX_OVERLOAD
 	IMPLEMENT_BINARY_UFUNC(add, xt::detail::make_xfunction<xt::detail::plus>(va::promote::to_num(a), va::promote::to_num(b)))

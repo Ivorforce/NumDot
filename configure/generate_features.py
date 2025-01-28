@@ -33,6 +33,8 @@ all_features = [
 	"rad2deg",
 	"deg2rad",
 
+	"conjugate",
+
 	"add",
 	"subtract",
 	"multiply",

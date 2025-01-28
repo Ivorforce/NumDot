@@ -40,37 +40,6 @@ void va::clip(VStoreAllocator& allocator, const VArrayTarget& target, const VDat
 	::clip(allocator, target, a, lo, hi);
 }
 
-void va::conjugate(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array) {
-	if (!std::visit([](auto x) {
-		using VTValue = typename std::decay_t<decltype(x)>::value_type;
-		return xtl::is_complex<VTValue>::value;
-	}, array)) {
-		// It's not even a complex value; let's just assign in-place.
-		if (va::dtype(array) == va::Bool) {
-			// Need to make sure bools get int-ified.
-			va::assign_cast(allocator, target, array, va::Int64);
-		}
-		else {
-			va::assign(allocator, target, array);
-		}
-
-		return;
-	}
-
-	// This is technically just b = a; b[imag] = -a[imag]
-	// But it may be slower to do it in 2 steps.
-	// TODO We should find out how much space this saves, and if alloc - assign - assign_sub isn't actually faster.
-	xoperation_inplace<
-		Feature::negative,
-		promote::reject_non_complex<promote::common_in_same_out>
-	>(
-		va::XFunction<xt::math::conj_fun> {},
-		allocator,
-		target,
-		array
-	);
-}
-
 void va::a0xb1_minus_a1xb0(va::VStoreAllocator& allocator, const va::VArrayTarget& target, const va::VData& a, const va::VData& b, const std::ptrdiff_t i0, const std::ptrdiff_t i1) {
 	va::xoperation_inplace<
 		va::Feature::cross,

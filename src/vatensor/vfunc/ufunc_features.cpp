@@ -23,6 +23,8 @@ namespace va::vfunc::tables {
 	UNARY_TABLES(rad2deg)
 	UNARY_TABLES(deg2rad)
 
+	UNARY_TABLES(conjugate)
+
 	BINARY_TABLES_COMMUTATIVE(add)
 	BINARY_TABLES(subtract)
 	BINARY_TABLES_COMMUTATIVE(multiply)

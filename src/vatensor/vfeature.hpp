@@ -29,8 +29,6 @@ namespace va {
 		any,
 		reduce_dot,
 
-		round,
-
 		negative,
 
 		clip,
@@ -77,8 +75,6 @@ namespace va {
 			FEATURE_NAME_CASE(all)
 			FEATURE_NAME_CASE(any)
 			FEATURE_NAME_CASE(reduce_dot)
-
-			FEATURE_NAME_CASE(round)
 
 			FEATURE_NAME_CASE(negative)
 

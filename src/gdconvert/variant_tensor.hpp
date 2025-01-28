@@ -65,8 +65,8 @@ namespace numdot {
 
 	template <>
 	struct VariantAsArray<godot::Vector4> {
-		static const auto& get(const godot::Vector4& v) { return v.components; }
-		static auto& get(godot::Vector4& v) { return v.components; }
+		static const auto& get(const godot::Vector4& v) { return v.coord; }
+		static auto& get(godot::Vector4& v) { return v.coord; }
 	};
 
 	template <>

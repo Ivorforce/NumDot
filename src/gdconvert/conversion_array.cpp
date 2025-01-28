@@ -610,7 +610,7 @@ std::shared_ptr<va::VArray> variant_as_array(const Variant& array) {
 		case Variant::PACKED_VECTOR4_ARRAY: {
 			auto packed = PackedVector4Array(array);
 			return numdot::varray_from_packed(
-			va::util::adapt_c_array(const_cast<real_t*>(&packed.ptr()[0].components[0]), { static_cast<std::size_t>(packed.size()), 4 }),
+			va::util::adapt_c_array(const_cast<real_t*>(&packed.ptr()[0].coord[0]), { static_cast<std::size_t>(packed.size()), 4 }),
 				std::move(packed)
 			);
 		}

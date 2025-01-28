@@ -36,11 +36,10 @@ jobs:
         with:
           submodules: true
       - name: Setup godot-cpp
-        uses: Ivorforce/godot-cpp-template/.github/actions/setup-godot-cpp@action-setup-separate
+        uses: ./godot-cpp/.github/actions/setup-godot-cpp
         with:
           platform: ${{ matrix.platform }}
           em-version: '3.1.55'  # FIXME Doesn't compile on the newest, xtensor has problems
-          em-cache-directory: emsdk-cache.${{ matrix.float_precision }}.${{ matrix.build_target_type }}
       - name: Cache .scons_cache
         uses: actions/cache@v4
         with:

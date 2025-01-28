@@ -67,6 +67,11 @@ if ARGUMENTS.get("optimize", None) is None and is_release:
         # For web, optimize binary size, can shrink by ~30%.
         ARGUMENTS["optimize"] = "size"
 
+if ARGUMENTS.get("lto", None) is None and is_release:
+    # Link-time optimization further lets the compiler optimize, reduce binary size (~.5mb) or inline functions (possibly improving speeds).
+    # lto=auto disables LTO by default in some configurations. For us, it brings substantial improvements for configurations.
+    ARGUMENTS["lto"] = "full"
+
 # Load godot-cpp
 godot_cpp_env = SConscript("godot-cpp/SConstruct", {"customs": customs})
 
@@ -78,17 +83,6 @@ for opt in opts.options:
 is_msvc = "is_msvc" in env and env["is_msvc"]
 
 # ============================= Actual source and lib setup =============================
-
-# TODO Can replace when https://github.com/godotengine/godot-cpp/pull/1601 is merged.
-if is_release:
-    # Enable link-time optimization.
-    # This further lets the compiler optimize, reduce binary size (~.5mb) or inline functions (possibly improving speeds).
-    if is_msvc:
-        env.Append(CCFLAGS=["/GL"])
-        env.Append(LINKFLAGS=["/LTCG"])
-    else:
-        env.Append(CCFLAGS=["-flto"])
-        env.Append(LINKFLAGS=["-flto"])
 
 sources = []
 targets = []

@@ -3754,6 +3754,28 @@
 				"double",
 				"bool"
 			]
+		},
+		{
+			"name": "sum",
+			"specializations": [
+				"?->?",
+				"B->B",
+				"D->D",
+				"F->F",
+				"H->H",
+				"I->I",
+				"Q->Q",
+				"b->b",
+				"d->d",
+				"f->f",
+				"h->h",
+				"i->i",
+				"q->q"
+			],
+			"casts": [],
+			"vargs": [
+				"const va::axes_type*"
+			]
 		}
 	]
 }

@@ -6,11 +6,12 @@
 #include "create.hpp"
 #include <xtensor/xmasked_view.hpp>
 #include <xtensor/xindex_view.hpp>
-
 #include "reduce.hpp"
+#include "vcarray.hpp"
 #include "vcompute.hpp"
 #include "vpromote.hpp"
 #include "xscalar_store.hpp"
+#include "vfunc/ufunc_features.hpp"
 
 using namespace va;
 
@@ -170,7 +171,7 @@ std::shared_ptr<VArray> va::get_at_mask(VStoreAllocator& allocator, const VData&
 	if (va::dtype(mask) != va::DType::Bool) throw std::runtime_error("mask must be boolean dtype");
 
 	auto& mask_ = std::get<compute_case<bool*>>(mask);
-	const auto array_size = static_cast_scalar<size_type>(va::sum(mask));
+	const size_t array_size = xt::sum(mask_, xt::evaluation_strategy::immediate)();
 
 	auto result_varray = va::empty(allocator, va::dtype(data), shape_type { array_size });
 	auto& result_data = result_varray->data;
@@ -204,7 +205,7 @@ void va::set_at_mask(VData& varray, VData& mask, VData& value) {
 	if (va::dtype(mask) != va::DType::Bool) throw std::runtime_error("mask must be boolean dtype");
 
 	auto& mask_ = std::get<compute_case<bool*>>(mask);
-	const auto array_size = static_cast_scalar<size_type>(va::sum(mask));
+	const size_t array_size = xt::sum(mask_, xt::evaluation_strategy::immediate)();
 	const auto& array_shape = va::shape(varray);
 
 	if (array_shape != mask_.shape()) {

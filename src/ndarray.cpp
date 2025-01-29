@@ -755,6 +755,24 @@ inline void reduction_inplace(Visitor&& visitor, VisitorNoaxes&& visitor_noaxes,
 	}
 }
 
+template<typename Visitor, typename... Args>
+inline void reduction_inplace_new(Visitor&& visitor, va::VArray& target, const Variant& axes, const Args&... args) {
+	try {
+		target.prepare_write();
+
+		if (axes.get_type() == Variant::NIL) {
+			std::forward<Visitor>(visitor)(static_cast<va::VArrayTarget>(&target.data), nullptr, variant_as_array(args)...);
+			return;
+		}
+
+		const auto axes_ = variant_to_axes(axes);
+		std::forward<Visitor>(visitor)(static_cast<va::VArrayTarget>(&target.data), &axes_, variant_as_array(args)...);
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_MSG(error.what());
+	}
+}
+
 #define VARRAY_MAP1(func, varray1) \
 	map_variants_as_arrays_inplace([this](const va::VArrayTarget& target, const std::shared_ptr<va::VArray>& varray) {\
         va::func(va::store::default_allocator, target, varray->data);\
@@ -778,6 +796,12 @@ inline void reduction_inplace(Visitor&& visitor, VisitorNoaxes&& visitor_noaxes,
 		va::func(va::store::default_allocator, target, array->data, axes);\
 	}, [this](const std::shared_ptr<va::VArray>& array) {\
 		return va::func(array->data);\
+	}, *this->array, (axes1), (varray1));\
+	return {this}
+
+#define REDUCTION1_NEW(func, varray1, axes1) \
+	reduction_inplace_new([this](const va::VArrayTarget& target, const va::axes_type* axes, const std::shared_ptr<va::VArray>& array) {\
+		va::func(va::store::default_allocator, target, array->data, axes);\
 	}, *this->array, (axes1), (varray1));\
 	return {this}
 
@@ -931,7 +955,7 @@ Ref<NDArray> NDArray::assign_atanh(const Variant& a) {
 }
 
 Ref<NDArray> NDArray::assign_sum(const Variant& a, const Variant& axes) {
-	REDUCTION1(sum, a, axes);
+	REDUCTION1_NEW(sum, a, axes);
 }
 
 Ref<NDArray> NDArray::assign_prod(const Variant& a, const Variant& axes) {

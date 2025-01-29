@@ -52,6 +52,17 @@ namespace va::util {
 			shape.size() < 2 ? xt::layout_type::any : xt::layout_type::row_major
 		);
 	}
+
+	template<typename T>
+	auto adapt_scalar(T*&& ptr) {
+		return xt::adapt<xt::layout_type::dynamic, T*, xt::no_ownership, va::shape_type>(
+			std::move(ptr),
+			1,
+			xt::no_ownership(),
+			va::shape_type(),
+			xt::layout_type::any
+		);
+	}
 }
 
 #endif //VCARRAY_HPP

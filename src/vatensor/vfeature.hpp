@@ -12,7 +12,6 @@ namespace va {
 		array_equal,
 		all_close,
 
-		sum,
 		prod,
 		mean,
 		median,
@@ -56,7 +55,6 @@ namespace va {
 			FEATURE_NAME_CASE(array_equal)
 			FEATURE_NAME_CASE(all_close)
 
-			FEATURE_NAME_CASE(sum)
 			FEATURE_NAME_CASE(prod)
 			FEATURE_NAME_CASE(mean)
 			FEATURE_NAME_CASE(median)

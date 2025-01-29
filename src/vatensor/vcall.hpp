@@ -44,14 +44,14 @@ namespace va {
 	VData& evaluate_target(VStoreAllocator& allocator, const VArrayTarget& target, DType dtype, const shape_type& result_shape, std::shared_ptr<VArray>& temp);
 
 	template<typename... Args>
-	void call_vfunc_unary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableUnary& table, const VArrayTarget& target, const VData& a, Args&&... args) {
+	void _call_vfunc_unary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableUnary& table, const VArrayTarget& target, const shape_type& result_shape, const VData& a, Args&&... args) {
 		const DType a_type = va::dtype(a);
 
 		const auto& ufunc = table[a_type];
 		if (ufunc.function_ptr == nullptr) throw std::runtime_error("Unsupported dtype for ufunc.");
 
 		std::shared_ptr<VArray> temp(nullptr);
-		auto& target_ = evaluate_target(allocator, target, ufunc.output_dtype, va::shape(a), temp);
+		auto& target_ = evaluate_target(allocator, target, ufunc.output_dtype, result_shape, temp);
 
 		if (a_type == ufunc.input_types[0]) {
 			reinterpret_cast<_call::UnaryDummyFunction<Args...>>(ufunc.function_ptr)(
@@ -72,6 +72,43 @@ namespace va {
 		if (temp != nullptr) {
 			// We wrote to temp because the return type mismatched; now we need to resolve that.
 			va::assign(*std::get<va::VData*>(target), temp->data);
+		}
+	}
+
+	template<typename... Args>
+	void call_vfunc_unary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableUnary& table, const VArrayTarget& target, const VData& a, Args&&... args) {
+		_call_vfunc_unary(allocator, table, target, va::shape(a), a, std::forward<Args>(args)...);
+	}
+
+	template<typename... Args>
+	void call_rfunc_unary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableUnary& table, const VArrayTarget& target, const VData& a, const va::axes_type* axes, Args&&... args) {
+		if (axes) {
+			va::shape_type result_shape = va::shape(a);
+			bool mask[result_shape.size()];
+			std::fill_n(mask, result_shape.size(), true);
+
+			for (const auto axis : *axes)
+			{
+				const size_t axis_normal = va::util::normalize_axis(axis, result_shape.size());
+				if (!mask[axis_normal]) {
+					throw std::runtime_error("Duplicate value in 'axis'.");
+				}
+				mask[axis_normal] = false;
+			}
+
+			result_shape.erase(
+				std::remove_if(
+					result_shape.begin(),
+					result_shape.end(),
+					[&mask, index = 0](int) mutable { return !mask[index++]; }
+				),
+				result_shape.end()
+			);
+
+			_call_vfunc_unary(allocator, table, target, result_shape, a, std::move(axes), std::forward<Args>(args)...);
+		}
+		else {
+			_call_vfunc_unary(allocator, table, target, va::shape_type(), a, nullptr, std::forward<Args>(args)...);
 		}
 	}
 

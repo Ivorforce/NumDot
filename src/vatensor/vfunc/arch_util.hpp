@@ -6,11 +6,23 @@ void UFUNC_NAME(compute_case<RETURN_TYPE*>& ret, const compute_case<IN0*>& a) {\
 	va::vfunc::impl::UFUNC_NAME(ret, a);\
 }
 
+#define DECLARE_NATIVE_UNARY1(UFUNC_NAME, RETURN_TYPE, IN0, ARG1)\
+void UFUNC_NAME(compute_case<RETURN_TYPE*>& ret, const compute_case<IN0*>& a, ARG1 arg1) {\
+	va::vfunc::impl::UFUNC_NAME(ret, a, arg1);\
+}
+
 #define ADD_NATIVE_UNARY0(UFUNC_NAME, RETURN_TYPE, IN0)\
 tables::UFUNC_NAME[va::dtype_of_type<IN0>()] = UFunc<1> {\
 	{ va::dtype_of_type<IN0>() },\
 	va::dtype_of_type<RETURN_TYPE>(),\
 	reinterpret_cast<void*>(static_cast<void (*)(compute_case<RETURN_TYPE*>&, const compute_case<IN0*>&)>(UFUNC_NAME))\
+}
+
+#define ADD_NATIVE_UNARY1(UFUNC_NAME, RETURN_TYPE, IN0, ARG1)\
+tables::UFUNC_NAME[va::dtype_of_type<IN0>()] = UFunc<1> {\
+	{ va::dtype_of_type<IN0>() },\
+	va::dtype_of_type<RETURN_TYPE>(),\
+	reinterpret_cast<void*>(static_cast<void (*)(compute_case<RETURN_TYPE*>&, const compute_case<IN0*>&, ARG1)>(UFUNC_NAME))\
 }
 
 #define ADD_CAST_UNARY(UFUNC_NAME, MODEL_IN0, IN0)\

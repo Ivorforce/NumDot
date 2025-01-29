@@ -132,8 +132,8 @@ std::ptrdiff_t variant_to_axis(const Variant& variant) {
 	return variant_as_int_strict<std::ptrdiff_t>(variant);
 }
 
-va::strides_type variant_to_axes(const Variant& variant) {
-	return variant_as_ints_<std::ptrdiff_t, va::strides_type>(variant);
+va::axes_type variant_to_axes(const Variant& variant) {
+	return variant_as_ints_<std::ptrdiff_t, va::axes_type>(variant);
 }
 
 va::axes_type variants_to_axes(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {

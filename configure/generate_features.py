@@ -169,6 +169,27 @@ def main():
 		"casts": [],
 		"vargs": ["double", "double", "bool"]
 	})
+	vfuncs.append({
+		"name": "sum",
+		# TODO Check if these specializations make sense.
+		"specializations": [
+			"?->?",
+			"B->B",
+			"D->D",
+			"F->F",
+			"H->H",
+			"I->I",
+			"Q->Q",
+			"b->b",
+			"d->d",
+			"f->f",
+			"h->h",
+			"i->i",
+			"q->q"
+		],
+		"casts": [],
+		"vargs": ["const va::axes_type*"]
+	})
 
 	with (pathlib.Path(__file__).parent / "vfuncs.json").open("w") as f:
 		json.dump({

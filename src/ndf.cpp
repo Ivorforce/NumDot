@@ -7,12 +7,14 @@
 #include <stdexcept>                          // for runtime_error
 #include <type_traits>                        // for decay_t
 #include <utility>                            // for forward
+#include <vatensor/xtensor_store.hpp>
 #include "gdconvert/conversion_array.hpp"       // for variant_as_array
 #include "gdconvert/util.hpp"
 #include "godot_cpp/core/class_db.hpp"        // for D_METHOD, ClassDB, Meth...
 #include "godot_cpp/core/error_macros.hpp"    // for ERR_FAIL_V_MSG
 #include "godot_cpp/variant/string_name.hpp"  // for StringName
 #include "vatensor/varray.hpp"                  // for VArray (ptr only), VScalar
+#include "vatensor/vfunc/ufunc_features.hpp"                  // for VArray (ptr only), VScalar
 
 using namespace godot;
 
@@ -37,11 +39,14 @@ ndf::~ndf() = default;
 #define REDUCTION1(func, varray1) \
 	numdot::reduction<double_t>([](const va::VArray& array) { return va::func(array.data); }, (varray1))
 
+#define REDUCTION1_NEW(func, varray1) \
+	numdot::reduction_new<double_t>([](const va::VArrayTarget& target, const va::VArray& array) { return va::func(va::store::default_allocator, target, array.data, nullptr); }, (varray1))
+
 #define REDUCTION2(func, varray1, varray2) \
 	numdot::reduction<double_t>([](const va::VArray& x1, const va::VArray& x2) { return va::func(x1.data, x2.data); }, (varray1), (varray2))
 
 double_t ndf::sum(const Variant& a) {
-	return REDUCTION1(sum, a);
+	return REDUCTION1_NEW(sum, a);
 }
 
 double_t ndf::prod(const Variant& a) {

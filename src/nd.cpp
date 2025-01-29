@@ -281,6 +281,26 @@ inline Ref<NDArray> reduction(Visitor&& visitor, VisitorNoaxes&& visitor_noaxes,
 	}
 }
 
+template<typename Visitor, typename... Args>
+inline Ref<NDArray> reduction_new(Visitor&& visitor, const Variant& axes, const Args&... args) {
+	std::shared_ptr<va::VArray> result;
+
+	try {
+		if (axes.get_type() == Variant::NIL) {
+			std::forward<Visitor>(visitor)(&result, nullptr, *variant_as_array(args)...);
+		}
+		else {
+			const auto axes_ = variant_to_axes(axes);
+			std::forward<Visitor>(visitor)(&result, &axes_, *variant_as_array(args)...);
+		}
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
+
+	return { memnew(NDArray(result)) };
+}
+
 template<typename Visitor>
 Ref<NDArray> like_visit(Visitor&& visitor, const Variant& model, nd::DType dtype, const Variant& shape) {
 	try {
@@ -322,6 +342,11 @@ Ref<NDArray> like_visit(Visitor&& visitor, const Variant& model, nd::DType dtype
 	reduction([](const va::VArrayTarget& target, const va::axes_type& axes, const va::VArray& array) {\
 		va::func(va::store::default_allocator, target, array.data, axes);\
 	}, [](const va::VArray& array) { return va::func(array.data); }, axes, (varray1))
+
+#define REDUCTION1_NEW(func, varray1, axes1) \
+	reduction_new([](const va::VArrayTarget& target, const va::axes_type* axes, const va::VArray& array) {\
+		va::func(va::store::default_allocator, target, array.data, axes);\
+	}, axes, (varray1))
 
 #define REDUCTION2(func, varray1, varray2, axes1) \
 	reduction([](const va::VArrayTarget& target, const va::axes_type& axes, const va::VArray& carray1, const va::VArray& carray2) {\
@@ -1000,7 +1025,7 @@ Ref<NDArray> nd::atanh(const Variant& a) {
 }
 
 Ref<NDArray> nd::sum(const Variant& a, const Variant& axes) {
-	return REDUCTION1(sum, a, axes);
+	return REDUCTION1_NEW(sum, a, axes);
 }
 
 Ref<NDArray> nd::prod(const Variant& a, const Variant& axes) {

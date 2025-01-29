@@ -7,6 +7,7 @@
 #include <type_traits>                        // for decay_t
 #include <utility>                            // for forward
 #include <vatensor/xtensor_store.hpp>
+#include <vatensor/vfunc/ufunc_features.hpp>
 #include "gdconvert/conversion_array.hpp"       // for variant_as_array
 #include "gdconvert/util.hpp"
 #include "godot_cpp/core/class_db.hpp"        // for D_METHOD, ClassDB, Meth...
@@ -36,11 +37,14 @@ ndi::~ndi() = default;
 #define REDUCTION1(func, varray1) \
 	numdot::reduction<int64_t>([](const va::VArray& array) { return va::func(array.data); }, (varray1))
 
+#define REDUCTION1_NEW(func, varray1) \
+	numdot::reduction_new<int64_t>([](const va::VArrayTarget& target, const va::VArray& array) { return va::func(va::store::default_allocator, target, array.data, nullptr); }, (varray1))
+
 #define REDUCTION2(func, varray1, varray2) \
 	numdot::reduction<int64_t>([](const va::VArray& x1, const va::VArray& x2) { return va::func(x1.data, x2.data); }, (varray1), (varray2))
 
 int64_t ndi::sum(const Variant& a) {
-	return REDUCTION1(sum, a);
+	return REDUCTION1_NEW(sum, a);
 }
 
 int64_t ndi::prod(const Variant& a) {

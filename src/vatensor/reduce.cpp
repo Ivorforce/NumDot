@@ -11,6 +11,7 @@
 #include "vcompute.hpp"                                   // for vreduce, xope...
 #include "vmath.hpp"
 #include "vpromote.hpp"                                   // for num_matching_...
+#include "vfunc/ufunc_features.hpp"
 #include "xtensor/xiterator.hpp"                        // for operator==
 #include "xtensor/xlayout.hpp"                          // for layout_type
 #include "xtensor/xmath.hpp"                            // for XTENSOR_REDUC...
@@ -37,29 +38,6 @@ using namespace va;
 using namespace xt;
 XTENSOR_REDUCER_FUNCTION(va_any, xt::detail::logical_or, bool, true)
 XTENSOR_REDUCER_FUNCTION(va_all, xt::detail::logical_and, bool, false)
-
-VScalar va::sum(const VData& array) {
-	return vreduce_single<
-		Feature::sum,
-		promote::num_in_same_out,
-		VScalar
-	>(
-		REDUCER_LAMBDA(xt::sum),
-		array
-	);
-}
-
-void va::sum(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array, const axes_type& axes) {
-	va::xoperation_single<
-		Feature::sum,
-		promote::num_in_same_out
-	>(
-		REDUCER_LAMBDA_AXES(axes, xt::sum),
-		allocator,
-		target,
-		array
-	);
-}
 
 VScalar va::prod(const VData& array) {
 	return vreduce_single<
@@ -349,19 +327,21 @@ void va::norm_linf(VStoreAllocator& allocator, const VArrayTarget& target, const
 }
 
 VScalar va::count_nonzero(VStoreAllocator& allocator, const VData& array) {
-	if (va::dtype(array) == va::Bool)
-		return sum(array);
-
-	const auto is_nonzero = va::copy_as_dtype(allocator, array, va::Bool);
-	return va::sum(is_nonzero->data);
+	return 0.0;  // TODO
+	// if (va::dtype(array) == va::Bool)
+	// 	return sum(array);
+	//
+	// const auto is_nonzero = va::copy_as_dtype(allocator, array, va::Bool);
+	// return va::sum(is_nonzero->data);
 }
 
 void va::count_nonzero(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array, const axes_type& axes) {
-	if (va::dtype(array) == va::Bool)
-		return va::sum(allocator, target, array, axes);
-
-	const auto is_nonzero = va::copy_as_dtype(allocator, array, va::Bool);
-	return va::sum(allocator, target, is_nonzero->data, axes);
+	// TODO
+	// if (va::dtype(array) == va::Bool)
+	// 	return va::sum(allocator, target, array, axes);
+	//
+	// const auto is_nonzero = va::copy_as_dtype(allocator, array, va::Bool);
+	// return va::sum(allocator, target, is_nonzero->data, axes);
 }
 
 bool va::all(const VData& array) {
@@ -461,14 +441,16 @@ void va::reduce_dot(VStoreAllocator& allocator, const VArrayTarget& target, cons
 }
 
 void va::trace(VStoreAllocator& allocator, const VArrayTarget& target, const VArray& varray, std::ptrdiff_t offset, std::ptrdiff_t axis1, std::ptrdiff_t axis2) {
-	const auto diagonal = va::diagonal(varray, offset, axis1, axis2);
-	va::sum(allocator, target, diagonal->data, axes_type {-1});
+	// TODO
+	// const auto diagonal = va::diagonal(varray, offset, axis1, axis2);
+	// va::sum(allocator, target, diagonal->data, axes_type {-1});
 }
 
 VScalar va::trace_to_scalar(const VArray& varray, std::ptrdiff_t offset, std::ptrdiff_t axis1, std::ptrdiff_t axis2) {
-	if (varray.dimension() != 2) {
-		throw std::runtime_error("array must be 2-D for trace to collapse to a scalar");
-	}
-	const auto diagonal = va::diagonal(varray, offset, axis1, axis2);
-	return va::sum(diagonal->data);
+	return 0.0; // TODO
+	// if (varray.dimension() != 2) {
+	// 	throw std::runtime_error("array must be 2-D for trace to collapse to a scalar");
+	// }
+	// const auto diagonal = va::diagonal(varray, offset, axis1, axis2);
+	// return va::sum(diagonal->data);
 }

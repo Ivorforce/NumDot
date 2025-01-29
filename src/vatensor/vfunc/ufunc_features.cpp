@@ -34,6 +34,8 @@ namespace va::vfunc::tables {
 	BINARY_TABLES_COMMUTATIVE(minimum)
 	BINARY_TABLES_COMMUTATIVE(maximum)
 
+	UNARY_TABLES(sum)
+
 	UNARY_TABLES(sin)
 	UNARY_TABLES(cos)
 	UNARY_TABLES(tan)

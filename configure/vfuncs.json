@@ -3739,6 +3739,21 @@
 				"D->D"
 			],
 			"casts": []
+		},
+		{
+			"name": "is_close",
+			"specializations": [
+				"ff->b",
+				"dd->b",
+				"FF->b",
+				"DD->b"
+			],
+			"casts": [],
+			"vargs": [
+				"double",
+				"double",
+				"bool"
+			]
 		}
 	]
 }

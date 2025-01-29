@@ -122,7 +122,7 @@ def main():
 			except ValueError:
 				continue
 
-	ufuncs = []
+	vfuncs = []
 	for ufunc_name in all_features:
 		ufunc: np.ufunc = getattr(np, ufunc_name)
 		if not isinstance(ufunc, np.ufunc):
@@ -150,22 +150,29 @@ def main():
 					except KeyError:
 						print(f"Skipping cast {ufunc_name}({l.name}, {r.name}); not found.")
 
-		ufuncs.append({
+		vfuncs.append({
 			"name": ufunc_name,
 			"specializations": [specialization.dumps() for specialization in specializations.values()],
-			"casts": [f"{dump_dtypes(input)}->{model.dumps()}" for input, model in casts.items()]
+			"casts": [f"{dump_dtypes(input)}->{model.dumps()}" for input, model in casts.items()],
 		})
 
 	# Not a ufunc because (in NumPy), it accepts a 'decimals' int parameter.
-	ufuncs.append({
+	vfuncs.append({
 		"name": "round",
 		"specializations": ["f->f", "d->d", "F->F", "D->D"],
-		"casts": []
+		"casts": [],
+	})
+	vfuncs.append({
+		"name": "is_close",
+		# TODO Could implement other dtypes by just calling equals in the implementation.
+		"specializations": ["ff->b", "dd->b", "FF->b", "DD->b"],
+		"casts": [],
+		"vargs": ["double", "double", "bool"]
 	})
 
 	with (pathlib.Path(__file__).parent / "vfuncs.json").open("w") as f:
 		json.dump({
-			"vfuncs": ufuncs,
+			"vfuncs": vfuncs,
 		}, f, indent='\t')
 
 if __name__ == "__main__":

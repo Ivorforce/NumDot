@@ -75,4 +75,6 @@ namespace va::vfunc::tables {
 	UNARY_TABLES(isnan)
 	UNARY_TABLES(isfinite)
 	UNARY_TABLES(isinf)
+
+	BINARY_TABLES_COMMUTATIVE(is_close)
 }

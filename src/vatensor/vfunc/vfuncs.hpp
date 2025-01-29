@@ -10,6 +10,12 @@ inline void UFUNC_NAME(R& ret, const A& a, const B& b) {\
 	va::broadcasting_assign_typesafe(ret, OP);\
 }
 
+#define IMPLEMENT_BINARY_VFUNC3(UFUNC_NAME, ARG1, ARG2, ARG3, OP)\
+template <typename R, typename A, typename B>\
+inline void UFUNC_NAME(R& ret, const A& a, const B& b, ARG1 arg1, ARG2 arg2, ARG3 arg3) {\
+	va::broadcasting_assign_typesafe(ret, OP);\
+}
+
 #define IMPLEMENT_UNARY_UFUNC(UFUNC_NAME, OP)\
 template <typename R, typename A>\
 inline void UFUNC_NAME(R& ret, const A& a) {\
@@ -121,6 +127,7 @@ namespace va::vfunc::impl {
 	IMPLEMENT_UNARY_UFUNC(isnan, xt::isnan(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_UFUNC(isfinite, xt::isfinite(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_UFUNC(isinf, xt::isinf(va::promote::to_num(a)))
+	IMPLEMENT_BINARY_VFUNC3(is_close, double, double, bool, xt::isclose(va::promote::to_num(a), arg1, arg2, arg3))
 } // namespace va::vfunc::impl
 
 #endif //VFUNCS_HPP

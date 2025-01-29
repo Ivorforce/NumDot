@@ -57,7 +57,7 @@ namespace va {
 			reinterpret_cast<_call::UnaryDummyFunction<Args...>>(ufunc.function_ptr)(
 				*static_cast<_call::Dummy*>(_call::get_value_ptr(target_)),
 				*static_cast<const _call::Dummy*>(_call::get_value_ptr(a)),
-				std::forward<Args...>(args)...
+				std::forward<Args>(args)...
 			);
 		}
 		else {
@@ -65,7 +65,7 @@ namespace va {
 			reinterpret_cast<_call::UnaryDummyFunction<Args...>>(ufunc.function_ptr)(
 				*static_cast<_call::Dummy*>(_call::get_value_ptr(target_)),
 				*static_cast<const _call::Dummy*>(_call::get_value_ptr(a_->data)),
-				std::forward<Args...>(args)...
+				std::forward<Args>(args)...
 			);
 		}
 
@@ -76,7 +76,7 @@ namespace va {
 	}
 
 	template<typename A, typename B, typename... Args>
-	void call_vfunc_binary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableBinary& table, const VArrayTarget& target, const shape_type& result_shape, const A& a, const B& b, Args&&... args) {
+	void _call_vfunc_binary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableBinary& table, const VArrayTarget& target, const shape_type& result_shape, const A& a, const B& b, Args&&... args) {
 		const DType a_type = va::dtype(a);
 		const DType b_type = va::dtype(b);
 
@@ -92,7 +92,7 @@ namespace va {
 					*static_cast<_call::Dummy*>(_call::get_value_ptr(target_)),
 					*static_cast<const _call::Dummy*>(_call::get_value_ptr(a)),
 					*static_cast<const _call::Dummy*>(_call::get_value_ptr(b)),
-					std::forward<Args...>(args)...
+					std::forward<Args>(args)...
 				);
 				break;
 			}
@@ -102,7 +102,7 @@ namespace va {
 					*static_cast<_call::Dummy*>(_call::get_value_ptr(target_)),
 					*static_cast<const _call::Dummy*>(_call::get_value_ptr(a)),
 					*static_cast<const _call::Dummy*>(_call::get_value_ptr(_call::deref(b_))),
-					std::forward<Args...>(args)...
+					std::forward<Args>(args)...
 				);
 				break;
 			}
@@ -112,7 +112,7 @@ namespace va {
 					*static_cast<_call::Dummy*>(_call::get_value_ptr(target_)),
 					*static_cast<const _call::Dummy*>(_call::get_value_ptr(_call::deref(a_))),
 					*static_cast<const _call::Dummy*>(_call::get_value_ptr(b)),
-					std::forward<Args...>(args)...
+					std::forward<Args>(args)...
 				);
 				break;
 			}
@@ -123,7 +123,7 @@ namespace va {
 					*static_cast<_call::Dummy*>(_call::get_value_ptr(target_)),
 					*static_cast<const _call::Dummy*>(_call::get_value_ptr(_call::deref(a_))),
 					*static_cast<const _call::Dummy*>(_call::get_value_ptr(_call::deref(b_))),
-					std::forward<Args...>(args)...
+					std::forward<Args>(args)...
 				);
 				break;
 			}
@@ -136,10 +136,35 @@ namespace va {
 	}
 
 	void call_ufunc_unary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableUnary& table, const VArrayTarget& target, const VData& a);
+
 	void call_ufunc_binary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableBinary& table, const VArrayTarget& target, const VData& a, const VData& b);
 
+	template<typename... Args>
+	void call_vfunc_binary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableBinary& table, const VArrayTarget& target, const VData& a, const VData& b, Args&&... args) {
+		const auto& a_shape = va::shape(a);
+		const auto& b_shape = va::shape(b);
+
+		auto result_shape = shape_type(std::max(a_shape.size(), b_shape.size()));
+		std::fill_n(result_shape.begin(), result_shape.size(), std::numeric_limits<shape_type::value_type>::max());
+		xt::broadcast_shape(a_shape, result_shape);
+		xt::broadcast_shape(b_shape, result_shape);
+
+		_call_vfunc_binary(allocator, table, target, result_shape, a, b, std::forward<Args>(args)...);
+	}
+
 	void call_ufunc_binary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableBinary& table, const VArrayTarget& target, const VScalar& a, const VData& b);
+
+	template<typename... Args>
+	void call_vfunc_binary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableBinary& table, const VArrayTarget& target, const VScalar& a, const VData& b, Args&&... args) {
+		_call_vfunc_binary(allocator, table, target, va::shape(b), a, b, std::forward<Args>(args)...);
+	}
+
 	void call_ufunc_binary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableBinary& table, const VArrayTarget& target, const VData& a, const VScalar& b);
+
+	template<typename... Args>
+	void call_vfunc_binary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableBinary& table, const VArrayTarget& target, const VData& a, const VScalar& b, Args&&... args) {
+		_call_vfunc_binary(allocator, table, target, va::shape(a), a, b, std::forward<Args>(args)...);
+	}
 }
 
 #endif //VCALL_HPP

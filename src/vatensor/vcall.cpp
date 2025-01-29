@@ -32,25 +32,17 @@ void va::call_ufunc_unary(VStoreAllocator& allocator, const vfunc::tables::UFunc
 
 template <typename A, typename B>
 void call_ufunc_binary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableBinary& table, const VArrayTarget& target, const shape_type& result_shape, const A& a, const B& b) {
-	call_vfunc_binary(allocator, table, target, result_shape, a, b);
+	_call_vfunc_binary(allocator, table, target, result_shape, a, b);
 }
 
 void va::call_ufunc_binary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableBinary& table, const VArrayTarget& target, const VData& a, const VData& b) {
-	const auto& a_shape = va::shape(a);
-	const auto& b_shape = va::shape(b);
-
-	auto result_shape = shape_type(std::max(a_shape.size(), b_shape.size()));
-	std::fill_n(result_shape.begin(), result_shape.size(), std::numeric_limits<shape_type::value_type>::max());
-	xt::broadcast_shape(a_shape, result_shape);
-	xt::broadcast_shape(b_shape, result_shape);
-
-	::call_ufunc_binary(allocator, table, target, result_shape, a, b);
+	call_vfunc_binary(allocator, table, target, a, b);
 }
 
 void va::call_ufunc_binary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableBinary& table, const VArrayTarget& target, const VScalar& a, const VData& b) {
-	::call_ufunc_binary(allocator, table, target, va::shape(b), a, b);
+	_call_vfunc_binary(allocator, table, target, va::shape(b), a, b);
 }
 
 void va::call_ufunc_binary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableBinary& table, const VArrayTarget& target, const VData& a, const VScalar& b) {
-	::call_ufunc_binary(allocator, table, target, va::shape(a), a, b);
+	_call_vfunc_binary(allocator, table, target, va::shape(a), a, b);
 }

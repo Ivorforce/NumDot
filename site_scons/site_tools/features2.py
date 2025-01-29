@@ -96,6 +96,7 @@ commutative_functions = {
 	"bitwise_xor",
 	"equal",
 	"not_equal",
+	"is_close",
 }
 
 @dataclasses.dataclass
@@ -128,6 +129,8 @@ def make_module(env, sources, module_name: str, ufuncs_json: dict):
 		nin = specializations[0].index("->")
 		is_commutative = ufunc_name in commutative_functions
 		commutative_str = "_COMMUTATIVE" if is_commutative else ""
+		vargs = ufunc_obj["vargs"] if "vargs" in ufunc_obj else []
+		vargs_part = "".join(f", {varg}" for varg in vargs)
 
 		covered_types: set[tuple[DType, ...]] = set()
 		for specialization_str in specializations:
@@ -155,12 +158,12 @@ def make_module(env, sources, module_name: str, ufuncs_json: dict):
 
 			if nin == 1:
 				assert len(input_types_cpp) == 1
-				declare_str += f"\tDECLARE_NATIVE_UNARY({ufunc_name}, {output_type_cpp}, {input_types_cpp[0]});\n"
-				configure_str += f"\tADD_NATIVE_UNARY({ufunc_name}, {output_type_cpp}, {input_types_cpp[0]});\n"
+				declare_str += f"\tDECLARE_NATIVE_UNARY{len(vargs)}({ufunc_name}, {output_type_cpp}, {input_types_cpp[0]}{vargs_part});\n"
+				configure_str += f"\tADD_NATIVE_UNARY{len(vargs)}({ufunc_name}, {output_type_cpp}, {input_types_cpp[0]}{vargs_part});\n"
 			elif nin == 2:
 				assert len(input_types_cpp) == 2
-				declare_str += f"\tDECLARE_NATIVE_BINARY{commutative_str}({ufunc_name}, {output_type_cpp}, {input_types_cpp[0]}, {input_types_cpp[1]});\n"
-				configure_str += f"\tADD_NATIVE_BINARY{commutative_str}({ufunc_name}, {output_type_cpp}, {input_types_cpp[0]}, {input_types_cpp[1]});\n"
+				declare_str += f"\tDECLARE_NATIVE_BINARY{commutative_str}{len(vargs)}({ufunc_name}, {output_type_cpp}, {input_types_cpp[0]}, {input_types_cpp[1]}{vargs_part});\n"
+				configure_str += f"\tADD_NATIVE_BINARY{commutative_str}{len(vargs)}({ufunc_name}, {output_type_cpp}, {input_types_cpp[0]}, {input_types_cpp[1]}{vargs_part});\n"
 			else:
 				raise ValueError
 

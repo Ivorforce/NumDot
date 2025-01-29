@@ -12,10 +12,10 @@ inline void UFUNC_NAME(VStoreAllocator& allocator, const VArrayTarget& target, c
 	call_ufunc_unary(allocator, vfunc::tables::UFUNC_NAME, target, a);\
 }
 
-#define DEFINE_RFUNC_CALLER_UNARY1(UFUNC_NAME, ARG1)\
+#define DEFINE_RFUNC_CALLER_UNARY0(UFUNC_NAME)\
 namespace vfunc::tables { UNARY_TABLES(UFUNC_NAME) }\
-inline void UFUNC_NAME(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, ARG1 arg1) {\
-	call_rfunc_unary(allocator, vfunc::tables::UFUNC_NAME, target, a, arg1);\
+inline void UFUNC_NAME(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const va::axes_type* axes) {\
+	call_rfunc_unary(allocator, vfunc::tables::UFUNC_NAME, target, a, axes);\
 }
 
 #define BINARY_TABLES(UFUNC_NAME)\

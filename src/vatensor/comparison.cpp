@@ -17,37 +17,6 @@
 
 using namespace va;
 
-template <typename A, typename B>
-void is_close(VStoreAllocator& allocator, const VArrayTarget& target, const A& a, const B& b, double rtol, double atol, bool equal_nan) {
-	va::xoperation_inplace<
-		Feature::is_close,
-		promote::common_in_nat_out
-	>(
-		[rtol, atol, equal_nan](auto&& a, auto&& b) {
-			return xt::isclose(std::forward<decltype(a)>(a), std::forward<decltype(b)>(b), rtol, atol, equal_nan);
-		},
-		allocator,
-		target,
-		a,
-		b
-	);
-}
-
-void va::is_close(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b, double rtol, double atol, bool equal_nan) {
-#ifndef NUMDOT_DISABLE_SCALAR_OPTIMIZATION
-	if (va::dimension(a) == 0) {
-		::is_close(allocator, target, b, va::to_single_value(a), rtol, atol, equal_nan);
-		return;
-	}
-	if (va::dimension(b) == 0) {
-		::is_close(allocator, target, a, va::to_single_value(b), rtol, atol, equal_nan);
-		return;
-	}
-#endif
-
-	::is_close(allocator, target, a, b, rtol, atol, equal_nan);
-}
-
 bool va::array_equiv(const VData& a, const VData& b) {
 #ifndef _WIN32
 	try {

@@ -5,7 +5,7 @@
 
 namespace va::vfunc {
 	template <int N>
-	struct UFunc {
+	struct VFunc {
 		std::array<va::DType, N> input_types;
 		va::DType output_dtype;
 		void* function_ptr;
@@ -13,9 +13,9 @@ namespace va::vfunc {
 }
 
 namespace va::vfunc::tables {
-	using UFuncTableUnary = std::array<UFunc<1>, DTypeMax>;
+	using UFuncTableUnary = std::array<VFunc<1>, DTypeMax>;
 
-	using UFuncTableBinary = std::array<std::array<UFunc<2>, DTypeMax>, DTypeMax>;
+	using UFuncTableBinary = std::array<std::array<VFunc<2>, DTypeMax>, DTypeMax>;
 	struct UFuncTablesBinary {
 		UFuncTableBinary tensors;
 		UFuncTableBinary scalar_left;

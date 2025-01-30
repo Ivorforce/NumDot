@@ -12,7 +12,7 @@ void UFUNC_NAME(compute_case<RETURN_TYPE*>& ret, const compute_case<IN0*>& a, AR
 }
 
 static void add_native_unary(va::vfunc::tables::UFuncTableUnary& table, const va::DType out, const va::DType in0, void *function_ptr) {
-	table[in0] = va::vfunc::UFunc<1> {
+	table[in0] = va::vfunc::VFunc<1> {
 		{ in0 },
 		out,
 		function_ptr
@@ -70,17 +70,17 @@ void UFUNC_NAME(compute_case<RETURN_TYPE*>& ret, const compute_case<IN0*>& a, co
 }
 
 static void add_native_binary(va::vfunc::tables::UFuncTablesBinary& tables, const va::DType out, const va::DType in0, const va::DType in1, void* function_ptr_tensors, void* function_ptr_scalar_left, void* function_ptr_scalar_right) {
-	tables.tensors[in0][in1] = va::vfunc::UFunc<2> {
+	tables.tensors[in0][in1] = va::vfunc::VFunc<2> {
 		{ in0, in1 },
 		out,
 		function_ptr_tensors
 	};
-	tables.scalar_left[in0][in1] = va::vfunc::UFunc<2> {
+	tables.scalar_left[in0][in1] = va::vfunc::VFunc<2> {
 		{ in0, in1 },
 		out,
 		function_ptr_scalar_left
 	};
-	tables.scalar_right[in0][in1] = va::vfunc::UFunc<2> {
+	tables.scalar_right[in0][in1] = va::vfunc::VFunc<2> {
 		{ in0, in1 },
 		out,
 		function_ptr_scalar_right
@@ -99,12 +99,12 @@ static void add_native_binary(va::vfunc::tables::UFuncTablesBinary& tables, cons
 )
 
 static void add_native_binary(va::vfunc::tables::UFuncTablesBinaryCommutative& tables, const va::DType out, const va::DType in0, const va::DType in1, void *function_ptr_tensors, void *function_ptr_scalar_right) {
-	tables.tensors[in0][in1] = va::vfunc::UFunc<2> {
+	tables.tensors[in0][in1] = va::vfunc::VFunc<2> {
 		{ in0, in1 },
 		out,
 		function_ptr_tensors
 	};
-	tables.scalar_right[in0][in1] = va::vfunc::UFunc<2> {
+	tables.scalar_right[in0][in1] = va::vfunc::VFunc<2> {
 		{ in0, in1 },
 		out,
 		function_ptr_scalar_right

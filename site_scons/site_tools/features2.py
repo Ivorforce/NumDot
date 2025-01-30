@@ -184,7 +184,7 @@ def make_module(env, sources, module_name: str, ufuncs_json: dict):
 			elif nin == 2:
 				assert len(model_in_cpp) == 2
 				assert len(in_types_cpp) == 2
-				configure_str += f"\tADD_CAST_BINARY{commutative_str}({ufunc_name}, {model_in_cpp[0]}, {model_in_cpp[1]}, {in_types_cpp[0]}, {in_types_cpp[1]});\n"
+				configure_str += f"\tADD_CAST_BINARY({ufunc_name}, {model_in_cpp[0]}, {model_in_cpp[1]}, {in_types_cpp[0]}, {in_types_cpp[1]});\n"
 			else:
 				raise ValueError
 

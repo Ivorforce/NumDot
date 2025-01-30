@@ -57,53 +57,53 @@ void UFUNC_NAME(compute_case<RETURN_TYPE*>& ret, const compute_case<IN0*>& a, co
 }
 
 #define ADD_NATIVE_BINARY0(UFUNC_NAME, RETURN_TYPE, IN0, IN1)\
-tables::UFUNC_NAME[va::dtype_of_type<IN0>()][va::dtype_of_type<IN1>()] = UFunc<2> {\
+tables::UFUNC_NAME.tensors[va::dtype_of_type<IN0>()][va::dtype_of_type<IN1>()] = UFunc<2> {\
 	{ va::dtype_of_type<IN0>(), va::dtype_of_type<IN1>() },\
 	va::dtype_of_type<RETURN_TYPE>(),\
 	reinterpret_cast<void*>(static_cast<void (*)(compute_case<RETURN_TYPE*>&, const compute_case<IN0*>&, const compute_case<IN1*>&)>(UFUNC_NAME))\
 };\
-tables::UFUNC_NAME##_scalarLeft[va::dtype_of_type<IN0>()][va::dtype_of_type<IN1>()] = UFunc<2> {\
+tables::UFUNC_NAME.scalar_left[va::dtype_of_type<IN0>()][va::dtype_of_type<IN1>()] = UFunc<2> {\
 	{ va::dtype_of_type<IN0>(), va::dtype_of_type<IN1>() },\
 	va::dtype_of_type<RETURN_TYPE>(),\
 	reinterpret_cast<void*>(static_cast<void (*)(compute_case<RETURN_TYPE*>&, const IN0&, const compute_case<IN1*>&)>(UFUNC_NAME))\
 };\
-tables::UFUNC_NAME##_scalarRight[va::dtype_of_type<IN0>()][va::dtype_of_type<IN1>()] = UFunc<2> {\
+tables::UFUNC_NAME.scalar_right[va::dtype_of_type<IN0>()][va::dtype_of_type<IN1>()] = UFunc<2> {\
 	{ va::dtype_of_type<IN0>(), va::dtype_of_type<IN1>() },\
 	va::dtype_of_type<RETURN_TYPE>(),\
 	reinterpret_cast<void*>(static_cast<void (*)(compute_case<RETURN_TYPE*>&, const compute_case<IN0*>&, const IN1&)>(UFUNC_NAME))\
 }
 
 #define ADD_NATIVE_BINARY_COMMUTATIVE0(UFUNC_NAME, RETURN_TYPE, IN0, IN1)\
-tables::UFUNC_NAME[va::dtype_of_type<IN0>()][va::dtype_of_type<IN1>()] = UFunc<2> {\
+tables::UFUNC_NAME.tensors[va::dtype_of_type<IN0>()][va::dtype_of_type<IN1>()] = UFunc<2> {\
 	{ va::dtype_of_type<IN0>(), va::dtype_of_type<IN1>() },\
 	va::dtype_of_type<RETURN_TYPE>(),\
 	reinterpret_cast<void*>(static_cast<void (*)(compute_case<RETURN_TYPE*>&, const compute_case<IN0*>&, const compute_case<IN1*>&)>(UFUNC_NAME))\
 };\
-tables::UFUNC_NAME##_scalarRight[va::dtype_of_type<IN0>()][va::dtype_of_type<IN1>()] = UFunc<2> {\
+tables::UFUNC_NAME.scalar_right[va::dtype_of_type<IN0>()][va::dtype_of_type<IN1>()] = UFunc<2> {\
 	{ va::dtype_of_type<IN0>(), va::dtype_of_type<IN1>() },\
 	va::dtype_of_type<RETURN_TYPE>(),\
 	reinterpret_cast<void*>(static_cast<void (*)(compute_case<RETURN_TYPE*>&, const compute_case<IN0*>&, const IN1&)>(UFUNC_NAME))\
 }
 
 #define ADD_NATIVE_BINARY_COMMUTATIVE3(UFUNC_NAME, RETURN_TYPE, IN0, IN1, ARG1, ARG2, ARG3)\
-tables::UFUNC_NAME[va::dtype_of_type<IN0>()][va::dtype_of_type<IN1>()] = UFunc<2> {\
+tables::UFUNC_NAME.tensors[va::dtype_of_type<IN0>()][va::dtype_of_type<IN1>()] = UFunc<2> {\
 	{ va::dtype_of_type<IN0>(), va::dtype_of_type<IN1>() },\
 	va::dtype_of_type<RETURN_TYPE>(),\
 	reinterpret_cast<void*>(static_cast<void (*)(compute_case<RETURN_TYPE*>&, const compute_case<IN0*>&, const compute_case<IN1*>&, ARG1, ARG2, ARG3)>(UFUNC_NAME))\
 };\
-tables::UFUNC_NAME##_scalarRight[va::dtype_of_type<IN0>()][va::dtype_of_type<IN1>()] = UFunc<2> {\
+tables::UFUNC_NAME.scalar_right[va::dtype_of_type<IN0>()][va::dtype_of_type<IN1>()] = UFunc<2> {\
 	{ va::dtype_of_type<IN0>(), va::dtype_of_type<IN1>() },\
 	va::dtype_of_type<RETURN_TYPE>(),\
 	reinterpret_cast<void*>(static_cast<void (*)(compute_case<RETURN_TYPE*>&, const compute_case<IN0*>&, const IN1&, ARG1, ARG2, ARG3)>(UFUNC_NAME))\
 }
 
 #define ADD_CAST_BINARY(UFUNC_NAME, MODEL_IN0, MODEL_IN1, IN0, IN1)\
-tables::UFUNC_NAME[va::dtype_of_type<IN0>()][va::dtype_of_type<IN1>()] = tables::UFUNC_NAME[va::dtype_of_type<MODEL_IN0>()][va::dtype_of_type<MODEL_IN1>()];\
-tables::UFUNC_NAME##_scalarLeft[va::dtype_of_type<IN0>()][va::dtype_of_type<IN1>()] = tables::UFUNC_NAME##_scalarLeft[va::dtype_of_type<MODEL_IN0>()][va::dtype_of_type<MODEL_IN1>()];\
-tables::UFUNC_NAME##_scalarRight[va::dtype_of_type<IN0>()][va::dtype_of_type<IN1>()] = tables::UFUNC_NAME##_scalarRight[va::dtype_of_type<MODEL_IN0>()][va::dtype_of_type<MODEL_IN1>()]
+tables::UFUNC_NAME.tensors[va::dtype_of_type<IN0>()][va::dtype_of_type<IN1>()] = tables::UFUNC_NAME.tensors[va::dtype_of_type<MODEL_IN0>()][va::dtype_of_type<MODEL_IN1>()];\
+tables::UFUNC_NAME.scalar_left[va::dtype_of_type<IN0>()][va::dtype_of_type<IN1>()] = tables::UFUNC_NAME.scalar_left[va::dtype_of_type<MODEL_IN0>()][va::dtype_of_type<MODEL_IN1>()];\
+tables::UFUNC_NAME.scalar_right[va::dtype_of_type<IN0>()][va::dtype_of_type<IN1>()] = tables::UFUNC_NAME.scalar_right[va::dtype_of_type<MODEL_IN0>()][va::dtype_of_type<MODEL_IN1>()]
 
 #define ADD_CAST_BINARY_COMMUTATIVE(UFUNC_NAME, MODEL_IN0, MODEL_IN1, IN0, IN1)\
-tables::UFUNC_NAME[va::dtype_of_type<IN0>()][va::dtype_of_type<IN1>()] = tables::UFUNC_NAME[va::dtype_of_type<MODEL_IN0>()][va::dtype_of_type<MODEL_IN1>()];\
-tables::UFUNC_NAME##_scalarRight[va::dtype_of_type<IN0>()][va::dtype_of_type<IN1>()] = tables::UFUNC_NAME##_scalarRight[va::dtype_of_type<MODEL_IN0>()][va::dtype_of_type<MODEL_IN1>()]
+tables::UFUNC_NAME.tensors[va::dtype_of_type<IN0>()][va::dtype_of_type<IN1>()] = tables::UFUNC_NAME.tensors[va::dtype_of_type<MODEL_IN0>()][va::dtype_of_type<MODEL_IN1>()];\
+tables::UFUNC_NAME.scalar_right[va::dtype_of_type<IN0>()][va::dtype_of_type<IN1>()] = tables::UFUNC_NAME.scalar_right[va::dtype_of_type<MODEL_IN0>()][va::dtype_of_type<MODEL_IN1>()]
 
 #endif //VATENSOR_ARCH_UTIL_HPP

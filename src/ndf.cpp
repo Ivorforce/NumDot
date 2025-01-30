@@ -14,7 +14,7 @@
 #include "godot_cpp/core/error_macros.hpp"    // for ERR_FAIL_V_MSG
 #include "godot_cpp/variant/string_name.hpp"  // for StringName
 #include "vatensor/varray.hpp"                  // for VArray (ptr only), VScalar
-#include "vatensor/vfunc/ufunc_features.hpp"                  // for VArray (ptr only), VScalar
+#include "vatensor/vfunc/entrypoints.hpp"                  // for VArray (ptr only), VScalar
 
 using namespace godot;
 

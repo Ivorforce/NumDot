@@ -1,17 +1,45 @@
-#include "ufunc_features.hpp"
+#ifndef TABLES_HPP
+#define TABLES_HPP
 
-#undef UNARY_TABLES
-#define UNARY_TABLES(UFUNC_NAME)\
-UFuncTableUnary UFUNC_NAME;
+#include <vatensor/dtype.hpp>
 
-#undef BINARY_TABLES
-#define BINARY_TABLES(UFUNC_NAME)\
-UFuncTableBinary UFUNC_NAME; UFuncTableBinary UFUNC_NAME##_scalarRight; UFuncTableBinary UFUNC_NAME##_scalarLeft;
+namespace va::vfunc {
+	template <int N>
+	struct UFunc {
+		std::array<va::DType, N> input_types;
+		va::DType output_dtype;
+		void* function_ptr;
+	};
+}
 
-#undef BINARY_TABLES_COMMUTATIVE
-#define BINARY_TABLES_COMMUTATIVE(UFUNC_NAME)\
-UFuncTableBinary UFUNC_NAME; UFuncTableBinary UFUNC_NAME##_scalarRight;
+namespace va::vfunc::tables {
+	using UFuncTableUnary = std::array<UFunc<1>, DTypeMax>;
 
+	using UFuncTableBinary = std::array<std::array<UFunc<2>, DTypeMax>, DTypeMax>;
+	struct UFuncTablesBinary {
+		UFuncTableBinary tensors;
+		UFuncTableBinary scalar_left;
+		UFuncTableBinary scalar_right;
+	};
+	struct UFuncTablesBinaryCommutative {
+		UFuncTableBinary tensors;
+		UFuncTableBinary scalar_right;
+	};
+}
+
+#ifndef UNARY_TABLES
+#define UNARY_TABLES(UFUNC_NAME) extern UFuncTableUnary UFUNC_NAME;
+#endif
+
+#ifndef BINARY_TABLES
+#define BINARY_TABLES(UFUNC_NAME) extern UFuncTablesBinary UFUNC_NAME;
+#endif
+
+#ifndef BINARY_TABLES_COMMUTATIVE
+#define BINARY_TABLES_COMMUTATIVE(UFUNC_NAME) extern UFuncTablesBinaryCommutative UFUNC_NAME;
+#endif
+
+// ReSharper disable CppNonInlineVariableDefinitionInHeaderFile
 namespace va::vfunc::tables {
 	UNARY_TABLES(negative)
 	UNARY_TABLES(sign)
@@ -80,3 +108,5 @@ namespace va::vfunc::tables {
 
 	BINARY_TABLES_COMMUTATIVE(is_close)
 }
+
+#endif //TABLES_HPP

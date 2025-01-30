@@ -11,7 +11,7 @@
 #include "vcompute.hpp"
 #include "vpromote.hpp"
 #include "xscalar_store.hpp"
-#include "vfunc/ufunc_features.hpp"
+#include "vfunc/entrypoints.hpp"
 
 using namespace va;
 

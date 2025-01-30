@@ -6,7 +6,7 @@
 #include <vatensor/trigonometry.hpp>          // for acos, acosh, asin, asinh
 #include <vatensor/vassign.hpp>               // for assign
 #include <vatensor/vmath.hpp>                 // for abs, add, clip, deg2rad
-#include "vatensor/vfunc/ufunc_features.hpp"
+#include "vatensor/vfunc/entrypoints.hpp"
 #include <cmath>                            // for double_t, isinf
 #include <optional>                         // for optional
 #include <stdexcept>                        // for runtime_error

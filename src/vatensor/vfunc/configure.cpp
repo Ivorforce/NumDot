@@ -1,7 +1,7 @@
 #include "configure.hpp"
 
 #include "vatensor/gen/base.hpp"
-#include "ufunc_features.hpp"
+#include "entrypoints.hpp"
 
 void va::vfunc::configure() {
 	va::vfunc::base::configure();

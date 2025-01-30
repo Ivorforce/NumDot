@@ -5,7 +5,7 @@
 #include <stdexcept>              // for runtime_error
 #include <vector>                 // for vector
 #include <xtensor/xview.hpp>
-#include "vfunc/ufunc_features.hpp"
+#include "vfunc/entrypoints.hpp"
 #include "create.hpp"
 #include "rearrange.hpp"
 #include "reduce.hpp"               // for sum

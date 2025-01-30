@@ -10,7 +10,7 @@
 #include "xtensor/xoperation.hpp"                        // for equal_to
 // See below
 #ifdef _WIN32
-#include "ufunc/ufunc_features.hpp"
+#include "ufunc/entrypoints.hpp"
 #include "xtensor_store.hpp"
 #include "reduce.hpp"
 #endif

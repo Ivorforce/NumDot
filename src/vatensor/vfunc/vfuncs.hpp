@@ -3,6 +3,7 @@
 
 #include "vatensor/varray.hpp"
 #include "vatensor/vpromote.hpp"
+#include "vatensor/vassign.hpp"
 #include "xtensor/xoperation.hpp"
 
 #define IMPLEMENT_BINARY_VFUNC0(UFUNC_NAME, OP)\

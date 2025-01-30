@@ -205,9 +205,9 @@ namespace {namespace_name} {{
 f"""
 #include "{module_name}.hpp"
 
-#include "vatensor/vfunc/ufunc_features.hpp"
+#include "vatensor/varray.hpp"
 #include "vatensor/vfunc/vfuncs.hpp"
-
+#include "vatensor/vfunc/tables.hpp"
 #include "vatensor/vfunc/arch_util.hpp"
 #include "xtensor/xoperation.hpp"
 

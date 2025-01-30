@@ -9,7 +9,7 @@
 #include <vatensor/vmath.hpp>                        // for abs, add, clip
 #include <vatensor/xtensor_store.hpp>                        // for abs, add, clip
 #include <vatensor/vcarray.hpp>                        // fill_c_array_flat
-#include "vatensor/vfunc/ufunc_features.hpp"
+#include "vatensor/vfunc/entrypoints.hpp"
 #include <algorithm>                               // for copy
 #include <cstddef>                                 // for size_t
 #include <ndutil.hpp>

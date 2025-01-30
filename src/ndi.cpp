@@ -7,7 +7,7 @@
 #include <type_traits>                        // for decay_t
 #include <utility>                            // for forward
 #include <vatensor/xtensor_store.hpp>
-#include <vatensor/vfunc/ufunc_features.hpp>
+#include <vatensor/vfunc/entrypoints.hpp>
 #include "gdconvert/conversion_array.hpp"       // for variant_as_array
 #include "gdconvert/util.hpp"
 #include "godot_cpp/core/class_db.hpp"        // for D_METHOD, ClassDB, Meth...

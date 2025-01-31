@@ -24,9 +24,14 @@ inline void UFUNC_NAME(VStoreAllocator& allocator, const VArrayTarget& target, c
 	va::call_vfunc_binary(allocator, vfunc::tables::UFUNC_NAME, target, a, b);\
 }
 
-#define DEFINE_RFUNC_CALLER_BINARY0(UFUNC_NAME)\
+#define DEFINE_R0FUNC_CALLER_BINARY0(UFUNC_NAME)\
 inline void UFUNC_NAME(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b) {\
 	va::call_rfunc_binary(allocator, vfunc::tables::UFUNC_NAME, target, a, b);\
+}
+
+#define DEFINE_RFUNC_CALLER_BINARY0(UFUNC_NAME)\
+inline void UFUNC_NAME(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b, const va::axes_type* axes) {\
+	va::call_rfunc_binary(allocator, vfunc::tables::UFUNC_NAME, target, a, b, axes);\
 }
 
 #define DEFINE_VFUNC_CALLER_BINARY3(UFUNC_NAME, VAR1, VAR2, VAR3)\
@@ -34,7 +39,7 @@ inline void UFUNC_NAME(VStoreAllocator& allocator, const VArrayTarget& target, c
 	va::call_vfunc_binary(allocator, vfunc::tables::UFUNC_NAME, target, a, b, v1, v2, v3);\
 }
 
-#define DEFINE_RFUNC_CALLER_BINARY3(UFUNC_NAME, VAR1, VAR2, VAR3)\
+#define DEFINE_R0FUNC_CALLER_BINARY3(UFUNC_NAME, VAR1, VAR2, VAR3)\
 inline void UFUNC_NAME(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b, const VAR1 v1, const VAR2 v2, const VAR3 v3) {\
 	va::call_rfunc_binary(allocator, vfunc::tables::UFUNC_NAME, target, a, b, v1, v2, v3);\
 }
@@ -120,7 +125,7 @@ namespace va {
 	DEFINE_VFUNC_CALLER_UNARY0(isinf)
 
 	DEFINE_VFUNC_CALLER_BINARY3(is_close, double, double, bool)
-	DEFINE_RFUNC_CALLER_BINARY0(array_equiv)
+	DEFINE_R0FUNC_CALLER_BINARY0(array_equiv)
 	static void array_equal(::va::VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b) {
 		if (shape(a) != shape(b)) {
 			return va::assign(target, false);
@@ -128,9 +133,11 @@ namespace va {
 
 		array_equiv(allocator, target, a, b);
 	}
-	DEFINE_RFUNC_CALLER_BINARY3(all_close, double, double, bool)
+	DEFINE_R0FUNC_CALLER_BINARY3(all_close, double, double, bool)
 
 	DEFINE_VFUNC_CALLER_UNARY1(fft, std::ptrdiff_t)
+
+	DEFINE_RFUNC_CALLER_BINARY0(reduce_dot)
 }
 
 #endif //VATENSOR_UFUNC_CONFIG_HPP

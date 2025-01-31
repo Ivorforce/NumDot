@@ -43,7 +43,7 @@ ndf::~ndf() = default;
 	numdot::reduction_new<double_t>([](const va::VArrayTarget& target, const va::VArray& array) { return va::func(va::store::default_allocator, target, array.data, nullptr); }, (varray1))
 
 #define REDUCTION2(func, varray1, varray2) \
-	numdot::reduction<double_t>([](const va::VArray& x1, const va::VArray& x2) { return va::func(x1.data, x2.data); }, (varray1), (varray2))
+	numdot::reduction_new<double_t>([](const va::VArrayTarget& target, const va::VArray& x1, const va::VArray& x2) { return va::func(va::store::default_allocator, target, x1.data, x2.data, nullptr); }, (varray1), (varray2))
 
 double_t ndf::sum(const Variant& a) {
 	return REDUCTION1_NEW(sum, a);

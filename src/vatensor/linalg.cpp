@@ -155,17 +155,20 @@ void va::matmul(VStoreAllocator& allocator, const VArrayTarget& target, const VD
 		throw std::runtime_error("matmul does not accept scalars");
 	}
 	if (va::dimension(b) == 1) {
-		va::reduce_dot(allocator, target, a, b, {-1});
+		auto axes = axes_type {-1};
+		va::reduce_dot(allocator, target, a, b, &axes);
 		return;
 	}
 	if (va::dimension(a) == 1) {
 		const auto promoted_a = va::sliced_data(a, {xt::all(), xt::newaxis()});
-		va::reduce_dot(allocator, target, promoted_a, b, {-2});
+		auto axes = axes_type {-2};
+		va::reduce_dot(allocator, target, promoted_a, b, &axes);
 		return;
 	}
 
 	auto a_broadcast = va::sliced_data(a, { xt::ellipsis(), xt::newaxis() });
 	auto b_broadcast = va::sliced_data(b, { xt::ellipsis(), xt::newaxis(), xt::all(), xt::all() });
 
-	reduce_dot(allocator, target, a_broadcast, b_broadcast, std::vector<std::ptrdiff_t> { -2 });
+	auto axes = axes_type {-2};
+	reduce_dot(allocator, target, a_broadcast, b_broadcast, &axes);
 }

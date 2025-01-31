@@ -114,56 +114,6 @@ void va::count_nonzero(VStoreAllocator& allocator, const VArrayTarget& target, c
 	// return va::sum(allocator, target, is_nonzero->data, axes);
 }
 
-va::VScalar va::reduce_dot(const VData& a, const VData& b) {
-	// Could also do this instead to avoid generating more code.
-	// std::shared_ptr<va::VArray> prod_cache;
-	// va::multiply(&prod_cache, a, b);
-	// return sum(*prod_cache);
-
-	return vreduce<
-		Feature::reduce_dot,
-		promote::num_in_same_out,
-		VScalar
-	>(
-		[](auto&& a, auto&& b) {
-			 using A = decltype(a);
-			 using B = decltype(b);
-
-			 return xt::sum(
-			 	std::forward<A>(a) * std::forward<B>(b),
-			 	std::tuple<xt::evaluation_strategy::lazy_type>()
-			)();
-	   },
-		a, b
-	);
-}
-
-void va::reduce_dot(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b, const axes_type& axes) {
-	// Could also do this instead to avoid generating more code.
-	// std::shared_ptr<va::VArray> prod_cache;
-	// va::multiply(&prod_cache, a, b);
-	// va::sum(target, *prod_cache, axes);
-
-	va::xoperation_inplace<
-		Feature::reduce_dot,
-		promote::num_in_same_out
-	>(
-		 [&axes](auto&& a, auto&& b) {
-			 using A = decltype(a);
-			 using B = decltype(b);
-
-			 return xt::sum(
-		 		// These HAVE to be passed in directly as rvalue, otherwise they'll be
-		 		// stored by sum as references, crashing the program.
-			 	std::forward<A>(a) * std::forward<B>(b),
-			 	axes,
-			 	std::tuple<xt::evaluation_strategy::lazy_type>()
-			);
-		},
-		allocator, target, a, b
-	);
-}
-
 void va::trace(VStoreAllocator& allocator, const VArrayTarget& target, const VArray& varray, std::ptrdiff_t offset, std::ptrdiff_t axis1, std::ptrdiff_t axis2) {
 	// TODO
 	// const auto diagonal = va::diagonal(varray, offset, axis1, axis2);

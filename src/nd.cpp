@@ -348,10 +348,8 @@ Ref<NDArray> like_visit(Visitor&& visitor, const Variant& model, nd::DType dtype
 	}, axes, (varray1))
 
 #define REDUCTION2(func, varray1, varray2, axes1) \
-	reduction([](const va::VArrayTarget& target, const va::axes_type& axes, const va::VArray& carray1, const va::VArray& carray2) {\
+	reduction_new([](const va::VArrayTarget& target, const va::axes_type* axes, const va::VArray& carray1, const va::VArray& carray2) {\
 		va::func(va::store::default_allocator, target, carray1.data, carray2.data, axes);\
-	}, [](const va::VArray& carray1, const va::VArray& carray2) {\
-		return va::func(carray1.data, carray2.data);\
 	}, axes, (varray1), (varray2))
 
 StringName nd::newaxis() {

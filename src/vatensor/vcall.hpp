@@ -81,6 +81,7 @@ namespace va {
 	}
 
 	void shape_reduce_axes(va::shape_type& shape, const va::axes_type& axes);
+	va::shape_type combined_shape(const shape_type& a_shape, const shape_type& b_shape);
 
 	template<typename... Args>
 	void call_rfunc_unary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableUnary& table, const VArrayTarget& target, const VData& a, const va::axes_type* axes, Args&&... args) {
@@ -157,14 +158,7 @@ namespace va {
 
 	template<typename... Args>
 	void call_vfunc_binary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableBinary& table, const VArrayTarget& target, const VData& a, const VData& b, Args&&... args) {
-		const auto& a_shape = va::shape(a);
-		const auto& b_shape = va::shape(b);
-
-		auto result_shape = shape_type(std::max(a_shape.size(), b_shape.size()));
-		std::fill_n(result_shape.begin(), result_shape.size(), std::numeric_limits<shape_type::value_type>::max());
-		xt::broadcast_shape(a_shape, result_shape);
-		xt::broadcast_shape(b_shape, result_shape);
-
+		const shape_type result_shape = combined_shape(va::shape(a), va::shape(b));
 		_call_vfunc_binary(allocator, table, target, result_shape, a, b, std::forward<Args>(args)...);
 	}
 
@@ -197,6 +191,19 @@ namespace va {
 		if (va::dimension(a) == 0) return _call_vfunc_binary(allocator, table.scalar_right, target, va::shape_type(), b, va::to_single_value(a), args...);
 		if (va::dimension(b) == 0) return _call_vfunc_binary(allocator, table.scalar_right, target, va::shape_type(), a, va::to_single_value(b), args...);
 		_call_vfunc_binary(allocator, table.tensors, target, va::shape_type(), a, b, std::forward<Args>(args)...);
+	}
+
+	template<typename... Args>
+	void call_rfunc_binary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableBinary& table, const VArrayTarget& target, const VData& a, const VData& b, const va::axes_type* axes, Args&&... args) {
+		if (axes) {
+			shape_type result_shape = combined_shape(va::shape(a), va::shape(b));
+			shape_reduce_axes(result_shape, *axes);
+
+			_call_vfunc_binary(allocator, table, target, result_shape, a, b, std::move(axes), std::forward<Args>(args)...);
+		}
+		else {
+			_call_vfunc_binary(allocator, table, target, va::shape_type(), a, b, nullptr, std::forward<Args>(args)...);
+		}
 	}
 }
 

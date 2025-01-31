@@ -2,6 +2,7 @@
 
 #include <variant>
 #include "reduce.hpp"
+#include "vfunc/entrypoints.hpp"
 
 std::shared_ptr<va::VArray> va::as_strided(const VArray& array, const shape_type& shape, const strides_type& strides) {
 	return std::visit(
@@ -68,5 +69,5 @@ void va::convolve(VStoreAllocator& allocator, const VArrayTarget& target, const 
 	axes_type axes(convolve_dimensions);
 	for (int i = 0; i < convolve_dimensions; i++) axes[i] = -convolve_dimensions + i;
 
-	va::reduce_dot(allocator, target, sliding_view->data, kernel.data, axes);
+	va::reduce_dot(allocator, target, sliding_view->data, kernel.data, &axes);
 }

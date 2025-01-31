@@ -47,3 +47,13 @@ void va::shape_reduce_axes(va::shape_type& shape, const va::axes_type& axes) {
 		shape.end()
 	);
 }
+
+va::shape_type va::combined_shape(const shape_type& a_shape, const shape_type& b_shape) {
+	va::shape_type result_shape = shape_type(std::max(a_shape.size(), b_shape.size()));
+	std::fill_n(result_shape.begin(), result_shape.size(), std::numeric_limits<shape_type::value_type>::max());
+
+	xt::broadcast_shape(a_shape, result_shape);
+	xt::broadcast_shape(b_shape, result_shape);
+
+	return result_shape;
+}

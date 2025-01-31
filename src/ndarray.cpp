@@ -805,10 +805,8 @@ inline void reduction_inplace_new(Visitor&& visitor, va::VArray& target, const V
 	return {this}
 
 #define REDUCTION2(func, varray1, varray2, axes1) \
-	reduction_inplace([this](const va::VArrayTarget& target, const va::axes_type& axes, const std::shared_ptr<va::VArray>& carray1, const std::shared_ptr<va::VArray>& carray2) {\
+	reduction_inplace_new([this](const va::VArrayTarget& target, const va::axes_type* axes, const std::shared_ptr<va::VArray>& carray1, const std::shared_ptr<va::VArray>& carray2) {\
 		va::func(va::store::default_allocator, target, carray1->data, carray2->data, axes);\
-	}, [this](const std::shared_ptr<va::VArray>& carray1, const std::shared_ptr<va::VArray>& carray2) {\
-		return va::func(carray1->data, carray2->data);\
 	}, *this->array, (axes1), (varray1), (varray2));\
 	return {this}
 

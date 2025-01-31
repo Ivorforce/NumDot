@@ -10,7 +10,6 @@ namespace va {
 		arange,
 
 		median,
-		reduce_dot,
 
 		cross,
 
@@ -35,7 +34,6 @@ namespace va {
 			FEATURE_NAME_CASE(arange)
 
 			FEATURE_NAME_CASE(median)
-			FEATURE_NAME_CASE(reduce_dot)
 
 			FEATURE_NAME_CASE(cross)
 

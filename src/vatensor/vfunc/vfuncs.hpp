@@ -88,6 +88,18 @@ inline void UFUNC_NAME(R& ret, const A& a, const va::axes_type* axes) {\
 	}\
 }
 
+#define IMPLEMENT_BINARY_RFUNC(UFUNC_NAME, SINGLE, MULTI)\
+template <typename R, typename A, typename B>\
+inline void UFUNC_NAME(R& ret, const A& a, const B& b, const va::axes_type* axes) {\
+	if (axes) {\
+		va::broadcasting_assign_typesafe(ret, MULTI);\
+	}\
+	else {\
+		const typename R::value_type intermediate = va::op::va_cast<typename R::value_type>(SINGLE);\
+		broadcasting_assign_typesafe(ret, xt::xscalar<typename R::value_type>(intermediate));\
+	}\
+}
+
 namespace va::vfunc::impl {
 	IMPLEMENT_UNARY_VFUNC(negative, -va::promote::to_num(a))
 	IMPLEMENT_UNARY_VFUNC(sign, xt::sign(va::promote::to_num(a)))
@@ -176,6 +188,8 @@ namespace va::vfunc::impl {
 	IMPLEMENT_BINARY_VFUNC(all_close, xt::xscalar<bool>(xt::all(xt::isclose(va::promote::to_num(a), va::promote::to_num(b), rtol, atol, equal_nan))), double rtol, double atol, bool equal_nan)
 
 	IMPLEMENT_UNARY_VFUNC(fft, xt::fft::fft(std::forward<decltype(a)>(a), axis), std::ptrdiff_t axis)
+
+	IMPLEMENT_BINARY_RFUNC(reduce_dot, xt::sum(a * b)(), xt::sum(a * b, *axes))
 } // namespace va::vfunc::impl
 
 #endif //VFUNCS_HPP

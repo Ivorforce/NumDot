@@ -62,6 +62,19 @@ static void add_native(va::vfunc::tables::UFuncTablesBinaryCommutative& tables) 
 	};
 }
 
+template <typename C, typename RETURN_TYPE, typename IN0, typename IN1, typename... ARGS>
+static void add_native(va::vfunc::tables::UFuncTableBinary& table) {
+	const auto in0 = va::dtype_of_type<IN0>();
+	const auto in1 = va::dtype_of_type<IN1>();
+	const auto out = va::dtype_of_type<RETURN_TYPE>();
+
+	table[in0][in1] = va::vfunc::VFunc<2> {
+		{ in0, in1 },
+		out,
+		(void *)&C::template run<RETURN_TYPE, va::compute_case<IN0*>, va::compute_case<IN1*>, ARGS...>
+	};
+}
+
 template <typename IN0, typename MODEL_IN0>
 static void add_cast(va::vfunc::tables::UFuncTableUnary& table) {
 	const auto in0 = va::dtype_of_type<IN0>();
@@ -90,6 +103,16 @@ static void add_cast(va::vfunc::tables::UFuncTablesBinaryCommutative& tables) {
 
 	tables.tensors[in0][in1] = tables.tensors[model_in0][model_in1];
 	tables.scalar_right[in0][in1] = tables.scalar_right[model_in0][model_in1];
+}
+
+template <typename IN0, typename IN1, typename MODEL_IN0, typename MODEL_IN1>
+static void add_cast(va::vfunc::tables::UFuncTableBinary& table) {
+	const auto in0 = va::dtype_of_type<IN0>();
+	const auto in1 = va::dtype_of_type<IN1>();
+	const auto model_in0 = va::dtype_of_type<MODEL_IN0>();
+	const auto model_in1 = va::dtype_of_type<MODEL_IN1>();
+
+	table[in0][in1] = table[model_in0][model_in1];
 }
 
 #endif //VATENSOR_ARCH_UTIL_HPP

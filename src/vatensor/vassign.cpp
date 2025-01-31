@@ -153,16 +153,14 @@ void va::assign_cast(VStoreAllocator& allocator, const VArrayTarget& target, con
 }
 
 void va::assign(const VArrayTarget& target, VScalar value) {
-	std::visit(
-		[value](auto target) {
-			if constexpr (std::is_same_v<decltype(target), VData*>) {
-				va::assign(*target, value);
-			}
-			else {
-				*target = va::store::from_scalar_variant(value);
-			}
-		}, target
-	);
+	if (const auto target_data = std::get_if<VData*>(&target)) {
+		VData& data = **target_data;
+		va::assign(data, value);
+	}
+	else {
+		auto& target_varray = *std::get<std::shared_ptr<VArray>*>(target);
+		target_varray = va::store::from_scalar_variant(value);
+	}
 }
 
 std::shared_ptr<VArray> va::get_at_mask(VStoreAllocator& allocator, const VData& data, const VData& mask) {

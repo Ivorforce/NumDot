@@ -133,6 +133,7 @@ def make_module(env, sources, module_name: str, ufuncs_json: dict):
 				or ufunc_name == "max"
 				or ufunc_name == "min"
 				or ufunc_name == "mean"
+				or ufunc_name == "median"
 				or ufunc_name == "variance"
 				or ufunc_name == "standard_deviation"
 				or ufunc_name == "rint"

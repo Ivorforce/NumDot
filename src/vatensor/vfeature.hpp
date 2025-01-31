@@ -9,8 +9,6 @@ namespace va {
 		linspace,
 		arange,
 
-		median,
-
 		cross,
 
 		random_float,
@@ -32,8 +30,6 @@ namespace va {
 
 			FEATURE_NAME_CASE(linspace)
 			FEATURE_NAME_CASE(arange)
-
-			FEATURE_NAME_CASE(median)
 
 			FEATURE_NAME_CASE(cross)
 

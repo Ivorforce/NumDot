@@ -3,6 +3,8 @@
 
 #include <xtensor-signal/fft.hpp>
 #include <xtensor/xnorm.hpp>
+#include <xtensor/xsort.hpp>
+
 #include "vatensor/varray.hpp"
 #include "vatensor/vpromote.hpp"
 #include "vatensor/vassign.hpp"
@@ -62,6 +64,15 @@ namespace va::op {
 	using namespace xt;
 	XTENSOR_REDUCER_FUNCTION(va_any, xt::detail::logical_or, bool, true)
 	XTENSOR_REDUCER_FUNCTION(va_all, xt::detail::logical_and, bool, false)
+
+	template <class T1>
+	auto median(const T1 &t1, const axes_type& axes) {
+		// TODO Improve implementation, this one is very finnicky
+		if (axes.size() > 1) {
+			throw std::runtime_error("only single axis median is supported right now");
+		}
+		return xt::median(t1, axes[0]);
+	}
 }
 
 #define IMPLEMENT_UNARY_VFUNC(UFUNC_NAME, OP, ...)\
@@ -126,6 +137,7 @@ namespace va::vfunc::impl {
 	IMPLEMENT_UNARY_RFUNC(sum, xt::sum(a)(), xt::sum(a, *axes))
 	IMPLEMENT_UNARY_RFUNC(prod, xt::prod(a)(), xt::prod(a, *axes))
 	IMPLEMENT_UNARY_RFUNC(mean, xt::mean(a)(), xt::mean(a, *axes))
+	IMPLEMENT_UNARY_RFUNC(median, xt::median(a), va::op::median(a, *axes))
 	IMPLEMENT_UNARY_RFUNC(variance, xt::variance(a)(), xt::variance(a, *axes))
 	IMPLEMENT_UNARY_RFUNC(standard_deviation, xt::stddev(a)(), xt::stddev(a, *axes))
 	IMPLEMENT_UNARY_RFUNC(max, xt::amax(a)(), xt::amax(a, *axes))

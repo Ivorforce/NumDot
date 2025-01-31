@@ -35,20 +35,17 @@ ndi::ndi() = default;
 ndi::~ndi() = default;
 
 #define REDUCTION1(func, varray1) \
-	numdot::reduction<int64_t>([](const va::VArray& array) { return va::func(array.data); }, (varray1))
-
-#define REDUCTION1_NEW(func, varray1) \
 	numdot::reduction_new<int64_t>([](const va::VArrayTarget& target, const va::VArray& array) { va::func(va::store::default_allocator, target, array.data, nullptr); }, (varray1))
 
 #define REDUCTION2(func, varray1, varray2) \
 	numdot::reduction_new<int64_t>([](const va::VArrayTarget& target, const va::VArray& x1, const va::VArray& x2) { va::func(va::store::default_allocator, target, x1.data, x2.data, nullptr); }, (varray1), (varray2))
 
 int64_t ndi::sum(const Variant& a) {
-	return REDUCTION1_NEW(sum, a);
+	return REDUCTION1(sum, a);
 }
 
 int64_t ndi::prod(const Variant& a) {
-	return REDUCTION1_NEW(prod, a);
+	return REDUCTION1(prod, a);
 }
 
 int64_t ndi::median(const Variant& a) {
@@ -56,11 +53,11 @@ int64_t ndi::median(const Variant& a) {
 }
 
 int64_t ndi::max(const Variant& a) {
-	return REDUCTION1_NEW(max, a);
+	return REDUCTION1(max, a);
 }
 
 int64_t ndi::min(const Variant& a) {
-	return REDUCTION1_NEW(min, a);
+	return REDUCTION1(min, a);
 }
 
 int64_t ndi::norm(const Variant& a, const Variant& ord) {
@@ -68,17 +65,17 @@ int64_t ndi::norm(const Variant& a, const Variant& ord) {
 		case Variant::INT:
 			switch (static_cast<int64_t>(ord)) {
 				case 0:
-					return REDUCTION1_NEW(norm_l0, a);
+					return REDUCTION1(norm_l0, a);
 				case 1:
-					return REDUCTION1_NEW(norm_l1, a);
+					return REDUCTION1(norm_l1, a);
 				case 2:
-					return REDUCTION1_NEW(norm_l2, a);
+					return REDUCTION1(norm_l2, a);
 				default:
 					break;
 			}
 		case Variant::FLOAT:
 			if (std::isinf(static_cast<int64_t>(ord))) {
-				return REDUCTION1_NEW(norm_linf, a);
+				return REDUCTION1(norm_linf, a);
 			}
 		default:
 			break;

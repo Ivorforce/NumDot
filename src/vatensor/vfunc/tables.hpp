@@ -57,6 +57,7 @@ namespace va::vfunc::tables {
 	VA_TABLES_EXTERN UFuncTableUnary sum;
 	VA_TABLES_EXTERN UFuncTableUnary prod;
 	VA_TABLES_EXTERN UFuncTableUnary mean;
+	VA_TABLES_EXTERN UFuncTableUnary median;
 	VA_TABLES_EXTERN UFuncTableUnary variance;
 	VA_TABLES_EXTERN UFuncTableUnary standard_deviation;
 	VA_TABLES_EXTERN UFuncTableUnary max;

@@ -37,24 +37,21 @@ ndf::ndf() = default;
 ndf::~ndf() = default;
 
 #define REDUCTION1(func, varray1) \
-numdot::reduction<double_t>([](const va::VArray& array) { return va::func(array.data); }, (varray1))
-
-#define REDUCTION1_NEW(func, varray1) \
 numdot::reduction_new<double_t>([](const va::VArrayTarget& target, const va::VArray& array) { va::func(va::store::default_allocator, target, array.data, nullptr); }, (varray1))
 
 #define REDUCTION2(func, varray1, varray2) \
 numdot::reduction_new<double_t>([](const va::VArrayTarget& target, const va::VArray& x1, const va::VArray& x2) { va::func(va::store::default_allocator, target, x1.data, x2.data, nullptr); }, (varray1), (varray2))
 
 double_t ndf::sum(const Variant& a) {
-	return REDUCTION1_NEW(sum, a);
+	return REDUCTION1(sum, a);
 }
 
 double_t ndf::prod(const Variant& a) {
-	return REDUCTION1_NEW(prod, a);
+	return REDUCTION1(prod, a);
 }
 
 double_t ndf::mean(const Variant& a) {
-	return REDUCTION1_NEW(mean, a);
+	return REDUCTION1(mean, a);
 }
 
 double_t ndf::median(const Variant& a) {
@@ -62,19 +59,19 @@ double_t ndf::median(const Variant& a) {
 }
 
 double_t ndf::variance(const Variant& a) {
-	return REDUCTION1_NEW(variance, a);
+	return REDUCTION1(variance, a);
 }
 
 double_t ndf::standard_deviation(const Variant& a) {
-	return REDUCTION1_NEW(standard_deviation, a);
+	return REDUCTION1(standard_deviation, a);
 }
 
 double_t ndf::max(const Variant& a) {
-	return REDUCTION1_NEW(max, a);
+	return REDUCTION1(max, a);
 }
 
 double_t ndf::min(const Variant& a) {
-	return REDUCTION1_NEW(min, a);
+	return REDUCTION1(min, a);
 }
 
 double_t ndf::norm(const Variant& a, const Variant& ord) {
@@ -82,17 +79,17 @@ double_t ndf::norm(const Variant& a, const Variant& ord) {
 		case Variant::INT:
 			switch (static_cast<int64_t>(ord)) {
 				case 0:
-					return REDUCTION1_NEW(norm_l0, a);
+					return REDUCTION1(norm_l0, a);
 				case 1:
-					return REDUCTION1_NEW(norm_l1, a);
+					return REDUCTION1(norm_l1, a);
 				case 2:
-					return REDUCTION1_NEW(norm_l2, a);
+					return REDUCTION1(norm_l2, a);
 				default:
 					break;
 			}
 		case Variant::FLOAT:
 			if (std::isinf(static_cast<double_t>(ord))) {
-				return REDUCTION1_NEW(norm_linf, a);
+				return REDUCTION1(norm_linf, a);
 			}
 		default:
 			break;

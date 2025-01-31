@@ -338,11 +338,6 @@ Ref<NDArray> like_visit(Visitor&& visitor, const Variant& model, nd::DType dtype
     }, (varray1), (varray2), (varray3))
 
 #define REDUCTION1(func, varray1, axes1) \
-	reduction([](const va::VArrayTarget& target, const va::axes_type& axes, const va::VArray& array) {\
-		va::func(va::store::default_allocator, target, array.data, axes);\
-	}, [](const va::VArray& array) { return va::func(array.data); }, axes, (varray1))
-
-#define REDUCTION1_NEW(func, varray1, axes1) \
 	reduction_new([](const va::VArrayTarget& target, const va::axes_type* axes, const va::VArray& array) {\
 		va::func(va::store::default_allocator, target, array.data, axes);\
 	}, axes, (varray1))
@@ -1022,15 +1017,15 @@ Ref<NDArray> nd::atanh(const Variant& a) {
 }
 
 Ref<NDArray> nd::sum(const Variant& a, const Variant& axes) {
-	return REDUCTION1_NEW(sum, a, axes);
+	return REDUCTION1(sum, a, axes);
 }
 
 Ref<NDArray> nd::prod(const Variant& a, const Variant& axes) {
-	return REDUCTION1_NEW(prod, a, axes);
+	return REDUCTION1(prod, a, axes);
 }
 
 Ref<NDArray> nd::mean(const Variant& a, const Variant& axes) {
-	return REDUCTION1_NEW(mean, a, axes);
+	return REDUCTION1(mean, a, axes);
 }
 
 Ref<NDArray> nd::median(const Variant& a, const Variant& axes) {
@@ -1038,19 +1033,19 @@ Ref<NDArray> nd::median(const Variant& a, const Variant& axes) {
 }
 
 Ref<NDArray> nd::variance(const Variant& a, const Variant& axes) {
-	return REDUCTION1_NEW(variance, a, axes);
+	return REDUCTION1(variance, a, axes);
 }
 
 Ref<NDArray> nd::standard_deviation(const Variant& a, const Variant& axes) {
-	return REDUCTION1_NEW(standard_deviation, a, axes);
+	return REDUCTION1(standard_deviation, a, axes);
 }
 
 Ref<NDArray> nd::max(const Variant& a, const Variant& axes) {
-	return REDUCTION1_NEW(max, a, axes);
+	return REDUCTION1(max, a, axes);
 }
 
 Ref<NDArray> nd::min(const Variant& a, const Variant& axes) {
-	return REDUCTION1_NEW(min, a, axes);
+	return REDUCTION1(min, a, axes);
 }
 
 Ref<NDArray> nd::norm(const Variant& a, const Variant& ord, const Variant& axes) {
@@ -1058,17 +1053,17 @@ Ref<NDArray> nd::norm(const Variant& a, const Variant& ord, const Variant& axes)
 		case Variant::INT:
 			switch (static_cast<int64_t>(ord)) {
 				case 0:
-					return REDUCTION1_NEW(norm_l0, a, axes);
+					return REDUCTION1(norm_l0, a, axes);
 				case 1:
-					return REDUCTION1_NEW(norm_l1, a, axes);
+					return REDUCTION1(norm_l1, a, axes);
 				case 2:
-					return REDUCTION1_NEW(norm_l2, a, axes);
+					return REDUCTION1(norm_l2, a, axes);
 				default:
 					break;
 			}
 		case Variant::FLOAT:
 			if (std::isinf(static_cast<double_t>(ord))) {
-				return REDUCTION1_NEW(norm_linf, a, axes);
+				return REDUCTION1(norm_linf, a, axes);
 			}
 		default:
 			break;
@@ -1162,11 +1157,11 @@ Ref<NDArray> nd::logical_not(const Variant& a) {
 }
 
 Ref<NDArray> nd::all(const Variant& a, const Variant& axes) {
-	return REDUCTION1_NEW(all, a, axes);
+	return REDUCTION1(all, a, axes);
 }
 
 Ref<NDArray> nd::any(const Variant& a, const Variant& axes) {
-	return REDUCTION1_NEW(any, a, axes);
+	return REDUCTION1(any, a, axes);
 }
 
 Ref<NDArray> nd::bitwise_and(const Variant& a, const Variant& b) {

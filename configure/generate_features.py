@@ -213,7 +213,7 @@ def main():
 			"casts": [],
 			"vargs": ["const va::axes_type*"]
 		})
-	for rfunc in ["mean", "variance", "standard_deviation", "norm_l0", "norm_l1", "norm_l2", "norm_linf"]:
+	for rfunc in ["mean", "median", "variance", "standard_deviation", "norm_l0", "norm_l1", "norm_l2", "norm_linf"]:
 		vfuncs.append({
 			"name": rfunc,
 			"specializations": specializations_at_least_float32,

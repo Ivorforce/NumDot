@@ -10,10 +10,11 @@
 using namespace va;
 
 void va::clip(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& lo, const VData& hi) {
-	// TODO Re-evaluate if it's worth it to make it a ternary vfunc.
-	std::shared_ptr<va::VArray> tmp;
-	va::minimum(allocator, &tmp, a, hi);
-	va::maximum(allocator, target, tmp->data, lo);
+	// We can just assign to target directly in the first call, and then use it as a temporary in the second call.
+	// No invariants are destroyed with this assumption, and it saves us having to re-define a ternary function
+	// or create a temporary variable.
+	va::minimum(allocator, target, a, hi);
+	va::maximum(allocator, target, unwrap_target(target), lo);
 }
 
 void va::a0xb1_minus_a1xb0(va::VStoreAllocator& allocator, const va::VArrayTarget& target, const va::VData& a, const va::VData& b, const std::ptrdiff_t i0, const std::ptrdiff_t i1) {

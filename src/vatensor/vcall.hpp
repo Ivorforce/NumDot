@@ -208,6 +208,13 @@ namespace va {
 		if (va::dimension(b) == 0) return va::call_vfunc_binary(allocator, table.scalar_right, target, a, va::to_single_value(b), args...);
 		va::call_vfunc_binary(allocator, table.tensors, target, a, b, args...);
 	}
+
+	static VData &unwrap_target(const va::VArrayTarget& target) {
+		if (const auto target_data = std::get_if<VData*>(&target)) {
+			return **target_data;
+		}
+		return (*std::get<std::shared_ptr<VArray>*>(target))->data;
+	}
 }
 
 #endif //VCALL_HPP

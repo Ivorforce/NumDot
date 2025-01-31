@@ -80,30 +80,13 @@ namespace va {
 		_call_vfunc_unary(allocator, table, target, va::shape(a), a, std::forward<Args>(args)...);
 	}
 
+	void shape_reduce_axes(va::shape_type& shape, const va::axes_type& axes);
+
 	template<typename... Args>
 	void call_rfunc_unary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableUnary& table, const VArrayTarget& target, const VData& a, const va::axes_type* axes, Args&&... args) {
 		if (axes) {
 			va::shape_type result_shape = va::shape(a);
-			bool mask[result_shape.size()];
-			std::fill_n(mask, result_shape.size(), true);
-
-			for (const auto axis : *axes)
-			{
-				const size_t axis_normal = va::util::normalize_axis(axis, result_shape.size());
-				if (!mask[axis_normal]) {
-					throw std::runtime_error("Duplicate value in 'axis'.");
-				}
-				mask[axis_normal] = false;
-			}
-
-			result_shape.erase(
-				std::remove_if(
-					result_shape.begin(),
-					result_shape.end(),
-					[&mask, index = 0](int) mutable { return !mask[index++]; }
-				),
-				result_shape.end()
-			);
+			shape_reduce_axes(result_shape, *axes);
 
 			_call_vfunc_unary(allocator, table, target, result_shape, a, std::move(axes), std::forward<Args>(args)...);
 		}

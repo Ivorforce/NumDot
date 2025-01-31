@@ -24,3 +24,26 @@ VData& va::evaluate_target(VStoreAllocator& allocator, const VArrayTarget& targe
 		return target_varray->data;
 	}
 }
+
+void va::shape_reduce_axes(va::shape_type& shape, const va::axes_type& axes) {
+	bool mask[shape.size()];
+	std::fill_n(mask, shape.size(), true);
+
+	for (const auto axis : axes)
+	{
+		const size_t axis_normal = va::util::normalize_axis(axis, shape.size());
+		if (!mask[axis_normal]) {
+			throw std::runtime_error("Duplicate value in 'axis'.");
+		}
+		mask[axis_normal] = false;
+	}
+
+	shape.erase(
+		std::remove_if(
+			shape.begin(),
+			shape.end(),
+			[&mask, index = 0](int) mutable { return !mask[index++]; }
+		),
+		shape.end()
+	);
+}

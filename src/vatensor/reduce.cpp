@@ -96,28 +96,18 @@ void va::median(VStoreAllocator& allocator, const VArrayTarget& target, const VD
 	}
 }
 
-VScalar va::count_nonzero(VStoreAllocator& allocator, const VData& array) {
-	return 0.0;  // TODO
-	// if (va::dtype(array) == va::Bool)
-	// 	return sum(array);
-	//
-	// const auto is_nonzero = va::copy_as_dtype(allocator, array, va::Bool);
-	// return va::sum(is_nonzero->data);
-}
+void va::count_nonzero(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array, const axes_type* axes) {
+	if (va::dtype(array) == va::Bool)
+		return va::sum(allocator, target, array, axes);
 
-void va::count_nonzero(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array, const axes_type& axes) {
-	// TODO
-	// if (va::dtype(array) == va::Bool)
-	// 	return va::sum(allocator, target, array, axes);
-	//
-	// const auto is_nonzero = va::copy_as_dtype(allocator, array, va::Bool);
-	// return va::sum(allocator, target, is_nonzero->data, axes);
+	const auto is_nonzero = va::copy_as_dtype(allocator, array, va::Bool);
+	return va::sum(allocator, target, is_nonzero->data, axes);
 }
 
 void va::trace(VStoreAllocator& allocator, const VArrayTarget& target, const VArray& varray, std::ptrdiff_t offset, std::ptrdiff_t axis1, std::ptrdiff_t axis2) {
-	// TODO
-	// const auto diagonal = va::diagonal(varray, offset, axis1, axis2);
-	// va::sum(allocator, target, diagonal->data, axes_type {-1});
+	const auto diagonal = va::diagonal(varray, offset, axis1, axis2);
+	const axes_type strides {-1};
+	va::sum(allocator, target, diagonal->data, &strides);
 }
 
 VScalar va::trace_to_scalar(const VArray& varray, std::ptrdiff_t offset, std::ptrdiff_t axis1, std::ptrdiff_t axis2) {

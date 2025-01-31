@@ -1078,9 +1078,9 @@ Ref<NDArray> nd::norm(const Variant& a, const Variant& ord, const Variant& axes)
 }
 
 Ref<NDArray> nd::count_nonzero(const Variant& a, const Variant& axes) {
-	return reduction([](const va::VArrayTarget& target, const va::axes_type& axes, const va::VArray& array) {
+	return reduction_new([](const va::VArrayTarget& target, const va::axes_type* axes, const va::VArray& array) {
 		va::count_nonzero(va::store::default_allocator, target, array.data, axes);
-	}, [](const va::VArray& array) { return va::count_nonzero(va::store::default_allocator, array.data); }, axes, a);
+	}, axes, a);
 }
 
 Ref<NDArray> nd::floor(const Variant& a) {

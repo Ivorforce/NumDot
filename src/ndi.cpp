@@ -38,10 +38,10 @@ ndi::~ndi() = default;
 	numdot::reduction<int64_t>([](const va::VArray& array) { return va::func(array.data); }, (varray1))
 
 #define REDUCTION1_NEW(func, varray1) \
-	numdot::reduction_new<int64_t>([](const va::VArrayTarget& target, const va::VArray& array) { return va::func(va::store::default_allocator, target, array.data, nullptr); }, (varray1))
+	numdot::reduction_new<int64_t>([](const va::VArrayTarget& target, const va::VArray& array) { va::func(va::store::default_allocator, target, array.data, nullptr); }, (varray1))
 
 #define REDUCTION2(func, varray1, varray2) \
-	numdot::reduction_new<int64_t>([](const va::VArrayTarget& target, const va::VArray& x1, const va::VArray& x2) { return va::func(va::store::default_allocator, target, x1.data, x2.data, nullptr); }, (varray1), (varray2))
+	numdot::reduction_new<int64_t>([](const va::VArrayTarget& target, const va::VArray& x1, const va::VArray& x2) { va::func(va::store::default_allocator, target, x1.data, x2.data, nullptr); }, (varray1), (varray2))
 
 int64_t ndi::sum(const Variant& a) {
 	return REDUCTION1_NEW(sum, a);
@@ -88,8 +88,8 @@ int64_t ndi::norm(const Variant& a, const Variant& ord) {
 }
 
 int64_t ndi::count_nonzero(const Variant& a) {
-	return numdot::reduction<int64_t>([](const va::VArray& array) {
-		return va::count_nonzero(va::store::default_allocator, array.data);
+	return numdot::reduction_new<int64_t>([](const va::VArrayTarget& target, const va::VArray& array) {
+		va::count_nonzero(va::store::default_allocator, target, array.data, nullptr);
 	}, a);
 }
 

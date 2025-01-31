@@ -4,18 +4,6 @@
 #include "vcompute.hpp"
 #include "xtensor-signal/fft.hpp"
 
-void va::fft(VStoreAllocator& allocator, const VArrayTarget& target, const VArray& a, std::ptrdiff_t axis) {
-	va::xoperation_single<
-		Feature::fft,
-		promote::num_matching_complex_or_default_in_same_out<double_t>
-	>(
-		[axis](auto&& a) { return xt::fft::fft(std::forward<decltype(a)>(a), axis); },
-		allocator,
-		target,
-		a.data
-	);
-}
-
 std::shared_ptr<va::VArray> va::fft_freq(VStoreAllocator& allocator, std::size_t n, double_t d) {
 	// From NumPy docs:
 	// f = [0, 1, ...,   n/2-1,     -n/2, ..., -1] / (d*n)   if n is even

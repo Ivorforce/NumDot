@@ -9,6 +9,11 @@ inline void UFUNC_NAME(VStoreAllocator& allocator, const VArrayTarget& target, c
 	va::call_vfunc_unary(allocator, vfunc::tables::UFUNC_NAME, target, a);\
 }
 
+#define DEFINE_VFUNC_CALLER_UNARY1(UFUNC_NAME, VAR1)\
+inline void UFUNC_NAME(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VAR1 v1) {\
+	va::call_vfunc_unary(allocator, vfunc::tables::UFUNC_NAME, target, a, v1);\
+}
+
 #define DEFINE_RFUNC_CALLER_UNARY0(UFUNC_NAME)\
 inline void UFUNC_NAME(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const va::axes_type* axes) {\
 	va::call_rfunc_unary(allocator, vfunc::tables::UFUNC_NAME, target, a, axes);\
@@ -124,6 +129,8 @@ namespace va {
 		array_equiv(allocator, target, a, b);
 	}
 	DEFINE_RFUNC_CALLER_BINARY3(all_close, double, double, bool)
+
+	DEFINE_VFUNC_CALLER_UNARY1(fft, std::ptrdiff_t)
 }
 
 #endif //VATENSOR_UFUNC_CONFIG_HPP

@@ -115,6 +115,8 @@ namespace va::vfunc::tables {
 	VA_TABLES_EXTERN UFuncTablesBinaryCommutative is_close;
 	VA_TABLES_EXTERN UFuncTablesBinaryCommutative array_equiv;
 	VA_TABLES_EXTERN UFuncTablesBinaryCommutative all_close;
+
+	VA_TABLES_EXTERN UFuncTableUnary fft;
 }
 
 #endif //TABLES_HPP

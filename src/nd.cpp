@@ -1243,7 +1243,7 @@ Ref<NDRandomGenerator> nd::default_rng(const Variant& seed) {
 
 Ref<NDArray> nd::fft(const Variant& array, const int64_t axis) {
 	return map_variants_as_arrays_with_target([axis](const va::VArrayTarget& target, const std::shared_ptr<va::VArray>& a) {
-		va::fft(va::store::default_allocator, target, *a, axis);
+		va::fft(va::store::default_allocator, target, a->data, axis);
 	}, array);
 }
 

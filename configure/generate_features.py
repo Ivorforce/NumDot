@@ -248,6 +248,24 @@ def main():
 		**[vfunc for vfunc in vfuncs if vfunc["name"] == "is_close"][0],
 		"name": "all_close",
 	})
+	vfuncs.append({
+		"name": "fft",
+		"specializations": ["D->D", "F->F"],
+		"casts": [
+			"?->D->D",
+			"B->D->D",
+			"H->D->D",
+			"I->D->D",
+			"Q->D->D",
+			"b->D->D",
+			"d->D->D",
+			"f->F->F",
+			"h->D->D",
+			"i->D->D",
+			"q->D->D"
+		],
+		"vargs": ["const std::ptrdiff_t"]
+	})
 
 	with (pathlib.Path(__file__).parent / "vfuncs.json").open("w") as f:
 		json.dump({

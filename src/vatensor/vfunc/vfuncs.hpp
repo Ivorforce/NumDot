@@ -18,6 +18,18 @@ inline void UFUNC_NAME(R& ret, const A& a, ##__VA_ARGS__) {\
 	va::broadcasting_assign_typesafe(ret, OP);\
 }
 
+#define IMPLEMENT_UNARY_RFUNC(UFUNC_NAME, SINGLE, MULTI)\
+template <typename R, typename A>\
+inline void UFUNC_NAME(R& ret, const A& a, const va::axes_type* axes) {\
+	if (axes) {\
+		va::broadcasting_assign_typesafe(ret, MULTI);\
+	}\
+	else {\
+		const typename R::value_type intermediate = SINGLE;\
+		broadcasting_assign(ret, xt::xscalar<typename R::value_type>(intermediate));\
+	}\
+}
+
 #define BIT_SHIFT_SAFE(NAME, OP)\
 struct NAME {\
 	template <class T1, class T2>\
@@ -79,16 +91,7 @@ namespace va::vfunc::impl {
 	IMPLEMENT_BINARY_VFUNC(minimum, xt::minimum(a, b))
 	IMPLEMENT_BINARY_VFUNC(maximum, xt::maximum(a, b))
 
-	template <typename R, typename A>
-	inline void sum(R& ret, const A& a, const va::axes_type* axes) {
-		if (axes) {
-			va::broadcasting_assign_typesafe(ret, xt::sum(a, *axes, xt::evaluation_strategy::lazy));
-		}
-		else {
-			const typename R::value_type sum = xt::sum(a)();
-			broadcasting_assign(ret, xt::xscalar<typename R::value_type>(sum));
-		}
-	}
+	IMPLEMENT_UNARY_RFUNC(sum, xt::sum(a)(), xt::sum(a, *axes))
 
 	IMPLEMENT_UNARY_VFUNC(sin, xt::sin(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_VFUNC(cos, xt::cos(va::promote::to_num(a)))

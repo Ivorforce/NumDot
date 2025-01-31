@@ -140,7 +140,7 @@ namespace va {
 
 	DEFINE_RFUNC_CALLER_BINARY0(reduce_dot)
 
-	inline void a0xb1_minus_a1xb0(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b, const std::ptrdiff_t i0, const std::ptrdiff_t i1) {
+	static void a0xb1_minus_a1xb0(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b, const std::ptrdiff_t i0, const std::ptrdiff_t i1) {
 		auto a_shape = va::shape(a);
 		a_shape.pop_back();
 		auto b_shape = va::shape(b);

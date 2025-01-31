@@ -1,5 +1,6 @@
 import dataclasses
 import enum
+import itertools
 import json
 import os
 import pathlib
@@ -83,22 +84,6 @@ complex_dtypes = {
 	DType.Complex128
 }
 
-commutative_functions = {
-	"add",
-	"multiply",
-	"maximum",
-	"minimum",
-	"logical_and",
-	"logical_or",
-	"logical_xor",
-	"bitwise_and",
-	"bitwise_or",
-	"bitwise_xor",
-	"equal",
-	"not_equal",
-	"is_close",
-}
-
 @dataclasses.dataclass
 class UFuncSpecialization:
 	output: DType
@@ -127,10 +112,10 @@ def make_module(env, sources, module_name: str, ufuncs_json: dict):
 		ufunc_name = ufunc_obj["name"]
 		specializations = ufunc_obj["specializations"]
 		nin = specializations[0].index("->")
-		is_commutative = ufunc_name in commutative_functions
-		commutative_str = "_COMMUTATIVE" if is_commutative else ""
 		vargs = ufunc_obj["vargs"] if "vargs" in ufunc_obj else []
 		vargs_part = "".join(f", {varg}" for varg in vargs)
+
+		declare_str += f"\tDECLARE_VFUNC({ufunc_name});\n"
 
 		covered_types: set[tuple[DType, ...]] = set()
 		for specialization_str in specializations:
@@ -153,19 +138,10 @@ def make_module(env, sources, module_name: str, ufuncs_json: dict):
 			):
 				continue
 
-			input_types_cpp = [dtype_to_c_type[dtype] for dtype in specialization.input]
+			input_types_cpp = "".join(f", {dtype_to_c_type[dtype]}" for dtype in specialization.input)
 			output_type_cpp = dtype_to_c_type[specialization.output]
 
-			if nin == 1:
-				assert len(input_types_cpp) == 1
-				declare_str += f"\tDECLARE_NATIVE_UNARY{len(vargs)}({ufunc_name}, {output_type_cpp}, {input_types_cpp[0]}{vargs_part});\n"
-				configure_str += f"\tADD_NATIVE_UNARY{len(vargs)}({ufunc_name}, {output_type_cpp}, {input_types_cpp[0]}{vargs_part});\n"
-			elif nin == 2:
-				assert len(input_types_cpp) == 2
-				declare_str += f"\tDECLARE_NATIVE_BINARY{commutative_str}{len(vargs)}({ufunc_name}, {output_type_cpp}, {input_types_cpp[0]}, {input_types_cpp[1]}{vargs_part});\n"
-				configure_str += f"\tADD_NATIVE_BINARY{commutative_str}{len(vargs)}({ufunc_name}, {output_type_cpp}, {input_types_cpp[0]}, {input_types_cpp[1]}{vargs_part});\n"
-			else:
-				raise ValueError
+			configure_str += f"\tadd_native<{ufunc_name}, {output_type_cpp}{input_types_cpp}{vargs_part}>(tables::{ufunc_name});\n"
 
 		for cast_str in ufunc_obj["casts"]:
 			in_str, model_str = cast_str.split("->", maxsplit=1)
@@ -174,19 +150,14 @@ def make_module(env, sources, module_name: str, ufuncs_json: dict):
 
 			assert model.input in covered_types, f"{ufunc_name} has a cast {in_str} to {model_str} even though the specialization does not exist"
 			assert in_types not in covered_types, f"{ufunc_name} has a cast {in_str} to {model_str} even though it was already specialized for these types"
+			assert len(model.input) == nin
+			assert len(in_types) == nin
 
-			model_in_cpp = [dtype_to_c_type[dtype] for dtype in model.input]
-			in_types_cpp = [dtype_to_c_type[dtype] for dtype in in_types]
-			if nin == 1:
-				assert len(model_in_cpp) == 1
-				assert len(in_types_cpp) == 1
-				configure_str += f"\tADD_CAST_UNARY({ufunc_name}, {model_in_cpp[0]}, {in_types_cpp[0]});\n"
-			elif nin == 2:
-				assert len(model_in_cpp) == 2
-				assert len(in_types_cpp) == 2
-				configure_str += f"\tADD_CAST_BINARY({ufunc_name}, {model_in_cpp[0]}, {model_in_cpp[1]}, {in_types_cpp[0]}, {in_types_cpp[1]});\n"
-			else:
-				raise ValueError
+			template_args_cpp = ", ".join(
+				dtype_to_c_type[dtype]
+				for dtype in itertools.chain(in_types, model.input)
+			)
+			configure_str += f"\tadd_cast<{template_args_cpp}>(tables::{ufunc_name});\n"
 
 	ifndef_macro = f"VATENSOR_UFUNC_{module_name}_HPP".upper()
 	hpp_contents = \

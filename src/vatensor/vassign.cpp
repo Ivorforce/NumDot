@@ -137,19 +137,17 @@ void va::assign_cast(VStoreAllocator& allocator, const VArrayTarget& target, con
 		return;
 	}
 
-	std::visit(
-		[&allocator, &value, dtype](auto target) {
-			if constexpr (std::is_same_v<decltype(target), VData*>) {
-				// Making a copy is slow, but it's also a bit unusual to in-place
-				// assign to a type that has another type.
-				const auto casted_copy = copy_as_dtype(allocator, value, dtype);
-				va::assign(*target, casted_copy->data);
-			}
-			else {
-				*target = copy_as_dtype(allocator, value, dtype);
-			}
-		}, target
-	);
+	if (const auto target_data = std::get_if<VData*>(&target)) {
+		VData& data = **target_data;
+		// Making a copy is slow, but it's also a bit unusual to in-place
+		// assign to a type that has another type.
+		const auto casted_copy = copy_as_dtype(allocator, value, dtype);
+		va::assign(data, casted_copy->data);
+	}
+	else {
+		auto& target_varray = *std::get<std::shared_ptr<VArray>*>(target);
+		target_varray = copy_as_dtype(allocator, value, dtype);
+	}
 }
 
 void va::assign(const VArrayTarget& target, VScalar value) {

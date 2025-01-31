@@ -3798,6 +3798,29 @@
 			"vargs": [
 				"const va::axes_type*"
 			]
+		},
+		{
+			"name": "mean",
+			"specializations": [
+				"D->D",
+				"F->F",
+				"d->d",
+				"f->f"
+			],
+			"casts": [
+				"?->d->d",
+				"B->d->d",
+				"H->d->d",
+				"I->d->d",
+				"Q->d->d",
+				"b->d->d",
+				"h->d->d",
+				"i->d->d",
+				"q->d->d"
+			],
+			"vargs": [
+				"const va::axes_type*"
+			]
 		}
 	]
 }

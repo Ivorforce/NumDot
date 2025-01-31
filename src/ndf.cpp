@@ -54,7 +54,7 @@ double_t ndf::prod(const Variant& a) {
 }
 
 double_t ndf::mean(const Variant& a) {
-	return REDUCTION1(mean, a);
+	return REDUCTION1_NEW(mean, a);
 }
 
 double_t ndf::median(const Variant& a) {

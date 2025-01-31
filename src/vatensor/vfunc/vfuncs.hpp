@@ -6,30 +6,6 @@
 #include "vatensor/vassign.hpp"
 #include "xtensor/xoperation.hpp"
 
-#define IMPLEMENT_BINARY_VFUNC(UFUNC_NAME, OP, ...)\
-template <typename R, typename A, typename B>\
-inline void UFUNC_NAME(R& ret, const A& a, const B& b, ##__VA_ARGS__) {\
-	va::broadcasting_assign_typesafe(ret, OP);\
-}
-
-#define IMPLEMENT_UNARY_VFUNC(UFUNC_NAME, OP, ...)\
-template <typename R, typename A>\
-inline void UFUNC_NAME(R& ret, const A& a, ##__VA_ARGS__) {\
-	va::broadcasting_assign_typesafe(ret, OP);\
-}
-
-#define IMPLEMENT_UNARY_RFUNC(UFUNC_NAME, SINGLE, MULTI)\
-template <typename R, typename A>\
-inline void UFUNC_NAME(R& ret, const A& a, const va::axes_type* axes) {\
-	if (axes) {\
-		va::broadcasting_assign_typesafe(ret, MULTI);\
-	}\
-	else {\
-		const typename R::value_type intermediate = SINGLE;\
-		broadcasting_assign(ret, xt::xscalar<typename R::value_type>(intermediate));\
-	}\
-}
-
 #define BIT_SHIFT_SAFE(NAME, OP)\
 struct NAME {\
 	template <class T1, class T2>\
@@ -66,6 +42,43 @@ namespace va::op {
 		template <class T1>
 		constexpr std::decay_t<std::complex<T1>> operator()(const std::complex<T1>& arg1) const { return std::conj(arg1); }
 	};
+
+	template <typename R, typename I>
+	R va_cast(I i) {
+		return static_cast<R>(i);
+	}
+
+	std::complex<float_t> va_cast(std::complex<double_t> i) {
+		return static_cast<std::complex<float_t>>(i);
+	}
+
+	std::complex<double_t> va_cast(std::complex<float_t> i) {
+		return static_cast<std::complex<float_t>>(i);
+	}
+}
+
+#define IMPLEMENT_BINARY_VFUNC(UFUNC_NAME, OP, ...)\
+template <typename R, typename A, typename B>\
+inline void UFUNC_NAME(R& ret, const A& a, const B& b, ##__VA_ARGS__) {\
+	va::broadcasting_assign_typesafe(ret, OP);\
+}
+
+#define IMPLEMENT_UNARY_VFUNC(UFUNC_NAME, OP, ...)\
+template <typename R, typename A>\
+inline void UFUNC_NAME(R& ret, const A& a, ##__VA_ARGS__) {\
+	va::broadcasting_assign_typesafe(ret, OP);\
+}
+
+#define IMPLEMENT_UNARY_RFUNC(UFUNC_NAME, SINGLE, MULTI)\
+template <typename R, typename A>\
+inline void UFUNC_NAME(R& ret, const A& a, const va::axes_type* axes) {\
+	if (axes) {\
+		va::broadcasting_assign_typesafe(ret, MULTI);\
+	}\
+	else {\
+		const typename R::value_type intermediate = va::op::va_cast<typename R::value_type>(SINGLE);\
+		broadcasting_assign(ret, xt::xscalar<typename R::value_type>(intermediate));\
+	}\
 }
 
 namespace va::vfunc::impl {
@@ -93,6 +106,7 @@ namespace va::vfunc::impl {
 
 	IMPLEMENT_UNARY_RFUNC(sum, xt::sum(a)(), xt::sum(a, *axes))
 	IMPLEMENT_UNARY_RFUNC(prod, xt::prod(a)(), xt::prod(a, *axes))
+	IMPLEMENT_UNARY_RFUNC(mean, xt::mean(a)(), xt::mean(a, *axes))
 
 	IMPLEMENT_UNARY_VFUNC(sin, xt::sin(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_VFUNC(cos, xt::cos(va::promote::to_num(a)))

@@ -101,6 +101,23 @@ specializations_at_least_int64 = [
 	"i->l",
 	"q->q"
 ]
+specializations_at_least_float32 = [
+	"D->D",
+	"F->F",
+	"d->d",
+	"f->f",
+]
+casts_at_least_float32 = [
+	"?->d->d",
+	"B->d->d",
+	"H->d->d",
+	"I->d->d",
+	"Q->d->d",
+	"b->d->d",
+	"h->d->d",
+	"i->d->d",
+	"q->d->d"
+]
 
 common_dtypes = dict()
 
@@ -190,6 +207,13 @@ def main():
 			"name": rfunc,
 			"specializations": specializations_at_least_int64,
 			"casts": [],
+			"vargs": ["const va::axes_type*"]
+		})
+	for rfunc in ["mean"]:
+		vfuncs.append({
+			"name": rfunc,
+			"specializations": specializations_at_least_float32,
+			"casts": casts_at_least_float32,
 			"vargs": ["const va::axes_type*"]
 		})
 

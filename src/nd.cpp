@@ -1033,7 +1033,7 @@ Ref<NDArray> nd::prod(const Variant& a, const Variant& axes) {
 }
 
 Ref<NDArray> nd::mean(const Variant& a, const Variant& axes) {
-	return REDUCTION1(mean, a, axes);
+	return REDUCTION1_NEW(mean, a, axes);
 }
 
 Ref<NDArray> nd::median(const Variant& a, const Variant& axes) {

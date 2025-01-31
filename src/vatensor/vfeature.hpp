@@ -12,7 +12,6 @@ namespace va {
 		array_equal,
 		all_close,
 
-		mean,
 		median,
 		var,
 		std,
@@ -54,7 +53,6 @@ namespace va {
 			FEATURE_NAME_CASE(array_equal)
 			FEATURE_NAME_CASE(all_close)
 
-			FEATURE_NAME_CASE(mean)
 			FEATURE_NAME_CASE(median)
 			FEATURE_NAME_CASE(var)
 			FEATURE_NAME_CASE(std)

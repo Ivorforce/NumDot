@@ -1,6 +1,5 @@
 #include "nd.hpp"
 
-#include <vatensor/comparison.hpp>            // for equal_to, greater, greate...
 #include <vatensor/linalg.hpp>                // for reduce_dot, dot, matmul
 #include <vatensor/reduce.hpp>                // for all, any, max, mean, median
 #include <vatensor/trigonometry.hpp>          // for acos, acosh, asin, asinh

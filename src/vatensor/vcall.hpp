@@ -208,6 +208,13 @@ namespace va {
 		if (va::dimension(b) == 0) return va::call_vfunc_binary(allocator, table.scalar_right, target, a, va::to_single_value(b), args...);
 		va::call_vfunc_binary(allocator, table.tensors, target, a, b, args...);
 	}
+
+	template<typename... Args>
+	void call_rfunc_binary(VStoreAllocator& allocator, const vfunc::tables::UFuncTablesBinaryCommutative& table, const VArrayTarget& target, const VData& a, const VData& b, Args&&... args) {
+		if (va::dimension(a) == 0) return _call_vfunc_binary(allocator, table.scalar_right, target, va::shape_type(), b, va::to_single_value(a), args...);
+		if (va::dimension(b) == 0) return _call_vfunc_binary(allocator, table.scalar_right, target, va::shape_type(), a, va::to_single_value(b), args...);
+		_call_vfunc_binary(allocator, table.tensors, target, va::shape_type(), a, b, std::forward<Args>(args)...);
+	}
 }
 
 #endif //VCALL_HPP

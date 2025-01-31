@@ -243,6 +243,11 @@ def main():
 		**[vfunc for vfunc in vfuncs if vfunc["name"] == "equal"][0],
 		"name": "array_equiv",
 	})
+	vfuncs.append({
+		# Copy 'is_close' type info.
+		**[vfunc for vfunc in vfuncs if vfunc["name"] == "is_close"][0],
+		"name": "all_close",
+	})
 
 	with (pathlib.Path(__file__).parent / "vfuncs.json").open("w") as f:
 		json.dump({

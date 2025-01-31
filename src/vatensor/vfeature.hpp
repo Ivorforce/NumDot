@@ -9,8 +9,6 @@ namespace va {
 		linspace,
 		arange,
 
-		all_close,
-
 		median,
 		reduce_dot,
 
@@ -36,8 +34,6 @@ namespace va {
 
 			FEATURE_NAME_CASE(linspace)
 			FEATURE_NAME_CASE(arange)
-
-			FEATURE_NAME_CASE(all_close)
 
 			FEATURE_NAME_CASE(median)
 			FEATURE_NAME_CASE(reduce_dot)

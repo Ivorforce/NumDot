@@ -4225,6 +4225,21 @@
 				"LH->QQ->?",
 				"LI->QQ->?"
 			]
+		},
+		{
+			"name": "all_close",
+			"specializations": [
+				"ff->b",
+				"dd->b",
+				"FF->b",
+				"DD->b"
+			],
+			"casts": [],
+			"vargs": [
+				"double",
+				"double",
+				"bool"
+			]
 		}
 	]
 }

@@ -4,7 +4,6 @@
 #include <stdexcept>                          // for runtime_error
 #include <type_traits>                        // for decay_t
 #include <utility>                            // for forward
-#include <vatensor/comparison.hpp>
 #include <vatensor/xtensor_store.hpp>
 #include <vatensor/vfunc/entrypoints.hpp>
 #include "gdconvert/conversion_array.hpp"       // for variant_as_array
@@ -51,8 +50,8 @@ bool ndb::array_equal(const Variant& a, const Variant& b) {
 }
 
 bool ndb::all_close(const Variant& a, const Variant& b, double_t rtol, double_t atol, bool equal_nan) {
-	return numdot::reduction<bool>([rtol, atol, equal_nan](const va::VArray& a, const va::VArray& b) {
-		return va::all_close(a.data, b.data, rtol, atol, equal_nan);
+	return numdot::reduction_new<bool>([rtol, atol, equal_nan](const va::VArrayTarget& target, const va::VArray& a, const va::VArray& b) {
+		return va::all_close(va::store::default_allocator, target, a.data, b.data, rtol, atol, equal_nan);
 	}, a, b);
 }
 

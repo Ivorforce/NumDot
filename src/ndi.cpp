@@ -48,7 +48,7 @@ int64_t ndi::sum(const Variant& a) {
 }
 
 int64_t ndi::prod(const Variant& a) {
-	return REDUCTION1(prod, a);
+	return REDUCTION1_NEW(prod, a);
 }
 
 int64_t ndi::median(const Variant& a) {

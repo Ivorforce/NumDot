@@ -86,6 +86,22 @@ all_features = [
 	"isinf",
 ]
 
+specializations_at_least_int64 = [
+	"?->l",
+	"B->L",
+	"D->D",
+	"F->F",
+	"H->L",
+	"I->L",
+	"Q->L",
+	"b->l",
+	"d->d",
+	"f->f",
+	"h->l",
+	"i->l",
+	"q->q"
+]
+
 common_dtypes = dict()
 
 def dump_dtypes(args):
@@ -169,27 +185,13 @@ def main():
 		"casts": [],
 		"vargs": ["double", "double", "bool"]
 	})
-	vfuncs.append({
-		"name": "sum",
-		# TODO Check if these specializations make sense.
-		"specializations": [
-			"?->l",
-			"B->L",
-			"D->D",
-			"F->F",
-			"H->L",
-			"I->L",
-			"Q->L",
-			"b->l",
-			"d->d",
-			"f->f",
-			"h->l",
-			"i->l",
-			"q->q"
-		],
-		"casts": [],
-		"vargs": ["const va::axes_type*"]
-	})
+	for rfunc in ["sum", "prod"]:
+		vfuncs.append({
+			"name": rfunc,
+			"specializations": specializations_at_least_int64,
+			"casts": [],
+			"vargs": ["const va::axes_type*"]
+		})
 
 	with (pathlib.Path(__file__).parent / "vfuncs.json").open("w") as f:
 		json.dump({

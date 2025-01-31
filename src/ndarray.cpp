@@ -959,7 +959,7 @@ Ref<NDArray> NDArray::assign_sum(const Variant& a, const Variant& axes) {
 }
 
 Ref<NDArray> NDArray::assign_prod(const Variant& a, const Variant& axes) {
-	REDUCTION1(prod, a, axes);
+	REDUCTION1_NEW(prod, a, axes);
 }
 
 Ref<NDArray> NDArray::assign_mean(const Variant& a, const Variant& axes) {

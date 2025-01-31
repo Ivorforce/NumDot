@@ -4,9 +4,6 @@
 #include "varray.hpp"
 
 namespace va {
-	VScalar prod(const VData& array);
-	void prod(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array, const axes_type& axes);
-
 	VScalar mean(const VData& array);
 	void mean(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array, const axes_type& axes);
 

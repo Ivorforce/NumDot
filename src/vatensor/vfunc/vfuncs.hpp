@@ -92,6 +92,7 @@ namespace va::vfunc::impl {
 	IMPLEMENT_BINARY_VFUNC(maximum, xt::maximum(a, b))
 
 	IMPLEMENT_UNARY_RFUNC(sum, xt::sum(a)(), xt::sum(a, *axes))
+	IMPLEMENT_UNARY_RFUNC(prod, xt::prod(a)(), xt::prod(a, *axes))
 
 	IMPLEMENT_UNARY_VFUNC(sin, xt::sin(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_VFUNC(cos, xt::cos(va::promote::to_num(a)))

@@ -50,7 +50,7 @@ double_t ndf::sum(const Variant& a) {
 }
 
 double_t ndf::prod(const Variant& a) {
-	return REDUCTION1(prod, a);
+	return REDUCTION1_NEW(prod, a);
 }
 
 double_t ndf::mean(const Variant& a) {

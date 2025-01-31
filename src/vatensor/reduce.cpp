@@ -39,29 +39,6 @@ using namespace xt;
 XTENSOR_REDUCER_FUNCTION(va_any, xt::detail::logical_or, bool, true)
 XTENSOR_REDUCER_FUNCTION(va_all, xt::detail::logical_and, bool, false)
 
-VScalar va::prod(const VData& array) {
-	return vreduce_single<
-		Feature::prod,
-		promote::num_at_least_int32_in_same_out,
-		VScalar
-	>(
-		REDUCER_LAMBDA(xt::prod),
-		array
-	);
-}
-
-void va::prod(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array, const axes_type& axes) {
-	va::xoperation_single<
-		Feature::prod,
-		promote::num_at_least_int32_in_same_out
-	>(
-		REDUCER_LAMBDA_AXES(axes, xt::prod),
-		allocator,
-		target,
-		array
-	);
-}
-
 VScalar va::mean(const VData& array) {
 	return vreduce_single<
 		Feature::mean,

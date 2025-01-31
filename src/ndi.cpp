@@ -94,8 +94,8 @@ int64_t ndi::count_nonzero(const Variant& a) {
 }
 
 int64_t ndi::trace(const Variant& v, int64_t offset, int64_t axis1, int64_t axis2) {
-	return numdot::reduction<int64_t>([offset, axis1, axis2](const va::VArray& array) {
-		return va::trace_to_scalar(array, offset, axis1, axis2);
+	return numdot::reduction_new<int64_t>([offset, axis1, axis2](const va::VArrayTarget& target, const va::VArray& array) {
+		return va::trace(va::store::default_allocator, target, array, offset, axis1, axis2);
 	}, v);
 }
 

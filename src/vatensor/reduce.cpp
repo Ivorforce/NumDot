@@ -34,11 +34,6 @@ using namespace va;
 #define REDUCER_LAMBDA_AXES(axes, func) [&axes](auto&& a) { return func(std::forward<decltype(a)>(a), axes, std::tuple<xt::evaluation_strategy::lazy_type>()); }
 #define REDUCER_LAMBDA_AXES_NOECS(axes, func) [&axes](auto&& a) { return func(std::forward<decltype(a)>(a), axes); }
 
-// FIXME These don't support axes yet, see https://github.com/xtensor-stack/xtensor/issues/1555
-using namespace xt;
-XTENSOR_REDUCER_FUNCTION(va_any, xt::detail::logical_or, bool, true)
-XTENSOR_REDUCER_FUNCTION(va_all, xt::detail::logical_and, bool, false)
-
 VScalar va::median(const VData& array) {
 	return vreduce_single<
 		Feature::median,
@@ -108,13 +103,4 @@ void va::trace(VStoreAllocator& allocator, const VArrayTarget& target, const VAr
 	const auto diagonal = va::diagonal(varray, offset, axis1, axis2);
 	const axes_type strides {-1};
 	va::sum(allocator, target, diagonal->data, &strides);
-}
-
-VScalar va::trace_to_scalar(const VArray& varray, std::ptrdiff_t offset, std::ptrdiff_t axis1, std::ptrdiff_t axis2) {
-	return 0.0; // TODO
-	// if (varray.dimension() != 2) {
-	// 	throw std::runtime_error("array must be 2-D for trace to collapse to a scalar");
-	// }
-	// const auto diagonal = va::diagonal(varray, offset, axis1, axis2);
-	// return va::sum(diagonal->data);
 }

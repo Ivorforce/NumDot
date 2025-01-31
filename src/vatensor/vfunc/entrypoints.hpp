@@ -139,6 +139,16 @@ namespace va {
 	DEFINE_VFUNC_CALLER_UNARY1(fft, std::ptrdiff_t)
 
 	DEFINE_RFUNC_CALLER_BINARY0(reduce_dot)
+
+	inline void a0xb1_minus_a1xb0(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b, const std::ptrdiff_t i0, const std::ptrdiff_t i1) {
+		auto a_shape = va::shape(a);
+		a_shape.pop_back();
+		auto b_shape = va::shape(b);
+		b_shape.pop_back();
+
+		const shape_type result_shape = combined_shape(a_shape, b_shape);
+		_call_vfunc_binary(allocator, vfunc::tables::a0xb1_minus_a1xb0, target, result_shape, a, b, std::move(i0), std::move(i1));
+	}
 }
 
 #endif //VATENSOR_UFUNC_CONFIG_HPP

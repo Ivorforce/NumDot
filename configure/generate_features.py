@@ -272,6 +272,12 @@ def main():
 		"name": "reduce_dot",
 		"vargs": ["const va::axes_type*"]
 	})
+	vfuncs.append({
+		# Copy 'multiply' type info.
+		**[vfunc for vfunc in vfuncs if vfunc["name"] == "multiply"][0],
+		"name": "a0xb1_minus_a1xb0",
+		"vargs": ["const std::ptrdiff_t", "const std::ptrdiff_t"]
+	})
 
 	with (pathlib.Path(__file__).parent / "vfuncs.json").open("w") as f:
 		json.dump({

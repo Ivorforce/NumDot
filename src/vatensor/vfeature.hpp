@@ -9,8 +9,6 @@ namespace va {
 		linspace,
 		arange,
 
-		cross,
-
 		random_float,
 		random_int,
 		random_normal,
@@ -30,8 +28,6 @@ namespace va {
 
 			FEATURE_NAME_CASE(linspace)
 			FEATURE_NAME_CASE(arange)
-
-			FEATURE_NAME_CASE(cross)
 
 			FEATURE_NAME_CASE(random_float)
 			FEATURE_NAME_CASE(random_int)

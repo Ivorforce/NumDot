@@ -202,6 +202,12 @@ namespace va::vfunc::impl {
 	IMPLEMENT_UNARY_VFUNC(fft, xt::fft::fft(std::forward<decltype(a)>(a), axis), std::ptrdiff_t axis)
 
 	IMPLEMENT_BINARY_RFUNC(reduce_dot, xt::sum(a * b)(), xt::sum(a * b, *axes))
+
+	IMPLEMENT_BINARY_VFUNC(a0xb1_minus_a1xb0,
+		(xt::strided_view(a, { xt::ellipsis(), i0 }) * xt::strided_view(b, { xt::ellipsis(), i1 }))
+		- (xt::strided_view(a, { xt::ellipsis(), i1 }) * xt::strided_view(b, { xt::ellipsis(), i0 })),
+		const std::ptrdiff_t i0, const std::ptrdiff_t i1
+	)
 } // namespace va::vfunc::impl
 
 #endif //VFUNCS_HPP

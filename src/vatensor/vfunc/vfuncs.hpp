@@ -74,6 +74,42 @@ namespace va::op {
 		}
 		return xt::median(t1, axes[0]);
 	}
+
+	template <class VWrite, class I>
+	auto vcast(const I& cvalue) {
+		using VRead = typename I::value_type;
+
+		if constexpr (std::is_same_v<VWrite, bool> && xtl::is_complex<VRead>::value) {
+			// This helps mostly complex dtypes to booleanize
+			return xt::cast<uint8_t>(xt::equal(cvalue, static_cast<VRead>(0)));
+		}
+		else if constexpr (!std::is_convertible_v<VRead, VWrite>) {
+			throw std::runtime_error("Cannot promote in this way.");
+			return xt::xscalar<VWrite>();  // To give us a return type.
+		}
+#ifdef XTENSOR_USE_XSIMD
+		// For some reason, bool - to - bool assignments are broken in xsimd
+		// TODO Should make this reproducible, I haven't managed so far.
+		// See https://github.com/Ivorforce/NumDot/issues/123
+		else if constexpr (std::is_same_v<VWrite, bool> && std::is_same_v<VRead, bool>) {
+			return xt::cast<uint8_t>(cvalue);
+		}
+		else if constexpr (xtl::is_complex<VWrite>::value) {
+			// xsimd also has no auto conversion into complex types
+			return xt::cast<VWrite>(cvalue);
+		}
+#endif
+		else
+		{
+			return cvalue;
+		}
+	}
+}
+
+#define IMPLEMENT_INPLACE_VFUNC(UFUNC_NAME, OP, ...)\
+template <typename R>\
+inline void UFUNC_NAME(R& ret, ##__VA_ARGS__) {\
+	va::broadcasting_assign_typesafe(ret, OP);\
 }
 
 #define IMPLEMENT_UNARY_VFUNC(UFUNC_NAME, OP, ...)\
@@ -113,7 +149,8 @@ inline void UFUNC_NAME(R& ret, const A& a, const B& b, const va::axes_type* axes
 }
 
 namespace va::vfunc::impl {
-	IMPLEMENT_UNARY_VFUNC(fill, reinterpret_cast<typename A::value_type&>(fill_value), void* fill_value)
+	IMPLEMENT_INPLACE_VFUNC(fill, xt::xscalar(reinterpret_cast<typename R::value_type&>(fill_value)), void* fill_value)
+	IMPLEMENT_UNARY_VFUNC(assign, va::op::vcast<typename R::value_type>(a))
 
 	IMPLEMENT_UNARY_VFUNC(negative, -va::promote::to_num(a))
 	IMPLEMENT_UNARY_VFUNC(sign, xt::sign(va::promote::to_num(a)))

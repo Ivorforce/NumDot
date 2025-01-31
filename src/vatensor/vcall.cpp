@@ -5,6 +5,22 @@
 
 using namespace va;
 
+void va::fill(VData& a, const VScalar& fill_value) {
+	VScalar scalar_cast = static_cast_scalar(fill_value, va::dtype(a));
+	auto value_ptr = va::_call::get_value_ptr(scalar_cast);
+	va::_call_vfunc_inplace(vfunc::tables::fill, a, std::move(value_ptr));
+}
+
+void va::assign(VData& a, const VData& b) {
+	if (va::dimension(b) == 0) {
+		// Optimization for 0D tensors
+		va::fill(a, va::to_single_value(b));
+		return;
+	}
+
+	va::_call_vfunc_inplace_binary(vfunc::tables::assign, a, b);
+}
+
 VData& va::evaluate_target(VStoreAllocator& allocator, const VArrayTarget& target, DType dtype, const shape_type& result_shape, std::shared_ptr<VArray>& temp) {
 	if (const auto target_data = std::get_if<VData*>(&target)) {
 		VData& data = **target_data;

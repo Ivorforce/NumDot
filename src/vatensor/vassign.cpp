@@ -44,45 +44,6 @@ VScalar va::get_single_value(const VData& array, axes_type& index) {
 	);
 }
 
-void va::assign(VData& array, const VData& value) {
-	if (va::dimension(value) == 0) {
-		// Optimization for 0D tensors
-		va::fill(array, va::to_single_value(value));
-		return;
-	}
-
-	std::visit(
-		[](auto& carray, const auto& cvalue) {
-			using VWrite = typename std::decay_t<decltype(carray)>::value_type;
-			using VRead = typename std::decay_t<decltype(cvalue)>::value_type;
-
-			if constexpr (std::is_same_v<VWrite, bool> && xtl::is_complex<VRead>::value) {
-				// This helps mostly complex dtypes to booleanize
-				broadcasting_assign(carray, xt::cast<uint8_t>(xt::equal(cvalue, static_cast<VRead>(0))));
-			}
-			else if constexpr (!std::is_convertible_v<VRead, VWrite>) {
-				throw std::runtime_error("Cannot promote in this way.");
-			}
-#ifdef XTENSOR_USE_XSIMD
-			// For some reason, bool - to - bool assignments are broken in xsimd
-			// TODO Should make this reproducible, I haven't managed so far.
-			// See https://github.com/Ivorforce/NumDot/issues/123
-			else if constexpr (std::is_same_v<VWrite, bool> && std::is_same_v<VRead, bool>) {
-				broadcasting_assign(carray, xt::cast<uint8_t>(cvalue));
-			}
-			else if constexpr (xtl::is_complex<VWrite>::value) {
-				// xsimd also has no auto conversion into complex types
-				broadcasting_assign(carray, xt::cast<VWrite>(cvalue));
-			}
-#endif
-			else
-			{
-				broadcasting_assign(carray, cvalue);
-			}
-		}, array, value
-	);
-}
-
 void va::assign(VStoreAllocator& allocator, const VArrayTarget& target, const VData& value) {
 	if (const auto target_data = std::get_if<VData*>(&target)) {
 		VData& data = **target_data;

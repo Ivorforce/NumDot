@@ -91,9 +91,11 @@ class UFuncSpecialization:
 
 	@staticmethod
 	def parse(code: str) -> "UFuncSpecialization":
-		input_str, output_str = code.split("->")
+		parts = code.split("->")
+		input_str = parts[0]
+		output_code = code_to_dtype[parts[1]] if len(parts) > 1 else None
 		return UFuncSpecialization(
-			output=code_to_dtype[output_str],
+			output=output_code,
 			input=tuple(code_to_dtype[input_str] for input_str in input_str)
 		)
 
@@ -111,7 +113,7 @@ def make_module(env, sources, module_name: str, ufuncs_json: dict):
 	for ufunc_obj in ufuncs_json["vfuncs"]:
 		ufunc_name = ufunc_obj["name"]
 		specializations = ufunc_obj["specializations"]
-		nin = specializations[0].index("->")
+		nin = specializations[0].index("->") if "->" in specializations[0] else len(specializations[0])
 		vargs = ufunc_obj["vargs"] if "vargs" in ufunc_obj else []
 		vargs_part = "".join(f", {varg}" for varg in vargs)
 
@@ -145,9 +147,9 @@ def make_module(env, sources, module_name: str, ufuncs_json: dict):
 				continue
 
 			input_types_cpp = "".join(f", {dtype_to_c_type[dtype]}" for dtype in specialization.input)
-			output_type_cpp = dtype_to_c_type[specialization.output]
+			output_type_cpp = f", {dtype_to_c_type[specialization.output]}" if specialization.output is not None else ""
 
-			configure_str += f"\tadd_native<{ufunc_name}, {output_type_cpp}{input_types_cpp}{vargs_part}>(tables::{ufunc_name});\n"
+			configure_str += f"\tadd_native<{ufunc_name}{output_type_cpp}{input_types_cpp}{vargs_part}>(tables::{ufunc_name});\n"
 
 		for cast_str in ufunc_obj["casts"]:
 			in_str, model_str = cast_str.split("->", maxsplit=1)

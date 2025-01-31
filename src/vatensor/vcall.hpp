@@ -10,7 +10,7 @@ namespace va {
 	namespace _call {
 		using Dummy = char;
 		template<typename... Args>
-		using InplaceDummyFunction = void (*)(const Dummy& b, Args... args);
+		using InplaceDummyFunction = void (*)(Dummy& b, Args... args);
 		template<typename... Args>
 		using UnaryDummyFunction = void (*)(Dummy& a, const Dummy& b, Args... args);
 		template<typename... Args>
@@ -43,17 +43,35 @@ namespace va {
 		}
 	}
 
+	void fill(VData& a, const VScalar& fill_value);
+	void assign(VData& a, const VData& b);
+
 	VData& evaluate_target(VStoreAllocator& allocator, const VArrayTarget& target, DType dtype, const shape_type& result_shape, std::shared_ptr<VArray>& temp);
 
 	template<typename... Args>
-	void _call_vfunc_inplace(const vfunc::tables::UFuncTableInplace& table, const VData& a, Args&&... args) {
+	void _call_vfunc_inplace(const vfunc::tables::UFuncTableInplace& table, VData& a, Args&&... args) {
 		const DType a_type = va::dtype(a);
 
 		const auto& function_ptr = table[a_type];
 		if (function_ptr == nullptr) throw std::runtime_error("Unsupported dtype for ufunc.");
 
 		reinterpret_cast<_call::InplaceDummyFunction<Args...>>(function_ptr)(
-			*static_cast<const _call::Dummy*>(_call::get_value_ptr(a)),
+			*static_cast<_call::Dummy*>(_call::get_value_ptr(a)),
+			std::forward<Args>(args)...
+		);
+	}
+
+	template<typename... Args>
+	void _call_vfunc_inplace_binary(const vfunc::tables::UFuncTableInplaceBinary& table, VData& a, const VData& b, Args&&... args) {
+		const DType a_type = va::dtype(a);
+		const DType b_type = va::dtype(b);
+
+		const auto& function_ptr = table[a_type][b_type];
+		if (function_ptr == nullptr) throw std::runtime_error("Unsupported dtype for ufunc.");
+
+		reinterpret_cast<_call::UnaryDummyFunction<Args...>>(function_ptr)(
+			*static_cast<_call::Dummy*>(_call::get_value_ptr(a)),
+			*static_cast<const _call::Dummy*>(_call::get_value_ptr(b)),
 			std::forward<Args>(args)...
 		);
 	}

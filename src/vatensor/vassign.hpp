@@ -32,8 +32,6 @@ namespace va {
 	void set_single_value(VData& array, axes_type& index, const VScalar& value);
 	VScalar get_single_value(const VData& array, axes_type& index);
 
-	void assign(VData& array, const VData& value);
-
 	void assign(VStoreAllocator& allocator, const VArrayTarget& target, const VData& value);
 	void assign_cast(VStoreAllocator& allocator, const VArrayTarget& target, const VData& value, DType dtype);
 	void assign(const VArrayTarget& target, VScalar value);

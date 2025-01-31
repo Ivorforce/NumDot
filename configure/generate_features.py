@@ -122,6 +122,10 @@ specializations_all = [
 	f"{type_.char}->{type_.char}"
 	for type_ in supported_dtypes
 ]
+specializations_all = [
+	f"{type_.char}->{type_.char}"
+	for type_ in supported_dtypes
+]
 
 common_dtypes = dict()
 
@@ -282,13 +286,22 @@ def main():
 		"name": "pad",
 		"specializations": specializations_all,
 		"casts": [],
-		"vargs": ["std::vector<std::vector<std::size_t>>&", "xt::pad_mode", "void* pad_value"]
+		"vargs": ["std::vector<std::vector<std::size_t>>&", "xt::pad_mode", "void*"]
 	})
 	vfuncs.append({
 		"name": "fill",
-		"specializations": specializations_all,
+		"specializations": [type_.char for type_ in supported_dtypes],
 		"casts": [],
 		"vargs": ["void*"]
+	})
+	vfuncs.append({
+		"name": "assign",
+		"specializations": [
+			f"{out_dtype.char}{in_dtype.char}"
+			for out_dtype in supported_dtypes
+			for in_dtype in supported_dtypes
+		],
+		"casts": [],
 	})
 
 	with (pathlib.Path(__file__).parent / "vfuncs.json").open("w") as f:

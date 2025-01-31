@@ -2,10 +2,10 @@
 
 #include <utility>                      // for move
 #include <variant>                      // for visit
-
 #include "rearrange.hpp"
 #include "varray.hpp"            // for VArray, shape_type, DType
 #include "vassign.hpp"
+#include "vcall.hpp"
 #include "vcompute.hpp"
 #include "vpromote.hpp"
 #include "vcarray.hpp"

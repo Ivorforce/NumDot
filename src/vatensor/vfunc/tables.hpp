@@ -14,6 +14,7 @@ namespace va::vfunc {
 
 namespace va::vfunc::tables {
 	using UFuncTableInplace = std::array<void*, DTypeMax>;
+	using UFuncTableInplaceBinary = std::array<std::array<void*, DTypeMax>, DTypeMax>;
 
 	using UFuncTableUnary = std::array<VFunc<1>, DTypeMax>;
 
@@ -36,6 +37,7 @@ namespace va::vfunc::tables {
 // ReSharper disable CppNonInlineVariableDefinitionInHeaderFile
 namespace va::vfunc::tables {
 	VA_TABLES_EXTERN UFuncTableInplace fill;
+	VA_TABLES_EXTERN UFuncTableInplaceBinary assign;
 
 	VA_TABLES_EXTERN UFuncTableUnary negative;
 	VA_TABLES_EXTERN UFuncTableUnary sign;

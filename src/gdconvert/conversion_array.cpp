@@ -14,6 +14,8 @@
 #include <vatensor/xtensor_store.hpp>
 #include <vatensor/xscalar_store.hpp>
 #include <vatensor/dtype.hpp>
+#include <vatensor/vfunc/entrypoints.hpp>
+
 #include "godot_cpp/classes/object.hpp"                // for Object
 #include "godot_cpp/core/defs.hpp"                     // for real_t
 #include "godot_cpp/core/object.hpp"                   // for Object::cast_to
@@ -404,19 +406,19 @@ std::shared_ptr<va::VArray> array_as_varray(const Array& input_array) {
 				case Variant::BOOL: {
 					auto compute = varray->sliced_data(element_idx);
 					// TODO If we're on the last dimension, we should use element assign rather than slice - fill for all these.
-					va::assign(compute, static_cast<bool>(array_element));
+					va::fill(compute, static_cast<bool>(array_element));
 					continue;
 				}
 				case Variant::INT: {
 					auto compute = varray->sliced_data(element_idx);
 					// TODO If we're on the last dimension, we should use element assign rather than slice - fill for all these.
-					va::assign(compute, static_cast<int64_t>(array_element));
+					va::fill(compute, static_cast<int64_t>(array_element));
 					continue;
 				}
 				case Variant::FLOAT: {
 					auto compute = varray->sliced_data(element_idx);
 					// TODO If we're on the last dimension, we should use element assign rather than slice - fill for all these.
-					va::assign(compute, static_cast<double_t>(array_element));
+					va::fill(compute, static_cast<double_t>(array_element));
 					continue;
 				}
 				case Variant::PACKED_BYTE_ARRAY: {

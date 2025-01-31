@@ -361,13 +361,13 @@ va::VData get_write(va::VArray& array, const single_axis_slice& sv) {
 static void set_vdata_variant(va::VData& data, const Variant& value) {
 	switch (value.get_type()) {
 		case Variant::BOOL:
-			va::assign(data, static_cast<bool>(value));
+			va::fill(data, static_cast<bool>(value));
 			return;
 		case Variant::INT:
-			va::assign(data, static_cast<int64_t>(value));
+			va::fill(data, static_cast<int64_t>(value));
 			return;
 		case Variant::FLOAT:
-			va::assign(data, static_cast<double_t>(value));
+			va::fill(data, static_cast<double_t>(value));
 			return;
 		// TODO We could optimize more assignments of literals.
 		//  Just need to figure out how, ideally without duplicating code - as_array already does much type checking work.
@@ -741,7 +741,7 @@ inline void reduction_inplace(Visitor&& visitor, VisitorNoaxes&& visitor_noaxes,
 
 		if (axes.get_type() == Variant::NIL) {
 			const va::VScalar result = std::forward<VisitorNoaxes>(visitor_noaxes)(variant_as_array(args)...);
-			va::assign(target.data, result);
+			va::fill(target.data, result);
 			return;
 		}
 

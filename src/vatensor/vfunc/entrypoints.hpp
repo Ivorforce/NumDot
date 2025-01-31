@@ -46,6 +46,12 @@ inline void UFUNC_NAME(VStoreAllocator& allocator, const VArrayTarget& target, c
 }
 
 namespace va {
+	inline void fill(const VData& a, const VScalar& fill_value) {
+		VScalar scalar_cast = static_cast_scalar(fill_value, va::dtype(a));
+		auto value_ptr = va::_call::get_value_ptr(scalar_cast);
+		va::_call_vfunc_inplace(vfunc::tables::fill, a, std::move(value_ptr));
+	}
+
 	DEFINE_VFUNC_CALLER_UNARY0(negative)
 	DEFINE_VFUNC_CALLER_UNARY0(sign)
 	DEFINE_VFUNC_CALLER_UNARY0(abs)

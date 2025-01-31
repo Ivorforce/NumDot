@@ -113,6 +113,8 @@ inline void UFUNC_NAME(R& ret, const A& a, const B& b, const va::axes_type* axes
 }
 
 namespace va::vfunc::impl {
+	IMPLEMENT_UNARY_VFUNC(fill, reinterpret_cast<typename A::value_type&>(fill_value), void* fill_value)
+
 	IMPLEMENT_UNARY_VFUNC(negative, -va::promote::to_num(a))
 	IMPLEMENT_UNARY_VFUNC(sign, xt::sign(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_VFUNC(abs, xt::abs(va::promote::to_num(a)))
@@ -203,7 +205,7 @@ namespace va::vfunc::impl {
 	IMPLEMENT_UNARY_VFUNC(fft, xt::fft::fft(std::forward<decltype(a)>(a), axis), std::ptrdiff_t axis)
 	IMPLEMENT_UNARY_VFUNC(
 		pad,
-		xt::pad(std::forward<decltype(a)>(a), pad_width, pad_mode, reinterpret_cast<A&>(pad_value)),
+		xt::pad(std::forward<decltype(a)>(a), pad_width, pad_mode, reinterpret_cast<typename A::value_type&>(pad_value)),
 		std::vector<std::vector<std::size_t>>& pad_width,
 		xt::pad_mode pad_mode,
 		void* pad_value

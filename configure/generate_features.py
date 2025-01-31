@@ -284,6 +284,12 @@ def main():
 		"casts": [],
 		"vargs": ["std::vector<std::vector<std::size_t>>&", "xt::pad_mode", "void* pad_value"]
 	})
+	vfuncs.append({
+		"name": "fill",
+		"specializations": specializations_all,
+		"casts": [],
+		"vargs": ["void*"]
+	})
 
 	with (pathlib.Path(__file__).parent / "vfuncs.json").open("w") as f:
 		json.dump({

@@ -47,7 +47,7 @@ VScalar va::get_single_value(const VData& array, axes_type& index) {
 void va::assign(VData& array, const VData& value) {
 	if (va::dimension(value) == 0) {
 		// Optimization for 0D tensors
-		va::assign(array, va::to_single_value(value));
+		va::fill(array, va::to_single_value(value));
 		return;
 	}
 
@@ -78,42 +78,6 @@ void va::assign(VData& array, const VData& value) {
 			else
 			{
 				broadcasting_assign(carray, cvalue);
-			}
-		}, array, value
-	);
-}
-
-void va::assign(VData& array, VScalar value) {
-	std::visit(
-		[](auto& carray, const auto cvalue) {
-			using T = std::decay_t<decltype(carray)>;
-			using V = typename T::value_type;
-
-			const auto value = static_cast_scalar<V>(cvalue);
-
-			// The .fill makes this check statically only, so is_contiguous() isn't called.
-			// But it also doesn't optimize for 1-D strided assign or 1-D strided fill.
-			// See https://github.com/xtensor-stack/xtensor/pull/2809
-			// carray.fill(static_cast<V>(cvalue));
-			if (T::contiguous_layout || carray.is_contiguous())
-			{
-				// Contiguous assign.
-				std::fill(carray.linear_begin(), carray.linear_end(), value);
-			}
-			else if (carray.dimension() == 1) {
-				// Strided assign.
-				const auto stride = carray.strides()[0];
-				auto ptr = carray.linear_begin();
-				const auto len = carray.shape()[0];
-
-				for (int i = 0; i < len; ++i, ptr += stride) {
-					*ptr = value;
-				}
-			}
-			else
-			{
-				// Stepper assign.
-				std::fill(carray.begin(), carray.end(), value);
 			}
 		}, array, value
 	);
@@ -153,7 +117,7 @@ void va::assign_cast(VStoreAllocator& allocator, const VArrayTarget& target, con
 void va::assign(const VArrayTarget& target, VScalar value) {
 	if (const auto target_data = std::get_if<VData*>(&target)) {
 		VData& data = **target_data;
-		va::assign(data, value);
+		va::fill(data, value);
 	}
 	else {
 		auto& target_varray = *std::get<std::shared_ptr<VArray>*>(target);

@@ -56,11 +56,11 @@ int64_t ndi::median(const Variant& a) {
 }
 
 int64_t ndi::max(const Variant& a) {
-	return REDUCTION1(max, a);
+	return REDUCTION1_NEW(max, a);
 }
 
 int64_t ndi::min(const Variant& a) {
-	return REDUCTION1(min, a);
+	return REDUCTION1_NEW(min, a);
 }
 
 int64_t ndi::norm(const Variant& a, const Variant& ord) {

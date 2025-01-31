@@ -13,8 +13,6 @@ namespace va {
 		all_close,
 
 		median,
-		max,
-		min,
 		norm_l0,
 		norm_l1,
 		norm_l2,
@@ -52,8 +50,6 @@ namespace va {
 			FEATURE_NAME_CASE(all_close)
 
 			FEATURE_NAME_CASE(median)
-			FEATURE_NAME_CASE(max)
-			FEATURE_NAME_CASE(min)
 			FEATURE_NAME_CASE(norm_l0)
 			FEATURE_NAME_CASE(norm_l1)
 			FEATURE_NAME_CASE(norm_l2)

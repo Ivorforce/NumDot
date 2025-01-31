@@ -96,52 +96,6 @@ void va::median(VStoreAllocator& allocator, const VArrayTarget& target, const VD
 	}
 }
 
-VScalar va::max(const VData& array) {
-	return vreduce_single<
-		Feature::max,
-		promote::reject_complex<promote::common_in_same_out>,
-		VScalar
-	>(
-		REDUCER_LAMBDA(xt::amax),
-		array
-	);
-}
-
-void va::max(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array, const axes_type& axes) {
-	va::xoperation_single<
-		Feature::max,
-		promote::reject_complex<promote::common_in_same_out>
-	>(
-		REDUCER_LAMBDA_AXES(axes, xt::amax),
-		allocator,
-		target,
-		array
-	);
-}
-
-VScalar va::min(const VData& array) {
-	return vreduce_single<
-		Feature::min,
-		promote::reject_complex<promote::common_in_same_out>,
-		VScalar
-	>(
-		REDUCER_LAMBDA(xt::amin),
-		array
-	);
-}
-
-void va::min(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array, const axes_type& axes) {
-	va::xoperation_single<
-		Feature::min,
-		promote::reject_complex<promote::common_in_same_out>
-	>(
-		REDUCER_LAMBDA_AXES(axes, xt::amin),
-		allocator,
-		target,
-		array
-	);
-}
-
 VScalar va::norm_l0(const VData& array) {
 	return vreduce_single<
 		Feature::norm_l0,

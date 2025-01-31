@@ -77,7 +77,7 @@ inline void UFUNC_NAME(R& ret, const A& a, const va::axes_type* axes) {\
 	}\
 	else {\
 		const typename R::value_type intermediate = va::op::va_cast<typename R::value_type>(SINGLE);\
-		broadcasting_assign(ret, xt::xscalar<typename R::value_type>(intermediate));\
+		broadcasting_assign_typesafe(ret, xt::xscalar<typename R::value_type>(intermediate));\
 	}\
 }
 
@@ -109,6 +109,8 @@ namespace va::vfunc::impl {
 	IMPLEMENT_UNARY_RFUNC(mean, xt::mean(a)(), xt::mean(a, *axes))
 	IMPLEMENT_UNARY_RFUNC(variance, xt::variance(a)(), xt::variance(a, *axes))
 	IMPLEMENT_UNARY_RFUNC(standard_deviation, xt::stddev(a)(), xt::stddev(a, *axes))
+	IMPLEMENT_UNARY_RFUNC(max, xt::amax(a)(), xt::amax(a, *axes))
+	IMPLEMENT_UNARY_RFUNC(min, xt::amin(a)(), xt::amin(a, *axes))
 
 	IMPLEMENT_UNARY_VFUNC(sin, xt::sin(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_VFUNC(cos, xt::cos(va::promote::to_num(a)))

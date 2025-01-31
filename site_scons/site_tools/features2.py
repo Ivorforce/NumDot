@@ -130,6 +130,11 @@ def make_module(env, sources, module_name: str, ufuncs_json: dict):
 			if any(dtype in complex_dtypes for dtype in specialization.input) and (
 				ufunc_name == "minimum"
 				or ufunc_name == "maximum"
+				or ufunc_name == "max"
+				or ufunc_name == "min"
+				or ufunc_name == "mean"
+				or ufunc_name == "variance"
+				or ufunc_name == "standard_deviation"
 				or ufunc_name == "rint"
 				or ufunc_name == "less_equal"
 				or ufunc_name == "less"

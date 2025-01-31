@@ -975,11 +975,11 @@ Ref<NDArray> NDArray::assign_standard_deviation(const Variant& a, const Variant&
 }
 
 Ref<NDArray> NDArray::assign_max(const Variant& a, const Variant& axes) {
-	REDUCTION1(max, a, axes);
+	REDUCTION1_NEW(max, a, axes);
 }
 
 Ref<NDArray> NDArray::assign_min(const Variant& a, const Variant& axes) {
-	REDUCTION1(min, a, axes);
+	REDUCTION1_NEW(min, a, axes);
 }
 
 Ref<NDArray> NDArray::assign_norm(const Variant& a, const Variant& ord, const Variant& axes) {

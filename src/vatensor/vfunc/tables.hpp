@@ -59,6 +59,8 @@ namespace va::vfunc::tables {
 	VA_TABLES_EXTERN UFuncTableUnary mean;
 	VA_TABLES_EXTERN UFuncTableUnary variance;
 	VA_TABLES_EXTERN UFuncTableUnary standard_deviation;
+	VA_TABLES_EXTERN UFuncTableUnary max;
+	VA_TABLES_EXTERN UFuncTableUnary min;
 
 	VA_TABLES_EXTERN UFuncTableUnary sin;
 	VA_TABLES_EXTERN UFuncTableUnary cos;

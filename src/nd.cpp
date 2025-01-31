@@ -1049,11 +1049,11 @@ Ref<NDArray> nd::standard_deviation(const Variant& a, const Variant& axes) {
 }
 
 Ref<NDArray> nd::max(const Variant& a, const Variant& axes) {
-	return REDUCTION1(max, a, axes);
+	return REDUCTION1_NEW(max, a, axes);
 }
 
 Ref<NDArray> nd::min(const Variant& a, const Variant& axes) {
-	return REDUCTION1(min, a, axes);
+	return REDUCTION1_NEW(min, a, axes);
 }
 
 Ref<NDArray> nd::norm(const Variant& a, const Variant& ord, const Variant& axes) {

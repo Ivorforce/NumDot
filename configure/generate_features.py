@@ -118,6 +118,10 @@ casts_at_least_float32 = [
 	"i->d->d",
 	"q->d->d"
 ]
+specializations_all = [
+	f"{type_.char}->{type_.char}"
+	for type_ in supported_dtypes
+]
 
 common_dtypes = dict()
 
@@ -214,6 +218,13 @@ def main():
 			"name": rfunc,
 			"specializations": specializations_at_least_float32,
 			"casts": casts_at_least_float32,
+			"vargs": ["const va::axes_type*"]
+		})
+	for rfunc in ["max", "min"]:
+		vfuncs.append({
+			"name": rfunc,
+			"specializations": specializations_all,
+			"casts": [],
 			"vargs": ["const va::axes_type*"]
 		})
 

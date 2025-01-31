@@ -70,11 +70,11 @@ double_t ndf::standard_deviation(const Variant& a) {
 }
 
 double_t ndf::max(const Variant& a) {
-	return REDUCTION1(max, a);
+	return REDUCTION1_NEW(max, a);
 }
 
 double_t ndf::min(const Variant& a) {
-	return REDUCTION1(min, a);
+	return REDUCTION1_NEW(min, a);
 }
 
 double_t ndf::norm(const Variant& a, const Variant& ord) {

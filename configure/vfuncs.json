@@ -3821,6 +3821,96 @@
 			"vargs": [
 				"const va::axes_type*"
 			]
+		},
+		{
+			"name": "variance",
+			"specializations": [
+				"D->D",
+				"F->F",
+				"d->d",
+				"f->f"
+			],
+			"casts": [
+				"?->d->d",
+				"B->d->d",
+				"H->d->d",
+				"I->d->d",
+				"Q->d->d",
+				"b->d->d",
+				"h->d->d",
+				"i->d->d",
+				"q->d->d"
+			],
+			"vargs": [
+				"const va::axes_type*"
+			]
+		},
+		{
+			"name": "standard_deviation",
+			"specializations": [
+				"D->D",
+				"F->F",
+				"d->d",
+				"f->f"
+			],
+			"casts": [
+				"?->d->d",
+				"B->d->d",
+				"H->d->d",
+				"I->d->d",
+				"Q->d->d",
+				"b->d->d",
+				"h->d->d",
+				"i->d->d",
+				"q->d->d"
+			],
+			"vargs": [
+				"const va::axes_type*"
+			]
+		},
+		{
+			"name": "max",
+			"specializations": [
+				"?->?",
+				"f->f",
+				"d->d",
+				"F->F",
+				"D->D",
+				"b->b",
+				"h->h",
+				"i->i",
+				"l->l",
+				"B->B",
+				"H->H",
+				"I->I",
+				"L->L"
+			],
+			"casts": [],
+			"vargs": [
+				"const va::axes_type*"
+			]
+		},
+		{
+			"name": "min",
+			"specializations": [
+				"?->?",
+				"f->f",
+				"d->d",
+				"F->F",
+				"D->D",
+				"b->b",
+				"h->h",
+				"i->i",
+				"l->l",
+				"B->B",
+				"H->H",
+				"I->I",
+				"L->L"
+			],
+			"casts": [],
+			"vargs": [
+				"const va::axes_type*"
+			]
 		}
 	]
 }

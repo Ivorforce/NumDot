@@ -278,6 +278,12 @@ def main():
 		"name": "a0xb1_minus_a1xb0",
 		"vargs": ["const std::ptrdiff_t", "const std::ptrdiff_t"]
 	})
+	vfuncs.append({
+		"name": "pad",
+		"specializations": specializations_all,
+		"casts": [],
+		"vargs": ["std::vector<std::vector<std::size_t>>&", "xt::pad_mode", "void* pad_value"]
+	})
 
 	with (pathlib.Path(__file__).parent / "vfuncs.json").open("w") as f:
 		json.dump({

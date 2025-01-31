@@ -3,6 +3,7 @@
 
 #include <xtensor-signal/fft.hpp>
 #include <xtensor/xnorm.hpp>
+#include <xtensor/xpad.hpp>
 #include <xtensor/xsort.hpp>
 
 #include "vatensor/varray.hpp"
@@ -200,6 +201,13 @@ namespace va::vfunc::impl {
 	IMPLEMENT_BINARY_VFUNC(all_close, xt::xscalar<bool>(xt::all(xt::isclose(va::promote::to_num(a), va::promote::to_num(b), rtol, atol, equal_nan))), double rtol, double atol, bool equal_nan)
 
 	IMPLEMENT_UNARY_VFUNC(fft, xt::fft::fft(std::forward<decltype(a)>(a), axis), std::ptrdiff_t axis)
+	IMPLEMENT_UNARY_VFUNC(
+		pad,
+		xt::pad(std::forward<decltype(a)>(a), pad_width, pad_mode, reinterpret_cast<A&>(pad_value)),
+		std::vector<std::vector<std::size_t>>& pad_width,
+		xt::pad_mode pad_mode,
+		void* pad_value
+	)
 
 	IMPLEMENT_BINARY_RFUNC(reduce_dot, xt::sum(a * b)(), xt::sum(a * b, *axes))
 

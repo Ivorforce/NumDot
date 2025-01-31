@@ -13,8 +13,6 @@ namespace va {
 		random_int,
 		random_normal,
 
-		pad,
-
 		count,
 	};
 
@@ -33,7 +31,6 @@ namespace va {
 			FEATURE_NAME_CASE(random_int)
 			FEATURE_NAME_CASE(random_normal)
 
-			FEATURE_NAME_CASE(pad)
 			default:
 				throw std::invalid_argument("invalid feature");
 		}

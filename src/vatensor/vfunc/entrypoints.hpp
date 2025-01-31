@@ -1,6 +1,7 @@
 #ifndef VATENSOR_UFUNC_CONFIG_HPP
 #define VATENSOR_UFUNC_CONFIG_HPP
 
+#include <xtensor/xpad.hpp>
 #include "vatensor/vcall.hpp"
 #include "vatensor/vfunc/tables.hpp"
 
@@ -148,6 +149,24 @@ namespace va {
 
 		const shape_type result_shape = combined_shape(a_shape, b_shape);
 		_call_vfunc_binary(allocator, vfunc::tables::a0xb1_minus_a1xb0, target, result_shape, a, b, std::move(i0), std::move(i1));
+	}
+
+	static void pad(VStoreAllocator& allocator, const VArrayTarget& target, const VArray& a, const std::vector<std::vector<std::size_t>>& pad_width, xt::pad_mode pad_mode, VScalar pad_value) {
+		auto result_shape = a.shape();
+		if (pad_width.size() > result_shape.size()) {
+			throw std::runtime_error("dimension out of bounds");
+		}
+		for (std::size_t i = 0; i < pad_width.size(); i++) {
+			if (pad_width[i].size() != 2) {
+				throw std::runtime_error("invalid pad width");
+			}
+			result_shape[i] += pad_width[i][0] + pad_width[i][1];
+		}
+
+		va::VScalar cast_scalar = static_cast_scalar(pad_value, a.dtype());
+		void* pad_value_ptr = va::_call::get_value_ptr(cast_scalar);
+
+		_call_vfunc_unary(allocator, vfunc::tables::pad, target, result_shape, a.data, pad_width, std::move(pad_mode), std::move(pad_value_ptr));
 	}
 }
 

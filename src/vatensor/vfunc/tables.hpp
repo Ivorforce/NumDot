@@ -118,6 +118,7 @@ namespace va::vfunc::tables {
 	VA_TABLES_EXTERN UFuncTablesBinaryCommutative all_close;
 
 	VA_TABLES_EXTERN UFuncTableUnary fft;
+	VA_TABLES_EXTERN UFuncTableUnary pad;
 
 	VA_TABLES_EXTERN UFuncTableBinary reduce_dot;
 

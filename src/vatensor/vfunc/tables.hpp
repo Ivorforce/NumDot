@@ -27,86 +27,78 @@ namespace va::vfunc::tables {
 	};
 }
 
-#ifndef UNARY_TABLES
-#define UNARY_TABLES(UFUNC_NAME) extern UFuncTableUnary UFUNC_NAME;
-#endif
-
-#ifndef BINARY_TABLES
-#define BINARY_TABLES(UFUNC_NAME) extern UFuncTablesBinary UFUNC_NAME;
-#endif
-
-#ifndef BINARY_TABLES_COMMUTATIVE
-#define BINARY_TABLES_COMMUTATIVE(UFUNC_NAME) extern UFuncTablesBinaryCommutative UFUNC_NAME;
+#ifndef VA_TABLES_EXTERN
+#define VA_TABLES_EXTERN extern
 #endif
 
 // ReSharper disable CppNonInlineVariableDefinitionInHeaderFile
 namespace va::vfunc::tables {
-	UNARY_TABLES(negative)
-	UNARY_TABLES(sign)
-	UNARY_TABLES(abs)
-	UNARY_TABLES(square)
-	UNARY_TABLES(sqrt)
-	UNARY_TABLES(exp)
-	UNARY_TABLES(log)
-	UNARY_TABLES(rad2deg)
-	UNARY_TABLES(deg2rad)
+	VA_TABLES_EXTERN UFuncTableUnary negative;
+	VA_TABLES_EXTERN UFuncTableUnary sign;
+	VA_TABLES_EXTERN UFuncTableUnary abs;
+	VA_TABLES_EXTERN UFuncTableUnary square;
+	VA_TABLES_EXTERN UFuncTableUnary sqrt;
+	VA_TABLES_EXTERN UFuncTableUnary exp;
+	VA_TABLES_EXTERN UFuncTableUnary log;
+	VA_TABLES_EXTERN UFuncTableUnary rad2deg;
+	VA_TABLES_EXTERN UFuncTableUnary deg2rad;
 
-	UNARY_TABLES(conjugate)
+	VA_TABLES_EXTERN UFuncTableUnary conjugate;
 
-	BINARY_TABLES_COMMUTATIVE(add)
-	BINARY_TABLES(subtract)
-	BINARY_TABLES_COMMUTATIVE(multiply)
-	BINARY_TABLES(divide)
-	BINARY_TABLES(remainder)
-	BINARY_TABLES(pow)
-	BINARY_TABLES_COMMUTATIVE(minimum)
-	BINARY_TABLES_COMMUTATIVE(maximum)
+	VA_TABLES_EXTERN UFuncTablesBinaryCommutative add;
+	VA_TABLES_EXTERN UFuncTablesBinary subtract;
+	VA_TABLES_EXTERN UFuncTablesBinaryCommutative multiply;
+	VA_TABLES_EXTERN UFuncTablesBinary divide;
+	VA_TABLES_EXTERN UFuncTablesBinary remainder;
+	VA_TABLES_EXTERN UFuncTablesBinary pow;
+	VA_TABLES_EXTERN UFuncTablesBinaryCommutative minimum;
+	VA_TABLES_EXTERN UFuncTablesBinaryCommutative maximum;
 
-	UNARY_TABLES(sum)
+	VA_TABLES_EXTERN UFuncTableUnary sum;
 
-	UNARY_TABLES(sin)
-	UNARY_TABLES(cos)
-	UNARY_TABLES(tan)
-	UNARY_TABLES(asin)
-	UNARY_TABLES(acos)
-	UNARY_TABLES(atan)
-	BINARY_TABLES(atan2);
-	UNARY_TABLES(sinh)
-	UNARY_TABLES(cosh)
-	UNARY_TABLES(tanh)
-	UNARY_TABLES(asinh)
-	UNARY_TABLES(acosh)
-	UNARY_TABLES(atanh)
+	VA_TABLES_EXTERN UFuncTableUnary sin;
+	VA_TABLES_EXTERN UFuncTableUnary cos;
+	VA_TABLES_EXTERN UFuncTableUnary tan;
+	VA_TABLES_EXTERN UFuncTableUnary asin;
+	VA_TABLES_EXTERN UFuncTableUnary acos;
+	VA_TABLES_EXTERN UFuncTableUnary atan;
+	VA_TABLES_EXTERN UFuncTablesBinary atan2;;
+	VA_TABLES_EXTERN UFuncTableUnary sinh;
+	VA_TABLES_EXTERN UFuncTableUnary cosh;
+	VA_TABLES_EXTERN UFuncTableUnary tanh;
+	VA_TABLES_EXTERN UFuncTableUnary asinh;
+	VA_TABLES_EXTERN UFuncTableUnary acosh;
+	VA_TABLES_EXTERN UFuncTableUnary atanh;
 
-	UNARY_TABLES(ceil)
-	UNARY_TABLES(floor)
-	UNARY_TABLES(trunc)
-	UNARY_TABLES(round)
-	UNARY_TABLES(rint)
+	VA_TABLES_EXTERN UFuncTableUnary ceil;
+	VA_TABLES_EXTERN UFuncTableUnary floor;
+	VA_TABLES_EXTERN UFuncTableUnary trunc;
+	VA_TABLES_EXTERN UFuncTableUnary round;
+	VA_TABLES_EXTERN UFuncTableUnary rint;
 
-	UNARY_TABLES(logical_not)
-	BINARY_TABLES_COMMUTATIVE(logical_and);
-	BINARY_TABLES_COMMUTATIVE(logical_or);
-	BINARY_TABLES_COMMUTATIVE(logical_xor);
+	VA_TABLES_EXTERN UFuncTableUnary logical_not;
+	VA_TABLES_EXTERN UFuncTablesBinaryCommutative logical_and;;
+	VA_TABLES_EXTERN UFuncTablesBinaryCommutative logical_or;;
+	VA_TABLES_EXTERN UFuncTablesBinaryCommutative logical_xor;;
 
-	UNARY_TABLES(bitwise_not)
-	BINARY_TABLES_COMMUTATIVE(bitwise_and);
-	BINARY_TABLES_COMMUTATIVE(bitwise_or);
-	BINARY_TABLES_COMMUTATIVE(bitwise_xor);
-	BINARY_TABLES(bitwise_left_shift);
-	BINARY_TABLES(bitwise_right_shift);
+	VA_TABLES_EXTERN UFuncTableUnary bitwise_not;
+	VA_TABLES_EXTERN UFuncTablesBinaryCommutative bitwise_and;;
+	VA_TABLES_EXTERN UFuncTablesBinaryCommutative bitwise_or;;
+	VA_TABLES_EXTERN UFuncTablesBinaryCommutative bitwise_xor;;
+	VA_TABLES_EXTERN UFuncTablesBinary bitwise_left_shift;;
+	VA_TABLES_EXTERN UFuncTablesBinary bitwise_right_shift;;
 
-	BINARY_TABLES_COMMUTATIVE(equal);
-	BINARY_TABLES_COMMUTATIVE(not_equal);
-	BINARY_TABLES(less);
-	BINARY_TABLES(less_equal);
-	BINARY_TABLES(greater);
-	BINARY_TABLES(greater_equal);
-	UNARY_TABLES(isnan)
-	UNARY_TABLES(isfinite)
-	UNARY_TABLES(isinf)
+	VA_TABLES_EXTERN UFuncTablesBinaryCommutative equal;;
+	VA_TABLES_EXTERN UFuncTablesBinaryCommutative not_equal;;
+	VA_TABLES_EXTERN UFuncTablesBinary less;;
+	VA_TABLES_EXTERN UFuncTablesBinary less_equal;;
+	VA_TABLES_EXTERN UFuncTablesBinary greater;;
+	VA_TABLES_EXTERN UFuncTablesBinary greater_equal;;
+	VA_TABLES_EXTERN UFuncTableUnary isnan;
+	VA_TABLES_EXTERN UFuncTableUnary isfinite;
+	VA_TABLES_EXTERN UFuncTableUnary isinf;
 
-	BINARY_TABLES_COMMUTATIVE(is_close)
+	VA_TABLES_EXTERN UFuncTablesBinaryCommutative is_close;
 }
 
 #endif //TABLES_HPP

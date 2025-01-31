@@ -53,7 +53,7 @@ namespace va::vfunc::tables {
 	VA_TABLES_EXTERN UFuncTablesBinary pow;
 	VA_TABLES_EXTERN UFuncTablesBinaryCommutative minimum;
 	VA_TABLES_EXTERN UFuncTablesBinaryCommutative maximum;
-
+	
 	VA_TABLES_EXTERN UFuncTableUnary sum;
 	VA_TABLES_EXTERN UFuncTableUnary prod;
 	VA_TABLES_EXTERN UFuncTableUnary mean;
@@ -75,7 +75,7 @@ namespace va::vfunc::tables {
 	VA_TABLES_EXTERN UFuncTableUnary asin;
 	VA_TABLES_EXTERN UFuncTableUnary acos;
 	VA_TABLES_EXTERN UFuncTableUnary atan;
-	VA_TABLES_EXTERN UFuncTablesBinary atan2;;
+	VA_TABLES_EXTERN UFuncTablesBinary atan2;
 	VA_TABLES_EXTERN UFuncTableUnary sinh;
 	VA_TABLES_EXTERN UFuncTableUnary cosh;
 	VA_TABLES_EXTERN UFuncTableUnary tanh;
@@ -90,28 +90,30 @@ namespace va::vfunc::tables {
 	VA_TABLES_EXTERN UFuncTableUnary rint;
 
 	VA_TABLES_EXTERN UFuncTableUnary logical_not;
-	VA_TABLES_EXTERN UFuncTablesBinaryCommutative logical_and;;
-	VA_TABLES_EXTERN UFuncTablesBinaryCommutative logical_or;;
-	VA_TABLES_EXTERN UFuncTablesBinaryCommutative logical_xor;;
+	VA_TABLES_EXTERN UFuncTablesBinaryCommutative logical_and;
+	VA_TABLES_EXTERN UFuncTablesBinaryCommutative logical_or;
+	VA_TABLES_EXTERN UFuncTablesBinaryCommutative logical_xor;
 
 	VA_TABLES_EXTERN UFuncTableUnary bitwise_not;
-	VA_TABLES_EXTERN UFuncTablesBinaryCommutative bitwise_and;;
-	VA_TABLES_EXTERN UFuncTablesBinaryCommutative bitwise_or;;
-	VA_TABLES_EXTERN UFuncTablesBinaryCommutative bitwise_xor;;
-	VA_TABLES_EXTERN UFuncTablesBinary bitwise_left_shift;;
-	VA_TABLES_EXTERN UFuncTablesBinary bitwise_right_shift;;
+	VA_TABLES_EXTERN UFuncTablesBinaryCommutative bitwise_and;
+	VA_TABLES_EXTERN UFuncTablesBinaryCommutative bitwise_or;
+	VA_TABLES_EXTERN UFuncTablesBinaryCommutative bitwise_xor;
+	VA_TABLES_EXTERN UFuncTablesBinary bitwise_left_shift;
+	VA_TABLES_EXTERN UFuncTablesBinary bitwise_right_shift;
 
-	VA_TABLES_EXTERN UFuncTablesBinaryCommutative equal;;
-	VA_TABLES_EXTERN UFuncTablesBinaryCommutative not_equal;;
-	VA_TABLES_EXTERN UFuncTablesBinary less;;
-	VA_TABLES_EXTERN UFuncTablesBinary less_equal;;
-	VA_TABLES_EXTERN UFuncTablesBinary greater;;
-	VA_TABLES_EXTERN UFuncTablesBinary greater_equal;;
+	VA_TABLES_EXTERN UFuncTablesBinaryCommutative equal;
+	VA_TABLES_EXTERN UFuncTablesBinaryCommutative not_equal;
+	VA_TABLES_EXTERN UFuncTablesBinary less;
+	VA_TABLES_EXTERN UFuncTablesBinary less_equal;
+	VA_TABLES_EXTERN UFuncTablesBinary greater;
+	VA_TABLES_EXTERN UFuncTablesBinary greater_equal;
+
 	VA_TABLES_EXTERN UFuncTableUnary isnan;
 	VA_TABLES_EXTERN UFuncTableUnary isfinite;
 	VA_TABLES_EXTERN UFuncTableUnary isinf;
 
 	VA_TABLES_EXTERN UFuncTablesBinaryCommutative is_close;
+	VA_TABLES_EXTERN UFuncTablesBinaryCommutative array_equiv;
 }
 
 #endif //TABLES_HPP

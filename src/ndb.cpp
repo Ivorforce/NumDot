@@ -29,28 +29,25 @@ ndb::ndb() = default;
 ndb::~ndb() = default;
 
 #define REDUCTION1(func, varray1) \
-numdot::reduction<bool>([](const va::VArray& array) { return va::func(array.data); }, (varray1))
-
-#define REDUCTION1_NEW(func, varray1) \
 numdot::reduction_new<bool>([](const va::VArrayTarget& target, const va::VArray& array) { return va::func(va::store::default_allocator, target, array.data, nullptr); }, (varray1))
 
-#define REDUCTION2(func, varray1, varray2) \
-numdot::reduction<bool>([](const va::VArray& x1, const va::VArray& x2) { return va::func(x1.data, x2.data); }, (varray1), (varray2))
+#define REDUCTION2_NOAXES(func, varray1, varray2) \
+numdot::reduction_new<bool>([](const va::VArrayTarget& target, const va::VArray& x1, const va::VArray& x2) { return va::func(va::store::default_allocator, target, x1.data, x2.data); }, (varray1), (varray2))
 
 bool ndb::all(const Variant& a) {
-	return REDUCTION1_NEW(all, a);
+	return REDUCTION1(all, a);
 }
 
 bool ndb::any(const Variant& a) {
-	return REDUCTION1_NEW(any, a);
+	return REDUCTION1(any, a);
 }
 
 bool ndb::array_equiv(const Variant& a, const Variant& b) {
-	return REDUCTION2(array_equiv, a, b);
+	return REDUCTION2_NOAXES(array_equiv, a, b);
 }
 
 bool ndb::array_equal(const Variant& a, const Variant& b) {
-	return REDUCTION2(array_equal, a, b);
+	return REDUCTION2_NOAXES(array_equal, a, b);
 }
 
 bool ndb::all_close(const Variant& a, const Variant& b, double_t rtol, double_t atol, bool equal_nan) {
@@ -60,4 +57,4 @@ bool ndb::all_close(const Variant& a, const Variant& b, double_t rtol, double_t 
 }
 
 #undef REDUCTION1
-#undef REDUCTION2
+#undef REDUCTION2_NOAXES

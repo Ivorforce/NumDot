@@ -3,8 +3,10 @@
 #include <utility>                                       // for move
 #include "scalar_tricks.hpp"
 #include "varray.hpp"                             // for VArray, VArr...
+#include "vcarray.hpp"
 #include "vcompute.hpp"                            // for XFunction
 #include "vpromote.hpp"                                    // for common_num_i...
+#include "vfunc/entrypoints.hpp"
 #include "xtensor/xmath.hpp"                           // for layout_type
 #include "xtensor/xlayout.hpp"                           // for layout_type
 #include "xtensor/xoperation.hpp"                        // for equal_to
@@ -17,38 +19,12 @@
 
 using namespace va;
 
-bool va::array_equiv(const VData& a, const VData& b) {
-#ifndef _WIN32
-	try {
-		return vreduce<
-			Feature::array_equal,
-			promote::common_in_nat_out,
-			bool
-		>(
-			[](auto&& a, auto&& b) -> bool {
-				return xt::all(xt::equal(std::forward<decltype(a)>(a), std::forward<decltype(b)>(b)));
-			},
-			a,
-			b
-		);
-	}
-	catch (std::runtime_error& e) {
-		// Should be broadcast error or cast error.
-		return false;
-	}
-#else
-	std::shared_ptr<VArray> intermediate;
-	va::equal(va::store::default_allocator, &intermediate, a, b);
-	return va::all(intermediate->data);
-#endif
-}
-
-bool va::array_equal(const VData& a, const VData& b) {
+void va::array_equal(::va::VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b) {
 	if (shape(a) != shape(b)) {
-		return false;
+		return va::assign(target, false);
 	}
 
-	return array_equiv(a, b);
+	va::array_equiv(allocator, target, a, b);
 }
 
 template <typename A, typename B>

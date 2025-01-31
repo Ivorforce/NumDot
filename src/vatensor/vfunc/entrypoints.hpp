@@ -103,7 +103,9 @@ namespace va {
 	DEFINE_VFUNC_CALLER_UNARY0(isnan)
 	DEFINE_VFUNC_CALLER_UNARY0(isfinite)
 	DEFINE_VFUNC_CALLER_UNARY0(isinf)
+
 	DEFINE_VFUNC_CALLER_BINARY3(is_close, double, double, bool)
+	DEFINE_VFUNC_CALLER_BINARY0(array_equiv)
 }
 
 #endif //VATENSOR_UFUNC_CONFIG_HPP

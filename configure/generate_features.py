@@ -238,6 +238,11 @@ def main():
 			],
 			"vargs": ["const va::axes_type*"]
 		})
+	vfuncs.append({
+		# Copy 'equal' type info.
+		**[vfunc for vfunc in vfuncs if vfunc["name"] == "equal"][0],
+		"name": "array_equiv",
+	})
 
 	with (pathlib.Path(__file__).parent / "vfuncs.json").open("w") as f:
 		json.dump({

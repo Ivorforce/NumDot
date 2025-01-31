@@ -9,7 +9,6 @@ namespace va {
 		linspace,
 		arange,
 
-		array_equal,
 		all_close,
 
 		median,
@@ -38,7 +37,6 @@ namespace va {
 			FEATURE_NAME_CASE(linspace)
 			FEATURE_NAME_CASE(arange)
 
-			FEATURE_NAME_CASE(array_equal)
 			FEATURE_NAME_CASE(all_close)
 
 			FEATURE_NAME_CASE(median)

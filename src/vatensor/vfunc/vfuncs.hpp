@@ -169,7 +169,9 @@ namespace va::vfunc::impl {
 	IMPLEMENT_UNARY_VFUNC(isnan, xt::isnan(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_VFUNC(isfinite, xt::isfinite(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_VFUNC(isinf, xt::isinf(va::promote::to_num(a)))
+
 	IMPLEMENT_BINARY_VFUNC(is_close, xt::isclose(va::promote::to_num(a), va::promote::to_num(b), rtol, atol, equal_nan), double rtol, double atol, bool equal_nan)
+	IMPLEMENT_BINARY_VFUNC(array_equiv, xt::xscalar<bool>(xt::all(xt::equal(a, b))))
 } // namespace va::vfunc::impl
 
 #endif //VFUNCS_HPP

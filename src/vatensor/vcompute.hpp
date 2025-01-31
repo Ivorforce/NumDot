@@ -18,16 +18,6 @@
 #include "xtensor/xtensor_forward.hpp"  // for xarray
 
 namespace va {
-    template<typename FX>
-    struct XFunction {
-        // This is analogous to xt::add etc., with the main difference that in our setup it's easier to use this function with the
-        //  appropriate xt::detail:: operation.
-        template<typename... Args>
-        inline auto operator()(Args&&... args) const -> xt::detail::xfunction_type_t<FX, Args...> {
-            return xt::detail::make_xfunction<FX>(std::forward<Args>(args)...);
-        }
-    };
-
     template <Feature feature, class Visitor, class... Vs>
     constexpr auto visit_if_enabled(Visitor&& visitor, Vs&&... vs) -> decltype(std::visit(visitor, vs...)) {
         if constexpr (va::is_feature_enabled(feature)) {
@@ -148,27 +138,6 @@ namespace va {
         assign_to_target<OutputType>(target, allocator, result);
     }
 
-    template <Feature feature, typename PromotionRule, typename... Args>
-    static DType dtype_for_operation(const Args&... args) {
-        return visit_if_enabled<feature>(
-            [](const auto&... args) -> DType {
-                using InputType = typename PromotionRule::template input_type<promote::value_type_v<std::decay_t<decltype(args)>>...>;
-
-                if constexpr (std::is_same_v<InputType, void>) {
-                    throw std::runtime_error("Unsupported type for operation.");
-                }
-                else {
-                    return dtype_of_type<InputType>();
-                }
-            },
-            args...
-        );
-    }
-
-    using BoolVariant = std::variant<std::true_type, std::false_type>;
-
-    static BoolVariant variant_from_bool(const bool b) { return b ? BoolVariant {std::true_type{}} : BoolVariant {std::false_type{}}; };
-
     template<Feature feature, typename PromotionRule, typename FX, typename Arg>
     static void xoperation_single(const FX& fx, VStoreAllocator& allocator, const VArrayTarget& target, const Arg arg) {
         visit_if_enabled<feature>(
@@ -194,48 +163,6 @@ namespace va {
             },
             arg
         );
-    }
-
-    template<typename A, typename B>
-    struct get_left {
-        using value = A;
-    };
-
-    template<typename PromotionRule, typename FX, typename... Args>
-    static void xoperation_precast(const FX& fx, VStoreAllocator& allocator, const VArrayTarget& target, const DType dtype, const Args&... args) {
-        std::visit(
-            [&fx, &allocator, &target, &args...](auto t) {
-                using InputType = typename PromotionRule::template input_type<typename get_left<decltype(t), Args>::value...>;
-
-                if constexpr (!std::is_same_v<InputType, decltype(t)>) {
-                    throw std::runtime_error("Internal error (post-cast type isn't the same as pre-cast type).");
-                }
-                else {
-                    vfunction_monotype<PromotionRule>(
-                        fx,
-                        allocator,
-                        target,
-                        promote::deref_promoted<InputType>(args)...
-                    );
-                }
-            },
-            dtype_to_variant_unchecked(dtype)
-        );
-    }
-
-    template<Feature feature, typename PromotionRule, typename FX, typename... Args>
-    static void xoperation_inplace(const FX& fx, VStoreAllocator& allocator, const VArrayTarget& target, const Args&... args) {
-        DType dtype = dtype_for_operation<feature, PromotionRule>(args...);
-
-        visit_if_enabled<feature>([&fx, &allocator, &target, dtype, &args...](auto... is_wrong_dtype) {
-            xoperation_precast<PromotionRule>(
-                fx,
-                allocator,
-                target,
-                dtype,
-                promote::deref_data(promote::promote_contents_if<decltype(is_wrong_dtype)>(args, dtype))...
-            );
-        }, variant_from_bool(va::dtype(args) != dtype)...);
     }
 }
 

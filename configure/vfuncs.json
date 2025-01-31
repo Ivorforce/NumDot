@@ -3869,6 +3869,98 @@
 			]
 		},
 		{
+			"name": "norm_l0",
+			"specializations": [
+				"D->D",
+				"F->F",
+				"d->d",
+				"f->f"
+			],
+			"casts": [
+				"?->d->d",
+				"B->d->d",
+				"H->d->d",
+				"I->d->d",
+				"Q->d->d",
+				"b->d->d",
+				"h->d->d",
+				"i->d->d",
+				"q->d->d"
+			],
+			"vargs": [
+				"const va::axes_type*"
+			]
+		},
+		{
+			"name": "norm_l1",
+			"specializations": [
+				"D->D",
+				"F->F",
+				"d->d",
+				"f->f"
+			],
+			"casts": [
+				"?->d->d",
+				"B->d->d",
+				"H->d->d",
+				"I->d->d",
+				"Q->d->d",
+				"b->d->d",
+				"h->d->d",
+				"i->d->d",
+				"q->d->d"
+			],
+			"vargs": [
+				"const va::axes_type*"
+			]
+		},
+		{
+			"name": "norm_l2",
+			"specializations": [
+				"D->D",
+				"F->F",
+				"d->d",
+				"f->f"
+			],
+			"casts": [
+				"?->d->d",
+				"B->d->d",
+				"H->d->d",
+				"I->d->d",
+				"Q->d->d",
+				"b->d->d",
+				"h->d->d",
+				"i->d->d",
+				"q->d->d"
+			],
+			"vargs": [
+				"const va::axes_type*"
+			]
+		},
+		{
+			"name": "norm_linf",
+			"specializations": [
+				"D->D",
+				"F->F",
+				"d->d",
+				"f->f"
+			],
+			"casts": [
+				"?->d->d",
+				"B->d->d",
+				"H->d->d",
+				"I->d->d",
+				"Q->d->d",
+				"b->d->d",
+				"h->d->d",
+				"i->d->d",
+				"q->d->d"
+			],
+			"vargs": [
+				"const va::axes_type*"
+			]
+		},
+		{
 			"name": "max",
 			"specializations": [
 				"?->?",

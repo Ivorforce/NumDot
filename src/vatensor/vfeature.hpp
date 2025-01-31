@@ -13,10 +13,6 @@ namespace va {
 		all_close,
 
 		median,
-		norm_l0,
-		norm_l1,
-		norm_l2,
-		norm_linf,
 		all,
 		any,
 		reduce_dot,
@@ -50,10 +46,6 @@ namespace va {
 			FEATURE_NAME_CASE(all_close)
 
 			FEATURE_NAME_CASE(median)
-			FEATURE_NAME_CASE(norm_l0)
-			FEATURE_NAME_CASE(norm_l1)
-			FEATURE_NAME_CASE(norm_l2)
-			FEATURE_NAME_CASE(norm_linf)
 			FEATURE_NAME_CASE(all)
 			FEATURE_NAME_CASE(any)
 			FEATURE_NAME_CASE(reduce_dot)

@@ -1061,17 +1061,17 @@ Ref<NDArray> nd::norm(const Variant& a, const Variant& ord, const Variant& axes)
 		case Variant::INT:
 			switch (static_cast<int64_t>(ord)) {
 				case 0:
-					return REDUCTION1(norm_l0, a, axes);
+					return REDUCTION1_NEW(norm_l0, a, axes);
 				case 1:
-					return REDUCTION1(norm_l1, a, axes);
+					return REDUCTION1_NEW(norm_l1, a, axes);
 				case 2:
-					return REDUCTION1(norm_l2, a, axes);
+					return REDUCTION1_NEW(norm_l2, a, axes);
 				default:
 					break;
 			}
 		case Variant::FLOAT:
 			if (std::isinf(static_cast<double_t>(ord))) {
-				return REDUCTION1(norm_linf, a, axes);
+				return REDUCTION1_NEW(norm_linf, a, axes);
 			}
 		default:
 			break;

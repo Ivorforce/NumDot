@@ -1,6 +1,7 @@
 #ifndef VFUNCS_HPP
 #define VFUNCS_HPP
 
+#include <xtensor/xnorm.hpp>
 #include "vatensor/varray.hpp"
 #include "vatensor/vpromote.hpp"
 #include "vatensor/vassign.hpp"
@@ -111,6 +112,10 @@ namespace va::vfunc::impl {
 	IMPLEMENT_UNARY_RFUNC(standard_deviation, xt::stddev(a)(), xt::stddev(a, *axes))
 	IMPLEMENT_UNARY_RFUNC(max, xt::amax(a)(), xt::amax(a, *axes))
 	IMPLEMENT_UNARY_RFUNC(min, xt::amin(a)(), xt::amin(a, *axes))
+	IMPLEMENT_UNARY_RFUNC(norm_l0, xt::norm_l0(a)(), xt::norm_l0(a, *axes, xt::evaluation_strategy::lazy))
+	IMPLEMENT_UNARY_RFUNC(norm_l1, xt::norm_l1(a)(), xt::norm_l1(a, *axes, xt::evaluation_strategy::lazy))
+	IMPLEMENT_UNARY_RFUNC(norm_l2, xt::norm_l2(a)(), xt::norm_l2(a, *axes, xt::evaluation_strategy::lazy))
+	IMPLEMENT_UNARY_RFUNC(norm_linf, xt::norm_linf(a)(), xt::norm_linf(a, *axes, xt::evaluation_strategy::lazy))
 
 	IMPLEMENT_UNARY_VFUNC(sin, xt::sin(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_VFUNC(cos, xt::cos(va::promote::to_num(a)))

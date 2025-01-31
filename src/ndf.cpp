@@ -82,17 +82,17 @@ double_t ndf::norm(const Variant& a, const Variant& ord) {
 		case Variant::INT:
 			switch (static_cast<int64_t>(ord)) {
 				case 0:
-					return REDUCTION1(norm_l0, a);
+					return REDUCTION1_NEW(norm_l0, a);
 				case 1:
-					return REDUCTION1(norm_l1, a);
+					return REDUCTION1_NEW(norm_l1, a);
 				case 2:
-					return REDUCTION1(norm_l2, a);
+					return REDUCTION1_NEW(norm_l2, a);
 				default:
 					break;
 			}
 		case Variant::FLOAT:
 			if (std::isinf(static_cast<double_t>(ord))) {
-				return REDUCTION1(norm_linf, a);
+				return REDUCTION1_NEW(norm_linf, a);
 			}
 		default:
 			break;

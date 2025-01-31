@@ -7,18 +7,6 @@ namespace va {
 	VScalar median(const VData& array);
 	void median(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array, const axes_type& axes);
 
-	VScalar norm_l0(const VData& array);
-	void norm_l0(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array, const axes_type& axes);
-
-	VScalar norm_l1(const VData& array);
-	void norm_l1(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array, const axes_type& axes);
-
-	VScalar norm_l2(const VData& array);
-	void norm_l2(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array, const axes_type& axes);
-
-	VScalar norm_linf(const VData& array);
-	void norm_linf(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array, const axes_type& axes);
-
 	VScalar count_nonzero(VStoreAllocator& allocator, const VData& array);
 	void count_nonzero(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array, const axes_type& axes);
 

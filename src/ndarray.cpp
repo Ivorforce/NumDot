@@ -987,17 +987,17 @@ Ref<NDArray> NDArray::assign_norm(const Variant& a, const Variant& ord, const Va
 		case Variant::INT:
 			switch (static_cast<int64_t>(ord)) {
 				case 0:
-					REDUCTION1(norm_l0, a, axes);
+					REDUCTION1_NEW(norm_l0, a, axes);
 				case 1:
-					REDUCTION1(norm_l1, a, axes);
+					REDUCTION1_NEW(norm_l1, a, axes);
 				case 2:
-					REDUCTION1(norm_l2, a, axes);
+					REDUCTION1_NEW(norm_l2, a, axes);
 				default:
 					break;
 			}
 		case Variant::FLOAT:
 			if (std::isinf(static_cast<double_t>(ord))) {
-				REDUCTION1(norm_linf, a, axes);
+				REDUCTION1_NEW(norm_linf, a, axes);
 			}
 		default:
 			break;

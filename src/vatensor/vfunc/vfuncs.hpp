@@ -63,15 +63,15 @@ namespace va::op {
 	XTENSOR_REDUCER_FUNCTION(va_all, xt::detail::logical_and, bool, false)
 }
 
-#define IMPLEMENT_BINARY_VFUNC(UFUNC_NAME, OP, ...)\
-template <typename R, typename A, typename B>\
-inline void UFUNC_NAME(R& ret, const A& a, const B& b, ##__VA_ARGS__) {\
-	va::broadcasting_assign_typesafe(ret, OP);\
-}
-
 #define IMPLEMENT_UNARY_VFUNC(UFUNC_NAME, OP, ...)\
 template <typename R, typename A>\
 inline void UFUNC_NAME(R& ret, const A& a, ##__VA_ARGS__) {\
+	va::broadcasting_assign_typesafe(ret, OP);\
+}
+
+#define IMPLEMENT_BINARY_VFUNC(UFUNC_NAME, OP, ...)\
+template <typename R, typename A, typename B>\
+inline void UFUNC_NAME(R& ret, const A& a, const B& b, ##__VA_ARGS__) {\
 	va::broadcasting_assign_typesafe(ret, OP);\
 }
 

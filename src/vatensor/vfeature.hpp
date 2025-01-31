@@ -15,8 +15,6 @@ namespace va {
 		median,
 		reduce_dot,
 
-		clip,
-
 		cross,
 
 		random_float,
@@ -45,8 +43,6 @@ namespace va {
 
 			FEATURE_NAME_CASE(median)
 			FEATURE_NAME_CASE(reduce_dot)
-
-			FEATURE_NAME_CASE(clip)
 
 			FEATURE_NAME_CASE(cross)
 

@@ -120,16 +120,14 @@ void va::assign(VData& array, VScalar value) {
 }
 
 void va::assign(VStoreAllocator& allocator, const VArrayTarget& target, const VData& value) {
-	std::visit(
-		[&value, &allocator](auto target) {
-			if constexpr (std::is_same_v<decltype(target), VData*>) {
-				va::assign(*target, value);
-			}
-			else {
-				*target = va::copy(allocator, value);
-			}
-		}, target
-	);
+	if (const auto target_data = std::get_if<VData*>(&target)) {
+		VData& data = **target_data;
+		va::assign(data, value);
+	}
+	else {
+		auto& target_varray = *std::get<std::shared_ptr<VArray>*>(target);
+		target_varray = va::copy(allocator, value);
+	}
 }
 
 void va::assign_cast(VStoreAllocator& allocator, const VArrayTarget& target, const VData& value, DType dtype) {

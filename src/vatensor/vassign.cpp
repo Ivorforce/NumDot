@@ -55,26 +55,6 @@ void va::assign(VStoreAllocator& allocator, const VArrayTarget& target, const VD
 	}
 }
 
-void va::assign_cast(VStoreAllocator& allocator, const VArrayTarget& target, const VData& value, DType dtype) {
-	if (va::dtype(value) == dtype) {
-		// No cast necessary, just assign.
-		va::assign(allocator, target, value);
-		return;
-	}
-
-	if (const auto target_data = std::get_if<VData*>(&target)) {
-		VData& data = **target_data;
-		// Making a copy is slow, but it's also a bit unusual to in-place
-		// assign to a type that has another type.
-		const auto casted_copy = copy_as_dtype(allocator, value, dtype);
-		va::assign(data, casted_copy->data);
-	}
-	else {
-		auto& target_varray = *std::get<std::shared_ptr<VArray>*>(target);
-		target_varray = copy_as_dtype(allocator, value, dtype);
-	}
-}
-
 void va::assign(const VArrayTarget& target, VScalar value) {
 	if (const auto target_data = std::get_if<VData*>(&target)) {
 		VData& data = **target_data;

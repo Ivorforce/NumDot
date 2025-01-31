@@ -96,52 +96,6 @@ void va::median(VStoreAllocator& allocator, const VArrayTarget& target, const VD
 	}
 }
 
-VScalar va::variance(const VData& array) {
-	return vreduce_single<
-		Feature::var,
-		promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>,
-		VScalar
-	>(
-		REDUCER_LAMBDA(xt::variance),
-		array
-	);
-}
-
-void va::variance(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array, const axes_type& axes) {
-	va::xoperation_single<
-		Feature::var,
-		promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>
-	>(
-		REDUCER_LAMBDA_AXES(axes, xt::variance),
-		allocator,
-		target,
-		array
-	);
-}
-
-VScalar va::standard_deviation(const VData& array) {
-	return vreduce_single<
-		Feature::std,
-		promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>,
-		VScalar
-	>(
-		REDUCER_LAMBDA(xt::stddev),
-		array
-	);
-}
-
-void va::standard_deviation(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array, const axes_type& axes) {
-	va::xoperation_single<
-		Feature::std,
-		promote::reject_complex<promote::num_matching_float_or_default_in_nat_out<double_t>>
-	>(
-		REDUCER_LAMBDA_AXES(axes, xt::stddev),
-		allocator,
-		target,
-		array
-	);
-}
-
 VScalar va::max(const VData& array) {
 	return vreduce_single<
 		Feature::max,

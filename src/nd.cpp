@@ -1041,11 +1041,11 @@ Ref<NDArray> nd::median(const Variant& a, const Variant& axes) {
 }
 
 Ref<NDArray> nd::variance(const Variant& a, const Variant& axes) {
-	return REDUCTION1(variance, a, axes);
+	return REDUCTION1_NEW(variance, a, axes);
 }
 
 Ref<NDArray> nd::standard_deviation(const Variant& a, const Variant& axes) {
-	return REDUCTION1(standard_deviation, a, axes);
+	return REDUCTION1_NEW(standard_deviation, a, axes);
 }
 
 Ref<NDArray> nd::max(const Variant& a, const Variant& axes) {

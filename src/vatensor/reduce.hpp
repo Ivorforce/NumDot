@@ -7,12 +7,6 @@ namespace va {
 	VScalar median(const VData& array);
 	void median(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array, const axes_type& axes);
 
-	VScalar variance(const VData& array);
-	void variance(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array, const axes_type& axes);
-
-	VScalar standard_deviation(const VData& array);
-	void standard_deviation(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array, const axes_type& axes);
-
 	VScalar max(const VData& array);
 	void max(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array, const axes_type& axes);
 

@@ -967,11 +967,11 @@ Ref<NDArray> NDArray::assign_mean(const Variant& a, const Variant& axes) {
 }
 
 Ref<NDArray> NDArray::assign_variance(const Variant& a, const Variant& axes) {
-	REDUCTION1(variance, a, axes);
+	REDUCTION1_NEW(variance, a, axes);
 }
 
 Ref<NDArray> NDArray::assign_standard_deviation(const Variant& a, const Variant& axes) {
-	REDUCTION1(standard_deviation, a, axes);
+	REDUCTION1_NEW(standard_deviation, a, axes);
 }
 
 Ref<NDArray> NDArray::assign_max(const Variant& a, const Variant& axes) {

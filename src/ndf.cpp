@@ -62,11 +62,11 @@ double_t ndf::median(const Variant& a) {
 }
 
 double_t ndf::variance(const Variant& a) {
-	return REDUCTION1(variance, a);
+	return REDUCTION1_NEW(variance, a);
 }
 
 double_t ndf::standard_deviation(const Variant& a) {
-	return REDUCTION1(standard_deviation, a);
+	return REDUCTION1_NEW(standard_deviation, a);
 }
 
 double_t ndf::max(const Variant& a) {

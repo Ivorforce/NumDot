@@ -1067,11 +1067,11 @@ Ref<NDArray> NDArray::assign_logical_not(const Variant& a) {
 }
 
 Ref<NDArray> NDArray::assign_all(const Variant& a, const Variant& axes) {
-	REDUCTION1(all, a, axes);
+	REDUCTION1_NEW(all, a, axes);
 }
 
 Ref<NDArray> NDArray::assign_any(const Variant& a, const Variant& axes) {
-	REDUCTION1(any, a, axes);
+	REDUCTION1_NEW(any, a, axes);
 }
 
 Ref<NDArray> NDArray::assign_bitwise_and(const Variant& a, const Variant& b) {

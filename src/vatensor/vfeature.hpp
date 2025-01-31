@@ -13,8 +13,6 @@ namespace va {
 		all_close,
 
 		median,
-		all,
-		any,
 		reduce_dot,
 
 		clip,
@@ -46,8 +44,6 @@ namespace va {
 			FEATURE_NAME_CASE(all_close)
 
 			FEATURE_NAME_CASE(median)
-			FEATURE_NAME_CASE(all)
-			FEATURE_NAME_CASE(any)
 			FEATURE_NAME_CASE(reduce_dot)
 
 			FEATURE_NAME_CASE(clip)

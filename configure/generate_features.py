@@ -227,6 +227,17 @@ def main():
 			"casts": [],
 			"vargs": ["const va::axes_type*"]
 		})
+	for rfunc in ["all", "any"]:
+		vfuncs.append({
+			"name": rfunc,
+			"specializations": ["?->?"],
+			"casts": [
+				f"{type_.char}->?->?"
+				for type_ in supported_dtypes
+				if type_ != np.dtype(bool)
+			],
+			"vargs": ["const va::axes_type*"]
+		})
 
 	with (pathlib.Path(__file__).parent / "vfuncs.json").open("w") as f:
 		json.dump({

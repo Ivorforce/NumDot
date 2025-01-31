@@ -10,12 +10,6 @@ namespace va {
 	VScalar count_nonzero(VStoreAllocator& allocator, const VData& array);
 	void count_nonzero(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array, const axes_type& axes);
 
-	bool all(const VData& array);
-	void all(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array, const axes_type& axes);
-
-	bool any(const VData& array);
-	void any(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array, const axes_type& axes);
-
 	VScalar reduce_dot(const VData& a, const VData& b);
 	void reduce_dot(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b, const axes_type& axes);
 

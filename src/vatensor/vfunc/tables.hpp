@@ -66,6 +66,9 @@ namespace va::vfunc::tables {
 	VA_TABLES_EXTERN UFuncTableUnary norm_l2;
 	VA_TABLES_EXTERN UFuncTableUnary norm_linf;
 
+	VA_TABLES_EXTERN UFuncTableUnary all;
+	VA_TABLES_EXTERN UFuncTableUnary any;
+
 	VA_TABLES_EXTERN UFuncTableUnary sin;
 	VA_TABLES_EXTERN UFuncTableUnary cos;
 	VA_TABLES_EXTERN UFuncTableUnary tan;

@@ -114,52 +114,6 @@ void va::count_nonzero(VStoreAllocator& allocator, const VArrayTarget& target, c
 	// return va::sum(allocator, target, is_nonzero->data, axes);
 }
 
-bool va::all(const VData& array) {
-	return vreduce_single<
-		Feature::all,
-		promote::reject_complex<promote::x_in_nat_out<bool>>,
-		bool
-	>(
-		REDUCER_LAMBDA_NOECS(xt::all),
-		array
-	);
-}
-
-void va::all(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array, const axes_type& axes) {
-	va::xoperation_single<
-		Feature::all,
-		promote::reject_complex<promote::x_in_nat_out<bool>>
-	>(
-		REDUCER_LAMBDA_AXES(axes, va_all),
-		allocator,
-		target,
-		array
-	);
-}
-
-bool va::any(const VData& array) {
-	return vreduce_single<
-		Feature::any,
-		promote::reject_complex<promote::x_in_nat_out<bool>>,
-		bool
-	>(
-		REDUCER_LAMBDA_NOECS(xt::any),
-		array
-	);
-}
-
-void va::any(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array, const axes_type& axes) {
-	va::xoperation_single<
-		Feature::any,
-		promote::reject_complex<promote::x_in_nat_out<bool>>
-	>(
-		REDUCER_LAMBDA_AXES(axes, va_any),
-		allocator,
-		target,
-		array
-	);
-}
-
 va::VScalar va::reduce_dot(const VData& a, const VData& b) {
 	// Could also do this instead to avoid generating more code.
 	// std::shared_ptr<va::VArray> prod_cache;

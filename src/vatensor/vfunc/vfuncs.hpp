@@ -56,6 +56,11 @@ namespace va::op {
 	std::complex<double_t> va_cast(std::complex<float_t> i) {
 		return static_cast<std::complex<float_t>>(i);
 	}
+
+	// FIXME These don't support axes yet, see https://github.com/xtensor-stack/xtensor/issues/1555
+	using namespace xt;
+	XTENSOR_REDUCER_FUNCTION(va_any, xt::detail::logical_or, bool, true)
+	XTENSOR_REDUCER_FUNCTION(va_all, xt::detail::logical_and, bool, false)
 }
 
 #define IMPLEMENT_BINARY_VFUNC(UFUNC_NAME, OP, ...)\
@@ -116,6 +121,9 @@ namespace va::vfunc::impl {
 	IMPLEMENT_UNARY_RFUNC(norm_l1, xt::norm_l1(a)(), xt::norm_l1(a, *axes, xt::evaluation_strategy::lazy))
 	IMPLEMENT_UNARY_RFUNC(norm_l2, xt::norm_l2(a)(), xt::norm_l2(a, *axes, xt::evaluation_strategy::lazy))
 	IMPLEMENT_UNARY_RFUNC(norm_linf, xt::norm_linf(a)(), xt::norm_linf(a, *axes, xt::evaluation_strategy::lazy))
+
+	IMPLEMENT_UNARY_RFUNC(all, va::op::va_all(a)(), va::op::va_all(a, *axes))
+	IMPLEMENT_UNARY_RFUNC(any, va::op::va_any(a)(), va::op::va_any(a, *axes))
 
 	IMPLEMENT_UNARY_VFUNC(sin, xt::sin(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_VFUNC(cos, xt::cos(va::promote::to_num(a)))

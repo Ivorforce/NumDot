@@ -5,6 +5,8 @@
 #include <type_traits>                        // for decay_t
 #include <utility>                            // for forward
 #include <vatensor/comparison.hpp>
+#include <vatensor/xtensor_store.hpp>
+#include <vatensor/vfunc/entrypoints.hpp>
 #include "gdconvert/conversion_array.hpp"       // for variant_as_array
 #include "gdconvert/util.hpp"
 #include "godot_cpp/core/class_db.hpp"        // for D_METHOD, ClassDB, Meth...
@@ -27,17 +29,20 @@ ndb::ndb() = default;
 ndb::~ndb() = default;
 
 #define REDUCTION1(func, varray1) \
-	numdot::reduction<bool>([](const va::VArray& array) { return va::func(array.data); }, (varray1))
+numdot::reduction<bool>([](const va::VArray& array) { return va::func(array.data); }, (varray1))
+
+#define REDUCTION1_NEW(func, varray1) \
+numdot::reduction_new<bool>([](const va::VArrayTarget& target, const va::VArray& array) { return va::func(va::store::default_allocator, target, array.data, nullptr); }, (varray1))
 
 #define REDUCTION2(func, varray1, varray2) \
-	numdot::reduction<bool>([](const va::VArray& x1, const va::VArray& x2) { return va::func(x1.data, x2.data); }, (varray1), (varray2))
+numdot::reduction<bool>([](const va::VArray& x1, const va::VArray& x2) { return va::func(x1.data, x2.data); }, (varray1), (varray2))
 
 bool ndb::all(const Variant& a) {
-	return REDUCTION1(all, a);
+	return REDUCTION1_NEW(all, a);
 }
 
 bool ndb::any(const Variant& a) {
-	return REDUCTION1(any, a);
+	return REDUCTION1_NEW(any, a);
 }
 
 bool ndb::array_equiv(const Variant& a, const Variant& b) {

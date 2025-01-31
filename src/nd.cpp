@@ -1165,11 +1165,11 @@ Ref<NDArray> nd::logical_not(const Variant& a) {
 }
 
 Ref<NDArray> nd::all(const Variant& a, const Variant& axes) {
-	return REDUCTION1(all, a, axes);
+	return REDUCTION1_NEW(all, a, axes);
 }
 
 Ref<NDArray> nd::any(const Variant& a, const Variant& axes) {
-	return REDUCTION1(any, a, axes);
+	return REDUCTION1_NEW(any, a, axes);
 }
 
 Ref<NDArray> nd::bitwise_and(const Variant& a, const Variant& b) {

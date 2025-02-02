@@ -4907,6 +4907,51 @@
 				"long long",
 				"long long"
 			]
+		},
+		{
+			"name": "fill_arange",
+			"specializations": [
+				"?",
+				"f",
+				"d",
+				"b",
+				"h",
+				"i",
+				"l",
+				"B",
+				"H",
+				"I",
+				"L"
+			],
+			"casts": [],
+			"vargs": [
+				"void*",
+				"void*",
+				"void*"
+			]
+		},
+		{
+			"name": "fill_linspace",
+			"specializations": [
+				"?",
+				"f",
+				"d",
+				"b",
+				"h",
+				"i",
+				"l",
+				"B",
+				"H",
+				"I",
+				"L"
+			],
+			"casts": [],
+			"vargs": [
+				"void*",
+				"void*",
+				"std::size_t",
+				"bool"
+			]
 		}
 	]
 }

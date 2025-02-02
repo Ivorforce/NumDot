@@ -6,9 +6,6 @@ namespace va {
 		index_masks,
 		index_lists,
 
-		linspace,
-		arange,
-
 		count,
 	};
 
@@ -19,9 +16,6 @@ namespace va {
 		switch (feature) {
 			FEATURE_NAME_CASE(index_masks)
 			FEATURE_NAME_CASE(index_lists)
-
-			FEATURE_NAME_CASE(linspace)
-			FEATURE_NAME_CASE(arange)
 
 			default:
 				throw std::invalid_argument("invalid feature");

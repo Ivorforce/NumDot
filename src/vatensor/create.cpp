@@ -107,24 +107,12 @@ std::shared_ptr<VArray> va::linspace(VStoreAllocator& allocator, VScalar start, 
 		dtype = va::dtype(start);
 		dtype = va::dtype_common_type_unchecked(dtype, va::dtype(stop));
 	}
+	start = static_cast_scalar(start, dtype);
+	stop = static_cast_scalar(stop, dtype);
 
-	return visit_if_enabled<Feature::linspace>(
-		[&allocator, &start, &stop, &num, &endpoint](auto t) -> std::shared_ptr<VArray> {
-			using T = std::decay_t<decltype(t)>;
-			if constexpr (xtl::is_complex<T>::value) {
-				throw std::invalid_argument("linspace cannot be used with this dtype");
-			}
-			else {
-				auto start_ = static_cast_scalar<T>(start);
-				auto stop_ = static_cast_scalar<T>(stop);
-
-				return va::create_varray<T>(
-					allocator,
-					xt::linspace(start_, stop_, num, endpoint)
-				);
-			}
-		}, dtype_to_variant(dtype)
-	);
+	auto array = empty(allocator, dtype, shape_type {num});
+	_call_vfunc_inplace(va::vfunc::tables::fill_linspace, array->data, va::_call::get_value_ptr(start), va::_call::get_value_ptr(stop), num, endpoint);
+	return array;
 }
 
 std::shared_ptr<VArray> va::arange(VStoreAllocator& allocator, VScalar start, VScalar stop, VScalar step, DType dtype) {
@@ -134,28 +122,30 @@ std::shared_ptr<VArray> va::arange(VStoreAllocator& allocator, VScalar start, VS
 		dtype = va::dtype_common_type(dtype, va::dtype(step));
 	}
 
-	return visit_if_enabled<Feature::arange>(
-		[&allocator, &start, &stop, &step](auto t) -> std::shared_ptr<VArray> {
-			using T = std::decay_t<decltype(t)>;
+	start = static_cast_scalar(start, dtype);
+	stop = static_cast_scalar(stop, dtype);
+	step = static_cast_scalar(step, dtype);
 
+	const std::size_t num = std::visit(
+		[&start, &stop, &step](auto t) -> std::size_t {
+			using T = std::decay_t<decltype(t)>;
 			if constexpr (xtl::is_complex<T>::value) {
-				throw std::invalid_argument("arange cannot be used with this dtype");
+				throw std::invalid_argument("linspace cannot be used with this dtype");
 			}
 			else {
-				// Using TUpper prevents unexpectedly not wrapping around when e.g. using arange of 5000 for uint8.
-				using TUpper = va::promote::num_at_least_int32_in_same_out::input_type<T>;
+				auto start_ = static_cast_scalar<T>(start);
+				auto stop_ = static_cast_scalar<T>(stop);
+				auto step_ = static_cast_scalar<T>(step);
 
-				auto start_ = static_cast_scalar<TUpper>(start);
-				auto stop_ = static_cast_scalar<TUpper>(stop);
-				auto step_ = static_cast_scalar<TUpper>(step);
-
-				return va::create_varray<T>(
-					allocator,
-					xt::arange(start_, stop_, step_)
-				);
+				// From arange_impl
+				return static_cast<std::size_t>(std::ceil((stop_ - start_) / step_));
 			}
 		}, dtype_to_variant(dtype)
 	);
+
+	auto array = empty(allocator, dtype, shape_type {num});
+	_call_vfunc_inplace(va::vfunc::tables::fill_arange, array->data, va::_call::get_value_ptr(start), va::_call::get_value_ptr(stop), va::_call::get_value_ptr(step));
+	return array;
 }
 
 std::shared_ptr<VArray> va::tile(VStoreAllocator& allocator, const VArray& array, const shape_type& reps, bool inner) {

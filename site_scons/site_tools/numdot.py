@@ -26,15 +26,12 @@ def options(opts):
     )
 
     features_tool = Tool("features")
-    features2_tool = Tool("features2")
     scu_tool = Tool("scu")
 
-    features_tool.options(opts)
     scu_tool.options(opts)
 
 def generate(env, godot_cpp_env, sources):
     features_tool = Tool("features")
-    features2_tool = Tool("features2")
     scu_tool = Tool("scu")
 
     # Allow additional defines, see https://scons.org/doc/production/HTML/scons-user/ch10s02.html
@@ -102,10 +99,9 @@ def generate(env, godot_cpp_env, sources):
         if not "/gen/" in str(f.path)
     ])
     # FIXME
-    features2_tool.generate(env, sources)
+    features_tool.generate(env, sources)
 
     scu_tool.generate(env, sources)
-    features_tool.generate(env)
 
     if env["target"] in ["editor", "template_debug"]:
         doc_data = env.GodotCPPDocData("src/gen/doc_data.gen.cpp", source=env.Glob("doc_classes/*.xml"))

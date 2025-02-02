@@ -7,23 +7,11 @@
 #include "varray.hpp"                     // for VArrayTarget, VScalar, VData
 #include "vassign.hpp"                    // for assign_nonoverlapping, broadc...
 #include "vpromote.hpp"                   // for promote_value_type_if_needed
-#include "vconfig.hpp"
 #include "dtype.hpp"
 #include "xtensor/xstorage.hpp"         // for uvector
 #include "xtensor/xtensor_forward.hpp"  // for xarray
 
 namespace va {
-    template <Feature feature, class Visitor, class... Vs>
-    constexpr auto visit_if_enabled(Visitor&& visitor, Vs&&... vs) -> decltype(std::visit(visitor, vs...)) {
-        if constexpr (va::is_feature_enabled(feature)) {
-            return std::visit(std::forward<Visitor>(visitor), std::forward<Vs>(vs)...);
-        }
-        else {
-            // TODO add what feature is missing
-            throw std::runtime_error(std::string("Function execution failed: Missing feature in NumDot build - ") + feature_name(feature));
-        }
-    }
-
     template<typename OutputType, typename Result>
     std::shared_ptr<VArray> create_varray(VStoreAllocator& allocator, const Result& result) {
         using RNatural = typename std::decay_t<decltype(result)>::value_type;

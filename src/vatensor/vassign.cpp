@@ -75,7 +75,7 @@ std::shared_ptr<VArray> va::get_at_mask(VStoreAllocator& allocator, const VData&
 	auto result_varray = va::empty(allocator, va::dtype(data), shape_type { array_size });
 	auto& result_data = result_varray->data;
 
-	visit_if_enabled<Feature::index_masks>([&mask_, &result_data](const auto& array) {
+	std::visit([&mask_, &result_data](const auto& array) {
 		using VTArray = typename std::decay_t<decltype(array)>::value_type;
 
 		auto result_compute = std::get<compute_case<VTArray*>>(result_data);
@@ -116,7 +116,7 @@ void va::set_at_mask(VData& varray, VData& mask, VData& value) {
 		throw std::runtime_error("mask must be single value or match the mask sum");
 	}
 
-	visit_if_enabled<Feature::index_masks>(
+	std::visit(
 		// Mask can't be const because of masked_view iterator.
 		[&mask_](auto& array, const auto& value) {
 			using VTArray = typename std::decay_t<decltype(array)>::value_type;
@@ -151,7 +151,7 @@ void va::set_at_mask(VData& varray, VData& mask, VScalar value) {
 		throw std::runtime_error("mask must be same shape as array");
 	}
 
-	return visit_if_enabled<Feature::index_masks>(
+	std::visit(
 		// Mask can't be const because of masked_view iterator.
 		[&mask_](auto& array, const auto value) {
 			using VTArray = typename std::decay_t<decltype(array)>::value_type;
@@ -188,7 +188,7 @@ xt::svector<xt::svector<size_type>> array_to_indices(const A& indices) {
 }
 
 xt::svector<xt::svector<size_type>> get_as_indices(const VData& indices) {
-	return visit_if_enabled<Feature::index_lists>(
+	return std::visit(
 		[](const auto& indices) -> xt::svector<xt::svector<size_type>> {
 			using VTIndices = typename std::decay_t<decltype(indices)>::value_type;
 
@@ -211,7 +211,7 @@ std::shared_ptr<VArray> va::get_at_indices(VStoreAllocator& allocator, const VDa
 	if (indices_shape.size() == 1 && array_dimension != 1) throw std::runtime_error("cannot use 1D index list for nd tensor");
 	if (va::shape(indices)[1] != array_dimension) throw std::runtime_error("index list dimension 2 must match array dimension");
 
-	return visit_if_enabled<Feature::index_lists>([&indices_norm, &allocator](const auto& array) -> std::shared_ptr<VArray> {
+	return std::visit([&indices_norm, &allocator](const auto& array) -> std::shared_ptr<VArray> {
 		using VTArray = typename std::decay_t<decltype(array)>::value_type;
 		return va::create_varray<VTArray>(allocator, xt::index_view(array, indices_norm));
 	}, data);
@@ -225,7 +225,7 @@ void va::set_at_indices(VData& data, VData& indices, VData& value) {
 	if (indices_shape.size() == 1 && array_dimension != 1) throw std::runtime_error("cannot use 1D index list for nd tensor");
 	if (indices_shape[1] != array_dimension) throw std::runtime_error("index list dimension 2 must match array dimension");
 
-	visit_if_enabled<Feature::index_lists>(
+	std::visit(
 		[&indices_norm](auto& array, const auto& value) {
 			using VTArray = typename std::decay_t<decltype(array)>::value_type;
 			using VTValue = typename std::decay_t<decltype(value)>::value_type;

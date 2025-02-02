@@ -38,6 +38,9 @@ namespace va::vfunc::tables {
 namespace va::vfunc::tables {
 	VA_TABLES_EXTERN UFuncTableInplace fill;
 	VA_TABLES_EXTERN UFuncTableInplaceBinary assign;
+	VA_TABLES_EXTERN UFuncTableInplace fill_random_float;
+	VA_TABLES_EXTERN UFuncTableInplace fill_random_int;
+	VA_TABLES_EXTERN UFuncTableInplace fill_random_normal;
 
 	VA_TABLES_EXTERN UFuncTableUnary negative;
 	VA_TABLES_EXTERN UFuncTableUnary sign;

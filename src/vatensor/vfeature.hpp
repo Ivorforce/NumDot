@@ -9,10 +9,6 @@ namespace va {
 		linspace,
 		arange,
 
-		random_float,
-		random_int,
-		random_normal,
-
 		count,
 	};
 
@@ -26,10 +22,6 @@ namespace va {
 
 			FEATURE_NAME_CASE(linspace)
 			FEATURE_NAME_CASE(arange)
-
-			FEATURE_NAME_CASE(random_float)
-			FEATURE_NAME_CASE(random_int)
-			FEATURE_NAME_CASE(random_normal)
 
 			default:
 				throw std::invalid_argument("invalid feature");

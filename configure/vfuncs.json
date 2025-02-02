@@ -4866,6 +4866,47 @@
 				"LL"
 			],
 			"casts": []
+		},
+		{
+			"name": "fill_random_float",
+			"specializations": [
+				"d",
+				"f"
+			],
+			"casts": [],
+			"vargs": [
+				"xt::random::default_engine_type&"
+			]
+		},
+		{
+			"name": "fill_random_normal",
+			"specializations": [
+				"d",
+				"f"
+			],
+			"casts": [],
+			"vargs": [
+				"xt::random::default_engine_type&"
+			]
+		},
+		{
+			"name": "fill_random_int",
+			"specializations": [
+				"b",
+				"h",
+				"i",
+				"l",
+				"B",
+				"H",
+				"I",
+				"L"
+			],
+			"casts": [],
+			"vargs": [
+				"xt::random::default_engine_type&",
+				"long long",
+				"long long"
+			]
 		}
 	]
 }

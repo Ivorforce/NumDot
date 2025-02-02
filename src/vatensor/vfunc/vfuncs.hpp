@@ -4,6 +4,7 @@
 #include <xtensor-signal/fft.hpp>
 #include <xtensor/xnorm.hpp>
 #include <xtensor/xpad.hpp>
+#include <xtensor/xrandom.hpp>
 #include <xtensor/xsort.hpp>
 
 #include "vatensor/varray.hpp"
@@ -151,6 +152,30 @@ inline void UFUNC_NAME(R& ret, const A& a, const B& b, const va::axes_type* axes
 namespace va::vfunc::impl {
 	IMPLEMENT_INPLACE_VFUNC(fill, xt::xscalar(reinterpret_cast<typename R::value_type&>(fill_value)), void* fill_value)
 	IMPLEMENT_UNARY_VFUNC(assign, va::op::vcast<typename R::value_type>(a))
+	IMPLEMENT_INPLACE_VFUNC(fill_random_float, xt::random::rand<typename R::value_type>(ret.shape(), 0, 1, engine), xt::random::default_engine_type& engine)
+
+	template<typename R>
+	inline void fill_random_int(R& ret, xt::random::default_engine_type& engine, long long low, long long high) {
+		using T = typename R::value_type;
+		// TODO Should automatically figure out somehow which are supported, not hardcode it...
+#ifdef _WIN32
+		// Windows supports no 8 bit random
+		using TRandom = std::conditional_t<
+			std::is_same_v<T, int8_t>,
+			int16_t,
+			std::conditional_t<
+				std::is_same_v<T, bool> || std::is_same_v<T, uint8_t>,
+				uint16_t,
+				T
+			>
+		>;
+#else
+		// Unix supports all integrals except bool
+		using TRandom = std::conditional_t<std::is_same_v<T, bool>, uint8_t, T>;
+#endif
+		va::broadcasting_assign_typesafe(ret, xt::random::randint<TRandom>(ret.shape(), low, high, engine));
+	}
+	IMPLEMENT_INPLACE_VFUNC(fill_random_normal, xt::random::randn<typename R::value_type>(ret.shape(), 0, 1, engine), xt::random::default_engine_type& engine)
 
 	IMPLEMENT_UNARY_VFUNC(negative, -va::promote::to_num(a))
 	IMPLEMENT_UNARY_VFUNC(sign, xt::sign(va::promote::to_num(a)))

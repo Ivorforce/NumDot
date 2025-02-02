@@ -303,6 +303,21 @@ def main():
 		],
 		"casts": [],
 	})
+	for ufunc_name in ["fill_random_float", "fill_random_normal"]:
+		vfuncs.append({
+			"name": ufunc_name,
+			# TODO Can probably add support for complex numbers.
+			"specializations": ["d", "f"],
+			"casts": [],
+			"vargs": ["xt::random::default_engine_type&"],
+		})
+	vfuncs.append({
+		"name": "fill_random_int",
+		# TODO Can probably add support for complex numbers.
+		"specializations": [type_.char for type_ in supported_dtypes if np.isdtype(type_, 'integral')],
+		"casts": [],
+		"vargs": ["xt::random::default_engine_type&", "long long", "long long"],
+	})
 
 	with (pathlib.Path(__file__).parent / "vfuncs.json").open("w") as f:
 		json.dump({

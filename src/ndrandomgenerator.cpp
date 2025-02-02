@@ -2,7 +2,6 @@
 
 #include <gdconvert/conversion_ints.hpp>             // for variants_to_axes
 #include <vatensor/linalg.hpp>                       // for reduce_dot, dot
-#include <vatensor/reduce.hpp>                       // for all, any, max, mean
 #include <vatensor/vassign.hpp>                      // for assign
 #include <algorithm>                               // for copy
 #include <cstddef>                                 // for size_t

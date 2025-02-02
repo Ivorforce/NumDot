@@ -8,7 +8,6 @@
 #include "vfunc/entrypoints.hpp"
 #include "create.hpp"
 #include "rearrange.hpp"
-#include "reduce.hpp"               // for sum
 #include "util.hpp"
 #include "varray.hpp"      // for VArray, VArrayTarget, VScalar, axes...
 #include "vcompute.hpp"

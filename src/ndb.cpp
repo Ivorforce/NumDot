@@ -1,6 +1,5 @@
 #include "ndb.hpp"
 
-#include <vatensor/reduce.hpp>                  // for all, any
 #include <stdexcept>                          // for runtime_error
 #include <type_traits>                        // for decay_t
 #include <utility>                            // for forward

@@ -1,7 +1,6 @@
 #include "ndf.hpp"
 
 #include <vatensor/linalg.hpp>                  // for reduce_dot
-#include <vatensor/reduce.hpp>                  // for max, mean, median, min
 #include <cmath>                              // for double_t, isinf
 #include <cstdint>                            // for int64_t
 #include <stdexcept>                          // for runtime_error

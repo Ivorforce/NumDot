@@ -1,7 +1,6 @@
 #include "ndi.hpp"
 
 #include <vatensor/linalg.hpp>                  // for reduce_dot
-#include <vatensor/reduce.hpp>                  // for max, median, min, norm_l0
 #include <cmath>                              // for isinf
 #include <stdexcept>                          // for runtime_error
 #include <type_traits>                        // for decay_t

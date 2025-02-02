@@ -1,7 +1,6 @@
 #include "nd.hpp"
 
 #include <vatensor/linalg.hpp>                // for reduce_dot, dot, matmul
-#include <vatensor/reduce.hpp>                // for all, any, max, mean, median
 #include <vatensor/vassign.hpp>               // for assign
 #include "vatensor/vfunc/entrypoints.hpp"
 #include <cmath>                            // for double_t, isinf

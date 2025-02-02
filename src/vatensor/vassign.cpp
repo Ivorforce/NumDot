@@ -6,7 +6,6 @@
 #include "create.hpp"
 #include <xtensor/xmasked_view.hpp>
 #include <xtensor/xindex_view.hpp>
-#include "reduce.hpp"
 #include "vcarray.hpp"
 #include "vcompute.hpp"
 #include "vpromote.hpp"

@@ -91,6 +91,20 @@ namespace va {
 	DEFINE_RFUNC_CALLER_UNARY0(norm_l2)
 	DEFINE_RFUNC_CALLER_UNARY0(norm_linf)
 
+	static void count_nonzero(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array, const axes_type* axes) {
+		if (va::dtype(array) == va::Bool)
+			return va::sum(allocator, target, array, axes);
+
+		const auto is_nonzero = va::copy_as_dtype(allocator, array, va::Bool);
+		return va::sum(allocator, target, is_nonzero->data, axes);
+	}
+
+	static void trace(VStoreAllocator& allocator, const VArrayTarget& target, const VArray& varray, std::ptrdiff_t offset, std::ptrdiff_t axis1, std::ptrdiff_t axis2) {
+		const auto diagonal = va::diagonal(varray, offset, axis1, axis2);
+		const axes_type strides {-1};
+		va::sum(allocator, target, diagonal->data, &strides);
+	}
+
 	DEFINE_RFUNC_CALLER_UNARY0(all)
 	DEFINE_RFUNC_CALLER_UNARY0(any)
 

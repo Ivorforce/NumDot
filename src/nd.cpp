@@ -2,7 +2,6 @@
 
 #include <vatensor/linalg.hpp>                // for reduce_dot, dot, matmul
 #include <vatensor/reduce.hpp>                // for all, any, max, mean, median
-#include <vatensor/trigonometry.hpp>          // for acos, acosh, asin, asinh
 #include <vatensor/vassign.hpp>               // for assign
 #include <vatensor/vmath.hpp>                 // for abs, add, clip, deg2rad
 #include "vatensor/vfunc/entrypoints.hpp"

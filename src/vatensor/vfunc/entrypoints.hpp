@@ -1,6 +1,7 @@
 #ifndef VATENSOR_UFUNC_CONFIG_HPP
 #define VATENSOR_UFUNC_CONFIG_HPP
 
+#include <vatensor/rearrange.hpp>
 #include <xtensor/xpad.hpp>
 #include "vatensor/vcall.hpp"
 #include "vatensor/vfunc/tables.hpp"
@@ -96,6 +97,10 @@ namespace va {
 	DEFINE_VFUNC_CALLER_UNARY0(asinh)
 	DEFINE_VFUNC_CALLER_UNARY0(acosh)
 	DEFINE_VFUNC_CALLER_UNARY0(atanh)
+
+	static void angle(VStoreAllocator& allocator, const VArrayTarget& target, const std::shared_ptr<VArray>& array) {
+		va::atan2(allocator, target, va::imag(array)->data, va::real(array)->data);
+	}
 
 	DEFINE_VFUNC_CALLER_UNARY0(ceil)
 	DEFINE_VFUNC_CALLER_UNARY0(floor)

@@ -47,6 +47,9 @@ inline void UFUNC_NAME(VStoreAllocator& allocator, const VArrayTarget& target, c
 }
 
 namespace va {
+	static void positive(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a) {
+		va::assign(allocator, target, a);
+	}
 	DEFINE_VFUNC_CALLER_UNARY0(negative)
 	DEFINE_VFUNC_CALLER_UNARY0(sign)
 	DEFINE_VFUNC_CALLER_UNARY0(abs)
@@ -67,6 +70,13 @@ namespace va {
 	DEFINE_VFUNC_CALLER_BINARY0(pow)
 	DEFINE_VFUNC_CALLER_BINARY0(minimum)
 	DEFINE_VFUNC_CALLER_BINARY0(maximum)
+	static void clip(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& lo, const VData& hi) {
+		// TODO Re-evaluate if it's worth it to make it a ternary vfunc.
+		// TODO It should also be possible to do this without a temp variable.
+		std::shared_ptr<va::VArray> tmp;
+		va::minimum(allocator, &tmp, a, hi);
+		va::maximum(allocator, target, tmp->data, lo);
+	}
 
 	DEFINE_RFUNC_CALLER_UNARY0(sum)
 	DEFINE_RFUNC_CALLER_UNARY0(prod)

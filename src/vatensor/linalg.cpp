@@ -12,7 +12,6 @@
 #include "util.hpp"
 #include "varray.hpp"      // for VArray, VArrayTarget, VScalar, axes...
 #include "vcompute.hpp"
-#include "vmath.hpp"                // for multiply
 #include "xtensor_store.hpp"
 #include "xtensor/xslice.hpp"     // for all, ellipsis, newaxis, xall_tag
 

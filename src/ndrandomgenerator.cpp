@@ -4,7 +4,6 @@
 #include <vatensor/linalg.hpp>                       // for reduce_dot, dot
 #include <vatensor/reduce.hpp>                       // for all, any, max, mean
 #include <vatensor/vassign.hpp>                      // for assign
-#include <vatensor/vmath.hpp>                        // for abs, add, clip
 #include <algorithm>                               // for copy
 #include <cstddef>                                 // for size_t
 #include <stdexcept>                               // for runtime_error

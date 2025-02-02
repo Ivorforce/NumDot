@@ -183,6 +183,16 @@ namespace va {
 
 		_call_vfunc_unary(allocator, vfunc::tables::pad, target, result_shape, a.data, pad_width, std::move(pad_mode), std::move(pad_value_ptr));
 	}
+
+	static void pad(VStoreAllocator& allocator, const VArrayTarget& target, const VArray& a, const std::vector<std::size_t>& pad_width, xt::pad_mode pad_mode, VScalar pad_value) {
+		const std::vector pw(a.dimension(), pad_width);
+		va::pad(allocator, target, a, pw, pad_mode, pad_value);
+	}
+
+	static void pad(VStoreAllocator& allocator, const VArrayTarget& target, const VArray& a, const size_t& pad_width, xt::pad_mode pad_mode, VScalar pad_value) {
+		const std::vector pw(a.dimension(), std::vector {pad_width, pad_width});
+		va::pad(allocator, target, a, pw, pad_mode, pad_value);
+	}
 }
 
 #endif //VATENSOR_UFUNC_CONFIG_HPP

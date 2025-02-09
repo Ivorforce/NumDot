@@ -8,13 +8,12 @@
 
 namespace va {
 	namespace _call {
-		using Dummy = char;
 		template<typename... Args>
-		using InplaceDummyFunction = void (*)(Dummy& b, Args... args);
+		using InplaceDummyFunction = void (*)(void* a, Args... args);
 		template<typename... Args>
-		using UnaryDummyFunction = void (*)(Dummy& a, const Dummy& b, Args... args);
+		using UnaryDummyFunction = void (*)(void* a, const void* b, Args... args);
 		template<typename... Args>
-		using BinaryDummyFunction = void (*)(Dummy& a, const Dummy& b, const Dummy& c, Args... args);
+		using BinaryDummyFunction = void (*)(void* a, const void* b, const void* c, Args... args);
 
 		inline std::shared_ptr<VArray> _copy_as_dtype(VStoreAllocator& allocator, const VData& a, DType dtype) {
 			return va::copy_as_dtype(allocator, a, dtype);
@@ -56,7 +55,7 @@ namespace va {
 		if (function_ptr == nullptr) throw std::runtime_error("Unsupported dtype for ufunc.");
 
 		reinterpret_cast<_call::InplaceDummyFunction<Args...>>(function_ptr)(
-			*static_cast<_call::Dummy*>(_call::get_value_ptr(a)),
+			_call::get_value_ptr(a),
 			std::forward<Args>(args)...
 		);
 	}
@@ -70,8 +69,8 @@ namespace va {
 		if (function_ptr == nullptr) throw std::runtime_error("Unsupported dtype for ufunc.");
 
 		reinterpret_cast<_call::UnaryDummyFunction<Args...>>(function_ptr)(
-			*static_cast<_call::Dummy*>(_call::get_value_ptr(a)),
-			*static_cast<const _call::Dummy*>(_call::get_value_ptr(b)),
+			_call::get_value_ptr(a),
+			_call::get_value_ptr(b),
 			std::forward<Args>(args)...
 		);
 	}
@@ -88,16 +87,16 @@ namespace va {
 
 		if (a_type == ufunc.input_types[0]) {
 			reinterpret_cast<_call::UnaryDummyFunction<Args...>>(ufunc.function_ptr)(
-				*static_cast<_call::Dummy*>(_call::get_value_ptr(target_)),
-				*static_cast<const _call::Dummy*>(_call::get_value_ptr(a)),
+				_call::get_value_ptr(target_),
+				_call::get_value_ptr(a),
 				std::forward<Args>(args)...
 			);
 		}
 		else {
 			const auto a_ = _call::_copy_as_dtype(allocator, a, ufunc.input_types[0]);
 			reinterpret_cast<_call::UnaryDummyFunction<Args...>>(ufunc.function_ptr)(
-				*static_cast<_call::Dummy*>(_call::get_value_ptr(target_)),
-				*static_cast<const _call::Dummy*>(_call::get_value_ptr(a_->data)),
+				_call::get_value_ptr(target_),
+				_call::get_value_ptr(a_->data),
 				std::forward<Args>(args)...
 			);
 		}
@@ -143,9 +142,9 @@ namespace va {
 		switch ((static_cast<uint8_t>(a_type == ufunc.input_types[0]) << 1) | static_cast<uint8_t>(b_type == ufunc.input_types[1])) {
 			case 0b11: {
 				reinterpret_cast<_call::BinaryDummyFunction<Args...>>(ufunc.function_ptr)(
-					*static_cast<_call::Dummy*>(_call::get_value_ptr(target_)),
-					*static_cast<const _call::Dummy*>(_call::get_value_ptr(a)),
-					*static_cast<const _call::Dummy*>(_call::get_value_ptr(b)),
+					_call::get_value_ptr(target_),
+					_call::get_value_ptr(a),
+					_call::get_value_ptr(b),
 					std::forward<Args>(args)...
 				);
 				break;
@@ -153,9 +152,9 @@ namespace va {
 			case 0b10: {
 				const auto b_ = _call::_copy_as_dtype(allocator, b, ufunc.input_types[1]);
 				reinterpret_cast<_call::BinaryDummyFunction<Args...>>(ufunc.function_ptr)(
-					*static_cast<_call::Dummy*>(_call::get_value_ptr(target_)),
-					*static_cast<const _call::Dummy*>(_call::get_value_ptr(a)),
-					*static_cast<const _call::Dummy*>(_call::get_value_ptr(_call::deref(b_))),
+					_call::get_value_ptr(target_),
+					_call::get_value_ptr(a),
+					_call::get_value_ptr(_call::deref(b_)),
 					std::forward<Args>(args)...
 				);
 				break;
@@ -163,9 +162,9 @@ namespace va {
 			case 0b01: {
 				const auto a_ = _call::_copy_as_dtype(allocator, a, ufunc.input_types[0]);
 				reinterpret_cast<_call::BinaryDummyFunction<Args...>>(ufunc.function_ptr)(
-					*static_cast<_call::Dummy*>(_call::get_value_ptr(target_)),
-					*static_cast<const _call::Dummy*>(_call::get_value_ptr(_call::deref(a_))),
-					*static_cast<const _call::Dummy*>(_call::get_value_ptr(b)),
+					_call::get_value_ptr(target_),
+					_call::get_value_ptr(_call::deref(a_)),
+					_call::get_value_ptr(b),
 					std::forward<Args>(args)...
 				);
 				break;
@@ -174,9 +173,9 @@ namespace va {
 				const auto a_ = _call::_copy_as_dtype(allocator, a, ufunc.input_types[0]);
 				const auto b_ = _call::_copy_as_dtype(allocator, b, ufunc.input_types[1]);
 				reinterpret_cast<_call::BinaryDummyFunction<Args...>>(ufunc.function_ptr)(
-					*static_cast<_call::Dummy*>(_call::get_value_ptr(target_)),
-					*static_cast<const _call::Dummy*>(_call::get_value_ptr(_call::deref(a_))),
-					*static_cast<const _call::Dummy*>(_call::get_value_ptr(_call::deref(b_))),
+					_call::get_value_ptr(target_),
+					_call::get_value_ptr(_call::deref(a_)),
+					_call::get_value_ptr(_call::deref(b_)),
 					std::forward<Args>(args)...
 				);
 				break;

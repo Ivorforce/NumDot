@@ -2,6 +2,7 @@
   "enabled_classes": [
     "Object",
     "RefCounted",
-    "OS"
+    "OS",
+    "Node"
   ]
 }

@@ -2,10 +2,6 @@
   "enabled_classes": [
     "Object",
     "RefCounted",
-    "OS",
-    "Node",
-    "InputEvent",
-    "MultiplayerAPI",
-    "MultiplayerPeer"
+    "OS"
   ]
 }

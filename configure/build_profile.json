@@ -4,6 +4,7 @@
     "RefCounted",
     "OS",
     "Node",
-    "InputEvent"
+    "InputEvent",
+    "MultiplayerAPI"
   ]
 }

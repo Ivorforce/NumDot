@@ -150,7 +150,7 @@ inline void UFUNC_NAME(R& ret, const A& a, const B& b, const va::axes_type* axes
 }
 
 namespace va::vfunc::impl {
-	IMPLEMENT_INPLACE_VFUNC(fill, xt::xscalar(reinterpret_cast<typename R::value_type&>(fill_value)), void* fill_value)
+	IMPLEMENT_INPLACE_VFUNC(fill, xt::xscalar(*static_cast<typename R::value_type*>(fill_value)), void* fill_value)
 	IMPLEMENT_UNARY_VFUNC(assign, va::op::vcast<typename R::value_type>(a))
 	IMPLEMENT_INPLACE_VFUNC(fill_random_float, xt::random::rand<typename R::value_type>(ret.shape(), 0, 1, engine), xt::random::default_engine_type& engine)
 
@@ -177,8 +177,8 @@ namespace va::vfunc::impl {
 	}
 	IMPLEMENT_INPLACE_VFUNC(fill_random_normal, xt::random::randn<typename R::value_type>(ret.shape(), 0, 1, engine), xt::random::default_engine_type& engine)
 
-	IMPLEMENT_INPLACE_VFUNC(fill_linspace, xt::linspace(reinterpret_cast<const typename R::value_type&>(start), reinterpret_cast<const typename R::value_type&>(stop), num, endpoint), void* start, void* stop, std::size_t num, const bool endpoint)
-	IMPLEMENT_INPLACE_VFUNC(fill_arange, xt::arange(reinterpret_cast<const typename R::value_type&>(start), reinterpret_cast<const typename R::value_type&>(stop), reinterpret_cast<const typename R::value_type&>(step)), void* start, void* stop, void* step)
+	IMPLEMENT_INPLACE_VFUNC(fill_linspace, xt::linspace(*static_cast<const typename R::value_type*>(start), *static_cast<const typename R::value_type*>(stop), num, endpoint), void* start, void* stop, std::size_t num, const bool endpoint)
+	IMPLEMENT_INPLACE_VFUNC(fill_arange, xt::arange(*static_cast<const typename R::value_type*>(start), *static_cast<const typename R::value_type*>(stop), *static_cast<const typename R::value_type*>(step)), void* start, void* stop, void* step)
 
 	IMPLEMENT_UNARY_VFUNC(negative, -va::promote::to_num(a))
 	IMPLEMENT_UNARY_VFUNC(sign, xt::sign(va::promote::to_num(a)))
@@ -270,7 +270,7 @@ namespace va::vfunc::impl {
 	IMPLEMENT_UNARY_VFUNC(fft, xt::fft::fft(std::forward<decltype(a)>(a), axis), std::ptrdiff_t axis)
 	IMPLEMENT_UNARY_VFUNC(
 		pad,
-		xt::pad(std::forward<decltype(a)>(a), pad_width, pad_mode, reinterpret_cast<typename A::value_type&>(pad_value)),
+		xt::pad(std::forward<decltype(a)>(a), pad_width, pad_mode, *static_cast<typename A::value_type*>(pad_value)),
 		std::vector<std::vector<std::size_t>>& pad_width,
 		xt::pad_mode pad_mode,
 		void* pad_value

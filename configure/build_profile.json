@@ -3,6 +3,7 @@
     "Object",
     "RefCounted",
     "OS",
-    "Node"
+    "Node",
+    "InputEvent"
   ]
 }

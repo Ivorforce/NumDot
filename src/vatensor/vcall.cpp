@@ -42,7 +42,8 @@ VData& va::evaluate_target(VStoreAllocator& allocator, const VArrayTarget& targe
 }
 
 void va::shape_reduce_axes(va::shape_type& shape, const va::axes_type& axes) {
-	bool mask[shape.size()];
+	// Assumes shape.size() is available and is of a reasonable size
+	auto mask = static_cast<bool*>(alloca(shape.size() * sizeof(bool)));
 	std::fill_n(mask, shape.size(), true);
 
 	for (const auto axis : axes)
@@ -58,7 +59,7 @@ void va::shape_reduce_axes(va::shape_type& shape, const va::axes_type& axes) {
 		std::remove_if(
 			shape.begin(),
 			shape.end(),
-			[&mask, index = 0](int) mutable { return !mask[index++]; }
+			[&mask, index = 0](int) mutable -> bool { return !mask[index++]; }
 		),
 		shape.end()
 	);

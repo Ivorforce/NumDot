@@ -143,6 +143,7 @@ def make_module(env, sources, module_name: str, ufuncs_json: dict):
 				or ufunc_name == "less"
 				or ufunc_name == "greater"
 				or ufunc_name == "greater_equal"
+				or ufunc_name == "round"
 			):
 				continue
 

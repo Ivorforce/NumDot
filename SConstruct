@@ -72,6 +72,11 @@ if ARGUMENTS.get("lto", None) is None and is_release:
     # lto=auto disables LTO by default in some configurations. For us, it brings substantial improvements for configurations.
     ARGUMENTS["lto"] = "full"
 
+if ARGUMENTS.get("build_profile", None) is None:
+    # Link-time optimization further lets the compiler optimize, reduce binary size (~.5mb) or inline functions (possibly improving speeds).
+    # lto=auto disables LTO by default in some configurations. For us, it brings substantial improvements for configurations.
+    ARGUMENTS["build_profile"] = str(pathlib.Path().parent / "configure" / "build_profile.json")
+
 # Load godot-cpp
 godot_cpp_env = SConscript("godot-cpp/SConstruct", {"customs": customs})
 

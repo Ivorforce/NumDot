@@ -5,7 +5,7 @@
 struct UFUNC_NAME {\
 	template <typename RETURN_TYPE, typename... ARGS>\
 	static void run(va::compute_case<RETURN_TYPE*>& ret, ARGS... args) {\
-		va::vfunc::impl::UFUNC_NAME(ret, args...);\
+		va::vfunc::impl::UFUNC_NAME(ret, std::forward<ARGS>(args)...);\
 	}\
 }
 
@@ -19,7 +19,7 @@ template <typename C, typename RETURN_TYPE, typename IN0, typename... ARGS>
 static void add_native(va::vfunc::tables::UFuncTableInplaceBinary& table) {
 	const auto out = va::dtype_of_type<RETURN_TYPE>();
 	const auto in0 = va::dtype_of_type<IN0>();
-	table[out][in0] = (void *)&C::template run<RETURN_TYPE, va::compute_case<IN0*>, ARGS...>;
+	table[out][in0] = (void *)&C::template run<RETURN_TYPE, const va::compute_case<IN0*>&, ARGS...>;
 }
 
 template <typename C, typename RETURN_TYPE, typename IN0, typename... ARGS>
@@ -30,7 +30,7 @@ static void add_native(va::vfunc::tables::UFuncTableUnary& table) {
 	table[in0] = va::vfunc::VFunc<1> {
 		{ in0 },
 		out,
-		(void *)&C::template run<RETURN_TYPE, va::compute_case<IN0*>, ARGS...>
+		(void *)&C::template run<RETURN_TYPE, const va::compute_case<IN0*>&, ARGS...>
 	};
 }
 
@@ -43,17 +43,17 @@ static void add_native(va::vfunc::tables::UFuncTablesBinary& tables) {
 	tables.tensors[in0][in1] = va::vfunc::VFunc<2> {
 		{ in0, in1 },
 		out,
-		(void *)&C::template run<RETURN_TYPE, va::compute_case<IN0*>, va::compute_case<IN1*>, ARGS...>
+		(void *)&C::template run<RETURN_TYPE, const va::compute_case<IN0*>&, const va::compute_case<IN1*>&, ARGS...>
 	};
 	tables.scalar_left[in0][in1] = va::vfunc::VFunc<2> {
 		{ in0, in1 },
 		out,
-		(void *)&C::template run<RETURN_TYPE, IN0, va::compute_case<IN1*>, ARGS...>
+		(void *)&C::template run<RETURN_TYPE, const IN0&, const va::compute_case<IN1*>&, ARGS...>
 	};
 	tables.scalar_right[in0][in1] = va::vfunc::VFunc<2> {
 		{ in0, in1 },
 		out,
-		(void *)&C::template run<RETURN_TYPE, va::compute_case<IN0*>, IN1, ARGS...>
+		(void *)&C::template run<RETURN_TYPE, const va::compute_case<IN0*>&, const IN1&, ARGS...>
 	};
 }
 
@@ -66,12 +66,12 @@ static void add_native(va::vfunc::tables::UFuncTablesBinaryCommutative& tables) 
 	tables.tensors[in0][in1] = va::vfunc::VFunc<2> {
 		{ in0, in1 },
 		out,
-		(void *)&C::template run<RETURN_TYPE, va::compute_case<IN0*>, va::compute_case<IN1*>, ARGS...>
+		(void *)&C::template run<RETURN_TYPE, const va::compute_case<IN0*>&, const va::compute_case<IN1*>&, ARGS...>
 	};
 	tables.scalar_right[in0][in1] = va::vfunc::VFunc<2> {
 		{ in0, in1 },
 		out,
-		(void *)&C::template run<RETURN_TYPE, va::compute_case<IN0*>, IN1, ARGS...>
+		(void *)&C::template run<RETURN_TYPE, const va::compute_case<IN0*>&, const IN1&, ARGS...>
 	};
 }
 
@@ -84,7 +84,7 @@ static void add_native(va::vfunc::tables::UFuncTableBinary& table) {
 	table[in0][in1] = va::vfunc::VFunc<2> {
 		{ in0, in1 },
 		out,
-		(void *)&C::template run<RETURN_TYPE, va::compute_case<IN0*>, va::compute_case<IN1*>, ARGS...>
+		(void *)&C::template run<RETURN_TYPE, const va::compute_case<IN0*>&, const va::compute_case<IN1*>&, ARGS...>
 	};
 }
 

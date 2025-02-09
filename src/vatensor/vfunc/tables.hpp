@@ -24,7 +24,7 @@ namespace va::vfunc::tables {
 		UFuncTableBinary scalar_left;
 		UFuncTableBinary scalar_right;
 	};
-	struct UFuncTablesBinaryCommutative {
+	struct UFuncTablesBinaryCommutative : UFuncTablesBinary {
 		UFuncTableBinary tensors;
 		UFuncTableBinary scalar_right;
 	};

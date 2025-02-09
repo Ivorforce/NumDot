@@ -102,7 +102,7 @@ std::shared_ptr<VArray> va::copy_as_dtype(VStoreAllocator& allocator, const VDat
 	return array;
 }
 
-std::shared_ptr<VArray> va::linspace(VStoreAllocator& allocator, VScalar start, VScalar stop, std::size_t num, const bool endpoint, DType dtype) {
+std::shared_ptr<VArray> va::linspace(VStoreAllocator& allocator, VScalar start, VScalar stop, std::size_t num, bool endpoint, DType dtype) {
 	if (dtype == DTypeMax) {
 		dtype = va::dtype(start);
 		dtype = va::dtype_common_type_unchecked(dtype, va::dtype(stop));
@@ -111,7 +111,7 @@ std::shared_ptr<VArray> va::linspace(VStoreAllocator& allocator, VScalar start, 
 	stop = static_cast_scalar(stop, dtype);
 
 	auto array = empty(allocator, dtype, shape_type {num});
-	_call_vfunc_inplace(va::vfunc::tables::fill_linspace, array->data, va::_call::get_value_ptr(start), va::_call::get_value_ptr(stop), num, endpoint);
+	_call_vfunc_inplace<void*, void*, std::size_t, bool>(va::vfunc::tables::fill_linspace, array->data, va::_call::get_value_ptr(start), va::_call::get_value_ptr(stop), std::move(num), std::move(endpoint));
 	return array;
 }
 
@@ -144,7 +144,7 @@ std::shared_ptr<VArray> va::arange(VStoreAllocator& allocator, VScalar start, VS
 	);
 
 	auto array = empty(allocator, dtype, shape_type {num});
-	_call_vfunc_inplace(va::vfunc::tables::fill_arange, array->data, va::_call::get_value_ptr(start), va::_call::get_value_ptr(stop), va::_call::get_value_ptr(step));
+	_call_vfunc_inplace<void*, void*, void*>(va::vfunc::tables::fill_arange, array->data, va::_call::get_value_ptr(start), va::_call::get_value_ptr(stop), va::_call::get_value_ptr(step));
 	return array;
 }
 

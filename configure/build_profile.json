@@ -5,6 +5,7 @@
     "OS",
     "Node",
     "InputEvent",
-    "MultiplayerAPI"
+    "MultiplayerAPI",
+    "MultiplayerPeer"
   ]
 }

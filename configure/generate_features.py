@@ -314,7 +314,7 @@ def main():
 	vfuncs.append({
 		"name": "fill_random_int",
 		# TODO Can probably add support for complex numbers.
-		"specializations": [type_.char for type_ in supported_dtypes if np.isdtype(type_, 'integral')],
+		"specializations": [type_.char for type_ in supported_dtypes if np.isdtype(type_, 'integral') or np.isdtype(type_, 'bool')],
 		"casts": [],
 		"vargs": ["xt::random::default_engine_type&", "long long", "long long"],
 	})

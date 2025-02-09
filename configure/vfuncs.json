@@ -4892,6 +4892,7 @@
 		{
 			"name": "fill_random_int",
 			"specializations": [
+				"?",
 				"b",
 				"h",
 				"i",

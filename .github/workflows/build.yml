@@ -68,7 +68,7 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: GDExtension-${{ matrix.platform }}-${{ matrix.arch }}-${{ matrix.float_precision }}-${{ matrix.build_target_type }}
+          name: NumDot-${{ matrix.platform }}-${{ matrix.arch }}-${{ matrix.float_precision }}-${{ matrix.build_target_type }}
           path: |
             ${{ github.workspace }}/build/**
   merge:
@@ -78,6 +78,6 @@ jobs:
       - name: Merge Artifacts
         uses: actions/upload-artifact/merge@v4
         with:
-          name: GDExtension-all
-          pattern: GDExtension-*
+          name: NumDot-all
+          pattern: NumDot-*
           delete-merged: true

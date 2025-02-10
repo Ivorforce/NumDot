@@ -97,7 +97,8 @@ numdot_tool.generate(env, godot_cpp_env, sources)
 # .universal just means "compatible with all relevant arches" so we don't need to key it.
 suffix = env['suffix'].replace(".dev", "").replace(".universal", "")
 
-addon_dir = f"{env['install_dir']}/addons/{libname}/{env['platform']}"
+addon_dir = f"{env['install_dir']}/addons/{libname}"
+platform_dir = f"{addon_dir}/{env['platform']}"
 
 if env["platform"] == "macos" or env["platform"] == "ios":
     # The above defaults to creating a .dylib.
@@ -107,7 +108,7 @@ if env["platform"] == "macos" or env["platform"] == "ios":
 
     lib_filename = f"{libname}{suffix}"
     library_targets = framework_tool.generate(
-        f"{addon_dir}/{lib_filename}.framework",
+        f"{platform_dir}/{lib_filename}.framework",
         env=env,
         source=sources,
         bundle_identifier=f"de.ivorius.{lib_filename}"
@@ -115,9 +116,19 @@ if env["platform"] == "macos" or env["platform"] == "ios":
 else:
     lib_filename = f"{env.subst('$SHLIBPREFIX')}{libname}{suffix}{env.subst('$SHLIBSUFFIX')}"
     library_targets = env.SharedLibrary(
-        f"{addon_dir}/{lib_filename}",
+        f"{platform_dir}/{lib_filename}",
         source=sources,
     )
+
+plugin_tool = Tool("plugin-cfg")
+targets.append(plugin_tool.generate(
+    f"{addon_dir}/plugin.cfg",
+    env=env,
+    name="NumDot",
+    description="NumDot is a tensor math and scientific computation library for the Godot Engine.",
+    author="Lukas Tenbrink and NumDot contributors.",
+    version="0.7",
+))
 
 targets.extend(library_targets)
 # Don't remove the file while building.

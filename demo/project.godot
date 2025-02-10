@@ -24,6 +24,10 @@ InputListener="*res://demos/launcher/input_listener.gd"
 
 window/stretch/mode="canvas_items"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/numdot/plugin.cfg")
+
 [input]
 
 back={

@@ -19,6 +19,7 @@ Upcoming Changes (main branch)
 - Added conversion functions for ``Plane``, ``Quaternion``, ``Projection`` and ``Basis``.
 - Added ``NDArray`` functions for getting slices as variant types (if shape is compatible).
 - Added ``complex64`` and ``complex128`` array creation shorthand functions.
+- NumDot now appears in the ``plugins`` section of the editor preferences.
 
 **Changed**
 

@@ -44,7 +44,7 @@ jobs:
         with:
           # TODO Can we automate choosing the run ID?
           run-id: 11562444170
-          name: GDExtension-all
+          name: NumDot-all
           path: demo/addons
           github-token: ${{ github.token }}
 

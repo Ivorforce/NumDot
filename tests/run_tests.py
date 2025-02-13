@@ -344,8 +344,8 @@ import time
 _timer = time.perf_counter
 """
 
-	test_code_nd = "extends Node\n\n"
-	test_code_gd = "extends Node\n\n"
+	test_code_nd = "extends RefCounted\n\n"
+	test_code_gd = "extends RefCounted\n\n"
 
 	tests: list[Test] = []
 
@@ -425,14 +425,14 @@ _timer = time.perf_counter
 		start_numdot_tests_string = "Starting NumDot tests..."
 		text += \
 f"""
-func _ready():
+func run():
 \tprint("{start_numdot_tests_string}")
 """
 		for test in tests:
 			if test_code := getattr(test, test_prop):
 				text += f"{test_code}\n"
 
-		godot_test_file_path = pathlib.Path(__file__).parent.parent / "demo" / "tests" / "run_tests.gd"
+		godot_test_file_path = pathlib.Path(__file__).parent.parent / "demo" / "tests" / "gen" / "tests.gd"
 		godot_test_file_path.write_text(text)
 
 		print(f"Running {len(tests)} tests in godot...")

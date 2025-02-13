@@ -15,3 +15,7 @@ mono_crash.*.json
 
 # Build
 /build/
+
+# Personal Workspace
+/workspace/*
+!/workspace/README.md

@@ -42,7 +42,7 @@ extends EditorPlugin
 			action=create_plugin_cfg
 		),
 		env.Command(
-			target_path.parent / "plugin.gd", [],
+			str(target_path.parent / "plugin.gd"), [],
 			action=create_dummy_script
 		)
 	]

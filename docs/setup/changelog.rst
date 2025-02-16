@@ -20,6 +20,8 @@ Upcoming Changes (main branch)
 - Added ``NDArray`` functions for getting slices as variant types (if shape is compatible).
 - Added ``complex64`` and ``complex128`` array creation shorthand functions.
 - NumDot now appears in the ``plugins`` section of the editor preferences.
+- New builds for Android (``x86_32``, ``x86_64``, ``arm32``).
+- New builds for Linux (``x86_32``).
 
 **Changed**
 

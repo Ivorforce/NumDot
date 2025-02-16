@@ -4,32 +4,30 @@ on:
   workflow_dispatch:
 
 jobs:
-  define-matrix:
-    runs-on: ubuntu-latest
-
-    outputs:
-      matrix-include: ${{ steps.make_matrix.outputs.include }}
-
-    steps:
-      - name: Set up Python 3.x
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.x"
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Load Matrix
-        id: make_matrix
-        run: |
-          echo 'include='$(python3 make_github_runner_config.py) >> "$GITHUB_OUTPUT"
-
   build:
-    needs: define-matrix
     strategy:
       fail-fast: false
       matrix:
-        include: ${{ fromJSON(needs.define-matrix.outputs.matrix-include) }}
+        # Could build with double, but that would double (hah) our build count.
+        # Double builds require building Godot from scratch anyway,
+        #  so it's appropriate NumDot also only ships with single builds by default.
+        float_precision: ["single"]
+        build_target_type: ["template_debug", "template_release"]
+        target:
+          - { platform: macos, arch: universal, os: macos-latest }
+          - { platform: ios, arch: arm64, os: macos-latest }
+          # TODO linux arm64 and rv64 are broken godot-cpp-side right now,
+          # see https://github.com/Ivorforce/NumDot/actions/runs/11745671842/job/32723646675
+          - { platform: linux, arch: x86_64, os: ubuntu-24.04 }
+          - { platform: windows, arch: x86_32, os: windows-latest }
+          - { platform: windows, arch: x86_64, os: windows-latest }
+          - { platform: android, arch: arm64, os: ubuntu-24.04 }
+          - { platform: android, arch: arm32, os: ubuntu-24.04 }
+          - { platform: android, arch: x86_64, os: ubuntu-24.04 }
+          - { platform: android, arch: x86_32, os: ubuntu-24.04 }
+          - { platform: web, arch: wasm32, os: ubuntu-24.04 }
 
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.target.os }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -38,22 +36,22 @@ jobs:
       - name: Setup godot-cpp
         uses: ./godot-cpp/.github/actions/setup-godot-cpp
         with:
-          platform: ${{ matrix.platform }}
+          platform: ${{ matrix.target.platform }}
           em-version: '3.1.55'  # FIXME Doesn't compile on the newest, xtensor has problems
       - name: Cache .scons_cache
         uses: actions/cache@v4
         with:
           path: |
             ${{ github.workspace }}/.scons_cache
-          key: ${{ matrix.platform }}_${{ matrix.arch }}_${{ matrix.float_precision }}_${{ matrix.build_target_type }}_cache
+          key: ${{ matrix.target.platform }}_${{ matrix.target.arch }}_${{ matrix.float_precision }}_${{ matrix.build_target_type }}_cache
       - name: Build NumDot library
         shell: sh
         env:
           SCONS_CACHE: ${{ github.workspace }}/.scons_cache
         run: |
-          scons target=${{ matrix.build_target_type }} platform=${{ matrix.platform }} arch=${{ matrix.arch }} precision=${{ matrix.float_precision }} scu_build=yes
+          scons target=${{ matrix.build_target_type }} platform=${{ matrix.target.platform }} arch=${{ matrix.target.arch }} precision=${{ matrix.float_precision }} scu_build=yes
       - name: Mac Sign
-        if: ${{ matrix.platform == 'macos' && env.APPLE_CERT_BASE64 }}
+        if: ${{ matrix.target.platform == 'macos' && env.APPLE_CERT_BASE64 }}
         env:
           APPLE_CERT_BASE64: ${{ secrets.APPLE_CERT_BASE64 }}
         uses: godotengine/godot-cpp-template/.github/actions/sign@main
@@ -68,7 +66,7 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: NumDot-${{ matrix.platform }}-${{ matrix.arch }}-${{ matrix.float_precision }}-${{ matrix.build_target_type }}
+          name: NumDot-${{ matrix.target.platform }}-${{ matrix.target.arch }}-${{ matrix.float_precision }}-${{ matrix.build_target_type }}
           path: |
             ${{ github.workspace }}/build/**
   merge:

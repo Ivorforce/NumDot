@@ -475,10 +475,14 @@ func run():
 		for test in tests:
 			try:
 				test_result_np: np.ndarray = eval(test.np_code)
+			except Exception as e:
+				print(f"Skipping invalid test: {test.name}; reason: {e}")
+				continue
 
+			try:
 				test_result_nd_path = results_folder / f"{test.name}.npy"
 				if not test_result_nd_path.exists():
-					print(f"Skipping test due to earlier errors: {test.name}")
+					print(f"Test failed in Godot: {test.name}")
 					failed_tests_num += 1
 					continue
 				test_result_nd: np.ndarray = np.load(test_result_nd_path)

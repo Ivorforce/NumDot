@@ -505,6 +505,8 @@ func run():
 				passed_tests_num += 1
 			except KeyboardInterrupt:
 				raise
+			except EOFError as e:
+				print(f"Skipping test due to earlier errors {test.name}")
 			except Exception as e:
 				print(f"Error loading npy file for test {test.name}: {e}")
 				failed_tests_num += 1

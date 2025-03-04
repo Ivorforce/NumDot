@@ -433,6 +433,7 @@ func run():
 				text += f"{test_code}\n"
 
 		godot_test_file_path = pathlib.Path(__file__).parent.parent / "demo" / "tests" / "gen" / "tests.gd"
+		godot_test_file_path.parent.mkdir(exist_ok=True)
 		godot_test_file_path.write_text(text)
 
 		print(f"Running {len(tests)} tests in godot...")

@@ -11,6 +11,10 @@ import os
 import argparse
 import subprocess
 
+gen_folder = pathlib.Path(__file__).parent / "gen"
+results_folder = gen_folder / "results"
+results_folder.mkdir(parents=True, exist_ok=True)
+
 dtype_names_nd: dict[np.dtype, str] = {
 	np.dtype(np.int8): "Int8",
 	np.dtype(np.int16): "Int16",
@@ -186,13 +190,12 @@ def {name}({args}n):
 """
 
 def make_test_func_nd(name, args, stmt):
-	result_path = pathlib.Path(f"gen/results").absolute()
 	return \
 f"""
 func __{name}({args}test_name):
 \tvar result = {stmt}
 \tvar data = nd.dumpb(result)
-\tvar file = FileAccess.open("{result_path}/" + test_name + ".npy", FileAccess.WRITE)
+\tvar file = FileAccess.open("{results_folder}/" + test_name + ".npy", FileAccess.WRITE)
 \tfile.store_buffer(data)
 """
 
@@ -462,7 +465,7 @@ func run():
 			return res
 
 	if not is_benchmark:
-		for test_result_path in pathlib.Path("gen/results/").glob("*.npy"):
+		for test_result_path in results_folder.glob("*.npy"):
 			test_result_path.unlink()
 
 		run_godot_tests(test_code_nd, "nd_code")
@@ -474,7 +477,7 @@ func run():
 		for test in tests:
 			try:
 				test_result_np: np.ndarray = eval(test.np_code)
-				test_result_nd: np.ndarray = np.load(f"gen/results/{test.name}.npy")
+				test_result_nd: np.ndarray = np.load(results_folder / f"{test.name}.npy")
 				if test_result_nd.shape != test_result_np.shape:
 					print(f"Shape unequal for {test.name} (nd: {test_result_nd.shape}, np: {test_result_np.shape})")
 					failed_tests_num += 1
@@ -532,8 +535,8 @@ func run():
 
 			result_columns["numpy"] = run_numpy_benchmark()
 
-		pd.DataFrame(result_columns).to_csv("gen/benchmark.csv")
-		print("gen/benchmark.csv")
+		pd.DataFrame(result_columns).to_csv(gen_folder / "benchmark.csv")
+		print(gen_folder / "benchmark.csv")
 
 if __name__ == "__main__":
 	main()

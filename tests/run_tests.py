@@ -194,9 +194,7 @@ def make_test_func_nd(name, args, stmt):
 f"""
 func __{name}({args}test_name):
 \tvar result = {stmt}
-\tvar data = nd.dumpb(result)
-\tvar file = FileAccess.open("{results_folder}/" + test_name + ".npy", FileAccess.WRITE)
-\tfile.store_buffer(data)
+\tTestUtil.store_result(result, "{results_folder}/" + test_name + ".npy")
 """
 
 def make_test_func_nd_benchmark(name, args, stmt):
@@ -477,7 +475,14 @@ func run():
 		for test in tests:
 			try:
 				test_result_np: np.ndarray = eval(test.np_code)
-				test_result_nd: np.ndarray = np.load(results_folder / f"{test.name}.npy")
+
+				test_result_nd_path = results_folder / f"{test.name}.npy"
+				if not test_result_nd_path.exists():
+					print(f"Skipping test due to earlier errors: {test.name}")
+					failed_tests_num += 1
+					continue
+				test_result_nd: np.ndarray = np.load(test_result_nd_path)
+
 				if test_result_nd.shape != test_result_np.shape:
 					print(f"Shape unequal for {test.name} (nd: {test_result_nd.shape}, np: {test_result_np.shape})")
 					failed_tests_num += 1
@@ -505,8 +510,6 @@ func run():
 				passed_tests_num += 1
 			except KeyboardInterrupt:
 				raise
-			except EOFError as e:
-				print(f"Skipping test due to earlier errors {test.name}")
 			except Exception as e:
 				print(f"Error loading npy file for test {test.name}: {e}")
 				failed_tests_num += 1

@@ -30,3 +30,11 @@ static func to_packed(array: NDArray):
 	if dtype == nd.Complex128:  # Not technically correct because it's not double, but eh...
 		return nd.complex_as_vector(array).to_packed_vector2_array()
 	assert(false)
+
+static func store_result(result: NDArray, path: String):
+	if result == null:
+		return  # earlier error; skip
+
+	var data = nd.dumpb(result)
+	var file = FileAccess.open(path, FileAccess.WRITE)
+	file.store_buffer(data)

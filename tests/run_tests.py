@@ -476,38 +476,38 @@ func run():
 			try:
 				test_result_np: np.ndarray = eval(test.np_code)
 			except Exception as e:
-				print(f"Skipping invalid test: {test.name}; reason: {e}")
+				print(f"[{test.name}] Invalid test: {e}")
 				continue
 
 			try:
 				test_result_nd_path = results_folder / f"{test.name}.npy"
 				if not test_result_nd_path.exists():
-					print(f"Test failed in Godot: {test.name}")
+					print(f"[{test.name}] Failed in Godot")
 					failed_tests_num += 1
 					continue
 				test_result_nd: np.ndarray = np.load(test_result_nd_path)
 
 				if test_result_nd.shape != test_result_np.shape:
-					print(f"Shape unequal for {test.name} (nd: {test_result_nd.shape}, np: {test_result_np.shape})")
+					print(f"[{test.name}] Shape unequal (nd: {test_result_nd.shape}, np: {test_result_np.shape})")
 					failed_tests_num += 1
 					continue
 				if test_result_nd.dtype != test_result_np.dtype:
-					print(f"DType unequal for {test.name} (nd: {test_result_nd.dtype}, np: {test_result_np.dtype})")
+					print(f"[{test.name}] DType unequal (nd: {test_result_nd.dtype}, np: {test_result_np.dtype})")
 					failed_tests_num += 1
 					continue
 
 				if test_result_np.dtype in [np.dtype(np.float32), np.dtype(np.float64), np.dtype(np.complex64), np.dtype(np.complex128)]:
 					if not np.allclose(test_result_nd, test_result_np, equal_nan=True):
 						diff = np.abs(test_result_nd - test_result_np)
-						print(f"Array unequal for {test.name}; max-diff: {np.max(diff[~np.isnan(diff)])}")
+						print(f"[{test.name}] Array unequal max-diff: {np.max(diff[~np.isnan(diff)])}")
 						failed_tests_num += 1
 						continue
 				else:
 					if not np.array_equal(test_result_nd, test_result_np):
 						if test_result_np.dtype == np.dtype(np.bool):
-							print(f"Array unequal for {test.name}; {np.sum(test_result_nd != test_result_np)} mismatched bool elements")
+							print(f"[{test.name}]Array unequal; {np.sum(test_result_nd != test_result_np)} mismatched bool elements")
 						else:
-							print(f"Array unequal for {test.name}; max-diff: {np.max(np.abs(test_result_nd - test_result_np))}")
+							print(f"[{test.name}]Array unequal max-diff: {np.max(np.abs(test_result_nd - test_result_np))}")
 						failed_tests_num += 1
 						continue
 
@@ -515,7 +515,7 @@ func run():
 			except KeyboardInterrupt:
 				raise
 			except Exception as e:
-				print(f"Error loading npy file for test {test.name}: {e}")
+				print(f"[{test.name}]Error loading npy file: {e}")
 				failed_tests_num += 1
 				continue
 

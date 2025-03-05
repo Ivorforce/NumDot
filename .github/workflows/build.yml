@@ -11,8 +11,6 @@ jobs:
         # Could build with double, but that would double (hah) our build count.
         # Double builds require building Godot from scratch anyway,
         #  so it's appropriate NumDot also only ships with single builds by default.
-        float_precision: ["single"]
-        build_target_type: ["template_debug", "template_release"]
         target:
           - { platform: macos, arch: universal, os: macos-latest }
           - { platform: ios, arch: arm64, os: macos-latest }
@@ -25,6 +23,8 @@ jobs:
           - { platform: android, arch: arm32, os: ubuntu-24.04 }
           - { platform: android, arch: arm64, os: ubuntu-24.04 }
           - { platform: web, arch: wasm32, os: ubuntu-24.04 }
+        float_precision: ["single"]
+        build_target_type: ["template_debug", "template_release"]
 
     runs-on: ${{ matrix.target.os }}
     steps:

@@ -22,20 +22,9 @@ You don't need to be proficient with all of these technologies to help! Check ou
 
 ## Making a contribution
 
-Setting up the project is covered on the docs: [Custom Builds](https://numdot.readthedocs.io/en/latest/setup/custom_builds.html)
+Setting up the project is covered on the docs: [Custom Builds](https://numdot.readthedocs.io/en/latest/setup/custom_build_setup.html)
 
 Additionally, please make sure you adhere to code style guideline, and update documentation, as described below.
-
-### Include Policy
-
-[include-what-you-use](https://github.com/include-what-you-use/include-what-you-use/) should be used to keep the includes tidy and explicit. This workflow is needed because code that works with one compiler can break down with another, due to differences in intrinsic headers. If you can't run it, don't worry, we can always fix includes post merge.
-
-```
-# Run the tool, dump the results into iwyu.txt.
-iwyu_tool.py -p . src > iwyu.txt
-```
-
-The resulting txt is _very_ explicit. Drop xsimd and intrinsics specific files you are offered, but most of the rest can be copied over as-is.
 
 ### Documentation
 
@@ -49,6 +38,17 @@ curl -sSL https://raw.githubusercontent.com/godotengine/godot/master/doc/tools/m
 ```
 
 Edit the new entries in `./doc_classes/` ([see the godot docs for more information](https://docs.godotengine.org/en/stable/tutorials/scripting/gdextension/gdextension_docs_system.html)).
+
+### Include Policy
+
+[include-what-you-use](https://github.com/include-what-you-use/include-what-you-use/) should be used to keep the includes tidy and explicit. This workflow is needed because code that works with one compiler can break down with another, due to differences in intrinsic headers. If you can't run it, don't worry about it. We can adjust includes after merging your changes.
+
+```
+# Run the tool, dump the results into iwyu.txt.
+iwyu_tool.py -p . src > iwyu.txt
+```
+
+The resulting txt is _very_ explicit. Drop xsimd and intrinsics specific files you are offered, but most of the rest can be copied over as-is.
 
 ### Proposing your changes
 

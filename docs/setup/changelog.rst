@@ -12,6 +12,9 @@ Here you will find the release notes for each version of the library. Each secti
 
 Upcoming Changes (main branch)
 ------------------------------
+The backend of NumDot has been completely rewritten! The changes shrink the binary size in half, and make some functions a lot faster.
+In addition, there's unit tests now that check validity of functions against NumPy implementations as the ground truth. This should help make NumDot functions more reliable.
+
 **Added**
 
 - Added ``nd.load`` and ``nd.saveb`` functions, to read and write files from ``.npy``.

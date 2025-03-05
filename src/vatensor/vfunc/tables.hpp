@@ -41,8 +41,7 @@ namespace va::vfunc::tables {
 	VA_TABLES_EXTERN UFuncTableInplace fill_random_float;
 	VA_TABLES_EXTERN UFuncTableInplace fill_random_int;
 	VA_TABLES_EXTERN UFuncTableInplace fill_random_normal;
-	VA_TABLES_EXTERN UFuncTableInplace fill_linspace;
-	VA_TABLES_EXTERN UFuncTableInplace fill_arange;
+	VA_TABLES_EXTERN UFuncTableInplace fill_consecutive;
 
 	VA_TABLES_EXTERN UFuncTableUnary negative;
 	VA_TABLES_EXTERN UFuncTableUnary sign;

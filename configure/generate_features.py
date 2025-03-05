@@ -319,16 +319,10 @@ def main():
 		"vargs": ["xt::random::default_engine_type&", "long long", "long long"],
 	})
 	vfuncs.append({
-		"name": "fill_arange",
+		"name": "fill_consecutive",
 		"specializations": [type_.char for type_ in supported_dtypes if not np.isdtype(type_, 'complex floating')],
 		"casts": [],
-		"vargs": ["void*", "void*", "void*"],
-	})
-	vfuncs.append({
-		"name": "fill_linspace",
-		"specializations": [type_.char for type_ in supported_dtypes if not np.isdtype(type_, 'complex floating')],
-		"casts": [],
-		"vargs": ["void*", "void*", "std::size_t", "bool"],
+		"vargs": ["void*", "void*", "std::size_t"],
 	})
 
 	with (pathlib.Path(__file__).parent / "vfuncs.json").open("w") as f:

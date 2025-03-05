@@ -4910,7 +4910,7 @@
 			]
 		},
 		{
-			"name": "fill_arange",
+			"name": "fill_consecutive",
 			"specializations": [
 				"?",
 				"f",
@@ -4928,30 +4928,7 @@
 			"vargs": [
 				"void*",
 				"void*",
-				"void*"
-			]
-		},
-		{
-			"name": "fill_linspace",
-			"specializations": [
-				"?",
-				"f",
-				"d",
-				"b",
-				"h",
-				"i",
-				"l",
-				"B",
-				"H",
-				"I",
-				"L"
-			],
-			"casts": [],
-			"vargs": [
-				"void*",
-				"void*",
-				"std::size_t",
-				"bool"
+				"std::size_t"
 			]
 		}
 	]

@@ -108,10 +108,17 @@ std::shared_ptr<VArray> va::linspace(VStoreAllocator& allocator, VScalar start, 
 		dtype = va::dtype_common_type_unchecked(dtype, va::dtype(stop));
 	}
 	start = static_cast_scalar(start, dtype);
-	stop = static_cast_scalar(stop, dtype);
+
+	VScalar step;
+	if (num > 0) {
+		auto start_ = static_cast_scalar<double>(start);
+		auto stop_ = static_cast_scalar<double>(stop);
+		// TODO Double check if this is correct.
+		step = static_cast_scalar((stop_ - start_) / (static_cast<double>(num) - (endpoint ? 1.0 : 0.0)), dtype);
+	}
 
 	auto array = empty(allocator, dtype, shape_type {num});
-	_call_vfunc_inplace<void*, void*, std::size_t, bool>(va::vfunc::tables::fill_linspace, array->data, va::_call::get_value_ptr(start), va::_call::get_value_ptr(stop), std::move(num), std::move(endpoint));
+	_call_vfunc_inplace<void*, void*, std::size_t>(va::vfunc::tables::fill_consecutive, array->data, va::_call::get_value_ptr(start), va::_call::get_value_ptr(step), std::move(num));
 	return array;
 }
 
@@ -122,29 +129,42 @@ std::shared_ptr<VArray> va::arange(VStoreAllocator& allocator, VScalar start, VS
 		dtype = va::dtype_common_type(dtype, va::dtype(step));
 	}
 
+	std::size_t num;
+	if (dtype == Complex64 || dtype == Complex128) {
+		throw std::invalid_argument("arange cannot be used with this dtype");
+	}
+	else if (dtype == Float32 || dtype == Float64) {
+		// float-like
+		auto start_ = static_cast_scalar<double>(start);
+		auto stop_ = static_cast_scalar<double>(stop);
+		auto step_ = static_cast_scalar<double>(step);
+
+		// From arange_impl
+		num = std::ceil((stop_ - start_) / step_);
+	}
+	else if (dtype == Int8 || dtype == Int16 || dtype == Int32 || dtype == Int64) {
+		// signed int-like
+		auto start_ = static_cast_scalar<int64_t>(start);
+		auto stop_ = static_cast_scalar<int64_t>(stop);
+		auto step_ = static_cast_scalar<int64_t>(step);
+
+		// From arange_impl
+		num = (stop_ - start_) / step_;
+	}
+	else {
+		// unsigned int-like
+		auto start_ = static_cast_scalar<uint64_t>(start);
+		auto stop_ = static_cast_scalar<uint64_t>(stop);
+		auto step_ = static_cast_scalar<uint64_t>(step);
+		// From arange_impl
+		num = (stop_ - start_) / step_;
+	}
+
 	start = static_cast_scalar(start, dtype);
-	stop = static_cast_scalar(stop, dtype);
 	step = static_cast_scalar(step, dtype);
 
-	const std::size_t num = std::visit(
-		[&start, &stop, &step](auto t) -> std::size_t {
-			using T = std::decay_t<decltype(t)>;
-			if constexpr (xtl::is_complex<T>::value) {
-				throw std::invalid_argument("linspace cannot be used with this dtype");
-			}
-			else {
-				auto start_ = static_cast_scalar<T>(start);
-				auto stop_ = static_cast_scalar<T>(stop);
-				auto step_ = static_cast_scalar<T>(step);
-
-				// From arange_impl
-				return static_cast<std::size_t>(std::ceil((stop_ - start_) / step_));
-			}
-		}, dtype_to_variant(dtype)
-	);
-
 	auto array = empty(allocator, dtype, shape_type {num});
-	_call_vfunc_inplace<void*, void*, void*>(va::vfunc::tables::fill_arange, array->data, va::_call::get_value_ptr(start), va::_call::get_value_ptr(stop), va::_call::get_value_ptr(step));
+	_call_vfunc_inplace<void*, void*, std::size_t>(va::vfunc::tables::fill_consecutive, array->data, va::_call::get_value_ptr(start), va::_call::get_value_ptr(step), std::move(num));
 	return array;
 }
 

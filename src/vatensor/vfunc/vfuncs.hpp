@@ -105,6 +105,11 @@ namespace va::op {
 			return cvalue;
 		}
 	}
+
+	template <class T1>
+	auto consecutive(const T1 &start, const T1 &step, const std::size_t &num) {
+		return start + xt::arange(num) * step;
+	}
 }
 
 #define IMPLEMENT_INPLACE_VFUNC(UFUNC_NAME, OP, ...)\
@@ -177,8 +182,7 @@ namespace va::vfunc::impl {
 	}
 	IMPLEMENT_INPLACE_VFUNC(fill_random_normal, xt::random::randn<typename R::value_type>(ret.shape(), 0, 1, engine), xt::random::default_engine_type& engine)
 
-	IMPLEMENT_INPLACE_VFUNC(fill_linspace, xt::linspace(*static_cast<const typename R::value_type*>(start), *static_cast<const typename R::value_type*>(stop), num, endpoint), void* start, void* stop, std::size_t num, const bool endpoint)
-	IMPLEMENT_INPLACE_VFUNC(fill_arange, xt::arange(*static_cast<const typename R::value_type*>(start), *static_cast<const typename R::value_type*>(stop), *static_cast<const typename R::value_type*>(step)), void* start, void* stop, void* step)
+	IMPLEMENT_INPLACE_VFUNC(fill_consecutive, va::op::consecutive(*static_cast<const typename R::value_type*>(start), *static_cast<const typename R::value_type*>(step), num), void* start, void* step, std::size_t num)
 
 	IMPLEMENT_UNARY_VFUNC(negative, -va::promote::to_num(a))
 	IMPLEMENT_UNARY_VFUNC(sign, xt::sign(va::promote::to_num(a)))

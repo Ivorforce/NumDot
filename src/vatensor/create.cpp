@@ -104,7 +104,9 @@ std::shared_ptr<VArray> va::copy_as_dtype(VStoreAllocator& allocator, const VDat
 
 std::shared_ptr<VArray> va::linspace(VStoreAllocator& allocator, VScalar start, VScalar stop, std::size_t num, bool endpoint, DType dtype) {
 	if (dtype == DTypeMax) {
-		dtype = va::dtype(start);
+		// linspace is always at least float32.
+		dtype = DType::Float32;
+		dtype = va::dtype_common_type_unchecked(dtype, va::dtype(start));
 		dtype = va::dtype_common_type_unchecked(dtype, va::dtype(stop));
 	}
 	start = static_cast_scalar(start, dtype);

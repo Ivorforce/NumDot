@@ -472,6 +472,7 @@ func run():
 		import gen.tests
 		failed_tests_num = 0
 		passed_tests_num = 0
+		skipped_tests_num = 0
 		for test in tests:
 			try:
 				test_result_np: np.ndarray = eval(test.np_code)
@@ -479,6 +480,7 @@ func run():
 				raise
 			except Exception as e:
 				print(f"[{test.name}] Invalid test: {e}")
+				skipped_tests_num += 1
 				continue
 
 			try:
@@ -525,11 +527,11 @@ func run():
 				raise
 			except Exception as e:
 				print(f"[{test.name}] Error comparing test results: {e}")
-				failed_tests_num += 1
+				skipped_tests_num += 1
 				continue
 
 		print("Tests completed.")
-		print(f"Passed: {passed_tests_num}; Failed: {failed_tests_num}")
+		print(f"Passed: {passed_tests_num}; Failed: {failed_tests_num}; Skipped: {skipped_tests_num}")
 	else:
 		result_columns = dict()
 

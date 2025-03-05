@@ -10,9 +10,12 @@ Here you will find the release notes for each version of the library. Each secti
    :local:
    :backlinks: none
 
-Upcoming Changes (main branch)
-------------------------------
-The backend of NumDot has been completely rewritten! The changes shrink the binary size in half, and make some functions a lot faster.
+.. Upcoming Changes (main branch)
+.. ------------------------------
+
+Version 0.8 - 2025-03-05
+------------------------
+The backend of NumDot has been completely rewritten! The changes shrink the binary size in half, and make some functions a lot faster. Some bugs may have been silently fixed or introduced in the process. `Let us know <https://github.com/Ivorforce/NumDot/issues>`_ if you run into any trouble!
 In addition, there's unit tests now that check validity of functions against NumPy implementations as the ground truth. This should help make NumDot functions more reliable.
 
 **Added**
@@ -23,7 +26,7 @@ In addition, there's unit tests now that check validity of functions against Num
 - Added ``NDArray`` functions for getting slices as variant types (if shape is compatible).
 - Added ``complex64`` and ``complex128`` array creation shorthand functions.
 - NumDot now appears in the ``plugins`` section of the editor preferences.
-- New builds for Android (``x86_32``, ``x86_64``, ``arm32``).
+- NumDot now builds for Android (``x86_32``, ``x86_64``, ``arm32``).
 
 **Changed**
 

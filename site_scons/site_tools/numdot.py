@@ -28,6 +28,7 @@ def options(opts):
     features_tool = Tool("features")
     scu_tool = Tool("scu")
 
+    features_tool.options(opts)
     scu_tool.options(opts)
 
 def generate(env, godot_cpp_env, sources):

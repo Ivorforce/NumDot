@@ -2,12 +2,8 @@ import dataclasses
 import enum
 import itertools
 import json
-import os
 import pathlib
-import platform
 import re
-import sys
-from typing import Collection
 
 from SCons.Action import Action
 from SCons.Builder import Builder
@@ -16,6 +12,8 @@ from SCons.Script import ARGUMENTS
 from SCons.Tool import Tool
 from SCons.Variables import BoolVariable, EnumVariable, PathVariable
 from SCons.Variables.BoolVariable import _text2bool
+from typing import Optional
+
 
 class DType(enum.Enum):
 	Bool = 0
@@ -31,6 +29,12 @@ class DType(enum.Enum):
 	UInt16 = 10
 	UInt32 = 11
 	UInt64 = 12
+
+	def __str__(self):
+		return self.name
+
+	def __repr__(self):
+		return f"DType.{self.name}"
 
 code_to_dtype = {
 	"?": DType.Bool,
@@ -85,88 +89,179 @@ complex_dtypes = {
 }
 
 @dataclasses.dataclass
-class UFuncSpecialization:
+class VFuncInfo:
+	name: str
+	vargs: list[str]
+
+@dataclasses.dataclass
+class VFuncSpecialization:
+	vfunc_name: str
+
 	output: DType
 	input: tuple[DType, ...]
+	model_input: Optional[tuple[DType, ...]]
+
+	is_enabled: bool = True
+
+@dataclasses.dataclass
+class Features:
+	all: list[VFuncSpecialization]
+	vfunc_infos: dict[str, VFuncInfo]
+
 
 	@staticmethod
-	def parse(code: str) -> "UFuncSpecialization":
-		parts = code.split("->")
-		input_str = parts[0]
-		output_code = code_to_dtype[parts[1]] if len(parts) > 1 else None
-		return UFuncSpecialization(
-			output=output_code,
-			input=tuple(code_to_dtype[input_str] for input_str in input_str)
-		)
+	def from_json_obj(object: dict) -> "Features":
+		features = Features(all=[], vfunc_infos=dict())
+
+		for vfunc_obj in object["vfuncs"]:
+			for code in vfunc_obj["specializations"]:
+				input_str, *rest_parts = code.split("->")
+				features.vfunc_infos.setdefault(vfunc_obj["name"], VFuncInfo(
+					name=vfunc_obj["name"],
+					vargs=vfunc_obj["vargs"] if "vargs" in vfunc_obj else []
+				))
+				features.all.append(
+					VFuncSpecialization(
+						vfunc_name=vfunc_obj["name"],
+						output=code_to_dtype[rest_parts[0]] if len(rest_parts) > 0 else None,
+						input=tuple(code_to_dtype[input_str] for input_str in input_str),
+						model_input=None
+					)
+				)
+
+			for code in vfunc_obj["casts"]:
+				input_str, model_input_str, *rest_parts = code.split("->")
+				features.vfunc_infos.setdefault(vfunc_obj["name"], VFuncInfo(
+					name=vfunc_obj["name"],
+					vargs=vfunc_obj["vargs"] if "vargs" in vfunc_obj else []
+				))
+				features.all.append(
+					VFuncSpecialization(
+						vfunc_name=vfunc_obj["name"],
+						output=code_to_dtype[rest_parts[0]] if len(rest_parts) > 0 else None,
+						input=tuple(code_to_dtype[input_str] for input_str in input_str),
+						model_input=tuple(code_to_dtype[input_str] for input_str in model_input_str)
+					)
+				)
+
+		return features
+
+	def name_matching(self, fn) -> list[VFuncSpecialization]:
+		return [f for f in self.all if fn(f.vfunc_name)]
+
+	@property
+	def bitwise(self) -> list[VFuncSpecialization]:
+		return self.name_matching(lambda name: name.startswith("bitwise"))
+
+	@property
+	def logical(self) -> list[VFuncSpecialization]:
+		return self.name_matching(lambda name: name.startswith("logical"))
+
+	@property
+	def random(self) -> list[VFuncSpecialization]:
+		return self.name_matching(lambda name: name.startswith("random"))
+
+	@property
+	def trigonometry(self) -> list[VFuncSpecialization]:
+		return self.name_matching(lambda name: re.match(r"a?(sin|cos|tan)h?", name))
+
+	@property
+	def enabled(self) -> list[VFuncSpecialization]:
+		return [f for f in self.all if f.is_enabled]
+
+	@property
+	def disabled(self) -> list[VFuncSpecialization]:
+		return [f for f in self.all if not f.is_enabled]
+
+	def find(self, feature=None):
+		if isinstance(feature, list) or isinstance(feature, tuple):
+			return [
+				single_feature
+				for feature_part in feature
+				for single_feature in self.find(feature_part)
+			]
+		if isinstance(feature, str):
+			return [x for x in self.all if x.vfunc_name == feature]
+		elif isinstance(feature, VFuncInfo):
+			return [x for x in self.all if x == feature]
+		elif isinstance(feature, VFuncSpecialization):
+			return [feature]
+		else:
+			raise ValueError
+
+	def disable(self, *args, **kwargs):
+		for specialization in self.find(*args, **kwargs):
+			specialization.is_enabled = False
+
+	def enable(self, *args, **kwargs):
+		for specialization in self.find(*args, **kwargs):
+			specialization.is_enabled = True
 
 def exists(env):
 	return True
 
 def options(opts):
-	pass
+	opts.Add(
+		PathVariable(
+			key="numdot_config",
+			help="Path to a .py file that sets up custom NumDot configuration.",
+			default=None,
+		)
+	)
 
-def make_module(env, sources, module_name: str, ufuncs_json: dict):
+def make_module(env, sources, module_name: str, features: Features):
 	namespace_name = f"va::vfunc::{module_name}"
 
 	declare_str = ""
-	configure_str = ""
-	for ufunc_obj in ufuncs_json["vfuncs"]:
-		ufunc_name = ufunc_obj["name"]
-		specializations = ufunc_obj["specializations"]
-		nin = specializations[0].index("->") if "->" in specializations[0] else len(specializations[0])
-		vargs = ufunc_obj["vargs"] if "vargs" in ufunc_obj else []
-		vargs_part = "".join(f", {varg}" for varg in vargs)
+	for vfunc in features.vfunc_infos.values():
+		declare_str += f"\tDECLARE_VFUNC({vfunc.name});\n"
 
-		declare_str += f"\tDECLARE_VFUNC({ufunc_name});\n"
+	configure_str = ""
+	for specialization in features.all:
+		if not specialization.is_enabled:
+			continue
+
 
 		covered_types: set[tuple[DType, ...]] = set()
-		for specialization_str in specializations:
-			specialization = UFuncSpecialization.parse(specialization_str)
+		if specialization.input in covered_types:
+			# Some types exist twice for some reason, see above.
+			continue
+		covered_types.add(specialization.input)
 
-			if specialization.input in covered_types:
-				# Some types exist twice for some reason, see above.
-				continue
-			covered_types.add(specialization.input)
+		vfunc = features.vfunc_infos[specialization.vfunc_name]
 
+		if specialization.model_input is None:
 			# FIXME Need to test how these functions are computed with complex dtypes in numpy.
 			if any(dtype in complex_dtypes for dtype in specialization.input) and (
-				ufunc_name == "minimum"
-				or ufunc_name == "maximum"
-				or ufunc_name == "max"
-				or ufunc_name == "min"
-				or ufunc_name == "mean"
-				or ufunc_name == "median"
-				or ufunc_name == "variance"
-				or ufunc_name == "standard_deviation"
-				or ufunc_name == "rint"
-				or ufunc_name == "less_equal"
-				or ufunc_name == "less"
-				or ufunc_name == "greater"
-				or ufunc_name == "greater_equal"
-				or ufunc_name == "round"
+				vfunc.name == "minimum"
+				or vfunc.name == "maximum"
+				or vfunc.name == "max"
+				or vfunc.name == "min"
+				or vfunc.name == "mean"
+				or vfunc.name == "median"
+				or vfunc.name == "variance"
+				or vfunc.name == "standard_deviation"
+				or vfunc.name == "rint"
+				or vfunc.name == "less_equal"
+				or vfunc.name == "less"
+				or vfunc.name == "greater"
+				or vfunc.name == "greater_equal"
+				or vfunc.name == "round"
 			):
 				continue
 
 			input_types_cpp = "".join(f", {dtype_to_c_type[dtype]}" for dtype in specialization.input)
 			output_type_cpp = f", {dtype_to_c_type[specialization.output]}" if specialization.output is not None else ""
 
-			configure_str += f"\tadd_native<{ufunc_name}{output_type_cpp}{input_types_cpp}{vargs_part}>(tables::{ufunc_name});\n"
+			vargs_part = "".join(f", {varg}" for varg in vfunc.vargs)
+			configure_str += f"\tadd_native<{vfunc.name}{output_type_cpp}{input_types_cpp}{vargs_part}>(tables::{vfunc.name});\n"
 
-		for cast_str in ufunc_obj["casts"]:
-			in_str, model_str = cast_str.split("->", maxsplit=1)
-			model = UFuncSpecialization.parse(model_str)
-			in_types = tuple(code_to_dtype[dtype_str] for dtype_str in in_str)
-
-			assert model.input in covered_types, f"{ufunc_name} has a cast {in_str} to {model_str} even though the specialization does not exist"
-			assert in_types not in covered_types, f"{ufunc_name} has a cast {in_str} to {model_str} even though it was already specialized for these types"
-			assert len(model.input) == nin
-			assert len(in_types) == nin
-
+		else:
 			template_args_cpp = ", ".join(
 				dtype_to_c_type[dtype]
-				for dtype in itertools.chain(in_types, model.input)
+				for dtype in itertools.chain(specialization.input, specialization.model_input)
 			)
-			configure_str += f"\tadd_cast<{template_args_cpp}>(tables::{ufunc_name});\n"
+			configure_str += f"\tadd_cast<{template_args_cpp}>(tables::{vfunc.name});\n"
 
 	ifndef_macro = f"VATENSOR_UFUNC_{module_name}_HPP".upper()
 	hpp_contents = \
@@ -210,6 +305,14 @@ void {namespace_name}::configure() {{
 
 def generate(env, sources):
 	with pathlib.Path("configure/vfuncs.json").open("r") as f:
-		ufuncs_json = json.load(f)
+		features = Features.from_json_obj(json.load(f))
 
-	make_module(env, sources, module_name="base", ufuncs_json=ufuncs_json)
+	if 'numdot_config' in env and env['numdot_config']:
+		custom_config_path = pathlib.Path(env['numdot_config'])
+		assert custom_config_path.suffix == ".py"
+		# -3 to cut the '.py'
+		custom_config_tool = Tool(custom_config_path.name[:-3], toolpath=[custom_config_path.parent])
+
+		custom_config_tool.generate(env, features)
+
+	make_module(env, sources, module_name="base", features=features)

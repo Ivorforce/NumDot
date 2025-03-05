@@ -80,7 +80,7 @@ You can disable features one by one (or as groups) using a python script. Disabl
 
 To get started, first copy `numdot_config.template.py <https://github.com/Ivorforce/NumDot/blob/main/numdot_config.template.py>`_ to any location on your computer (and rename it).
 
-The file is written in `Python <https://www.python.org>`_. Don't worry, it's a very easy language to use - in fact, it's very similar to GDScript! The file contains a few examples to get you started. You can find all toggleable features in `vfeature.hpp <https://github.com/Ivorforce/NumDot/blob/main/src/vatensor/vfeature.hpp>`_.
+The file is written in `Python <https://www.python.org>`_. Don't worry, it's a very easy language to use - in fact, it's very similar to GDScript! The file contains a few examples to get you started. You can find all toggleable features in `vfuncs.json <https://github.com/Ivorforce/NumDot/blob/main/configure/vfuncs.json>`_.
 
 Finally, when you compile the project, pass the option ```numdot_config=path/to/numdot_config.py``.
 

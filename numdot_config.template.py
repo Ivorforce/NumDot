@@ -1,7 +1,13 @@
+# This function has to exist for SCons reasons.
 def exists(env):
     return True
 
 def generate(env, features):
+    """
+    Modify the prevalent features in the current build.
+    :param env: The SCons Environment object for this build.
+    :param features: The Features object for this build. You can find its definition in ./site_scons/site_tools/features.py.
+    """
     # Disable random functions
     # features.disable(features.random)
 

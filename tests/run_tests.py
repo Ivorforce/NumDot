@@ -475,6 +475,8 @@ func run():
 		for test in tests:
 			try:
 				test_result_np: np.ndarray = eval(test.np_code)
+			except KeyboardInterrupt:
+				raise
 			except Exception as e:
 				print(f"[{test.name}] Invalid test: {e}")
 				continue
@@ -486,7 +488,14 @@ func run():
 					failed_tests_num += 1
 					continue
 				test_result_nd: np.ndarray = np.load(test_result_nd_path)
+			except KeyboardInterrupt:
+				raise
+			except Exception as e:
+				print(f"[{test.name}] Error loading npy file: {e}")
+				failed_tests_num += 1
+				continue
 
+			try:
 				if test_result_nd.shape != test_result_np.shape:
 					print(f"[{test.name}] Shape unequal (nd: {test_result_nd.shape}, np: {test_result_np.shape})")
 					failed_tests_num += 1
@@ -505,9 +514,9 @@ func run():
 				else:
 					if not np.array_equal(test_result_nd, test_result_np):
 						if test_result_np.dtype == np.dtype(np.bool):
-							print(f"[{test.name}]Array unequal; {np.sum(test_result_nd != test_result_np)} mismatched bool elements")
+							print(f"[{test.name}] Array unequal; {np.sum(test_result_nd != test_result_np)} mismatched bool elements")
 						else:
-							print(f"[{test.name}]Array unequal max-diff: {np.max(np.abs(test_result_nd - test_result_np))}")
+							print(f"[{test.name}] Array unequal max-diff: {np.max(np.abs(test_result_nd - test_result_np))}")
 						failed_tests_num += 1
 						continue
 
@@ -515,7 +524,7 @@ func run():
 			except KeyboardInterrupt:
 				raise
 			except Exception as e:
-				print(f"[{test.name}]Error loading npy file: {e}")
+				print(f"[{test.name}] Error comparing test results: {e}")
 				failed_tests_num += 1
 				continue
 

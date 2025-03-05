@@ -6,6 +6,8 @@ NumPy;xtensor;NumDot;Notes
 | ``a(0)`` ";"| ``a.get(0)``
 | ``a.get_int(0)``
 | ``a.get_float(0)``";Create a view, or return an element of the tensor.
+``a[0] = b``;"| ``xt::view(a, { 0 }) = b``
+| ``a(0) = b`` ";"| ``a.set(b, 0)``";Update a slice of a tensor.
 ``a[:]``;``xt::view(a, { xt::all() })``;``a.get(null)``;Select all elements.
 ``a[None]``;``xt::view(a, { xt::newaxis() })``;"``a.get(&""newaxis"")``";Insert new axis.
 ``a[..., 0]``;``xt::view(a, { xt::ellipsis(), 0 })``;"``a.get(&""..."", 0)``";Ellipsis stands in for all other dimensions.

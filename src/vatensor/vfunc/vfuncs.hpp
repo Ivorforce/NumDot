@@ -64,8 +64,8 @@ namespace va::op {
 
 	// FIXME These don't support axes yet, see https://github.com/xtensor-stack/xtensor/issues/1555
 	using namespace xt;
-	XTENSOR_REDUCER_FUNCTION(va_any, xt::detail::logical_or, bool, true)
-	XTENSOR_REDUCER_FUNCTION(va_all, xt::detail::logical_and, bool, false)
+	XTENSOR_REDUCER_FUNCTION(va_any, xt::detail::logical_or, bool, false)
+	XTENSOR_REDUCER_FUNCTION(va_all, xt::detail::logical_and, bool, true)
 
 	template <class T1>
 	auto median(const T1 &t1, const axes_type& axes) {

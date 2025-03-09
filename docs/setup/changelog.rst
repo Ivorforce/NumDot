@@ -10,8 +10,13 @@ Here you will find the release notes for each version of the library. Each secti
    :local:
    :backlinks: none
 
-.. Upcoming Changes (main branch)
-.. ------------------------------
+Upcoming Changes (main branch)
+------------------------------
+
+**Fixed**
+
+- ``nd.any`` and ``nd.all`` always incorrectly evaluated to ``true`` and ``false`` respectively.
+
 
 Version 0.8 - 2025-03-05
 ------------------------

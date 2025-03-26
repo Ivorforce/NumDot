@@ -37,6 +37,9 @@
 
 using namespace godot;
 
+const double nd::INF = std::numeric_limits<double>::infinity();
+const double nd::NAN_VAL = std::nan("");
+
 void nd::_bind_methods() {
 	// For the macros, we need to have the values in our namespace.
 	using namespace va;
@@ -60,6 +63,14 @@ void nd::_bind_methods() {
 	BIND_ENUM_CONSTANT(Reflect);
 	BIND_ENUM_CONSTANT(Wrap);
 	BIND_ENUM_CONSTANT(Edge);
+
+    godot::ClassDB::bind_static_method("nd", D_METHOD("get_PI"), []() -> double { return nd::PI; });
+    godot::ClassDB::bind_static_method("nd", D_METHOD("get_E"), []() -> double { return nd::E; });
+    godot::ClassDB::bind_static_method("nd", D_METHOD("get_EULER_GAMMA"), []() -> double { return nd::EULER_GAMMA; });
+    
+    // Special constants
+    godot::ClassDB::bind_static_method("nd", D_METHOD("get_INF"), []() -> double { return nd::INF; });
+    godot::ClassDB::bind_static_method("nd", D_METHOD("get_NAN"), []() -> double { return nd::NAN_VAL; });
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("newaxis"), &nd::newaxis);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("ellipsis"), &nd::ellipsis);

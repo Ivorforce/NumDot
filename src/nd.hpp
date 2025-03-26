@@ -51,9 +51,6 @@ public:
     static const double INF;
     static const double NAN_VAL;
 
-    // NumPy Compatibility
-    static const int NEWAXIS; 
-
 	// Range.
 	static Vector4i range(const Variant& start_or_stop = static_cast<int32_t>(0), const Variant& stop = nullptr, const Variant& step = DEFVAL(nullptr));
 	static Vector4i from(int32_t start);

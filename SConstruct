@@ -100,25 +100,11 @@ suffix = env['suffix'].replace(".dev", "").replace(".universal", "")
 addon_dir = f"{env['install_dir']}/addons/{libname}"
 platform_dir = f"{addon_dir}/{env['platform']}"
 
-if env["platform"] == "macos" or env["platform"] == "ios":
-    # The above defaults to creating a .dylib.
-    # These are not supported on the iOS app store.
-    # To make it consistent, we'll just use frameworks on both macOS and iOS.
-    framework_tool = Tool("macos-framework")
-
-    lib_filename = f"{libname}{suffix}"
-    library_targets = framework_tool.generate(
-        f"{platform_dir}/{lib_filename}.framework",
-        env=env,
-        source=sources,
-        bundle_identifier=f"de.ivorius.{lib_filename}"
-    )
-else:
-    lib_filename = f"{env.subst('$SHLIBPREFIX')}{libname}{suffix}{env.subst('$SHLIBSUFFIX')}"
-    library_targets = env.SharedLibrary(
-        f"{platform_dir}/{lib_filename}",
-        source=sources,
-    )
+lib_filename = f"{env.subst('$SHLIBPREFIX')}{libname}{suffix}{env.subst('$SHLIBSUFFIX')}"
+library_targets = env.SharedLibrary(
+    f"{platform_dir}/{lib_filename}",
+    source=sources,
+)
 
 plugin_tool = Tool("plugin-cfg")
 targets.append(plugin_tool.generate(

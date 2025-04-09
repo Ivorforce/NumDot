@@ -49,19 +49,6 @@ jobs:
           SCONS_CACHE: ${{ github.workspace }}/.scons_cache
         run: |
           scons target=${{ matrix.build_target_type }} platform=${{ matrix.target.platform }} arch=${{ matrix.target.arch }} precision=${{ matrix.float_precision }} scu_build=yes
-      - name: Mac Sign
-        if: ${{ matrix.target.platform == 'macos' && env.APPLE_CERT_BASE64 }}
-        env:
-          APPLE_CERT_BASE64: ${{ secrets.APPLE_CERT_BASE64 }}
-        uses: godotengine/godot-cpp-template/.github/actions/sign@main
-        with:
-          FRAMEWORK_PATH: build/addons/numdot/macos/numdot-macos.framework
-          APPLE_CERT_BASE64: ${{ secrets.APPLE_CERT_BASE64 }}
-          APPLE_CERT_PASSWORD: ${{ secrets.APPLE_CERT_PASSWORD }}
-          APPLE_DEV_PASSWORD: ${{ secrets.APPLE_DEV_PASSWORD }}
-          APPLE_DEV_ID: ${{ secrets.APPLE_DEV_ID }}
-          APPLE_DEV_TEAM_ID: ${{ secrets.APPLE_DEV_TEAM_ID }}
-          APPLE_DEV_APP_ID: ${{ secrets.APPLE_DEV_APP_ID }}
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:

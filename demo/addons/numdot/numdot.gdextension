@@ -6,20 +6,20 @@ reloadable = true
 
 [libraries]
 
-macos.x86_64.single.debug = "./macos/numdot.macos.template_debug.x86_64.framework/numdot.macos.template_debug.x86_64"
-macos.x86_64.double.debug = "./macos/numdot.macos.template_debug.x86_64.double.framework/numdot.macos.template_debug.x86_64.double"
-macos.x86_64.single.release = "./macos/numdot.macos.template_release.x86_64.framework/numdot.macos.template_release.x86_64"
-macos.x86_64.double.release = "./macos/numdot.macos.template_debug.x86_64.double.framework/numdot.macos.template_release.x86_64.double"
+macos.x86_64.single.debug = "./macos/libnumdot.macos.template_debug.x86_64.dylib"
+macos.x86_64.double.debug = "./macos/libnumdot.macos.template_debug.x86_64.double.dylib"
+macos.x86_64.single.release = "./macos/libnumdot.macos.template_release.x86_64.dylib"
+macos.x86_64.double.release = "./macos/libnumdot.macos.template_debug.x86_64.double.dylib"
 
-macos.arm64.single.debug = "./macos/numdot.macos.template_debug.arm64.framework/numdot.macos.template_debug.arm64"
-macos.arm64.double.debug = "./macos/numdot.macos.template_debug.arm64.double.framework/numdot.macos.template_debug.arm64.double"
-macos.arm64.single.release = "./macos/numdot.macos.template_release.arm64.framework/numdot.macos.template_release.arm64"
-macos.arm64.double.release = "./macos/numdot.macos.template_debug.arm64.double.framework/numdot.macos.template_release.arm64.double"
+macos.arm64.single.debug = "./macos/libnumdot.macos.template_debug.arm64.dylib"
+macos.arm64.double.debug = "./macos/libnumdot.macos.template_debug.arm64.double.dylib"
+macos.arm64.single.release = "./macos/libnumdot.macos.template_release.arm64.dylib"
+macos.arm64.double.release = "./macos/libnumdot.macos.template_debug.arm64.double.dylib"
 
-ios.arm64.single.debug = "./ios/numdot.ios.template_debug.arm64.framework/numdot.ios.template_debug.arm64"
-ios.arm64.double.debug = "./ios/numdot.ios.template_debug.arm64.double.framework/numdot.ios.template_debug.arm64.double"
-ios.arm64.single.release = "./ios/numdot.ios.template_release.arm64.framework/numdot.ios.template_release.arm64"
-ios.arm64.double.release = "./ios/numdot.ios.template_release.arm64.double.framework/numdot.ios.template_release.arm64.double"
+ios.arm64.single.debug = "./ios/libnumdot.ios.template_debug.arm64.dylib"
+ios.arm64.double.debug = "./ios/libnumdot.ios.template_debug.arm64.double.dylib"
+ios.arm64.single.release = "./ios/libnumdot.ios.template_release.arm64.dylib"
+ios.arm64.double.release = "./ios/libnumdot.ios.template_release.arm64.double.dylib"
 
 windows.x86_32.single.debug = "windows/numdot.windows.template_debug.x86_32.dll"
 windows.x86_32.double.debug = "windows/numdot.windows.template_debug.x86_32.double.dll"

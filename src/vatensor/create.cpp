@@ -109,18 +109,17 @@ std::shared_ptr<VArray> va::linspace(VStoreAllocator& allocator, VScalar start, 
 		dtype = va::dtype_common_type_unchecked(dtype, va::dtype(start));
 		dtype = va::dtype_common_type_unchecked(dtype, va::dtype(stop));
 	}
-	start = static_cast_scalar(start, dtype);
 
-	VScalar step;
+	double start_ = static_cast_scalar<double>(start);
+	double stop_ = static_cast_scalar<double>(stop);
+
+	double step = 0.0;
 	if (num > 0) {
-		auto start_ = static_cast_scalar<double>(start);
-		auto stop_ = static_cast_scalar<double>(stop);
-		// TODO Double check if this is correct.
-		step = static_cast_scalar((stop_ - start_) / (static_cast<double>(num) - (endpoint ? 1.0 : 0.0)), dtype);
+		step = (stop_ - start_) / (static_cast<double>(num) - (endpoint ? 1.0 : 0.0));
 	}
 
 	auto array = empty(allocator, dtype, shape_type {num});
-	_call_vfunc_inplace<void*, void*, std::size_t>(va::vfunc::tables::fill_consecutive, array->data, va::_call::get_value_ptr(start), va::_call::get_value_ptr(step), std::move(num));
+	_call_vfunc_inplace<double, double, std::size_t>(va::vfunc::tables::fill_consecutive, array->data, std::move(start_), std::move(step), std::move(num));
 	return array;
 }
 

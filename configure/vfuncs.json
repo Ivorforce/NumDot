@@ -4926,8 +4926,8 @@
 			],
 			"casts": [],
 			"vargs": [
-				"void*",
-				"void*",
+				"double",
+				"double",
 				"std::size_t"
 			]
 		}

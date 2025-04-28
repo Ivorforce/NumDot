@@ -182,7 +182,7 @@ namespace va::vfunc::impl {
 	}
 	IMPLEMENT_INPLACE_VFUNC(fill_random_normal, xt::random::randn<typename R::value_type>(ret.shape(), 0, 1, engine), xt::random::default_engine_type& engine)
 
-	IMPLEMENT_INPLACE_VFUNC(fill_consecutive, va::op::consecutive(*static_cast<const typename R::value_type*>(start), *static_cast<const typename R::value_type*>(step), num), void* start, void* step, std::size_t num)
+	IMPLEMENT_INPLACE_VFUNC(fill_consecutive, va::op::consecutive(start, step, num), double start, double step, std::size_t num)
 
 	IMPLEMENT_UNARY_VFUNC(negative, -va::promote::to_num(a))
 	IMPLEMENT_UNARY_VFUNC(sign, xt::sign(va::promote::to_num(a)))

@@ -3,8 +3,8 @@
 
 #include <variant>
 #include <exception>
-#include <xtensor/xshape.hpp>
-#include <xtensor/xcomplex.hpp>
+#include <xtensor/core/xshape.hpp>
+#include <xtensor/misc/xcomplex.hpp>
 
 namespace va {
 	// We should be using the same default types as xarray does, so we know for sure the ones we create /

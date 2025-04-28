@@ -20,8 +20,8 @@
 #include "godot_cpp/variant/variant.hpp"           // for Variant
 #include "nd.hpp"                                    // for nd
 #include "vatensor/varray.hpp"                       // for VArray, VArrayTarget
-#include "xtensor/xiterator.hpp"                   // for operator==
-#include "xtensor/xstrided_view.hpp"               // for xstrided_slice_vector
+#include "xtensor/core/xiterator.hpp"                   // for operator==
+#include "xtensor/views/xstrided_view.hpp"               // for xstrided_slice_vector
 #include "xtl/xiterator_base.hpp"                  // for operator!=
 
 using namespace godot;

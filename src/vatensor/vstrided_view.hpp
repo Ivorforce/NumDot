@@ -1,7 +1,7 @@
 #ifndef VSTRIDED_VIEW_HPP
 #define VSTRIDED_VIEW_HPP
 
-#include <xtensor/xstrided_view.hpp>
+#include <xtensor/views/xstrided_view.hpp>
 
 #include "util.hpp"
 
@@ -29,17 +29,17 @@ namespace va {
             bool has_ellipsis = false;
             for (const auto& el : slices)
             {
-                if (xtl::get_if<xt::xnewaxis_tag>(&el) != nullptr)
+                if (std::get_if<xt::xnewaxis_tag>(&el) != nullptr)
                 {
                     ++dimension;
                     ++n_newaxis;
                 }
-                else if (xtl::get_if<std::ptrdiff_t>(&el) != nullptr)
+                else if (std::get_if<std::ptrdiff_t>(&el) != nullptr)
                 {
                     --dimension;
                     --dimension_check;
                 }
-                else if (xtl::get_if<xt::xellipsis_tag>(&el) != nullptr)
+                else if (std::get_if<xt::xellipsis_tag>(&el) != nullptr)
                 {
                     if (has_ellipsis == true)
                     {
@@ -82,20 +82,20 @@ namespace va {
             for (; i < slices.size(); ++i)
             {
                 i_ax = static_cast<std::size_t>(static_cast<std::ptrdiff_t>(i) - axis_skip);
-                auto ptr = xtl::get_if<std::ptrdiff_t>(&slices[i]);
+                auto ptr = std::get_if<std::ptrdiff_t>(&slices[i]);
                 if (ptr != nullptr)
                 {
                     auto slice0 = static_cast<old_strides_value_type>(*ptr);
                     mod_idx(slice0, shape[i_ax]);  // THIS IS THE ONLY CHANGE WE MADE
                     new_offset += static_cast<std::size_t>(slice0 * old_strides[i_ax]);
                 }
-                else if (xtl::get_if<xt::xnewaxis_tag>(&slices[i]) != nullptr)
+                else if (std::get_if<xt::xnewaxis_tag>(&slices[i]) != nullptr)
                 {
                     new_shape[idx] = 1;
                     base_type::set_fake_slice(idx);
                     ++axis_skip, ++idx;
                 }
-                else if (xtl::get_if<xt::xellipsis_tag>(&slices[i]) != nullptr)
+                else if (std::get_if<xt::xellipsis_tag>(&slices[i]) != nullptr)
                 {
                     for (std::size_t j = 0; j < n_add_all; ++j)
                     {
@@ -106,7 +106,7 @@ namespace va {
                     }
                     axis_skip = axis_skip - static_cast<std::ptrdiff_t>(n_add_all) + 1;
                 }
-                else if (xtl::get_if<xt::xall_tag>(&slices[i]) != nullptr)
+                else if (std::get_if<xt::xall_tag>(&slices[i]) != nullptr)
                 {
                     new_shape[idx] = old_shape[i_ax];
                     new_strides[idx] = old_strides[i_ax];
@@ -120,7 +120,7 @@ namespace va {
                 else
                 {
                     slice_getter.idx = i_ax;
-                    auto info = xtl::visit(slice_getter, slices[i]);
+                    auto info = std::visit(slice_getter, slices[i]);
                     new_offset += static_cast<std::size_t>(info[0] * old_strides[i_ax]);
                     new_shape[idx] = static_cast<std::size_t>(info[1]);
                     new_strides[idx] = info[2] * old_strides[i_ax];
@@ -147,7 +147,7 @@ namespace va {
         {
 	        const auto dimension = shape.size();
 
-	    	if (xtl::get_if<xt::xnewaxis_tag>(&slice)) {
+	    	if (std::get_if<xt::xnewaxis_tag>(&slice)) {
 	    		// Add one dimension by newaxis.
 
 	    		// Dimension + 1 because newaxis at -1 should insert it at the very back.
@@ -177,7 +177,7 @@ namespace va {
 
 	    	auto old_stride = old_strides[axis_ptrdiff];
 
-	        if (auto idx = xtl::get_if<V>(&slice)) {
+	        if (auto idx = std::get_if<V>(&slice)) {
 	        	// Remove one dimension by selection.
 
 	            auto slice0 = *idx;
@@ -203,7 +203,7 @@ namespace va {
 	    	new_strides = old_strides;
 	    	base_type::resize(dimension);
 
-	        if (xtl::get_if<xt::xellipsis_tag>(&slice) || xtl::get_if<xt::xall_tag>(&slice)) {
+	        if (std::get_if<xt::xellipsis_tag>(&slice) || std::get_if<xt::xall_tag>(&slice)) {
 	        	// Trivial, no-op selection.
 		        new_layout = layout;
                 return;
@@ -213,7 +213,7 @@ namespace va {
 
             auto slice_getter = xt::detail::slice_getter_impl<S>(shape);
 	        slice_getter.idx = axis;
-	        auto info = xtl::visit(slice_getter, slice);
+	        auto info = std::visit(slice_getter, slice);
 
 	        new_offset += static_cast<std::size_t>(info[0] * old_stride);
 	        new_shape[axis] = static_cast<std::size_t>(info[1]);

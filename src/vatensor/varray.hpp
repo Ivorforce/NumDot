@@ -15,16 +15,16 @@
 #include <variant>                         // for variant, visit
 #include <vector>                          // for vector
 #include "dtype.hpp"
-#include "xtensor/xadapt.hpp"              // for adapt, default_allocator_f...
-#include "xtensor/xarray.hpp"              // for xarray_container, xarray_a...
-#include "xtensor/xbuffer_adaptor.hpp"     // for no_ownership, xbuffer_adaptor
-#include "xtensor/xlayout.hpp"             // for layout_type
-#include "xtensor/xshape.hpp"              // for dynamic_shape
-#include "xtensor/xstorage.hpp"            // for uvector
-#include "xtensor/xstrided_view.hpp"       // for no_adj_strides_policy, xst...
-#include "xtensor/xstrided_view_base.hpp"  // for strided_view_args
-#include "xtensor/xtensor_forward.hpp"     // for xarray
-#include "xtensor/xutils.hpp"              // for get_strides_t
+#include "xtensor/containers/xadapt.hpp"              // for adapt, default_allocator_f...
+#include "xtensor/containers/xarray.hpp"              // for xarray_container, xarray_a...
+#include "xtensor/containers/xbuffer_adaptor.hpp"     // for no_ownership, xbuffer_adaptor
+#include "xtensor/core/xlayout.hpp"             // for layout_type
+#include "xtensor/core/xshape.hpp"              // for dynamic_shape
+#include "xtensor/containers/xstorage.hpp"            // for uvector
+#include "xtensor/views/xstrided_view.hpp"       // for no_adj_strides_policy, xst...
+#include "xtensor/views/xstrided_view_base.hpp"  // for strided_view_args
+#include "xtensor/core/xtensor_forward.hpp"     // for xarray
+#include "xtensor/utils/xutils.hpp"              // for get_strides_t
 #include "vstrided_view.hpp"
 
 namespace va {

@@ -8,8 +8,8 @@
 #include "vassign.hpp"                    // for assign_nonoverlapping, broadc...
 #include "vpromote.hpp"                   // for promote_value_type_if_needed
 #include "dtype.hpp"
-#include "xtensor/xstorage.hpp"         // for uvector
-#include "xtensor/xtensor_forward.hpp"  // for xarray
+#include "xtensor/containers/xstorage.hpp"         // for uvector
+#include "xtensor/core/xtensor_forward.hpp"  // for xarray
 
 namespace va {
     template<typename OutputType, typename Result>

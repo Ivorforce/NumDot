@@ -31,8 +31,8 @@
 #include "vatensor/create.hpp"              // for full, empty
 #include "vatensor/rearrange.hpp"             // for moveaxis, reshape, transpose
 #include "vatensor/varray.hpp"                // for VArrayTarget, axes_type
-#include "xtensor/xbuilder.hpp"             // for arange, linspace
-#include "xtensor/xlayout.hpp"              // for layout_type
+#include "xtensor/generators/xbuilder.hpp"             // for arange, linspace
+#include "xtensor/core/xlayout.hpp"              // for layout_type
 
 
 using namespace godot;

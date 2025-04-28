@@ -2,15 +2,15 @@
 #define VFUNCS_HPP
 
 #include <xtensor-signal/fft.hpp>
-#include <xtensor/xnorm.hpp>
-#include <xtensor/xpad.hpp>
-#include <xtensor/xrandom.hpp>
-#include <xtensor/xsort.hpp>
+#include <xtensor/reducers/xnorm.hpp>
+#include <xtensor/misc/xpad.hpp>
+#include <xtensor/generators/xrandom.hpp>
+#include <xtensor/misc/xsort.hpp>
 
 #include "vatensor/varray.hpp"
 #include "vatensor/vpromote.hpp"
 #include "vatensor/vassign.hpp"
-#include "xtensor/xoperation.hpp"
+#include "xtensor/core/xoperation.hpp"
 
 #define BIT_SHIFT_SAFE(NAME, OP)\
 struct NAME {\

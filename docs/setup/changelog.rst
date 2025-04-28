@@ -16,6 +16,7 @@ Upcoming Changes (main branch)
 **Fixed**
 
 - ``nd.any`` and ``nd.all`` always incorrectly evaluated to ``true`` and ``false`` respectively.
+- Update to ``xtensor`` ``0.26.0``, ``xsimd`` ``13.2.0``, ``xtl`` ``0.8.0``. This may come with both improvements and regressions.
 
 
 Version 0.8 - 2025-03-05

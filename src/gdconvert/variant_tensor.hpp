@@ -2,7 +2,7 @@
 #define VARIANT_TENSOR_HPP
 
 #include "godot_cpp/variant/variant.hpp"
-#include <xtensor/xadapt.hpp>
+#include <xtensor/containers/xadapt.hpp>
 #include "vatensor/vcarray.hpp"
 
 namespace numdot {

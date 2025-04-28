@@ -2,7 +2,7 @@
 #define TENSOR_FIXED_STORE_HPP
 
 #include <godot_cpp/core/defs.hpp>
-#include <xtensor/xtensor_forward.hpp>
+#include <xtensor/core/xtensor_forward.hpp>
 #include <vatensor/varray.hpp>
 
 #include "variant_tensor.hpp"

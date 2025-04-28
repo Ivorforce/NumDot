@@ -7,7 +7,7 @@
 #include <vatensor/varray.hpp>
 #include "gdextension_interface.h"            // for GDExtensionCallError
 #include "godot_cpp/variant/string_name.hpp"  // for StringName
-#include "xtensor/xstrided_view.hpp"          // for xstrided_slice, xstride...
+#include "xtensor/views/xstrided_view.hpp"          // for xstrided_slice, xstride...
 
 using namespace godot;
 

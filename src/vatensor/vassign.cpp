@@ -4,8 +4,8 @@
 #include <variant>                                      // for visit
 #include "varray.hpp"                            // for VData, VScalar
 #include "create.hpp"
-#include <xtensor/xmasked_view.hpp>
-#include <xtensor/xindex_view.hpp>
+#include <xtensor/views/xmasked_view.hpp>
+#include <xtensor/views/xindex_view.hpp>
 #include "vcarray.hpp"
 #include "vcompute.hpp"
 #include "vpromote.hpp"

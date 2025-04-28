@@ -10,9 +10,9 @@
 #include <variant>                        // for visit
 #include "godot_cpp/variant/array.hpp"    // for Array
 #include "vatensor/varray.hpp"              // for shape_type, DType, VArray
-#include "xtensor/xadapt.hpp"             // for adapt
-#include "xtensor/xbuffer_adaptor.hpp"    // for no_ownership
-#include "xtensor/xlayout.hpp"            // for layout_type
+#include "xtensor/containers/xadapt.hpp"             // for adapt
+#include "xtensor/containers/xbuffer_adaptor.hpp"    // for no_ownership
+#include "xtensor/core/xlayout.hpp"            // for layout_type
 
 class NDArray;
 

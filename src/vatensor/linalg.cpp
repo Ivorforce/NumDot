@@ -4,7 +4,7 @@
 #include <optional>               // for optional
 #include <stdexcept>              // for runtime_error
 #include <vector>                 // for vector
-#include <xtensor/xview.hpp>
+#include <xtensor/views/xview.hpp>
 #include "vfunc/entrypoints.hpp"
 #include "create.hpp"
 #include "rearrange.hpp"
@@ -12,7 +12,7 @@
 #include "varray.hpp"      // for VArray, VArrayTarget, VScalar, axes...
 #include "vcompute.hpp"
 #include "xtensor_store.hpp"
-#include "xtensor/xslice.hpp"     // for all, ellipsis, newaxis, xall_tag
+#include "xtensor/views/xslice.hpp"     // for all, ellipsis, newaxis, xall_tag
 
 
 void va::dot(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b) {

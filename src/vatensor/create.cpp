@@ -9,9 +9,9 @@
 #include "vcompute.hpp"
 #include "vpromote.hpp"
 #include "vcarray.hpp"
-#include "xtensor/xbuilder.hpp"         // for empty
-#include "xtensor/xlayout.hpp"          // for layout_type
-#include "xtensor/xoperation.hpp"       // for cast
+#include "xtensor/generators/xbuilder.hpp"         // for empty
+#include "xtensor/core/xlayout.hpp"          // for layout_type
+#include "xtensor/core/xoperation.hpp"       // for cast
 
 using namespace va;
 

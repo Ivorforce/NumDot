@@ -284,7 +284,7 @@ f"""
 #include "vatensor/vfunc/vfuncs.hpp"
 #include "vatensor/vfunc/tables.hpp"
 #include "vatensor/vfunc/arch_util.hpp"
-#include "xtensor/xoperation.hpp"
+#include "xtensor/core/xoperation.hpp"
 
 namespace {namespace_name} {{
 {declare_str}}}

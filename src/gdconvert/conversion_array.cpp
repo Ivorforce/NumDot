@@ -40,11 +40,11 @@
 #include "tensor_fixed_store.hpp"
 #include "packed_array_store.hpp"
 #include "variant_tensor.hpp"
-#include "xtensor/xarray.hpp"                          // for xarray_adaptor
-#include "xtensor/xbuffer_adaptor.hpp"                 // for xbuffer_adaptor
-#include "xtensor/xlayout.hpp"                         // for layout_type
-#include "xtensor/xstorage.hpp"                        // for svector, uvector
-#include "xtensor/xstrided_view.hpp"                   // for xstrided_slice...
+#include "xtensor/containers/xarray.hpp"                          // for xarray_adaptor
+#include "xtensor/containers/xbuffer_adaptor.hpp"                 // for xbuffer_adaptor
+#include "xtensor/core/xlayout.hpp"                         // for layout_type
+#include "xtensor/containers/xstorage.hpp"                        // for svector, uvector
+#include "xtensor/views/xstrided_view.hpp"                   // for xstrided_slice...
 
 void add_size_at_idx(va::shape_type& shape, const std::size_t idx, const std::size_t value) {
 	if (shape.size() > idx) {
@@ -381,15 +381,15 @@ std::shared_ptr<va::VArray> array_as_varray(const Array& input_array) {
 	if (dtype == va::DTypeMax) dtype = va::Float64; // Default dtype
 
 	std::shared_ptr<va::VArray> varray = va::empty(va::store::default_allocator, dtype, shape);
-	std::vector<std::tuple<xt::xstrided_slice_vector, Array>> next = { std::make_tuple(xt::xstrided_slice_vector {}, input_array) };
+	std::vector<std::tuple<xt::xstrided_slice_vector, Array>> next { std::make_tuple(xt::xstrided_slice_vector {}, input_array) };
 
 	while (!next.empty()) {
 		const auto [array_base_idx, array] = std::move(next.back());
 		next.pop_back();
 
 		for (std::size_t i = 0; i < array.size(); ++i) {
-			auto element_idx = array_base_idx;
-			element_idx.emplace_back(i);
+			xt::xstrided_slice_vector element_idx = array_base_idx;
+			element_idx.push_back(static_cast<std::ptrdiff_t>(i));
 
 			const auto& array_element = array[i];
 			switch (array_element.get_type()) {
@@ -700,7 +700,7 @@ std::vector<std::shared_ptr<va::VArray>> variant_to_vector(const Variant& array)
 			const std::size_t outer_dim_size = gdarray.size();
 			std::vector<std::shared_ptr<va::VArray>> vector(outer_dim_size);
 			for (std::size_t i = 0; i < outer_dim_size; i++) {
-				xt::xstrided_slice_vector idx = {i};
+				xt::xstrided_slice_vector idx {i};
 				vector[i] = variant_as_array(gdarray[static_cast<int64_t>(i)]);
 			}
 			return vector;
@@ -715,7 +715,7 @@ std::vector<std::shared_ptr<va::VArray>> variant_to_vector(const Variant& array)
 	const std::size_t outer_dim_size = ndarray->shape()[0];
 	std::vector<std::shared_ptr<va::VArray>> vector(outer_dim_size);
 	for (std::size_t i = 0; i < outer_dim_size; i++) {
-		xt::xstrided_slice_vector idx = {i};
+		xt::xstrided_slice_vector idx {i};
 		vector[i] = ndarray->sliced(idx);
 	}
 	return vector;

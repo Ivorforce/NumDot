@@ -3,7 +3,7 @@
 
 #include "varray.hpp"
 
-#include "xtensor/xrandom.hpp"                                    // for random engine
+#include "xtensor/generators/xrandom.hpp"                                    // for random engine
 
 namespace va::random {
 	struct VRandomEngine {

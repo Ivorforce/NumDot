@@ -15,9 +15,9 @@
 #include "xscalar_store.hpp"
 #include "dtype.hpp"
 #include "vatensor//varray.hpp"         // for VArray, strides_type, axes_type
-#include "xtensor/xlayout.hpp"        // for layout_type
-#include "xtensor/xmanipulation.hpp"  // for full, transpose, flip, moveaxis
-#include "xtensor/xstrided_view.hpp"  // for reshape_view
+#include "xtensor/core/xlayout.hpp"        // for layout_type
+#include "xtensor/misc/xmanipulation.hpp"  // for full, transpose, flip, moveaxis
+#include "xtensor/views/xstrided_view.hpp"  // for reshape_view
 
 using namespace va;
 

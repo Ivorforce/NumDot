@@ -2,8 +2,8 @@
 #define NUMDOT_VASSIGN_H
 
 #include "varray.hpp"               // for VData, VScalar, ArrayVariant, VArr...
-#include "xtensor/xassign.hpp"    // for assert_compatible_shape, assign_data
-#include "xtensor/xsemantic.hpp"  // for get_rhs_triviality
+#include "xtensor/core/xassign.hpp"    // for assert_compatible_shape, assign_data
+#include "xtensor/core/xsemantic.hpp"  // for get_rhs_triviality
 
 namespace xt {
 	template<class D>

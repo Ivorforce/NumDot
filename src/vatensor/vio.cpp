@@ -1,6 +1,6 @@
 #include "vio.hpp"
 
-#include "xtensor/xnpy.hpp"
+#include "xtensor/io/xnpy.hpp"
 #include "array_store.hpp"
 
 struct membuf : std::streambuf {

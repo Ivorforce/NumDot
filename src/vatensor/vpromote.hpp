@@ -2,8 +2,8 @@
 #define VPROMOTE_H
 
 #include <complex>
-#include <xtensor/xexpression.hpp>
-#include <xtensor/xoperation.hpp>
+#include <xtensor/core/xexpression.hpp>
+#include <xtensor/core/xoperation.hpp>
 #include <xtl/xcomplex.hpp>
 #include "create.hpp"
 #include "xtensor_store.hpp"

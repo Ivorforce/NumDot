@@ -2,7 +2,7 @@
 #define VATENSOR_UFUNC_CONFIG_HPP
 
 #include <vatensor/rearrange.hpp>
-#include <xtensor/xpad.hpp>
+#include <xtensor/misc/xpad.hpp>
 #include "vatensor/vcall.hpp"
 #include "vatensor/vfunc/tables.hpp"
 

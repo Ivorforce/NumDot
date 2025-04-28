@@ -21,8 +21,8 @@
 #include "godot_cpp/variant/vector3i.hpp"            // for Vector3i
 #include "godot_cpp/variant/vector4i.hpp"            // for Vector4i
 #include "ndarray.hpp"                                 // for NDArray
-#include "xtensor/xiterator.hpp"                     // for operator==
-#include "xtensor/xlayout.hpp"                       // for layout_type
+#include "xtensor/core/xiterator.hpp"                     // for operator==
+#include "xtensor/core/xlayout.hpp"                       // for layout_type
 #include "xtl/xiterator_base.hpp"                    // for operator!=
 
 template<typename C>

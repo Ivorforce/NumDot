@@ -35,7 +35,7 @@ xt::xstrided_slice<std::ptrdiff_t> variant_to_slice_part(const Variant& variant)
 		case Variant::NIL:
 			return xt::all();
 		case Variant::INT:
-			return static_cast<int64_t>(variant);
+			return static_cast<std::ptrdiff_t>(static_cast<int64_t>(variant));
 		case Variant::STRING_NAME: {
 			const auto string_name = static_cast<StringName>(variant);
 

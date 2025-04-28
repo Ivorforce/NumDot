@@ -17,6 +17,7 @@ Version 0.9 - 2025-04-29
 ------------------------
 
 **Changed**
+
 - Update ``xtensor`` to ``0.26.0``, ``xsimd`` to ``13.2.0``, ``xtl`` to ``0.8.0``. This may come with both improvements and regressions.
 
 **Fixed**

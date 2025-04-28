@@ -10,13 +10,18 @@ Here you will find the release notes for each version of the library. Each secti
    :local:
    :backlinks: none
 
-Upcoming Changes (main branch)
-------------------------------
+.. Upcoming Changes (main branch)
+.. ------------------------------
+
+Version 0.9 - 2025-04-29
+------------------------
+
+**Changed**
+- Update ``xtensor`` to ``0.26.0``, ``xsimd`` to ``13.2.0``, ``xtl`` to ``0.8.0``. This may come with both improvements and regressions.
 
 **Fixed**
 
 - ``nd.any`` and ``nd.all`` always incorrectly evaluated to ``true`` and ``false`` respectively.
-- Update to ``xtensor`` ``0.26.0``, ``xsimd`` ``13.2.0``, ``xtl`` ``0.8.0``. This may come with both improvements and regressions.
 - Fix ``nd.linspace`` for non-floating types.
 
 

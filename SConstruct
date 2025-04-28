@@ -113,7 +113,7 @@ targets.append(plugin_tool.generate(
     name="NumDot",
     description="NumDot is a tensor math and scientific computation library for the Godot Engine.",
     author="Lukas Tenbrink and NumDot contributors.",
-    version="0.8",
+    version="0.9",
 ))
 
 targets.extend(library_targets)

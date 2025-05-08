@@ -50,6 +50,11 @@ def generate(env, godot_cpp_env, sources):
 
     is_msvc = "is_msvc" in env and env["is_msvc"]
 
+    if env.get("is_msvc", False):
+        env.Append(CXXFLAGS=["/std:c++20"])
+    else:
+        env.Append(CXXFLAGS=["-std=c++20"])
+
     if env["use_xsimd"] == "auto":
         use_xsimd = True
     else:

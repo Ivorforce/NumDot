@@ -37,6 +37,7 @@ jobs:
         with:
           platform: ${{ matrix.target.platform }}
           em-version: '3.1.55'  # FIXME Doesn't compile on the newest, xtensor has problems
+          ndk-version: 'r27c'
       - name: Cache .scons_cache
         uses: actions/cache@v4
         with:

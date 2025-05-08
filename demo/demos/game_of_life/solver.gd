@@ -8,7 +8,7 @@ func initialize() -> void:
 
 func simulation_step() -> void:
 	pass
-	
+
 func on_draw() -> void:
 	pass
 

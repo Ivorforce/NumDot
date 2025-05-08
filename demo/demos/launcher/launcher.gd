@@ -13,7 +13,7 @@ func _ready() -> void:
 		card.set_data(demo)
 		demo_list.add_child(card)
 		demo_list.add_spacer(false)
-		
+
 func _process(delta: float) -> void:
 	pass
 
@@ -34,6 +34,6 @@ func read_json(path: String) -> void:
 				print(data["path"] + " missing main.tscn!")
 		else:
 			print("JSON file (" + path + ") is missing required keys (name, description, link).")
-		
+
 func _on_texture_button_pressed() -> void:
 	OS.shell_open("https://godotengine.org/asset-library/asset/3351")

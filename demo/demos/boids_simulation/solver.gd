@@ -1,16 +1,13 @@
 extends Node
-class_name SIRSolver
+class_name BoidsSolver
 
 @export var params: Node2D
 
 func initialize() -> void:
 	pass
 
-func simulation_step() -> void:
-	pass
-	
-func on_draw() -> void:
+func simulation_step(delta: float) -> void:
 	pass
 
-func place_random() -> void:
+func update_boids() -> void:
 	pass

@@ -6,18 +6,19 @@ extends BoidsSolver
 var position: Vector2 = Vector2(500, 500) # position vector
 #var velocity: Vector2 = Vector2.ZERO
 
-#var texture = preload("res://demos/boids_simulation/boid.png")
+var texture = preload("res://demos/boids_simulation/boid.png")
 
-#@onready var boid_sprite: Sprite2D = $Sprite2D
+@onready var boid_sprite: Sprite2D = $/root/BoidsModel/Sprite2D
 
 func initialize() -> void:#
 	
 		# Load the boid sprite
 	
-	#boid_sprite.texture = texture
+	boid_sprite.texture = texture
 	
-	# Set the initial position
-	#boid_sprite.position = position
+	# Set the initial position and size
+	boid_sprite.scale = Vector2(0.1, 0.1)
+	boid_sprite.position = position
 	
 	
 	# create position vector and initialize with random Vector2s inside screen

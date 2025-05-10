@@ -1,5 +1,7 @@
 extends BoidsSolver
 
+var position: Vector2 = Vector2(500, 500)
+
 func initialize() -> void:#
 	
 		# Load the boid sprite

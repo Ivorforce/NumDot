@@ -4,9 +4,9 @@ extends BoidsSolver
 # params is set to BoidsModel and can be modified in Editor and in boids_model.gd
 
 var position: Vector2 = Vector2(500, 500) # position vector
-var velocity: Vector2 = Vector2.ZERO
+#var velocity: Vector2 = Vector2.ZERO
 
-var texture = preload("res://demos/boids_simulation/boid.png")
+#var texture = preload("res://demos/boids_simulation/boid.png")
 
 #@onready var boid_sprite: Sprite2D = $Sprite2D
 

@@ -9,7 +9,7 @@ extends Node2D
 
 
 
-@export var N: int = 1
+@export var N: int = 20
 # Implement slider functionalities for:
 	# Number of Boids
 	# Speed
@@ -28,7 +28,8 @@ func _ready() -> void:
 	# Add border around screen redirecting boids to screen center
 	
 
-	
+	#TODO fix workaround below 
+	self.solver = $Solvers/GDSolver
 	solver.initialize()
 	pass
 
@@ -38,5 +39,20 @@ func _process(delta: float) -> void:
 
 	pass
 
+func _on_point_slider_drag_ended(value_changed: bool) -> void:
+	N = %PointSlider.value
+	%PointLabel.text = "Grid: " + str(N) + "x" + str(N)
+	#resize_image()
+	solver.initialize()
 
+#func _on_steps_per_second_slider_drag_ended(value_changed: bool) -> void:
+	#steps_per_second = %StepsPerSecondSlider.value
+	#%StepsPerSecondLabel.text = "Speed: %.2f" % steps_per_second
+
+func _on_restart_button_pressed() -> void:
+	solver.initialize()
+
+func _on_solver_option_item_selected(index: int) -> void:
+	solver = $Solvers.get_child(index)
+	solver.initialize()
 # TODO handle GUI inputs

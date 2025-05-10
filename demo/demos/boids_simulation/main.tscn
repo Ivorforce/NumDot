@@ -9,9 +9,6 @@
 [node name="BoidsModel" type="Node2D"]
 script = ExtResource("1_2fw6l")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(395.3, 326.62)
-
 [node name="Solvers" type="Node" parent="."]
 
 [node name="GDSolver" type="Node" parent="Solvers" node_paths=PackedStringArray("params")]

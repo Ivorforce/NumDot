@@ -1,8 +1,15 @@
-extends Node
-
-@export var params: Node2D
+extends Node2D
 
 
+@export_category("Simulation parameters")
+@export var solver: BoidsSolver
+
+
+
+
+
+
+@export var N: int = 1
 # Implement slider functionalities for:
 	# Number of Boids
 	# Speed
@@ -14,12 +21,15 @@ extends Node
 # Implement reset
 
 func _ready() -> void:
+	
 	# Set correct values in GUI
 
 	# Initialize boids as scenes from res://demos/boids_simulation/boid.tscn
 	# Add border around screen redirecting boids to screen center
+	
 
-	#solver.initialize()
+	
+	solver.initialize()
 	pass
 
 func _process(delta: float) -> void:

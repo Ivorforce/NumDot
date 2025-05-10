@@ -6,8 +6,8 @@ class_name BoidsSolver
 func initialize() -> void:
 	pass
 
-func simulation_step(delta: float) -> void:
-	pass
+#func simulation_step(delta: float) -> void:
+	#pass
 
 func update_boids() -> void:
 	pass

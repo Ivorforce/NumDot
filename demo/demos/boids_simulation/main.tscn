@@ -6,9 +6,11 @@
 
 [sub_resource type="ImageTexture" id="ImageTexture_03ndn"]
 
-[node name="BoidsModel" type="Node2D" node_paths=PackedStringArray("params")]
+[node name="BoidsModel" type="Node2D"]
 script = ExtResource("1_2fw6l")
-params = NodePath(".")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(395.3, 326.62)
 
 [node name="Solvers" type="Node" parent="."]
 

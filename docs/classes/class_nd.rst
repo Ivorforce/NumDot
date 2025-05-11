@@ -234,7 +234,7 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`real<class_nd_method_real>`\ (\ v\: ``Variant``\ ) |static|                                                                                                                           |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`NDArray<class_NDArray>`                              | :ref:`reduce_dot<class_nd_method_reduce_dot>`\ (\ a\: ``Variant``, b\: ``Variant``, axes\: ``Variant`` = null\ ) |static|                                                                   |
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`sum_product<class_nd_method_reduce_dot>`\ (\ a\: ``Variant``, b\: ``Variant``, axes\: ``Variant`` = null\ ) |static|                                                                   |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`remainder<class_nd_method_remainder>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1881,13 +1881,13 @@ If the argument is not complex, returns the argument.
 
 .. rst-class:: classref-method
 
-:ref:`NDArray<class_NDArray>` **reduce_dot**\ (\ a\: ``Variant``, b\: ``Variant``, axes\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_reduce_dot>`
+:ref:`NDArray<class_NDArray>` **sum_product**\ (\ a\: ``Variant``, b\: ``Variant``, axes\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_reduce_dot>`
 
 Dot product of two arrays along the given axes.
 
 Equivalent to ``nd.sum(nd.multiply(a, b), axes)``.
 
-Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.reduce_dot<class_ndf_method_reduce_dot>` or :ref:`ndi.reduce_dot<class_ndi_method_reduce_dot>`.
+Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.sum_product<class_ndf_method_reduce_dot>` or :ref:`ndi.sum_product<class_ndi_method_reduce_dot>`.
 
 .. rst-class:: classref-item-separator
 

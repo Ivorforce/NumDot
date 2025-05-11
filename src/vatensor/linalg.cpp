@@ -155,13 +155,13 @@ void va::matmul(VStoreAllocator& allocator, const VArrayTarget& target, const VD
 	}
 	if (va::dimension(b) == 1) {
 		auto axes = axes_type {-1};
-		va::reduce_dot(allocator, target, a, b, &axes);
+		va::sum_product(allocator, target, a, b, &axes);
 		return;
 	}
 	if (va::dimension(a) == 1) {
 		const auto promoted_a = va::sliced_data(a, {xt::all(), xt::newaxis()});
 		auto axes = axes_type {-2};
-		va::reduce_dot(allocator, target, promoted_a, b, &axes);
+		va::sum_product(allocator, target, promoted_a, b, &axes);
 		return;
 	}
 
@@ -169,7 +169,7 @@ void va::matmul(VStoreAllocator& allocator, const VArrayTarget& target, const VD
 	auto b_broadcast = va::sliced_data(b, { xt::ellipsis(), xt::newaxis(), xt::all(), xt::all() });
 
 	auto axes = axes_type {-2};
-	reduce_dot(allocator, target, a_broadcast, b_broadcast, &axes);
+	sum_product(allocator, target, a_broadcast, b_broadcast, &axes);
 }
 
 void va::outer(VStoreAllocator& allocator, const VArrayTarget& target, const std::shared_ptr<VArray>& a, const std::shared_ptr<VArray>& b) {
@@ -190,5 +190,5 @@ void va::inner(VStoreAllocator& allocator, const VArrayTarget& target, const VDa
 		axes[i] = -i - 1;
 	}
 
-	reduce_dot(allocator, target, a, b, &axes);
+	sum_product(allocator, target, a, b, &axes);
 }

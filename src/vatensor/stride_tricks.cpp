@@ -60,7 +60,7 @@ void va::convolve(VStoreAllocator& allocator, const VArrayTarget& target, const 
 	// TODO Could use support for kernel size > array, which is still a valid convolution.
 	// In that case it's just the kernel that acts as the array.
 
-	// Simple 'direct' method just involves reduce_dot and sliding window view.
+	// Simple 'direct' method just involves sum_product and sliding window view.
 	const std::size_t convolve_dimensions = kernel.dimension();
 
 	const auto sliding_view = sliding_window_view(array, kernel.shape());
@@ -68,5 +68,5 @@ void va::convolve(VStoreAllocator& allocator, const VArrayTarget& target, const 
 	axes_type axes(convolve_dimensions);
 	for (int i = 0; i < convolve_dimensions; i++) axes[i] = -convolve_dimensions + i;
 
-	va::reduce_dot(allocator, target, sliding_view->data, kernel.data, &axes);
+	va::sum_product(allocator, target, sliding_view->data, kernel.data, &axes);
 }

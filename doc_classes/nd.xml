@@ -937,7 +937,7 @@
 				If the argument is not complex, returns the argument.
 			</description>
 		</method>
-		<method name="reduce_dot" qualifiers="static">
+		<method name="sum_product" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
@@ -945,7 +945,7 @@
 			<description>
 				Dot product of two arrays along the given axes.
 				Equivalent to [code]nd.sum(nd.multiply(a, b), axes)[/code].
-				Returns a 0-dimension scalar if axes is null. In that case, consider [method ndf.reduce_dot] or [method ndi.reduce_dot].
+				Returns a 0-dimension scalar if axes is null. In that case, consider [method ndf.sum_product] or [method ndi.sum_product].
 			</description>
 		</method>
 		<method name="remainder" qualifiers="static">

@@ -1,6 +1,6 @@
 #include "ndf.hpp"
 
-#include <vatensor/linalg.hpp>                  // for reduce_dot
+#include <vatensor/linalg.hpp>                  // for sum_product
 #include <cmath>                              // for double_t, isinf
 #include <cstdint>                            // for int64_t
 #include <stdexcept>                          // for runtime_error
@@ -29,7 +29,7 @@ void ndf::_bind_methods() {
 	godot::ClassDB::bind_static_method("ndf", D_METHOD("norm", "a", "ord"), &ndf::norm, DEFVAL(2));
 	godot::ClassDB::bind_static_method("ndf", D_METHOD("trace", "v", "offset", "axis1", "axis2"), &ndf::trace, DEFVAL(0), DEFVAL(0), DEFVAL(1));
 
-	godot::ClassDB::bind_static_method("ndf", D_METHOD("reduce_dot", "a", "b"), &ndf::reduce_dot);
+	godot::ClassDB::bind_static_method("ndf", D_METHOD("sum_product", "a", "b"), &ndf::sum_product);
 }
 
 #define REDUCTION1(func, varray1) \
@@ -100,8 +100,8 @@ double_t ndf::trace(const Variant& v, int64_t offset, int64_t axis1, int64_t axi
 	}, v);
 }
 
-double_t ndf::reduce_dot(const Variant& a, const Variant& b) {
-	return REDUCTION2(reduce_dot, a, b);
+double_t ndf::sum_product(const Variant& a, const Variant& b) {
+	return REDUCTION2(sum_product, a, b);
 }
 
 #undef REDUCTION1

@@ -130,7 +130,7 @@ namespace va::vfunc::tables {
 	VA_TABLES_EXTERN UFuncTableUnary fft;
 	VA_TABLES_EXTERN UFuncTableUnary pad;
 
-	VA_TABLES_EXTERN UFuncTableBinary reduce_dot;
+	VA_TABLES_EXTERN UFuncTableBinary sum_product;
 
 	VA_TABLES_EXTERN UFuncTableBinary a0xb1_minus_a1xb0;
 }

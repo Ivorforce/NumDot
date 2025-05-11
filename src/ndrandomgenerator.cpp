@@ -1,7 +1,7 @@
 #include "ndrandomgenerator.hpp"
 
 #include <gdconvert/conversion_ints.hpp>             // for variants_to_axes
-#include <vatensor/linalg.hpp>                       // for reduce_dot, dot
+#include <vatensor/linalg.hpp>                       // for sum_product, dot
 #include <vatensor/vassign.hpp>                      // for assign
 #include <algorithm>                               // for copy
 #include <cstddef>                                 // for size_t

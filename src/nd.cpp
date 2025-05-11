@@ -1,6 +1,6 @@
 #include "nd.hpp"
 
-#include <vatensor/linalg.hpp>                // for reduce_dot, dot, matmul
+#include <vatensor/linalg.hpp>                // for sum_product, dot, matmul
 #include <vatensor/vassign.hpp>               // for assign
 #include "vatensor/vfunc/entrypoints.hpp"
 #include <cmath>                            // for double_t, isinf
@@ -217,7 +217,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("bitwise_right_shift", "a", "b"), &nd::bitwise_right_shift);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("dot", "a", "b"), &nd::dot);
-	godot::ClassDB::bind_static_method("nd", D_METHOD("reduce_dot", "a", "b", "axes"), &nd::reduce_dot, DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("sum_product", "a", "b", "axes"), &nd::sum_product, DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("matmul", "a", "b"), &nd::matmul);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("cross", "a", "b", "axisa", "axisb", "axisc"), &nd::cross, DEFVAL(-1), DEFVAL(-1), DEFVAL(-1));
 
@@ -1212,8 +1212,8 @@ Ref<NDArray> nd::dot(const Variant& a, const Variant& b) {
 	return VARRAY_MAP2(dot, a, b);
 }
 
-Ref<NDArray> nd::reduce_dot(const Variant& a, const Variant& b, const Variant& axes) {
-	return REDUCTION2(reduce_dot, a, b, axes);
+Ref<NDArray> nd::sum_product(const Variant& a, const Variant& b, const Variant& axes) {
+	return REDUCTION2(sum_product, a, b, axes);
 }
 
 Ref<NDArray> nd::matmul(const Variant& a, const Variant& b) {

@@ -492,7 +492,7 @@
 			<param index="1" name="b" type="Variant" />
 			<param index="2" name="axes" type="Variant" default="null" />
 			<description>
-				In-place version of [method nd.reduce_dot].
+				In-place version of [method nd.sum_product].
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>

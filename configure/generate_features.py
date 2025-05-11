@@ -273,7 +273,7 @@ def main():
 	vfuncs.append({
 		# Copy 'multiply' type info.
 		**[vfunc for vfunc in vfuncs if vfunc["name"] == "multiply"][0],
-		"name": "reduce_dot",
+		"name": "sum_product",
 		"vargs": ["const va::axes_type*"]
 	})
 	vfuncs.append({

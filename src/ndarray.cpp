@@ -1,7 +1,7 @@
 #include "ndarray.hpp"
 
 #include <gdconvert/conversion_ints.hpp>             // for variants_to_axes
-#include <vatensor/linalg.hpp>                       // for reduce_dot, dot
+#include <vatensor/linalg.hpp>                       // for sum_product, dot
 #include <vatensor/vassign.hpp>                      // for assign
 #include <vatensor/xtensor_store.hpp>                        // for abs, add, clip
 #include <vatensor/vcarray.hpp>                        // fill_c_array_flat
@@ -1108,7 +1108,7 @@ Ref<NDArray> NDArray::assign_dot(const Variant& a, const Variant& b) {
 }
 
 Ref<NDArray> NDArray::assign_reduce_dot(const Variant& a, const Variant& b, const Variant& axes) {
-	REDUCTION2(reduce_dot, a, b, axes);
+	REDUCTION2(sum_product, a, b, axes);
 }
 
 Ref<NDArray> NDArray::assign_matmul(const Variant& a, const Variant& b) {

@@ -1109,7 +1109,7 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 :ref:`NDArray<class_NDArray>` **assign_reduce_dot**\ (\ a\: ``Variant``, b\: ``Variant``, axes\: ``Variant`` = null\ ) :ref:`🔗<class_NDArray_method_assign_reduce_dot>`
 
-In-place version of :ref:`nd.reduce_dot<class_nd_method_reduce_dot>`.
+In-place version of :ref:`nd.sum_product<class_nd_method_reduce_dot>`.
 
 Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 

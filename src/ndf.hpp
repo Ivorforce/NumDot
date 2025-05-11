@@ -40,7 +40,7 @@ public:
 	//	static bool any(const Variant& a);
 
 	// Linalg.
-	static double_t reduce_dot(const Variant& a, const Variant& b);
+	static double_t sum_product(const Variant& a, const Variant& b);
 };
 
 #endif

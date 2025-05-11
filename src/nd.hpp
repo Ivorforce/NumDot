@@ -101,6 +101,7 @@ public:
 	static TypedArray<NDArray> split(const Variant& v, const Variant& indices_or_section_size, int64_t axis);
 	static TypedArray<NDArray> hsplit(const Variant& v, const Variant& indices_or_section_size);
 	static TypedArray<NDArray> vsplit(const Variant& v, const Variant& indices_or_section_size);
+	static Ref<NDArray> squeeze(const Variant& v);
 
 	// Complex.
 	static Ref<NDArray> real(const Variant& a);
@@ -216,6 +217,10 @@ public:
 	static Ref<NDArray> fft(const Variant& array, int64_t axis);
 	static Ref<NDArray> fft_freq(int64_t n, double_t freq);
 	static Ref<NDArray> pad(const Variant& array, const Variant& pad_width, PadMode pad_mode = PadMode::Constant, const Variant& pad_value = 0);
+
+	// Vector and Matrix.
+	static Ref<NDArray> outer(const Variant& a, const Variant& b);
+	static Ref<NDArray> inner(const Variant& a, const Variant& b);
 
 	// IO.
 	static Ref<NDArray> load(const Variant& variant);

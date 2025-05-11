@@ -43,15 +43,6 @@ std::shared_ptr<VArray> va::transpose(const VArray& varray) {
 	return va::transpose(varray, permutation_);
 }
 
-std::shared_ptr<VArray> va::reshape(const VArray& varray, strides_type new_shape) {
-	return map(
-		[new_shape](auto& array) {
-			auto new_shape_ = new_shape;
-			return xt::reshape_view(array, new_shape_);
-		}, varray
-	);
-}
-
 std::shared_ptr<VArray> va::swapaxes(const VArray& varray, std::ptrdiff_t a, std::ptrdiff_t b) {
 	return map(
 		[a, b](auto& array) {
@@ -325,4 +316,20 @@ std::shared_ptr<VArray> va::vector_as_complex(VStoreAllocator& allocator, const 
 	const auto float_array = va::copy_as_dtype(allocator, varray.data, comp_dtype);
 	// Call ourselves again, though this time we should get a view for sure.
 	return vector_as_complex(allocator, *float_array, dtype, keepdims);
+}
+
+std::shared_ptr<VArray> va::squeeze(const std::shared_ptr<VArray>& varray) {
+	xt::xstrided_slice_vector v;
+	const shape_type &shape = varray->shape();
+	if (std::ranges::count(shape, 1) == 0) {
+		return varray;
+	}
+
+	// Not the most efficient way, but eh.
+	v.resize(shape.size());
+	for (int i = 0; i < shape.size(); ++i) {
+		v[i] = shape[i] == 1 ? xt::xstrided_slice<std::ptrdiff_t>(0) : xt::xstrided_slice<std::ptrdiff_t>(xt::xall_tag{});
+	}
+
+	return varray->sliced(v);
 }

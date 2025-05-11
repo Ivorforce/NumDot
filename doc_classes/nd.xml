@@ -539,6 +539,15 @@
 				If the argument is not complex, returns a non-writeable array.
 			</description>
 		</method>
+		<method name="inner" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+				Inner product of two arrays.
+				Ordinary inner product of vectors for 1-D arrays (without complex conjugation), in higher dimensions a sum product over the last axes.
+			</description>
+		</method>
 		<method name="int8" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="array" type="Variant" />
@@ -822,6 +831,15 @@
 				DType and shape will, if supplied, override the values inferred from the given array.
 			</description>
 		</method>
+		<method name="outer" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+				Compute the outer product of two vectors.
+				Both vectors are flattened before the operation.
+			</description>
+		</method>
 		<method name="pad" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="v" type="Variant" />
@@ -996,6 +1014,13 @@
 			<param index="0" name="a" type="Variant" />
 			<description>
 				Return the element-wise square of the input.
+			</description>
+		</method>
+		<method name="squeeze" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="v" type="Variant" />
+			<description>
+				Remove axes of length one from [param v].
 			</description>
 		</method>
 		<method name="stack" qualifiers="static">
@@ -1249,6 +1274,8 @@
 		</constant>
 		<constant name="UInt64" value="12" enum="DType">
 			Unsigned integer type with 64 bits. This dtype cannot express negative values.
+		</constant>
+		<constant name="DTypeMax" value="13" enum="DType">
 		</constant>
 		<constant name="Constant" value="0" enum="PadMode">
 			Pads with a constant value, given by pad_value.

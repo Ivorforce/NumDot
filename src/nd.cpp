@@ -118,6 +118,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("split", "v", "indices_or_section_size", "axis"), &nd::split, DEFVAL(0));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("hsplit", "v", "indices_or_section_size"), &nd::hsplit);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("vsplit", "v", "indices_or_section_size"), &nd::vsplit);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("squeeze", "v"), &nd::squeeze);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("real", "v"), &nd::real);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("imag", "v"), &nd::imag);
@@ -220,6 +221,9 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("fft", "v", "axis"), &nd::fft, DEFVAL(-1));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("fft_freq", "n", "d"), &nd::fft_freq, DEFVAL(1));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("pad", "v", "pad_width", "pad_mode", "pad_value"), &nd::pad, DEFVAL(nd::PadMode::Constant), DEFVAL(0));
+
+	godot::ClassDB::bind_static_method("nd", D_METHOD("outer", "a", "b"), &nd::outer);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("inner", "a", "b"), &nd::inner);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("load", "file_or_buffer"), &nd::load);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("dumpb", "array"), &nd::dumpb);
@@ -586,7 +590,7 @@ Ref<NDArray> nd::reshape(const Variant& a, const Variant& shape) {
 		//  We should probably decouple them when we add better shape checks.
 		const auto new_shape_ = variant_to_axes(shape);
 
-		return { memnew(NDArray(va::reshape(*a_, new_shape_))) };
+		return { memnew(NDArray(va::reshape(va::store::default_allocator, a_, new_shape_))) };
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
@@ -845,6 +849,16 @@ TypedArray<NDArray> nd::hsplit(const Variant& v, const Variant& indices_or_secti
 
 TypedArray<NDArray> nd::vsplit(const Variant& v, const Variant& indices_or_section_size) {
 	return nd::split(v, indices_or_section_size, 0);
+}
+
+Ref<NDArray> nd::squeeze(const Variant& v) {
+	try {
+		const auto array = variant_as_array(v);
+		return { memnew(NDArray(va::squeeze(array))) };
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
 }
 
 Ref<NDArray> nd::real(const Variant& v) {
@@ -1268,6 +1282,14 @@ Ref<NDArray> nd::pad(const Variant& array, const Variant& pad_width, PadMode pad
 			va::pad(va::store::default_allocator, target, *a, pad_width, pad_mode_xt, pad_value_scalar);
 		}, pad_width_variant);
 	}, array);
+}
+
+Ref<NDArray> nd::outer(const Variant& a, const Variant& b) {
+	return VARRAY_MAP2(outer, a, b);
+}
+
+Ref<NDArray> nd::inner(const Variant& a, const Variant& b) {
+	return VARRAY_MAP2(inner, a, b);
 }
 
 Ref<NDArray> nd::load(const Variant& variant) {

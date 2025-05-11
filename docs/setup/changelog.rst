@@ -10,8 +10,18 @@ Here you will find the release notes for each version of the library. Each secti
    :local:
    :backlinks: none
 
-.. Upcoming Changes (main branch)
-.. ------------------------------
+Upcoming Changes (main branch)
+------------------------------
+
+**Added**
+
+- ``nd.outer`` and ``nd.inner`` functions for dedicated vector multiplication.
+- ``nd.squeeze`` function.
+
+**Changed**
+
+- ``nd.reshape`` no longer re-interprets the previous shape (if layout is not row-major). Instead, it iterates the previous array in the correct order, filling elements one by one.
+- ``nd.flatten`` no longer makes a copy if it doesn't need to.
 
 Version 0.9 - 2025-04-29
 ------------------------

@@ -4,6 +4,7 @@
 #include <optional>               // for optional
 #include <stdexcept>              // for runtime_error
 #include <vector>                 // for vector
+#include <godot_cpp/core/math.hpp>
 #include <xtensor/views/xview.hpp>
 #include "vfunc/entrypoints.hpp"
 #include "create.hpp"
@@ -169,4 +170,50 @@ void va::matmul(VStoreAllocator& allocator, const VArrayTarget& target, const VD
 
 	auto axes = axes_type {-2};
 	reduce_dot(allocator, target, a_broadcast, b_broadcast, &axes);
+}
+
+void va::outer(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b) {
+	const shape_type &a_shape = va::shape(a);
+	const shape_type &b_shape = va::shape(b);
+
+	xt::xstrided_slice_vector a_slice;
+	a_slice.reserve(a_shape.size());
+	xt::xstrided_slice_vector b_slice;
+	b_slice.reserve(b_shape.size());
+
+	for (auto size : a_shape) {
+		if (size == 1) {
+			a_slice.emplace_back(0);
+		}
+		else {
+			a_slice.emplace_back(xt::xall_tag{});
+			b_slice.emplace_back(xt::xnewaxis_tag{});
+		}
+	}
+	for (auto size : b_shape) {
+		if (size == 1) {
+			b_slice.emplace_back(0);
+		}
+		else {
+			b_slice.emplace_back(xt::xall_tag{});
+			a_slice.emplace_back(xt::xnewaxis_tag{});
+		}
+	}
+
+	VData a_sliced = sliced_data(a, a_slice);
+	VData b_sliced = sliced_data(b, b_slice);
+
+	multiply(allocator, target, a_sliced, b_sliced);
+}
+
+void va::inner(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b) {
+	const size_t n_axes = godot::Math::min(va::dimension(a), va::dimension(b));
+
+	va::axes_type axes;
+	axes.resize(n_axes);
+	for (std::ptrdiff_t i = 0; i < static_cast<std::ptrdiff_t>(n_axes); ++i) {
+		axes[i] = -i - 1;
+	}
+
+	reduce_dot(allocator, target, a, b, &axes);
 }

@@ -15,8 +15,9 @@ protected:
 	static void _bind_methods();
 
 public:
-	ndb();
-	~ndb();
+	ndb() {
+		ERR_FAIL_MSG("This class should not be constructed. It's just a namespace.");
+	}
 
 	// Logical.
 	static bool all(const Variant& a);

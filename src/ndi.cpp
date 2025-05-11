@@ -30,9 +30,6 @@ void ndi::_bind_methods() {
 	godot::ClassDB::bind_static_method("ndi", D_METHOD("reduce_dot", "a", "b"), &ndi::reduce_dot);
 }
 
-ndi::ndi() = default;
-ndi::~ndi() = default;
-
 #define REDUCTION1(func, varray1) \
 	numdot::reduction_new<int64_t>([](const va::VArrayTarget& target, const va::VArray& array) { va::func(va::store::default_allocator, target, array.data, nullptr); }, (varray1))
 

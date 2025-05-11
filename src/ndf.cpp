@@ -32,9 +32,6 @@ void ndf::_bind_methods() {
 	godot::ClassDB::bind_static_method("ndf", D_METHOD("reduce_dot", "a", "b"), &ndf::reduce_dot);
 }
 
-ndf::ndf() = default;
-ndf::~ndf() = default;
-
 #define REDUCTION1(func, varray1) \
 numdot::reduction_new<double_t>([](const va::VArrayTarget& target, const va::VArray& array) { va::func(va::store::default_allocator, target, array.data, nullptr); }, (varray1))
 

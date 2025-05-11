@@ -19,8 +19,9 @@ protected:
 	static void _bind_methods();
 
 public:
-	ndf();
-	~ndf();
+	ndf() {
+		ERR_FAIL_MSG("This class should not be constructed. It's just a namespace.");
+	}
 
 	// Reductions.
 	static double_t sum(const Variant& a);

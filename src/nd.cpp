@@ -229,9 +229,6 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("dumpb", "array"), &nd::dumpb);
 }
 
-nd::nd() = default;
-nd::~nd() = default;
-
 template<typename Visitor, typename... Args>
 Ref<NDArray> map_variants_as_arrays(Visitor&& visitor, const Args&... args) {
 	try {

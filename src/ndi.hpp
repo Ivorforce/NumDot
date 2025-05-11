@@ -18,8 +18,9 @@ protected:
 	static void _bind_methods();
 
 public:
-	ndi();
-	~ndi();
+	ndi() {
+		ERR_FAIL_MSG("This class should not be constructed. It's just a namespace.");
+	}
 
 	// Reductions.
 	static int64_t sum(const Variant& a);

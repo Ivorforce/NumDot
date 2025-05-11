@@ -35,8 +35,9 @@ public:
 		Edge
 	};
 
-	nd();
-	~nd();
+	nd() {
+		ERR_FAIL_MSG("This class should not be constructed. It's just a namespace.");
+	}
 
 	// Constants.
 	static StringName newaxis();

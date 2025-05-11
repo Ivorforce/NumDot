@@ -25,6 +25,10 @@ Upcoming Changes (main branch)
 - ``nd.reshape`` no longer re-interprets the previous shape (if layout is not row-major). Instead, it iterates the previous array in the correct order, filling elements one by one.
 - ``nd.flatten`` no longer makes a copy if it doesn't need to.
 
+**Fixed**
+
+- ``array.get(0)`` and ``array.get(&"newaxis")`` no longer fails or crashes the program.
+
 Version 0.9 - 2025-04-29
 ------------------------
 

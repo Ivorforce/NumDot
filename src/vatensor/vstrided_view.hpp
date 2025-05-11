@@ -147,6 +147,8 @@ namespace va {
         {
 	        const auto dimension = shape.size();
 
+	    	new_offset = base_offset;
+
 	    	if (std::get_if<xt::xnewaxis_tag>(&slice)) {
 	    		// Add one dimension by newaxis.
 
@@ -159,12 +161,12 @@ namespace va {
 	    		new_shape.resize(dimension + 1);
 	    		std::copy_n(shape.begin(), axis, new_shape.begin());
 	    		new_shape[axis] = 1;
-	    		std::copy_n(shape.begin() + axis + 1, dimension - axis, new_shape.begin() + axis);
+	    		std::copy_n(shape.begin() + axis, dimension - axis, new_shape.begin() + axis + 1);
 
 	    		new_strides.resize(dimension + 1);
 	    		std::copy_n(old_strides.begin(), axis, new_strides.begin());
 	    		new_strides[axis] = 0;
-	    		std::copy_n(old_strides.begin() + axis + 1, dimension - axis, new_strides.begin() + axis);
+	    		std::copy_n(old_strides.begin() + axis, dimension - axis, new_strides.begin() + axis + 1);
 
 	    		base_type::resize(dimension + 1);
 	    		new_layout = do_strides_match(new_shape, new_strides, layout, true) ? layout : xt::layout_type::dynamic;
@@ -186,11 +188,11 @@ namespace va {
 
 	            new_shape.resize(dimension - 1);
 	            std::copy_n(shape.begin(), axis, new_shape.begin());
-	            std::copy_n(shape.begin() + axis, dimension - axis, new_shape.begin() + axis);
+	            std::copy_n(shape.begin() + axis + 1, dimension - axis, new_shape.begin() + axis);
 
 	            new_strides.resize(dimension - 1);
 	            std::copy_n(old_strides.begin(), axis, new_strides.begin());
-	            std::copy_n(old_strides.begin() + axis, dimension - axis, new_strides.begin() + axis);
+	            std::copy_n(old_strides.begin() + axis + 1, dimension - axis, new_strides.begin() + axis);
 
 	            base_type::resize(dimension - 1);
 	            new_layout = do_strides_match(new_shape, new_strides, layout, true) ? layout : xt::layout_type::dynamic;
@@ -198,7 +200,6 @@ namespace va {
 	        	return;
 	        }
 
-	    	new_offset = base_offset;
 	    	new_shape = shape;
 	    	new_strides = old_strides;
 	    	base_type::resize(dimension);

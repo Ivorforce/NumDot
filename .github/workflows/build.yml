@@ -13,7 +13,7 @@ jobs:
         #  so it's appropriate NumDot also only ships with single builds by default.
         target:
           - { platform: linux, arch: x86_64, os: ubuntu-22.04 }
-          - { platform: linux, arch: x86_32, os: ubuntu-22.04 }
+#          - { platform: linux, arch: x86_32, os: ubuntu-22.04 } # Broken right now
           - { platform: linux, arch: arm64, os: ubuntu-22.04-arm }
           - { platform: linux, arch: arm32, os: ubuntu-22.04-arm }
           - { platform: windows, arch: x86_64, os: windows-latest }

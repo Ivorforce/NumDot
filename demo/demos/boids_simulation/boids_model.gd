@@ -35,6 +35,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	# Call simulation_step(delta)
+	solver.simulation_step(delta)
 	# Update GUI
 
 	pass

@@ -3,25 +3,12 @@ extends BoidsSolver
 # parameters (speed, boids, etc.) defined in params
 # params is set to BoidsModel and can be modified in Editor and in boids_model.gd
 
-var position: Vector2 = Vector2(500, 500) # position vector
-var velocity: Vector2 = Vector2(100,50)
-
-
-var texture = preload("res://demos/boids_simulation/boid.png")
-
-@onready var boid_sprite: Sprite2D = $/root/BoidsModel/Sprite2D
-
-@export var speed: float = 200.0  # Pixels per second
+@export var rotation_speed: float = 2.0  # Higher value = faster rotation
+var noise_angle = randf_range(-0.5, 0.5)
 
 func initialize() -> void:#
 	
-		# Load the boid sprite
 	
-	boid_sprite.texture = texture
-	
-	# Set the initial position and size
-	boid_sprite.scale = Vector2(0.1, 0.1)
-	boid_sprite.position = position
 	
 	
 	# create position vector and initialize with random Vector2s inside screen
@@ -30,7 +17,7 @@ func initialize() -> void:#
 
 	pass
 
-func simulation_step(delta: float) -> void:
+func simulation_step(delta: float, velocity: Vector2, speed: float, position: Vector2, boid_sprite: Sprite2D) -> void:
 	
 	
 	
@@ -41,7 +28,7 @@ func simulation_step(delta: float) -> void:
 		# Cohesion
 		# (Additional noise)
 	# Apply a random angle noise
-	var noise_angle = randf_range(-0.2, 0.1)
+	noise_angle += randf_range(-0.05, 0.05)
 	var new_direction = velocity.rotated(noise_angle).normalized()
 	velocity = new_direction * speed
 	# apply velocities to positions
@@ -51,6 +38,9 @@ func simulation_step(delta: float) -> void:
 	#offset angle for right facing direction
 	boid_sprite.rotation = velocity.angle()  + PI / 2 
 
+	
+	
+
 	pass
 
 func update_boids() -> void:
@@ -58,4 +48,7 @@ func update_boids() -> void:
 	# derive and apply rotation from velocity vector direction to each boid
 
 	pass
+	
+
+
 	

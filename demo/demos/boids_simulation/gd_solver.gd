@@ -3,10 +3,10 @@ extends BoidsSolver
 # parameters (speed, boids, etc.) defined in params
 # params is set to BoidsModel and can be modified in Editor and in boids_model.gd
 
-@export var rotation_speed: float = 2.0  # Higher value = faster rotation
-@export var update_interval: int = 5  # Number of frames between angle updates
+
+@export var update_interval: int = 50  # Number of frames between angle updates
 var frame_counter: int = 0
-var noise_angle = randf_range(-0.5, 0.5) # deafult random noise angle
+var new_direction = Vector2.ONE
 
 func initialize() -> void:#
 	
@@ -19,9 +19,8 @@ func initialize() -> void:#
 
 	pass
 
-func simulation_step(delta: float, velocity: Vector2, speed: float, position: Vector2, boid_sprite: Sprite2D) -> void:
-	
-	
+func simulation_step(delta: float, velocity: Vector2, speed: float, position: Vector2, boid_sprite: Sprite2D, boids: Array) -> void:
+
 	
 	# for each boid collect others in visual range
 	# calculate new velocity directions according to:
@@ -30,28 +29,50 @@ func simulation_step(delta: float, velocity: Vector2, speed: float, position: Ve
 		# Cohesion
 		# (Additional noise)
 	# Apply a random angle noise every n frames
+	
+	update_boids(boids, speed, delta)
+		
+	
 	frame_counter += 1
-	if frame_counter >= update_interval:
-		frame_counter = 0
-		noise_angle += randf_range(-0.1, 0.1)
 	
-	var new_direction = velocity.rotated(noise_angle).normalized()
-	velocity = new_direction * speed
-	# apply velocities to positions
 	
-	boid_sprite.position += velocity * delta
 	
-	#offset angle for right facing direction
-	boid_sprite.rotation = velocity.angle()  + PI / 2 
 
 	
 	
 
 	pass
 
-func update_boids() -> void:
-	# apply position from position vector to each boid
-	# derive and apply rotation from velocity vector direction to each boid
+func update_boids(boids: Array, speed: float, delta: float) -> void:
+	if frame_counter >= update_interval:
+		frame_counter = 0
+		for boid in boids:
+			
+				
+				
+			# Apply a small random variation to the current angle
+			var angle_variation = randf_range(-0.01, 0.01)
+			var new_angle = boid.node.rotation + angle_variation
+			new_direction = Vector2(cos(new_angle), sin(new_angle))
+			boid.velocity = new_direction * speed
+			# apply velocities to positions
+			
+			boid.node.position += boid.velocity * delta
+			
+			#offset angle for right facing direction
+			boid.node.rotation = boid.velocity.angle()  + PI / 2 
+			# apply position from position vector to each boid
+			# derive and apply rotation from velocity vector direction to each boid
+	else:
+		for boid in boids:
+			# apply velocities to positions
+			
+			boid.node.position += boid.velocity * delta
+			
+			#offset angle for right facing direction
+			boid.node.rotation = boid.velocity.angle()  + PI / 2 
+			# apply position from position vector to each boid
+			# derive and apply rotation from velocity vector direction to each boid
 
 	pass
 	

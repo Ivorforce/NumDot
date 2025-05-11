@@ -8,7 +8,7 @@ namespace va {
 	void cross(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b, std::ptrdiff_t axisa=-1, std::ptrdiff_t axisb=-1, std::ptrdiff_t axisc=-1);
 	void matmul(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b);
 
-	void outer(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b);
+	void outer(VStoreAllocator& allocator, const VArrayTarget& target, const std::shared_ptr<VArray>& a, const std::shared_ptr<VArray>& b);
 	void inner(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b);
 }
 

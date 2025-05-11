@@ -1285,7 +1285,9 @@ Ref<NDArray> nd::pad(const Variant& array, const Variant& pad_width, PadMode pad
 }
 
 Ref<NDArray> nd::outer(const Variant& a, const Variant& b) {
-	return VARRAY_MAP2(outer, a, b);
+	return map_variants_as_arrays_with_target([](const va::VArrayTarget& target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b) {
+		va::outer(va::store::default_allocator, target, a, b);
+	}, (a), (b));
 }
 
 Ref<NDArray> nd::inner(const Variant& a, const Variant& b) {

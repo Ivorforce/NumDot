@@ -172,38 +172,13 @@ void va::matmul(VStoreAllocator& allocator, const VArrayTarget& target, const VD
 	reduce_dot(allocator, target, a_broadcast, b_broadcast, &axes);
 }
 
-void va::outer(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b) {
-	const shape_type &a_shape = va::shape(a);
-	const shape_type &b_shape = va::shape(b);
+void va::outer(VStoreAllocator& allocator, const VArrayTarget& target, const std::shared_ptr<VArray>& a, const std::shared_ptr<VArray>& b) {
+	const auto a_flat = va::flatten(allocator, a);
+	const auto b_flat = va::flatten(allocator, b);
 
-	xt::xstrided_slice_vector a_slice;
-	a_slice.reserve(a_shape.size());
-	xt::xstrided_slice_vector b_slice;
-	b_slice.reserve(b_shape.size());
+	xt::xstrided_slice_vector a_slice {xt::xall_tag{}, xt::xnewaxis_tag{}};
 
-	for (auto size : a_shape) {
-		if (size == 1) {
-			a_slice.emplace_back(0);
-		}
-		else {
-			a_slice.emplace_back(xt::xall_tag{});
-			b_slice.emplace_back(xt::xnewaxis_tag{});
-		}
-	}
-	for (auto size : b_shape) {
-		if (size == 1) {
-			b_slice.emplace_back(0);
-		}
-		else {
-			b_slice.emplace_back(xt::xall_tag{});
-			a_slice.emplace_back(xt::xnewaxis_tag{});
-		}
-	}
-
-	VData a_sliced = sliced_data(a, a_slice);
-	VData b_sliced = sliced_data(b, b_slice);
-
-	multiply(allocator, target, a_sliced, b_sliced);
+	multiply(allocator, target, a_flat->sliced_data(a_slice), b_flat->data);
 }
 
 void va::inner(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b) {

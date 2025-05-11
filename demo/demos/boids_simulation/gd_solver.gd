@@ -4,7 +4,9 @@ extends BoidsSolver
 # params is set to BoidsModel and can be modified in Editor and in boids_model.gd
 
 @export var rotation_speed: float = 2.0  # Higher value = faster rotation
-var noise_angle = randf_range(-0.5, 0.5)
+@export var update_interval: int = 5  # Number of frames between angle updates
+var frame_counter: int = 0
+var noise_angle = randf_range(-0.5, 0.5) # deafult random noise angle
 
 func initialize() -> void:#
 	
@@ -27,8 +29,12 @@ func simulation_step(delta: float, velocity: Vector2, speed: float, position: Ve
 		# Alignment
 		# Cohesion
 		# (Additional noise)
-	# Apply a random angle noise
-	noise_angle += randf_range(-0.05, 0.05)
+	# Apply a random angle noise every n frames
+	frame_counter += 1
+	if frame_counter >= update_interval:
+		frame_counter = 0
+		noise_angle += randf_range(-0.1, 0.1)
+	
 	var new_direction = velocity.rotated(noise_angle).normalized()
 	velocity = new_direction * speed
 	# apply velocities to positions

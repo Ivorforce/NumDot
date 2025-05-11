@@ -17,6 +17,7 @@ Upcoming Changes (main branch)
 
 - ``nd.outer`` and ``nd.inner`` functions for dedicated vector multiplication.
 - ``nd.squeeze`` function.
+- Mathematical constants (``pi``, ``e``, ``euler_gamma``, ``inf``, ``nan``). These are currently added as functions, due to limitations of Godot's APIs.
 
 **Changed**
 

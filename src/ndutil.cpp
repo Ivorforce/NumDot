@@ -1,17 +1,17 @@
 #include "ndutil.hpp"
 
 StringName newaxis() {
-	const auto newaxis = StringName("newaxis");
+	static const auto newaxis = StringName("newaxis", true);
 	return newaxis;
 }
 
 StringName ellipsis() {
-	const auto ellipsis = StringName("...");
+	static const auto ellipsis = StringName("...", true);
 	return ellipsis;
 }
 
 StringName no_value() {
-	const auto no_value = StringName("no_value");
+	static const auto no_value = StringName("no_value", true);
 	return no_value;
 }
 

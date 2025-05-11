@@ -44,13 +44,17 @@ public:
 	static StringName ellipsis();
 
 	// Mathematical Constants
-	static constexpr double PI = 3.141592653589793;
-    static constexpr double E = 2.718281828459045;
-    static constexpr double EULER_GAMMA = 0.5772156649015329;
+	static constexpr double pi = 3.141592653589793;
+    static constexpr double e = 2.718281828459045;
+    static constexpr double euler_gamma = 0.5772156649015329;
+    static constexpr double inf = std::numeric_limits<double>::infinity();
+    static constexpr double nan = std::numeric_limits<double>::quiet_NaN();
 
-    // Special Constants (need to be defined by us)
-    static const double INF;
-    static const double NAN_VAL;
+	static constexpr double get_pi() { return pi; }
+	static constexpr double get_e() { return e; }
+	static constexpr double get_euler_gamma() { return euler_gamma; }
+	static constexpr double get_inf() { return inf; }
+	static constexpr double get_nan() { return nan; }
 
 	// Range.
 	static Vector4i range(const Variant& start_or_stop = static_cast<int32_t>(0), const Variant& stop = nullptr, const Variant& step = DEFVAL(nullptr));

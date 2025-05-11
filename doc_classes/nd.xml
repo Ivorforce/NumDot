@@ -365,6 +365,12 @@
 				See [method load] to load an array in the same format.
 			</description>
 		</method>
+		<method name="e" qualifiers="static">
+			<return type="float" />
+			<description>
+				Euler’s constant, base of natural logarithms, Napier’s constant.
+			</description>
+		</method>
 		<method name="ellipsis" qualifiers="static">
 			<return type="StringName" />
 			<description>
@@ -395,6 +401,12 @@
 			<param index="1" name="b" type="Variant" />
 			<description>
 				Return (x1 == x2) element-wise.
+			</description>
+		</method>
+		<method name="euler_gamma" qualifiers="static">
+			<return type="float" />
+			<description>
+				Euler-Mascheroni constant.
 			</description>
 		</method>
 		<method name="exp" qualifiers="static">
@@ -537,6 +549,12 @@
 			<description>
 				Return the imaginary part of the complex argument.
 				If the argument is not complex, returns a non-writeable array.
+			</description>
+		</method>
+		<method name="inf" qualifiers="static">
+			<return type="float" />
+			<description>
+				IEEE 754 floating point representation of (positive) infinity.
 			</description>
 		</method>
 		<method name="inner" qualifiers="static">
@@ -779,6 +797,12 @@
 				Multiply arguments element-wise.
 			</description>
 		</method>
+		<method name="nan" qualifiers="static">
+			<return type="float" />
+			<description>
+				IEEE 754 floating point representation of Not a Number (NaN).
+			</description>
+		</method>
 		<method name="negative" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
@@ -852,6 +876,12 @@
 				1. number, shortcut for [code][number, number][/code].
 				2. [code][before, after][/code], pads all axes equally.
 				3. [code][[before_0, after_0], [before_1, after_1], ...][/code], pads axes in order.
+			</description>
+		</method>
+		<method name="pi" qualifiers="static">
+			<return type="float" />
+			<description>
+				The PI constant, that is the ratio of a circle's circumference to its diameter.
 			</description>
 		</method>
 		<method name="positive" qualifiers="static">

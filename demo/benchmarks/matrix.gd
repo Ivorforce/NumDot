@@ -35,12 +35,12 @@ func run_numdot(
 
 	begin_section("projection")
 	for t in test_count:
-		nd.matmul(projection, vector.get(nd.newaxis(), null))  # TODO This should be supported without the get
+		nd.matmul(projection, vector.get(&"newaxis", &":"))  # TODO This should be supported without the get
 	store_result()
 	
 	begin_section("matrix")
 	for t in test_count:
-		nd.matmul(matrix, vector.get(nd.newaxis(), null))
+		nd.matmul(matrix, vector.get(&"newaxis", &":"))
 	store_result()
 
 func run_benchmark():

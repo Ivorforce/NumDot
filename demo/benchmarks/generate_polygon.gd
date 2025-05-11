@@ -29,8 +29,8 @@ func run_numdot(
 	#  another copy.
 	var polygon := nd.empty([num_sides, 2])
 	
-	polygon.get(null, 0).assign_sin(angle_delta)
-	polygon.get(null, 1).assign_cos(angle_delta)
+	polygon.get(&":", 0).assign_sin(angle_delta)
+	polygon.get(&":", 1).assign_cos(angle_delta)
 	polygon.assign_multiply(polygon, radius)
 	polygon.assign_add(polygon, position)
 

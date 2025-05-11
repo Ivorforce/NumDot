@@ -64,6 +64,7 @@ void nd::_bind_methods() {
     // Constants.
 	godot::ClassDB::bind_static_method("nd", D_METHOD("newaxis"), &nd::newaxis);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("ellipsis"), &nd::ellipsis);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("axis_all"), &nd::axis_all);
 
     godot::ClassDB::bind_static_method("nd", D_METHOD("pi"), &nd::get_pi);
     godot::ClassDB::bind_static_method("nd", D_METHOD("e"), &nd::get_e);
@@ -358,6 +359,10 @@ StringName nd::newaxis() {
 
 StringName nd::ellipsis() {
 	return ::ellipsis();
+}
+
+StringName nd::axis_all() {
+	return ::axis_all();
 }
 
 Vector4i nd::from(int32_t start) {

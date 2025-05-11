@@ -1,5 +1,10 @@
 #include "ndutil.hpp"
 
+StringName axis_all() {
+	static const auto axis_all = StringName(":", true);
+	return axis_all;
+}
+
 StringName newaxis() {
 	static const auto newaxis = StringName("newaxis", true);
 	return newaxis;

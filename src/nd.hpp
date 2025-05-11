@@ -42,6 +42,7 @@ public:
 	// Constants.
 	static StringName newaxis();
 	static StringName ellipsis();
+	static StringName axis_all();
 
 	// Mathematical Constants
 	static constexpr double pi = 3.141592653589793;

@@ -8,6 +8,7 @@
 
 using namespace godot;
 
+StringName axis_all();
 StringName newaxis();
 StringName ellipsis();
 StringName no_value();

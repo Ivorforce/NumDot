@@ -4,11 +4,14 @@ extends BoidsSolver
 # params is set to BoidsModel and can be modified in Editor and in boids_model.gd
 
 var position: Vector2 = Vector2(500, 500) # position vector
-#var velocity: Vector2 = Vector2.ZERO
+var velocity: Vector2 = Vector2(100,50)
+
 
 var texture = preload("res://demos/boids_simulation/boid.png")
 
 @onready var boid_sprite: Sprite2D = $/root/BoidsModel/Sprite2D
+
+@export var speed: float = 200.0  # Pixels per second
 
 func initialize() -> void:#
 	
@@ -28,13 +31,25 @@ func initialize() -> void:#
 	pass
 
 func simulation_step(delta: float) -> void:
+	
+	
+	
 	# for each boid collect others in visual range
 	# calculate new velocity directions according to:
 		# Seperation
 		# Alignment
 		# Cohesion
 		# (Additional noise)
+	# Apply a random angle noise
+	var noise_angle = randf_range(-0.2, 0.1)
+	var new_direction = velocity.rotated(noise_angle).normalized()
+	velocity = new_direction * speed
 	# apply velocities to positions
+	
+	boid_sprite.position += velocity * delta
+	
+	#offset angle for right facing direction
+	boid_sprite.rotation = velocity.angle()  + PI / 2 
 
 	pass
 

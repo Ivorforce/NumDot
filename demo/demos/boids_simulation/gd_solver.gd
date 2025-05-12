@@ -51,9 +51,9 @@ func update_boids(boids: Array, speed: float, delta: float) -> void:
 				
 				
 			# Apply a small random variation to the current angle
-			var angle_variation = randf_range(-0.01, 0.01)
-			var new_angle = boid.node.rotation + angle_variation
-			new_direction = Vector2(cos(new_angle), sin(new_angle))
+			var angle_variation = randf_range(-0.5, 0.5)
+			var adjusted_angle = boid.velocity.angle() + angle_variation
+			new_direction = Vector2(cos(adjusted_angle), sin(adjusted_angle))
 			boid.velocity = new_direction * speed
 			# apply velocities to positions
 			

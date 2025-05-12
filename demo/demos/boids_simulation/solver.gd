@@ -6,8 +6,8 @@ class_name BoidsSolver
 func initialize() -> void:
 	pass
 
-#func simulation_step(delta: float) -> void:
-	#pass
+func simulation_step(delta: float, velocity: Vector2, speed: float, position: Vector2, boid_sprite: Sprite2D, boids: Array) -> void:
+	pass
 
-func update_boids() -> void:
+func update_boids(boids: Array, speed: float, delta: float) -> void:
 	pass

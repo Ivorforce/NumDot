@@ -1,6 +1,6 @@
 #include "ndi.hpp"
 
-#include <vatensor/linalg.hpp>                  // for reduce_dot
+#include <vatensor/linalg.hpp>                  // for sum_product
 #include <cmath>                              // for isinf
 #include <stdexcept>                          // for runtime_error
 #include <type_traits>                        // for decay_t
@@ -27,11 +27,8 @@ void ndi::_bind_methods() {
 	godot::ClassDB::bind_static_method("ndi", D_METHOD("count_nonzero", "a"), &ndi::count_nonzero);
 	godot::ClassDB::bind_static_method("ndi", D_METHOD("trace", "v", "offset", "axis1", "axis2"), &ndi::trace, DEFVAL(0), DEFVAL(0), DEFVAL(1));
 
-	godot::ClassDB::bind_static_method("ndi", D_METHOD("reduce_dot", "a", "b"), &ndi::reduce_dot);
+	godot::ClassDB::bind_static_method("ndi", D_METHOD("sum_product", "a", "b"), &ndi::sum_product);
 }
-
-ndi::ndi() = default;
-ndi::~ndi() = default;
 
 #define REDUCTION1(func, varray1) \
 	numdot::reduction_new<int64_t>([](const va::VArrayTarget& target, const va::VArray& array) { va::func(va::store::default_allocator, target, array.data, nullptr); }, (varray1))
@@ -95,8 +92,8 @@ int64_t ndi::trace(const Variant& v, int64_t offset, int64_t axis1, int64_t axis
 	}, v);
 }
 
-int64_t ndi::reduce_dot(const Variant& a, const Variant& b) {
-	return REDUCTION2(reduce_dot, a, b);
+int64_t ndi::sum_product(const Variant& a, const Variant& b) {
+	return REDUCTION2(sum_product, a, b);
 }
 
 #undef REDUCTION1

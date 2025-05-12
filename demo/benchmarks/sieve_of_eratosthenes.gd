@@ -7,7 +7,7 @@ func run_numdot(n: int) -> NDArray:
 	var p := 2
 	while p * p <= n:
 		if is_prime.get_bool(p):
-			is_prime.set(false, nd.range(p * p, null, p))
+			is_prime.set(false, nd.range(p * p, &":", p))
 		p += 1
 	return is_prime
 

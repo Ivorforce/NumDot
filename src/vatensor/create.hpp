@@ -16,7 +16,8 @@ namespace va {
 
 	std::shared_ptr<VArray> tile(VStoreAllocator& allocator, const VArray& array, const shape_type& reps, bool inner);
 
-	std::shared_ptr<VArray> flatten(VStoreAllocator& allocator, const VArray& varray);
+	std::shared_ptr<VArray> reshape(VStoreAllocator& allocator, const std::shared_ptr<VArray>& varray, strides_type new_shape);
+	std::shared_ptr<VArray> flatten(VStoreAllocator& allocator, const std::shared_ptr<VArray>& varray);
 }
 
 #endif //VATENSOR_FILL_H

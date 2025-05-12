@@ -38,7 +38,6 @@ namespace va {
 
 	std::shared_ptr<VArray> transpose(const VArray& varray, strides_type permutation);
 	std::shared_ptr<VArray> transpose(const VArray& varray);
-	std::shared_ptr<VArray> reshape(const VArray& varray, strides_type new_shape);
 	std::shared_ptr<VArray> swapaxes(const VArray& varray, std::ptrdiff_t a, std::ptrdiff_t b);
 	std::shared_ptr<VArray> moveaxis(const VArray& varray, std::ptrdiff_t src, std::ptrdiff_t dst);
 	VData moveaxis(const VData& data, std::ptrdiff_t src, std::ptrdiff_t dst);
@@ -50,6 +49,8 @@ namespace va {
 	std::shared_ptr<VArray> imag(const std::shared_ptr<VArray>& varray);
 	std::shared_ptr<VArray> complex_as_vector(const std::shared_ptr<VArray>& varray);
 	std::shared_ptr<VArray> vector_as_complex(VStoreAllocator& allocator, const VArray& varray, DType dtype, bool keepdims);
+
+	std::shared_ptr<VArray> squeeze(const std::shared_ptr<VArray>& vdata);
 }
 
 #endif //XV_H

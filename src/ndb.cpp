@@ -23,9 +23,6 @@ void ndb::_bind_methods() {
 	godot::ClassDB::bind_static_method("ndb", D_METHOD("all_close", "a", "b", "rtol", "atol", "equal_nan"), &ndb::all_close, DEFVAL(1e-05), DEFVAL(1e-08), DEFVAL(false));
 }
 
-ndb::ndb() = default;
-ndb::~ndb() = default;
-
 #define REDUCTION1(func, varray1) \
 numdot::reduction_new<bool>([](const va::VArrayTarget& target, const va::VArray& array) { return va::func(va::store::default_allocator, target, array.data, nullptr); }, (varray1))
 

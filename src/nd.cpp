@@ -1,6 +1,6 @@
 #include "nd.hpp"
 
-#include <vatensor/linalg.hpp>                // for reduce_dot, dot, matmul
+#include <vatensor/linalg.hpp>                // for sum_product, dot, matmul
 #include <vatensor/vassign.hpp>               // for assign
 #include "vatensor/vfunc/entrypoints.hpp"
 #include <cmath>                            // for double_t, isinf
@@ -61,8 +61,16 @@ void nd::_bind_methods() {
 	BIND_ENUM_CONSTANT(Wrap);
 	BIND_ENUM_CONSTANT(Edge);
 
+    // Constants.
 	godot::ClassDB::bind_static_method("nd", D_METHOD("newaxis"), &nd::newaxis);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("ellipsis"), &nd::ellipsis);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("axis_all"), &nd::axis_all);
+
+    godot::ClassDB::bind_static_method("nd", D_METHOD("pi"), &nd::get_pi);
+    godot::ClassDB::bind_static_method("nd", D_METHOD("e"), &nd::get_e);
+    godot::ClassDB::bind_static_method("nd", D_METHOD("euler_gamma"), &nd::get_euler_gamma);
+    godot::ClassDB::bind_static_method("nd", D_METHOD("inf"), &nd::get_inf);
+    godot::ClassDB::bind_static_method("nd", D_METHOD("nan"), &nd::get_nan);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("from", "start"), &nd::from);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("to", "stop"), &nd::to);
@@ -118,6 +126,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("split", "v", "indices_or_section_size", "axis"), &nd::split, DEFVAL(0));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("hsplit", "v", "indices_or_section_size"), &nd::hsplit);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("vsplit", "v", "indices_or_section_size"), &nd::vsplit);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("squeeze", "v"), &nd::squeeze);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("real", "v"), &nd::real);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("imag", "v"), &nd::imag);
@@ -208,7 +217,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("bitwise_right_shift", "a", "b"), &nd::bitwise_right_shift);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("dot", "a", "b"), &nd::dot);
-	godot::ClassDB::bind_static_method("nd", D_METHOD("reduce_dot", "a", "b", "axes"), &nd::reduce_dot, DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("sum_product", "a", "b", "axes"), &nd::sum_product, DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("matmul", "a", "b"), &nd::matmul);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("cross", "a", "b", "axisa", "axisb", "axisc"), &nd::cross, DEFVAL(-1), DEFVAL(-1), DEFVAL(-1));
 
@@ -221,12 +230,12 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("fft_freq", "n", "d"), &nd::fft_freq, DEFVAL(1));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("pad", "v", "pad_width", "pad_mode", "pad_value"), &nd::pad, DEFVAL(nd::PadMode::Constant), DEFVAL(0));
 
+	godot::ClassDB::bind_static_method("nd", D_METHOD("outer", "a", "b"), &nd::outer);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("inner", "a", "b"), &nd::inner);
+
 	godot::ClassDB::bind_static_method("nd", D_METHOD("load", "file_or_buffer"), &nd::load);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("dumpb", "array"), &nd::dumpb);
 }
-
-nd::nd() = default;
-nd::~nd() = default;
 
 template<typename Visitor, typename... Args>
 Ref<NDArray> map_variants_as_arrays(Visitor&& visitor, const Args&... args) {
@@ -350,6 +359,10 @@ StringName nd::newaxis() {
 
 StringName nd::ellipsis() {
 	return ::ellipsis();
+}
+
+StringName nd::axis_all() {
+	return ::axis_all();
 }
 
 Vector4i nd::from(int32_t start) {
@@ -586,7 +599,7 @@ Ref<NDArray> nd::reshape(const Variant& a, const Variant& shape) {
 		//  We should probably decouple them when we add better shape checks.
 		const auto new_shape_ = variant_to_axes(shape);
 
-		return { memnew(NDArray(va::reshape(*a_, new_shape_))) };
+		return { memnew(NDArray(va::reshape(va::store::default_allocator, a_, new_shape_))) };
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
@@ -845,6 +858,16 @@ TypedArray<NDArray> nd::hsplit(const Variant& v, const Variant& indices_or_secti
 
 TypedArray<NDArray> nd::vsplit(const Variant& v, const Variant& indices_or_section_size) {
 	return nd::split(v, indices_or_section_size, 0);
+}
+
+Ref<NDArray> nd::squeeze(const Variant& v) {
+	try {
+		const auto array = variant_as_array(v);
+		return { memnew(NDArray(va::squeeze(array))) };
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
 }
 
 Ref<NDArray> nd::real(const Variant& v) {
@@ -1189,8 +1212,8 @@ Ref<NDArray> nd::dot(const Variant& a, const Variant& b) {
 	return VARRAY_MAP2(dot, a, b);
 }
 
-Ref<NDArray> nd::reduce_dot(const Variant& a, const Variant& b, const Variant& axes) {
-	return REDUCTION2(reduce_dot, a, b, axes);
+Ref<NDArray> nd::sum_product(const Variant& a, const Variant& b, const Variant& axes) {
+	return REDUCTION2(sum_product, a, b, axes);
 }
 
 Ref<NDArray> nd::matmul(const Variant& a, const Variant& b) {
@@ -1268,6 +1291,16 @@ Ref<NDArray> nd::pad(const Variant& array, const Variant& pad_width, PadMode pad
 			va::pad(va::store::default_allocator, target, *a, pad_width, pad_mode_xt, pad_value_scalar);
 		}, pad_width_variant);
 	}, array);
+}
+
+Ref<NDArray> nd::outer(const Variant& a, const Variant& b) {
+	return map_variants_as_arrays_with_target([](const va::VArrayTarget& target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b) {
+		va::outer(va::store::default_allocator, target, a, b);
+	}, (a), (b));
+}
+
+Ref<NDArray> nd::inner(const Variant& a, const Variant& b) {
+	return VARRAY_MAP2(inner, a, b);
 }
 
 Ref<NDArray> nd::load(const Variant& variant) {

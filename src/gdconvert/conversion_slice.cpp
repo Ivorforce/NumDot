@@ -33,7 +33,7 @@ xt::xstrided_slice<std::ptrdiff_t> variant_to_slice_part(const Variant& variant)
 			break;
 		}
 		case Variant::NIL:
-			return xt::all();
+			return xt::newaxis();
 		case Variant::INT:
 			return static_cast<std::ptrdiff_t>(static_cast<int64_t>(variant));
 		case Variant::STRING_NAME: {
@@ -44,6 +44,9 @@ xt::xstrided_slice<std::ptrdiff_t> variant_to_slice_part(const Variant& variant)
 			}
 			else if (string_name == ::ellipsis()) {
 				return xt::ellipsis();
+			}
+			else if (string_name == ::axis_all()) {
+				return xt::all();
 			}
 		}
 		break;

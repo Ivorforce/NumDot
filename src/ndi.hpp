@@ -18,8 +18,9 @@ protected:
 	static void _bind_methods();
 
 public:
-	ndi();
-	~ndi();
+	ndi() {
+		ERR_FAIL_MSG("This class should not be constructed. It's just a namespace.");
+	}
 
 	// Reductions.
 	static int64_t sum(const Variant& a);
@@ -32,7 +33,7 @@ public:
 	static int64_t trace(const Variant& v, int64_t offset, int64_t axis1, int64_t axis2);
 
 	// Linalg.
-	static int64_t reduce_dot(const Variant& a, const Variant& b);
+	static int64_t sum_product(const Variant& a, const Variant& b);
 };
 
 #endif

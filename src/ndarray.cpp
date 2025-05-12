@@ -1,7 +1,7 @@
 #include "ndarray.hpp"
 
 #include <gdconvert/conversion_ints.hpp>             // for variants_to_axes
-#include <vatensor/linalg.hpp>                       // for reduce_dot, dot
+#include <vatensor/linalg.hpp>                       // for sum_product, dot
 #include <vatensor/vassign.hpp>                      // for assign
 #include <vatensor/xtensor_store.hpp>                        // for abs, add, clip
 #include <vatensor/vcarray.hpp>                        // fill_c_array_flat
@@ -66,6 +66,7 @@ void NDArray::_bind_methods() {
 	godot::ClassDB::bind_method(D_METHOD("copy"), &NDArray::copy);
 	numdot::bind_vararg_method(numdot::VD_METHOD("transpose"), &NDArray::transpose);
 	godot::ClassDB::bind_method(D_METHOD("flatten"), &NDArray::flatten);
+	godot::ClassDB::bind_method(D_METHOD("squeeze"), &NDArray::squeeze);
 
 	numdot::bind_vararg_method(numdot::VD_METHOD("get_vector2"), &NDArray::get_vector2);
 	numdot::bind_vararg_method(numdot::VD_METHOD("get_vector3"), &NDArray::get_vector3);
@@ -337,7 +338,17 @@ Ref<NDArray> NDArray::transpose(const Variant** args, GDExtensionInt arg_count, 
 
 Ref<NDArray> NDArray::flatten() const {
 	try {
-		const auto result = va::flatten(va::store::default_allocator, *array);
+		const auto result = va::flatten(va::store::default_allocator, array);
+		return { memnew(NDArray(result)) };
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
+}
+
+Ref<NDArray> NDArray::squeeze() const {
+	try {
+		const auto result = va::squeeze(array);
 		return { memnew(NDArray(result)) };
 	}
 	catch (std::runtime_error& error) {
@@ -1097,7 +1108,7 @@ Ref<NDArray> NDArray::assign_dot(const Variant& a, const Variant& b) {
 }
 
 Ref<NDArray> NDArray::assign_reduce_dot(const Variant& a, const Variant& b, const Variant& axes) {
-	REDUCTION2(reduce_dot, a, b, axes);
+	REDUCTION2(sum_product, a, b, axes);
 }
 
 Ref<NDArray> NDArray::assign_matmul(const Variant& a, const Variant& b) {

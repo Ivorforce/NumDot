@@ -52,12 +52,12 @@
 				No-axis equivalent of [method nd.prod] that returns an int.
 			</description>
 		</method>
-		<method name="reduce_dot" qualifiers="static">
+		<method name="sum_product" qualifiers="static">
 			<return type="int" />
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
-				No-axis equivalent of [method nd.reduce_dot] that returns an int.
+				No-axis equivalent of [method nd.sum_product] that returns an int.
 			</description>
 		</method>
 		<method name="sum" qualifiers="static">

@@ -4288,7 +4288,7 @@
 			]
 		},
 		{
-			"name": "reduce_dot",
+			"name": "sum_product",
 			"specializations": [
 				"??->?",
 				"BB->B",

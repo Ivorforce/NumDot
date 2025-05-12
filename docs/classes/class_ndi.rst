@@ -42,7 +42,7 @@ Methods
    +---------+--------------------------------------------------------------------------------------------------------------------------------------+
    | ``int`` | :ref:`prod<class_ndi_method_prod>`\ (\ a\: ``Variant``\ ) |static|                                                                   |
    +---------+--------------------------------------------------------------------------------------------------------------------------------------+
-   | ``int`` | :ref:`reduce_dot<class_ndi_method_reduce_dot>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                      |
+   | ``int`` | :ref:`sum_product<class_ndi_method_reduce_dot>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                      |
    +---------+--------------------------------------------------------------------------------------------------------------------------------------+
    | ``int`` | :ref:`sum<class_ndi_method_sum>`\ (\ a\: ``Variant``\ ) |static|                                                                     |
    +---------+--------------------------------------------------------------------------------------------------------------------------------------+
@@ -134,9 +134,9 @@ No-axis equivalent of :ref:`nd.prod<class_nd_method_prod>` that returns an int.
 
 .. rst-class:: classref-method
 
-``int`` **reduce_dot**\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static| :ref:`🔗<class_ndi_method_reduce_dot>`
+``int`` **sum_product**\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static| :ref:`🔗<class_ndi_method_reduce_dot>`
 
-No-axis equivalent of :ref:`nd.reduce_dot<class_nd_method_reduce_dot>` that returns an int.
+No-axis equivalent of :ref:`nd.sum_product<class_nd_method_reduce_dot>` that returns an int.
 
 .. rst-class:: classref-item-separator
 

@@ -42,7 +42,7 @@ Methods
    +-----------+--------------------------------------------------------------------------------------------------------------------------------------+
    | ``float`` | :ref:`prod<class_ndf_method_prod>`\ (\ a\: ``Variant``\ ) |static|                                                                   |
    +-----------+--------------------------------------------------------------------------------------------------------------------------------------+
-   | ``float`` | :ref:`reduce_dot<class_ndf_method_reduce_dot>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                      |
+   | ``float`` | :ref:`sum_product<class_ndf_method_reduce_dot>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                      |
    +-----------+--------------------------------------------------------------------------------------------------------------------------------------+
    | ``float`` | :ref:`std<class_ndf_method_std>`\ (\ a\: ``Variant``\ ) |static|                                                                     |
    +-----------+--------------------------------------------------------------------------------------------------------------------------------------+
@@ -138,9 +138,9 @@ No-axis equivalent of :ref:`nd.prod<class_nd_method_prod>` that returns a float.
 
 .. rst-class:: classref-method
 
-``float`` **reduce_dot**\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static| :ref:`🔗<class_ndf_method_reduce_dot>`
+``float`` **sum_product**\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static| :ref:`🔗<class_ndf_method_reduce_dot>`
 
-No-axis equivalent of :ref:`nd.reduce_dot<class_nd_method_reduce_dot>` that returns a float.
+No-axis equivalent of :ref:`nd.sum_product<class_nd_method_reduce_dot>` that returns a float.
 
 .. rst-class:: classref-item-separator
 

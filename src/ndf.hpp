@@ -19,8 +19,9 @@ protected:
 	static void _bind_methods();
 
 public:
-	ndf();
-	~ndf();
+	ndf() {
+		ERR_FAIL_MSG("This class should not be constructed. It's just a namespace.");
+	}
 
 	// Reductions.
 	static double_t sum(const Variant& a);
@@ -39,7 +40,7 @@ public:
 	//	static bool any(const Variant& a);
 
 	// Linalg.
-	static double_t reduce_dot(const Variant& a, const Variant& b);
+	static double_t sum_product(const Variant& a, const Variant& b);
 };
 
 #endif

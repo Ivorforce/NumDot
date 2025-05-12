@@ -4,6 +4,7 @@
 #include <optional>               // for optional
 #include <stdexcept>              // for runtime_error
 #include <vector>                 // for vector
+#include <godot_cpp/core/math.hpp>
 #include <xtensor/views/xview.hpp>
 #include "vfunc/entrypoints.hpp"
 #include "create.hpp"
@@ -154,13 +155,13 @@ void va::matmul(VStoreAllocator& allocator, const VArrayTarget& target, const VD
 	}
 	if (va::dimension(b) == 1) {
 		auto axes = axes_type {-1};
-		va::reduce_dot(allocator, target, a, b, &axes);
+		va::sum_product(allocator, target, a, b, &axes);
 		return;
 	}
 	if (va::dimension(a) == 1) {
 		const auto promoted_a = va::sliced_data(a, {xt::all(), xt::newaxis()});
 		auto axes = axes_type {-2};
-		va::reduce_dot(allocator, target, promoted_a, b, &axes);
+		va::sum_product(allocator, target, promoted_a, b, &axes);
 		return;
 	}
 
@@ -168,5 +169,26 @@ void va::matmul(VStoreAllocator& allocator, const VArrayTarget& target, const VD
 	auto b_broadcast = va::sliced_data(b, { xt::ellipsis(), xt::newaxis(), xt::all(), xt::all() });
 
 	auto axes = axes_type {-2};
-	reduce_dot(allocator, target, a_broadcast, b_broadcast, &axes);
+	sum_product(allocator, target, a_broadcast, b_broadcast, &axes);
+}
+
+void va::outer(VStoreAllocator& allocator, const VArrayTarget& target, const std::shared_ptr<VArray>& a, const std::shared_ptr<VArray>& b) {
+	const auto a_flat = va::flatten(allocator, a);
+	const auto b_flat = va::flatten(allocator, b);
+
+	xt::xstrided_slice_vector a_slice {xt::xall_tag{}, xt::xnewaxis_tag{}};
+
+	multiply(allocator, target, a_flat->sliced_data(a_slice), b_flat->data);
+}
+
+void va::inner(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b) {
+	const size_t n_axes = godot::Math::min(va::dimension(a), va::dimension(b));
+
+	va::axes_type axes;
+	axes.resize(n_axes);
+	for (std::ptrdiff_t i = 0; i < static_cast<std::ptrdiff_t>(n_axes); ++i) {
+		axes[i] = -i - 1;
+	}
+
+	sum_product(allocator, target, a, b, &axes);
 }

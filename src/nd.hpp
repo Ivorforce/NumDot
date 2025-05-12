@@ -35,12 +35,27 @@ public:
 		Edge
 	};
 
-	nd();
-	~nd();
+	nd() {
+		ERR_FAIL_MSG("This class should not be constructed. It's just a namespace.");
+	}
 
 	// Constants.
 	static StringName newaxis();
 	static StringName ellipsis();
+	static StringName axis_all();
+
+	// Mathematical Constants
+	static constexpr double pi = 3.141592653589793;
+    static constexpr double e = 2.718281828459045;
+    static constexpr double euler_gamma = 0.5772156649015329;
+    static constexpr double inf = std::numeric_limits<double>::infinity();
+    static constexpr double nan = std::numeric_limits<double>::quiet_NaN();
+
+	static constexpr double get_pi() { return pi; }
+	static constexpr double get_e() { return e; }
+	static constexpr double get_euler_gamma() { return euler_gamma; }
+	static constexpr double get_inf() { return inf; }
+	static constexpr double get_nan() { return nan; }
 
 	// Range.
 	static Vector4i range(const Variant& start_or_stop = static_cast<int32_t>(0), const Variant& stop = nullptr, const Variant& step = DEFVAL(nullptr));
@@ -101,6 +116,7 @@ public:
 	static TypedArray<NDArray> split(const Variant& v, const Variant& indices_or_section_size, int64_t axis);
 	static TypedArray<NDArray> hsplit(const Variant& v, const Variant& indices_or_section_size);
 	static TypedArray<NDArray> vsplit(const Variant& v, const Variant& indices_or_section_size);
+	static Ref<NDArray> squeeze(const Variant& v);
 
 	// Complex.
 	static Ref<NDArray> real(const Variant& a);
@@ -201,7 +217,7 @@ public:
 
 	// Linalg.
 	static Ref<NDArray> dot(const Variant& a, const Variant& b);
-	static Ref<NDArray> reduce_dot(const Variant& a, const Variant& b, const Variant& axes);
+	static Ref<NDArray> sum_product(const Variant& a, const Variant& b, const Variant& axes);
 	static Ref<NDArray> matmul(const Variant& a, const Variant& b);
 	static Ref<NDArray> cross(const Variant& a, const Variant& b, int64_t axisa=-1, int64_t axisb=-1, int64_t axisc=-1);
 
@@ -216,6 +232,10 @@ public:
 	static Ref<NDArray> fft(const Variant& array, int64_t axis);
 	static Ref<NDArray> fft_freq(int64_t n, double_t freq);
 	static Ref<NDArray> pad(const Variant& array, const Variant& pad_width, PadMode pad_mode = PadMode::Constant, const Variant& pad_value = 0);
+
+	// Vector and Matrix.
+	static Ref<NDArray> outer(const Variant& a, const Variant& b);
+	static Ref<NDArray> inner(const Variant& a, const Variant& b);
 
 	// IO.
 	static Ref<NDArray> load(const Variant& variant);

@@ -280,7 +280,7 @@ namespace va::vfunc::impl {
 		void* pad_value
 	)
 
-	IMPLEMENT_BINARY_RFUNC(reduce_dot, xt::sum(a * b)(), xt::sum(a * b, *axes))
+	IMPLEMENT_BINARY_RFUNC(sum_product, xt::sum(a * b)(), xt::sum(a * b, *axes))
 
 	IMPLEMENT_BINARY_VFUNC(a0xb1_minus_a1xb0,
 		(xt::strided_view(a, { xt::ellipsis(), i0 }) * xt::strided_view(b, { xt::ellipsis(), i1 }))

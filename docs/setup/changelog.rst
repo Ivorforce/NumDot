@@ -10,8 +10,25 @@ Here you will find the release notes for each version of the library. Each secti
    :local:
    :backlinks: none
 
-.. Upcoming Changes (main branch)
-.. ------------------------------
+Upcoming Changes (main branch)
+------------------------------
+
+**Added**
+
+- ``nd.outer`` and ``nd.inner`` functions for dedicated vector multiplication.
+- ``nd.squeeze`` function.
+- Mathematical constants (``pi``, ``e``, ``euler_gamma``, ``inf``, ``nan``). These are currently added as functions, due to limitations of Godot's APIs.
+
+**Changed**
+
+- ``array.get(null)`` will no longer select all elements. Instead, it will add an new dimension, analogous to ``np_array[None]``. Use ``array.get(&":")`` to select all elements instead.
+- ``nd.reshape`` no longer re-interprets the previous shape (if layout is not row-major). Instead, it iterates the previous array in the correct order, filling elements one by one.
+- ``nd.flatten`` no longer makes a copy if it doesn't need to.
+- ``nd.reduce_dot`` is now called ``nd.sum_product``.
+
+**Fixed**
+
+- ``array.get(0)`` and ``array.get(&"newaxis")`` no longer fails or crashes the program.
 
 Version 0.9 - 2025-04-29
 ------------------------
@@ -129,7 +146,7 @@ Version 0.5 - 2024-10-07
 **Changed**
 
 - Added ``array.set(x)`` should now be slightly faster when only a single element is updated.
-- Accelerated ``reduce_dot``. This also affects ``matmul``, ``dot``, and ``convolve`` operations.
+- Accelerated ``sum_product``. This also affects ``matmul``, ``dot``, and ``convolve`` operations.
 
 **Fixed**
 
@@ -165,7 +182,7 @@ Version 0.3 - 2024-09-25
 ------------------------
 **Added**
 
-- Added the ``dot`` and ``reduce_dot`` functions.
+- Added the ``dot`` and ``sum_product`` functions.
 - Added the ``matmul`` function.
 - ``nd.array([...])`` can now handle more complex array inputs, e.g. an array of ``Vector2i``.
 - Added the ``stack`` and ``unstack`` functions.

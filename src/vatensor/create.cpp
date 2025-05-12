@@ -217,7 +217,7 @@ std::shared_ptr<VArray> va::tile(VStoreAllocator& allocator, const VArray& array
 	}
 
 	auto result = va::empty(allocator, array.dtype(), result_final_shape);
-	auto result_broadcast = va::reshape(*result, result_broadcast_shape);
+	auto result_broadcast = va::reshape(allocator, result, result_broadcast_shape);
 	const auto array_broadcast = array.sliced_data(array_slices);
 
 	result_broadcast->prepare_write();
@@ -226,29 +226,53 @@ std::shared_ptr<VArray> va::tile(VStoreAllocator& allocator, const VArray& array
 	return result;
 }
 
-std::shared_ptr<VArray> va::flatten(VStoreAllocator& allocator, const VArray& varray) {
-	const auto count = varray.size();
-	auto store = allocator.allocate(varray.dtype(), count);
+std::shared_ptr<VArray> va::reshape(VStoreAllocator& allocator, const std::shared_ptr<VArray>& varray, strides_type new_shape) {
+	if (varray->layout() == xt::layout_type::row_major) {
+		// Do in-place reshape.
+		return map(
+			[&new_shape](auto& array) {
+				auto new_shape_ = new_shape;
+				return xt::reshape_view(array, new_shape_);
+			}, *varray
+		);
+	}
+
+	// Need to allocate new memory for reshape.
+	const auto count = varray->size();
+	auto store = allocator.allocate(varray->dtype(), count);
 
 	return std::visit(
-		[&store, count](const auto& read) -> std::shared_ptr<VArray> {
+		[&store, &new_shape](const auto& read) -> std::shared_ptr<VArray> {
 			using VT = typename std::decay_t<decltype(read)>::value_type;
 
 			auto ptr = static_cast<VT*>(store->data());
 			util::fill_c_array_flat(ptr, read);
+
+			// Use xtensor to figure out the final shape for us.
+			// (new_shape can have one negative entry, for "figure out the rest")
+			const auto reshape_view = xt::reshape_view(read, new_shape);
 
 			return std::make_shared<VArray>(
 				VArray {
 					store,
 					make_compute<VT*>(
 						std::move(ptr),
-						shape_type { count },
-						strides_type { 1 },
-						xt::layout_type::any
+						reshape_view.shape(),
+						strides_type {}, // unused
+						xt::layout_type::row_major
 					),
 					0
 				}
 			);
-		}, varray.data
+		}, varray->data
 	);
+}
+
+std::shared_ptr<VArray> va::flatten(VStoreAllocator& allocator, const std::shared_ptr<VArray>& varray) {
+	if (varray->dimension() == 1) {
+		// Fast lane return.
+		return varray;
+	}
+
+	return reshape(allocator, varray, strides_type { static_cast<std::ptrdiff_t>(varray->size()) });
 }

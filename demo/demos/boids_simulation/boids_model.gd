@@ -1,6 +1,6 @@
 extends Node2D
 
-@export var boid_count: int = 5
+@export var boid_count: int = 20
 # Store data for each sprite
 var boids = []
 var boids_container: Node2D
@@ -68,11 +68,7 @@ func _ready() -> void:
 	# Initialize boids as scenes from res://demos/boids_simulation/boid.tscn
 		# Load the boid sprite
 	
-	boid_sprite.texture = texture
 	
-	# Set the initial position and size
-	boid_sprite.scale = Vector2(0.1, 0.1)
-	boid_sprite.position = position
 	# Add border around screen redirecting boids to screen center
 	
 
@@ -89,6 +85,38 @@ func _process(delta: float) -> void:
 	# Update GUI
 
 	pass
+	
+func initialize_boids(target_count: int) -> void:
+	# Clear existing boids
+	for boid_data in boids:
+		boid_data["node"].queue_free()
+	boids.clear()
+
+	# Create new boids
+	for i in range(target_count):
+		add_boid(i)
+		
+func add_boid(i: int):
+	var boid = Sprite2D.new()
+	boid.texture = texture
+	#Assign a boid a random position and standard size
+	boid.scale = Vector2(0.1, 0.1)
+	boid.position = Vector2(randf_range(0, get_viewport_rect().size.x), randf_range(0, get_viewport_rect().size.y))
+	# Assign a random start rotation (in radians)
+	boid.rotation = randf_range(0, PI * 2)
+	boid.name = "Boid " + str(i + 1)  # Naming each boid
+	
+	boids_container.add_child(boid)
+	
+	
+
+	# Initialize boid data
+	var boid_data = {
+		"node": boid,
+		#Assign same speed and random direction based on rotation
+		"velocity": Vector2(cos(boid.rotation), sin(boid.rotation)).normalized() * speed
+	}
+	boids.append(boid_data)
 	
 func wrap_around(boids: Array):
 	var screen_size = get_viewport_rect().size
@@ -108,8 +136,8 @@ func wrap_around(boids: Array):
 			boid.node.position.y = screen_size.y
 
 func _on_point_slider_drag_ended(value_changed: bool) -> void:
-	N = %PointSlider.value
-	%PointLabel.text = "Grid: " + str(N) + "x" + str(N)
+	boid_count = %NumberOfBoidsSlider.value
+	
 	#resize_image()
 	solver.initialize()
 
@@ -123,4 +151,14 @@ func _on_restart_button_pressed() -> void:
 func _on_solver_option_item_selected(index: int) -> void:
 	solver = $Solvers.get_child(index)
 	solver.initialize()
+	
+
+	
 # TODO handle GUI inputs
+
+
+func _on_number_of_boids_slider_drag_ended(value_changed: bool) -> void:
+	boid_count = %NumberOfBoidsSlider.value
+	%NumberOfBoids.text = "Boids: "+str(boid_count)
+	initialize_boids(boid_count)
+	

@@ -84,6 +84,7 @@ func _ready() -> void:
 	pass
 
 func _process(delta: float) -> void:
+	%FPSLabel.text = "FPS: " + str(Engine.get_frames_per_second())
 	# Call simulation_step(delta)
 	
 	solver.simulation_step(delta, velocity, speed, visual_range, separation_weight, alignment_weight, cohesion_weight, position, boid_sprite, boids)

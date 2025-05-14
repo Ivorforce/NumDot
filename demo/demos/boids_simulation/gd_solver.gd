@@ -25,12 +25,21 @@ func simulation_step(delta: float, velocity: Vector2, speed: float, position: Ve
 	# for each boid collect others in visual range
 	# calculate new velocity directions according to:
 		# Seperation
+		
+	var separation_distance = 200.0
+	var separation_weight = 5.0
+
+	for boid in boids:
+		var separation = apply_separation(boid, boids, separation_distance)
+		if separation != Vector2.ZERO:
+			# Blend the separation with the current velocity
+			boid.velocity = (boid.velocity + separation * separation_weight).normalized() * speed
 		# Alignment
 		# Cohesion
 		# (Additional noise)
 	# Apply a random angle noise every n frames
 	
-	update_boids(boids, speed, delta)
+	update_boids_noise(boids, speed, delta)
 		
 	
 	frame_counter += 1
@@ -42,8 +51,30 @@ func simulation_step(delta: float, velocity: Vector2, speed: float, position: Ve
 	
 
 	pass
+	
+func apply_separation(boid, boids: Array, separation_distance: float) -> Vector2:
+	var steer = Vector2.ZERO
+	var total = 0
 
-func update_boids(boids: Array, speed: float, delta: float) -> void:
+	for other in boids:
+		if other == boid:
+			continue
+
+		var dist = boid.node.position.distance_to(other.node.position)
+
+		if dist < separation_distance and dist > 0:
+			# Vector pointing away from the neighbor, inversely weighted by distance
+			var diff = (boid.node.position - other.node.position).normalized() / dist
+			steer += diff
+			total += 1
+
+	if total > 0:
+		steer /= total
+		steer = steer.normalized()
+	
+	return steer
+
+func update_boids_noise(boids: Array, speed: float, delta: float) -> void:
 	if frame_counter >= update_interval:
 		frame_counter = 0
 		for boid in boids:

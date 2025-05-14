@@ -4,7 +4,7 @@ extends BoidsSolver
 # params is set to BoidsModel and can be modified in Editor and in boids_model.gd
 
 
-@export var update_interval: int = 50  # Number of frames between angle updates
+@export var update_interval: int = 5000  # Number of frames between angle updates
 var frame_counter: int = 0
 var new_direction = Vector2.ONE
 
@@ -26,8 +26,8 @@ func simulation_step(delta: float, velocity: Vector2, speed: float, position: Ve
 	# calculate new velocity directions according to:
 		# Seperation
 		
-	var separation_distance = 200.0
-	var separation_weight = 5.0
+	var separation_distance = 50.0
+	var separation_weight = 1.0
 
 	for boid in boids:
 		var separation = apply_separation(boid, boids, separation_distance)
@@ -35,6 +35,14 @@ func simulation_step(delta: float, velocity: Vector2, speed: float, position: Ve
 			# Blend the separation with the current velocity
 			boid.velocity = (boid.velocity + separation * separation_weight).normalized() * speed
 		# Alignment
+		
+	var visual_range = 100.0
+	var alignment_weight = 0.5
+
+	for boid in boids:
+		var alignment = apply_alignment(boid, boids, visual_range)
+		if alignment != Vector2.ZERO:
+			boid.velocity = (boid.velocity + alignment * alignment_weight).normalized() * speed
 		# Cohesion
 		# (Additional noise)
 	# Apply a random angle noise every n frames
@@ -73,6 +81,26 @@ func apply_separation(boid, boids: Array, separation_distance: float) -> Vector2
 		steer = steer.normalized()
 	
 	return steer
+	
+func apply_alignment(boid: Dictionary, boids: Array, visual_range: float) -> Vector2:
+	var avg_velocity = Vector2.ZERO
+	var count = 0
+
+	for other in boids:
+		if other == boid:
+			continue
+
+		var dist = boid.node.position.distance_to(other.node.position)
+		if dist < visual_range:
+			avg_velocity += other.velocity
+			count += 1
+
+	if count > 0:
+		avg_velocity /= count
+		avg_velocity = avg_velocity.normalized()
+		return avg_velocity
+	else:
+		return Vector2.ZERO
 
 func update_boids_noise(boids: Array, speed: float, delta: float) -> void:
 	if frame_counter >= update_interval:

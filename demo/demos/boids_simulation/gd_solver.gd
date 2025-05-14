@@ -19,31 +19,30 @@ func initialize() -> void:#
 
 	pass
 
-func simulation_step(delta: float, velocity: Vector2, speed: float, position: Vector2, boid_sprite: Sprite2D, boids: Array) -> void:
+func simulation_step(delta: float, velocity: Vector2, speed: float,
+ visual_range: float, separation_weight: float, alignment_weight: float,
+ cohesion_weight: float, position: Vector2, boid_sprite: Sprite2D, boids: Array) -> void:
 
 	
 	# for each boid collect others in visual range
 	# calculate new velocity directions according to:
 		# Seperation
-		
-	var separation_distance = 50.0
-	var separation_weight = 1.0
-
-	for boid in boids:
-		var separation = apply_separation(boid, boids, separation_distance)
-		if separation != Vector2.ZERO:
-			# Blend the separation with the current velocity
-			boid.velocity = (boid.velocity + separation * separation_weight).normalized() * speed
 		# Alignment
-		
-	var visual_range = 100.0
-	var alignment_weight = 0.5
+		# Cohesion#
+
+	var separation_range = 50.0
+	
 
 	for boid in boids:
+		var separation = apply_separation(boid, boids, separation_range)
 		var alignment = apply_alignment(boid, boids, visual_range)
-		if alignment != Vector2.ZERO:
-			boid.velocity = (boid.velocity + alignment * alignment_weight).normalized() * speed
-		# Cohesion
+		var cohesion = apply_cohesion(boid, boids, visual_range)
+
+		# Combine the three steering behaviors
+		var steer = separation * separation_weight + alignment * alignment_weight + cohesion * cohesion_weight
+
+		# Blend with current velocity and normalize to maintain speed
+		boid.velocity = (boid.velocity + steer).normalized() * speed
 		# (Additional noise)
 	# Apply a random angle noise every n frames
 	
@@ -101,6 +100,27 @@ func apply_alignment(boid: Dictionary, boids: Array, visual_range: float) -> Vec
 		return avg_velocity
 	else:
 		return Vector2.ZERO
+		
+func apply_cohesion(boid: Dictionary, boids: Array, visual_range: float) -> Vector2:
+	var center = Vector2.ZERO
+	var count = 0
+
+	for other in boids:
+		if other == boid:
+			continue
+
+		var dist = boid.node.position.distance_to(other.node.position)
+		if dist < visual_range:
+			center += other.node.position
+			count += 1
+
+	if count > 0:
+		center /= count
+		var direction = (center - boid.node.position).normalized()
+		return direction
+	else:
+		return Vector2.ZERO
+
 
 func update_boids_noise(boids: Array, speed: float, delta: float) -> void:
 	if frame_counter >= update_interval:

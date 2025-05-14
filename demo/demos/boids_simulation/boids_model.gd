@@ -1,6 +1,12 @@
 extends Node2D
 
 @export var boid_count: int = 20
+@export var speed: float = 200.0  # Pixels per second
+@export var visual_range: float = 100.0
+@export var separation_weight: float = 1.0
+@export var alignment_weight: float = 0.5
+@export var cohesion_weight: float = 0.5
+
 # Store data for each sprite
 var boids = []
 var boids_container: Node2D
@@ -16,7 +22,7 @@ var texture = preload("res://demos/boids_simulation/boid.png")
 
 @onready var boid_sprite: Sprite2D = $/root/BoidsModel/Sprite2D
 
-@export var speed: float = 200.0  # Pixels per second
+
 
 
 
@@ -80,7 +86,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	# Call simulation_step(delta)
 	
-	solver.simulation_step(delta, velocity, speed, position, boid_sprite, boids)
+	solver.simulation_step(delta, velocity, speed, visual_range, separation_weight, alignment_weight, cohesion_weight, position, boid_sprite, boids)
 	wrap_around(boids)
 	# Update GUI
 
@@ -135,16 +141,31 @@ func wrap_around(boids: Array):
 		elif boid.node.position.y < 0:
 			boid.node.position.y = screen_size.y
 
-func _on_point_slider_drag_ended(value_changed: bool) -> void:
-	boid_count = %NumberOfBoidsSlider.value
-	
-	#resize_image()
-	solver.initialize()
-
-#func _on_steps_per_second_slider_drag_ended(value_changed: bool) -> void:
-	#steps_per_second = %StepsPerSecondSlider.value
-	#%StepsPerSecondLabel.text = "Speed: %.2f" % steps_per_second
-
+func _on_speed_slider_drag_ended(value_changed: bool) -> void:
+	if value_changed:
+		speed = %SpeedSlider.value
+		%SpeedLabel.text = "Speed: " + str(round(speed))
+		
+func _on_visual_range_slider_drag_ended(value_changed: bool) -> void:
+	if value_changed:
+		visual_range = %VisualRangeSlider.value
+		%VisualRangeLabel.text = "Visual Range: " + str(round(visual_range))
+		
+func _on_separation_slider_drag_ended(value_changed: bool) -> void:
+	if value_changed:
+		separation_weight = %SeparationSlider.value
+		%SeparationLabel.text = "Separation: " + str(snapped(separation_weight, 0.1))
+		
+func _on_alignment_slider_drag_ended(value_changed: bool) -> void:
+	if value_changed:
+		alignment_weight = %AlignmentSlider.value
+		%AlignmentLabel.text = "Alignment: " + str(snapped(alignment_weight, 0.1))
+		
+func _on_cohesion_slider_drag_ended(value_changed: bool) -> void:
+	if value_changed:
+		cohesion_weight = %CohesionSlider.value
+		%CohesionLabel.text = "Cohesion: " + str(snapped(cohesion_weight, 0.1))
+		
 func _on_restart_button_pressed() -> void:
 	solver.initialize()
 
@@ -152,11 +173,6 @@ func _on_solver_option_item_selected(index: int) -> void:
 	solver = $Solvers.get_child(index)
 	solver.initialize()
 	
-
-	
-# TODO handle GUI inputs
-
-
 func _on_number_of_boids_slider_drag_ended(value_changed: bool) -> void:
 	boid_count = %NumberOfBoidsSlider.value
 	%NumberOfBoids.text = "Boids: "+str(boid_count)

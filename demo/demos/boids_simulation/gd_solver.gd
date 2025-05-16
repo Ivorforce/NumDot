@@ -3,8 +3,8 @@ extends BoidsSolver
 # parameters (speed, boids, etc.) defined in params
 # params is set to BoidsModel and can be modified in Editor and in boids_model.gd
 
-
-@export var update_interval: int = 5000  # Number of frames between angle updates
+#TODO make noise independent of frame change
+@export var update_interval: int = 50  # Number of frames between angle updates
 var frame_counter: int = 0
 var new_direction = Vector2.ONE
 
@@ -48,7 +48,7 @@ func simulation_step(delta: float, velocity: Vector2, speed: float,
 	
 	update_boids_noise(boids, speed, delta)
 		
-	
+	#TODO apply here: boid.node.position += boid.velocity * delta
 	frame_counter += 1
 	
 	
@@ -132,6 +132,7 @@ func update_boids_noise(boids: Array, speed: float, delta: float) -> void:
 			# Apply a small random variation to the current angle
 			var angle_variation = randf_range(-0.5, 0.5)
 			var adjusted_angle = boid.velocity.angle() + angle_variation
+			#TODO explain this more
 			new_direction = Vector2(cos(adjusted_angle), sin(adjusted_angle))
 			boid.velocity = new_direction * speed
 			# apply velocities to positions
@@ -139,6 +140,7 @@ func update_boids_noise(boids: Array, speed: float, delta: float) -> void:
 			boid.node.position += boid.velocity * delta
 			
 			#offset angle for right facing direction
+			#TODO initially direct sprite
 			boid.node.rotation = boid.velocity.angle()  + PI / 2 
 			# apply position from position vector to each boid
 			# derive and apply rotation from velocity vector direction to each boid

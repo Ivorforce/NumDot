@@ -22,21 +22,7 @@ var texture = preload("res://demos/boids_simulation/boid.png")
 
 @onready var boid_sprite: Sprite2D = $/root/BoidsModel/Sprite2D
 
-
-
-
-
-
-@export var N: int = 20
-# Implement slider functionalities for:
-	# Number of Boids
-	# Speed
-	# Visual range
-	# Seperation
-	# Alignment
-	# Cohesion
-
-# Implement reset
+#TODO Implement reset
 
 func _ready() -> void:
 	# Create Boids container if it does not exist
@@ -86,7 +72,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	%FPSLabel.text = "FPS: " + str(Engine.get_frames_per_second())
 	# Call simulation_step(delta)
-	
+	#TODO delta display
 	solver.simulation_step(delta, velocity, speed, visual_range, separation_weight, alignment_weight, cohesion_weight, position, boid_sprite, boids)
 	wrap_around(boids)
 	# Update GUI

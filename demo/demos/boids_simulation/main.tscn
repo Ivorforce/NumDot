@@ -57,13 +57,13 @@ offset_right = 272.0
 offset_bottom = 626.0
 metadata/_edit_group_ = true
 
-[node name="SpreadLabel" type="Label" parent="SliderOptions"]
+[node name="SeparationLabel" type="Label" parent="SliderOptions"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Separation: 1"
 
-[node name="SpreadSlider" type="HSlider" parent="SliderOptions"]
+[node name="SeparationSlider" type="HSlider" parent="SliderOptions"]
 unique_name_in_owner = true
 layout_mode = 2
 min_value = 0.01
@@ -72,26 +72,26 @@ step = 0.0
 value = 1.0
 exp_edit = true
 
-[node name="InfectedLabel" type="Label" parent="SliderOptions"]
+[node name="AlignmentLabel" type="Label" parent="SliderOptions"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Alignment: 4"
 
-[node name="InfectedSlider" type="HSlider" parent="SliderOptions"]
+[node name="AlignmentSlider" type="HSlider" parent="SliderOptions"]
 unique_name_in_owner = true
 layout_mode = 2
 min_value = 1.0
 value = 4.0
 exp_edit = true
 
-[node name="RecoveryLabel" type="Label" parent="SliderOptions"]
+[node name="CohesionLabel" type="Label" parent="SliderOptions"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Cohesion: 6"
 
-[node name="RecoverySlider" type="HSlider" parent="SliderOptions"]
+[node name="CohesionSlider" type="HSlider" parent="SliderOptions"]
 unique_name_in_owner = true
 layout_mode = 2
 min_value = 1.0
@@ -149,13 +149,13 @@ offset_right = 1130.0
 offset_bottom = 626.0
 metadata/_edit_group_ = true
 
-[node name="StepsPerSecondLabel" type="Label" parent="SolverOptions"]
+[node name="SpeedLabel" type="Label" parent="SolverOptions"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Speed: 20"
 
-[node name="StepsPerSecondSlider" type="HSlider" parent="SolverOptions"]
+[node name="SpeedSlider" type="HSlider" parent="SolverOptions"]
 unique_name_in_owner = true
 layout_mode = 2
 min_value = 0.1
@@ -164,13 +164,13 @@ step = 0.5
 value = 30.1
 exp_edit = true
 
-[node name="StepsPerSecondLabel2" type="Label" parent="SolverOptions"]
+[node name="NumberOfBoids" type="Label" parent="SolverOptions"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Boids: 20"
 
-[node name="StepsPerSecondSlider2" type="HSlider" parent="SolverOptions"]
+[node name="NumberOfBoidsSlider" type="HSlider" parent="SolverOptions"]
 unique_name_in_owner = true
 layout_mode = 2
 min_value = 0.1
@@ -179,13 +179,13 @@ step = 0.5
 value = 30.1
 exp_edit = true
 
-[node name="StepsPerSecondLabel3" type="Label" parent="SolverOptions"]
+[node name="VisualRangeLabel" type="Label" parent="SolverOptions"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Visual range: 20"
 
-[node name="StepsPerSecondSlider3" type="HSlider" parent="SolverOptions"]
+[node name="VisualRangeSlider" type="HSlider" parent="SolverOptions"]
 unique_name_in_owner = true
 layout_mode = 2
 min_value = 0.1
@@ -196,11 +196,17 @@ exp_edit = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 
-[connection signal="drag_ended" from="SliderOptions/SpreadSlider" to="." method="_on_spread_slider_drag_ended"]
-[connection signal="drag_ended" from="SliderOptions/InfectedSlider" to="." method="_on_infected_slider_drag_ended"]
-[connection signal="drag_ended" from="SliderOptions/RecoverySlider" to="." method="_on_recovery_slider_drag_ended"]
+[connection signal="drag_ended" from="SliderOptions/SeparationSlider" to="." method="_on_spread_slider_drag_ended"]
+[connection signal="drag_ended" from="SliderOptions/SeparationSlider" to="." method="_on_separation_slider_drag_ended"]
+[connection signal="drag_ended" from="SliderOptions/AlignmentSlider" to="." method="_on_infected_slider_drag_ended"]
+[connection signal="drag_ended" from="SliderOptions/AlignmentSlider" to="." method="_on_alignment_slider_drag_ended"]
+[connection signal="drag_ended" from="SliderOptions/CohesionSlider" to="." method="_on_recovery_slider_drag_ended"]
+[connection signal="drag_ended" from="SliderOptions/CohesionSlider" to="." method="_on_cohesion_slider_drag_ended"]
 [connection signal="pressed" from="RestartButton" to="." method="_on_restart_button_pressed"]
 [connection signal="item_selected" from="SolverOption" to="." method="_on_solver_option_item_selected"]
-[connection signal="drag_ended" from="SolverOptions/StepsPerSecondSlider" to="." method="_on_steps_per_second_slider_drag_ended"]
-[connection signal="drag_ended" from="SolverOptions/StepsPerSecondSlider2" to="." method="_on_steps_per_second_slider_drag_ended"]
-[connection signal="drag_ended" from="SolverOptions/StepsPerSecondSlider3" to="." method="_on_steps_per_second_slider_drag_ended"]
+[connection signal="drag_ended" from="SolverOptions/SpeedSlider" to="." method="_on_speed_slider_drag_ended"]
+[connection signal="drag_ended" from="SolverOptions/SpeedSlider" to="." method="_on_steps_per_second_slider_drag_ended"]
+[connection signal="drag_ended" from="SolverOptions/NumberOfBoidsSlider" to="." method="_on_number_of_boids_slider_drag_ended"]
+[connection signal="drag_ended" from="SolverOptions/NumberOfBoidsSlider" to="." method="_on_steps_per_second_slider_drag_ended"]
+[connection signal="drag_ended" from="SolverOptions/VisualRangeSlider" to="." method="_on_visual_range_slider_drag_ended"]
+[connection signal="drag_ended" from="SolverOptions/VisualRangeSlider" to="." method="_on_steps_per_second_slider_drag_ended"]

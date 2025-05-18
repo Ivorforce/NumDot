@@ -29,6 +29,7 @@ Upcoming Changes (main branch)
 **Fixed**
 
 - ``array.get(0)`` and ``array.get(&"newaxis")`` no longer fails or crashes the program.
+- Restored compatibility with older Linux OS by downgrading to GLIBC 2.35.
 
 Version 0.9 - 2025-04-29
 ------------------------

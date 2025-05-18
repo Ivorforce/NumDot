@@ -1,8 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://bjcka7l1qf7by"]
+[gd_scene load_steps=2 format=3 uid="uid://b65qrclghjwb1"]
 
-[ext_resource type="Texture2D" uid="uid://bsmuhgmkqrp0a" path="res://demos/boids_simulation/boid.png" id="1_u4ev8"]
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_nx014"]
 
 [node name="Boid" type="Control"]
+modulate = Color(0.1634, 0.76712, 0.86, 1)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,10 +12,11 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="BoidTexture" type="TextureRect" parent="."]
+z_index = -1
 layout_mode = 0
 offset_left = -12.8
 offset_top = -25.6
 offset_right = 243.2
 offset_bottom = 358.4
 scale = Vector2(0.1, 0.1)
-texture = ExtResource("1_u4ev8")
+texture = SubResource("CompressedTexture2D_nx014")

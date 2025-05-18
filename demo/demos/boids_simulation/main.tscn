@@ -6,8 +6,9 @@
 
 [sub_resource type="ImageTexture" id="ImageTexture_03ndn"]
 
-[node name="BoidsModel" type="Node2D"]
+[node name="BoidsModel" type="Node2D" node_paths=PackedStringArray("solver")]
 script = ExtResource("1_2fw6l")
+solver = NodePath("Solvers/NDSolver")
 
 [node name="Solvers" type="Node" parent="."]
 
@@ -21,6 +22,7 @@ params = NodePath("../..")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 show_behind_parent = true
+z_index = -10
 custom_minimum_size = Vector2(1152, 648)
 anchors_preset = 5
 anchor_left = 0.5
@@ -52,7 +54,7 @@ text = "Frame time: 1"
 [node name="SliderOptions" type="VBoxContainer" parent="."]
 custom_minimum_size = Vector2(250, 0)
 offset_left = 22.0
-offset_top = 432.0
+offset_top = 366.0
 offset_right = 272.0
 offset_bottom = 626.0
 metadata/_edit_group_ = true
@@ -61,42 +63,53 @@ metadata/_edit_group_ = true
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
-text = "Separation: 1"
+text = "Separation: 0.5"
 
 [node name="SeparationSlider" type="HSlider" parent="SliderOptions"]
 unique_name_in_owner = true
 layout_mode = 2
-min_value = 0.01
-max_value = 4.0
-step = 0.0
-value = 1.0
-exp_edit = true
+max_value = 1.0
+step = 0.01
+value = 0.5
 
 [node name="AlignmentLabel" type="Label" parent="SliderOptions"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
-text = "Alignment: 4"
+text = "Alignment: 0.5"
 
 [node name="AlignmentSlider" type="HSlider" parent="SliderOptions"]
 unique_name_in_owner = true
 layout_mode = 2
-min_value = 1.0
-value = 4.0
-exp_edit = true
+max_value = 1.0
+step = 0.01
+value = 0.5
 
 [node name="CohesionLabel" type="Label" parent="SliderOptions"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
-text = "Cohesion: 6"
+text = "Cohesion: 0.5"
 
 [node name="CohesionSlider" type="HSlider" parent="SliderOptions"]
 unique_name_in_owner = true
 layout_mode = 2
-min_value = 1.0
-value = 6.0
-exp_edit = true
+max_value = 1.0
+step = 0.01
+value = 0.5
+
+[node name="NoiseLabel" type="Label" parent="SliderOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Noise: 0.5"
+
+[node name="NoiseSlider" type="HSlider" parent="SliderOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+value = 0.5
 
 [node name="RestartButton" type="Button" parent="."]
 offset_left = 865.0
@@ -153,16 +166,13 @@ metadata/_edit_group_ = true
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
-text = "Speed: 20"
+text = "Speed: 0.5"
 
 [node name="SpeedSlider" type="HSlider" parent="SolverOptions"]
 unique_name_in_owner = true
 layout_mode = 2
-min_value = 0.1
-max_value = 10000.0
-step = 0.5
-value = 30.1
-exp_edit = true
+max_value = 1000.0
+value = 0.5
 
 [node name="NumberOfBoids" type="Label" parent="SolverOptions"]
 unique_name_in_owner = true
@@ -173,40 +183,30 @@ text = "Boids: 20"
 [node name="NumberOfBoidsSlider" type="HSlider" parent="SolverOptions"]
 unique_name_in_owner = true
 layout_mode = 2
-min_value = 0.1
-max_value = 10000.0
+max_value = 1000.0
 step = 0.5
-value = 30.1
+value = 20.0
 exp_edit = true
 
-[node name="VisualRangeLabel" type="Label" parent="SolverOptions"]
+[node name="RangeLabel" type="Label" parent="SolverOptions"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
-text = "Visual range: 20"
+text = "Range: 0.5"
 
-[node name="VisualRangeSlider" type="HSlider" parent="SolverOptions"]
+[node name="RangeSlider" type="HSlider" parent="SolverOptions"]
 unique_name_in_owner = true
 layout_mode = 2
-min_value = 0.1
-max_value = 10000.0
-step = 0.5
-value = 30.1
-exp_edit = true
+max_value = 1.0
+step = 0.01
+value = 0.5
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-
-[connection signal="drag_ended" from="SliderOptions/SeparationSlider" to="." method="_on_spread_slider_drag_ended"]
-[connection signal="drag_ended" from="SliderOptions/SeparationSlider" to="." method="_on_separation_slider_drag_ended"]
-[connection signal="drag_ended" from="SliderOptions/AlignmentSlider" to="." method="_on_infected_slider_drag_ended"]
-[connection signal="drag_ended" from="SliderOptions/AlignmentSlider" to="." method="_on_alignment_slider_drag_ended"]
-[connection signal="drag_ended" from="SliderOptions/CohesionSlider" to="." method="_on_recovery_slider_drag_ended"]
-[connection signal="drag_ended" from="SliderOptions/CohesionSlider" to="." method="_on_cohesion_slider_drag_ended"]
+[connection signal="value_changed" from="SliderOptions/SeparationSlider" to="." method="_on_separation_slider_value_changed"]
+[connection signal="value_changed" from="SliderOptions/AlignmentSlider" to="." method="_on_alignment_slider_value_changed"]
+[connection signal="value_changed" from="SliderOptions/CohesionSlider" to="." method="_on_cohesion_slider_value_changed"]
+[connection signal="value_changed" from="SliderOptions/NoiseSlider" to="." method="_on_noise_slider_value_changed"]
 [connection signal="pressed" from="RestartButton" to="." method="_on_restart_button_pressed"]
 [connection signal="item_selected" from="SolverOption" to="." method="_on_solver_option_item_selected"]
-[connection signal="drag_ended" from="SolverOptions/SpeedSlider" to="." method="_on_speed_slider_drag_ended"]
-[connection signal="drag_ended" from="SolverOptions/SpeedSlider" to="." method="_on_steps_per_second_slider_drag_ended"]
-[connection signal="drag_ended" from="SolverOptions/NumberOfBoidsSlider" to="." method="_on_number_of_boids_slider_drag_ended"]
-[connection signal="drag_ended" from="SolverOptions/NumberOfBoidsSlider" to="." method="_on_steps_per_second_slider_drag_ended"]
-[connection signal="drag_ended" from="SolverOptions/VisualRangeSlider" to="." method="_on_visual_range_slider_drag_ended"]
-[connection signal="drag_ended" from="SolverOptions/VisualRangeSlider" to="." method="_on_steps_per_second_slider_drag_ended"]
+[connection signal="value_changed" from="SolverOptions/SpeedSlider" to="." method="_on_speed_slider_value_changed"]
+[connection signal="value_changed" from="SolverOptions/NumberOfBoidsSlider" to="." method="_on_number_of_boids_slider_value_changed"]
+[connection signal="value_changed" from="SolverOptions/RangeSlider" to="." method="_on_range_slider_value_changed"]

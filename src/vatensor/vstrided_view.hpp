@@ -13,7 +13,7 @@ namespace va {
         using base_type = adj_strides_policy;
 
 	    template<typename T, typename S>
-        static void mod_idx(T& idx, S& dim) {
+        void mod_idx(T& idx, S& dim) {
 	        if (idx < 0) idx = dim + idx;
 	        if (idx >= dim || idx < 0) throw std::runtime_error("Slice index out of range.");
 	    }

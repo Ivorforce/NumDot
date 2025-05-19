@@ -19,13 +19,13 @@ namespace numdot {
 	struct ArrayAsTensor<T[N], Dims...> : ArrayAsTensor<T, Dims..., N> {};
 
 	template <typename T>
-	static auto adapt_tensor(const T& t) {
+	auto adapt_tensor(const T& t) {
 		using Tensor = ArrayAsTensor<T>;
 		return xt::adapt(reinterpret_cast<const typename Tensor::value_type*>(&t), typename Tensor::shape {});
 	}
 
 	template <typename T>
-	static auto adapt_tensor(T& t) {
+	auto adapt_tensor(T& t) {
 		using Tensor = ArrayAsTensor<T>;
 		return xt::adapt(reinterpret_cast<typename Tensor::value_type*>(&t), typename Tensor::shape {});
 	}

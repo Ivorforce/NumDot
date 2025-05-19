@@ -46,7 +46,7 @@ namespace numdot {
 	}
 
 	template<typename Array, typename C>
-	static std::shared_ptr<va::VArray> varray_from_packed(C&& compute, Array&& array) {
+	std::shared_ptr<va::VArray> varray_from_packed(C&& compute, Array&& array) {
 		// A bit fishy to initialize the compute beforehand, but it's guaranteed to point to the same data so far because it's COW.
 		auto store = std::make_shared<PackedArrayStore<Array>>(PackedArrayStore<Array> { std::forward<Array>(array) });
 

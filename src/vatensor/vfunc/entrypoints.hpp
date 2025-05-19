@@ -47,7 +47,7 @@ inline void UFUNC_NAME(VStoreAllocator& allocator, const VArrayTarget& target, c
 }
 
 namespace va {
-	static void positive(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a) {
+	inline void positive(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a) {
 		va::assign(allocator, target, a);
 	}
 	DEFINE_VFUNC_CALLER_UNARY0(negative)
@@ -70,7 +70,7 @@ namespace va {
 	DEFINE_VFUNC_CALLER_BINARY0(pow)
 	DEFINE_VFUNC_CALLER_BINARY0(minimum)
 	DEFINE_VFUNC_CALLER_BINARY0(maximum)
-	static void clip(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& lo, const VData& hi) {
+	inline void clip(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& lo, const VData& hi) {
 		// TODO Re-evaluate if it's worth it to make it a ternary vfunc.
 		// TODO It should also be possible to do this without a temp variable.
 		std::shared_ptr<va::VArray> tmp;
@@ -91,7 +91,7 @@ namespace va {
 	DEFINE_RFUNC_CALLER_UNARY0(norm_l2)
 	DEFINE_RFUNC_CALLER_UNARY0(norm_linf)
 
-	static void count_nonzero(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array, const axes_type* axes) {
+	inline void count_nonzero(VStoreAllocator& allocator, const VArrayTarget& target, const VData& array, const axes_type* axes) {
 		if (va::dtype(array) == va::Bool)
 			return va::sum(allocator, target, array, axes);
 
@@ -99,7 +99,7 @@ namespace va {
 		return va::sum(allocator, target, is_nonzero->data, axes);
 	}
 
-	static void trace(VStoreAllocator& allocator, const VArrayTarget& target, const VArray& varray, std::ptrdiff_t offset, std::ptrdiff_t axis1, std::ptrdiff_t axis2) {
+	inline void trace(VStoreAllocator& allocator, const VArrayTarget& target, const VArray& varray, std::ptrdiff_t offset, std::ptrdiff_t axis1, std::ptrdiff_t axis2) {
 		const auto diagonal = va::diagonal(varray, offset, axis1, axis2);
 		const axes_type strides {-1};
 		va::sum(allocator, target, diagonal->data, &strides);
@@ -122,7 +122,7 @@ namespace va {
 	DEFINE_VFUNC_CALLER_UNARY0(acosh)
 	DEFINE_VFUNC_CALLER_UNARY0(atanh)
 
-	static void angle(VStoreAllocator& allocator, const VArrayTarget& target, const std::shared_ptr<VArray>& array) {
+	inline void angle(VStoreAllocator& allocator, const VArrayTarget& target, const std::shared_ptr<VArray>& array) {
 		va::atan2(allocator, target, va::imag(array)->data, va::real(array)->data);
 	}
 
@@ -157,7 +157,7 @@ namespace va {
 
 	DEFINE_VFUNC_CALLER_BINARY3(is_close, double, double, bool)
 	DEFINE_R0FUNC_CALLER_BINARY0(array_equiv)
-	static void array_equal(::va::VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b) {
+	inline void array_equal(::va::VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b) {
 		if (shape(a) != shape(b)) {
 			return va::assign(target, false);
 		}
@@ -170,7 +170,7 @@ namespace va {
 
 	DEFINE_RFUNC_CALLER_BINARY0(sum_product)
 
-	static void a0xb1_minus_a1xb0(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b, const std::ptrdiff_t i0, const std::ptrdiff_t i1) {
+	inline void a0xb1_minus_a1xb0(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b, const std::ptrdiff_t i0, const std::ptrdiff_t i1) {
 		auto a_shape = va::shape(a);
 		a_shape.pop_back();
 		auto b_shape = va::shape(b);
@@ -180,7 +180,7 @@ namespace va {
 		_call_vfunc_binary(allocator, vfunc::tables::a0xb1_minus_a1xb0, target, result_shape, a, b, std::move(i0), std::move(i1));
 	}
 
-	static void pad(VStoreAllocator& allocator, const VArrayTarget& target, const VArray& a, const std::vector<std::vector<std::size_t>>& pad_width, xt::pad_mode pad_mode, VScalar pad_value) {
+	inline void pad(VStoreAllocator& allocator, const VArrayTarget& target, const VArray& a, const std::vector<std::vector<std::size_t>>& pad_width, xt::pad_mode pad_mode, VScalar pad_value) {
 		auto result_shape = a.shape();
 		if (pad_width.size() > result_shape.size()) {
 			throw std::runtime_error("dimension out of bounds");
@@ -198,12 +198,12 @@ namespace va {
 		_call_vfunc_unary(allocator, vfunc::tables::pad, target, result_shape, a.data, pad_width, std::move(pad_mode), std::move(pad_value_ptr));
 	}
 
-	static void pad(VStoreAllocator& allocator, const VArrayTarget& target, const VArray& a, const std::vector<std::size_t>& pad_width, xt::pad_mode pad_mode, VScalar pad_value) {
+	inline void pad(VStoreAllocator& allocator, const VArrayTarget& target, const VArray& a, const std::vector<std::size_t>& pad_width, xt::pad_mode pad_mode, VScalar pad_value) {
 		const std::vector pw(a.dimension(), pad_width);
 		va::pad(allocator, target, a, pw, pad_mode, pad_value);
 	}
 
-	static void pad(VStoreAllocator& allocator, const VArrayTarget& target, const VArray& a, const size_t& pad_width, xt::pad_mode pad_mode, VScalar pad_value) {
+	inline void pad(VStoreAllocator& allocator, const VArrayTarget& target, const VArray& a, const size_t& pad_width, xt::pad_mode pad_mode, VScalar pad_value) {
 		const std::vector pw(a.dimension(), std::vector {pad_width, pad_width});
 		va::pad(allocator, target, a, pw, pad_mode, pad_value);
 	}

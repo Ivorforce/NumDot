@@ -8,7 +8,7 @@
 
 namespace va {
 	template<typename Visitor>
-	static std::shared_ptr<VArray> map(const Visitor& visitor, const VArray& varray) {
+	std::shared_ptr<VArray> map(const Visitor& visitor, const VArray& varray) {
 		return std::visit(
 			[&varray, &visitor](const auto& read) -> std::shared_ptr<VArray> {
 				using VTRead = typename std::decay_t<decltype(read)>::value_type;
@@ -23,7 +23,7 @@ namespace va {
 	}
 
 	template<typename Visitor>
-	static VData map_compute(const Visitor& visitor, const VData& data) {
+	VData map_compute(const Visitor& visitor, const VData& data) {
 		return std::visit(
 			[&visitor](const auto& read) -> VData {
 				using VTRead = typename std::decay_t<decltype(read)>::value_type;

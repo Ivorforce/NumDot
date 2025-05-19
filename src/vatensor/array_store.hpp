@@ -23,7 +23,7 @@ namespace va::store {
 		~VCharPtrStore() override;
 	};
 
-	static std::shared_ptr<VArray> from_store(VCharPtrStore&& store, const va::shape_type& shape, const va::strides_type& strides, const xt::layout_type layout) {
+	inline std::shared_ptr<VArray> from_store(VCharPtrStore&& store, const va::shape_type& shape, const va::strides_type& strides, const xt::layout_type layout) {
 		auto compute = std::visit([&store, &shape, &strides, &layout](auto t) -> VData {
 			using T = decltype(t);
 			return make_compute<T*>(

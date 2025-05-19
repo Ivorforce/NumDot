@@ -43,11 +43,11 @@ namespace va::store {
 		std::shared_ptr<VStore> allocate(DType dtype, std::size_t count) override;
 	};
 
-	static XArrayStoreAllocator default_allocator = {};
+	inline XArrayStoreAllocator default_allocator = {};
 
 	// For deducted V, from xexpressions
 	template<typename T>
-	static std::shared_ptr<VStore> make_store(std::size_t count) {
+	std::shared_ptr<VStore> make_store(std::size_t count) {
 		return std::shared_ptr<VStore>(std::make_shared<XArrayStore>(XArrayStore {
 			XArrayStoreVariant { tensor_case<T>(typename tensor_case<T>::shape_type { count }) }
 		}));

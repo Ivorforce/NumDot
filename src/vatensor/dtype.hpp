@@ -49,7 +49,7 @@ namespace va {
 		uint64_t
 	>;
 
-	constexpr static DType dtype(VScalar dtype) {
+	constexpr DType dtype(VScalar dtype) {
 		return static_cast<DType>(dtype.index());
 	}
 
@@ -58,11 +58,11 @@ namespace va {
 		return static_cast<DType>(VScalar(T()).index());
 	}
 
-	static constexpr bool is_any_dtype(const DType dtype) noexcept {
+	constexpr bool is_any_dtype(const DType dtype) noexcept {
 		return static_cast<size_t>(dtype) <= DTypeMax;
 	}
 
-	static constexpr bool is_normal_dtype(const DType dtype) noexcept {
+	constexpr bool is_normal_dtype(const DType dtype) noexcept {
 		return static_cast<size_t>(dtype) <= DTypeMax;
 	}
 
@@ -75,11 +75,11 @@ namespace va {
 		std::make_index_sequence<std::variant_size_v<VScalar>>{}
 	);
 
-	static constexpr VScalar dtype_to_variant_unchecked(const DType dtype) noexcept {
+	constexpr VScalar dtype_to_variant_unchecked(const DType dtype) noexcept {
 		return _variant_table[static_cast<size_t>(dtype)];
 	}
 
-	static VScalar dtype_to_variant(const DType dtype) {
+	inline VScalar dtype_to_variant(const DType dtype) {
 		static_assert(std::is_trivially_copyable_v<VScalar>, "VScalar is not trivially copyable");
 
 		if (!is_normal_dtype(dtype)) {
@@ -97,11 +97,11 @@ namespace va {
 
 	constexpr auto _size_table = make_size_array(VScalar{});
 
-	static constexpr std::size_t size_of_dtype_in_bytes_unchecked(const DType dtype) noexcept {
+	constexpr std::size_t size_of_dtype_in_bytes_unchecked(const DType dtype) noexcept {
 		return _size_table[static_cast<size_t>(dtype)];
 	}
 
-	static std::size_t size_of_dtype_in_bytes(const DType dtype) {
+	inline std::size_t size_of_dtype_in_bytes(const DType dtype) {
 		if (!is_normal_dtype(dtype)) {
 			throw std::runtime_error("Invalid dtype.");
 		}
@@ -135,18 +135,18 @@ namespace va {
 
 	constexpr auto _common_type_table = create_common_type_table();
 
-	static constexpr DType dtype_common_type_unchecked(const DType a, const DType b) noexcept {
+	constexpr DType dtype_common_type_unchecked(const DType a, const DType b) noexcept {
 		return _common_type_table[static_cast<size_t>(a)][static_cast<size_t>(b)];
 	}
 
-	static DType dtype_common_type(const DType a, const DType b) {
+	inline DType dtype_common_type(const DType a, const DType b) {
 		if (!is_any_dtype(a) || !is_any_dtype(b)) {
 			throw std::runtime_error("Invalid dtype.");
 		}
 		return dtype_common_type_unchecked(a, b);
 	}
 
-	static DType complex_dtype_value_type(const DType dtype) {
+	inline DType complex_dtype_value_type(const DType dtype) {
 		return std::visit([](auto t) -> DType {
 			if constexpr (xtl::is_complex<decltype(t)>::value) {
 				return dtype_of_type<typename decltype(t)::value_type>();

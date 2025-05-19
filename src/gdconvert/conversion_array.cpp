@@ -350,7 +350,7 @@ void find_shape_and_dtype(va::shape_type& shape, va::DType& dtype, const Variant
 }
 
 template <typename E, std::size_t... axes, typename T>
-static auto adapt_packed(const T& packed) {
+auto adapt_packed(const T& packed) {
 	return va::util::adapt_c_array(
 		const_cast<E*>(reinterpret_cast<const E*>(packed.ptr())),
 		{ static_cast<std::size_t>(packed.size()), axes... }
@@ -358,7 +358,7 @@ static auto adapt_packed(const T& packed) {
 }
 
 template <typename T>
-static auto adapt_array_tensor(const T& t) {
+auto adapt_array_tensor(const T& t) {
 	const auto& array = numdot::VariantAsArray<T>::get(t);
 	using Tensor = numdot::ArrayAsTensor<std::remove_reference_t<decltype(array)>>;
 

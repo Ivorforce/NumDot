@@ -23,7 +23,7 @@ namespace va::store {
 	};
 
 	template <typename V>
-	static std::shared_ptr<VArray> from_scalar(const V value) {
+	std::shared_ptr<VArray> from_scalar(const V value) {
 		auto store = std::make_shared<VScalarStore>(VScalarStore { value });
 
 		return std::make_shared<VArray>(VArray {
@@ -40,7 +40,7 @@ namespace va::store {
 	}
 
 	template <typename V>
-	static std::shared_ptr<VArray> full_dummy_like(const V value, const VData& read) {
+	std::shared_ptr<VArray> full_dummy_like(const V value, const VData& read) {
 		auto store = std::make_shared<VScalarStoreNonwrite>(VScalarStoreNonwrite { value });
 
 		strides_type strides(va::dimension(read));

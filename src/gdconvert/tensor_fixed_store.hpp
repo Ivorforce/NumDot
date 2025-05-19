@@ -28,7 +28,7 @@ namespace numdot {
 	>;
 
 	template<typename Store>
-	static std::shared_ptr<va::VArray> varray_from_tensor(typename Store::Tensor&& tensor) {
+	std::shared_ptr<va::VArray> varray_from_tensor(typename Store::Tensor&& tensor) {
 		using V = typename Store::Tensor::value_type;
 
 		constexpr std::size_t dim = Store::Tensor::shape_type::size();
@@ -57,7 +57,7 @@ namespace numdot {
 	}
 
 	template<typename T>
-	static std::shared_ptr<va::VArray> varray_from_tensor(const T& tensor) {
+	std::shared_ptr<va::VArray> varray_from_tensor(const T& tensor) {
 		using Array = VariantAsArray<T>;
 		using StoreTensor = typename VStoreVariant<T>::Tensor;
 

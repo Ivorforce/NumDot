@@ -70,9 +70,9 @@ func simulation_step(delta: float) -> void:
 	# Calculate distances from position differences with shape [n, n]
 	var position_distances := nd.norm(position_differences, 2, 2)
 	# Mark every pair of boids with distance smaller than range in separation mask with shape [n, n]
-	var vision_mask := nd.less(position_distances, params.range).as_type(nd.Int16)
+	var vision_mask := nd.less_equal(position_distances, params.range).as_type(nd.Int16)
 	# Mark every pair of boids with distance smaller than 0.5*range in separation mask with shape [n, n]
-	var separation_mask := nd.less(position_distances, params.range*0.5).as_type(nd.Int16)
+	var separation_mask := nd.less_equal(position_distances, params.range*0.5).as_type(nd.Int16)
 
 	# Separation
 	# Calculate separation direction normalization divisor with shape [n, n]

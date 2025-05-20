@@ -1,27 +1,20 @@
 extends Node2D
 
 @export var boid_count: int = 20
-@export var speed: float = 200.0  # Pixels per second
+@export var speed: float = 200.0
 @export var range: float = 100.0
 @export var separation_weight: float = 1.0
 @export var alignment_weight: float = 0.5
 @export var cohesion_weight: float = 0.5
-@export var noise_weight: float = 0.5
 
 @export var scale_factor: float = 0.1
 
 @export_category("Simulation parameters")
 @export var solver: BoidsSolver
 
-#var position = Vector2(500, 500) # position vector
-var velocity: Vector2 = Vector2(100,50)
-
-
 var texture = preload("res://demos/boids_simulation/boid.tres")
 
-@onready var boid_sprite: Sprite2D = $/root/BoidsModel/Sprite2D
-
-#TODO Implement reset
+var frame_time: float = 0.
 
 func _ready() -> void:
 	# Create Boids container if it does not exist
@@ -30,34 +23,27 @@ func _ready() -> void:
 		boids_container.name = "Boids"
 		add_child(boids_container)
 
+	# Synchronize initial values with GUI
+	boid_count = %NumberOfBoidsSlider.value
+	speed = %SpeedSlider.value
+	range = %RangeSlider.value
+	separation_weight = %SeparationSlider.value
+	alignment_weight = %AlignmentSlider.value
+	cohesion_weight = %CohesionSlider.value
+
 	# Create boids as children of the Boids container
 	initialize_boids(boid_count)
 
 	solver.initialize()
-		##TODO initialize in model?
-		## Initialize boid data
-		#var boid_data = {
-			#"node": boid,
-			##Assign same speed and random direction based on rotation
-			#"velocity": Vector2(cos(boid.rotation), sin(boid.rotation)).normalized() * speed
-		#}
-		#boids.append(boid_data)
-	# Set correct values in GUI
-
-	# Initialize boids as scenes from res://demos/boids_simulation/boid.tscn
-		# Load the boid sprite
-
-	# TODO Add border around screen redirecting boids to screen center
 
 
 func _process(delta: float) -> void:
-	%FPSLabel.text = "FPS: " + str(Engine.get_frames_per_second())
-
+	frame_time = Time.get_ticks_usec()
 	solver.simulation_step(delta)
+	frame_time = Time.get_ticks_usec() - frame_time
 
-	# Call simulation_step(delta)
-	# TODO delta display
-	# Update GUI
+	%FPSLabel.text = "FPS: " + str(Engine.get_frames_per_second())
+	%FrameTimeLabel.text = "Delta (ms): " + str(snappedf(frame_time/1000, 1e-3))
 
 
 func initialize_boids(target_count: int) -> void:
@@ -77,27 +63,8 @@ func add_boid(i: int):
 	boid.set_modulate(Color.DARK_SLATE_GRAY)
 	boid.z_index = -1
 	boid.scale = Vector2(0.1, 0.1)
-	boid.name = "Boid" + str(i)  # Naming each boid
+	boid.name = "Boid" + str(i)
 	$Boids.add_child(boid)
-
-
-func wrap_around(boids: Array):
-	return
-	var screen_size = get_viewport_rect().size
-	for boid in boids:
-
-		# TODO in solver, add offset?
-		# Check horizontal boundaries
-		if boid.node.position.x > screen_size.x:
-			boid.node.position.x = 0
-		elif boid.node.position.x < 0:
-			boid.node.position.x = screen_size.x
-
-		# Check vertical boundaries
-		if boid.node.position.y > screen_size.y:
-			boid.node.position.y = 0
-		elif boid.node.position.y < 0:
-			boid.node.position.y = screen_size.y
 
 
 func _on_speed_slider_value_changed(value) -> void:
@@ -119,10 +86,6 @@ func _on_alignment_slider_value_changed(value) -> void:
 func _on_cohesion_slider_value_changed(value) -> void:
 	cohesion_weight = value
 	%CohesionLabel.text = "Cohesion: " + str(cohesion_weight)
-
-func _on_noise_slider_value_changed(value) -> void:
-	noise_weight = value
-	%NoiseLabel.text = "Noise: " + str(noise_weight)
 
 func _on_restart_button_pressed() -> void:
 	solver.initialize()

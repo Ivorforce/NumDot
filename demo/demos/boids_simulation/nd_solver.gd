@@ -2,9 +2,9 @@ extends BoidsSolver
 
 var positions: NDArray
 var directions: NDArray
-var noise_positions: NDArray
 
 var rng := nd.default_rng()
+
 var screen_size: Vector2
 
 func initialize() -> void:
@@ -13,9 +13,6 @@ func initialize() -> void:
 	# Initialize position and direction vector
 	positions = initialize_position_array(params.boid_count)
 	directions = initialize_direction_array(params.boid_count)
-
-	# Initalize vector with random noise sampling positions
-	noise_positions = initialize_sample_position_array(params.boid_count)
 
 
 # Helper function to create position direction vector with length
@@ -41,26 +38,17 @@ func initialize_direction_array(length: int) -> NDArray:
 	return nd.stack([directions_x, directions_y], 1)
 
 
-# Helper function to create random sample position vector with length
-func initialize_sample_position_array(length: int) -> NDArray:
-	# Initialize noise sampling position vector of shape [length]
-	return nd.add(rng.integers(1e3, null, [length]), rng.random([length]))
-
-
 func simulation_step(delta: float) -> void:
 	# Check if boid_count has been changed, update vector sizes accordingly
 	var boid_count_difference = params.boid_count-positions.shape()[0]
 	if boid_count_difference < 0:
 		positions = positions.get(nd.range(params.boid_count), nd.range(2))
 		directions = directions.get(nd.range(params.boid_count), nd.range(2))
-		noise_positions = noise_positions.get(nd.range(params.boid_count))
 	elif boid_count_difference > 0:
 		var new_positions := initialize_position_array(boid_count_difference)
 		var new_directions := initialize_direction_array(boid_count_difference)
-		var new_noise_positions := initialize_sample_position_array(boid_count_difference)
 		positions = nd.vstack([positions, new_positions])
 		directions = nd.vstack([directions, new_directions])
-		noise_positions = nd.concatenate([noise_positions, new_noise_positions])
 
 	# Move positions in directions by delta*speed
 	var offset := nd.multiply(directions, delta*params.speed)
@@ -77,20 +65,60 @@ func simulation_step(delta: float) -> void:
 		positions_axis.assign_add(positions_axis, wrap_negative)
 		positions.set(positions_axis, nd.range(params.boid_count), axis)
 
-	# For each force:
-		# Calculate masks for boids in range
-		# Calulcate difference to current boid
-		# Sum over differences and normalize
+	# Create pair-wise position differences of boids with shape [n, n, 2]
+	var position_differences := nd.subtract(positions.get(null, &"newaxis", null), positions.get(&"newaxis", null, null))
+	# Calculate distances from position differences with shape [n, n]
+	var position_distances := nd.norm(position_differences, 2, 2)
+	# Mark every pair of boids with distance smaller than range in separation mask with shape [n, n]
+	var vision_mask := nd.less(position_distances, params.range).as_type(nd.Int16)
+	# Mark every pair of boids with distance smaller than 0.5*range in separation mask with shape [n, n]
+	var separation_mask := nd.less(position_distances, params.range*0.5).as_type(nd.Int16)
 
-	# TODO Separation
-	# TODO Alignment
-	# TODO Cohesion
+	# Separation
+	# Normalize position differences to length 1, set identities to length 0 with shape [n, n, 1]
+	var separation_directions := nd.divide(position_differences, nd.add(position_distances, nd.eye(params.boid_count)).get(null, null, &"newaxis"))
+	# Ignore boids not marked in separation mask
+	separation_directions.assign_multiply(position_differences, separation_mask.get(null, null, &"newaxis"))
+	# Calculate sum of separation directions per boid with shape [n, 2]
+	var separations := nd.sum(separation_directions, 0)
+	# Normalize separation directions for each boid
+	separations.assign_divide(separations, nd.sum(separation_mask, 0).get(null, &"newaxis"))
+	# Make seperation directions point away from boids in separation range
+	separations.assign_multiply(separations, -1)
 
-	# TODO Noise
+	# Alignment
+	# Ignore boids not marked in vision mask
+	var alignment_directions := nd.multiply(directions.get(null, &"newaxis", null), vision_mask.get(null, null, &"newaxis"))
+	# Calculate sum of alignment directions per boid with shape [n, 2]
+	var alignments := nd.sum(alignment_directions, 0)
+	# Normalize alignment directions for each boid
+	alignments.assign_divide(alignments, nd.norm(alignments, 2, 1).get(null, &"newaxis"))
 
-	# TODO Add to direction according to weigths and normalize
+	# Cohesion
+	# Ignore boids not marked in cohesion mask
+	var cohesion_positions := nd.multiply(positions.get(null, &"newaxis", null), vision_mask.get(null, null, &"newaxis"))
+	# Calculate sum of cohesion positions with shape [n, 1]
+	var cohesions := nd.sum(cohesion_positions, 0)
+	# Find cohesion centers by calculating averages
+	cohesions.assign_divide(cohesions, nd.sum(vision_mask, 0).get(null, &"newaxis"))
+	# Calculate cohesion directions by taking difference between boids and respective cohesion centers
+	cohesions.assign_subtract(cohesions, positions)
+	# Calculate cohesion direction normalization divisor (dist to cohesion center if existing, else 1)
+	var cohesion_normalization = nd.norm(cohesions, 2, 1)
+	cohesion_normalization.assign_add(cohesion_normalization, nd.equal(cohesion_normalization, 0.0).as_type(nd.Int16))
+	# Normalize cohesion directions
+	cohesions.assign_divide(cohesions, cohesion_normalization.get(null, &"newaxis"))
+
+	# Update direcctions vector according to separation, alignment and cohesion with respective weights
+	directions.assign_add(directions, separations.assign_multiply(separations, params.separation_weight*delta))
+	directions.assign_add(directions, alignments.assign_multiply(alignments, params.alignment_weight*delta))
+	directions.assign_add(directions, cohesions.assign_multiply(cohesions, params.cohesion_weight*delta))
+
+	# Normalize direction vection lengths to 1
+	directions.assign_divide(directions, nd.norm(directions, 2, 1).get(null, &"newaxis"))
 
 	update_boids()
+
 
 func update_boids() -> void:
 	var boids := params.get_node("Boids").get_children()

@@ -54,7 +54,7 @@ text = "Frame time: 1"
 [node name="SliderOptions" type="VBoxContainer" parent="."]
 custom_minimum_size = Vector2(250, 0)
 offset_left = 22.0
-offset_top = 366.0
+offset_top = 432.0
 offset_right = 272.0
 offset_bottom = 626.0
 metadata/_edit_group_ = true
@@ -63,53 +63,42 @@ metadata/_edit_group_ = true
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
-text = "Separation: 0.5"
+text = "Separation: 0.2"
 
 [node name="SeparationSlider" type="HSlider" parent="SliderOptions"]
 unique_name_in_owner = true
 layout_mode = 2
 max_value = 1.0
 step = 0.01
-value = 0.5
+value = 0.2
 
 [node name="AlignmentLabel" type="Label" parent="SliderOptions"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
-text = "Alignment: 0.5"
+text = "Alignment: 0.4
+"
 
 [node name="AlignmentSlider" type="HSlider" parent="SliderOptions"]
 unique_name_in_owner = true
 layout_mode = 2
 max_value = 1.0
 step = 0.01
-value = 0.5
+value = 0.4
 
 [node name="CohesionLabel" type="Label" parent="SliderOptions"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
-text = "Cohesion: 0.5"
+text = "Cohesion: 0.6
+"
 
 [node name="CohesionSlider" type="HSlider" parent="SliderOptions"]
 unique_name_in_owner = true
 layout_mode = 2
 max_value = 1.0
 step = 0.01
-value = 0.5
-
-[node name="NoiseLabel" type="Label" parent="SliderOptions"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 30
-text = "Noise: 0.5"
-
-[node name="NoiseSlider" type="HSlider" parent="SliderOptions"]
-unique_name_in_owner = true
-layout_mode = 2
-max_value = 1.0
-step = 0.01
-value = 0.5
+value = 0.6
 
 [node name="RestartButton" type="Button" parent="."]
 offset_left = 865.0
@@ -126,7 +115,7 @@ offset_top = 23.0
 offset_right = 1137.0
 offset_bottom = 73.0
 theme_override_font_sizes/font_size = 30
-selected = 0
+selected = 1
 item_count = 2
 popup/item_0/text = "GDScript"
 popup/item_1/text = "NumDot"
@@ -166,45 +155,44 @@ metadata/_edit_group_ = true
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
-text = "Speed: 0.5"
+text = "Speed: 200"
 
 [node name="SpeedSlider" type="HSlider" parent="SolverOptions"]
 unique_name_in_owner = true
 layout_mode = 2
 max_value = 1000.0
-value = 0.5
+value = 200.0
 
 [node name="NumberOfBoids" type="Label" parent="SolverOptions"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
-text = "Boids: 20"
+text = "Boids: 50"
 
 [node name="NumberOfBoidsSlider" type="HSlider" parent="SolverOptions"]
 unique_name_in_owner = true
 layout_mode = 2
+min_value = 1.0
 max_value = 1000.0
 step = 0.5
-value = 20.0
+value = 50.0
 exp_edit = true
 
 [node name="RangeLabel" type="Label" parent="SolverOptions"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
-text = "Range: 0.5"
+text = "Range: 100"
 
 [node name="RangeSlider" type="HSlider" parent="SolverOptions"]
 unique_name_in_owner = true
 layout_mode = 2
-max_value = 1.0
-step = 0.01
-value = 0.5
+max_value = 1000.0
+value = 100.0
 
 [connection signal="value_changed" from="SliderOptions/SeparationSlider" to="." method="_on_separation_slider_value_changed"]
 [connection signal="value_changed" from="SliderOptions/AlignmentSlider" to="." method="_on_alignment_slider_value_changed"]
 [connection signal="value_changed" from="SliderOptions/CohesionSlider" to="." method="_on_cohesion_slider_value_changed"]
-[connection signal="value_changed" from="SliderOptions/NoiseSlider" to="." method="_on_noise_slider_value_changed"]
 [connection signal="pressed" from="RestartButton" to="." method="_on_restart_button_pressed"]
 [connection signal="item_selected" from="SolverOption" to="." method="_on_solver_option_item_selected"]
 [connection signal="value_changed" from="SolverOptions/SpeedSlider" to="." method="_on_speed_slider_value_changed"]

@@ -17,12 +17,6 @@ var texture = preload("res://demos/boids_simulation/boid.tres")
 var frame_time: float = 0.
 
 func _ready() -> void:
-	# Create Boids container if it does not exist
-	if not has_node("Boids"):
-		var boids_container = Node2D.new()
-		boids_container.name = "Boids"
-		add_child(boids_container)
-
 	# Synchronize initial values with GUI
 	boid_count = %NumberOfBoidsSlider.value
 	speed = %SpeedSlider.value
@@ -31,7 +25,11 @@ func _ready() -> void:
 	alignment_weight = %AlignmentSlider.value
 	cohesion_weight = %CohesionSlider.value
 
-	# Create boids as children of the Boids container
+	# Instantiate Boid nodes under $Boids
+	if not has_node("Boids"):
+		var boids_container = Node2D.new()
+		boids_container.name = "Boids"
+		add_child(boids_container)
 	initialize_boids(boid_count)
 
 	solver.initialize()
@@ -62,7 +60,7 @@ func add_boid(i: int):
 	boid.texture = texture
 	boid.set_modulate(Color.DARK_SLATE_GRAY)
 	boid.z_index = -1
-	boid.scale = Vector2(0.1, 0.1)
+	boid.scale *= scale_factor
 	boid.name = "Boid" + str(i)
 	$Boids.add_child(boid)
 

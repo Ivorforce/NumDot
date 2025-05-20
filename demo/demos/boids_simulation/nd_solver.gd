@@ -75,16 +75,22 @@ func simulation_step(delta: float) -> void:
 	var separation_mask := nd.less(position_distances, params.range*0.5).as_type(nd.Int16)
 
 	# Separation
-	# Normalize position differences to length 1, set identities to length 0 with shape [n, n, 1]
-	var separation_directions := nd.divide(position_differences, nd.add(position_distances, nd.eye(params.boid_count)).get(null, null, &"newaxis"))
+	# Calculate separation direction normalization divisor with shape [n, n]
+	var separation_normalization := nd.square(position_distances)
+	separation_normalization.assign_add(separation_normalization, nd.eye(params.boid_count))
+	# Normalize separation directions inversely proportional to distances with shape [n, n, 1]
+	var separation_directions := nd.divide(position_differences, separation_normalization.get(null, null, &"newaxis"))
 	# Ignore boids not marked in separation mask
 	separation_directions.assign_multiply(position_differences, separation_mask.get(null, null, &"newaxis"))
 	# Calculate sum of separation directions per boid with shape [n, 2]
 	var separations := nd.sum(separation_directions, 0)
-	# Normalize separation directions for each boid
-	separations.assign_divide(separations, nd.sum(separation_mask, 0).get(null, &"newaxis"))
 	# Make seperation directions point away from boids in separation range
 	separations.assign_multiply(separations, -1)
+	# Calculate separation direction normalization divisor with shape [n]
+	var separations_normalization := nd.norm(separations, 2, 1)
+	separations_normalization.assign_add(separations_normalization, nd.equal(separations_normalization, 0.0).as_type(nd.Int16))
+	# Normalize separation directions for each boid
+	separations.assign_divide(separations, separations_normalization.get(null, &"newaxis"))
 
 	# Alignment
 	# Ignore boids not marked in vision mask
@@ -104,13 +110,13 @@ func simulation_step(delta: float) -> void:
 	# Calculate cohesion directions by taking difference between boids and respective cohesion centers
 	cohesions.assign_subtract(cohesions, positions)
 	# Calculate cohesion direction normalization divisor (dist to cohesion center if existing, else 1)
-	var cohesion_normalization = nd.norm(cohesions, 2, 1)
-	cohesion_normalization.assign_add(cohesion_normalization, nd.equal(cohesion_normalization, 0.0).as_type(nd.Int16))
+	var cohesions_normalization = nd.norm(cohesions, 2, 1)
+	cohesions_normalization.assign_add(cohesions_normalization, nd.equal(cohesions_normalization, 0.0).as_type(nd.Int16))
 	# Normalize cohesion directions
-	cohesions.assign_divide(cohesions, cohesion_normalization.get(null, &"newaxis"))
+	cohesions.assign_divide(cohesions, cohesions_normalization.get(null, &"newaxis"))
 
-	# Update direcctions vector according to separation, alignment and cohesion with respective weights
-	directions.assign_add(directions, separations.assign_multiply(separations, params.separation_weight*delta))
+	# Update directions vector according to separation, alignment and cohesion with respective weights
+	directions.assign_add(directions, separations.assign_multiply(separations, params.separation_weight*delta*2))
 	directions.assign_add(directions, alignments.assign_multiply(alignments, params.alignment_weight*delta))
 	directions.assign_add(directions, cohesions.assign_multiply(cohesions, params.cohesion_weight*delta))
 
@@ -122,7 +128,7 @@ func simulation_step(delta: float) -> void:
 
 func update_boids() -> void:
 	var boids := params.get_node("Boids").get_children()
-	for i in range(boids.size()):
+	for i in range(params.boid_count):
 		var boid: Node2D = boids[i]
 
 		# Set position of boids by updating origin of transform

@@ -1,158 +1,102 @@
 extends BoidsSolver
 
-# parameters (speed, boids, etc.) defined in params
-# params is set to BoidsModel and can be modified in Editor and in boids_model.gd
+var positions: Array[Vector2]
+var directions: Array[Vector2]
 
-#TODO make noise independent of frame change
-@export var update_interval: int = 50  # Number of frames between angle updates
-var frame_counter: int = 0
-var new_direction: Vector2
+var screen_size: Vector2
 
-func initialize() -> void:#
-	print("GD Solver")
-	# create position vector and initialize with random Vector2s inside screen
-	#boid.position = Vector2(randf_range(0, get_viewport_rect().size.x), randf_range(0, get_viewport_rect().size.y))
-	#Assign a boid a random position and standard size
+func initialize() -> void:
+	screen_size = params.get_viewport_rect().size
+
+	# Initialize position and direction vector
+	positions = initialize_position_array(params.boid_count)
+	directions = initialize_direction_array(params.boid_count)
 
 
-	# create velocity vector and initialize with Vector2s of same value in random directions
-	# Assign a random start rotation (in radians)
-	#boid.rotation = randf_range(0, PI * 2)
-	pass
+# Helper function to create position direction vector with length
+func initialize_position_array(length: int) -> Array[Vector2]:
+	# Initialize position Array with |length| Vector2s
+	# Values are random 2D-positions on screen
+	var positions_xy: Array[Vector2] = []
+	for i in range(length):
+		positions_xy.append(Vector2(randf()*screen_size.x, randf()*screen_size.y))
+	return positions_xy
 
-# TODO as dictionary? Which inputs are actual inputs
+
+# Helper function to create random direction vector with length
+func initialize_direction_array(length: int) -> Array[Vector2]:
+	# Initialize direction Array with |length| Vector2s
+	# Values are normalized 2D-vectors with random angle
+	var directions_xy: Array[Vector2] = []
+	for i in range(length):
+		var angle = 2*PI*randf()
+		var direction = Vector2(cos(angle), sin(angle))
+		directions_xy.append(direction)
+	return directions_xy
+
+
 func simulation_step(delta: float) -> void:
-#
-#
-	## for each boid collect others in visual range
-	## calculate new velocity directions according to:
-		## Seperation
-		## Alignment
-		## Cohesion#
-#
-	#var separation_range = 50.0
-#
-#
-	#for boid in boids:
-		#var separation = apply_separation(boid, boids, separation_range)
-		#var alignment = apply_alignment(boid, boids, visual_range)
-		#var cohesion = apply_cohesion(boid, boids, visual_range)
-#
-		## Combine the three steering behaviors
-		#var steer = separation * separation_weight + alignment * alignment_weight + cohesion * cohesion_weight
-#
-		## Blend with current velocity and normalize to maintain speed
-		#boid.velocity = (boid.velocity + steer).normalized() * speed
-		## (Additional noise)
-	## Apply a random angle noise every n frames
-#
-	#update_boids_noise(boids, speed, delta)
-#
-	##TODO apply here: boid.node.position += boid.velocity * delta
-	#frame_counter += 1
+	# Check if boid_count has been changed, update vector sizes accordingly
+	var boid_count_difference = params.boid_count-positions.size()
+	if boid_count_difference < 0:
+		positions.resize(params.boid_count)
+		directions.resize(params.boid_count)
+	elif boid_count_difference > 0:
+		var new_positions := initialize_position_array(boid_count_difference)
+		var new_directions := initialize_direction_array(boid_count_difference)
+		positions.append_array(new_positions)
+		directions.append_array(new_directions)
+
+	# Calculate separation, alignment and cohesion per boid
+	var separations: Array[Vector2] = []
+	var alignments: Array[Vector2] = []
+	var cohesions: Array[Vector2] = []
+	for i in range(params.boid_count):
+		var separation := Vector2(0, 0)
+		var alignment := Vector2(0, 0)
+		var cohesion := Vector2(0, 0)
+		for j in range(params.boid_count):
+			var distance = (positions[i] - positions[j]).length()
+			if distance < params.range * 0.5 and distance != 0:
+				separation += (positions[i]-positions[j])/(distance**2)
+			if distance < params.range:
+				alignment += directions[j]
+				cohesion += positions[j]-positions[i]
+		if separation != Vector2(0, 0):
+			separation /= separation.length()
+		if cohesion != Vector2(0, 0):
+			cohesion /= cohesion.length()
+		if alignment != Vector2(0, 0):
+			alignment /= alignment.length()
+		separations.append(separation)
+		cohesions.append(cohesion)
+		alignments.append(alignment)
+
+	for i in range(params.boid_count):
+		# Apply separation, alignment and cohesion to direction vector and normalize
+		directions[i] += separations[i] * params.separation_weight * delta * 2.0
+		directions[i] += cohesions[i] * params.cohesion_weight * delta
+		directions[i] += alignments[i] * params.alignment_weight * delta
+		directions[i] /= directions[i].length()
+
+		# Move positions in directions by delta*speed
+		positions[i] += directions[i]*delta*params.speed
+
+		# Make boid positions wrap around at borders of screen
+		positions[i] = Vector2(fposmod(positions[i].x, screen_size.x), fposmod(positions[i].y, screen_size.y))
+	update_boids()
 
 
+func update_boids() -> void:
+	var boids := params.get_node("Boids").get_children()
+	for i in range(params.boid_count):
+		var boid: Node2D = boids[i]
 
+		# Set position of boids by updating origin of transform
+		boid.transform.origin = positions[i]
 
-
-
-
-	pass
-
-func apply_separation(boid, boids: Array, separation_distance: float) -> Vector2:
-	var steer = Vector2.ZERO
-	var total = 0
-
-	for other in boids:
-		if other == boid:
-			continue
-
-		var dist = boid.node.position.distance_to(other.node.position)
-
-		if dist < separation_distance and dist > 0:
-			# Vector pointing away from the neighbor, inversely weighted by distance
-			var diff = (boid.node.position - other.node.position).normalized() / dist
-			steer += diff
-			total += 1
-
-	if total > 0:
-		steer /= total
-		steer = steer.normalized()
-
-	return steer
-
-func apply_alignment(boid: Dictionary, boids: Array, visual_range: float) -> Vector2:
-	var avg_velocity = Vector2.ZERO
-	var count = 0
-
-	for other in boids:
-		if other == boid:
-			continue
-
-		var dist = boid.node.position.distance_to(other.node.position)
-		if dist < visual_range:
-			avg_velocity += other.velocity
-			count += 1
-
-	if count > 0:
-		avg_velocity /= count
-		avg_velocity = avg_velocity.normalized()
-		return avg_velocity
-	else:
-		return Vector2.ZERO
-
-func apply_cohesion(boid: Dictionary, boids: Array, visual_range: float) -> Vector2:
-	var center = Vector2.ZERO
-	var count = 0
-
-	for other in boids:
-		if other == boid:
-			continue
-
-		var dist = boid.node.position.distance_to(other.node.position)
-		if dist < visual_range:
-			center += other.node.position
-			count += 1
-
-	if count > 0:
-		center /= count
-		var direction = (center - boid.node.position).normalized()
-		return direction
-	else:
-		return Vector2.ZERO
-
-
-func update_boids_noise(boids: Array, speed: float, delta: float) -> void:
-	if frame_counter >= update_interval:
-		frame_counter = 0
-		for boid in boids:
-
-
-
-			# Apply a small random variation to the current angle
-			var angle_variation = randf_range(-0.5, 0.5)
-			var adjusted_angle = boid.velocity.angle() + angle_variation
-			#TODO explain this more
-			new_direction = Vector2(cos(adjusted_angle), sin(adjusted_angle))
-			boid.velocity = new_direction * speed
-			# apply velocities to positions
-
-			boid.node.position += boid.velocity * delta
-
-			#offset angle for right facing direction
-			#TODO initially direct sprite
-			boid.node.rotation = boid.velocity.angle()  + PI / 2
-			# apply position from position vector to each boid
-			# derive and apply rotation from velocity vector direction to each boid
-	else:
-		for boid in boids:
-			# apply velocities to positions
-
-			boid.node.position += boid.velocity * delta
-
-			#offset angle for right facing direction
-			boid.node.rotation = boid.velocity.angle()  + PI / 2
-			# apply position from position vector to each boid
-			# derive and apply rotation from velocity vector direction to each boid
-
-	pass
+		# Set rotation of boids by aligning direction with up-vector of transform
+		var up := directions[i]
+		var right := Vector2(up.y, -up.x)
+		boid.transform.x = right*params.scale_factor
+		boid.transform.y = -up*params.scale_factor

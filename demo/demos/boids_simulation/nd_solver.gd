@@ -128,7 +128,7 @@ func simulation_step(delta: float) -> void:
 
 func update_boids() -> void:
 	var boids := params.get_node("Boids").get_children()
-	for i in range(params.boid_count):
+	for i in range(min(params.boid_count, boids.size())):
 		var boid: Node2D = boids[i]
 
 		# Set position of boids by updating origin of transform

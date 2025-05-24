@@ -16,9 +16,9 @@ var frame_time: float = 0.
 func _ready() -> void:
 	%PointSlider.value = N
 	%PointLabel.text = "Grid: " + str(N) + "x" + str(N)
-	
+
 	resize_image()
-	
+
 	solver.initialize()
 
 func _process(delta: float) -> void:
@@ -30,7 +30,7 @@ func _process(delta: float) -> void:
 		solver.simulation_step()
 		frame_time = Time.get_ticks_usec() - frame_time
 	current_step = next_step
-	
+
 	%FrameTimeLabel.text = "Delta (ms): " + str(snappedf(frame_time/1000, 1e-3))
 	solver.on_draw()
 

@@ -10,20 +10,20 @@ struct UFUNC_NAME {\
 }
 
 template <typename C, typename RETURN_TYPE, typename... ARGS>
-static void add_native(va::vfunc::tables::UFuncTableInplace& table) {
+void add_native(va::vfunc::tables::UFuncTableInplace& table) {
 	const auto out = va::dtype_of_type<RETURN_TYPE>();
 	table[out] = (void *)&C::template run<RETURN_TYPE, ARGS...>;
 }
 
 template <typename C, typename RETURN_TYPE, typename IN0, typename... ARGS>
-static void add_native(va::vfunc::tables::UFuncTableInplaceBinary& table) {
+void add_native(va::vfunc::tables::UFuncTableInplaceBinary& table) {
 	const auto out = va::dtype_of_type<RETURN_TYPE>();
 	const auto in0 = va::dtype_of_type<IN0>();
 	table[out][in0] = (void *)&C::template run<RETURN_TYPE, const va::compute_case<IN0*>&, ARGS...>;
 }
 
 template <typename C, typename RETURN_TYPE, typename IN0, typename... ARGS>
-static void add_native(va::vfunc::tables::UFuncTableUnary& table) {
+void add_native(va::vfunc::tables::UFuncTableUnary& table) {
 	const auto in0 = va::dtype_of_type<IN0>();
 	const auto out = va::dtype_of_type<RETURN_TYPE>();
 
@@ -35,7 +35,7 @@ static void add_native(va::vfunc::tables::UFuncTableUnary& table) {
 }
 
 template <typename C, typename RETURN_TYPE, typename IN0, typename IN1, typename... ARGS>
-static void add_native(va::vfunc::tables::UFuncTablesBinary& tables) {
+void add_native(va::vfunc::tables::UFuncTablesBinary& tables) {
 	const auto in0 = va::dtype_of_type<IN0>();
 	const auto in1 = va::dtype_of_type<IN1>();
 	const auto out = va::dtype_of_type<RETURN_TYPE>();
@@ -58,7 +58,7 @@ static void add_native(va::vfunc::tables::UFuncTablesBinary& tables) {
 }
 
 template <typename C, typename RETURN_TYPE, typename IN0, typename IN1, typename... ARGS>
-static void add_native(va::vfunc::tables::UFuncTablesBinaryCommutative& tables) {
+void add_native(va::vfunc::tables::UFuncTablesBinaryCommutative& tables) {
 	const auto in0 = va::dtype_of_type<IN0>();
 	const auto in1 = va::dtype_of_type<IN1>();
 	const auto out = va::dtype_of_type<RETURN_TYPE>();
@@ -76,7 +76,7 @@ static void add_native(va::vfunc::tables::UFuncTablesBinaryCommutative& tables) 
 }
 
 template <typename C, typename RETURN_TYPE, typename IN0, typename IN1, typename... ARGS>
-static void add_native(va::vfunc::tables::UFuncTableBinary& table) {
+void add_native(va::vfunc::tables::UFuncTableBinary& table) {
 	const auto in0 = va::dtype_of_type<IN0>();
 	const auto in1 = va::dtype_of_type<IN1>();
 	const auto out = va::dtype_of_type<RETURN_TYPE>();
@@ -89,14 +89,14 @@ static void add_native(va::vfunc::tables::UFuncTableBinary& table) {
 }
 
 template <typename IN0, typename MODEL_IN0>
-static void add_cast(va::vfunc::tables::UFuncTableUnary& table) {
+void add_cast(va::vfunc::tables::UFuncTableUnary& table) {
 	const auto in0 = va::dtype_of_type<IN0>();
 	const auto model_in0 = va::dtype_of_type<MODEL_IN0>();
 	table[in0] = table[model_in0];
 }
 
 template <typename IN0, typename IN1, typename MODEL_IN0, typename MODEL_IN1>
-static void add_cast(va::vfunc::tables::UFuncTablesBinary& tables) {
+void add_cast(va::vfunc::tables::UFuncTablesBinary& tables) {
 	const auto in0 = va::dtype_of_type<IN0>();
 	const auto in1 = va::dtype_of_type<IN1>();
 	const auto model_in0 = va::dtype_of_type<MODEL_IN0>();
@@ -108,7 +108,7 @@ static void add_cast(va::vfunc::tables::UFuncTablesBinary& tables) {
 }
 
 template <typename IN0, typename IN1, typename MODEL_IN0, typename MODEL_IN1>
-static void add_cast(va::vfunc::tables::UFuncTablesBinaryCommutative& tables) {
+void add_cast(va::vfunc::tables::UFuncTablesBinaryCommutative& tables) {
 	const auto in0 = va::dtype_of_type<IN0>();
 	const auto in1 = va::dtype_of_type<IN1>();
 	const auto model_in0 = va::dtype_of_type<MODEL_IN0>();
@@ -119,7 +119,7 @@ static void add_cast(va::vfunc::tables::UFuncTablesBinaryCommutative& tables) {
 }
 
 template <typename IN0, typename IN1, typename MODEL_IN0, typename MODEL_IN1>
-static void add_cast(va::vfunc::tables::UFuncTableBinary& table) {
+void add_cast(va::vfunc::tables::UFuncTableBinary& table) {
 	const auto in0 = va::dtype_of_type<IN0>();
 	const auto in1 = va::dtype_of_type<IN1>();
 	const auto model_in0 = va::dtype_of_type<MODEL_IN0>();

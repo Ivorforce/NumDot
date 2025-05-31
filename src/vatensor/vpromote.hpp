@@ -78,15 +78,15 @@ namespace va {
 			return std::forward<T>(t);
 		}
 
-		static const VData& deref_data(const std::shared_ptr<VArray>& t) {
+		inline const VData& deref_data(const std::shared_ptr<VArray>& t) {
 			return t->data;
 		}
 
-		static const VData& deref_data(const VData& t) {
+		inline const VData& deref_data(const VData& t) {
 			return t;
 		}
 
-		static const VScalar& deref_data(const VScalar &t) {
+		inline const VScalar& deref_data(const VScalar &t) {
 			return t;
 		}
 
@@ -106,12 +106,12 @@ namespace va {
 		}
 
 		template <typename Need, typename Have, std::enable_if_t<std::is_same_v<std::decay_t<Need>, std::decay_t<Have>>, int> = 0>
-		static const Need& promote_list_if_needed(const Have& have) {
+		const Need& promote_list_if_needed(const Have& have) {
 			return have;
 		}
 
 		template <typename Need, typename Have, std::enable_if_t<!std::is_same_v<std::decay_t<Need>, std::decay_t<Have>>, int> = 0>
-		static Need promote_list_if_needed(const Have& have) {
+		Need promote_list_if_needed(const Have& have) {
 			Need need(have.size());
 			std::copy_n(have.begin(), have.size(), need.begin());
 			return need;

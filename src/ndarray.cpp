@@ -366,7 +366,7 @@ va::VData get_write(va::VArray& array, const single_axis_slice& sv) {
 	return array.sliced_data(std::get<0>(sv), std::get<1>(sv));
 }
 
-static void set_vdata_variant(va::VData& data, const Variant& value) {
+inline void set_vdata_variant(va::VData& data, const Variant& value) {
 	switch (value.get_type()) {
 		case Variant::BOOL:
 			va::fill(data, static_cast<bool>(value));

@@ -31,7 +31,7 @@ namespace numdot {
 	}
 
 	template <typename M, typename... DefaultValues>
-	static MethodBind *bind_vararg_method(VarargMethodDefinition d_method, M p_method, bool p_return_nil_is_variant = true, DefaultValues... defaults) {
+	MethodBind *bind_vararg_method(VarargMethodDefinition d_method, M p_method, bool p_return_nil_is_variant = true, DefaultValues... defaults) {
 		MethodInfo mi;
 		mi.name = d_method.name;
 		mi.arguments = d_method.args;

@@ -14,7 +14,7 @@
 
 using namespace va;
 
-static void mod_index(axes_type& index, const shape_type& shape) {
+inline void mod_index(axes_type& index, const shape_type& shape) {
 	// xtensor actually checks later, too, but it just pads with 0 rather than throwing.
 	if (index.size() != shape.size()) throw std::runtime_error("invalid dimension for index");
 

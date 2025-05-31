@@ -56,11 +56,11 @@ namespace va {
     [[nodiscard]] const strides_type& strides(const VData& read);
     [[nodiscard]] size_type offset(const VData& read);
     [[nodiscard]] xt::layout_type layout(const VData& read);
-    [[nodiscard]] static constexpr DType dtype(const VData& read) { return static_cast<DType>(read.index()); }
+    [[nodiscard]] constexpr DType dtype(const VData& read) { return static_cast<DType>(read.index()); }
     [[nodiscard]] std::size_t size(const VData& read);
     [[nodiscard]] std::size_t dimension(const VData& read);
     [[nodiscard]] std::size_t size_of_array_in_bytes(const VData& read);
-    [[nodiscard]] static bool is_contiguous(const VData& read) {
+    [[nodiscard]] inline bool is_contiguous(const VData& read) {
         const auto layout = va::layout(read);
         return layout == xt::layout_type::any || layout == xt::layout_type::row_major;
     }
@@ -129,7 +129,7 @@ namespace va {
     };
 
     template<typename V>
-    static compute_case<V> make_compute(V&& ptr, const shape_type& shape, const strides_type& strides, xt::layout_type layout) {
+    compute_case<V> make_compute(V&& ptr, const shape_type& shape, const strides_type& strides, xt::layout_type layout) {
         auto size_ = std::accumulate(shape.begin(), shape.end(), static_cast<std::size_t>(1), std::multiplies());
 
         switch (layout) {
@@ -144,7 +144,7 @@ namespace va {
     }
 
     template<typename CC>
-    static auto slice_compute(CC& compute, const xt::xstrided_slice_vector& slices, std::ptrdiff_t& new_offset) {
+    auto slice_compute(CC& compute, const xt::xstrided_slice_vector& slices, std::ptrdiff_t& new_offset) {
 		using V = typename std::decay_t<decltype(compute)>::value_type;
 
         va::strided_view_args<xt::detail::no_adj_strides_policy> args;
@@ -161,7 +161,7 @@ namespace va {
     }
 
     template<typename CC>
-    static auto slice_compute(CC& compute, const xt::xstrided_slice<std::ptrdiff_t>& slice, std::ptrdiff_t axis, std::ptrdiff_t& new_offset) {
+    auto slice_compute(CC& compute, const xt::xstrided_slice<std::ptrdiff_t>& slice, std::ptrdiff_t axis, std::ptrdiff_t& new_offset) {
 		using V = typename std::decay_t<decltype(compute)>::value_type;
 
         va::strided_view_args<xt::detail::no_adj_strides_policy> args;
@@ -179,7 +179,7 @@ namespace va {
     }
 
     template<typename S, typename VT = typename S::value_type>
-    static VData compute_from_surrogate(const S& surrogate, VT* data) {
+    VData compute_from_surrogate(const S& surrogate, VT* data) {
         return make_compute<VT*>(
             data + surrogate.data_offset(),
             surrogate.shape(),
@@ -189,7 +189,7 @@ namespace va {
     }
 
     template<typename S, typename VT = typename S::value_type>
-    static std::shared_ptr<VArray> from_surrogate(const VArray& varray, const S& surrogate, VT* data) {
+    std::shared_ptr<VArray> from_surrogate(const VArray& varray, const S& surrogate, VT* data) {
         return std::make_shared<VArray>(
             VArray {
                 std::shared_ptr(varray.store),

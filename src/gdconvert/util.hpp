@@ -5,7 +5,7 @@
 
 namespace numdot {
 	template<typename ReturnType, typename Visitor, typename... Args>
-	static ReturnType reduction(Visitor&& visitor, const Args&... args) {
+	ReturnType reduction(Visitor&& visitor, const Args&... args) {
 		try {
 			const auto result = std::forward<Visitor>(visitor)(*variant_as_array(args)...);
 
@@ -22,7 +22,7 @@ namespace numdot {
 	}
 
 	template<typename ReturnType, typename Visitor, typename... Args>
-	static ReturnType reduction_new(Visitor&& visitor, const Args&... args) {
+	ReturnType reduction_new(Visitor&& visitor, const Args&... args) {
 		try {
 			ReturnType result = 0;
 			va::VData adaptor = va::util::adapt_scalar(&result);

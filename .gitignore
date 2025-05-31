@@ -58,3 +58,6 @@ __pycache__
 # Custom config
 /custom.py
 /numdot_config.py
+
+# Program Debug Database
+*.pdb

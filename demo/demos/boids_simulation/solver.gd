@@ -1,5 +1,5 @@
 extends Node
-class_name WaveSolver
+class_name BoidsSolver
 
 @export var params: Node2D
 
@@ -9,5 +9,5 @@ func initialize() -> void:
 func simulation_step(delta: float) -> void:
 	pass
 
-func on_draw() -> void:
+func update_boids() -> void:
 	pass

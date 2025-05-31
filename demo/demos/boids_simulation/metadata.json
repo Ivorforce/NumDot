@@ -1,0 +1,6 @@
+{
+	"name": "Boids Simulation",
+	"description": "A simulation of flocking behavior modeled on how birds and other animals move collectively.",
+	"link": "https://en.wikipedia.org/wiki/Boids",
+	"authors": "versjon, kro-ma"
+}

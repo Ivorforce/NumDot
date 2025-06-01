@@ -9,17 +9,17 @@ func initialize() -> void:
 	# boundary conditions
 	grid[0].fill(params.tau0 + 1)
 	grid[-1].fill(params.tau0 + 1)
-
+	
 	for arr in grid:
-		arr[0] = params.tau0 + 1
+		arr[0] = params.tau0 + 1 
 		arr[-1] = params.tau0 + 1
 
 	place_random()
 	gridp = grid.duplicate(true)
 
 func simulation_step() -> void:
-	var infp := 0.
-
+	var infp := 0. 
+	
 	for i in range(1, params.N-1):
 		for j in range(1, params.N-1):
 			if gridp[i][j] == 0:
@@ -39,7 +39,7 @@ func on_draw() -> void:
 			params._image.set_pixel(i, j, params.colors[grid[i][j]])
 
 	params.update_texture()
-
+	
 func create_matrix(N: int) -> Array:
 	var matrix := []
 	for x in range(N):

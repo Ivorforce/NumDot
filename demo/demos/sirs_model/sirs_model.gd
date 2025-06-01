@@ -30,17 +30,17 @@ func _ready() -> void:
 
 	%SpreadSlider.value = spread
 	%SpreadLabel.text = "Spread: %.3f" % spread
-
+	
 	%InfectedSlider.value = tauI
 	%InfectedLabel.text = "Infection time: " + str(tauI)
-
+	
 	%RecoverySlider.value = tauR
 	%RecoveryLabel.text = "Recovery time: " + str(tauR)
-
+	
 	generate_colors()
 	resize_image()
 	create_legend()
-
+	
 	solver.initialize()
 
 func _process(delta: float) -> void:
@@ -53,7 +53,7 @@ func _process(delta: float) -> void:
 		solver.simulation_step()
 		frame_time = Time.get_ticks_usec() - frame_time
 	current_step = next_step
-
+	
 	%FrameTimeLabel.text = "Delta (ms): " + str(snappedf(frame_time/1000, 1e-3))
 	solver.on_draw()
 
@@ -102,7 +102,7 @@ func _on_solver_option_item_selected(index: int) -> void:
 
 func update_texture() -> void:
 	texture_rect.texture.update(_image)
-
+	
 func resize_image() -> void:
 	_image = Image.create(N, N, false, Image.FORMAT_RGBA8)
 
@@ -113,11 +113,11 @@ func resize_image() -> void:
 
 func create_legend() -> void:
 	var _img = Image.create(1, 1, false, Image.FORMAT_RGBA8)
-
+	
 	# infected
 	_img.set_pixel(0, 0, color_infected)
 	$LegendInfected.texture = ImageTexture.create_from_image(_img)
-
+	
 	# recovered
 	_img.set_pixel(0, 0, color_recovered)
 	$LegendRecovered.texture = ImageTexture.create_from_image(_img)

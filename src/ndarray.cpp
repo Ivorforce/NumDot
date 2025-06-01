@@ -41,16 +41,26 @@ void NDArray::_bind_methods() {
 	BIND_ENUM_CONSTANT(Dynamic);
 	BIND_ENUM_CONSTANT(Any);
 
-	godot::ClassDB::bind_method(D_METHOD("dtype"), &NDArray::dtype);
-	godot::ClassDB::bind_method(D_METHOD("shape"), &NDArray::shape);
-	godot::ClassDB::bind_method(D_METHOD("size"), &NDArray::size);
-	godot::ClassDB::bind_method(D_METHOD("buffer_dtype"), &NDArray::buffer_dtype);
-	godot::ClassDB::bind_method(D_METHOD("buffer_size"), &NDArray::buffer_size);
-	godot::ClassDB::bind_method(D_METHOD("buffer_size_in_bytes"), &NDArray::buffer_size_in_bytes);
-	godot::ClassDB::bind_method(D_METHOD("ndim"), &NDArray::ndim);
-	godot::ClassDB::bind_method(D_METHOD("strides"), &NDArray::strides);
-	godot::ClassDB::bind_method(D_METHOD("strides_layout"), &NDArray::strides_layout);
-	godot::ClassDB::bind_method(D_METHOD("strides_offset"), &NDArray::strides_offset);
+	godot::ClassDB::bind_method(D_METHOD("get_dtype"), &NDArray::dtype);
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "dtype", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_READ_ONLY), "", "get_dtype");
+	godot::ClassDB::bind_method(D_METHOD("get_shape"), &NDArray::shape);
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "shape", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_READ_ONLY), "", "get_shape");
+	godot::ClassDB::bind_method(D_METHOD("get_size"), &NDArray::size);
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "size", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_READ_ONLY), "", "get_size");
+	godot::ClassDB::bind_method(D_METHOD("get_buffer_dtype"), &NDArray::buffer_dtype);
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "buffer_dtype", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_READ_ONLY), "", "get_buffer_dtype");
+	godot::ClassDB::bind_method(D_METHOD("get_buffer_size"), &NDArray::buffer_size);
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "buffer_size", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_READ_ONLY), "", "get_buffer_size");
+	godot::ClassDB::bind_method(D_METHOD("get_buffer_size_in_bytes"), &NDArray::buffer_size_in_bytes);
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "buffer_size_in_bytes", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_READ_ONLY), "", "get_buffer_size_in_bytes");
+	godot::ClassDB::bind_method(D_METHOD("get_ndim"), &NDArray::ndim);
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "ndim", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_READ_ONLY), "", "get_ndim");
+	godot::ClassDB::bind_method(D_METHOD("get_strides"), &NDArray::strides);
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "strides", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_READ_ONLY), "", "get_strides");
+	godot::ClassDB::bind_method(D_METHOD("get_strides_layout"), &NDArray::strides_layout);
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "strides_layout", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_READ_ONLY), "", "get_strides_layout");
+	godot::ClassDB::bind_method(D_METHOD("get_strides_offset"), &NDArray::strides_offset);
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "strides_offset", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_READ_ONLY), "", "get_strides_offset");
 
 	ClassDB::bind_method(D_METHOD("_iter_init"), &NDArray::_iter_init);
 	ClassDB::bind_method(D_METHOD("_iter_get"), &NDArray::_iter_get);

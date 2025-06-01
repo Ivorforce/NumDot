@@ -2,7 +2,7 @@ class_name TestUtil
 extends Node
 
 static func to_packed(array: NDArray):
-	var dtype := array.dtype()
+	var dtype := array.dtype
 	if dtype == nd.Int8:
 		return array.to_packed_int32_array()
 	if dtype == nd.Int16:

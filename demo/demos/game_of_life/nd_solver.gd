@@ -39,4 +39,4 @@ func on_draw() -> void:
 	params.update_texture()
 
 func place_random() -> void:
-	is_alive_inner.set(rng.integers(0, 2, is_alive_inner.shape(), nd.Bool))
+	is_alive_inner.set(rng.integers(0, 2, is_alive_inner.shape, nd.Bool))

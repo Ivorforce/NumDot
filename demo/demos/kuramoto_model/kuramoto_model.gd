@@ -30,7 +30,7 @@ func _ready() -> void:
 	%MeanLabel.text = "Frequency mean: " + str(%MeanSlider.value)
 	%StdSlider.value = frequency_sigma
 	%StdLabel.text = "Frequency std: " + str(%StdSlider.value)
-
+	
 	_restart_simulation()
 
 func _process(delta: float) -> void:
@@ -39,8 +39,8 @@ func _process(delta: float) -> void:
 	frame_time = Time.get_ticks_usec()
 	solver.simulation_step()
 	frame_time = Time.get_ticks_usec() - frame_time
-
-	%FrameTimeLabel.text = "Delta (ms): " + str(snappedf(frame_time/1000, 1e-3))
+	
+	%FrameTimeLabel.text = "Delta (ms): " + str(snappedf(frame_time/1000, 1e-3))	
 	solver.on_draw()
 
 #func _draw() -> void:
@@ -89,14 +89,14 @@ func _generate_fireflies() -> void:
 	TEXTURE_SIZE = int(ceil(sqrt(N)))
 	fireflies_data = Image.create(TEXTURE_SIZE, TEXTURE_SIZE, false, Image.FORMAT_RGBAH)
 	fireflies_texture = ImageTexture.create_from_image(fireflies_data)
-
+	
 	fireflies.amount = N
 	fireflies.process_material.set_shader_parameter("fireflies_data", fireflies_texture)
-
+	
 	positions.resize(N)
 	for i in N:
 		positions[i] = Vector2(randf_range(0, get_viewport_rect().size.x), randf_range(0, get_viewport_rect().size.y))
-
+	
 func _randomize_positions() -> void:
 	for i in N:
 		positions[i].x = randf_range(0, get_viewport_rect().size.x)
@@ -110,12 +110,12 @@ func set_alphas(alphas: Variant) -> void:
 				pixel_pos.x, pixel_pos.y,
 				Color(positions[i].x, positions[i].y, sin(alphas[i])/2 + 0.5, 0)
 				)
-
+			
 	elif alphas is NDArray:
 		for i in alphas.size():
 			var pixel_pos := Vector2(int(i / TEXTURE_SIZE), int(i % TEXTURE_SIZE))
 			fireflies_data.set_pixel(
-				pixel_pos.x, pixel_pos.y,
+				pixel_pos.x, pixel_pos.y, 
 				Color(positions[i].x, positions[i].y, alphas.get_float(i), 0)
 				)
 

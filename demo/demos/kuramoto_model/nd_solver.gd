@@ -40,7 +40,7 @@ func simulation_step() -> void:
 func compute_derivative(df: NDArray, phase: NDArray):
 	phase_sin.assign_sin(phase)
 	phase_cos.assign_cos(phase)
-	phase_coherence.assign_divide(nd.sqrt(nd.add(nd.square(nd.sum(phase_cos)), nd.square(nd.sum(phase_sin)))), phase.size)
+	phase_coherence.assign_divide(nd.sqrt(nd.add(nd.square(nd.sum(phase_cos)), nd.square(nd.sum(phase_sin)))), phase.size())
 	avg_phase.assign_atan2(nd.sum(phase_sin), nd.sum(phase_cos))
 	
 	df.assign_subtract(omega, nd.multiply(nd.multiply(params.coupling, phase_coherence), nd.sin(nd.subtract(phase, avg_phase))))

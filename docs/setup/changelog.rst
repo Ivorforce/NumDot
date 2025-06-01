@@ -12,6 +12,7 @@ Here you will find the release notes for each version of the library. Each secti
 
 Upcoming Changes (main branch)
 ------------------------------
+Careful, we have some breaking changes in this update! Make sure you read the section below closely before updating. I apologize for the inconvenience caused to running projects!
 
 **Added**
 

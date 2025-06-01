@@ -6,6 +6,10 @@ var directions: Array[Vector2]
 var screen_size: Vector2
 
 func initialize() -> void:
+	"""
+	Initializes the solver by setting the screen size
+	and generating initial position and direction arrays.
+	"""
 	screen_size = params.get_viewport_rect().size
 
 	# Initialize position and direction vector
@@ -15,6 +19,15 @@ func initialize() -> void:
 
 # Helper function to create position direction vector with length
 func initialize_position_array(length: int) -> Array[Vector2]:
+	"""
+	Creates array of random positions within screen bounds.
+
+	Parameters:
+	length (int): Number of positions.
+
+	Returns:
+	Array[Vector2]: Random position vectors.
+	"""
 	# Initialize position Array with |length| Vector2s
 	# Values are random 2D-positions on screen
 	var positions_xy: Array[Vector2] = []
@@ -25,6 +38,15 @@ func initialize_position_array(length: int) -> Array[Vector2]:
 
 # Helper function to create random direction vector with length
 func initialize_direction_array(length: int) -> Array[Vector2]:
+	"""
+	Creates array of normalized random direction vectors.
+
+	Parameters:
+	length (int): Number of directions.
+
+	Returns:
+	Array[Vector2]: Random direction vectors.
+	"""
 	# Initialize direction Array with |length| Vector2s
 	# Values are normalized 2D-vectors with random angle
 	var directions_xy: Array[Vector2] = []
@@ -36,6 +58,13 @@ func initialize_direction_array(length: int) -> Array[Vector2]:
 
 
 func simulation_step(delta: float) -> void:
+	"""
+	Updates positions and directions based on separation,
+	alignment, and cohesion during simulation.
+
+	Parameters:
+	delta (float): Time since last frame.
+	"""
 	# Check if boid_count has been changed, update vector sizes accordingly
 	var boid_count_difference = params.boid_count-positions.size()
 	if boid_count_difference < 0:
@@ -88,6 +117,9 @@ func simulation_step(delta: float) -> void:
 
 
 func update_boids() -> void:
+	"""
+	Updates graphical positions and orientations of boids.
+	"""
 	var boids := params.get_node("Boids").get_children()
 	for i in range(params.boid_count):
 		var boid: Node2D = boids[i]

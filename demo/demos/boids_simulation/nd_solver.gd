@@ -8,6 +8,10 @@ var rng := nd.default_rng()
 var screen_size: Vector2
 
 func initialize() -> void:
+	"""
+	Initializes solver by setting the screen size
+	and generating initial position and direction arrays.
+	"""
 	screen_size = params.get_viewport_rect().size
 
 	# Initialize position and direction vector
@@ -17,6 +21,15 @@ func initialize() -> void:
 
 # Helper function to create position direction vector with length
 func initialize_position_array(length: int) -> NDArray:
+	"""
+	Generates an NDArray of random positions within screen bounds.
+
+	Parameters:
+	length (int): Number of positions to generate.
+
+	Returns:
+	NDArray: Array containing random position vectors.
+	"""
 	# Initialize position vector of shape [length, 2]
 	# Values are random 2D positions on screen
 	var positions_xy = rng.random([length, 2])
@@ -26,6 +39,15 @@ func initialize_position_array(length: int) -> NDArray:
 
 # Helper function to create random direction vector with length
 func initialize_direction_array(length: int) -> NDArray:
+	"""
+	Creates an NDArray of normalized random direction vectors.
+
+	Parameters:
+	length (int): Number of directions to generate.
+
+	Returns:
+	NDArray: Array containing random normalized direction vectors.
+	"""
 	# Initialize angle vector of shape [length]
 	# Values are random angles in [0, 2*PI), used to create direction vector
 	var angles := rng.random([length])
@@ -39,6 +61,13 @@ func initialize_direction_array(length: int) -> NDArray:
 
 
 func simulation_step(delta: float) -> void:
+	"""
+	Executes a simulation step updating positions and directions
+	using NumDot operations for efficiency.
+
+	Parameters:
+	delta (float): Time elapsed since the last frame.
+	"""
 	# Check if boid_count has been changed, update vector sizes accordingly
 	var boid_count_difference = params.boid_count-positions.shape()[0]
 	if boid_count_difference < 0:
@@ -127,6 +156,10 @@ func simulation_step(delta: float) -> void:
 
 
 func update_boids() -> void:
+	"""
+	Updates the graphical representations of boids
+	to match the computed positions and directions.
+	"""
 	var boids := params.get_node("Boids").get_children()
 	for i in range(min(params.boid_count, boids.size())):
 		var boid: Node2D = boids[i]

@@ -24,7 +24,7 @@ extends Node2D
 # simulation parameters computed
 @onready var dx: float = (xmax - xmin)/num_points
 @onready var num_steps_per_frame: int = max(1, ceili(wave_speed/ dx / frame_rate)) # to satisfy CFL condition
-
+	
 @export var init_params = [
 	{"x0": 0.5, "sig": 0.005, "amplitude": -2.},
 	{"mode": 5, "amplitude": 1.},
@@ -60,7 +60,7 @@ func _process(delta: float) -> void:
 	frame_time = Time.get_ticks_usec()
 	solver.simulation_step(delta)
 	frame_time = Time.get_ticks_usec() - frame_time
-
+	
 	%FrameTimeLabel.text = "Delta (ms): " + str(snappedf(frame_time/1000, 1e-3))
 	queue_redraw()
 
@@ -72,11 +72,11 @@ func _draw() -> void:
 func _on_solver_option_item_selected(index: int) -> void:
 	solver = $Solvers.get_child(index)
 	restart_simulation()
-
+	
 func _on_point_slider_drag_ended(value_changed: bool) -> void:
 	%PointLabel.text = "Points: " + str(%PointSlider.value)
 	%CFLLabel.text = "CFL: " + str(snappedf(wave_speed * 1/(frame_rate * num_steps_per_frame * dx), 1e-3))
-
+	
 	num_points = %PointSlider.value
 	dx = (xmax - xmin)/num_points
 	num_steps_per_frame = max(1, ceili(wave_speed/ dx / frame_rate)) # to satisfy CFL condition
@@ -90,10 +90,10 @@ func _on_init_option_item_selected(index: int) -> void:
 
 func set_initial_condition(idx) -> void:
 	x = range(num_points).map(func(elt): return (dx * elt + xmin))
-
+	
 	u.resize(num_points)
 	uprev.resize(num_points)
-
+	
 	match idx:
 		0:
 			for i in u.size():
@@ -103,7 +103,7 @@ func set_initial_condition(idx) -> void:
 			for i in u.size():
 				u[i] = init_params[1]["amplitude"] * sin(init_params[1]["mode"] * PI * x[i])
 				uprev[i] = u[i]
-		2:
+		2: 
 			for i in u.size():
 				u[i] = init_params[0]["amplitude"] * exp(-(x[i] - init_params[2]["xi"])**2/init_params[0]["sig"])
 				var delx = wave_speed/frame_rate/num_steps_per_frame
@@ -111,7 +111,7 @@ func set_initial_condition(idx) -> void:
 		3:
 			for i in u.size():
 				u[i] = init_params[0]["amplitude"] * exp(-(x[i] - init_params[3]["x1"])**2/init_params[0]["sig"]) - init_params[0]["amplitude"] * exp(-(x[i] - init_params[3]["x2"])**2/init_params[0]["sig"])
-
+				
 				var delx = wave_speed/frame_rate/num_steps_per_frame
 				uprev[i] = init_params[0]["amplitude"] * exp(-(x[i] - init_params[3]["x1"] - delx)**2/init_params[0]["sig"]) - init_params[0]["amplitude"] * exp(-(x[i] - init_params[3]["x2"] + delx)**2/init_params[0]["sig"])
 

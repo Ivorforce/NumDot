@@ -71,4 +71,4 @@ func on_draw() -> void:
 		params.draw_circle(Vector2(x.get_float(0), u.get_float(0) * params.yscale), params.anchor_size, params.anchor_color)
 
 	if params.bc_right:
-		params.draw_circle(Vector2(x.get_float(x.size - 1) * params.xscale, u.get_float(u.size - 1) * params.yscale), params.anchor_size, params.anchor_color)
+		params.draw_circle(Vector2(x.get_float(x.size() - 1) * params.xscale, u.get_float(u.size() - 1) * params.yscale), params.anchor_size, params.anchor_color)

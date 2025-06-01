@@ -38,7 +38,7 @@ func simulation_step() -> void:
 	grid_infected_neighbor_ratio.assign_divide(grid_infected_neighbor_count, 4.0)
 
 	grid_infected_neighbor_ratio.assign_multiply(grid_infected_neighbor_ratio, params.spread)
-	grid_new_infected_this_step.assign_less(rng.random(grid_time_since_infection.shape()), grid_infected_neighbor_ratio)
+	grid_new_infected_this_step.assign_less(rng.random(grid_time_since_infection.shape), grid_infected_neighbor_ratio)
 	grid_new_infected_this_step.assign_logical_and(grid_new_infected_this_step, grid_is_infectable)
 
 	grid_time_since_infection.set(0, grid_new_infected_this_step)

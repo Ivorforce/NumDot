@@ -12,6 +12,7 @@ Here you will find the release notes for each version of the library. Each secti
 
 Upcoming Changes (main branch)
 ------------------------------
+Careful, we have some breaking changes in this update! Make sure you read the section below closely before updating. I apologize for the inconvenience caused to running projects!
 
 **Added**
 
@@ -25,6 +26,7 @@ Upcoming Changes (main branch)
 - ``nd.reshape`` no longer re-interprets the previous shape (if layout is not row-major). Instead, it iterates the previous array in the correct order, filling elements one by one.
 - ``nd.flatten`` no longer makes a copy if it doesn't need to.
 - ``nd.reduce_dot`` is now called ``nd.sum_product``.
+- Properties are now accessed without parentheses, e.g. ``array.shape`` instead of ``array.shape()``. This holds for ``dtype``, ``shape``, ``size``, ``buffer_dtype``, ``buffer_size``, ``buffer_size_in_bytes``, ``ndim``, ``strides``, ``strides_layout``, and ``strides_offset``.
 
 **Fixed**
 

@@ -71,8 +71,8 @@ func simulation_step(delta: float) -> void:
 	# Check if boid_count has been changed, update vector sizes accordingly
 	var boid_count_difference = params.boid_count-positions.shape[0]
 	if boid_count_difference < 0:
-		positions = positions.get(nd.range(params.boid_count), nd.range(2))
-		directions = directions.get(nd.range(params.boid_count), nd.range(2))
+		positions = positions.get(nd.range(params.boid_count))
+		directions = directions.get(nd.range(params.boid_count))
 	elif boid_count_difference > 0:
 		var new_positions := initialize_position_array(boid_count_difference)
 		var new_directions := initialize_direction_array(boid_count_difference)
@@ -84,15 +84,12 @@ func simulation_step(delta: float) -> void:
 	positions.assign_add(positions, offset)
 
 	# Make boid positions wrap around at borders of screen
-	for axis in [0, 1]:
-		var positions_axis := positions.get(nd.range(params.boid_count), axis)
-		var wrap_positive := nd.greater(positions_axis, screen_size[axis]).as_type(nd.Int16)
-		var wrap_negative := nd.less(positions_axis, 0).as_type(nd.Int16)
-		wrap_positive.assign_multiply(wrap_positive, -screen_size[axis])
-		wrap_negative.assign_multiply(wrap_negative, screen_size[axis])
-		positions_axis.assign_add(positions_axis, wrap_positive)
-		positions_axis.assign_add(positions_axis, wrap_negative)
-		positions.set(positions_axis, nd.range(params.boid_count), axis)
+	var wrap_positive := nd.greater(positions, screen_size).as_type(nd.Int16)
+	var wrap_negative := nd.less(positions, 0).as_type(nd.Int16)
+	wrap_positive.assign_multiply(wrap_positive, -screen_size)
+	wrap_negative.assign_multiply(wrap_negative, screen_size)
+	positions.assign_add(positions, wrap_positive)
+	positions.assign_add(positions, wrap_negative)
 
 	# Create pair-wise position differences of boids with shape [n, n, 2]
 	var position_differences := nd.subtract(positions.get(&":", &"newaxis", &":"), positions.get(&"newaxis", &":", &":"))
@@ -165,10 +162,10 @@ func update_boids() -> void:
 		var boid: Node2D = boids[i]
 
 		# Set position of boids by updating origin of transform
-		boid.transform.origin = positions.get_vector2(i, nd.range(2))
+		boid.transform.origin = positions.get_vector2(i)
 
 		# Set rotation of boids by aligning direction with up-vector of transform
-		var up := directions.get_vector2(i, nd.range(2))
+		var up := directions.get_vector2(i)
 		var right := Vector2(up.y, -up.x)
 		boid.transform.x = right*params.scale_factor
 		boid.transform.y = -up*params.scale_factor

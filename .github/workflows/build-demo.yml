@@ -43,7 +43,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           # TODO Can we automate choosing the run ID?
-          run-id: 13677627016
+          run-id: ${{ !vars.numdot-demo-run-id }}
           name: NumDot-all
           path: demo/addons
           github-token: ${{ github.token }}

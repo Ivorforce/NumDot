@@ -1,0 +1,200 @@
+[gd_scene load_steps=5 format=3 uid="uid://bujidut18snxp"]
+
+[ext_resource type="Script" path="res://demos/boids_simulation/boids_model.gd" id="1_2fw6l"]
+[ext_resource type="Script" path="res://demos/boids_simulation/gd_solver.gd" id="2_yi4li"]
+[ext_resource type="Script" path="res://demos/boids_simulation/nd_solver.gd" id="3_av8qh"]
+
+[sub_resource type="ImageTexture" id="ImageTexture_03ndn"]
+
+[node name="BoidsModel" type="Node2D" node_paths=PackedStringArray("solver")]
+script = ExtResource("1_2fw6l")
+solver = NodePath("Solvers/GDSolver")
+
+[node name="Solvers" type="Node" parent="."]
+
+[node name="GDSolver" type="Node" parent="Solvers" node_paths=PackedStringArray("params")]
+script = ExtResource("2_yi4li")
+params = NodePath("../..")
+
+[node name="NDSolver" type="Node" parent="Solvers" node_paths=PackedStringArray("params")]
+script = ExtResource("3_av8qh")
+params = NodePath("../..")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+show_behind_parent = true
+z_index = -10
+custom_minimum_size = Vector2(1152, 648)
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_right = 1152.0
+offset_bottom = 648.0
+grow_horizontal = 2
+color = Color(0.0431373, 0.0745098, 0.101961, 1)
+
+[node name="Labels" type="VBoxContainer" parent="."]
+offset_left = 23.0
+offset_top = 18.0
+offset_right = 223.0
+offset_bottom = 118.0
+metadata/_edit_group_ = true
+
+[node name="FPSLabel" type="Label" parent="Labels"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "FPS: 60"
+
+[node name="FrameTimeLabel" type="Label" parent="Labels"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Frame time: 1"
+
+[node name="SliderOptions" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(250, 0)
+offset_left = 22.0
+offset_top = 432.0
+offset_right = 272.0
+offset_bottom = 626.0
+metadata/_edit_group_ = true
+
+[node name="SeparationLabel" type="Label" parent="SliderOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Separation: 0.2"
+
+[node name="SeparationSlider" type="HSlider" parent="SliderOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+value = 0.2
+
+[node name="AlignmentLabel" type="Label" parent="SliderOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Alignment: 0.4
+"
+
+[node name="AlignmentSlider" type="HSlider" parent="SliderOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+value = 0.4
+
+[node name="CohesionLabel" type="Label" parent="SliderOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Cohesion: 0.6
+"
+
+[node name="CohesionSlider" type="HSlider" parent="SliderOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+value = 0.6
+
+[node name="RestartButton" type="Button" parent="."]
+offset_left = 865.0
+offset_top = 79.0
+offset_right = 1140.0
+offset_bottom = 129.0
+theme_override_font_sizes/font_size = 30
+text = "Restart
+"
+
+[node name="SolverOption" type="OptionButton" parent="."]
+offset_left = 865.0
+offset_top = 23.0
+offset_right = 1137.0
+offset_bottom = 73.0
+theme_override_font_sizes/font_size = 30
+selected = 0
+item_count = 2
+popup/item_0/text = "GDScript"
+popup/item_1/text = "NumDot"
+popup/item_1/id = 1
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer"]
+texture_filter = 1
+offset_right = 40.0
+offset_bottom = 40.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = SubResource("ImageTexture_03ndn")
+
+[node name="LegendInfected" type="TextureRect" parent="."]
+offset_left = 288.0
+offset_top = 541.0
+offset_right = 308.0
+offset_bottom = 561.0
+
+[node name="LegendRecovered" type="TextureRect" parent="."]
+offset_left = 288.0
+offset_top = 607.0
+offset_right = 308.0
+offset_bottom = 627.0
+
+[node name="SolverOptions" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(200, 0)
+offset_left = 902.0
+offset_top = 432.0
+offset_right = 1130.0
+offset_bottom = 626.0
+metadata/_edit_group_ = true
+
+[node name="SpeedLabel" type="Label" parent="SolverOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Speed: 200"
+
+[node name="SpeedSlider" type="HSlider" parent="SolverOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 1000.0
+value = 200.0
+
+[node name="NumberOfBoids" type="Label" parent="SolverOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Boids: 50"
+
+[node name="NumberOfBoidsSlider" type="HSlider" parent="SolverOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 1.0
+max_value = 1000.0
+step = 0.5
+value = 50.0
+exp_edit = true
+
+[node name="RangeLabel" type="Label" parent="SolverOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Range: 100"
+
+[node name="RangeSlider" type="HSlider" parent="SolverOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 1000.0
+value = 100.0
+
+[connection signal="value_changed" from="SliderOptions/SeparationSlider" to="." method="_on_separation_slider_value_changed"]
+[connection signal="value_changed" from="SliderOptions/AlignmentSlider" to="." method="_on_alignment_slider_value_changed"]
+[connection signal="value_changed" from="SliderOptions/CohesionSlider" to="." method="_on_cohesion_slider_value_changed"]
+[connection signal="pressed" from="RestartButton" to="." method="_on_restart_button_pressed"]
+[connection signal="item_selected" from="SolverOption" to="." method="_on_solver_option_item_selected"]
+[connection signal="value_changed" from="SolverOptions/SpeedSlider" to="." method="_on_speed_slider_value_changed"]
+[connection signal="value_changed" from="SolverOptions/NumberOfBoidsSlider" to="." method="_on_number_of_boids_slider_value_changed"]
+[connection signal="value_changed" from="SolverOptions/RangeSlider" to="." method="_on_range_slider_value_changed"]

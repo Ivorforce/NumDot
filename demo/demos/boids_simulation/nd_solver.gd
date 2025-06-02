@@ -69,7 +69,7 @@ func simulation_step(delta: float) -> void:
 	delta (float): Time elapsed since the last frame.
 	"""
 	# Check if boid_count has been changed, update vector sizes accordingly
-	var boid_count_difference = params.boid_count-positions.shape()[0]
+	var boid_count_difference = params.boid_count-positions.shape[0]
 	if boid_count_difference < 0:
 		positions = positions.get(nd.range(params.boid_count), nd.range(2))
 		directions = directions.get(nd.range(params.boid_count), nd.range(2))

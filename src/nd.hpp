@@ -6,7 +6,6 @@
 #include <godot_cpp/core/binder_common.hpp>   // for VARIANT_ENUM_CAST
 #include "godot_cpp/classes/object.hpp"       // for Object
 #include "godot_cpp/classes/wrapped.hpp"      // for GDCLASS
-#include "godot_cpp/core/class_db.hpp"        // for ClassDB (ptr only), DEFVAL
 #include "godot_cpp/variant/string_name.hpp"  // for StringName
 #include "godot_cpp/variant/variant.hpp"      // for Variant
 #include "godot_cpp/variant/vector4i.hpp"     // for Vector4i
@@ -58,7 +57,7 @@ public:
 	static constexpr double get_nan() { return nan; }
 
 	// Range.
-	static Vector4i range(const Variant& start_or_stop = static_cast<int32_t>(0), const Variant& stop = nullptr, const Variant& step = DEFVAL(nullptr));
+	static Vector4i range(const Variant& start_or_stop = 0, const Variant& stop = nullptr, const Variant& step = nullptr);
 	static Vector4i from(int32_t start);
 	static Vector4i to(int32_t stop);
 

@@ -322,7 +322,7 @@ def main():
 		"name": "fill_consecutive",
 		"specializations": [type_.char for type_ in supported_dtypes if not np.isdtype(type_, 'complex floating')],
 		"casts": [],
-		"vargs": ["double", "double", "std::size_t"],
+		"vargs": ["const void*", "const void*", "std::size_t"],
 	})
 
 	with (pathlib.Path(__file__).parent / "vfuncs.json").open("w") as f:

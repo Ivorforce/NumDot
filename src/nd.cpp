@@ -557,8 +557,10 @@ Ref<NDArray> nd::linspace(const Variant& start, const Variant& stop, const int64
 
 Ref<NDArray> nd::arange(const Variant& start_or_stop, const Variant& stop, const Variant& step, const DType dtype) {
 	try {
-		const auto start_ = stop.get_type() == Variant::NIL ? va::VScalar(0) : variant_to_vscalar(start_or_stop);
-		const auto stop_ = variant_to_vscalar(stop.get_type() == Variant::NIL ? start_or_stop : stop);
+		const bool first_is_stop = stop.get_type() == Variant::NIL;
+
+		const auto start_ = first_is_stop ? va::VScalar(0) : variant_to_vscalar(start_or_stop);
+		const auto stop_ = first_is_stop ? variant_to_vscalar(start_or_stop) : variant_to_vscalar(stop);
 		const auto step_ = variant_to_vscalar(step);
 
 		const auto result = va::arange(

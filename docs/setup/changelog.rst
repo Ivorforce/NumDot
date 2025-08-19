@@ -10,8 +10,13 @@ Here you will find the release notes for each version of the library. Each secti
    :local:
    :backlinks: none
 
-.. Upcoming Changes (main branch)
-.. ------------------------------
+Upcoming Changes (main branch)
+------------------------------
+
+**Fixed**
+
+- ``nd.arange`` no longer produces garbage data.
+
 
 Version 0.10 - 2025-07-08
 ------------------------

@@ -107,8 +107,9 @@ namespace va::op {
 	}
 
 	template <class T1>
-	auto consecutive(const T1 &start, const T1 &step, const std::size_t &num) {
-		return start + xt::arange(num) * step;
+	auto consecutive(const void* start, const void* step, const std::size_t& num) {
+		using V = typename T1::value_type;
+		return *(const V*)start + xt::arange(num) * *(const V*)step;
 	}
 }
 
@@ -182,7 +183,7 @@ namespace va::vfunc::impl {
 	}
 	IMPLEMENT_INPLACE_VFUNC(fill_random_normal, xt::random::randn<typename R::value_type>(ret.shape(), 0, 1, engine), xt::random::default_engine_type& engine)
 
-	IMPLEMENT_INPLACE_VFUNC(fill_consecutive, va::op::consecutive(start, step, num), double start, double step, std::size_t num)
+	IMPLEMENT_INPLACE_VFUNC(fill_consecutive, va::op::consecutive<R>(start, step, num), const void* start, const void* step, std::size_t num)
 
 	IMPLEMENT_UNARY_VFUNC(negative, -va::promote::to_num(a))
 	IMPLEMENT_UNARY_VFUNC(sign, xt::sign(va::promote::to_num(a)))

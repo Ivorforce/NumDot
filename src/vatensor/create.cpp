@@ -2,6 +2,8 @@
 
 #include <utility>                      // for move
 #include <variant>                      // for visit
+#include <godot_cpp/core/print_string.hpp>
+
 #include "rearrange.hpp"
 #include "varray.hpp"            // for VArray, shape_type, DType
 #include "vassign.hpp"
@@ -102,70 +104,70 @@ std::shared_ptr<VArray> va::copy_as_dtype(VStoreAllocator& allocator, const VDat
 	return array;
 }
 
-std::shared_ptr<VArray> va::linspace(VStoreAllocator& allocator, VScalar start, VScalar stop, std::size_t num, bool endpoint, DType dtype) {
-	if (dtype == DTypeMax) {
-		// linspace is always at least float32.
-		dtype = DType::Float32;
-		dtype = va::dtype_common_type_unchecked(dtype, va::dtype(start));
-		dtype = va::dtype_common_type_unchecked(dtype, va::dtype(stop));
-	}
+std::shared_ptr<VArray> va::linspace(VStoreAllocator& allocator, VScalar start, VScalar stop, std::size_t num, bool endpoint, DType dtype) {	// Need to process with the highest needed precision. Otherwise, rounding will destroy our values.
+	// Need to process with the highest needed precision. Otherwise, rounding will destroy our values.
+	// We'll convert to the requested dtype at the end.
+	// Use at least float32. That's because we don't know in advance if step needs to be float.
+	DType process_dtype = DType::Float32;
+	process_dtype = va::dtype_common_type(process_dtype, va::dtype(start));;
+	process_dtype = va::dtype_common_type(process_dtype, va::dtype(stop));
 
 	double start_ = static_cast_scalar<double>(start);
 	double stop_ = static_cast_scalar<double>(stop);
 
-	double step = 0.0;
+	double step_ = 0.0;
 	if (num > 0) {
-		step = (stop_ - start_) / (static_cast<double>(num) - (endpoint ? 1.0 : 0.0));
+		step_ = (stop_ - start_) / (static_cast<double>(num) - (endpoint ? 1.0 : 0.0));
 	}
 
-	auto array = empty(allocator, dtype, shape_type {num});
-	_call_vfunc_inplace<double, double, std::size_t>(va::vfunc::tables::fill_consecutive, array->data, std::move(start_), std::move(step), std::move(num));
+	start = static_cast_scalar(start_, process_dtype);
+	VScalar step = static_cast_scalar(step_, process_dtype);
+
+	auto array = empty(allocator, process_dtype, shape_type {num});
+	_call_vfunc_inplace<const void*, const void*, std::size_t>(va::vfunc::tables::fill_consecutive, array->data, va::_call::get_value_ptr(start), va::_call::get_value_ptr(step), std::move(num));
+
+	if (dtype != process_dtype && dtype != DType::DTypeMax) {
+		return va::copy_as_dtype(allocator, array->data, dtype);
+	}
+
 	return array;
 }
 
 std::shared_ptr<VArray> va::arange(VStoreAllocator& allocator, VScalar start, VScalar stop, VScalar step, DType dtype) {
-	if (dtype == DTypeMax) {
-		dtype = va::dtype(start);
-		dtype = va::dtype_common_type(dtype, va::dtype(stop));
-		dtype = va::dtype_common_type(dtype, va::dtype(step));
-	}
+	// Need to process with the highest needed precision. Otherwise, rounding will destroy our values.
+	// We'll convert to the requested dtype at the end.
+	DType process_dtype = va::dtype(start);
+	process_dtype = va::dtype_common_type(process_dtype, va::dtype(stop));
+	process_dtype = va::dtype_common_type(process_dtype, va::dtype(step));
 
 	std::size_t num;
-	if (dtype == Complex64 || dtype == Complex128) {
-		throw std::invalid_argument("arange cannot be used with this dtype");
-	}
-	else if (dtype == Float32 || dtype == Float64) {
-		// float-like
-		auto start_ = static_cast_scalar<double>(start);
-		auto stop_ = static_cast_scalar<double>(stop);
-		auto step_ = static_cast_scalar<double>(step);
 
-		// From arange_impl
-		num = std::ceil((stop_ - start_) / step_);
-	}
-	else if (dtype == Int8 || dtype == Int16 || dtype == Int32 || dtype == Int64) {
-		// signed int-like
-		auto start_ = static_cast_scalar<int64_t>(start);
-		auto stop_ = static_cast_scalar<int64_t>(stop);
-		auto step_ = static_cast_scalar<int64_t>(step);
+	std::visit([&start, &stop, &step, &num](auto t) {
+		using T = std::decay_t<decltype(t)>;
 
-		// From arange_impl
-		num = (stop_ - start_) / step_;
-	}
-	else {
-		// unsigned int-like
-		auto start_ = static_cast_scalar<uint64_t>(start);
-		auto stop_ = static_cast_scalar<uint64_t>(stop);
-		auto step_ = static_cast_scalar<uint64_t>(step);
-		// From arange_impl
-		num = (stop_ - start_) / step_;
+		if constexpr (xtl::is_complex<T>::value) {
+			throw std::invalid_argument("arange cannot be used with this process_dtype");
+		}
+		else {
+			T start_ = static_cast_scalar<T>(start);
+			T stop_ = static_cast_scalar<T>(stop);
+			T step_ = static_cast_scalar<T>(step);
+
+			// From arange_impl
+			num = std::ceil((stop_ - start_) / step_);
+
+			start = start_;
+			step = step_;
+		}
+	}, dtype_to_variant(process_dtype));
+
+	auto array = empty(allocator, process_dtype, shape_type {num});
+	_call_vfunc_inplace<const void*, const void*, std::size_t>(va::vfunc::tables::fill_consecutive, array->data, va::_call::get_value_ptr(start), va::_call::get_value_ptr(step), std::move(num));
+
+	if (dtype != process_dtype && dtype != DType::DTypeMax) {
+		return va::copy_as_dtype(allocator, array->data, dtype);
 	}
 
-	start = static_cast_scalar(start, dtype);
-	step = static_cast_scalar(step, dtype);
-
-	auto array = empty(allocator, dtype, shape_type {num});
-	_call_vfunc_inplace<void*, void*, std::size_t>(va::vfunc::tables::fill_consecutive, array->data, va::_call::get_value_ptr(start), va::_call::get_value_ptr(step), std::move(num));
 	return array;
 }
 

@@ -17,11 +17,11 @@ namespace va::util {
 			else if (carray.dimension() == 1) {
 				// Strided assign.
 				const auto stride = carray.strides()[0];
-				auto ptr = carray.linear_begin();
-				const auto end = ptr + carray.shape()[0] * stride;
+				auto size = carray.shape()[0];
+				auto source = carray.linear_begin();
 
-				for (; ptr < end; ptr += stride, ++target) {
-					*target = *ptr;
+				for (std::size_t i = 0; i < size; i++) {
+					target[i] = source[i * stride];
 				}
 			}
 			else

@@ -16,6 +16,8 @@ Upcoming Changes (main branch)
 **Fixed**
 
 - ``nd.arange`` no longer produces garbage data.
+- ``nd.reshape`` did not provide a view (instead gave a copy) when given 0-D and 1-D arrays.
+- ``nd.reshape`` did not fill in the result array when given single-element 1-D arrays.
 
 
 Version 0.10 - 2025-07-08

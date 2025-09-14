@@ -10,18 +10,22 @@ Here you will find the release notes for each version of the library. Each secti
    :local:
    :backlinks: none
 
-Upcoming Changes (main branch)
-------------------------------
+.. Upcoming Changes (main branch)
+.. ------------------------------
+
+Version 0.11 - 2025-09-14
+-------------------------
 
 **Fixed**
 
 - ``nd.arange`` no longer produces garbage data.
 - ``nd.reshape`` did not provide a view (instead gave a copy) when given 0-D and 1-D arrays.
 - ``nd.reshape`` did not fill in the result array when given single-element 1-D arrays.
-
+- Multi-indexing used to crash when using more than 4 indices.
 
 Version 0.10 - 2025-07-08
-------------------------
+-------------------------
+
 Careful, we have some breaking changes in this update! Make sure you read the section below closely before updating. I apologize for the inconvenience caused to running projects!
 
 **Added**

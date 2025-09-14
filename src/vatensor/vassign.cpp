@@ -168,7 +168,7 @@ void va::set_at_mask(VData& varray, VData& mask, VScalar value) {
 }
 
 template<typename A>
-xt::svector<xt::svector<size_type>> array_to_indices(const A& indices) {
+std::vector<std::vector<size_type>> array_to_indices(const A& indices) {
 	// TODO we could optimize 1d indices, xtensor supports this.
 	if (indices.dimension() != 1 && indices.dimension() != 2) throw std::runtime_error("index list must be 1d or 2d");
 
@@ -177,18 +177,17 @@ xt::svector<xt::svector<size_type>> array_to_indices(const A& indices) {
 	const auto stride = indices.strides()[0];
 
 	// TODO This should be possible without allocating separately for each xidx, no?
-	xt::svector<xt::svector<size_type>> xindices(num_indices);
+	std::vector<std::vector<size_type>> xindices(num_indices);
 	for (int i = 0; i < num_indices; ++i) {
-		xt::svector<size_type> xidx(num_dimensions);
-		std::copy_n(indices.begin() + i * stride, num_dimensions, xidx.begin());
-		xindices[i] = std::move(xidx);
+		xindices[i].resize(num_dimensions);
+		std::copy_n(indices.begin() + i * stride, num_dimensions, xindices[i].begin());
 	}
 	return xindices;
 }
 
-xt::svector<xt::svector<size_type>> get_as_indices(const VData& indices) {
+std::vector<std::vector<size_type>> get_as_indices(const VData& indices) {
 	return std::visit(
-		[](const auto& indices) -> xt::svector<xt::svector<size_type>> {
+		[](const auto& indices) -> std::vector<std::vector<size_type>> {
 			using VTIndices = typename std::decay_t<decltype(indices)>::value_type;
 
 			if constexpr (!std::is_integral_v<VTIndices> || std::is_same_v<VTIndices, bool>) {

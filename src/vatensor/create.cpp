@@ -229,7 +229,7 @@ std::shared_ptr<VArray> va::tile(VStoreAllocator& allocator, const VArray& array
 }
 
 std::shared_ptr<VArray> va::reshape(VStoreAllocator& allocator, const std::shared_ptr<VArray>& varray, strides_type new_shape) {
-	if (varray->layout() == xt::layout_type::row_major) {
+	if (varray->is_contiguous()) {
 		// Do in-place reshape.
 		return map(
 			[&new_shape](auto& array) {

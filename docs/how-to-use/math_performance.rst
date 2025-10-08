@@ -40,8 +40,8 @@ With vectorization, it would execute much, much faster:
 
     var vectors := nd.stack([1000, 2])
     var prog := nd.divide(nd.arange(1000), 10)
-    vectors.set(nd.sin(prog), null, 0)
-    vectors.set(nd.cos(prog), null, 1)
+    vectors.set(nd.sin(prog), &":", 0)
+    vectors.set(nd.cos(prog), &":", 1)
 
 As a rule of thumb: The fewer calls you make to NumDot, the faster your algorithm executes.
 

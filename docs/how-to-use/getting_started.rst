@@ -45,7 +45,7 @@ NumDot arrays can be indexed and sliced similarly to godot Arrays, but with more
 
     # Slicing
     print(arr1.get(nd.range(1, 4)))   # Outputs: { 2, 3, 4 }
-    print(arr2.get(null, 1))          # Outputs: { 2, 4, 6 }
+    print(arr2.get(&":", 1))          # Outputs: { 2, 4, 6 }
 
 Common Operations
 -----------------

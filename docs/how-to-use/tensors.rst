@@ -64,7 +64,7 @@ Broadcasting is particularly useful in various scenarios, such as:
     # Applying a filter (row-wise operation)
     var arr6 := nd.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
     var mask := nd.array([1, 0, 1])
-    var filtered := nd.multiply(arr6, mask.get(null, &"newaxis"))
+    var filtered := nd.multiply(arr6, mask.get(&":", null))
     print(filtered)          # Outputs:
                              # {{1, 2, 3}
                              #  {0, 0, 0}

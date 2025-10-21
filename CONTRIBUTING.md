@@ -9,7 +9,7 @@ New collaborators are very welcome! There's 3 quick ways to start:
 ## Understanding NumDot Technology
 
 First off, NumDot is a [GDExtension](https://docs.godotengine.org/en/stable/tutorials/scripting/gdextension/what_is_gdextension.html), that is, an extension for the [Godot engine](https://godotengine.org). 
-If you aren't familiar with them, I recommend doing the short [C++ GDExtension tutorial](https://docs.godotengine.org/en/stable/tutorials/scripting/gdextension/gdextension_cpp_example.html) to understand the tools involved.
+If you aren't familiar with them, I recommend doing the short [C++ GDExtension tutorial](https://docs.godotengine.org/en/stable/tutorials/scripting/cpp/gdextension_cpp_example.html) to understand the tools involved.
 
 NumDot itself is a very thin wrapper over [xtensor](https://xtensor.readthedocs.io/en/latest/index.html). That means little code is involved, but some of it involves fairly advanced concepts:
 

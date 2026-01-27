@@ -18,7 +18,7 @@ bool is_no_value(const Variant& variant);
 namespace numdot {
 	struct VarargMethodDefinition {
 		StringName name;
-		std::vector<PropertyInfo> args;
+		LocalVector<PropertyInfo> args;
 		VarargMethodDefinition() = default;
 		explicit VarargMethodDefinition(StringName&& p_name) : name(std::forward<StringName>(p_name)) {}
 	};
@@ -43,7 +43,7 @@ namespace numdot {
 			d_method.name,
 			p_method,
 			mi,
-			std::vector<Variant>(defaults...),
+			LocalVector<Variant>(defaults...),
 			p_return_nil_is_variant
 		);
 	}

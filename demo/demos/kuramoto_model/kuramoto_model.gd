@@ -112,7 +112,7 @@ func set_alphas(alphas: Variant) -> void:
 				)
 			
 	elif alphas is NDArray:
-		for i in alphas.size():
+		for i in alphas.size:
 			var pixel_pos := Vector2(int(i / TEXTURE_SIZE), int(i % TEXTURE_SIZE))
 			fireflies_data.set_pixel(
 				pixel_pos.x, pixel_pos.y, 

@@ -18,7 +18,9 @@ Upcoming Changes (main branch)
 - ``nd.arange`` returned a garbage-sized array when the sign of ``step`` disagreed with the sign of ``stop - start``; it now returns an empty array, matching numpy.
 - ``nd.arange`` with ``step = 0`` is now rejected with a clean error (previously it relied on undefined division-by-zero behavior).
 - ``nd.arange`` with integer arguments above ``2**53`` could compute a wrong element count because the bounds were converted to ``float64`` before subtraction; integer dtypes now use exact integer arithmetic.
-- ``NDArray.to_godot_array`` used to abort the process on internal slice errors; it now reports a clean Godot error and returns an empty array. The same defensive handling has been added to ``NDArray.copy``, ``NDArray.as_type``, the ``to_vector*``/``to_color``/``to_quaternion``/``to_plane``/``to_basis``/``to_projection`` and ``to_packed_*`` conversions, and array iteration.
+- ``NDArray.to_godot_array`` returned wrong data and could crash Godot on arrays with more than two elements; it now returns the correct rows.
+- ``nd.concatenate``/``nd.hstack``/``nd.vstack`` failed with a shape-mismatch error when called on a single ``NDArray``.
+- Internal slice errors in array conversions (``to_godot_array``, ``to_packed_*``, ``to_vector*``/``to_color``/etc., ``copy``, ``as_type``, iteration) used to abort Godot; they now report a Godot error.
 
 Version 0.11 - 2025-09-14
 -------------------------

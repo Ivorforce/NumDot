@@ -700,7 +700,6 @@ std::vector<std::shared_ptr<va::VArray>> variant_to_vector(const Variant& array)
 			const std::size_t outer_dim_size = gdarray.size();
 			std::vector<std::shared_ptr<va::VArray>> vector(outer_dim_size);
 			for (std::size_t i = 0; i < outer_dim_size; i++) {
-				xt::xstrided_slice_vector idx {i};
 				vector[i] = variant_as_array(gdarray[static_cast<int64_t>(i)]);
 			}
 			return vector;
@@ -715,7 +714,7 @@ std::vector<std::shared_ptr<va::VArray>> variant_to_vector(const Variant& array)
 	const std::size_t outer_dim_size = ndarray->shape()[0];
 	std::vector<std::shared_ptr<va::VArray>> vector(outer_dim_size);
 	for (std::size_t i = 0; i < outer_dim_size; i++) {
-		xt::xstrided_slice_vector idx {i};
+		xt::xstrided_slice_vector idx {static_cast<std::ptrdiff_t>(i)};
 		vector[i] = ndarray->sliced(idx);
 	}
 	return vector;

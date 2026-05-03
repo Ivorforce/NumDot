@@ -771,7 +771,7 @@ TypedArray<NDArray> NDArray::to_godot_array() const {
 		const std::size_t outer_dim_size = array->shape()[0];
 		godot_array.resize(static_cast<int64_t>(outer_dim_size));
 		for (std::size_t i = 0; i < outer_dim_size; i++) {
-			xt::xstrided_slice_vector idx {i};
+			xt::xstrided_slice_vector idx {static_cast<std::ptrdiff_t>(i)};
 			godot_array[static_cast<int64_t>(i)] = { memnew(NDArray(array->sliced(idx))) };
 		}
 		return godot_array;

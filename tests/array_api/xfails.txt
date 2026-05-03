@@ -128,3 +128,32 @@ array_api_tests/test_operators_and_elementwise_functions.py::test_sign
 # implementation appears to choke on non-complex inputs.
 array_api_tests/test_operators_and_elementwise_functions.py::test_real
 array_api_tests/test_operators_and_elementwise_functions.py::test_imag
+
+
+# === Reductions: axis/keepdims/dtype wired ===
+# numdot_xp now passes axis/keepdims/dtype through to nd reductions. Residual
+# failures below are either nd-binding gaps or known nd promotion divergences.
+
+# --- No nd binding (file issue if we want them) ---
+array_api_tests/test_statistical_functions.py::test_cumulative_sum
+array_api_tests/test_statistical_functions.py::test_cumulative_prod
+array_api_tests/test_utility_functions.py::test_diff
+array_api_tests/test_utility_functions.py::test_diff_append_prepend
+
+# --- NumDot bug: nd.std / nd.var / nd.mean fail on multi-axis reductions ---
+# Single-axis and full-reduction work; passing a list like [1, 0] returns
+# null. Hypothesis finds these once shape ≥ 2.
+array_api_tests/test_statistical_functions.py::test_std
+array_api_tests/test_statistical_functions.py::test_var
+array_api_tests/test_statistical_functions.py::test_mean
+
+# --- NumDot bug: all/any treat complex(0,0) as truthy ---
+# Spec says all(complex(0,0)) is False; NumDot returns True.
+array_api_tests/test_utility_functions.py::test_all
+array_api_tests/test_utility_functions.py::test_any
+
+# --- NumDot bug: sum/prod don't honor explicit dtype ---
+# nd.sum on uint8 promotes to uint64 even after nd.array(x, uint8) cast.
+# Also nd.array doesn't accept complex64 as a target dtype (returns null).
+array_api_tests/test_statistical_functions.py::test_sum
+array_api_tests/test_statistical_functions.py::test_prod

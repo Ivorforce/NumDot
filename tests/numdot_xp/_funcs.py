@@ -41,7 +41,7 @@ __all__ = [
 	"conj", "real", "imag",
 	"clip",
 	# reductions
-	"all", "any", "sum", "prod", "max", "min", "mean",
+	"all", "any", "sum", "prod", "max", "min", "mean", "std", "var",
 	# manipulation
 	"reshape",
 ]
@@ -244,51 +244,104 @@ def clip(x, /, min=None, max=None):  # noqa: A001 — spec name shadows builtin
 
 
 # ---- reductions -------------------------------------------------------------
-# Array API reductions take (x, *, axis=None, keepdims=False[, dtype=None]).
-# NumDot's signatures may vary; for now we only handle the no-axis,
-# default-keepdims path. axis/keepdims/dtype handling will be added once we
-# know the matching NumDot positional-arg layout.
+# All NumDot reductions share one signature: nd.<r>(a, axes=null), where axes
+# is int | list[int] | null. keepdims and dtype are not native — emulated here.
+
+def _normalize_axes(axis, ndim):
+	"""Array API axis kwarg → list of normalized non-negative axes (or None for full)."""
+	if axis is None:
+		return None
+	if isinstance(axis, int):
+		axes = (axis,)
+	else:
+		axes = tuple(axis)
+	return [a % ndim for a in axes]
+
+
+def _keepdims_shape(in_shape, norm_axes):
+	"""Reduced-with-keepdims shape: in_shape with each reduced axis → 1."""
+	if norm_axes is None:
+		return [1] * len(in_shape)
+	out = list(in_shape)
+	for a in norm_axes:
+		out[a] = 1
+	return out
+
+
+def _reduced_size(in_shape, axis):
+	"""Number of elements collapsed by the reduction (for std/var correction)."""
+	norm = _normalize_axes(axis, len(in_shape))
+	if norm is None:
+		n = 1
+		for s in in_shape:
+			n *= s
+		return n
+	n = 1
+	for a in norm:
+		n *= in_shape[a]
+	return n
+
+
+def _reduce(nd_func, x, axis, keepdims):
+	norm = _normalize_axes(axis, x.ndim)
+	if norm is None:
+		out = _call(nd_func, x)
+	elif len(norm) == 1:
+		out = _call(nd_func, x, norm[0])
+	else:
+		out = _call(nd_func, x, norm)
+	if keepdims:
+		out = _call("reshape", out, _keepdims_shape(x.shape, norm))
+	return out
+
 
 def all(x, /, *, axis=None, keepdims=False):  # noqa: A001
-	if axis is not None or keepdims:
-		raise NotImplementedError("axis/keepdims for all() not yet wired")
-	return _call("all", x)
+	return _reduce("all", x, axis, keepdims)
 
 
 def any(x, /, *, axis=None, keepdims=False):
-	if axis is not None or keepdims:
-		raise NotImplementedError("axis/keepdims for any() not yet wired")
-	return _call("any", x)
-
-
-def sum(x, /, *, axis=None, dtype=None, keepdims=False):  # noqa: A001
-	if axis is not None or keepdims or dtype is not None:
-		raise NotImplementedError("axis/keepdims/dtype for sum() not yet wired")
-	return _call("sum", x)
-
-
-def prod(x, /, *, axis=None, dtype=None, keepdims=False):
-	if axis is not None or keepdims or dtype is not None:
-		raise NotImplementedError("axis/keepdims/dtype for prod() not yet wired")
-	return _call("prod", x)
+	return _reduce("any", x, axis, keepdims)
 
 
 def max(x, /, *, axis=None, keepdims=False):  # noqa: A001
-	if axis is not None or keepdims:
-		raise NotImplementedError("axis/keepdims for max() not yet wired")
-	return _call("max", x)
+	return _reduce("max", x, axis, keepdims)
 
 
 def min(x, /, *, axis=None, keepdims=False):  # noqa: A001
-	if axis is not None or keepdims:
-		raise NotImplementedError("axis/keepdims for min() not yet wired")
-	return _call("min", x)
+	return _reduce("min", x, axis, keepdims)
 
 
 def mean(x, /, *, axis=None, keepdims=False):
-	if axis is not None or keepdims:
-		raise NotImplementedError("axis/keepdims for mean() not yet wired")
-	return _call("mean", x)
+	return _reduce("mean", x, axis, keepdims)
+
+
+def sum(x, /, *, axis=None, dtype=None, keepdims=False):  # noqa: A001
+	if dtype is not None:
+		x = _call("array", x, dtype)
+	return _reduce("sum", x, axis, keepdims)
+
+
+def prod(x, /, *, axis=None, dtype=None, keepdims=False):
+	if dtype is not None:
+		x = _call("array", x, dtype)
+	return _reduce("prod", x, axis, keepdims)
+
+
+def var(x, /, *, axis=None, correction=0.0, keepdims=False):
+	out = _reduce("var", x, axis, keepdims)
+	if correction != 0.0:
+		n = _reduced_size(x.shape, axis)
+		if n - correction > 0:
+			# Cast the factor to x's dtype so multiply doesn't promote float32 → float64.
+			factor = np.asarray(n / (n - correction), dtype=x.dtype)
+			out = _call("multiply", out, factor)
+	return out
+
+
+def std(x, /, *, axis=None, correction=0.0, keepdims=False):
+	if correction == 0.0:
+		return _reduce("std", x, axis, keepdims)
+	return _call("sqrt", var(x, axis=axis, correction=correction, keepdims=keepdims))
 
 
 # ---- manipulation -----------------------------------------------------------

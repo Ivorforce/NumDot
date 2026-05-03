@@ -22,6 +22,4 @@ array_api_tests/test_set_functions.py
 array_api_tests/test_signatures.py
 array_api_tests/test_sorting_functions.py
 array_api_tests/test_special_cases.py
-array_api_tests/test_statistical_functions.py
-array_api_tests/test_utility_functions.py
 

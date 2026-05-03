@@ -204,6 +204,14 @@ def main():
 		"casts": [],
 	})
 	vfuncs.append({
+		# Reuse 'multiply' dtype fanout for the (x, y) → common-type promotion.
+		# Condition is bool-only and rides along as a runtime arg (pointer to the
+		# bool xarray adaptor), so the vfunc table dispatches on (x, y) only.
+		**[vfunc for vfunc in vfuncs if vfunc["name"] == "multiply"][0],
+		"name": "where",
+		"vargs": ["const va::compute_case<bool*>*"]
+	})
+	vfuncs.append({
 		"name": "is_close",
 		# TODO Could implement other dtypes by just calling equals in the implementation.
 		"specializations": ["ff->b", "dd->b", "FF->b", "DD->b"],

@@ -62,6 +62,8 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`atanh<class_nd_method_atanh>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                         |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``StringName``                                             | :ref:`axis_all<class_nd_method_axis_all>`\ (\ ) |static|                                                                                                                                    |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`bitwise_and<class_nd_method_bitwise_and>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                            |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`bitwise_left_shift<class_nd_method_bitwise_left_shift>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                              |
@@ -116,6 +118,8 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``PackedByteArray``                                        | :ref:`dumpb<class_nd_method_dumpb>`\ (\ array\: ``Variant``\ ) |static|                                                                                                                     |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``float``                                                  | :ref:`e<class_nd_method_e>`\ (\ ) |static|                                                                                                                                                  |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``StringName``                                             | :ref:`ellipsis<class_nd_method_ellipsis>`\ (\ ) |static|                                                                                                                                    |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`empty<class_nd_method_empty>`\ (\ shape\: ``Variant``, dtype\: :ref:`DType<enum_nd_DType>` = 2\ ) |static|                                                                            |
@@ -123,6 +127,8 @@ Methods
    | :ref:`NDArray<class_NDArray>`                              | :ref:`empty_like<class_nd_method_empty_like>`\ (\ model\: ``Variant``, dtype\: :ref:`DType<enum_nd_DType>` = 13, shape\: ``Variant`` = null\ ) |static|                                     |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`equal<class_nd_method_equal>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                        |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``float``                                                  | :ref:`euler_gamma<class_nd_method_euler_gamma>`\ (\ ) |static|                                                                                                                              |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`exp<class_nd_method_exp>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                             |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -155,6 +161,10 @@ Methods
    | :ref:`NDArray<class_NDArray>`                              | :ref:`hstack<class_nd_method_hstack>`\ (\ v\: ``Variant``, dtype\: :ref:`DType<enum_nd_DType>` = 13\ ) |static|                                                                             |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`imag<class_nd_method_imag>`\ (\ v\: ``Variant``\ ) |static|                                                                                                                           |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``float``                                                  | :ref:`inf<class_nd_method_inf>`\ (\ ) |static|                                                                                                                                              |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`inner<class_nd_method_inner>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                        |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`int8<class_nd_method_int8>`\ (\ array\: ``Variant``\ ) |static|                                                                                                                       |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -208,6 +218,8 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`multiply<class_nd_method_multiply>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                  |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``float``                                                  | :ref:`nan<class_nd_method_nan>`\ (\ ) |static|                                                                                                                                              |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`negative<class_nd_method_negative>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                   |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``StringName``                                             | :ref:`newaxis<class_nd_method_newaxis>`\ (\ ) |static|                                                                                                                                      |
@@ -220,7 +232,11 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`ones_like<class_nd_method_ones_like>`\ (\ model\: ``Variant``, dtype\: :ref:`DType<enum_nd_DType>` = 13, shape\: ``Variant`` = null\ ) |static|                                       |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`outer<class_nd_method_outer>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                        |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`pad<class_nd_method_pad>`\ (\ v\: ``Variant``, pad_width\: ``Variant``, pad_mode\: :ref:`PadMode<enum_nd_PadMode>` = 0, pad_value\: ``Variant`` = 0\ ) |static|                       |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``float``                                                  | :ref:`pi<class_nd_method_pi>`\ (\ ) |static|                                                                                                                                                |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`positive<class_nd_method_positive>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                   |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -233,8 +249,6 @@ Methods
    | ``Vector4i``                                               | :ref:`range<class_nd_method_range>`\ (\ start_or_stop\: ``Variant``, stop\: ``Variant`` = &"no_value", step\: ``Variant`` = null\ ) |static|                                                |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`real<class_nd_method_real>`\ (\ v\: ``Variant``\ ) |static|                                                                                                                           |
-   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`NDArray<class_NDArray>`                              | :ref:`sum_product<class_nd_method_reduce_dot>`\ (\ a\: ``Variant``, b\: ``Variant``, axes\: ``Variant`` = null\ ) |static|                                                                   |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`remainder<class_nd_method_remainder>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -260,6 +274,8 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`square<class_nd_method_square>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                       |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`squeeze<class_nd_method_squeeze>`\ (\ v\: ``Variant``\ ) |static|                                                                                                                     |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`stack<class_nd_method_stack>`\ (\ v\: ``Variant``, axis\: ``int`` = 0\ ) |static|                                                                                                     |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`std<class_nd_method_std>`\ (\ a\: ``Variant``, axes\: ``Variant`` = null\ ) |static|                                                                                                  |
@@ -267,6 +283,8 @@ Methods
    | :ref:`NDArray<class_NDArray>`                              | :ref:`subtract<class_nd_method_subtract>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                  |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`sum<class_nd_method_sum>`\ (\ a\: ``Variant``, axes\: ``Variant`` = null\ ) |static|                                                                                                  |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`sum_product<class_nd_method_sum_product>`\ (\ a\: ``Variant``, b\: ``Variant``, axes\: ``Variant`` = null\ ) |static|                                                                 |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`swapaxes<class_nd_method_swapaxes>`\ (\ v\: ``Variant``, a\: ``int``, b\: ``int``\ ) |static|                                                                                         |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -301,6 +319,8 @@ Methods
    | :ref:`Array<class_Array>`\[:ref:`NDArray<class_NDArray>`\] | :ref:`vsplit<class_nd_method_vsplit>`\ (\ v\: ``Variant``, indices_or_section_size\: ``Variant``\ ) |static|                                                                                |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`vstack<class_nd_method_vstack>`\ (\ v\: ``Variant``, dtype\: :ref:`DType<enum_nd_DType>` = 13\ ) |static|                                                                             |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`where<class_nd_method_where>`\ (\ condition\: ``Variant``, x\: ``Variant``, y\: ``Variant``\ ) |static|                                                                               |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`zeros<class_nd_method_zeros>`\ (\ shape\: ``Variant``, dtype\: :ref:`DType<enum_nd_DType>` = 2\ ) |static|                                                                            |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -426,6 +446,18 @@ Unsigned integer type with 32 bits. This dtype cannot express negative values.
 
 Unsigned integer type with 64 bits. This dtype cannot express negative values.
 
+.. _class_nd_constant_DTypeMax:
+
+.. rst-class:: classref-enumeration-constant
+
+:ref:`DType<enum_nd_DType>` **DTypeMax** = ``13``
+
+.. container:: contribute
+
+	There is currently no description for this enum. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+
+
 .. rst-class:: classref-item-separator
 
 ----
@@ -543,7 +575,7 @@ Add arguments element-wise.
 
 Test whether all array elements along a given axis evaluate to True.
 
-Returns a 0-dimension boolean if axes is null. In that case, :ref:`ndb.all<class_ndb_method_all>` is preferred.
+Returns a 0-dimension boolean if axes is null. In that case, :ref:`ndb.all()<class_ndb_method_all>` is preferred.
 
 .. rst-class:: classref-item-separator
 
@@ -571,7 +603,7 @@ This is equivalent to ``nd.atan2(nd.imag(x), nd.real(x))``.
 
 Test whether any array element along a given axis evaluates to True.
 
-Returns a 0-dimension boolean if axes is null. In that case, :ref:`ndb.any<class_ndb_method_any>` is preferred.
+Returns a 0-dimension boolean if axes is null. In that case, :ref:`ndb.any()<class_ndb_method_any>` is preferred.
 
 .. rst-class:: classref-item-separator
 
@@ -676,6 +708,20 @@ The quadrant (i.e., branch) is chosen so that arctan2(x1, x2) is the signed angl
 :ref:`NDArray<class_NDArray>` **atanh**\ (\ a\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_atanh>`
 
 Inverse hyperbolic tangent element-wise.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_axis_all:
+
+.. rst-class:: classref-method
+
+``StringName`` **axis_all**\ (\ ) |static| :ref:`🔗<class_nd_method_axis_all>`
+
+.. container:: contribute
+
+	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
 
 .. rst-class:: classref-item-separator
 
@@ -929,7 +975,7 @@ Equivalent to 0.5 \* (nd.exp(x) + nd.exp(-x)).
 
 Counts the number of non-zero values in the array a along the given axes.
 
-Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndi.count_nonzero<class_ndi_method_count_nonzero>`.
+Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndi.count_nonzero()<class_ndi_method_count_nonzero>`.
 
 .. rst-class:: classref-item-separator
 
@@ -985,7 +1031,7 @@ This function does one of two things, depending on the dimension of the input ar
 
 1-D: Constructs a square matrix from a k-th diagonal, with all other positions being 0.
 
-2-D: Returns a view of the k-th diagonal, like :ref:`diagonal<class_nd_method_diagonal>`.
+2-D: Returns a view of the k-th diagonal, like :ref:`diagonal()<class_nd_method_diagonal>`.
 
 .. rst-class:: classref-item-separator
 
@@ -1027,9 +1073,9 @@ Dot product of two arrays. Specifically,
 
 
 
-If either a or b is 0-D (scalar), it is equivalent to multiply, but using :ref:`multiply<class_nd_method_multiply>` or a \* b is preferred.
+If either a or b is 0-D (scalar), it is equivalent to multiply, but using :ref:`multiply()<class_nd_method_multiply>` or a \* b is preferred.
 
-If both a and b are 2-D or less, but not 0-D, it is equal to :ref:`matmul<class_nd_method_matmul>`, and using it is preferred.
+If both a and b are 2-D or less, but not 0-D, it is equal to :ref:`matmul()<class_nd_method_matmul>`, and using it is preferred.
 
 Otherwise, it would be equivalent to tensordot, but currently fails.
 
@@ -1045,7 +1091,19 @@ Otherwise, it would be equivalent to tensordot, but currently fails.
 
 Save an array to a buffer in NumPy .npy format.
 
-See :ref:`load<class_nd_method_load>` to load an array in the same format.
+See :ref:`load()<class_nd_method_load>` to load an array in the same format.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_e:
+
+.. rst-class:: classref-method
+
+``float`` **e**\ (\ ) |static| :ref:`🔗<class_nd_method_e>`
+
+Euler’s constant, base of natural logarithms, Napier’s constant.
 
 .. rst-class:: classref-item-separator
 
@@ -1096,6 +1154,18 @@ DType and shape will, if supplied, override the values inferred from the given a
 :ref:`NDArray<class_NDArray>` **equal**\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_equal>`
 
 Return (x1 == x2) element-wise.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_euler_gamma:
+
+.. rst-class:: classref-method
+
+``float`` **euler_gamma**\ (\ ) |static| :ref:`🔗<class_nd_method_euler_gamma>`
+
+Euler-Mascheroni constant.
 
 .. rst-class:: classref-item-separator
 
@@ -1289,7 +1359,7 @@ Return (x1 >= x2) element-wise.
 
 Split an array into multiple sub-arrays horizontally (column-wise).
 
-Please refer to :ref:`split<class_nd_method_split>`. hsplit is equivalent to :ref:`split<class_nd_method_split>` with axis=1, the array is always split along the second axis except for 1-D arrays, where it is split at axis=0.
+Please refer to :ref:`split()<class_nd_method_split>`. hsplit is equivalent to :ref:`split()<class_nd_method_split>` with axis=1, the array is always split along the second axis except for 1-D arrays, where it is split at axis=0.
 
 .. rst-class:: classref-item-separator
 
@@ -1320,6 +1390,32 @@ This function makes most sense for arrays with up to 3 dimensions. For instance,
 Return the imaginary part of the complex argument.
 
 If the argument is not complex, returns a non-writeable array.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_inf:
+
+.. rst-class:: classref-method
+
+``float`` **inf**\ (\ ) |static| :ref:`🔗<class_nd_method_inf>`
+
+IEEE 754 floating point representation of (positive) infinity.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_inner:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **inner**\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_inner>`
+
+Inner product of two arrays.
+
+Ordinary inner product of vectors for 1-D arrays (without complex conjugation), in higher dimensions a sum product over the last axes.
 
 .. rst-class:: classref-item-separator
 
@@ -1485,7 +1581,7 @@ Load arrays in npy format.
 
 Supports ``FileAccess``, ``PackedByteArray`` and ``String`` path parameters.
 
-See :ref:`dumpb<class_nd_method_dumpb>` to write an array to the same format.
+See :ref:`dumpb()<class_nd_method_dumpb>` to write an array to the same format.
 
 .. rst-class:: classref-item-separator
 
@@ -1549,7 +1645,7 @@ Compute the truth value of x1 OR x2 element-wise.
 
 Compute the truth value of x1 XOR x2 element-wise.
 
-Similar to :ref:`not_equal<class_nd_method_not_equal>`, but converts all arguments to boolean before computation.
+Similar to :ref:`not_equal()<class_nd_method_not_equal>`, but converts all arguments to boolean before computation.
 
 .. rst-class:: classref-item-separator
 
@@ -1587,7 +1683,7 @@ If either argument is N-D, N > 2, it is treated as a stack of matrices residing 
 
 Return the maximum of an array or maximum along an axis.
 
-Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.max<class_ndf_method_max>` or :ref:`ndi.max<class_ndi_method_max>`.
+Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.max()<class_ndf_method_max>` or :ref:`ndi.max()<class_ndi_method_max>`.
 
 .. rst-class:: classref-item-separator
 
@@ -1615,7 +1711,7 @@ Compare two arrays and return a new array containing the element-wise maxima. If
 
 Compute the arithmetic mean along the specified axis.
 
-Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.mean<class_ndf_method_mean>`.
+Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.mean()<class_ndf_method_mean>`.
 
 .. rst-class:: classref-item-separator
 
@@ -1629,7 +1725,7 @@ Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.m
 
 Compute the median along the specified axis. The median is the middle value when you sort the values.
 
-Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.median<class_ndf_method_median>` or :ref:`ndi.median<class_ndi_method_median>`.
+Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.median()<class_ndf_method_median>` or :ref:`ndi.median()<class_ndi_method_median>`.
 
 .. rst-class:: classref-item-separator
 
@@ -1643,7 +1739,7 @@ Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.m
 
 Return the minimum of an array or minimum along an axis.
 
-Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.min<class_ndf_method_min>` or :ref:`ndi.min<class_ndi_method_min>`.
+Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.min()<class_ndf_method_min>` or :ref:`ndi.min()<class_ndi_method_min>`.
 
 .. rst-class:: classref-item-separator
 
@@ -1689,6 +1785,18 @@ Multiply arguments element-wise.
 
 ----
 
+.. _class_nd_method_nan:
+
+.. rst-class:: classref-method
+
+``float`` **nan**\ (\ ) |static| :ref:`🔗<class_nd_method_nan>`
+
+IEEE 754 floating point representation of Not a Number (NaN).
+
+.. rst-class:: classref-item-separator
+
+----
+
 .. _class_nd_method_negative:
 
 .. rst-class:: classref-method
@@ -1727,7 +1835,7 @@ Vector norm.
 
 This function is able to return one of 4 different vector norms, depending on the value of the ord parameter (L0, L1, L2 and LInf).
 
-Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.norm<class_ndf_method_norm>` or :ref:`ndi.norm<class_ndi_method_norm>`.
+Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.norm()<class_ndf_method_norm>` or :ref:`ndi.norm()<class_ndi_method_norm>`.
 
 .. rst-class:: classref-item-separator
 
@@ -1771,6 +1879,20 @@ DType and shape will, if supplied, override the values inferred from the given a
 
 ----
 
+.. _class_nd_method_outer:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **outer**\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_outer>`
+
+Compute the outer product of two vectors.
+
+Both vectors are flattened before the operation.
+
+.. rst-class:: classref-item-separator
+
+----
+
 .. _class_nd_method_pad:
 
 .. rst-class:: classref-method
@@ -1786,6 +1908,18 @@ Pad an array.
 2. ``[before, after]``, pads all axes equally.
 
 3. ``[[before_0, after_0], [before_1, after_1], ...]``, pads axes in order.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_pi:
+
+.. rst-class:: classref-method
+
+``float`` **pi**\ (\ ) |static| :ref:`🔗<class_nd_method_pi>`
+
+The PI constant, that is the ratio of a circle's circumference to its diameter.
 
 .. rst-class:: classref-item-separator
 
@@ -1825,7 +1959,7 @@ First array elements raised to powers from second array, element-wise.
 
 Return the product of array elements over a given axis.
 
-Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.prod<class_ndf_method_prod>` or :ref:`ndi.prod<class_ndi_method_prod>`.
+Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.prod()<class_ndf_method_prod>` or :ref:`ndi.prod()<class_ndi_method_prod>`.
 
 .. rst-class:: classref-item-separator
 
@@ -1872,22 +2006,6 @@ Note that ranges are represented as Vector4i(mask, start, stop, step).
 Return the real part of the complex argument.
 
 If the argument is not complex, returns the argument.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_nd_method_reduce_dot:
-
-.. rst-class:: classref-method
-
-:ref:`NDArray<class_NDArray>` **sum_product**\ (\ a\: ``Variant``, b\: ``Variant``, axes\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_reduce_dot>`
-
-Dot product of two arrays along the given axes.
-
-Equivalent to ``nd.sum(nd.multiply(a, b), axes)``.
-
-Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.sum_product<class_ndf_method_reduce_dot>` or :ref:`ndi.sum_product<class_ndi_method_reduce_dot>`.
 
 .. rst-class:: classref-item-separator
 
@@ -2019,7 +2137,7 @@ Also known as rolling or moving window, the window slides across all dimensions 
 
 Split an array into multiple sub-arrays as views into v.
 
-This can be regarded as the opposite of :ref:`concatenate<class_nd_method_concatenate>`.
+This can be regarded as the opposite of :ref:`concatenate()<class_nd_method_concatenate>`.
 
 \ ``indices_or_section_size`` must be either:
 
@@ -2055,6 +2173,18 @@ Return the element-wise square of the input.
 
 ----
 
+.. _class_nd_method_squeeze:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **squeeze**\ (\ v\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_squeeze>`
+
+Remove axes of length one from ``v``.
+
+.. rst-class:: classref-item-separator
+
+----
+
 .. _class_nd_method_stack:
 
 .. rst-class:: classref-method
@@ -2081,7 +2211,7 @@ Compute the standard deviation along the specified axis.
 
 Returns the standard deviation, a measure of the spread of a distribution, of the array elements. The standard deviation is computed for the flattened array by default, otherwise over the specified axis.
 
-Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.std<class_ndf_method_std>`.
+Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.std()<class_ndf_method_std>`.
 
 .. rst-class:: classref-item-separator
 
@@ -2107,7 +2237,23 @@ Subtract arguments, element-wise.
 
 Sum of array elements over a given axis.
 
-Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.sum<class_ndf_method_sum>` or :ref:`ndi.sum<class_ndi_method_sum>`.
+Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.sum()<class_ndf_method_sum>` or :ref:`ndi.sum()<class_ndi_method_sum>`.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_sum_product:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **sum_product**\ (\ a\: ``Variant``, b\: ``Variant``, axes\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_sum_product>`
+
+Dot product of two arrays along the given axes.
+
+Equivalent to ``nd.sum(nd.multiply(a, b), axes)``.
+
+Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.sum_product()<class_ndf_method_sum_product>` or :ref:`ndi.sum_product()<class_ndi_method_sum_product>`.
 
 .. rst-class:: classref-item-separator
 
@@ -2197,7 +2343,7 @@ Return the sum of the k-th diagonal of a matrix.
 
 The shape of the result will be the same as ``v``, but with the two given axes removed.
 
-Returns a 0-dimension scalar if ``v`` is 2-D. In that case, consider :ref:`ndi.trace<class_ndi_method_trace>` and :ref:`ndf.trace<class_ndf_method_trace>`.
+Returns a 0-dimension scalar if ``v`` is 2-D. In that case, consider :ref:`ndi.trace()<class_ndi_method_trace>` and :ref:`ndf.trace()<class_ndf_method_trace>`.
 
 .. rst-class:: classref-item-separator
 
@@ -2293,7 +2439,7 @@ Equivalent to ``nd.as_array(array, nd.DType.UInt64)``.
 
 :ref:`NDArray<class_NDArray>` **unstack**\ (\ v\: ``Variant``, axis\: ``int`` = 0\ ) |static| :ref:`🔗<class_nd_method_unstack>`
 
-Unpacks the given dimension of a rank-R tensor into a sequence of R-1 tensors. Opposite of :ref:`stack<class_nd_method_stack>`.
+Unpacks the given dimension of a rank-R tensor into a sequence of R-1 tensors. Opposite of :ref:`stack()<class_nd_method_stack>`.
 
 Equivalent to ``nd.moveaxis(array, axis, 0)``.
 
@@ -2311,7 +2457,7 @@ Compute the variance along the specified axis.
 
 Returns the variance of the array elements, a measure of the spread of a distribution. The variance is computed for the flattened array by default, otherwise over the specified axis.
 
-Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.var<class_ndf_method_var>`.
+Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.var()<class_ndf_method_var>`.
 
 .. rst-class:: classref-item-separator
 
@@ -2341,7 +2487,7 @@ This function will return a view if possible, but create a new array otherwise.
 
 Split an array into multiple sub-arrays vertically (row-wise).
 
-Please refer to :ref:`split<class_nd_method_split>`. vsplit is equivalent to split with axis=0 (default), the array is always split along the first axis regardless of the array dimension.
+Please refer to :ref:`split()<class_nd_method_split>`. vsplit is equivalent to split with axis=0 (default), the array is always split along the first axis regardless of the array dimension.
 
 .. rst-class:: classref-item-separator
 
@@ -2358,6 +2504,20 @@ Stack arrays in sequence vertically (row wise).
 This is equivalent to concatenation along the first axis after 1-D arrays of shape (N,) have been reshaped to (1,N). Rebuilds arrays divided by vsplit.
 
 This function makes most sense for arrays with up to 3 dimensions. For instance, for pixel-data with a height (first axis), width (second axis), and r/g/b channels (third axis). The functions concatenate, stack and block provide more general stacking and concatenation operations.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_where:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **where**\ (\ condition\: ``Variant``, x\: ``Variant``, y\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_where>`
+
+Element-wise selection. Returns elements from ``x`` where ``condition`` is true and from ``y`` otherwise.
+
+\ ``condition`` must be a boolean tensor. All three operands broadcast against each other; the result dtype is the common type of ``x`` and ``y``.
 
 .. rst-class:: classref-item-separator
 
@@ -2386,6 +2546,7 @@ Return a new array of ones with the same shape and type as a given array.
 DType and shape will, if supplied, override the values inferred from the given array.
 
 .. |virtual| replace:: :abbr:`virtual (This method should typically be overridden by the user to have any effect.)`
+.. |required| replace:: :abbr:`required (This method is required to be overridden when extending its base class.)`
 .. |const| replace:: :abbr:`const (This method has no side effects. It doesn't modify any of the instance's member variables.)`
 .. |vararg| replace:: :abbr:`vararg (This method accepts any number of arguments after the ones described here.)`
 .. |constructor| replace:: :abbr:`constructor (This method is used to construct a type.)`

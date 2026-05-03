@@ -230,24 +230,16 @@ def make_module(env, sources, module_name: str, features: Features):
 
 		vfunc = features.vfunc_infos[specialization.vfunc_name]
 
+		complex_skip_funcs = {
+			"minimum", "maximum", "max", "min",
+			"mean", "median", "variance", "standard_deviation",
+			"rint", "less_equal", "less", "greater", "greater_equal",
+			"round",
+			"where",  # xt::where + bool cond + complex operands fails to compile in xtensor
+		}
 		if specialization.model_input is None:
 			# FIXME Need to test how these functions are computed with complex dtypes in numpy.
-			if any(dtype in complex_dtypes for dtype in specialization.input) and (
-				vfunc.name == "minimum"
-				or vfunc.name == "maximum"
-				or vfunc.name == "max"
-				or vfunc.name == "min"
-				or vfunc.name == "mean"
-				or vfunc.name == "median"
-				or vfunc.name == "variance"
-				or vfunc.name == "standard_deviation"
-				or vfunc.name == "rint"
-				or vfunc.name == "less_equal"
-				or vfunc.name == "less"
-				or vfunc.name == "greater"
-				or vfunc.name == "greater_equal"
-				or vfunc.name == "round"
-			):
+			if vfunc.name in complex_skip_funcs and any(dtype in complex_dtypes for dtype in specialization.input):
 				continue
 
 			input_types_cpp = "".join(f", {dtype_to_c_type[dtype]}" for dtype in specialization.input)
@@ -257,6 +249,9 @@ def make_module(env, sources, module_name: str, features: Features):
 			configure_str += f"\tadd_native<{vfunc.name}{output_type_cpp}{input_types_cpp}{vargs_part}>(tables::{vfunc.name});\n"
 
 		else:
+			# Skip casts whose model specialization was filtered out above.
+			if vfunc.name in complex_skip_funcs and any(dtype in complex_dtypes for dtype in specialization.model_input):
+				continue
 			template_args_cpp = ", ".join(
 				dtype_to_c_type[dtype]
 				for dtype in itertools.chain(specialization.input, specialization.model_input)

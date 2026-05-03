@@ -44,6 +44,8 @@ __all__ = [
 	"all", "any", "sum", "prod", "max", "min", "mean", "std", "var",
 	# manipulation
 	"reshape",
+	# selection
+	"where",
 ]
 
 
@@ -350,3 +352,9 @@ def reshape(x, /, shape, *, copy=None):
 	if copy is False:
 		raise NotImplementedError("reshape with copy=False not yet wired")
 	return _call("reshape", x, _shape(shape))
+
+
+# ---- selection --------------------------------------------------------------
+
+def where(condition, x1, x2, /):
+	return _call("where", condition, x1, x2)

@@ -123,6 +123,7 @@ namespace va::vfunc::tables {
 	VA_TABLES_EXTERN UFuncTableUnary isfinite;
 	VA_TABLES_EXTERN UFuncTableUnary isinf;
 
+	VA_TABLES_EXTERN UFuncTableBinary where;
 	VA_TABLES_EXTERN UFuncTablesBinaryCommutative is_close;
 	VA_TABLES_EXTERN UFuncTablesBinaryCommutative array_equiv;
 	VA_TABLES_EXTERN UFuncTablesBinaryCommutative all_close;

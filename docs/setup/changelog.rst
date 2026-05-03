@@ -16,6 +16,10 @@ Upcoming Changes (main branch)
 This release we're adding a new testing strategy, where we test NumDot against the `Python array-api-tests <https://github.com/data-apis/array-api-tests>`_ conformance suite by the Consortium for Python Data API Standards.
 The suite is made to test numpy-like APIs, and ended up surfacing a number of edge-case bugs in creation and conversion functions, most of which are fixed below.
 
+**Added**
+
+- ``nd.where(condition, x, y)`` selects from ``x`` where ``condition`` is true and from ``y`` otherwise, with broadcasting across all three operands.
+
 **Fixed**
 
 - ``nd.arange`` returned a garbage-sized array when the sign of ``step`` disagreed with the sign of ``stop - start``; it now returns an empty array, matching numpy.

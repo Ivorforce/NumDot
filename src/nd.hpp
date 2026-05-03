@@ -139,6 +139,7 @@ public:
 	static Ref<NDArray> minimum(const Variant& a, const Variant& b);
 	static Ref<NDArray> maximum(const Variant& a, const Variant& b);
 	static Ref<NDArray> clip(const Variant& a, const Variant& min, const Variant& max);
+	static Ref<NDArray> where(const Variant& condition, const Variant& x, const Variant& y);
 
 	static Ref<NDArray> sign(const Variant& a);
 	static Ref<NDArray> abs(const Variant& a);

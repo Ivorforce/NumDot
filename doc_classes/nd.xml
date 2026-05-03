@@ -132,6 +132,11 @@
 				Inverse hyperbolic tangent element-wise.
 			</description>
 		</method>
+		<method name="axis_all" qualifiers="static">
+			<return type="StringName" />
+			<description>
+			</description>
+		</method>
 		<method name="bitwise_and" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
@@ -937,17 +942,6 @@
 				If the argument is not complex, returns the argument.
 			</description>
 		</method>
-		<method name="sum_product" qualifiers="static">
-			<return type="NDArray" />
-			<param index="0" name="a" type="Variant" />
-			<param index="1" name="b" type="Variant" />
-			<param index="2" name="axes" type="Variant" default="null" />
-			<description>
-				Dot product of two arrays along the given axes.
-				Equivalent to [code]nd.sum(nd.multiply(a, b), axes)[/code].
-				Returns a 0-dimension scalar if axes is null. In that case, consider [method ndf.sum_product] or [method ndi.sum_product].
-			</description>
-		</method>
 		<method name="remainder" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
@@ -1088,6 +1082,17 @@
 			<description>
 				Sum of array elements over a given axis.
 				Returns a 0-dimension scalar if axes is null. In that case, consider [method ndf.sum] or [method ndi.sum].
+			</description>
+		</method>
+		<method name="sum_product" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<param index="2" name="axes" type="Variant" default="null" />
+			<description>
+				Dot product of two arrays along the given axes.
+				Equivalent to [code]nd.sum(nd.multiply(a, b), axes)[/code].
+				Returns a 0-dimension scalar if axes is null. In that case, consider [method ndf.sum_product] or [method ndi.sum_product].
 			</description>
 		</method>
 		<method name="swapaxes" qualifiers="static">
@@ -1244,6 +1249,16 @@
 				Stack arrays in sequence vertically (row wise).
 				This is equivalent to concatenation along the first axis after 1-D arrays of shape (N,) have been reshaped to (1,N). Rebuilds arrays divided by vsplit.
 				This function makes most sense for arrays with up to 3 dimensions. For instance, for pixel-data with a height (first axis), width (second axis), and r/g/b channels (third axis). The functions concatenate, stack and block provide more general stacking and concatenation operations.
+			</description>
+		</method>
+		<method name="where" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="condition" type="Variant" />
+			<param index="1" name="x" type="Variant" />
+			<param index="2" name="y" type="Variant" />
+			<description>
+				Element-wise selection. Returns elements from [param x] where [param condition] is true and from [param y] otherwise.
+				[param condition] must be a boolean tensor. All three operands broadcast against each other; the result dtype is the common type of [param x] and [param y].
 			</description>
 		</method>
 		<method name="zeros" qualifiers="static">

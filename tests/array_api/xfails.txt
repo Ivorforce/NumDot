@@ -22,11 +22,13 @@ array_api_tests/test_creation_functions.py::test_meshgrid
 array_api_tests/test_creation_functions.py::test_full
 array_api_tests/test_creation_functions.py::test_full_like
 
-# === Section: NumDot missing function (file issue) ===
-# These tests work for their target function but their assertions use
-# array-api functions NumDot doesn't expose. Will unblock when those land.
-# - test_eye, test_linspace: use xp.where
-# - test_asarray_arrays: uses xp.real
+# === Section: NumDot bugs in test_creation_functions ===
+# - test_eye: nd.eye truncates the `k` offset to 32 bits (k=2^32 returns
+#   diagonal of ones instead of all zeros for a 1x1 matrix).
+# - test_linspace: nd.linspace endpoint precision (out[-1]=29.000...004 ≠ 29.0)
+#   and linspace(0, 0, 1) produces nan instead of 0.0.
+# - test_asarray_arrays: nd.asarray copy semantics — out reflects mutations to x
+#   when it shouldn't.
 array_api_tests/test_creation_functions.py::test_eye
 array_api_tests/test_creation_functions.py::test_linspace
 array_api_tests/test_creation_functions.py::test_asarray_arrays
@@ -140,12 +142,14 @@ array_api_tests/test_statistical_functions.py::test_cumulative_prod
 array_api_tests/test_utility_functions.py::test_diff
 array_api_tests/test_utility_functions.py::test_diff_append_prepend
 
-# --- NumDot bug: nd.std / nd.var / nd.mean fail on multi-axis reductions ---
+# --- NumDot bug: nd reductions fail on multi-axis tuples ---
 # Single-axis and full-reduction work; passing a list like [1, 0] returns
-# null. Hypothesis finds these once shape ≥ 2.
+# null. Hypothesis finds these once shape ≥ 2. Affects std/var/mean/min/max.
 array_api_tests/test_statistical_functions.py::test_std
 array_api_tests/test_statistical_functions.py::test_var
 array_api_tests/test_statistical_functions.py::test_mean
+array_api_tests/test_statistical_functions.py::test_min
+array_api_tests/test_statistical_functions.py::test_max
 
 # --- NumDot bug: all/any treat complex(0,0) as truthy ---
 # Spec says all(complex(0,0)) is False; NumDot returns True.

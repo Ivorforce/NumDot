@@ -78,6 +78,18 @@ namespace va {
 		va::maximum(allocator, target, tmp->data, lo);
 	}
 
+	inline void where(VStoreAllocator& allocator, const VArrayTarget& target, const VData& cond, const VData& a, const VData& b) {
+		if (va::dtype(cond) != va::DType::Bool)
+			throw std::runtime_error("where: condition must be a boolean array");
+		const auto& cond_b = std::get<compute_case<bool*>>(cond);
+		const shape_type result_shape = combined_shape(
+			combined_shape(va::shape(cond), va::shape(a)),
+			va::shape(b)
+		);
+		_call_vfunc_binary(allocator, vfunc::tables::where, target, result_shape,
+		                   a, b, &cond_b);
+	}
+
 	DEFINE_RFUNC_CALLER_UNARY0(sum)
 	DEFINE_RFUNC_CALLER_UNARY0(prod)
 	DEFINE_RFUNC_CALLER_UNARY0(mean)

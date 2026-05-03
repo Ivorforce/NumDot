@@ -147,6 +147,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("minimum", "a", "b"), &nd::minimum);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("maximum", "a", "b"), &nd::maximum);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("clip", "a", "min", "max"), &nd::clip);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("where", "condition", "x", "y"), &nd::where);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("sign", "a"), &nd::sign);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("abs", "a"), &nd::abs);
@@ -952,6 +953,10 @@ Ref<NDArray> nd::maximum(const Variant& a, const Variant& b) {
 
 Ref<NDArray> nd::clip(const Variant& a, const Variant& min, const Variant& max) {
 	return VARRAY_MAP3(clip, a, min, max);
+}
+
+Ref<NDArray> nd::where(const Variant& condition, const Variant& x, const Variant& y) {
+	return VARRAY_MAP3(where, condition, x, y);
 }
 
 Ref<NDArray> nd::sign(const Variant& a) {

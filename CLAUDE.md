@@ -128,7 +128,8 @@ The path from a `nd.foo(...)` call to xtensor:
    styles:
    - **Ufuncs and reductions** dispatch through pre-built function-
      pointer tables in `src/vatensor/vfunc/` (one cell per dtype
-     combination, populated at startup).
+     combination, populated at startup). Tables live in `tables.hpp`,
+     bodies in `vfuncs.hpp`, entry points in `entrypoints.hpp`.
    - **Structural ops** like `arange`, `linspace`, `reshape`, `eye`
      dispatch dtype *inline* with `std::visit` in `src/vatensor/
      create.cpp` and `rearrange.cpp`, with arithmetic embedded in
@@ -136,6 +137,19 @@ The path from a `nd.foo(...)` call to xtensor:
      live here.
 3. **xtensor** — the actual computation, reached via `xt::*` calls
    inside the `va::` layer.
+
+The vfunc-table instantiations in `src/vatensor/gen/base.cpp` are
+**generated** — do not edit by hand. The pipeline:
+1. `configure/generate_features.py` → emits `configure/vfuncs.json`
+   listing each vfunc's specializations (per-dtype cells), casts
+   (cross-dtype via promotion), and `vargs` (extra runtime args).
+2. `site_scons/site_tools/features.py` → reads that JSON at scons
+   build time and writes `src/vatensor/gen/base.cpp` + `.hpp`.
+To add or change a vfunc: edit `generate_features.py`, run it to
+regenerate `vfuncs.json`, then build (scons regenerates `base.cpp`).
+Functions with extra runtime args (e.g. `is_close` carries rtol/atol/
+equal_nan) declare them in `"vargs"`; the `IMPLEMENT_*_VFUNC` macros
+in `vfuncs.hpp` already forward trailing args via `##__VA_ARGS__`.
 
 ### Probing what `nd` exposes
 

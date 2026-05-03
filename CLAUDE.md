@@ -22,6 +22,22 @@ The changelog is always in reference to the previous released version. When maki
 
 The changelog is user-facing. It should document what the user sees or what it might mean to them, not internal implementation details. Architectural changes are only briefly mentioned, and focused on the implication.
 
+## When changing the public C++/GDScript API
+
+Regenerate docs:
+
+```bash
+cd demo && /Applications/Godot-4.4.app/Contents/MacOS/Godot --doctool ../ --gdextension-docs --headless && cd ..
+# make_rst.py needs godot's misc/utility/color.py + version.py on PYTHONPATH;
+# fetch them once into a scratch dir, then:
+PYTHONPATH=/tmp/godot_doctool tests/.venv/bin/python /tmp/godot_doctool/make_rst.py \
+  -o docs/classes -l en doc_classes
+```
+
+`doctool` rewrites `doc_classes/*.xml` from the **currently-built** binary — if some method registrations are missing from your build, the tool will silently delete them from the XML. Verify the diff before committing; revert XML files you didn't intend to touch. Then hand-write descriptions for new methods in `doc_classes/*.xml` and rerun `make_rst.py`.
+
+`make_rst.py` writes its `XML source` URL comment using the cwd-derived path; if it ends up with `Users/...` in the URL, hand-edit it back to the project-relative form (`godot/NumDot/doc_classes/...`) to keep the diff clean.
+
 ## Testing & iteration
 
 What follows is for working on the test infrastructure. Build setup and

@@ -22,9 +22,19 @@ array_api_tests/test_creation_functions.py::test_asarray_arrays
 # === Section: signature / argument-encoding mismatch ===
 # The shim makes the call but NumDot rejects the args (returns null).
 # Likely fix: discover the actual NumDot signature and adjust the shim.
-array_api_tests/test_creation_functions.py::test_arange
 array_api_tests/test_creation_functions.py::test_eye
 array_api_tests/test_creation_functions.py::test_full
 array_api_tests/test_creation_functions.py::test_linspace
 array_api_tests/test_creation_functions.py::test_empty_like
 array_api_tests/test_creation_functions.py::test_zeros_like
+
+# === Section: NumDot precision edges (file issue) ===
+# NumDot's va::arange computes num after converting all inputs to its
+# process_dtype (the common type). When start/stop are huge ints (>2^53)
+# and step is a float, both ints round independently to float64 BEFORE
+# the subtraction, losing 8+ bits of precision in the diff. numpy avoids
+# this by doing the int subtraction first. Hypothesis finds inputs that
+# exceed array-api-tests's ±10% size tolerance.
+# Pure-int and pure-float arange now work correctly (200+ examples) thanks
+# to the integer-arithmetic and direction-mismatch fixes.
+array_api_tests/test_creation_functions.py::test_arange

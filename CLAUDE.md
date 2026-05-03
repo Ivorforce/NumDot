@@ -5,6 +5,15 @@ NumDot imitates numpy's API where possible, using the `nd` class with static met
 
 Find its documentation at `./docs/`. The source code is in `src/`.
 
+## Building
+
+To build for the `./demo` godot project:
+
+```
+scons install_dir=demo api_version=4.3
+scons install_dir=demo arch=arm64 api_version=4.3  # on macOS
+```
+
 ## Testing & iteration
 
 What follows is for working on the test infrastructure. Build setup and

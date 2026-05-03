@@ -153,8 +153,32 @@ std::shared_ptr<VArray> va::arange(VStoreAllocator& allocator, VScalar start, VS
 			T stop_ = static_cast_scalar<T>(stop);
 			T step_ = static_cast_scalar<T>(step);
 
-			// From arange_impl
-			num = std::ceil((stop_ - start_) / step_);
+			if (step_ == T(0)) {
+				throw std::runtime_error("arange: step cannot be zero");
+			}
+
+			// numpy semantics: if step's direction disagrees with
+			// (stop - start), the result is empty. Guard before computing
+			// num so we never assign a negative ceil() to size_t (UB) or
+			// suffer signed-overflow inside the difference.
+			const bool empty_range = (step_ > T(0)) ? (stop_ <= start_) : (stop_ >= start_);
+			if (empty_range) {
+				num = 0;
+			}
+			else if constexpr (std::is_integral_v<T>) {
+				// Integer arithmetic preserves the exact difference. Casting
+				// to double first would lose ULPs above 2^53 even for tiny
+				// ranges (because each operand rounds independently).
+				// Overflow of (stop_ - start_) only happens for ranges so
+				// large that the subsequent allocation would fail anyway.
+				const T diff = stop_ - start_;
+				const T q = diff / step_;
+				const T r = diff % step_;
+				num = static_cast<std::size_t>(q + (r != T(0) ? T(1) : T(0)));
+			}
+			else {
+				num = static_cast<std::size_t>(std::ceil((stop_ - start_) / step_));
+			}
 
 			start = start_;
 			step = step_;

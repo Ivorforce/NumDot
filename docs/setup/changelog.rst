@@ -10,8 +10,14 @@ Here you will find the release notes for each version of the library. Each secti
    :local:
    :backlinks: none
 
-.. Upcoming Changes (main branch)
-.. ------------------------------
+Upcoming Changes (main branch)
+------------------------------
+
+**Fixed**
+
+- ``nd.arange`` returned a garbage-sized array when the sign of ``step`` disagreed with the sign of ``stop - start``; it now returns an empty array, matching numpy.
+- ``nd.arange`` with ``step = 0`` is now rejected with a clean error (previously it relied on undefined division-by-zero behavior).
+- ``nd.arange`` with integer arguments above ``2**53`` could compute a wrong element count because the bounds were converted to ``float64`` before subtraction; integer dtypes now use exact integer arithmetic.
 
 Version 0.11 - 2025-09-14
 -------------------------

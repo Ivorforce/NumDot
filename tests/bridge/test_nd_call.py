@@ -45,6 +45,19 @@ def test_nd_call_ones_int64(bridge):
 	assert np.all(out == 1)
 
 
+def test_nd_call_eye(bridge):
+	# nd.eye signature is (shape, k, dtype) — shape is a 2-element list,
+	# not separate n_rows/n_cols.
+	out = bridge.call_nd("eye", [3, 4], 0, np.float32)
+	assert out.shape == (3, 4)
+	assert out.dtype == np.float32
+	expected = np.eye(3, 4, k=0, dtype=np.float32)
+	assert np.array_equal(out, expected)
+	# Off-diagonal k
+	out_k1 = bridge.call_nd("eye", [4, 4], 1, np.int32)
+	assert np.array_equal(out_k1, np.eye(4, 4, k=1, dtype=np.int32))
+
+
 # ---- mixed value args ----
 
 def test_nd_call_arange(bridge):

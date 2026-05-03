@@ -110,7 +110,9 @@ def eye(n_rows, n_cols=None, /, *, k=0, dtype=None, device=None):
 		n_cols = n_rows
 	if dtype is None:
 		dtype = np.float64
-	return _call("eye", n_rows, n_cols, k, dtype)
+	# NumDot signature: nd.eye(shape, k, dtype) — shape is a 2-element list,
+	# not separate n_rows/n_cols positionals.
+	return _call("eye", [n_rows, n_cols], k, dtype)
 
 
 def linspace(start, stop, /, num, *, dtype=None, device=None, endpoint=True):

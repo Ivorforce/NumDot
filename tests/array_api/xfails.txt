@@ -22,11 +22,15 @@ array_api_tests/test_creation_functions.py::test_asarray_arrays
 # === Section: signature / argument-encoding mismatch ===
 # The shim makes the call but NumDot rejects the args (returns null).
 # Likely fix: discover the actual NumDot signature and adjust the shim.
-array_api_tests/test_creation_functions.py::test_eye
 array_api_tests/test_creation_functions.py::test_full
 array_api_tests/test_creation_functions.py::test_linspace
 array_api_tests/test_creation_functions.py::test_empty_like
 array_api_tests/test_creation_functions.py::test_zeros_like
+
+# === Section: NumDot missing function (file issue) ===
+# nd.eye works correctly, but the test verifies the result with xp.where,
+# which NumDot doesn't expose. Will unblock when nd.where lands.
+array_api_tests/test_creation_functions.py::test_eye
 
 # === Section: NumDot precision edges (file issue) ===
 # NumDot's va::arange computes num after converting all inputs to its

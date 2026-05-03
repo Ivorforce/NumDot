@@ -261,6 +261,26 @@ Ref<NDArray> map_variants_as_arrays_with_target(Visitor&& visitor, const Args&..
 	}
 }
 
+// NEP-50 / Array API "weak scalar" promotion for binary ops: when one operand
+// is an NDArray and the other is a Variant scalar (BOOL/INT/FLOAT), the scalar
+// adopts the array's dtype so it doesn't widen the result (`arr_uint8 + 5`
+// stays uint8, not int64). Helper lives in gdconvert/conversion_array — also
+// reused by ndb/ndf/ndi for their binary methods.
+template<typename Visitor>
+Ref<NDArray> map_binary_with_weak_scalar(Visitor&& visitor, const Variant& a, const Variant& b) {
+	try {
+		std::shared_ptr<va::VArray> va_arr;
+		std::shared_ptr<va::VArray> vb_arr;
+		variant_pair_as_arrays_weak(a, b, va_arr, vb_arr);
+		std::shared_ptr<va::VArray> result;
+		std::forward<Visitor>(visitor)(&result, va_arr, vb_arr);
+		return { memnew(NDArray(result)) };
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
+}
+
 template<typename Visitor, typename VisitorNoaxes, typename... Args>
 inline Ref<NDArray> reduction(Visitor&& visitor, VisitorNoaxes&& visitor_noaxes, const Variant& axes, const Args&... args) {
 	try {
@@ -335,7 +355,7 @@ Ref<NDArray> like_visit(Visitor&& visitor, const Variant& model, nd::DType dtype
     }, (varray1))
 
 #define VARRAY_MAP2(func, varray1, varray2) \
-	map_variants_as_arrays_with_target([](const va::VArrayTarget& target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b) {\
+	map_binary_with_weak_scalar([](const va::VArrayTarget& target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b) {\
         va::func(va::store::default_allocator, target, a->data, b->data);\
     }, (varray1), (varray2))
 

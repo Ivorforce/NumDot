@@ -23,6 +23,16 @@ std::shared_ptr<va::VArray> array_as_varray(const Array& array);
 std::shared_ptr<va::VArray> variant_as_array(const Variant& array);
 std::shared_ptr<va::VArray> variant_as_array(const Variant& array, va::DType dtype, bool copy);
 
+// NEP-50 / Array API "weak scalar" promotion for binary ops: when one operand
+// is an NDArray and the other is a Variant scalar (BOOL/INT/FLOAT), build the
+// scalar with the array's dtype so it doesn't widen the result.
+void variant_pair_as_arrays_weak(
+	const Variant& a,
+	const Variant& b,
+	std::shared_ptr<va::VArray>& out_a,
+	std::shared_ptr<va::VArray>& out_b
+);
+
 std::vector<std::shared_ptr<va::VArray>> variant_to_vector(const Variant& array);
 
 void find_shape_and_dtype_of_array(va::shape_type& shape, va::DType& dtype, const Array& input_array);

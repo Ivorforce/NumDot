@@ -27,7 +27,7 @@ void ndb::_bind_methods() {
 numdot::reduction_new<bool>([](const va::VArrayTarget& target, const va::VArray& array) { return va::func(va::store::default_allocator, target, array.data, nullptr); }, (varray1))
 
 #define REDUCTION2_NOAXES(func, varray1, varray2) \
-numdot::reduction_new<bool>([](const va::VArrayTarget& target, const va::VArray& x1, const va::VArray& x2) { return va::func(va::store::default_allocator, target, x1.data, x2.data); }, (varray1), (varray2))
+numdot::reduction_new_binary_weak<bool>([](const va::VArrayTarget& target, const va::VArray& x1, const va::VArray& x2) { return va::func(va::store::default_allocator, target, x1.data, x2.data); }, (varray1), (varray2))
 
 bool ndb::all(const Variant& a) {
 	return REDUCTION1(all, a);

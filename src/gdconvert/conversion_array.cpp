@@ -670,6 +670,41 @@ std::shared_ptr<va::VArray> ndarray_as_dtype(const NDArray& ndarray, const va::D
 	return va::copy_as_dtype(va::store::default_allocator, ndarray.array->data, dtype);
 }
 
+static bool _variant_is_ndarray(const Variant& v) {
+	return v.get_type() == Variant::OBJECT && Object::cast_to<NDArray>(v) != nullptr;
+}
+
+static bool _variant_is_weak_scalar(const Variant& v) {
+	switch (v.get_type()) {
+		case Variant::BOOL:
+		case Variant::INT:
+		case Variant::FLOAT:
+			return true;
+		default:
+			return false;
+	}
+}
+
+void variant_pair_as_arrays_weak(
+	const Variant& a,
+	const Variant& b,
+	std::shared_ptr<va::VArray>& out_a,
+	std::shared_ptr<va::VArray>& out_b
+) {
+	if (_variant_is_ndarray(a) && _variant_is_weak_scalar(b)) {
+		out_a = variant_as_array(a);
+		out_b = variant_as_array(b, out_a->dtype(), false);
+		return;
+	}
+	if (_variant_is_weak_scalar(a) && _variant_is_ndarray(b)) {
+		out_b = variant_as_array(b);
+		out_a = variant_as_array(a, out_b->dtype(), false);
+		return;
+	}
+	out_a = variant_as_array(a);
+	out_b = variant_as_array(b);
+}
+
 std::shared_ptr<va::VArray> variant_as_array(const Variant& array, const va::DType dtype, const bool copy) {
 	switch (array.get_type()) {
 		case Variant::OBJECT: {

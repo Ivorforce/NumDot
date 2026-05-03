@@ -208,8 +208,21 @@ _INPLACE_DUNDERS = {
 }
 
 
+# NEP-50 / Array API weak-scalar promotion for Python complex scalars: GDScript
+# has no Variant complex, so a Python complex arrives at the C++ binding as a
+# typed 0-d ndarray (complex128) that the binding-level weak-scalar fix can't
+# see. Pre-cast it to the peer array's dtype here so `arr_c64 + 0j` stays c64.
+# (int/float/bool weak scalars already work end-to-end via the bridge → C++
+# binding path; this hook only matters for Python complex.)
+def _coerce_weak_complex(self, other):
+	if isinstance(other, complex) and np.issubdtype(self.dtype, np.complexfloating):
+		return self.dtype.type(other)
+	return other
+
+
 def _make_binary(nd_name):
 	def dunder(self, other):
+		other = _coerce_weak_complex(self, other)
 		return _call(nd_name, self, other)
 	dunder.__name__ = nd_name
 	return dunder

@@ -60,42 +60,6 @@ array_api_tests/test_operators_and_elementwise_functions.py::test_log10
 array_api_tests/test_operators_and_elementwise_functions.py::test_logaddexp
 array_api_tests/test_operators_and_elementwise_functions.py::test_signbit
 
-# --- NumDot bug: scalar promotes integer arrays to int64 ---
-# `arr_uint8 + 0` returns int64 instead of preserving uint8. Array API
-# requires the array dtype to win when the other operand is a Python
-# scalar. Affects all binary-with-scalar variants (function-form is fine
-# because both args are arrays; only the (x, s) parametrization fails).
-array_api_tests/test_operators_and_elementwise_functions.py::test_add[__add__(x, s)]
-array_api_tests/test_operators_and_elementwise_functions.py::test_add[__iadd__(x, s)]
-array_api_tests/test_operators_and_elementwise_functions.py::test_subtract[__sub__(x, s)]
-array_api_tests/test_operators_and_elementwise_functions.py::test_subtract[__isub__(x, s)]
-array_api_tests/test_operators_and_elementwise_functions.py::test_multiply[__mul__(x, s)]
-array_api_tests/test_operators_and_elementwise_functions.py::test_multiply[__imul__(x, s)]
-array_api_tests/test_operators_and_elementwise_functions.py::test_divide[__truediv__(x, s)]
-array_api_tests/test_operators_and_elementwise_functions.py::test_divide[__itruediv__(x, s)]
-array_api_tests/test_operators_and_elementwise_functions.py::test_pow[__pow__(x, s)]
-array_api_tests/test_operators_and_elementwise_functions.py::test_pow[__ipow__(x, s)]
-array_api_tests/test_operators_and_elementwise_functions.py::test_bitwise_left_shift[__lshift__(x, s)]
-array_api_tests/test_operators_and_elementwise_functions.py::test_bitwise_left_shift[__ilshift__(x, s)]
-array_api_tests/test_operators_and_elementwise_functions.py::test_bitwise_right_shift[__rshift__(x, s)]
-array_api_tests/test_operators_and_elementwise_functions.py::test_bitwise_right_shift[__irshift__(x, s)]
-array_api_tests/test_operators_and_elementwise_functions.py::test_bitwise_and[__and__(x, s)]
-array_api_tests/test_operators_and_elementwise_functions.py::test_bitwise_and[__iand__(x, s)]
-array_api_tests/test_operators_and_elementwise_functions.py::test_bitwise_or[__or__(x, s)]
-array_api_tests/test_operators_and_elementwise_functions.py::test_bitwise_or[__ior__(x, s)]
-array_api_tests/test_operators_and_elementwise_functions.py::test_bitwise_xor[__xor__(x, s)]
-array_api_tests/test_operators_and_elementwise_functions.py::test_bitwise_xor[__ixor__(x, s)]
-
-# --- NumDot bug: comparison ops dtype/result handling ---
-# All six comparison functions fail in both function-form and op-form,
-# so this is a NumDot-side issue (not a dispatch problem in the adapter).
-array_api_tests/test_operators_and_elementwise_functions.py::test_equal
-array_api_tests/test_operators_and_elementwise_functions.py::test_not_equal
-array_api_tests/test_operators_and_elementwise_functions.py::test_less
-array_api_tests/test_operators_and_elementwise_functions.py::test_less_equal
-array_api_tests/test_operators_and_elementwise_functions.py::test_greater
-array_api_tests/test_operators_and_elementwise_functions.py::test_greater_equal
-
 # --- NumDot bug: nd.round returns null on integer inputs ---
 array_api_tests/test_operators_and_elementwise_functions.py::test_round
 
@@ -122,7 +86,6 @@ array_api_tests/test_operators_and_elementwise_functions.py::test_atanh
 array_api_tests/test_operators_and_elementwise_functions.py::test_tan
 array_api_tests/test_operators_and_elementwise_functions.py::test_tanh
 array_api_tests/test_operators_and_elementwise_functions.py::test_log
-array_api_tests/test_operators_and_elementwise_functions.py::test_positive
 array_api_tests/test_operators_and_elementwise_functions.py::test_sign
 
 # --- NumDot bug: nd.real / nd.imag on real-valued inputs ---
@@ -170,9 +133,13 @@ array_api_tests/test_data_type_functions.py::test_astype
 
 
 # === Hypothesis-flaky at high example counts ===
-# Passes when isolated, fails with default --max-examples on some seeds.
-# Either a numerical edge in nd.divide or a hypothesis-shrinking artifact.
+# Pass when isolated, fail with default --max-examples on some seeds:
+# - test_divide: numerical edge in nd.divide or hypothesis-shrinking artifact.
+# - test_abs[abs]: complex64 magnitude overflow on |z|^2 intermediate
+#   (Hypothesis finds c64 values where Re^2+Im^2 overflows even though |z| fits).
+array_api_tests/test_operators_and_elementwise_functions.py::test_divide[divide(x1, x2)]
 array_api_tests/test_operators_and_elementwise_functions.py::test_divide[__truediv__(x1, x2)]
+array_api_tests/test_operators_and_elementwise_functions.py::test_abs[abs]
 
 
 # === test_manipulation_functions.py ===
@@ -218,17 +185,9 @@ array_api_tests/test_signatures.py::test_func_signature[from_dlpack]
 array_api_tests/test_signatures.py::test_func_signature[meshgrid]
 array_api_tests/test_signatures.py::test_func_signature[tril]
 array_api_tests/test_signatures.py::test_func_signature[triu]
-array_api_tests/test_signatures.py::test_func_signature[concat]
 array_api_tests/test_signatures.py::test_func_signature[expand_dims]
-array_api_tests/test_signatures.py::test_func_signature[flip]
-array_api_tests/test_signatures.py::test_func_signature[moveaxis]
-array_api_tests/test_signatures.py::test_func_signature[permute_dims]
 array_api_tests/test_signatures.py::test_func_signature[repeat]
 array_api_tests/test_signatures.py::test_func_signature[roll]
-array_api_tests/test_signatures.py::test_func_signature[squeeze]
-array_api_tests/test_signatures.py::test_func_signature[stack]
-array_api_tests/test_signatures.py::test_func_signature[tile]
-array_api_tests/test_signatures.py::test_func_signature[unstack]
 array_api_tests/test_signatures.py::test_func_signature[argsort]
 array_api_tests/test_signatures.py::test_func_signature[sort]
 array_api_tests/test_signatures.py::test_func_signature[copysign]

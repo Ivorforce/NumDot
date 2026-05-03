@@ -182,6 +182,17 @@ func _decode_arg(spec: Variant, blobs: Array) -> Dictionary:
 		return {"ok": true, "value": spec["$value"]}
 	if spec.has("$int"):
 		return {"ok": true, "value": int(spec["$int"])}
+	if spec.has("$float"):
+		# 8-byte raw blob carrying a bit-exact IEEE 754 double. Decoded as a
+		# Variant FLOAT so NumDot's binding sees it as a Python scalar (and
+		# applies weak-scalar promotion), not a typed 0-d ndarray.
+		var idx: int = spec["$float"]
+		if idx < 0 or idx >= blobs.size():
+			return {"ok": false, "error": "float blob index %d out of range" % idx}
+		var blob: PackedByteArray = blobs[idx]
+		if blob.size() != 8:
+			return {"ok": false, "error": "float blob must be 8 bytes, got %d" % blob.size()}
+		return {"ok": true, "value": blob.decode_double(0)}
 	if spec.has("$ints"):
 		var arr: Array = []
 		for v in spec["$ints"]:

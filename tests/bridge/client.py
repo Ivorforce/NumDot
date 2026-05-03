@@ -35,6 +35,13 @@ def _encode_nd_args(args) -> tuple[list, list[bytes]]:
 			specs.append({"$dtype": NUMPY_TO_ND_NAME[np.dtype(arg)]})
 		elif arg is None:
 			specs.append({"$null": True})
+		elif isinstance(arg, np.generic):
+			# numpy scalars carry an explicit dtype, so they must NOT get the
+			# weak-scalar treatment Python ints/floats get below — `np.float64`
+			# is a subclass of `float`, so this branch has to come first.
+			# Ship as a 0-d .npy blob; arrives on the GD side as a 0-d NDArray.
+			specs.append({"$blob": len(blobs)})
+			blobs.append(np_to_npy_bytes(np.asarray(arg)))
 		elif isinstance(arg, bool):
 			# Order matters: bool is an int subclass, must be checked first.
 			specs.append({"$value": arg})
@@ -43,14 +50,22 @@ def _encode_nd_args(args) -> tuple[list, list[bytes]]:
 			# losing precision for ints with |value| > 2**53. Send as a
 			# string; GDScript's int() coerces strings transparently.
 			specs.append({"$int": str(arg)})
-		elif isinstance(arg, (np.generic, float, complex)):
-			# numpy scalars, Python floats, and Python complex: ship as 0-d
-			# .npy blob. GDScript's JSON.parse_string is not bit-exact for
-			# floats either (off-by-one-ULP at the edges), and json.dumps
-			# can't even encode complex. So we route every numeric scalar
-			# that isn't a small-enough-to-be-safe int through the binary
-			# blob path. NumDot's variant_to_vscalar already unwraps a 0-d
-			# NDArray to its scalar value.
+		elif isinstance(arg, float):
+			# Python floats need to arrive on the GD side as a Variant FLOAT
+			# (not a 0-d ndarray) so NumDot's binding-level weak-scalar
+			# promotion treats them like Python scalars (NEP-50 / Array API:
+			# `arr_f32 + 0.5` should stay f32). JSON can't carry a bit-exact
+			# float, so ship the raw 8 bytes in a blob and decode via
+			# PackedByteArray.decode_double on the GD side.
+			specs.append({"$float": len(blobs)})
+			blobs.append(np.float64(arg).tobytes())
+		elif isinstance(arg, complex):
+			# Ship complex as a 0-d .npy blob — there's no Variant complex in
+			# GDScript, so no weak-scalar path is possible at the C++ level.
+			# numdot_xp's operator dunders and binary shims pre-cast Python
+			# complex scalars to the peer array's dtype before they reach the
+			# bridge, so this path is exercised only when there's no peer to
+			# match (e.g. complex+complex array-array).
 			specs.append({"$blob": len(blobs)})
 			blobs.append(np_to_npy_bytes(np.asarray(arg)))
 		elif isinstance(arg, (list, tuple)) and arg and all(

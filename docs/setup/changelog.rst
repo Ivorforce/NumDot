@@ -20,6 +20,10 @@ The suite is made to test numpy-like APIs, and ended up surfacing a number of ed
 
 - ``nd.where(condition, x, y)`` selects from ``x`` where ``condition`` is true and from ``y`` otherwise, with broadcasting across all three operands.
 
+**Changed**
+
+- Binary ops (``nd.add``, ``nd.subtract``, comparisons, bitwise, ...) no longer widen the result dtype when one operand is a GDScript ``int``/``float``/``bool`` scalar. ``nd.add(uint8_arr, 5)`` now stays ``uint8`` instead of returning ``int64``, matching the Array API spec and numpy 2.x's NEP-50 promotion. To keep the old widening behavior, wrap the scalar as a typed array (e.g. ``nd.array(5, nd.Int64)``).
+
 **Fixed**
 
 - ``nd.arange`` returned a garbage-sized array when the sign of ``step`` disagreed with the sign of ``stop - start``; it now returns an empty array, matching numpy.

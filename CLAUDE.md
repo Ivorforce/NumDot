@@ -80,9 +80,11 @@ Always re-run the bridge sanity suite after touching `tests/bridge/` or
   Use `ClassDB.class_has_method("nd", name)` and
   `Callable(ClassDB, "class_call_static").callv(["nd", name, ...args])`.
   `class_call_static` is **Godot 4.4+ only**.
-- GDScript's `JSON.parse_string` parses *every* number as `float`. The
-  wire protocol uses explicit `$int` / `$ints` arg tags so int-ness
-  survives — required for shape/axis args to `zeros`/`reshape`/etc.
+- GDScript's `JSON.parse_string` is not bit-exact for numbers — it
+  parses every number as `float64`, losing int precision above 2^53
+  *and* off-by-one-ULP on some float edge values. The wire encoder
+  routes ints as strings and floats/numpy scalars as 0-d `.npy`
+  blobs so every numeric scalar arg survives bit-exact.
 - The bridge runs Godot in a child process. **NumDot segfaults kill
   Godot, not pytest.** `BridgeClient` detects the dead pipe, marks
   itself dead, and `numdot_xp` respawns transparently before the next
@@ -93,6 +95,26 @@ Always re-run the bridge sanity suite after touching `tests/bridge/` or
 - Wire format (v1.1): `[u32 LE header_len][JSON header][blob 0]...[blob N]`.
   Header carries optional `"blobs": [size, ...]` listing blob sizes in
   order. Zero-blob frames are byte-identical to the original v0 format.
+
+## NumDot dispatch architecture
+
+The path from a `nd.foo(...)` call to xtensor:
+
+1. **`src/nd.cpp`** — Godot binding. `Variant` in, conversion via
+   `src/gdconvert/`, calls into the `va::` namespace.
+2. **`src/vatensor/` (`va::` namespace)** — type-erased tensor layer
+   over `VData` (variant of typed xtensor adaptors). Two dispatch
+   styles:
+   - **Ufuncs and reductions** dispatch through pre-built function-
+     pointer tables in `src/vatensor/vfunc/` (one cell per dtype
+     combination, populated at startup).
+   - **Structural ops** like `arange`, `linspace`, `reshape`, `eye`
+     dispatch dtype *inline* with `std::visit` in `src/vatensor/
+     create.cpp` and `rearrange.cpp`, with arithmetic embedded in
+     the lambda. Numerical edge bugs in creation funcs almost always
+     live here.
+3. **xtensor** — the actual computation, reached via `xt::*` calls
+   inside the `va::` layer.
 
 ### Probing what `nd` exposes
 

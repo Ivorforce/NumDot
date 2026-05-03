@@ -17,7 +17,7 @@ import builtins  # the Array API shims below shadow several Python builtins
 
 import numpy as np
 
-from . import _call
+from . import _call, ndarray
 
 
 __all__ = [
@@ -44,6 +44,8 @@ __all__ = [
 	"all", "any", "sum", "prod", "max", "min", "mean", "std", "var",
 	# manipulation
 	"reshape", "broadcast_to", "broadcast_arrays",
+	"concat", "stack", "unstack", "flip", "moveaxis", "permute_dims",
+	"squeeze", "tile",
 	# selection
 	"where",
 	# dtype
@@ -363,6 +365,74 @@ def broadcast_to(x, /, shape):
 
 def broadcast_arrays(*arrays):
 	return list(np.broadcast_arrays(*arrays))
+
+
+def concat(arrays, /, *, axis=0):
+	return _call("concatenate", list(arrays), axis if axis is not None else 0)
+
+
+def stack(arrays, /, *, axis=0):
+	return _call("stack", list(arrays), axis)
+
+
+def unstack(x, /, *, axis=0):
+	# Array API requires a tuple. nd.unstack would need bridge support for
+	# returning a list of arrays (only one blob comes back today), so we do
+	# the split client-side via numpy.
+	return tuple(arr.view(ndarray) for arr in np.moveaxis(np.asarray(x), axis, 0))
+
+
+def flip(x, /, *, axis=None):
+	# nd.flip crashes on negative axes; pre-normalize. Also, nd.flip requires
+	# an axis arg, so iterate for axis=None / tuples.
+	if axis is None:
+		axes = range(x.ndim)
+	elif isinstance(axis, int):
+		axes = (axis,)
+	else:
+		axes = tuple(axis)
+	out = x
+	for a in axes:
+		out = _call("flip", out, a % x.ndim)
+	return out
+
+
+def moveaxis(x, source, destination, /):
+	# Array API allows int or tuple; nd.moveaxis accepts both via Variant.
+	if isinstance(source, int):
+		source = [source]
+	else:
+		source = list(source)
+	if isinstance(destination, int):
+		destination = [destination]
+	else:
+		destination = list(destination)
+	return _call("moveaxis", x, source, destination)
+
+
+def permute_dims(x, /, axes):
+	return _call("transpose", x, list(axes))
+
+
+def squeeze(x, /, axis):
+	# Array API requires axis (int or tuple); nd.squeeze takes none.
+	# Validate the requested axes have size 1, then reshape to drop them.
+	if isinstance(axis, int):
+		axes = (axis,)
+	else:
+		axes = tuple(axis)
+	axes = sorted({a % x.ndim for a in axes}, reverse=True)
+	new_shape = list(x.shape)
+	for a in axes:
+		if new_shape[a] != 1:
+			raise ValueError(f"cannot squeeze axis {a} of shape {x.shape}")
+		del new_shape[a]
+	return _call("reshape", x, new_shape)
+
+
+def tile(x, repetitions, /):
+	# nd.tile takes (v, reps, inner=False).
+	return _call("tile", x, list(repetitions), False)
 
 
 # ---- selection --------------------------------------------------------------

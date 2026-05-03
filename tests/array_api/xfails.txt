@@ -175,6 +175,32 @@ array_api_tests/test_data_type_functions.py::test_astype
 array_api_tests/test_operators_and_elementwise_functions.py::test_divide[__truediv__(x1, x2)]
 
 
+# === test_manipulation_functions.py ===
+# Bridge protocol gap: list-of-arrays args aren't encodeable.
+# concat/stack take a list of arrays; the bridge encoder has no spec
+# type for "list of ndarrays" (lists go through $value→JSON, which
+# can't serialize ndarrays). A $blobs spec would unlock both.
+array_api_tests/test_manipulation_functions.py::test_concat
+array_api_tests/test_manipulation_functions.py::test_stack
+
+# NumDot bugs (FIXME):
+# - nd.flip on bool arrays produces wrong results (likely the same xsimd
+#   bool-load bug as #123 — nd.flip([True, True], 0) → [True, False]).
+#   The shim already pre-normalizes negative axes (nd.flip(x, -1) crashes
+#   Godot otherwise).
+# - nd.moveaxis returns wrong shape for arrays with a 0-sized axis
+#   (e.g. shape (0, 1) → moveaxis 0,1 gives (0, 1) instead of (1, 0)).
+# - nd.transpose returns null when permutation contains negative axes.
+array_api_tests/test_manipulation_functions.py::test_flip
+array_api_tests/test_manipulation_functions.py::test_moveaxis
+array_api_tests/test_manipulation_functions.py::test_permute_dims
+
+# No nd binding (out of scope: would need new C++ funcs):
+array_api_tests/test_manipulation_functions.py::TestExpandDims::test_expand_dims
+array_api_tests/test_manipulation_functions.py::test_repeat
+array_api_tests/test_manipulation_functions.py::test_roll
+
+
 # === test_signatures.py — functions from still-skipped test files ===
 # These signatures fail because the corresponding shim is missing entirely.
 # Each will resolve when its containing test file is brought online (and the

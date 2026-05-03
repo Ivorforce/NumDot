@@ -43,6 +43,15 @@ jobs:
           rm godot.zip "Godot_v${GODOT_VERSION}_linux.x86_64"
           godot --headless --version
 
+      - name: Register the NumDot GDExtension with the demo project
+        # Godot only loads .gdextension files listed in
+        # demo/.godot/extension_list.cfg. The editor populates this on first
+        # scan; on a fresh CI runner the .godot/ cache doesn't exist yet, so
+        # we seed it manually.
+        run: |
+          mkdir -p demo/.godot
+          echo 'res://addons/numdot/numdot.gdextension' > demo/.godot/extension_list.cfg
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:

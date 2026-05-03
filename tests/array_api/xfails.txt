@@ -1,0 +1,30 @@
+# Expected-failures within the test files that are NOT in skips.txt.
+# Each line is a test-ID substring matched by array-api-tests's --xfails-file.
+# Comment lines (#) and blank lines are ignored.
+#
+# Workflow:
+#   1. Run the suite (see tests/array_api/README.md).
+#   2. New failures (not listed here) break the build → real regression.
+#   3. Tests listed here are reported as xfailed; if any start passing they
+#      show up as XPASSED — investigate and remove the line.
+#   4. Bring a line to zero by either: implementing the missing shim in
+#      numdot_xp, fixing a NumDot bug, or filing one (and noting upstream).
+
+# === Section: missing adapter shim (work item: extend numdot_xp) ===
+# These currently fail because the adapter doesn't translate the spec
+# signature, or the function isn't wired at all (NotImplementedError /
+# AttributeError → spec test failure).
+array_api_tests/test_creation_functions.py::test_meshgrid
+array_api_tests/test_creation_functions.py::test_full_like
+array_api_tests/test_creation_functions.py::test_ones_like
+array_api_tests/test_creation_functions.py::test_asarray_arrays
+
+# === Section: signature / argument-encoding mismatch ===
+# The shim makes the call but NumDot rejects the args (returns null).
+# Likely fix: discover the actual NumDot signature and adjust the shim.
+array_api_tests/test_creation_functions.py::test_arange
+array_api_tests/test_creation_functions.py::test_eye
+array_api_tests/test_creation_functions.py::test_full
+array_api_tests/test_creation_functions.py::test_linspace
+array_api_tests/test_creation_functions.py::test_empty_like
+array_api_tests/test_creation_functions.py::test_zeros_like

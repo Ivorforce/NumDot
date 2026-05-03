@@ -68,15 +68,34 @@ class BridgeClient:
 		self._sock: Optional[socket.socket] = None
 		self._process: Optional[subprocess.Popen] = None
 		self._log_file = None
+		self._dead = False
 
 	def __enter__(self) -> "BridgeClient":
+		self._spawn()
+		return self
+
+	def is_alive(self) -> bool:
+		return (
+			not self._dead
+			and self._sock is not None
+			and self._process is not None
+			and self._process.poll() is None
+		)
+
+	def respawn(self) -> None:
+		"""Tear down a dead bridge and spawn a fresh one. Used by long-lived
+		callers (the array-api adapter) to recover after Godot crashes."""
+		self._teardown()
+		self._spawn()
+
+	def _spawn(self) -> None:
 		self._listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self._listener.bind(("127.0.0.1", 0))
 		self._listener.listen(1)
 		self._listener.settimeout(self.accept_timeout)
 		port = self._listener.getsockname()[1]
 
-		self._log_file = open(self.log_path, "wb")
+		self._log_file = open(self.log_path, "ab")
 		env = {**os.environ, "NUMDOT_BRIDGE_PORT": str(port)}
 		self._process = subprocess.Popen(
 			[
@@ -103,14 +122,18 @@ class BridgeClient:
 			self._listener = None
 
 		self._sock.settimeout(self.call_timeout)
-		return self
+		self._dead = False
 
 	def call(self, op: str, blobs: Sequence[bytes] = (), **kwargs) -> tuple[dict, list[bytes]]:
-		if self._sock is None:
+		if self._sock is None or self._dead:
 			raise RuntimeError("BridgeClient is not active")
 		header = {"op": op, **kwargs}
-		self._sock.sendall(encode_frame(header, blobs))
-		return read_frame(self._sock)
+		try:
+			self._sock.sendall(encode_frame(header, blobs))
+			return read_frame(self._sock)
+		except (ConnectionError, OSError, socket.timeout):
+			self._dead = True
+			raise
 
 	def call_nd(self, func: str, *args) -> np.ndarray:
 		arg_specs, blobs = _encode_nd_args(args)
@@ -127,8 +150,11 @@ class BridgeClient:
 		return self.call_nd(func, *arrays)
 
 	def __exit__(self, exc_type, exc, tb) -> None:
+		self._teardown(graceful=exc_type is None)
+
+	def _teardown(self, graceful: bool = True) -> None:
 		try:
-			if self._sock is not None and exc_type is None:
+			if graceful and self._sock is not None and not self._dead:
 				try:
 					self.call("shutdown")
 				except (OSError, ConnectionError, RuntimeError):
@@ -151,6 +177,8 @@ class BridgeClient:
 			if self._log_file is not None:
 				self._log_file.close()
 				self._log_file = None
+
+			self._dead = True
 
 	def _kill_process(self) -> None:
 		if self._process is None:

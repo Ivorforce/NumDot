@@ -1,0 +1,33 @@
+# Tests we don't try to run yet. Each line is a test-ID substring that
+# array-api-tests's --skips-file matches against. Whole-file entries skip
+# every test in that file.
+#
+# The intent: keep the steady-state run focused on the test files we've
+# wired the adapter for. As coverage expands (more shims in numdot_xp),
+# remove the corresponding line from this file and either confirm green
+# or move individual failures to xfails.txt.
+
+# === Adapter not yet wired for this surface ===
+array_api_tests/test_array_object.py
+array_api_tests/test_constants.py
+array_api_tests/test_data_type_functions.py
+array_api_tests/test_dlpack.py
+array_api_tests/test_fft.py
+array_api_tests/test_has_names.py
+array_api_tests/test_indexing_functions.py
+array_api_tests/test_inspection_functions.py
+array_api_tests/test_linalg.py
+array_api_tests/test_manipulation_functions.py
+array_api_tests/test_searching_functions.py
+array_api_tests/test_set_functions.py
+array_api_tests/test_signatures.py
+array_api_tests/test_sorting_functions.py
+array_api_tests/test_special_cases.py
+array_api_tests/test_statistical_functions.py
+array_api_tests/test_utility_functions.py
+
+# === Operators (in-place / dunders) — needs adapter to expose the array
+# object with __add__ etc. We hand back numpy arrays which already implement
+# these, so some operator tests may pass; others need the operator to dispatch
+# back through nd. Defer until we choose how to surface this. ===
+array_api_tests/test_operators_and_elementwise_functions.py

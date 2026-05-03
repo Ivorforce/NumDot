@@ -234,7 +234,6 @@ def make_module(env, sources, module_name: str, features: Features):
 			"minimum", "maximum", "max", "min",
 			"mean", "median", "variance", "standard_deviation",
 			"rint", "less_equal", "less", "greater", "greater_equal",
-			"round",
 			"where",  # xt::where + bool cond + complex operands fails to compile in xtensor
 		}
 		if specialization.model_input is None:

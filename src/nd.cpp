@@ -1133,7 +1133,17 @@ Ref<NDArray> nd::ceil(const Variant& a) {
 	return VARRAY_MAP1(ceil, a);
 }
 
+// round and rint have only float/complex specializations (numpy's `rint` ufunc
+// has no integer rows). For integer/bool inputs the value is already rounded,
+// so short-circuit to a no-op rather than hitting an empty dispatch cell.
+inline bool _is_integer_dtype(va::DType d) {
+	return d == va::Bool || d >= va::Int8;
+}
+
 Ref<NDArray> nd::round(const Variant& a) {
+	if (const auto ndarray = Object::cast_to<NDArray>(a); ndarray && _is_integer_dtype(ndarray->dtype())) {
+		return { memnew(NDArray(ndarray->array)) };
+	}
 	return VARRAY_MAP1(round, a);
 }
 
@@ -1142,6 +1152,9 @@ Ref<NDArray> nd::trunc(const Variant& a) {
 }
 
 Ref<NDArray> nd::rint(const Variant& a) {
+	if (const auto ndarray = Object::cast_to<NDArray>(a); ndarray && _is_integer_dtype(ndarray->dtype())) {
+		return { memnew(NDArray(ndarray->array)) };
+	}
 	return VARRAY_MAP1(rint, a);
 }
 

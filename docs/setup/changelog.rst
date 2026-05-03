@@ -26,6 +26,7 @@ The suite is made to test numpy-like APIs, and ended up surfacing a number of ed
 
 **Fixed**
 
+- ``nd.round`` and ``nd.rint`` returned ``null`` on integer/bool arrays; they now pass the input through unchanged. ``nd.round`` also now works on complex arrays (rounding real and imaginary parts independently), instead of returning ``null``.
 - ``nd.arange`` returned a garbage-sized array when the sign of ``step`` disagreed with the sign of ``stop - start``; it now returns an empty array, matching numpy.
 - ``nd.arange`` with ``step = 0`` is now rejected with a clean error (previously it relied on undefined division-by-zero behavior).
 - ``nd.arange`` with integer arguments above ``2**53`` could compute a wrong element count because the bounds were converted to ``float64`` before subtraction; integer dtypes now use exact integer arithmetic.

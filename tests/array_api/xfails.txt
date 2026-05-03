@@ -60,9 +60,6 @@ array_api_tests/test_operators_and_elementwise_functions.py::test_log10
 array_api_tests/test_operators_and_elementwise_functions.py::test_logaddexp
 array_api_tests/test_operators_and_elementwise_functions.py::test_signbit
 
-# --- NumDot bug: nd.round returns null on integer inputs ---
-array_api_tests/test_operators_and_elementwise_functions.py::test_round
-
 # --- NumDot bug: nd.clip with None bounds ---
 array_api_tests/test_operators_and_elementwise_functions.py::test_clip
 

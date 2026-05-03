@@ -261,19 +261,28 @@ Ref<NDArray> map_variants_as_arrays_with_target(Visitor&& visitor, const Args&..
 	}
 }
 
-// NEP-50 / Array API "weak scalar" promotion for binary ops: when one operand
-// is an NDArray and the other is a Variant scalar (BOOL/INT/FLOAT), the scalar
-// adopts the array's dtype so it doesn't widen the result (`arr_uint8 + 5`
-// stays uint8, not int64). Helper lives in gdconvert/conversion_array — also
-// reused by ndb/ndf/ndi for their binary methods.
-template<typename Visitor>
-Ref<NDArray> map_binary_with_weak_scalar(Visitor&& visitor, const Variant& a, const Variant& b) {
+// NEP-50 / Array API "weak scalar" promotion for binary/ternary ops: when at
+// least one operand is an NDArray, any Variant scalar (BOOL/INT/FLOAT) adopts
+// the array's dtype so it doesn't widen the result (`arr_uint8 + 5` stays
+// uint8, not int64). Helper lives in gdconvert/conversion_array — also reused
+// by ndb/ndf/ndi for their binary methods.
+template<typename Visitor, typename... Args, std::size_t... Is>
+inline void _invoke_with_arrays(Visitor&& visitor, const va::VArrayTarget target,
+                                std::shared_ptr<va::VArray>* arrs, std::index_sequence<Is...>) {
+	std::forward<Visitor>(visitor)(target, arrs[Is]...);
+}
+
+template<typename Visitor, typename... Args>
+Ref<NDArray> map_with_weak_scalar(Visitor&& visitor, const Args&... args) {
 	try {
-		std::shared_ptr<va::VArray> va_arr;
-		std::shared_ptr<va::VArray> vb_arr;
-		variant_pair_as_arrays_weak(a, b, va_arr, vb_arr);
+		constexpr std::size_t N = sizeof...(Args);
+		const Variant* const in[N] = { (&args)... };
+		std::shared_ptr<va::VArray> out[N];
+		variants_as_arrays_weak(in, out, N);
 		std::shared_ptr<va::VArray> result;
-		std::forward<Visitor>(visitor)(&result, va_arr, vb_arr);
+		_invoke_with_arrays<Visitor, Args...>(
+			std::forward<Visitor>(visitor), &result, out, std::make_index_sequence<N>{}
+		);
 		return { memnew(NDArray(result)) };
 	}
 	catch (std::runtime_error& error) {
@@ -355,12 +364,12 @@ Ref<NDArray> like_visit(Visitor&& visitor, const Variant& model, nd::DType dtype
     }, (varray1))
 
 #define VARRAY_MAP2(func, varray1, varray2) \
-	map_binary_with_weak_scalar([](const va::VArrayTarget& target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b) {\
+	map_with_weak_scalar([](const va::VArrayTarget& target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b) {\
         va::func(va::store::default_allocator, target, a->data, b->data);\
     }, (varray1), (varray2))
 
 #define VARRAY_MAP3(func, varray1, varray2, varray3) \
-	map_variants_as_arrays_with_target([](const va::VArrayTarget& target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b, const std::shared_ptr<va::VArray>& c) {\
+	map_with_weak_scalar([](const va::VArrayTarget& target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b, const std::shared_ptr<va::VArray>& c) {\
         va::func(va::store::default_allocator, target, a->data, b->data, c->data);\
     }, (varray1), (varray2), (varray3))
 
@@ -972,6 +981,20 @@ Ref<NDArray> nd::maximum(const Variant& a, const Variant& b) {
 }
 
 Ref<NDArray> nd::clip(const Variant& a, const Variant& min, const Variant& max) {
+	// Per Array API: a null bound means "no clamp on that side". Reduce to
+	// minimum/maximum for one-sided cases, or pass through when both are null.
+	const bool min_is_null = min.get_type() == Variant::NIL;
+	const bool max_is_null = max.get_type() == Variant::NIL;
+	if (min_is_null && max_is_null) {
+		try {
+			return { memnew(NDArray(variant_as_array(a))) };
+		}
+		catch (std::runtime_error& error) {
+			ERR_FAIL_V_MSG({}, error.what());
+		}
+	}
+	if (min_is_null) return VARRAY_MAP2(minimum, a, max);
+	if (max_is_null) return VARRAY_MAP2(maximum, a, min);
 	return VARRAY_MAP3(clip, a, min, max);
 }
 

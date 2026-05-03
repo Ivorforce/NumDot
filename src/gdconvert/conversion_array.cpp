@@ -691,18 +691,37 @@ void variant_pair_as_arrays_weak(
 	std::shared_ptr<va::VArray>& out_a,
 	std::shared_ptr<va::VArray>& out_b
 ) {
-	if (_variant_is_ndarray(a) && _variant_is_weak_scalar(b)) {
-		out_a = variant_as_array(a);
-		out_b = variant_as_array(b, out_a->dtype(), false);
-		return;
+	const Variant* in[] = { &a, &b };
+	std::shared_ptr<va::VArray> out[2];
+	variants_as_arrays_weak(in, out, 2);
+	out_a = std::move(out[0]);
+	out_b = std::move(out[1]);
+}
+
+void variants_as_arrays_weak(
+	const Variant* const* in_variants,
+	std::shared_ptr<va::VArray>* out_arrays,
+	const std::size_t n
+) {
+	// First pass: find a peer NDArray to source the dtype from.
+	std::shared_ptr<va::VArray> peer;
+	for (std::size_t i = 0; i < n; ++i) {
+		if (_variant_is_ndarray(*in_variants[i])) {
+			out_arrays[i] = variant_as_array(*in_variants[i]);
+			if (!peer) peer = out_arrays[i];
+		}
 	}
-	if (_variant_is_weak_scalar(a) && _variant_is_ndarray(b)) {
-		out_b = variant_as_array(b);
-		out_a = variant_as_array(a, out_b->dtype(), false);
-		return;
+	// Second pass: convert remaining operands. Weak scalars borrow the peer's
+	// dtype if there is one; everything else takes its natural conversion.
+	for (std::size_t i = 0; i < n; ++i) {
+		if (out_arrays[i]) continue;
+		if (peer && _variant_is_weak_scalar(*in_variants[i])) {
+			out_arrays[i] = variant_as_array(*in_variants[i], peer->dtype(), false);
+		}
+		else {
+			out_arrays[i] = variant_as_array(*in_variants[i]);
+		}
 	}
-	out_a = variant_as_array(a);
-	out_b = variant_as_array(b);
 }
 
 std::shared_ptr<va::VArray> variant_as_array(const Variant& array, const va::DType dtype, const bool copy) {

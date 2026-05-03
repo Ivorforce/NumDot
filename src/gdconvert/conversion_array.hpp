@@ -33,6 +33,15 @@ void variant_pair_as_arrays_weak(
 	std::shared_ptr<va::VArray>& out_b
 );
 
+// Same idea, generalized to N operands: any Variant scalar (BOOL/INT/FLOAT)
+// adopts the dtype of the first NDArray operand. With no NDArray peer, every
+// operand falls back to plain dtype-driven conversion.
+void variants_as_arrays_weak(
+	const Variant* const* in_variants,
+	std::shared_ptr<va::VArray>* out_arrays,
+	std::size_t n
+);
+
 std::vector<std::shared_ptr<va::VArray>> variant_to_vector(const Variant& array);
 
 void find_shape_and_dtype_of_array(va::shape_type& shape, va::DType& dtype, const Array& input_array);

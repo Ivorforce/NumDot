@@ -60,9 +60,6 @@ array_api_tests/test_operators_and_elementwise_functions.py::test_log10
 array_api_tests/test_operators_and_elementwise_functions.py::test_logaddexp
 array_api_tests/test_operators_and_elementwise_functions.py::test_signbit
 
-# --- NumDot bug: nd.clip with None bounds ---
-array_api_tests/test_operators_and_elementwise_functions.py::test_clip
-
 # --- NumDot bug: nd.bitwise_right_shift function-form fails on array×array ---
 # Both function-form and operator-form (x1, x2) variants fail; the (x, s)
 # scalar variant is already covered above under scalar-promotion.
@@ -137,6 +134,7 @@ array_api_tests/test_data_type_functions.py::test_astype
 array_api_tests/test_operators_and_elementwise_functions.py::test_divide[divide(x1, x2)]
 array_api_tests/test_operators_and_elementwise_functions.py::test_divide[__truediv__(x1, x2)]
 array_api_tests/test_operators_and_elementwise_functions.py::test_abs[abs]
+array_api_tests/test_operators_and_elementwise_functions.py::test_abs[__abs__]
 
 
 # === test_manipulation_functions.py ===

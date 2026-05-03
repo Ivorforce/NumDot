@@ -43,9 +43,11 @@ __all__ = [
 	# reductions
 	"all", "any", "sum", "prod", "max", "min", "mean", "std", "var",
 	# manipulation
-	"reshape",
+	"reshape", "broadcast_to", "broadcast_arrays",
 	# selection
 	"where",
+	# dtype
+	"astype", "can_cast", "result_type", "isdtype",
 ]
 
 
@@ -354,7 +356,40 @@ def reshape(x, /, shape, *, copy=None):
 	return _call("reshape", x, _shape(shape))
 
 
+def broadcast_to(x, /, shape):
+	# Pure shape op; numpy handles it on our np.ndarray subclass.
+	return np.broadcast_to(x, _shape(shape))
+
+
+def broadcast_arrays(*arrays):
+	return list(np.broadcast_arrays(*arrays))
+
+
 # ---- selection --------------------------------------------------------------
 
 def where(condition, x1, x2, /):
 	return _call("where", condition, x1, x2)
+
+
+# ---- dtype --------------------------------------------------------------------
+# Pure dtype/introspection — delegated to numpy. astype routes through nd so
+# the actual conversion lives in the va layer.
+
+def astype(x, dtype, /, *, copy=True, device=None):
+	if device not in (None, "cpu"):
+		raise ValueError(f"unsupported device: {device!r}")
+	if not copy and x.dtype == dtype:
+		return x
+	return _call("array", x, dtype)
+
+
+def can_cast(from_, to, /):
+	return np.can_cast(from_, to)
+
+
+def result_type(*arrays_and_dtypes):
+	return np.result_type(*arrays_and_dtypes)
+
+
+def isdtype(dtype, kind):
+	return np.isdtype(dtype, kind)

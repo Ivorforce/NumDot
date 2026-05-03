@@ -59,11 +59,33 @@ inf = math.inf
 nan = math.nan
 newaxis = None
 
-# Spec-required dtype introspection. The values returned by these functions
-# are properties of the dtype itself (epsilon, smallest_normal, etc.) and are
-# identical to numpy's, so we delegate.
-finfo = np.finfo
-iinfo = np.iinfo
+# Spec-required dtype introspection. Two divergences from numpy:
+#   - Array API accepts either a dtype or an array; numpy accepts only a
+#     dtype, so unwrap arrays first. (Don't use hasattr("dtype") — np.int8
+#     is a *class* with its own .dtype attribute that numpy can't consume.)
+#   - Array API requires .eps/.max/.min/.smallest_normal to be Python floats;
+#     numpy returns numpy scalars. Coerce.
+class _FInfo:
+	__slots__ = ("bits", "eps", "max", "min", "smallest_normal", "dtype")
+	def __init__(self, raw):
+		self.bits            = int(raw.bits)
+		self.eps             = float(raw.eps)
+		self.max             = float(raw.max)
+		self.min             = float(raw.min)
+		self.smallest_normal = float(raw.smallest_normal)
+		self.dtype           = raw.dtype
+
+
+def finfo(type, /):  # noqa: A002 — spec name shadows builtin
+	if isinstance(type, np.ndarray):
+		type = type.dtype
+	return _FInfo(np.finfo(type))
+
+
+def iinfo(type, /):  # noqa: A002
+	if isinstance(type, np.ndarray):
+		type = type.dtype
+	return np.iinfo(type)  # iinfo's int fields are already Python ints
 
 # Spec-required namespace info. Returns capabilities/default_dtypes/devices/
 # dtypes — all properties of the dtype space itself, which we share with

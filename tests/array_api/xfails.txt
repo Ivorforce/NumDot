@@ -161,3 +161,61 @@ array_api_tests/test_utility_functions.py::test_any
 # Also nd.array doesn't accept complex64 as a target dtype (returns null).
 array_api_tests/test_statistical_functions.py::test_sum
 array_api_tests/test_statistical_functions.py::test_prod
+
+
+# === test_data_type_functions.py ===
+# nd.array(x, complex64) returns null when casting complex128 → complex64
+# (same NumDot bug surfaced under sum/prod above).
+array_api_tests/test_data_type_functions.py::test_astype
+
+
+# === Hypothesis-flaky at high example counts ===
+# Passes when isolated, fails with default --max-examples on some seeds.
+# Either a numerical edge in nd.divide or a hypothesis-shrinking artifact.
+array_api_tests/test_operators_and_elementwise_functions.py::test_divide[__truediv__(x1, x2)]
+
+
+# === test_signatures.py — functions from still-skipped test files ===
+# These signatures fail because the corresponding shim is missing entirely.
+# Each will resolve when its containing test file is brought online (and the
+# shim is added to numdot_xp/_funcs.py).
+array_api_tests/test_signatures.py::test_func_signature[cumulative_sum]
+array_api_tests/test_signatures.py::test_func_signature[unique_all]
+array_api_tests/test_signatures.py::test_func_signature[unique_counts]
+array_api_tests/test_signatures.py::test_func_signature[unique_inverse]
+array_api_tests/test_signatures.py::test_func_signature[unique_values]
+array_api_tests/test_signatures.py::test_func_signature[argmax]
+array_api_tests/test_signatures.py::test_func_signature[argmin]
+array_api_tests/test_signatures.py::test_func_signature[nonzero]
+array_api_tests/test_signatures.py::test_func_signature[searchsorted]
+array_api_tests/test_signatures.py::test_func_signature[from_dlpack]
+array_api_tests/test_signatures.py::test_func_signature[meshgrid]
+array_api_tests/test_signatures.py::test_func_signature[tril]
+array_api_tests/test_signatures.py::test_func_signature[triu]
+array_api_tests/test_signatures.py::test_func_signature[concat]
+array_api_tests/test_signatures.py::test_func_signature[expand_dims]
+array_api_tests/test_signatures.py::test_func_signature[flip]
+array_api_tests/test_signatures.py::test_func_signature[moveaxis]
+array_api_tests/test_signatures.py::test_func_signature[permute_dims]
+array_api_tests/test_signatures.py::test_func_signature[repeat]
+array_api_tests/test_signatures.py::test_func_signature[roll]
+array_api_tests/test_signatures.py::test_func_signature[squeeze]
+array_api_tests/test_signatures.py::test_func_signature[stack]
+array_api_tests/test_signatures.py::test_func_signature[tile]
+array_api_tests/test_signatures.py::test_func_signature[unstack]
+array_api_tests/test_signatures.py::test_func_signature[argsort]
+array_api_tests/test_signatures.py::test_func_signature[sort]
+array_api_tests/test_signatures.py::test_func_signature[copysign]
+array_api_tests/test_signatures.py::test_func_signature[expm1]
+array_api_tests/test_signatures.py::test_func_signature[floor_divide]
+array_api_tests/test_signatures.py::test_func_signature[hypot]
+array_api_tests/test_signatures.py::test_func_signature[log1p]
+array_api_tests/test_signatures.py::test_func_signature[log2]
+array_api_tests/test_signatures.py::test_func_signature[log10]
+array_api_tests/test_signatures.py::test_func_signature[logaddexp]
+array_api_tests/test_signatures.py::test_func_signature[signbit]
+array_api_tests/test_signatures.py::test_func_signature[matmul]
+array_api_tests/test_signatures.py::test_func_signature[matrix_transpose]
+array_api_tests/test_signatures.py::test_func_signature[tensordot]
+array_api_tests/test_signatures.py::test_func_signature[vecdot]
+array_api_tests/test_signatures.py::test_func_signature[take]

@@ -34,9 +34,11 @@ PYTHONPATH=/tmp/godot_doctool tests/.venv/bin/python /tmp/godot_doctool/make_rst
   -o docs/classes -l en doc_classes
 ```
 
-`doctool` rewrites `doc_classes/*.xml` from the **currently-built** binary — if some method registrations are missing from your build, the tool will silently delete them from the XML. Verify the diff before committing; revert XML files you didn't intend to touch. Then hand-write descriptions for new methods in `doc_classes/*.xml` and rerun `make_rst.py`.
+`doctool` rewrites `doc_classes/*.xml` from the **currently-built** binary — if a method registration is missing from your build, the tool drops it from the XML. Always verify the diff before committing; revert XML files you didn't intend to touch. Then hand-write descriptions for new methods in `doc_classes/*.xml` and rerun `make_rst.py`.
 
-`make_rst.py` writes its `XML source` URL comment using the cwd-derived path; if it ends up with `Users/...` in the URL, hand-edit it back to the project-relative form (`godot/NumDot/doc_classes/...`) to keep the diff clean.
+Apparent "method deletions" in regenerated XML usually mean a method-property duplicate is being collapsed: anything bound via both `bind_method("get_X")` and `ADD_PROPERTY("X", ..., "get_X")` is promoted from a `<method name="X">` (cruft) to a `<member name="X">` (correct). Don't revert these.
+
+`make_rst.py`'s `XML source: ...` URL comment is broken for NumDot — it's hardcoded to `https://github.com/godotengine/godot/tree/master/{path}` and cannot point at `Ivorforce/NumDot` without patching the script. The committed `.rst` files have a stable but technically-wrong URL; regenerating produces a *different* wrong URL based on the cwd-derived `os.path.relpath`. Don't try to "fix" the URL on regeneration — either match the stable form already in the file, or skip regenerating `.rst` files unless their contents actually need updating.
 
 ## Testing & iteration
 

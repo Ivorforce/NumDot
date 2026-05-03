@@ -754,15 +754,27 @@ Ref<NDArray> concatenate_(nd::DType dtype, const std::vector<std::shared_ptr<va:
 	return { memnew(NDArray(result)) };
 }
 
-Ref<NDArray> nd::concatenate(const Variant& v, int64_t axis, DType dtype) {
+Ref<NDArray> nd::concatenate(const Variant& v, const Variant& axis, DType dtype) {
 	try {
-		const auto vector = variant_to_vector(v);
+		auto vector = variant_to_vector(v);
 		ERR_FAIL_COND_V_MSG(vector.empty(), {}, "Need at least one array to concatenate.");
 
-		if (axis < 0) axis += static_cast<int64_t>(vector[0]->dimension());
-		ERR_FAIL_COND_V_MSG(axis < 0 || axis >= vector[0]->dimension(), {}, "Axis out of range.");
+		std::size_t axis_used;
+		if (axis.get_type() == Variant::NIL) {
+			// Per Array API: axis=null flattens each input before concatenation.
+			for (auto& varr : vector) {
+				varr = va::flatten(va::store::default_allocator, varr);
+			}
+			axis_used = 0;
+		}
+		else {
+			int64_t axis_ = axis;
+			if (axis_ < 0) axis_ += static_cast<int64_t>(vector[0]->dimension());
+			ERR_FAIL_COND_V_MSG(axis_ < 0 || axis_ >= vector[0]->dimension(), {}, "Axis out of range.");
+			axis_used = static_cast<std::size_t>(axis_);
+		}
 
-		return ::concatenate_(dtype, vector, static_cast<std::size_t>(axis));
+		return ::concatenate_(dtype, vector, axis_used);
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());

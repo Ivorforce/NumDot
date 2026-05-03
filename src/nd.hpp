@@ -108,7 +108,7 @@ public:
 	static Ref<NDArray> trace(const Variant& v, int64_t offset, int64_t axis1, int64_t axis2);
 	static Ref<NDArray> stack(const Variant& v, int64_t axis);
 	static Ref<NDArray> unstack(const Variant& v, int64_t axis);
-	static Ref<NDArray> concatenate(const Variant& v, int64_t axis, DType dtype = DType::DTypeMax);
+	static Ref<NDArray> concatenate(const Variant& v, const Variant& axis, DType dtype = DType::DTypeMax);
 	static Ref<NDArray> hstack(const Variant& v, DType dtype = DType::DTypeMax);
 	static Ref<NDArray> vstack(const Variant& v, DType dtype = DType::DTypeMax);
 	static Ref<NDArray> tile(const Variant& v, const Variant& reps, bool inner = false);

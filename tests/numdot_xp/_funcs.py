@@ -374,11 +374,23 @@ def broadcast_arrays(*arrays):
 
 
 def concat(arrays, /, *, axis=0):
-	return _call("concatenate", list(arrays), axis if axis is not None else 0)
+	# nd.concatenate handles axis=None natively (flattens each input first).
+	return _call("concatenate", list(arrays), axis)
 
 
 def stack(arrays, /, *, axis=0):
-	return _call("stack", list(arrays), axis)
+	# nd.stack is moveaxis on a single array, not numpy stack — compose
+	# Array-API stack semantics from reshape (insert a length-1 axis at the
+	# requested position) + concatenate along that axis.
+	arrays = [np.asarray(a) for a in arrays]
+	if not arrays:
+		raise ValueError("stack: arrays must be non-empty")
+	out_ndim = arrays[0].ndim + 1
+	norm_axis = axis if axis >= 0 else axis + out_ndim
+	new_shape = list(arrays[0].shape)
+	new_shape.insert(norm_axis, 1)
+	expanded = [_call("reshape", a, new_shape) for a in arrays]
+	return _call("concatenate", expanded, norm_axis)
 
 
 def unstack(x, /, *, axis=0):

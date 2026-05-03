@@ -178,6 +178,21 @@ func _decode_arg(spec: Variant, blobs: Array) -> Dictionary:
 		if arr == null:
 			return {"ok": false, "error": "nd.load failed for blob %d" % idx}
 		return {"ok": true, "value": arr}
+	if spec.has("$blobs"):
+		# Homogeneous list of ndarrays — one .npy blob per element. Decode into
+		# a GDScript Array of NDArray, which is what variant_to_vector consumes
+		# (e.g. nd.concatenate's first arg).
+		var indices: Array = spec["$blobs"]
+		var out: Array = []
+		for v in indices:
+			var idx: int = v
+			if idx < 0 or idx >= blobs.size():
+				return {"ok": false, "error": "$blobs index %d out of range" % idx}
+			var loaded = nd.load(blobs[idx])
+			if loaded == null:
+				return {"ok": false, "error": "nd.load failed for $blobs[%d]" % idx}
+			out.append(loaded)
+		return {"ok": true, "value": out}
 	if spec.has("$value"):
 		return {"ok": true, "value": spec["$value"]}
 	if spec.has("$int"):

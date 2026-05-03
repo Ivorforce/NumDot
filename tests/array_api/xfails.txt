@@ -111,12 +111,12 @@ array_api_tests/test_operators_and_elementwise_functions.py::test_abs[__abs__]
 
 
 # === test_manipulation_functions.py ===
-# Bridge protocol gap: list-of-arrays args aren't encodeable.
-# concat/stack take a list of arrays; the bridge encoder has no spec
-# type for "list of ndarrays" (lists go through $value→JSON, which
-# can't serialize ndarrays). A $blobs spec would unlock both.
+# nd.concatenate's mixed-dtype inference uses std::common_type_t, which
+# promotes uint8+uint16 → int (signed) instead of numpy's uint16. Same-
+# dtype concat works; bridge protocol gap is fixed (see $blobs spec).
+# Affects every nd call that uses dtype_common_type (linspace, arange,
+# linalg, etc.) — not specific to concatenate.
 array_api_tests/test_manipulation_functions.py::test_concat
-array_api_tests/test_manipulation_functions.py::test_stack
 
 # NumDot bugs (FIXME):
 # - nd.flip on bool arrays produces wrong results (likely the same xsimd

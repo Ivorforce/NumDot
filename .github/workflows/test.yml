@@ -1,0 +1,91 @@
+name: Bridge & Array-API Tests
+
+on:
+  workflow_call:
+  workflow_dispatch:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    env:
+      # Bridge needs Godot 4.4+ for ClassDB.class_call_static.
+      GODOT_VERSION: 4.4-stable
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup godot-cpp
+        uses: ./godot-cpp/.github/actions/setup-godot-cpp
+        with:
+          platform: linux
+
+      - name: Cache .scons_cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/.scons_cache
+          key: tests-linux-x86_64-template_debug
+
+      - name: Build NumDot (linux x86_64 debug)
+        env:
+          SCONS_CACHE: ${{ github.workspace }}/.scons_cache
+        run: |
+          scons install_dir=demo target=template_debug platform=linux arch=x86_64 api_version=4.3 scu_build=yes
+
+      - name: Install Godot ${{ env.GODOT_VERSION }}
+        run: |
+          curl -fL -o godot.zip "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -q godot.zip
+          install -m 0755 "Godot_v${GODOT_VERSION}_linux.x86_64" /usr/local/bin/godot
+          rm godot.zip "Godot_v${GODOT_VERSION}_linux.x86_64"
+          godot --headless --version
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Poetry
+        run: pipx install poetry
+
+      - name: Install Python test dependencies
+        working-directory: tests
+        run: |
+          poetry config virtualenvs.in-project true --local
+          poetry install --no-interaction --no-root
+
+      - name: Bridge sanity tests
+        run: |
+          tests/.venv/bin/python -m pytest tests/bridge/ \
+            --godot=/usr/local/bin/godot \
+            -v
+
+      - name: Array-API steady state
+        env:
+          PYTHONPATH: tests
+          NUMDOT_GODOT: /usr/local/bin/godot
+          ARRAY_API_TESTS_MODULE: numdot_xp
+          # Convert xfails → skips for speed (no Hypothesis examples generated
+          # for skipped tests). Tests not in xfails.txt must pass.
+          ARRAY_API_TESTS_XFAIL_MARK: skip
+        run: |
+          tests/.venv/bin/python -m pytest \
+            tests/array-api-tests/array_api_tests/ \
+            --ignore=tests/array-api-tests/array_api_tests/test_inspection_functions.py \
+            --skips-file tests/array_api/skips.txt \
+            --xfails-file tests/array_api/xfails.txt \
+            --hypothesis-disable-deadline \
+            --max-examples 20
+
+      - name: Upload Godot logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: godot-test-logs
+          path: |
+            /tmp/numdot_xp_*.log
+            /tmp/pytest-*/
+          if-no-files-found: ignore

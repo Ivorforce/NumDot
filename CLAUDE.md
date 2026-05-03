@@ -60,7 +60,6 @@ NUMDOT_GODOT=/Applications/Godot-4.4.app/Contents/MacOS/Godot \
 ARRAY_API_TESTS_MODULE=numdot_xp \
 ARRAY_API_TESTS_XFAIL_MARK=skip \
   tests/.venv/bin/python -m pytest tests/array-api-tests/array_api_tests/ \
-    --ignore=tests/array-api-tests/array_api_tests/test_inspection_functions.py \
     --skips-file tests/array_api/skips.txt \
     --xfails-file tests/array_api/xfails.txt \
     --hypothesis-disable-deadline

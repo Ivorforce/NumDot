@@ -15,7 +15,6 @@ array_api_tests/test_dlpack.py
 array_api_tests/test_fft.py
 array_api_tests/test_has_names.py
 array_api_tests/test_indexing_functions.py
-array_api_tests/test_inspection_functions.py
 array_api_tests/test_linalg.py
 array_api_tests/test_manipulation_functions.py
 array_api_tests/test_searching_functions.py

@@ -63,6 +63,13 @@ newaxis = None
 finfo = np.finfo
 iinfo = np.iinfo
 
+# Spec-required namespace info. Returns capabilities/default_dtypes/devices/
+# dtypes — all properties of the dtype space itself, which we share with
+# numpy. Delegate. (Without this, array-api-tests's test_inspection_functions
+# can't even collect, and Hypothesis warns "Could not determine whether
+# module numdot_xp is an Array API library".)
+__array_namespace_info__ = np.__array_namespace_info__
+
 
 # --- bridge bootstrapping ----------------------------------------------------
 

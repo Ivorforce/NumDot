@@ -48,8 +48,8 @@ __all__ = [
 # ---- creation ---------------------------------------------------------------
 
 def asarray(obj, /, *, dtype=None, device=None, copy=None):
-	if device is not None:
-		raise ValueError("device kwarg is not supported")
+	if device not in (None, "cpu"):
+		raise ValueError(f"unsupported device: {device!r}")
 	import numpy as np
 	arr = np.asarray(obj, dtype=dtype)
 	# NumDot exposes 'array' (not 'asarray'). We always round-trip through the
@@ -58,24 +58,24 @@ def asarray(obj, /, *, dtype=None, device=None, copy=None):
 
 
 def zeros(shape, *, dtype=None, device=None):
-	if device is not None:
-		raise ValueError("device kwarg is not supported")
+	if device not in (None, "cpu"):
+		raise ValueError(f"unsupported device: {device!r}")
 	if dtype is None:
 		dtype = np.float64  # spec default
 	return _call("zeros", _shape(shape), dtype)
 
 
 def ones(shape, *, dtype=None, device=None):
-	if device is not None:
-		raise ValueError("device kwarg is not supported")
+	if device not in (None, "cpu"):
+		raise ValueError(f"unsupported device: {device!r}")
 	if dtype is None:
 		dtype = np.float64
 	return _call("ones", _shape(shape), dtype)
 
 
 def full(shape, fill_value, *, dtype=None, device=None):
-	if device is not None:
-		raise ValueError("device kwarg is not supported")
+	if device not in (None, "cpu"):
+		raise ValueError(f"unsupported device: {device!r}")
 	if dtype is None:
 		# Spec: dtype inferred from fill_value — bool/int/float/complex map
 		# to the corresponding default kind.
@@ -91,8 +91,8 @@ def full(shape, fill_value, *, dtype=None, device=None):
 
 
 def arange(start, /, stop=None, step=1, *, dtype=None, device=None):
-	if device is not None:
-		raise ValueError("device kwarg is not supported")
+	if device not in (None, "cpu"):
+		raise ValueError(f"unsupported device: {device!r}")
 	if stop is None:
 		start, stop = 0, start
 	if dtype is None:
@@ -105,16 +105,16 @@ def arange(start, /, stop=None, step=1, *, dtype=None, device=None):
 
 
 def empty(shape, *, dtype=None, device=None):
-	if device is not None:
-		raise ValueError("device kwarg is not supported")
+	if device not in (None, "cpu"):
+		raise ValueError(f"unsupported device: {device!r}")
 	if dtype is None:
 		dtype = np.float64
 	return _call("empty", _shape(shape), dtype)
 
 
 def eye(n_rows, n_cols=None, /, *, k=0, dtype=None, device=None):
-	if device is not None:
-		raise ValueError("device kwarg is not supported")
+	if device not in (None, "cpu"):
+		raise ValueError(f"unsupported device: {device!r}")
 	if n_cols is None:
 		n_cols = n_rows
 	if dtype is None:
@@ -125,8 +125,8 @@ def eye(n_rows, n_cols=None, /, *, k=0, dtype=None, device=None):
 
 
 def linspace(start, stop, /, num, *, dtype=None, device=None, endpoint=True):
-	if device is not None:
-		raise ValueError("device kwarg is not supported")
+	if device not in (None, "cpu"):
+		raise ValueError(f"unsupported device: {device!r}")
 	if dtype is None:
 		dtype = np.float64
 	# NumDot signature: nd.linspace(start, stop, num, endpoint, dtype) —
@@ -135,32 +135,32 @@ def linspace(start, stop, /, num, *, dtype=None, device=None, endpoint=True):
 
 
 def full_like(x, /, fill_value, *, dtype=None, device=None):
-	if device is not None:
-		raise ValueError("device kwarg is not supported")
+	if device not in (None, "cpu"):
+		raise ValueError(f"unsupported device: {device!r}")
 	if dtype is None:
 		return _call("full_like", x, fill_value)
 	return _call("full_like", x, fill_value, dtype)
 
 
 def ones_like(x, /, *, dtype=None, device=None):
-	if device is not None:
-		raise ValueError("device kwarg is not supported")
+	if device not in (None, "cpu"):
+		raise ValueError(f"unsupported device: {device!r}")
 	if dtype is None:
 		return _call("ones_like", x)
 	return _call("ones_like", x, dtype)
 
 
 def zeros_like(x, /, *, dtype=None, device=None):
-	if device is not None:
-		raise ValueError("device kwarg is not supported")
+	if device not in (None, "cpu"):
+		raise ValueError(f"unsupported device: {device!r}")
 	if dtype is None:
 		return _call("zeros_like", x)
 	return _call("zeros_like", x, dtype)
 
 
 def empty_like(x, /, *, dtype=None, device=None):
-	if device is not None:
-		raise ValueError("device kwarg is not supported")
+	if device not in (None, "cpu"):
+		raise ValueError(f"unsupported device: {device!r}")
 	if dtype is None:
 		return _call("empty_like", x)
 	return _call("empty_like", x, dtype)

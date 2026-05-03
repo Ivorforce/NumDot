@@ -25,16 +25,10 @@ NUMDOT_GODOT=/Applications/Godot-4.4.app/Contents/MacOS/Godot \
 ARRAY_API_TESTS_MODULE=numdot_xp \
 ARRAY_API_TESTS_XFAIL_MARK=skip \
   tests/.venv/bin/python -m pytest tests/array-api-tests/array_api_tests/ \
-    --ignore=tests/array-api-tests/array_api_tests/test_inspection_functions.py \
     --skips-file tests/array_api/skips.txt \
     --xfails-file tests/array_api/xfails.txt \
     --hypothesis-disable-deadline
 ```
-
-The `--ignore` flag is needed because `--skips-file` only skips *after*
-collection, and `test_inspection_functions.py` errors at collection time
-(it imports `xp.__array_namespace_info__`). Drop the `--ignore` once
-that adapter shim exists.
 
 `ARRAY_API_TESTS_XFAIL_MARK=skip` makes Hypothesis skip xfailed tests
 instead of running them (≈4-5× faster). For *triage* runs (looking for
@@ -75,7 +69,6 @@ isolation comes for free from the bridge architecture.
 
 ## Known limitations of the current adapter
 
-- No `__array_namespace_info__` (blocks `test_inspection_functions.py`).
 - No operator dispatch back through `nd` (blocks
   `test_operators_and_elementwise_functions.py` — the dunder tests
   expect arrays whose `__add__` calls back into `nd.add`; we hand back

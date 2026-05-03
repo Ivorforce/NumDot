@@ -111,6 +111,11 @@ Always re-run the bridge sanity suite after touching `tests/bridge/` or
 - Wire format (v1.1): `[u32 LE header_len][JSON header][blob 0]...[blob N]`.
   Header carries optional `"blobs": [size, ...]` listing blob sizes in
   order. Zero-blob frames are byte-identical to the original v0 format.
+- `numdot_xp.ndarray` is an `np.ndarray` **subclass** with the binary,
+  unary, and in-place operator dunders overridden to call back through
+  the bridge. Every `_call(...)` result is `.view(ndarray)` so chained
+  operators stay routed through nd. Without this, `x + y` would silently
+  use numpy and the conformance suite's operator-form tests would lie.
 
 ## NumDot dispatch architecture
 

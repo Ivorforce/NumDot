@@ -28,10 +28,12 @@ from bridge.client import BridgeClient
 
 __array_api_version__ = "2023.12"
 
-# Carrier type. Spec consumers (e.g. hypothesis) check isinstance(x, ndarray);
-# everything we hand back is a real numpy.ndarray produced by np.load on the
-# bridge response, so this is honest.
-ndarray = np.ndarray
+# Carrier type. Subclass of np.ndarray so isinstance checks pass and the bridge
+# encoder (bridge/client.py: isinstance arg, np.ndarray) accepts it transparently.
+# We override the operator dunders below to dispatch back through nd, so that
+# `x + y` actually exercises NumDot instead of silently going through numpy.
+class ndarray(np.ndarray):
+	__hash__ = None  # arrays are unhashable, matching np.ndarray
 
 # Dtype objects. The Array API spec requires module-level attributes for each
 # supported dtype. We expose numpy dtype scalar types directly — they compare
@@ -120,9 +122,89 @@ def _call(func: str, *args):
 	If the bridge died on the previous call (Godot crashed), respawn before
 	this call. We don't auto-retry the *current* call on failure — that would
 	mask flaky failures from the test suite.
+
+	Results are viewed as our ``ndarray`` subclass so subsequent operators on
+	them dispatch through nd, not raw numpy.
 	"""
 	client = _ensure_client()
-	return client.call_nd(func, *args)
+	return client.call_nd(func, *args).view(ndarray)
+
+
+# --- operator dispatch -------------------------------------------------------
+# Map each Python dunder to the nd function name it should call. Source of truth
+# for op→func mapping is array_api_tests.dtype_helpers.op_to_func; we mirror it
+# here to avoid importing the test suite into the adapter.
+
+_BINARY_DUNDERS = {
+	"__add__":      "add",
+	"__sub__":      "subtract",
+	"__mul__":      "multiply",
+	"__truediv__":  "divide",
+	"__floordiv__": "floor_divide",   # nd lacks this; tests will surface as failures.
+	"__mod__":      "remainder",
+	"__pow__":      "pow",
+	"__matmul__":   "matmul",
+	"__and__":      "bitwise_and",
+	"__or__":       "bitwise_or",
+	"__xor__":      "bitwise_xor",
+	"__lshift__":   "bitwise_left_shift",
+	"__rshift__":   "bitwise_right_shift",
+	"__lt__":       "less",
+	"__le__":       "less_equal",
+	"__gt__":       "greater",
+	"__ge__":       "greater_equal",
+	"__eq__":       "equal",
+	"__ne__":       "not_equal",
+}
+
+_UNARY_DUNDERS = {
+	"__neg__":    "negative",
+	"__pos__":    "positive",
+	"__invert__": "bitwise_not",
+	"__abs__":    "abs",
+}
+
+# In-place: just delegate to the non-in-place operation. The test harness only
+# checks the post-`exec` value of the LHS (test_operators_and_elementwise_functions.py
+# uses `xp.asarray(l, copy=True)` for `x1`, then `exec("x1 += x2")`), and Python
+# rebinds the name to whatever __iadd__ returns — so true in-place semantics
+# aren't required for correctness here.
+_INPLACE_DUNDERS = {
+	"__iadd__":      "add",
+	"__isub__":      "subtract",
+	"__imul__":      "multiply",
+	"__itruediv__":  "divide",
+	"__ifloordiv__": "floor_divide",
+	"__imod__":      "remainder",
+	"__ipow__":      "pow",
+	"__imatmul__":   "matmul",
+	"__iand__":      "bitwise_and",
+	"__ior__":       "bitwise_or",
+	"__ixor__":      "bitwise_xor",
+	"__ilshift__":   "bitwise_left_shift",
+	"__irshift__":   "bitwise_right_shift",
+}
+
+
+def _make_binary(nd_name):
+	def dunder(self, other):
+		return _call(nd_name, self, other)
+	dunder.__name__ = nd_name
+	return dunder
+
+
+def _make_unary(nd_name):
+	def dunder(self):
+		return _call(nd_name, self)
+	dunder.__name__ = nd_name
+	return dunder
+
+
+for _dunder_name, _nd_name in {**_BINARY_DUNDERS, **_INPLACE_DUNDERS}.items():
+	setattr(ndarray, _dunder_name, _make_binary(_nd_name))
+for _dunder_name, _nd_name in _UNARY_DUNDERS.items():
+	setattr(ndarray, _dunder_name, _make_unary(_nd_name))
+del _dunder_name, _nd_name
 
 
 # Re-export the function shims at module level.

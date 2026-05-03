@@ -30,14 +30,16 @@ __all__ = [
 	"logical_and", "logical_or", "logical_xor",
 	"bitwise_and", "bitwise_or", "bitwise_xor",
 	"bitwise_left_shift", "bitwise_right_shift",
-	"maximum", "minimum",
+	"maximum", "minimum", "atan2",
 	# elementwise (unary)
 	"negative", "positive", "abs", "sqrt", "square", "exp", "log",
 	"sin", "cos", "tan", "asin", "acos", "atan",
 	"sinh", "cosh", "tanh", "asinh", "acosh", "atanh",
-	"floor", "ceil", "sign",
+	"floor", "ceil", "round", "trunc", "sign",
 	"logical_not", "bitwise_invert",
 	"isnan", "isfinite", "isinf",
+	"conj", "real", "imag",
+	"clip",
 	# reductions
 	"all", "any", "sum", "prod", "max", "min", "mean",
 	# manipulation
@@ -197,6 +199,7 @@ def bitwise_left_shift(x1, x2, /):  return _call("bitwise_left_shift", x1, x2)
 def bitwise_right_shift(x1, x2, /): return _call("bitwise_right_shift", x1, x2)
 def maximum(x1, x2, /):          return _call("maximum", x1, x2)
 def minimum(x1, x2, /):          return _call("minimum", x1, x2)
+def atan2(x1, x2, /):            return _call("atan2", x1, x2)
 
 
 # ---- elementwise unary ------------------------------------------------------
@@ -222,12 +225,22 @@ def acosh(x, /):          return _call("acosh", x)
 def atanh(x, /):          return _call("atanh", x)
 def floor(x, /):          return _call("floor", x)
 def ceil(x, /):           return _call("ceil", x)
+def round(x, /):          return _call("round", x)         # noqa: A001
+def trunc(x, /):          return _call("trunc", x)
 def sign(x, /):           return _call("sign", x)
 def logical_not(x, /):    return _call("logical_not", x)
 def bitwise_invert(x, /): return _call("bitwise_not", x)  # spec name -> nd name
 def isnan(x, /):          return _call("is_nan", x)       # spec name -> nd name
 def isfinite(x, /):       return _call("is_finite", x)
 def isinf(x, /):          return _call("is_inf", x)
+def conj(x, /):           return _call("conjugate", x)    # spec name -> nd name
+def real(x, /):           return _call("real", x)
+def imag(x, /):           return _call("imag", x)
+
+
+def clip(x, /, min=None, max=None):  # noqa: A001 — spec name shadows builtin
+	# nd.clip takes (a, min, max) positionally; min/max may be scalars or arrays.
+	return _call("clip", x, min, max)
 
 
 # ---- reductions -------------------------------------------------------------

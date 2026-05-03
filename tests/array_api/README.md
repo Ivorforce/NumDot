@@ -69,12 +69,10 @@ isolation comes for free from the bridge architecture.
 
 ## Known limitations of the current adapter
 
-- No operator dispatch back through `nd` (blocks
-  `test_operators_and_elementwise_functions.py` — the dunder tests
-  expect arrays whose `__add__` calls back into `nd.add`; we hand back
-  raw numpy arrays).
 - Reductions ignore `axis`/`keepdims`/`dtype` kwargs — we only call the
   no-axis path (`NotImplementedError` for the others).
 - `meshgrid` doesn't exist in NumDot.
+- Reflected operator forms (`scalar + array`) aren't wired; not exercised
+  by the conformance suite today, easy to add when needed.
 
 These are all addressable in follow-up slices.

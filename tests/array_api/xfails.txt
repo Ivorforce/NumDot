@@ -41,3 +41,90 @@ array_api_tests/test_creation_functions.py::test_asarray_arrays
 # Pure-int and pure-float arange now work correctly (200+ examples) thanks
 # to the integer-arithmetic and direction-mismatch fixes.
 array_api_tests/test_creation_functions.py::test_arange
+
+
+# === test_operators_and_elementwise_functions.py — first wiring ===
+# File enabled by adding an ndarray subclass with operator dunders that
+# dispatch back through nd. Residual failures bucketed below.
+
+# --- NumDot missing function (no shim possible until nd exposes it) ---
+array_api_tests/test_operators_and_elementwise_functions.py::test_copysign
+array_api_tests/test_operators_and_elementwise_functions.py::test_expm1
+array_api_tests/test_operators_and_elementwise_functions.py::test_floor_divide
+array_api_tests/test_operators_and_elementwise_functions.py::test_hypot
+array_api_tests/test_operators_and_elementwise_functions.py::test_log1p
+array_api_tests/test_operators_and_elementwise_functions.py::test_log2
+array_api_tests/test_operators_and_elementwise_functions.py::test_log10
+array_api_tests/test_operators_and_elementwise_functions.py::test_logaddexp
+array_api_tests/test_operators_and_elementwise_functions.py::test_signbit
+
+# --- NumDot bug: scalar promotes integer arrays to int64 ---
+# `arr_uint8 + 0` returns int64 instead of preserving uint8. Array API
+# requires the array dtype to win when the other operand is a Python
+# scalar. Affects all binary-with-scalar variants (function-form is fine
+# because both args are arrays; only the (x, s) parametrization fails).
+array_api_tests/test_operators_and_elementwise_functions.py::test_add[__add__(x, s)]
+array_api_tests/test_operators_and_elementwise_functions.py::test_add[__iadd__(x, s)]
+array_api_tests/test_operators_and_elementwise_functions.py::test_subtract[__sub__(x, s)]
+array_api_tests/test_operators_and_elementwise_functions.py::test_subtract[__isub__(x, s)]
+array_api_tests/test_operators_and_elementwise_functions.py::test_multiply[__mul__(x, s)]
+array_api_tests/test_operators_and_elementwise_functions.py::test_multiply[__imul__(x, s)]
+array_api_tests/test_operators_and_elementwise_functions.py::test_divide[__truediv__(x, s)]
+array_api_tests/test_operators_and_elementwise_functions.py::test_divide[__itruediv__(x, s)]
+array_api_tests/test_operators_and_elementwise_functions.py::test_pow[__pow__(x, s)]
+array_api_tests/test_operators_and_elementwise_functions.py::test_pow[__ipow__(x, s)]
+array_api_tests/test_operators_and_elementwise_functions.py::test_bitwise_left_shift[__lshift__(x, s)]
+array_api_tests/test_operators_and_elementwise_functions.py::test_bitwise_left_shift[__ilshift__(x, s)]
+array_api_tests/test_operators_and_elementwise_functions.py::test_bitwise_right_shift[__rshift__(x, s)]
+array_api_tests/test_operators_and_elementwise_functions.py::test_bitwise_right_shift[__irshift__(x, s)]
+array_api_tests/test_operators_and_elementwise_functions.py::test_bitwise_and[__and__(x, s)]
+array_api_tests/test_operators_and_elementwise_functions.py::test_bitwise_and[__iand__(x, s)]
+array_api_tests/test_operators_and_elementwise_functions.py::test_bitwise_or[__or__(x, s)]
+array_api_tests/test_operators_and_elementwise_functions.py::test_bitwise_or[__ior__(x, s)]
+array_api_tests/test_operators_and_elementwise_functions.py::test_bitwise_xor[__xor__(x, s)]
+array_api_tests/test_operators_and_elementwise_functions.py::test_bitwise_xor[__ixor__(x, s)]
+
+# --- NumDot bug: comparison ops dtype/result handling ---
+# All six comparison functions fail in both function-form and op-form,
+# so this is a NumDot-side issue (not a dispatch problem in the adapter).
+array_api_tests/test_operators_and_elementwise_functions.py::test_equal
+array_api_tests/test_operators_and_elementwise_functions.py::test_not_equal
+array_api_tests/test_operators_and_elementwise_functions.py::test_less
+array_api_tests/test_operators_and_elementwise_functions.py::test_less_equal
+array_api_tests/test_operators_and_elementwise_functions.py::test_greater
+array_api_tests/test_operators_and_elementwise_functions.py::test_greater_equal
+
+# --- NumDot bug: nd.round returns null on integer inputs ---
+array_api_tests/test_operators_and_elementwise_functions.py::test_round
+
+# --- NumDot bug: nd.clip with None bounds ---
+array_api_tests/test_operators_and_elementwise_functions.py::test_clip
+
+# --- NumDot bug: nd.bitwise_right_shift function-form fails on array×array ---
+# Both function-form and operator-form (x1, x2) variants fail; the (x, s)
+# scalar variant is already covered above under scalar-promotion.
+array_api_tests/test_operators_and_elementwise_functions.py::test_bitwise_right_shift[bitwise_right_shift(x1, x2)]
+array_api_tests/test_operators_and_elementwise_functions.py::test_bitwise_right_shift[__rshift__(x1, x2)]
+array_api_tests/test_operators_and_elementwise_functions.py::test_bitwise_right_shift[__irshift__(x1, x2)]
+
+# --- NumDot bug: numerical edges in trig / log / unary functions ---
+# These pass at low example counts but Hypothesis finds inputs (NaN/Inf,
+# domain edges, tiny denormals) where NumDot diverges from the spec.
+# Not a dispatch issue — both function-form and op-form fail.
+array_api_tests/test_operators_and_elementwise_functions.py::test_acos
+array_api_tests/test_operators_and_elementwise_functions.py::test_acosh
+array_api_tests/test_operators_and_elementwise_functions.py::test_asin
+array_api_tests/test_operators_and_elementwise_functions.py::test_asinh
+array_api_tests/test_operators_and_elementwise_functions.py::test_atan
+array_api_tests/test_operators_and_elementwise_functions.py::test_atanh
+array_api_tests/test_operators_and_elementwise_functions.py::test_tan
+array_api_tests/test_operators_and_elementwise_functions.py::test_tanh
+array_api_tests/test_operators_and_elementwise_functions.py::test_log
+array_api_tests/test_operators_and_elementwise_functions.py::test_positive
+array_api_tests/test_operators_and_elementwise_functions.py::test_sign
+
+# --- NumDot bug: nd.real / nd.imag on real-valued inputs ---
+# Spec requires real(x) / imag(x) to work on any numeric dtype; NumDot's
+# implementation appears to choke on non-complex inputs.
+array_api_tests/test_operators_and_elementwise_functions.py::test_real
+array_api_tests/test_operators_and_elementwise_functions.py::test_imag

@@ -25,8 +25,3 @@ array_api_tests/test_special_cases.py
 array_api_tests/test_statistical_functions.py
 array_api_tests/test_utility_functions.py
 
-# === Operators (in-place / dunders) — needs adapter to expose the array
-# object with __add__ etc. We hand back numpy arrays which already implement
-# these, so some operator tests may pass; others need the operator to dispatch
-# back through nd. Defer until we choose how to surface this. ===
-array_api_tests/test_operators_and_elementwise_functions.py

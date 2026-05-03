@@ -311,19 +311,33 @@ Variant NDArray::_iter_get(const Variant& p_iter) {
 	if (pos < 0 || pos >= size) { return {}; }
 	ERR_FAIL_COND_V_MSG(pos < 0 || pos >= size, false, "iterator out of bounds");
 
-	// We checked for the shape size, the next should not fail.
-	const auto result = array->sliced({ pos });
-	return { memnew(NDArray(result)) };
+	try {
+		const auto result = array->sliced({ pos });
+		return { memnew(NDArray(result)) };
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
 }
 
 Ref<NDArray> NDArray::as_type(const va::DType dtype) const {
-	const auto result = ndarray_as_dtype(*this, dtype);
-	return { memnew(NDArray(result)) };
+	try {
+		const auto result = ndarray_as_dtype(*this, dtype);
+		return { memnew(NDArray(result)) };
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
 }
 
 Ref<NDArray> NDArray::copy() const {
-	const auto result = va::copy(va::store::default_allocator, array->data);
-	return { memnew(NDArray(result)) };
+	try {
+		const auto result = va::copy(va::store::default_allocator, array->data);
+		return { memnew(NDArray(result)) };
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
 }
 
 Ref<NDArray> NDArray::transpose(const Variant** args, GDExtensionInt arg_count, GDExtensionCallError& error) {
@@ -582,49 +596,25 @@ bool NDArray::to_bool() const { return static_cast<bool>(*this); }
 int64_t NDArray::to_int() const { return static_cast<int64_t>(*this); }
 double_t NDArray::to_float() const { return static_cast<double_t>(*this); }
 
-Vector2 NDArray::to_vector2() const {
-	return numdot::to_variant_tensor<Vector2>(array->data);
+#define CONVERT_TO_VARIANT_TENSOR(type)\
+try {\
+	return numdot::to_variant_tensor<type>(array->data);\
+}\
+catch (std::runtime_error& error) {\
+	ERR_FAIL_V_MSG({}, error.what());\
 }
 
-Vector3 NDArray::to_vector3() const {
-	return numdot::to_variant_tensor<Vector3>(array->data);
-}
-
-Vector4 NDArray::to_vector4() const {
-	return numdot::to_variant_tensor<Vector4>(array->data);
-}
-
-Vector2i NDArray::to_vector2i() const {
-	return numdot::to_variant_tensor<Vector2i>(array->data);
-}
-
-Vector3i NDArray::to_vector3i() const {
-	return numdot::to_variant_tensor<Vector3i>(array->data);
-}
-
-Vector4i NDArray::to_vector4i() const {
-	return numdot::to_variant_tensor<Vector4i>(array->data);
-}
-
-Color NDArray::to_color() const {
-	return numdot::to_variant_tensor<Color>(array->data);
-}
-
-Quaternion NDArray::to_quaternion() const {
-	return numdot::to_variant_tensor<Quaternion>(array->data);
-}
-
-Plane NDArray::to_plane() const {
-	return numdot::to_variant_tensor<Plane>(array->data);
-}
-
-Basis NDArray::to_basis() const {
-	return numdot::to_variant_tensor<Basis>(array->data);
-}
-
-Projection NDArray::to_projection() const {
-	return numdot::to_variant_tensor<Projection>(array->data);
-}
+Vector2 NDArray::to_vector2() const { CONVERT_TO_VARIANT_TENSOR(Vector2); }
+Vector3 NDArray::to_vector3() const { CONVERT_TO_VARIANT_TENSOR(Vector3); }
+Vector4 NDArray::to_vector4() const { CONVERT_TO_VARIANT_TENSOR(Vector4); }
+Vector2i NDArray::to_vector2i() const { CONVERT_TO_VARIANT_TENSOR(Vector2i); }
+Vector3i NDArray::to_vector3i() const { CONVERT_TO_VARIANT_TENSOR(Vector3i); }
+Vector4i NDArray::to_vector4i() const { CONVERT_TO_VARIANT_TENSOR(Vector4i); }
+Color NDArray::to_color() const { CONVERT_TO_VARIANT_TENSOR(Color); }
+Quaternion NDArray::to_quaternion() const { CONVERT_TO_VARIANT_TENSOR(Quaternion); }
+Plane NDArray::to_plane() const { CONVERT_TO_VARIANT_TENSOR(Plane); }
+Basis NDArray::to_basis() const { CONVERT_TO_VARIANT_TENSOR(Basis); }
+Projection NDArray::to_projection() const { CONVERT_TO_VARIANT_TENSOR(Projection); }
 
 PackedFloat32Array NDArray::to_packed_float32_array() const {
 	if (array->is_contiguous() && array->is_full_view()) {
@@ -633,7 +623,12 @@ PackedFloat32Array NDArray::to_packed_float32_array() const {
 		}
 	}
 
-	return numdot::to_packed<PackedFloat32Array, float_t>(array->data);
+	try {
+		return numdot::to_packed<PackedFloat32Array, float_t>(array->data);
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
 }
 
 PackedFloat64Array NDArray::to_packed_float64_array() const {
@@ -643,7 +638,12 @@ PackedFloat64Array NDArray::to_packed_float64_array() const {
 		}
 	}
 
-	return numdot::to_packed<PackedFloat64Array, double_t>(array->data);
+	try {
+		return numdot::to_packed<PackedFloat64Array, double_t>(array->data);
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
 }
 
 PackedByteArray NDArray::to_packed_byte_array() const {
@@ -653,7 +653,12 @@ PackedByteArray NDArray::to_packed_byte_array() const {
 		}
 	}
 
-	return numdot::to_packed<PackedByteArray, uint8_t>(array->data);
+	try {
+		return numdot::to_packed<PackedByteArray, uint8_t>(array->data);
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
 }
 
 PackedInt32Array NDArray::to_packed_int32_array() const {
@@ -663,7 +668,12 @@ PackedInt32Array NDArray::to_packed_int32_array() const {
 		}
 	}
 
-	return numdot::to_packed<PackedInt32Array, int32_t>(array->data);
+	try {
+		return numdot::to_packed<PackedInt32Array, int32_t>(array->data);
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
 }
 
 PackedInt64Array NDArray::to_packed_int64_array() const {
@@ -673,7 +683,12 @@ PackedInt64Array NDArray::to_packed_int64_array() const {
 		}
 	}
 
-	return numdot::to_packed<PackedInt64Array, int64_t>(array->data);
+	try {
+		return numdot::to_packed<PackedInt64Array, int64_t>(array->data);
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
 }
 
 PackedVector2Array NDArray::to_packed_vector2_array() const {
@@ -686,7 +701,12 @@ PackedVector2Array NDArray::to_packed_vector2_array() const {
 		}
 	}
 
-	return numdot::to_packed<PackedVector2Array, real_t, 2>(array->data);
+	try {
+		return numdot::to_packed<PackedVector2Array, real_t, 2>(array->data);
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
 }
 
 PackedVector3Array NDArray::to_packed_vector3_array() const {
@@ -699,7 +719,12 @@ PackedVector3Array NDArray::to_packed_vector3_array() const {
 		}
 	}
 
-	return numdot::to_packed<PackedVector3Array, real_t, 3>(array->data);
+	try {
+		return numdot::to_packed<PackedVector3Array, real_t, 3>(array->data);
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
 }
 
 PackedVector4Array NDArray::to_packed_vector4_array() const {
@@ -712,7 +737,12 @@ PackedVector4Array NDArray::to_packed_vector4_array() const {
 		}
 	}
 
-	return numdot::to_packed<PackedVector4Array, real_t, 4>(array->data);
+	try {
+		return numdot::to_packed<PackedVector4Array, real_t, 4>(array->data);
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
 }
 
 PackedColorArray NDArray::to_packed_color_array() const {
@@ -725,7 +755,12 @@ PackedColorArray NDArray::to_packed_color_array() const {
 		}
 	}
 
-	return numdot::to_packed<PackedColorArray, float_t, 4>(array->data);
+	try {
+		return numdot::to_packed<PackedColorArray, float_t, 4>(array->data);
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
 }
 
 TypedArray<NDArray> NDArray::to_godot_array() const {

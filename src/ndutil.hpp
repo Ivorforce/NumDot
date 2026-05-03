@@ -5,6 +5,7 @@
 #include "godot_cpp/variant/variant.hpp"  // for Variant
 #include "godot_cpp/core/class_db.hpp"  // for Variant
 #include "godot_cpp/core/object.hpp"  // for Variant
+#include "godot_cpp/templates/local_vector.hpp"  // for LocalVector
 
 using namespace godot;
 

@@ -99,15 +99,6 @@ array_api_tests/test_statistical_functions.py::test_cumulative_prod
 array_api_tests/test_utility_functions.py::test_diff
 array_api_tests/test_utility_functions.py::test_diff_append_prepend
 
-# --- NumDot bug: nd reductions fail on multi-axis tuples ---
-# Single-axis and full-reduction work; passing a list like [1, 0] returns
-# null. Hypothesis finds these once shape ≥ 2. Affects std/var/mean/min/max.
-array_api_tests/test_statistical_functions.py::test_std
-array_api_tests/test_statistical_functions.py::test_var
-array_api_tests/test_statistical_functions.py::test_mean
-array_api_tests/test_statistical_functions.py::test_min
-array_api_tests/test_statistical_functions.py::test_max
-
 # --- NumDot bug: all/any treat complex(0,0) as truthy ---
 # Spec says all(complex(0,0)) is False; NumDot returns True.
 array_api_tests/test_utility_functions.py::test_all

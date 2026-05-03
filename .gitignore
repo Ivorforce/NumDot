@@ -40,6 +40,9 @@ __pycache__
 *.pyc
 .venv
 
+# clangd index cache
+/.cache/
+
 # SCons
 .sconf_temp
 .sconsign*.dblite

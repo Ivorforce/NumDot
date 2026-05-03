@@ -11,32 +11,25 @@
 #      numdot_xp, fixing a NumDot bug, or filing one (and noting upstream).
 
 # === Section: missing adapter shim (work item: extend numdot_xp) ===
-# These currently fail because the adapter doesn't translate the spec
-# signature, or the function isn't wired at all (NotImplementedError /
-# AttributeError → spec test failure).
+# NumDot doesn't expose meshgrid; would need to either implement it via
+# nd primitives or file an issue.
 array_api_tests/test_creation_functions.py::test_meshgrid
-array_api_tests/test_creation_functions.py::test_full_like
-array_api_tests/test_creation_functions.py::test_ones_like
-array_api_tests/test_creation_functions.py::test_asarray_arrays
-
-# === Section: signature / argument-encoding mismatch ===
-# The shim makes the call but NumDot rejects the args (returns null).
-# Likely fix: discover the actual NumDot signature and adjust the shim.
-array_api_tests/test_creation_functions.py::test_empty_like
-array_api_tests/test_creation_functions.py::test_zeros_like
 
 # === Section: NumDot bug — file issue ===
-# nd.full((), <complex 0-d>, complex64) errors with "Incompatible
-# dimension of arrays" even though both shapes are 0-d. Hypothesis
-# zeroes in on this case; non-complex full works correctly.
+# nd.full and nd.full_like both error with "Incompatible dimension of
+# arrays" when the fill_value is a 0-d complex and the dtype is complex.
+# Both work correctly for non-complex inputs.
 array_api_tests/test_creation_functions.py::test_full
+array_api_tests/test_creation_functions.py::test_full_like
 
 # === Section: NumDot missing function (file issue) ===
-# These functions work correctly via the adapter, but the tests verify
-# their results using xp.where, which NumDot doesn't expose. Will
-# unblock once nd.where lands.
+# These tests work for their target function but their assertions use
+# array-api functions NumDot doesn't expose. Will unblock when those land.
+# - test_eye, test_linspace: use xp.where
+# - test_asarray_arrays: uses xp.real
 array_api_tests/test_creation_functions.py::test_eye
 array_api_tests/test_creation_functions.py::test_linspace
+array_api_tests/test_creation_functions.py::test_asarray_arrays
 
 # === Section: NumDot precision edges (file issue) ===
 # NumDot's va::arange computes num after converting all inputs to its

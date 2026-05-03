@@ -43,14 +43,17 @@ jobs:
           rm godot.zip "Godot_v${GODOT_VERSION}_linux.x86_64"
           godot --headless --version
 
-      - name: Register the NumDot GDExtension with the demo project
-        # Godot only loads .gdextension files listed in
-        # demo/.godot/extension_list.cfg. The editor populates this on first
-        # scan; on a fresh CI runner the .godot/ cache doesn't exist yet, so
-        # we seed it manually.
+      - name: Bootstrap demo project .godot/ cache
+        # Godot only loads .gdextension files (and resolves UIDs, etc.) once
+        # the editor has scanned the project and populated .godot/. A fresh
+        # CI runner has none of that. --import does an asset-import pass and
+        # exits, leaving a populated .godot/ cache including extension_list.cfg.
         run: |
-          mkdir -p demo/.godot
-          echo 'res://addons/numdot/numdot.gdextension' > demo/.godot/extension_list.cfg
+          godot --headless --path demo --import || true
+          # The import pass returns non-zero on resource warnings even when it
+          # succeeded, so we don't fail the step on its exit code; the next
+          # steps will fail visibly if the cache wasn't populated.
+          ls demo/.godot/extension_list.cfg && cat demo/.godot/extension_list.cfg
 
       - name: Set up Python
         uses: actions/setup-python@v5

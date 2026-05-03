@@ -120,6 +120,12 @@ targets.append(plugin_tool.generate(
     version="0.11",
 ))
 
+third_party_licenses_tool = Tool("third-party-licenses")
+targets.append(third_party_licenses_tool.generate(
+    f"{addon_dir}/THIRD_PARTY_LICENSES.md",
+    env=env,
+))
+
 targets.extend(library_targets)
 # Don't remove the file while building.
 env.Precious(library_targets)

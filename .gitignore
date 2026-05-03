@@ -38,6 +38,7 @@
 # Python generated files
 __pycache__
 *.pyc
+.venv
 
 # SCons
 .sconf_temp

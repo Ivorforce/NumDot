@@ -17,7 +17,10 @@ scons install_dir=demo arch=arm64 api_version=4.3  # on macOS
 ## When making changes to NumDot's behavior
 
 Edit `./docs/setup/changelog.rst`. If the "Upcoming Changes" is commented out, uncomment it. Be brief. Match the style of existing changelogs.
+
 The changelog is always in reference to the previous released version. When making changes on `main` to unreleased behavior, edit the changelog instead of adding stacking entries.
+
+The changelog is user-facing. It should document what the user sees or what it might mean to them, not internal implementation details. Architectural changes are only briefly mentioned, and focused on the implication.
 
 ## Testing & iteration
 

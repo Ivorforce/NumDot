@@ -6,12 +6,49 @@ from typing import Optional, Sequence
 
 import numpy as np
 
-from .arrays import BridgeError, np_to_npy_bytes, npy_bytes_to_np
+from .arrays import (
+	NUMPY_TO_ND_NAME,
+	BridgeError,
+	NdDtype,
+	np_to_npy_bytes,
+	npy_bytes_to_np,
+)
 from .protocol import encode_frame, read_frame
 
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent.parent
 DEMO_PATH = REPO_ROOT / "demo"
+
+
+def _encode_nd_args(args) -> tuple[list, list[bytes]]:
+	specs: list = []
+	blobs: list[bytes] = []
+	for arg in args:
+		if isinstance(arg, np.ndarray):
+			specs.append({"$blob": len(blobs)})
+			blobs.append(np_to_npy_bytes(arg))
+		elif isinstance(arg, NdDtype):
+			specs.append({"$dtype": arg.name})
+		elif isinstance(arg, np.dtype):
+			specs.append({"$dtype": NUMPY_TO_ND_NAME[arg]})
+		elif isinstance(arg, type) and issubclass(arg, np.generic):
+			specs.append({"$dtype": NUMPY_TO_ND_NAME[np.dtype(arg)]})
+		elif arg is None:
+			specs.append({"$null": True})
+		elif isinstance(arg, bool):
+			# Order matters: bool is an int subclass, must be checked first.
+			specs.append({"$value": arg})
+		elif isinstance(arg, int):
+			# JSON parsing in GDScript turns all numbers into floats; tag
+			# so int-ness (needed for shapes, axes, etc.) survives.
+			specs.append({"$int": arg})
+		elif isinstance(arg, (list, tuple)) and arg and all(
+			isinstance(x, int) and not isinstance(x, bool) for x in arg
+		):
+			specs.append({"$ints": list(arg)})
+		else:
+			specs.append({"$value": arg})
+	return specs, blobs
 
 
 class BridgeClient:
@@ -75,14 +112,19 @@ class BridgeClient:
 		self._sock.sendall(encode_frame(header, blobs))
 		return read_frame(self._sock)
 
-	def call_array_op(self, op: str, *arrays: np.ndarray) -> np.ndarray:
-		blobs = [np_to_npy_bytes(a) for a in arrays]
-		header, out_blobs = self.call(op, blobs=blobs)
+	def call_nd(self, func: str, *args) -> np.ndarray:
+		arg_specs, blobs = _encode_nd_args(args)
+		header, out_blobs = self.call("nd_call", blobs=blobs, func=func, args=arg_specs)
 		if not header.get("ok"):
 			raise BridgeError(header)
 		if len(out_blobs) != 1:
 			raise RuntimeError(f"expected 1 output blob, got {len(out_blobs)}")
 		return npy_bytes_to_np(out_blobs[0])
+
+	def call_array_op(self, func: str, *arrays: np.ndarray) -> np.ndarray:
+		# Backwards-compat shim: previously a hand-written op on the bridge,
+		# now routed through nd_call.
+		return self.call_nd(func, *arrays)
 
 	def __exit__(self, exc_type, exc, tb) -> None:
 		try:

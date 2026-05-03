@@ -11,6 +11,7 @@
 #include "vatensor/vpromote.hpp"
 #include "vatensor/vassign.hpp"
 #include "xtensor/core/xoperation.hpp"
+#include "godot_cpp/core/error_macros.hpp"  // for WARN_PRINT_ONCE
 
 #define BIT_SHIFT_SAFE(NAME, OP)\
 struct NAME {\
@@ -81,8 +82,21 @@ namespace va::op {
 		using VRead = typename I::value_type;
 
 		if constexpr (std::is_same_v<VWrite, bool> && xtl::is_complex<VRead>::value) {
-			// This helps mostly complex dtypes to booleanize
-			return xt::cast<uint8_t>(xt::equal(cvalue, static_cast<VRead>(0)));
+			// bool ← complex: nonzero in either component → true.
+			return xt::cast<uint8_t>(xt::not_equal(cvalue, static_cast<VRead>(0)));
+		}
+		else if constexpr (xtl::is_complex<VRead>::value && !xtl::is_complex<VWrite>::value) {
+			// real ← complex: drop the imaginary part. Numpy raises a
+			// ComplexWarning here; emit the equivalent Godot warning so
+			// users notice the silent truncation.
+			WARN_PRINT_ONCE("Casting complex array to real dtype discards the imaginary part.");
+			return xt::cast<VWrite>(xt::real(cvalue));
+		}
+		else if constexpr (xtl::is_complex<VWrite>::value) {
+			// complex target — cover same-precision, cross-precision, and
+			// real → complex in one branch via xt::cast (which xsimd also
+			// requires for any → complex).
+			return xt::cast<VWrite>(cvalue);
 		}
 		else if constexpr (!std::is_convertible_v<VRead, VWrite>) {
 			throw std::runtime_error("Cannot promote in this way.");
@@ -94,10 +108,6 @@ namespace va::op {
 		// See https://github.com/Ivorforce/NumDot/issues/123
 		else if constexpr (std::is_same_v<VWrite, bool> && std::is_same_v<VRead, bool>) {
 			return xt::cast<uint8_t>(cvalue);
-		}
-		else if constexpr (xtl::is_complex<VWrite>::value) {
-			// xsimd also has no auto conversion into complex types
-			return xt::cast<VWrite>(cvalue);
 		}
 #endif
 		else
@@ -207,8 +217,11 @@ namespace va::vfunc::impl {
 	IMPLEMENT_BINARY_VFUNC(minimum, xt::minimum(a, b))
 	IMPLEMENT_BINARY_VFUNC(maximum, xt::maximum(a, b))
 
-	IMPLEMENT_UNARY_RFUNC(sum, xt::sum(a)(), xt::sum(a, *axes))
-	IMPLEMENT_UNARY_RFUNC(prod, xt::prod(a)(), xt::prod(a, *axes))
+	// sum/prod must accumulate at the output cell's dtype (the vfunc table maps
+	// narrow ints to int64), or `prod(int32)` overflows during accumulation and
+	// the wraparound propagates into the int64 result.
+	IMPLEMENT_UNARY_RFUNC(sum, xt::sum<typename R::value_type>(a)(), xt::sum<typename R::value_type>(a, *axes))
+	IMPLEMENT_UNARY_RFUNC(prod, xt::prod<typename R::value_type>(a)(), xt::prod<typename R::value_type>(a, *axes))
 	IMPLEMENT_UNARY_RFUNC(mean, xt::mean(a)(), xt::mean(a, *axes))
 	IMPLEMENT_UNARY_RFUNC(median, xt::median(a), va::op::median(a, *axes))
 	IMPLEMENT_UNARY_RFUNC(variance, xt::variance(a)(), xt::variance(a, *axes))

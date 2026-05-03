@@ -322,15 +322,21 @@ def mean(x, /, *, axis=None, keepdims=False):
 
 
 def sum(x, /, *, axis=None, dtype=None, keepdims=False):  # noqa: A001
+	out = _reduce("sum", x, axis, keepdims)
+	# nd.sum's accumulator dtype follows numpy's "promote small ints to int64"
+	# rule, so an explicit narrower dtype only takes effect if we cast the
+	# output. Doing it after the reduction also avoids `nd.array(x, dtype)`
+	# truncating in-range values (e.g. uint8 sum into int8) before summing.
 	if dtype is not None:
-		x = _call("array", x, dtype)
-	return _reduce("sum", x, axis, keepdims)
+		out = _call("array", out, dtype)
+	return out
 
 
 def prod(x, /, *, axis=None, dtype=None, keepdims=False):
+	out = _reduce("prod", x, axis, keepdims)
 	if dtype is not None:
-		x = _call("array", x, dtype)
-	return _reduce("prod", x, axis, keepdims)
+		out = _call("array", out, dtype)
+	return out
 
 
 def var(x, /, *, axis=None, correction=0.0, keepdims=False):

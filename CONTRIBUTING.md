@@ -34,10 +34,10 @@ If you changed NumDot's public API, you should also update its documentation. St
 # Update the .xml files from source
 cd demo && godot --doctool ../ --gdextension-docs && cd ..
 # Update the .rst files from .xml files
-curl -sSL https://raw.githubusercontent.com/godotengine/godot/master/doc/tools/make_rst.py | python3 - -o "docs/classes" -l "en" doc_classes
+python3 configure/regenerate_docs.py
 ```
 
-Edit the new entries in `./doc_classes/` ([see the godot docs for more information](https://docs.godotengine.org/en/stable/tutorials/scripting/gdextension/gdextension_docs_system.html)).
+Edit the new entries in `./doc_classes/` ([see the godot docs for more information](https://docs.godotengine.org/en/stable/tutorials/scripting/gdextension/gdextension_docs_system.html)), then re-run `regenerate_docs.py`.
 
 ### Include Policy
 

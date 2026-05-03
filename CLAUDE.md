@@ -24,21 +24,16 @@ The changelog is user-facing. It should document what the user sees or what it m
 
 ## When changing the public C++/GDScript API
 
-Regenerate docs:
+After building, regenerate the docs:
 
 ```bash
 cd demo && /Applications/Godot-4.4.app/Contents/MacOS/Godot --doctool ../ --gdextension-docs --headless && cd ..
-# make_rst.py needs godot's misc/utility/color.py + version.py on PYTHONPATH;
-# fetch them once into a scratch dir, then:
-PYTHONPATH=/tmp/godot_doctool tests/.venv/bin/python /tmp/godot_doctool/make_rst.py \
-  -o docs/classes -l en doc_classes
+tests/.venv/bin/python configure/regenerate_docs.py
 ```
 
-`doctool` rewrites `doc_classes/*.xml` from the **currently-built** binary — if a method registration is missing from your build, the tool drops it from the XML. Always verify the diff before committing; revert XML files you didn't intend to touch. Then hand-write descriptions for new methods in `doc_classes/*.xml` and rerun `make_rst.py`.
+Then fill in any new descriptions in `doc_classes/*.xml` and re-run the wrapper. The output is idempotent across machines and ready to commit.
 
-Apparent "method deletions" in regenerated XML usually mean a method-property duplicate is being collapsed: anything bound via both `bind_method("get_X")` and `ADD_PROPERTY("X", ..., "get_X")` is promoted from a `<method name="X">` (cruft) to a `<member name="X">` (correct). Don't revert these.
-
-`make_rst.py`'s `XML source: ...` URL comment is broken for NumDot — it's hardcoded to `https://github.com/godotengine/godot/tree/master/{path}` and cannot point at `Ivorforce/NumDot` without patching the script. The committed `.rst` files have a stable but technically-wrong URL; regenerating produces a *different* wrong URL based on the cwd-derived `os.path.relpath`. Don't try to "fix" the URL on regeneration — either match the stable form already in the file, or skip regenerating `.rst` files unless their contents actually need updating.
+Gotcha: `doctool` reads the **currently-built** binary. Methods missing from your build (e.g. an incomplete or stale `.so`) silently disappear from the XML. Verify the diff before committing.
 
 ## Testing & iteration
 

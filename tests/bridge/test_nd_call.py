@@ -45,6 +45,15 @@ def test_nd_call_ones_int64(bridge):
 	assert np.all(out == 1)
 
 
+def test_nd_call_full_complex_scalar(bridge):
+	# Encoder must route Python complex through the .npy blob path —
+	# json.dumps can't even serialise a complex literal.
+	out = bridge.call_nd("full", [3], 1 + 2j, np.complex128)
+	assert out.shape == (3,)
+	assert out.dtype == np.complex128
+	assert np.array_equal(out, np.full((3,), 1 + 2j, dtype=np.complex128))
+
+
 def test_nd_call_eye(bridge):
 	# nd.eye signature is (shape, k, dtype) — shape is a 2-element list,
 	# not separate n_rows/n_cols.

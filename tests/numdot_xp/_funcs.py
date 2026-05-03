@@ -77,7 +77,16 @@ def full(shape, fill_value, *, dtype=None, device=None):
 	if device is not None:
 		raise ValueError("device kwarg is not supported")
 	if dtype is None:
-		dtype = np.float64
+		# Spec: dtype inferred from fill_value — bool/int/float/complex map
+		# to the corresponding default kind.
+		if isinstance(fill_value, bool):
+			dtype = np.bool_
+		elif isinstance(fill_value, int):
+			dtype = np.int64
+		elif isinstance(fill_value, complex):
+			dtype = np.complex128
+		else:
+			dtype = np.float64
 	return _call("full", _shape(shape), fill_value, dtype)
 
 

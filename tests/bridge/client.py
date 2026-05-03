@@ -43,13 +43,14 @@ def _encode_nd_args(args) -> tuple[list, list[bytes]]:
 			# losing precision for ints with |value| > 2**53. Send as a
 			# string; GDScript's int() coerces strings transparently.
 			specs.append({"$int": str(arg)})
-		elif isinstance(arg, (np.generic, float)):
-			# numpy scalars and Python floats: ship as 0-d .npy blob.
-			# GDScript's JSON.parse_string is not bit-exact for floats
-			# either (off-by-one-ULP at the edges), so we route every
-			# numeric scalar that isn't a small-enough-to-be-safe int
-			# through the binary blob path. NumDot's variant_to_vscalar
-			# already unwraps a 0-d NDArray to its scalar value.
+		elif isinstance(arg, (np.generic, float, complex)):
+			# numpy scalars, Python floats, and Python complex: ship as 0-d
+			# .npy blob. GDScript's JSON.parse_string is not bit-exact for
+			# floats either (off-by-one-ULP at the edges), and json.dumps
+			# can't even encode complex. So we route every numeric scalar
+			# that isn't a small-enough-to-be-safe int through the binary
+			# blob path. NumDot's variant_to_vscalar already unwraps a 0-d
+			# NDArray to its scalar value.
 			specs.append({"$blob": len(blobs)})
 			blobs.append(np_to_npy_bytes(np.asarray(arg)))
 		elif isinstance(arg, (list, tuple)) and arg and all(

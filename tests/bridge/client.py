@@ -2,8 +2,11 @@ import os
 import pathlib
 import socket
 import subprocess
-from typing import Optional
+from typing import Optional, Sequence
 
+import numpy as np
+
+from .arrays import BridgeError, np_to_npy_bytes, npy_bytes_to_np
 from .protocol import encode_frame, read_frame
 
 
@@ -65,19 +68,28 @@ class BridgeClient:
 		self._sock.settimeout(self.call_timeout)
 		return self
 
-	def call(self, op: str, **kwargs) -> dict:
+	def call(self, op: str, blobs: Sequence[bytes] = (), **kwargs) -> tuple[dict, list[bytes]]:
 		if self._sock is None:
 			raise RuntimeError("BridgeClient is not active")
-		payload = {"op": op, **kwargs}
-		self._sock.sendall(encode_frame(payload))
+		header = {"op": op, **kwargs}
+		self._sock.sendall(encode_frame(header, blobs))
 		return read_frame(self._sock)
+
+	def call_array_op(self, op: str, *arrays: np.ndarray) -> np.ndarray:
+		blobs = [np_to_npy_bytes(a) for a in arrays]
+		header, out_blobs = self.call(op, blobs=blobs)
+		if not header.get("ok"):
+			raise BridgeError(header)
+		if len(out_blobs) != 1:
+			raise RuntimeError(f"expected 1 output blob, got {len(out_blobs)}")
+		return npy_bytes_to_np(out_blobs[0])
 
 	def __exit__(self, exc_type, exc, tb) -> None:
 		try:
 			if self._sock is not None and exc_type is None:
 				try:
 					self.call("shutdown")
-				except (OSError, ConnectionError):
+				except (OSError, ConnectionError, RuntimeError):
 					pass
 		finally:
 			if self._sock is not None:

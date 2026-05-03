@@ -54,43 +54,100 @@ func _run_loop() -> void:
 			get_tree().quit(1)
 			return
 
-		# Read 4-byte length prefix.
-		var header := await _read_exact(4)
-		if header.is_empty():
+		# Read 4-byte header length prefix.
+		var length_bytes := await _read_exact(4)
+		if length_bytes.is_empty():
 			return  # quit() already called by _read_exact on failure
-		var payload_len := header.decode_u32(0)
+		var header_len := length_bytes.decode_u32(0)
 
-		# Read payload.
-		var payload_bytes := await _read_exact(payload_len)
-		if payload_bytes.is_empty() and payload_len != 0:
+		# Read JSON header.
+		var header_bytes := await _read_exact(header_len)
+		if header_bytes.is_empty() and header_len != 0:
 			return
 
-		var payload_str := payload_bytes.get_string_from_utf8()
-		var request: Variant = JSON.parse_string(payload_str)
+		var header_str := header_bytes.get_string_from_utf8()
+		var request: Variant = JSON.parse_string(header_str)
 		if typeof(request) != TYPE_DICTIONARY:
-			_send({"ok": false, "error": "invalid_json", "raw": payload_str})
+			_send({"ok": false, "error": "invalid_json", "raw": header_str}, [])
 			continue
 
+		# Read blob payloads, if any.
+		var blob_sizes: Array = request.get("blobs", [])
+		var blobs: Array = []
+		var read_failed := false
+		for size_v in blob_sizes:
+			var size := int(size_v)
+			var blob := await _read_exact(size)
+			if blob.is_empty() and size != 0:
+				read_failed = true
+				break
+			blobs.append(blob)
+		if read_failed:
+			return
+
 		var op: String = request.get("op", "")
-		var response := _dispatch(op, request)
-		_send(response)
+		var result := _dispatch(op, request, blobs)
+		_send(result["header"], result["blobs"])
 
 		if op == "shutdown":
 			get_tree().quit(0)
 			return
 
 
-func _dispatch(op: String, _request: Dictionary) -> Dictionary:
+func _dispatch(op: String, request: Dictionary, blobs: Array) -> Dictionary:
 	match op:
 		"ping":
-			return {"ok": true, "pong": true}
+			return {"header": {"ok": true, "pong": true}, "blobs": []}
 		"shutdown":
-			return {"ok": true}
+			return {"header": {"ok": true}, "blobs": []}
+		"echo_blob":
+			return {"header": {"ok": true}, "blobs": blobs}
+		"echo_array":
+			return _op_echo_array(blobs)
+		"add":
+			return _op_add(blobs)
 		_:
-			return {"ok": false, "error": "unknown_op", "op": op}
+			return {"header": {"ok": false, "error": "unknown_op", "op": op}, "blobs": []}
+
+
+func _op_echo_array(blobs: Array) -> Dictionary:
+	var out: Array = []
+	for blob in blobs:
+		var arr = nd.load(blob)
+		if arr == null:
+			return _op_error("echo_array", "nd.load returned null")
+		var dumped = nd.dumpb(arr)
+		if dumped == null:
+			return _op_error("echo_array", "nd.dumpb returned null")
+		out.append(dumped)
+	return {"header": {"ok": true}, "blobs": out}
+
+
+func _op_add(blobs: Array) -> Dictionary:
+	if blobs.size() != 2:
+		return _op_error("add", "expected 2 blobs, got %d" % blobs.size())
+	var a = nd.load(blobs[0])
+	if a == null:
+		return _op_error("add", "nd.load(blobs[0]) returned null")
+	var b = nd.load(blobs[1])
+	if b == null:
+		return _op_error("add", "nd.load(blobs[1]) returned null")
+	var result = nd.add(a, b)
+	if result == null:
+		return _op_error("add", "nd.add returned null")
+	var dumped = nd.dumpb(result)
+	if dumped == null:
+		return _op_error("add", "nd.dumpb returned null")
+	return {"header": {"ok": true}, "blobs": [dumped]}
+
+
+func _op_error(op: String, message: String) -> Dictionary:
+	return {"header": {"ok": false, "error": "op_failed", "op": op, "message": message}, "blobs": []}
 
 
 func _read_exact(n: int) -> PackedByteArray:
+	if n == 0:
+		return PackedByteArray()
 	var buf := PackedByteArray()
 	while buf.size() < n:
 		peer.poll()
@@ -113,13 +170,24 @@ func _read_exact(n: int) -> PackedByteArray:
 	return buf
 
 
-func _send(payload: Dictionary) -> void:
-	var json_str := JSON.stringify(payload)
+func _send(header: Dictionary, blobs: Array) -> void:
+	# Only emit the "blobs" field when there are blobs to attach, so
+	# zero-blob frames remain byte-identical to the v0 protocol.
+	if not blobs.is_empty():
+		var sizes: Array = []
+		for blob in blobs:
+			sizes.append((blob as PackedByteArray).size())
+		header["blobs"] = sizes
+
+	var json_str := JSON.stringify(header)
 	var json_bytes := json_str.to_utf8_buffer()
 	var frame := PackedByteArray()
 	frame.resize(4)
 	frame.encode_u32(0, json_bytes.size())
 	frame.append_array(json_bytes)
+	for blob in blobs:
+		frame.append_array(blob)
+
 	var err := peer.put_data(frame)
 	if err != OK:
 		printerr("bridge: put_data failed: ", err)

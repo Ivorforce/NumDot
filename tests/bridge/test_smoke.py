@@ -1,14 +1,19 @@
 def test_ping(bridge):
-	assert bridge.call("ping") == {"ok": True, "pong": True}
+	header, blobs = bridge.call("ping")
+	assert header == {"ok": True, "pong": True}
+	assert blobs == []
 
 
 def test_unknown_op(bridge):
-	resp = bridge.call("definitely_not_a_real_op")
-	assert resp["ok"] is False
-	assert resp["error"] == "unknown_op"
-	assert resp["op"] == "definitely_not_a_real_op"
+	header, blobs = bridge.call("definitely_not_a_real_op")
+	assert header["ok"] is False
+	assert header["error"] == "unknown_op"
+	assert header["op"] == "definitely_not_a_real_op"
+	assert blobs == []
 
 
 def test_multiple_pings(bridge):
 	for _ in range(5):
-		assert bridge.call("ping") == {"ok": True, "pong": True}
+		header, blobs = bridge.call("ping")
+		assert header == {"ok": True, "pong": True}
+		assert blobs == []

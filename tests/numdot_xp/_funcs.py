@@ -129,9 +129,9 @@ def linspace(start, stop, /, num, *, dtype=None, device=None, endpoint=True):
 		raise ValueError("device kwarg is not supported")
 	if dtype is None:
 		dtype = np.float64
-	# NumDot's linspace signature is unverified — assume (start, stop, num, dtype, endpoint).
-	# If wrong, this raises a clear BridgeError and we adjust.
-	return _call("linspace", start, stop, num, dtype, endpoint)
+	# NumDot signature: nd.linspace(start, stop, num, endpoint, dtype) —
+	# endpoint comes BEFORE dtype.
+	return _call("linspace", start, stop, num, endpoint, dtype)
 
 
 def full_like(x, /, fill_value, *, dtype=None, device=None):

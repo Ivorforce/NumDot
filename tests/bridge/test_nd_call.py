@@ -45,6 +45,18 @@ def test_nd_call_ones_int64(bridge):
 	assert np.all(out == 1)
 
 
+def test_nd_call_linspace(bridge):
+	# nd.linspace signature is (start, stop, num, endpoint, dtype) — endpoint
+	# comes BEFORE dtype, the opposite of the Array API convention.
+	out = bridge.call_nd("linspace", 0.0, 1.0, 5, True, np.float64)
+	assert out.shape == (5,)
+	assert out.dtype == np.float64
+	assert np.allclose(out, np.linspace(0, 1, 5))
+	# endpoint=False shifts the right edge.
+	out_open = bridge.call_nd("linspace", 0.0, 1.0, 5, False, np.float64)
+	assert np.allclose(out_open, np.linspace(0, 1, 5, endpoint=False))
+
+
 def test_nd_call_full_complex_scalar(bridge):
 	# Encoder must route Python complex through the .npy blob path —
 	# json.dumps can't even serialise a complex literal.

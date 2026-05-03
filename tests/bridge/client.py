@@ -39,13 +39,14 @@ def _encode_nd_args(args) -> tuple[list, list[bytes]]:
 			# Order matters: bool is an int subclass, must be checked first.
 			specs.append({"$value": arg})
 		elif isinstance(arg, int):
-			# JSON parsing in GDScript turns all numbers into floats; tag
-			# so int-ness (needed for shapes, axes, etc.) survives.
-			specs.append({"$int": arg})
+			# JSON parsing in GDScript turns every number into a float64,
+			# losing precision for ints with |value| > 2**53. Send as a
+			# string; GDScript's int() coerces strings transparently.
+			specs.append({"$int": str(arg)})
 		elif isinstance(arg, (list, tuple)) and arg and all(
 			isinstance(x, int) and not isinstance(x, bool) for x in arg
 		):
-			specs.append({"$ints": list(arg)})
+			specs.append({"$ints": [str(x) for x in arg]})
 		else:
 			specs.append({"$value": arg})
 	return specs, blobs

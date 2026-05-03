@@ -11,6 +11,10 @@ by removing entries from xfails.txt and adding shims here as needed.
 
 from __future__ import annotations
 
+import builtins  # the Array API shims below shadow several Python builtins
+                 # (all, any, min, max, sum, pow, abs); use builtins.<name>
+                 # inside this module if the real builtin is what you want.
+
 import numpy as np
 
 from . import _call
@@ -83,7 +87,11 @@ def arange(start, /, stop=None, step=1, *, dtype=None, device=None):
 	if stop is None:
 		start, stop = 0, start
 	if dtype is None:
-		dtype = np.float64
+		# Spec: dtype inferred from inputs — all-int → default int, else default float.
+		if builtins.all(isinstance(v, int) and not isinstance(v, bool) for v in (start, stop, step)):
+			dtype = np.int64
+		else:
+			dtype = np.float64
 	return _call("arange", start, stop, step, dtype)
 
 

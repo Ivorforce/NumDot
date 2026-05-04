@@ -47,7 +47,7 @@ __all__ = [
 	# manipulation
 	"reshape", "broadcast_to", "broadcast_arrays",
 	"concat", "stack", "unstack", "flip", "moveaxis", "permute_dims",
-	"squeeze", "tile", "expand_dims",
+	"squeeze", "tile", "expand_dims", "roll",
 	# utility
 	"diff",
 	# selection
@@ -513,6 +513,21 @@ def moveaxis(x, source, destination, /):
 
 def permute_dims(x, /, axes):
 	return _call("transpose", x, list(axes))
+
+
+def roll(x, /, shift, *, axis=None):
+	if axis is None:
+		# Spec: when axis is None, shift must be an int.
+		return _call("roll", x, int(shift), None)
+	if isinstance(shift, int):
+		shift_arg = shift
+	else:
+		shift_arg = list(shift)
+	if isinstance(axis, int):
+		axis_arg = axis
+	else:
+		axis_arg = list(axis)
+	return _call("roll", x, shift_arg, axis_arg)
 
 
 def expand_dims(x, /, axis=0):

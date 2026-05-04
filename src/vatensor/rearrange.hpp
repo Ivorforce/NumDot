@@ -55,6 +55,8 @@ namespace va {
 	std::shared_ptr<VArray> squeeze(const std::shared_ptr<VArray>& vdata, const axes_type& axes);
 	std::shared_ptr<VArray> broadcast_to(const VArray& varray, const shape_type& target_shape);
 	std::shared_ptr<VArray> expand_dims(const VArray& varray, std::ptrdiff_t axis);
+	std::shared_ptr<VArray> roll(VStoreAllocator& allocator, const VArray& varray, std::ptrdiff_t shift);
+	std::shared_ptr<VArray> roll(VStoreAllocator& allocator, const VArray& varray, std::ptrdiff_t shift, std::ptrdiff_t axis);
 }
 
 #endif //XV_H

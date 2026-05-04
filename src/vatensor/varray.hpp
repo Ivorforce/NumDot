@@ -135,8 +135,17 @@ namespace va {
         switch (layout) {
             case xt::layout_type::row_major:
             case xt::layout_type::column_major:
-            case xt::layout_type::any:
                 return xt::adapt<xt::layout_type::dynamic, V>(std::forward<V>(ptr), size_, xt::no_ownership(), shape, layout);
+            case xt::layout_type::any: {
+                // 1-D: keep `any` (row- and column-major are identical, and
+                // staying layout-agnostic helps downstream reshapes pick the
+                // right convention). Multi-D: xtensor's xt::adapt disambiguates
+                // `any` to column-major, but NumDot is row-major (matches
+                // empty()/numpy/users), so force row-major to avoid flipping
+                // strides under the user's nose.
+                const auto resolved = shape.size() <= 1 ? xt::layout_type::any : xt::layout_type::row_major;
+                return xt::adapt<xt::layout_type::dynamic, V>(std::forward<V>(ptr), size_, xt::no_ownership(), shape, resolved);
+            }
             default: {
                 return xt::adapt<V>(std::forward<V>(ptr), size_, xt::no_ownership(), shape, strides);
             }

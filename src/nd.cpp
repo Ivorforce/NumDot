@@ -129,6 +129,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("vsplit", "v", "indices_or_sections"), &nd::vsplit);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("squeeze", "v", "axes"), &nd::squeeze, DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("expand_dims", "v", "axis"), &nd::expand_dims);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("roll", "v", "shift", "axis"), &nd::roll, DEFVAL(nullptr));
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("real", "v"), &nd::real);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("imag", "v"), &nd::imag);
@@ -949,6 +950,32 @@ Ref<NDArray> nd::squeeze(const Variant& v, const Variant& axes) {
 		}
 		const auto axes_ = variant_to_axes(axes);
 		return { memnew(NDArray(va::squeeze(array, axes_))) };
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
+}
+
+Ref<NDArray> nd::roll(const Variant& v, const Variant& shift, const Variant& axis) {
+	try {
+		const auto array = variant_as_array(v);
+
+		if (axis.get_type() == Variant::NIL) {
+			// Spec: axis=null flattens, then shifts a single int.
+			const auto shift_int = variant_to_axis(shift);
+			return { memnew(NDArray(va::roll(va::store::default_allocator, *array, shift_int))) };
+		}
+
+		const auto shifts = variant_to_axes(shift);
+		const auto axes = variant_to_axes(axis);
+		ERR_FAIL_COND_V_MSG(shifts.size() != axes.size(), {}, "roll: shift and axis must have the same length");
+
+		// Multi-axis roll = sequential single-axis rolls (each one materializes).
+		auto result = array;
+		for (std::size_t i = 0; i < shifts.size(); ++i) {
+			result = va::roll(va::store::default_allocator, *result, shifts[i], axes[i]);
+		}
+		return { memnew(NDArray(result)) };
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());

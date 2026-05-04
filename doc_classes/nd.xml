@@ -1084,6 +1084,19 @@
 				Round elements of the array to the nearest integer.
 			</description>
 		</method>
+		<method name="roll" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="v" type="Variant" />
+			<param index="1" name="shift" type="Variant" />
+			<param index="2" name="axis" type="Variant" default="null" />
+			<description>
+				Cyclically shift elements of [code]v[/code] along [code]axis[/code]. Elements that fall off one end re-enter at the other.
+				If [code]axis[/code] is null, the input is treated as a flat row-major sequence and shifted by [code]shift[/code] (an int), then reshaped back to its original shape.
+				If [code]axis[/code] is an int, [code]shift[/code] is an int and elements are shifted along that single axis.
+				If both are arrays of the same length, each axis is shifted by the corresponding amount in sequence.
+				Negative shifts and shifts larger than the axis length are normalized.
+			</description>
+		</method>
 		<method name="round" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />

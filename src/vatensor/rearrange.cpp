@@ -11,6 +11,8 @@
 
 #include "create.hpp"
 #include "util.hpp"
+#include "vassign.hpp"
+#include "vcall.hpp"
 #include "vpromote.hpp"
 #include "xscalar_store.hpp"
 #include "dtype.hpp"
@@ -363,6 +365,54 @@ std::shared_ptr<VArray> va::vector_as_complex(VStoreAllocator& allocator, const 
 	const auto float_array = va::copy_as_dtype(allocator, varray.data, comp_dtype);
 	// Call ourselves again, though this time we should get a view for sure.
 	return vector_as_complex(allocator, *float_array, dtype, keepdims);
+}
+
+std::shared_ptr<VArray> va::roll(VStoreAllocator& allocator, const VArray& varray, std::ptrdiff_t shift, std::ptrdiff_t axis) {
+	const std::size_t ndim = varray.dimension();
+	const std::size_t axis_norm = va::util::normalize_axis(axis, ndim);
+	const std::ptrdiff_t dim = static_cast<std::ptrdiff_t>(varray.shape()[axis_norm]);
+
+	auto out = va::empty(allocator, varray.dtype(), varray.shape());
+	if (dim == 0) return out;  // axis has length 0 — nothing to roll
+
+	std::ptrdiff_t k = shift % dim;
+	if (k < 0) k += dim;
+	if (k == 0) {
+		va::assign(out->data, varray.data);
+		return out;
+	}
+
+	// Roll along one axis is two slice copies:
+	//   out[..., 0:k, ...]   ← varray[..., dim-k:dim, ...]
+	//   out[..., k:dim, ...] ← varray[..., 0:dim-k, ...]
+	xt::xstrided_slice_vector s_in(ndim, xt::all());
+	xt::xstrided_slice_vector s_out(ndim, xt::all());
+
+	s_in[axis_norm] = xt::xrange(dim - k, dim);
+	s_out[axis_norm] = xt::xrange(static_cast<std::ptrdiff_t>(0), k);
+	{
+		auto write = out->sliced_data(s_out);
+		va::assign(write, varray.sliced_data(s_in));
+	}
+
+	s_in[axis_norm] = xt::xrange(static_cast<std::ptrdiff_t>(0), dim - k);
+	s_out[axis_norm] = xt::xrange(k, dim);
+	{
+		auto write = out->sliced_data(s_out);
+		va::assign(write, varray.sliced_data(s_in));
+	}
+
+	return out;
+}
+
+std::shared_ptr<VArray> va::roll(VStoreAllocator& allocator, const VArray& varray, std::ptrdiff_t shift) {
+	// Spec: roll without axis flattens, rolls, then reshapes back to input shape.
+	const auto self = std::make_shared<VArray>(varray);
+	const auto flat = va::flatten(allocator, self);
+	auto rolled = va::roll(allocator, *flat, shift, 0);
+	if (varray.dimension() == 1) return rolled;
+	va::strides_type orig_shape(varray.shape().begin(), varray.shape().end());
+	return va::reshape(allocator, rolled, std::move(orig_shape));
 }
 
 std::shared_ptr<VArray> va::expand_dims(const VArray& varray, std::ptrdiff_t axis) {

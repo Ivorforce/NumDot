@@ -118,6 +118,7 @@ public:
 	static TypedArray<NDArray> vsplit(const Variant& v, const Variant& indices_or_sections);
 	static Ref<NDArray> squeeze(const Variant& v, const Variant& axes);
 	static Ref<NDArray> expand_dims(const Variant& v, int64_t axis);
+	static Ref<NDArray> roll(const Variant& v, const Variant& shift, const Variant& axis);
 
 	// Complex.
 	static Ref<NDArray> real(const Variant& a);

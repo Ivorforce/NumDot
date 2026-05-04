@@ -26,6 +26,7 @@ Many bugs in this release were found by running NumDot against the `Python array
 - ``nd.broadcast_to(v, shape)`` returns a view of ``v`` stretched to ``shape``. Front-padded axes and any input axes of length 1 are broadcast (zero-stride); the rest must match the target dimension or the call errors.
 - ``nd.squeeze(v, axes)`` accepts an optional ``axes`` argument (int or list) selecting which length-1 axes to drop. The requested axes must all be size 1 or the call errors. Without ``axes`` the previous behavior is unchanged: drop every length-1 axis.
 - ``nd.moveaxis`` accepts lists for ``src`` and ``dst`` (in addition to single ints), moving multiple axes in one call. ``nd.moveaxis(arr, [0, 1], [-1, -2])`` swaps the first two axes to the end.
+- ``nd.roll(v, shift, axis)`` cyclically shifts elements; ``axis`` may be null (flatten), an int, or a list paired with ``shift``. Negative and over-sized shifts are normalized.
 
 **Changed**
 
@@ -48,6 +49,7 @@ Many bugs in this release were found by running NumDot against the `Python array
 - Result dtype for ``nd.concatenate``, ``nd.linspace``, ``nd.arange``, ``nd.matmul`` / ``nd.dot``, and array-from-nested-array conversion follows numpy's ``result_type`` rules: ``uint8 + uint16 → uint16`` (was ``int32``), ``int32 + uint32 → int64``, ``int64 + uint64 → float64``.
 - ``nd.linspace(a, b, num)`` lands ``out[-1]`` exactly on ``b`` when ``endpoint`` is true (used to drift a few ULPs, e.g. ``29.000000000000004`` instead of ``29.0``). ``nd.linspace(a, b, 1)`` returns ``[a]`` instead of ``[nan]``.
 - ``nd.bitwise_right_shift`` on negative signed integers now sign-extends when the shift count meets or exceeds the dtype's bit width (e.g. ``int32(-1) >> 32`` now returns ``-1``, was ``0``), matching the array-api spec.
+- ``nd.reshape`` from a 1-D array to a multi-dimensional shape used to silently produce column-major output (e.g. ``nd.reshape(nd.array([1, 2, 3, 4, 5, 6]), [2, 3])`` returned ``[[1, 3, 5], [2, 4, 6]]``); it now returns row-major ``[[1, 2, 3], [4, 5, 6]]`` to match numpy / NumDot's general convention.
 - ``nd.arange`` returns an empty array when ``step`` has the wrong sign for ``stop - start`` (used to return garbage data).
 - ``nd.arange`` with ``step = 0`` is rejected with a clean error.
 - ``nd.arange`` with integer arguments above ``2**53`` could return the wrong number of elements; integer dtypes now use exact integer arithmetic.

@@ -284,6 +284,8 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`rint<class_nd_method_rint>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                           |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`roll<class_nd_method_roll>`\ (\ v\: ``Variant``, shift\: ``Variant``, axis\: ``Variant`` = null\ ) |static|                                                                           |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`round<class_nd_method_round>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                         |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`sign<class_nd_method_sign>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                           |
@@ -2260,6 +2262,26 @@ Up to one element in the new shape can be -1 to infer its size.
 :ref:`NDArray<class_NDArray>` **rint**\ (\ a\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_rint>`
 
 Round elements of the array to the nearest integer.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_roll:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **roll**\ (\ v\: ``Variant``, shift\: ``Variant``, axis\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_roll>`
+
+Cyclically shift elements of ``v`` along ``axis``. Elements that fall off one end re-enter at the other.
+
+If ``axis`` is null, the input is treated as a flat row-major sequence and shifted by ``shift`` (an int), then reshaped back to its original shape.
+
+If ``axis`` is an int, ``shift`` is an int and elements are shifted along that single axis.
+
+If both are arrays of the same length, each axis is shifted by the corresponding amount in sequence.
+
+Negative shifts and shifts larger than the axis length are normalized.
 
 .. rst-class:: classref-item-separator
 

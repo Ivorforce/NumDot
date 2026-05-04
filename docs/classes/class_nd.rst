@@ -280,6 +280,8 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`remainder<class_nd_method_remainder>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`repeat<class_nd_method_repeat>`\ (\ v\: ``Variant``, repeats\: ``Variant``, axis\: ``Variant`` = null\ ) |static|                                                                     |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`reshape<class_nd_method_reshape>`\ (\ a\: ``Variant``, shape\: ``Variant``\ ) |static|                                                                                                |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`rint<class_nd_method_rint>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                           |
@@ -2236,6 +2238,22 @@ If the argument is not complex, returns the argument.
 Returns the element-wise remainder of division.
 
 Computes the remainder complementary to the floor_divide function. It is equivalent to the modulus operator x1 % x2 and has the same sign as the divisor x2.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_repeat:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **repeat**\ (\ v\: ``Variant``, repeats\: ``Variant``, axis\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_repeat>`
+
+Repeat each element of ``v`` along ``axis``. The output has the same shape as the input except along ``axis``, whose length becomes the sum of the repeat counts.
+
+If ``axis`` is null, the input is flattened first and the result is 1-D.
+
+\ ``repeats`` is either an int (every element repeated that many times) or an array. A length-1 array is treated as the scalar; otherwise it must have the same length as the axis being repeated and assigns one count per element.
 
 .. rst-class:: classref-item-separator
 

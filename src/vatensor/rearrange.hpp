@@ -57,6 +57,9 @@ namespace va {
 	std::shared_ptr<VArray> expand_dims(const VArray& varray, std::ptrdiff_t axis);
 	std::shared_ptr<VArray> roll(VStoreAllocator& allocator, const VArray& varray, std::ptrdiff_t shift);
 	std::shared_ptr<VArray> roll(VStoreAllocator& allocator, const VArray& varray, std::ptrdiff_t shift, std::ptrdiff_t axis);
+
+	std::shared_ptr<VArray> repeat(VStoreAllocator& allocator, const VArray& varray, std::size_t repeats, std::ptrdiff_t axis);
+	std::shared_ptr<VArray> repeat(VStoreAllocator& allocator, const VArray& varray, const std::vector<std::size_t>& repeats, std::ptrdiff_t axis);
 }
 
 #endif //XV_H

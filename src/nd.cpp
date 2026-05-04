@@ -130,6 +130,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("squeeze", "v", "axes"), &nd::squeeze, DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("expand_dims", "v", "axis"), &nd::expand_dims);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("roll", "v", "shift", "axis"), &nd::roll, DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("repeat", "v", "repeats", "axis"), &nd::repeat, DEFVAL(nullptr));
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("real", "v"), &nd::real);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("imag", "v"), &nd::imag);
@@ -976,6 +977,45 @@ Ref<NDArray> nd::roll(const Variant& v, const Variant& shift, const Variant& axi
 			result = va::roll(va::store::default_allocator, *result, shifts[i], axes[i]);
 		}
 		return { memnew(NDArray(result)) };
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
+}
+
+Ref<NDArray> nd::repeat(const Variant& v, const Variant& repeats, const Variant& axis) {
+	try {
+		auto array = variant_as_array(v);
+		std::ptrdiff_t axis_used;
+		if (axis.get_type() == Variant::NIL) {
+			array = va::flatten(va::store::default_allocator, array);
+			axis_used = 0;
+		}
+		else {
+			axis_used = static_cast<std::ptrdiff_t>(static_cast<int64_t>(axis));
+		}
+
+		if (repeats.get_type() == Variant::INT) {
+			const int64_t r = repeats;
+			if (r < 0) ERR_FAIL_V_MSG({}, "repeat: repeats must be non-negative");
+			return { memnew(NDArray(va::repeat(va::store::default_allocator, *array, static_cast<std::size_t>(r), axis_used))) };
+		}
+
+		// Per-element repeats. Decode as signed first (variant_to_axes handles
+		// arrays/PackedInt*Arrays), validate non-negative, then cast.
+		const auto signed_repeats = variant_to_axes(repeats);
+		std::vector<std::size_t> unsigned_repeats(signed_repeats.size());
+		for (std::size_t i = 0; i < signed_repeats.size(); ++i) {
+			if (signed_repeats[i] < 0) ERR_FAIL_V_MSG({}, "repeat: repeats must be non-negative");
+			unsigned_repeats[i] = static_cast<std::size_t>(signed_repeats[i]);
+		}
+
+		// Spec: a length-1 repeats array broadcasts as a scalar repeat.
+		if (unsigned_repeats.size() == 1) {
+			return { memnew(NDArray(va::repeat(va::store::default_allocator, *array, unsigned_repeats[0], axis_used))) };
+		}
+
+		return { memnew(NDArray(va::repeat(va::store::default_allocator, *array, unsigned_repeats, axis_used))) };
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());

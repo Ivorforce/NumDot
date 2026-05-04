@@ -1068,6 +1068,17 @@
 				Computes the remainder complementary to the floor_divide function. It is equivalent to the modulus operator x1 % x2 and has the same sign as the divisor x2.
 			</description>
 		</method>
+		<method name="repeat" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="v" type="Variant" />
+			<param index="1" name="repeats" type="Variant" />
+			<param index="2" name="axis" type="Variant" default="null" />
+			<description>
+				Repeat each element of [code]v[/code] along [code]axis[/code]. The output has the same shape as the input except along [code]axis[/code], whose length becomes the sum of the repeat counts.
+				If [code]axis[/code] is null, the input is flattened first and the result is 1-D.
+				[code]repeats[/code] is either an int (every element repeated that many times) or an array. A length-1 array is treated as the scalar; otherwise it must have the same length as the axis being repeated and assigns one count per element.
+			</description>
+		</method>
 		<method name="reshape" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />

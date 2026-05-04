@@ -415,6 +415,40 @@ std::shared_ptr<VArray> va::roll(VStoreAllocator& allocator, const VArray& varra
 	return va::reshape(allocator, rolled, std::move(orig_shape));
 }
 
+std::shared_ptr<VArray> va::repeat(VStoreAllocator& allocator, const VArray& varray, const std::vector<std::size_t>& repeats, std::ptrdiff_t axis) {
+	const std::size_t axis_norm = va::util::normalize_axis(axis, varray.dimension());
+	if (repeats.size() != varray.shape()[axis_norm]) {
+		throw std::runtime_error("repeat: per-element repeats length must match the axis size");
+	}
+
+	// Output shape: input shape with axis size replaced by sum(repeats).
+	const std::size_t total = std::accumulate(repeats.begin(), repeats.end(), std::size_t(0));
+	va::shape_type out_shape(varray.shape().begin(), varray.shape().end());
+	out_shape[axis_norm] = total;
+
+	return std::visit([&](const auto& in_data) -> std::shared_ptr<VArray> {
+		using VT = typename std::decay_t<decltype(in_data)>::value_type;
+		auto repeated = xt::repeat(in_data, repeats, axis_norm);
+
+		auto store = allocator.allocate(varray.dtype(), std::accumulate(out_shape.begin(), out_shape.end(), std::size_t(1), std::multiplies<>()));
+		auto* ptr = static_cast<VT*>(store->data());
+		auto out_compute = make_compute<VT*>(std::move(ptr), out_shape, strides_type{}, xt::layout_type::row_major);
+
+		va::broadcasting_assign_typesafe(out_compute, repeated);
+
+		return std::make_shared<VArray>(VArray { std::move(store), std::move(out_compute), 0 });
+	}, varray.data);
+}
+
+std::shared_ptr<VArray> va::repeat(VStoreAllocator& allocator, const VArray& varray, std::size_t repeats, std::ptrdiff_t axis) {
+	// Broadcast scalar to per-element vector and forward; xt::repeat does the
+	// same internally, but going through our vector overload reuses the shape
+	// computation and validation logic.
+	const std::size_t axis_norm = va::util::normalize_axis(axis, varray.dimension());
+	std::vector<std::size_t> per_elem(varray.shape()[axis_norm], repeats);
+	return va::repeat(allocator, varray, per_elem, static_cast<std::ptrdiff_t>(axis_norm));
+}
+
 std::shared_ptr<VArray> va::expand_dims(const VArray& varray, std::ptrdiff_t axis) {
 	const std::size_t ndim = varray.dimension();
 	// Array API allows axis in [-ndim-1, ndim]; -ndim-1 means "insert at front".

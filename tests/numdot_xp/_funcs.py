@@ -47,7 +47,7 @@ __all__ = [
 	# manipulation
 	"reshape", "broadcast_to", "broadcast_arrays",
 	"concat", "stack", "unstack", "flip", "moveaxis", "permute_dims",
-	"squeeze", "tile", "expand_dims", "roll",
+	"squeeze", "tile", "expand_dims", "roll", "repeat",
 	# utility
 	"diff",
 	# selection
@@ -513,6 +513,15 @@ def moveaxis(x, source, destination, /):
 
 def permute_dims(x, /, axes):
 	return _call("transpose", x, list(axes))
+
+
+def repeat(x, repeats, /, *, axis=None):
+	if isinstance(repeats, int):
+		repeats_arg = repeats
+	else:
+		# repeats may be an ndarray (numpy or our subclass) or a sequence.
+		repeats_arg = list(map(int, np.asarray(repeats).reshape(-1)))
+	return _call("repeat", x, repeats_arg, axis)
 
 
 def roll(x, /, shift, *, axis=None):

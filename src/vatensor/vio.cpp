@@ -2,6 +2,8 @@
 
 #include "xtensor/io/xnpy.hpp"
 #include "array_store.hpp"
+#include "create.hpp"
+#include "xtensor_store.hpp"
 
 struct membuf : std::streambuf {
 	membuf(char* begin, char* end) {
@@ -77,7 +79,17 @@ std::shared_ptr<va::VArray> va::load_npy(const char* data, std::size_t size) {
 }
 
 std::string va::save_npy(VData& data) {
-	return std::visit([](const auto& data) {
-		return xt::dump_npy(data);
+	// xt::dump_npy calls xt::eval (a no-op on our xarray_adaptor) and then
+	// writes the underlying buffer's bytes directly, ignoring strides. For
+	// strided views (flip/moveaxis/transpose/slice) the npy header would
+	// then carry the new shape but the bytes would be the original storage.
+	// Materialize through va::copy in that case; assign's bool/xsimd
+	// workaround in vcast applies along the way.
+	return std::visit([&data](const auto& adaptor) -> std::string {
+		if (adaptor.is_contiguous()) {
+			return xt::dump_npy(adaptor);
+		}
+		const auto contig = va::copy(va::store::default_allocator, data);
+		return xt::dump_npy(std::get<std::decay_t<decltype(adaptor)>>(contig->data));
 	}, data);
 }

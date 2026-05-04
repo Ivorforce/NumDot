@@ -22,6 +22,12 @@
 using namespace va;
 
 std::shared_ptr<VArray> va::transpose(const VArray& varray, strides_type permutation) {
+	// xtensor's full check rejects negative axes; the Array API allows them
+	// to wrap from the end. Normalize before passing through.
+	const auto ndim = static_cast<std::ptrdiff_t>(varray.dimension());
+	for (auto& ax : permutation) {
+		if (ax < 0) ax += ndim;
+	}
 	return map(
 		[permutation](auto& array) {
 			return xt::transpose(

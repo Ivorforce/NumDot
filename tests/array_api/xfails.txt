@@ -111,18 +111,6 @@ array_api_tests/test_operators_and_elementwise_functions.py::test_abs[__abs__]
 
 
 # === test_manipulation_functions.py ===
-# NumDot bugs (FIXME):
-# - nd.flip on bool arrays produces wrong results (likely the same xsimd
-#   bool-load bug as #123 — nd.flip([True, True], 0) → [True, False]).
-#   The shim already pre-normalizes negative axes (nd.flip(x, -1) crashes
-#   Godot otherwise).
-# - nd.moveaxis returns wrong shape for arrays with a 0-sized axis
-#   (e.g. shape (0, 1) → moveaxis 0,1 gives (0, 1) instead of (1, 0)).
-# - nd.transpose returns null when permutation contains negative axes.
-array_api_tests/test_manipulation_functions.py::test_flip
-array_api_tests/test_manipulation_functions.py::test_moveaxis
-array_api_tests/test_manipulation_functions.py::test_permute_dims
-
 # No nd binding (out of scope: would need new C++ funcs):
 array_api_tests/test_manipulation_functions.py::TestExpandDims::test_expand_dims
 array_api_tests/test_manipulation_functions.py::test_repeat

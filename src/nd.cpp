@@ -127,6 +127,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("hsplit", "v", "indices_or_sections"), &nd::hsplit);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("vsplit", "v", "indices_or_sections"), &nd::vsplit);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("squeeze", "v"), &nd::squeeze);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("expand_dims", "v", "axis"), &nd::expand_dims);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("real", "v"), &nd::real);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("imag", "v"), &nd::imag);
@@ -924,6 +925,19 @@ Ref<NDArray> nd::squeeze(const Variant& v) {
 	try {
 		const auto array = variant_as_array(v);
 		return { memnew(NDArray(va::squeeze(array))) };
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
+}
+
+Ref<NDArray> nd::expand_dims(const Variant& v, const int64_t axis) {
+	try {
+		const auto array = variant_as_array(v);
+		return { memnew(NDArray(va::expand_dims(*array, static_cast<std::ptrdiff_t>(axis)))) };
+	}
+	catch (std::out_of_range& error) {
+		ERR_FAIL_V_MSG({}, error.what());
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());

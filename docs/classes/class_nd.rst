@@ -140,6 +140,8 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`exp<class_nd_method_exp>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                             |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`expand_dims<class_nd_method_expand_dims>`\ (\ v\: ``Variant``, axis\: ``int``\ ) |static|                                                                                             |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`expm1<class_nd_method_expm1>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                         |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`eye<class_nd_method_eye>`\ (\ shape\: ``Variant``, k\: ``int`` = 0, dtype\: :ref:`DType<enum_nd_DType>` = 2\ ) |static|                                                               |
@@ -1264,6 +1266,20 @@ Euler-Mascheroni constant.
 :ref:`NDArray<class_NDArray>` **exp**\ (\ a\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_exp>`
 
 Calculate the exponential of all elements in the input array.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_expand_dims:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **expand_dims**\ (\ v\: ``Variant``, axis\: ``int``\ ) |static| :ref:`🔗<class_nd_method_expand_dims>`
+
+Insert a length-1 dimension at the given ``axis`` of ``v``. Returns a view sharing the input's data — no copy.
+
+\ ``axis`` may be negative to count from the end. The valid range is ``[-ndim - 1, ndim]``; values outside that range error.
 
 .. rst-class:: classref-item-separator
 

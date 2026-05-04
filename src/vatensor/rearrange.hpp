@@ -51,6 +51,7 @@ namespace va {
 	std::shared_ptr<VArray> vector_as_complex(VStoreAllocator& allocator, const VArray& varray, DType dtype, bool keepdims);
 
 	std::shared_ptr<VArray> squeeze(const std::shared_ptr<VArray>& vdata);
+	std::shared_ptr<VArray> expand_dims(const VArray& varray, std::ptrdiff_t axis);
 }
 
 #endif //XV_H

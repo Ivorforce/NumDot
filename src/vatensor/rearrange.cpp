@@ -324,6 +324,22 @@ std::shared_ptr<VArray> va::vector_as_complex(VStoreAllocator& allocator, const 
 	return vector_as_complex(allocator, *float_array, dtype, keepdims);
 }
 
+std::shared_ptr<VArray> va::expand_dims(const VArray& varray, std::ptrdiff_t axis) {
+	const std::size_t ndim = varray.dimension();
+	// Array API allows axis in [-ndim-1, ndim]; -ndim-1 means "insert at front".
+	const std::ptrdiff_t lo = -static_cast<std::ptrdiff_t>(ndim) - 1;
+	const std::ptrdiff_t hi = static_cast<std::ptrdiff_t>(ndim);
+	if (axis < lo || axis > hi) {
+		throw std::out_of_range("expand_dims: axis out of range");
+	}
+	const std::size_t pos = axis < 0 ? static_cast<std::size_t>(axis + hi + 1) : static_cast<std::size_t>(axis);
+	return map(
+		[pos](auto& array) {
+			return xt::expand_dims(array, pos);
+		}, varray
+	);
+}
+
 std::shared_ptr<VArray> va::squeeze(const std::shared_ptr<VArray>& varray) {
 	xt::xstrided_slice_vector v;
 	const shape_type &shape = varray->shape();

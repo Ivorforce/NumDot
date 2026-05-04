@@ -91,7 +91,6 @@ array_api_tests/test_operators_and_elementwise_functions.py::test_abs[__abs__]
 
 # === test_manipulation_functions.py ===
 # No nd binding (out of scope: would need new C++ funcs):
-array_api_tests/test_manipulation_functions.py::TestExpandDims::test_expand_dims
 array_api_tests/test_manipulation_functions.py::test_repeat
 array_api_tests/test_manipulation_functions.py::test_roll
 
@@ -111,7 +110,6 @@ array_api_tests/test_signatures.py::test_func_signature[searchsorted]
 array_api_tests/test_signatures.py::test_func_signature[from_dlpack]
 array_api_tests/test_signatures.py::test_func_signature[tril]
 array_api_tests/test_signatures.py::test_func_signature[triu]
-array_api_tests/test_signatures.py::test_func_signature[expand_dims]
 array_api_tests/test_signatures.py::test_func_signature[repeat]
 array_api_tests/test_signatures.py::test_func_signature[roll]
 array_api_tests/test_signatures.py::test_func_signature[argsort]

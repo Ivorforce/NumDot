@@ -116,6 +116,7 @@ public:
 	static TypedArray<NDArray> hsplit(const Variant& v, const Variant& indices_or_sections);
 	static TypedArray<NDArray> vsplit(const Variant& v, const Variant& indices_or_sections);
 	static Ref<NDArray> squeeze(const Variant& v);
+	static Ref<NDArray> expand_dims(const Variant& v, int64_t axis);
 
 	// Complex.
 	static Ref<NDArray> real(const Variant& a);

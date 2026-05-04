@@ -47,7 +47,7 @@ __all__ = [
 	# manipulation
 	"reshape", "broadcast_to", "broadcast_arrays",
 	"concat", "stack", "unstack", "flip", "moveaxis", "permute_dims",
-	"squeeze", "tile",
+	"squeeze", "tile", "expand_dims",
 	# utility
 	"diff",
 	# selection
@@ -515,6 +515,13 @@ def moveaxis(x, source, destination, /):
 
 def permute_dims(x, /, axes):
 	return _call("transpose", x, list(axes))
+
+
+def expand_dims(x, /, axis=0):
+	# Array-API spec: axis must lie in [-ndim-1, ndim], else IndexError.
+	if axis < -x.ndim - 1 or axis > x.ndim:
+		raise IndexError(f"expand_dims: axis {axis} out of range for ndim {x.ndim}")
+	return _call("expand_dims", x, axis)
 
 
 def squeeze(x, /, axis):

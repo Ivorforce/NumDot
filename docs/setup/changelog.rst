@@ -22,6 +22,7 @@ Many bugs in this release were found by running NumDot against the `Python array
 - ``nd.cumsum`` and ``nd.cumprod`` compute cumulative sums and products along an axis (or over the flattened input when ``axis`` is null).
 - ``nd.diff(a, n, axis)`` computes the n-th discrete difference along the given axis. Output shrinks by ``n`` along that axis (empty if ``n`` exceeds the axis length).
 - ``nd.meshgrid(arrays, indexing)`` builds coordinate grids from a list of 1-D arrays. ``indexing`` is a ``StringName`` accepting ``&"xy"`` (default, swaps the first two output axes) or ``&"ij"``.
+- ``nd.expand_dims(v, axis)`` inserts a length-1 dimension at the given axis (counts from the end if negative). Returns a view, no copy.
 
 **Changed**
 

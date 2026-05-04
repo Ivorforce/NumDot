@@ -21,7 +21,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           lfs: true
           sparse-checkout: 'demo'
@@ -40,7 +40,7 @@ jobs:
 
       # Download the relevant NumDot version.
       - name: Download Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           # TODO Can we automate choosing the run ID?
           run-id: ${{ vars.numdot_demo_run_id }}
@@ -55,7 +55,7 @@ jobs:
           godot --headless --verbose --export-release "Web" build/web/index.html
 
       - name: Upload Web Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: web
           path: demo/build/web
@@ -72,7 +72,7 @@ jobs:
           - web
     steps:
       - name: Download Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: ${{ matrix.channel }}
           path: build/${{ matrix.channel }}

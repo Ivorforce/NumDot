@@ -38,7 +38,7 @@ namespace va::op {
 		constexpr std::decay_t<T1> operator()(T1&& arg1) const { return ::round(std::forward<T1>(arg1)); }
 
 		template <class T1>
-		constexpr std::decay_t<std::complex<T1>> operator()(const std::complex<T1>& arg1) const { return std::complex(::round(arg1.real()), ::round(arg1.imag())); }
+		constexpr std::decay_t<std::complex<T1>> operator()(const std::complex<T1>& arg1) const { return std::complex<T1>(::round(arg1.real()), ::round(arg1.imag())); }
 	};
 
 	struct conj_fun {

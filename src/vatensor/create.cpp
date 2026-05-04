@@ -116,7 +116,10 @@ std::shared_ptr<VArray> va::linspace(VStoreAllocator& allocator, VScalar start, 
 	double stop_ = static_cast_scalar<double>(stop);
 
 	double step_ = 0.0;
-	if (num > 0) {
+	// num <= 1 leaves step at 0: out is empty (num=0) or just {start} (num=1).
+	// Computing the step would divide by zero (num=1 with endpoint) and bake nan
+	// into the single cell, even though numpy returns [start] for that case.
+	if (num > 1) {
 		step_ = (stop_ - start_) / (static_cast<double>(num) - (endpoint ? 1.0 : 0.0));
 	}
 
@@ -125,6 +128,14 @@ std::shared_ptr<VArray> va::linspace(VStoreAllocator& allocator, VScalar start, 
 
 	auto array = empty(allocator, process_dtype, shape_type {num});
 	_call_vfunc_inplace<const void*, const void*, std::size_t>(va::vfunc::tables::fill_consecutive, array->data, va::_call::get_value_ptr(start), va::_call::get_value_ptr(step), std::move(num));
+
+	// start + step*(num-1) drifts a few ULPs even in double, so the last cell
+	// almost never lands on `stop` exactly. Numpy fixes this by overwriting
+	// out[-1] = stop after the fill — same trick here.
+	if (endpoint && num > 1) {
+		va::axes_type last_idx { static_cast<std::ptrdiff_t>(num - 1) };
+		va::set_single_value(array->data, last_idx, static_cast_scalar(stop_, process_dtype));
+	}
 
 	if (dtype != process_dtype && dtype != DType::DTypeMax) {
 		return va::copy_as_dtype(allocator, array->data, dtype);

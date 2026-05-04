@@ -20,12 +20,9 @@ array_api_tests/test_creation_functions.py::test_full_like
 # === Section: NumDot bugs in test_creation_functions ===
 # - test_eye: nd.eye truncates the `k` offset to 32 bits (k=2^32 returns
 #   diagonal of ones instead of all zeros for a 1x1 matrix).
-# - test_linspace: nd.linspace endpoint precision (out[-1]=29.000...004 ≠ 29.0)
-#   and linspace(0, 0, 1) produces nan instead of 0.0.
 # - test_asarray_arrays: nd.asarray copy semantics — out reflects mutations to x
 #   when it shouldn't.
 array_api_tests/test_creation_functions.py::test_eye
-array_api_tests/test_creation_functions.py::test_linspace
 array_api_tests/test_creation_functions.py::test_asarray_arrays
 
 # === Section: NumDot precision edges (file issue) ===

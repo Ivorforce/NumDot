@@ -82,9 +82,6 @@ array_api_tests/test_operators_and_elementwise_functions.py::test_imag
 # numdot_xp now passes axis/keepdims/dtype through to nd reductions. Residual
 # failures below are either nd-binding gaps or known nd promotion divergences.
 
-# --- No nd binding (file issue if we want them) ---
-array_api_tests/test_utility_functions.py::test_diff
-array_api_tests/test_utility_functions.py::test_diff_append_prepend
 
 # === Hypothesis-flaky at high example counts ===
 # Pass when isolated, fail with default --max-examples on some seeds:

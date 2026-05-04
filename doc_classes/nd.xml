@@ -370,6 +370,17 @@
 				If the array has more than 2 dimensions, the given dimensions are removed, and the new dimension is inserted as the new last (innermost) dimension.
 			</description>
 		</method>
+		<method name="diff" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="n" type="int" default="1" />
+			<param index="2" name="axis" type="int" default="-1" />
+			<description>
+				The n-th discrete difference of [code]a[/code] along [code]axis[/code]. Each pass replaces neighbours with their difference, so output[i] = a[i+1] - a[i]; this repeats [code]n[/code] times.
+				The output shape matches the input except along [code]axis[/code], where it shrinks by [code]n[/code]. If [code]n[/code] is larger than the axis length, the output is empty along that axis.
+				[code]axis[/code] is a single dimension and may be negative to count from the end.
+			</description>
+		</method>
 		<method name="divide" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />

@@ -234,6 +234,12 @@ def main():
 			"casts": [],
 			"vargs": ["const va::axes_type*"]
 		})
+	vfuncs.append({
+		"name": "diff",
+		"specializations": specializations_all,
+		"casts": [],
+		"vargs": ["std::size_t", "std::ptrdiff_t"]
+	})
 	for rfunc in ["mean", "median", "variance", "standard_deviation", "norm_l0", "norm_l1", "norm_l2", "norm_linf"]:
 		vfuncs.append({
 			"name": rfunc,

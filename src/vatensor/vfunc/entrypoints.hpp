@@ -108,6 +108,20 @@ namespace va {
 	DEFINE_RFUNC_CALLER_UNARY0(prod)
 	DEFINE_AFUNC_CALLER_UNARY0(cumsum)
 	DEFINE_AFUNC_CALLER_UNARY0(cumprod)
+
+	inline void diff(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, std::size_t n, std::ptrdiff_t axis) {
+		const auto& in_shape = va::shape(a);
+		if (in_shape.empty()) throw std::runtime_error("diff requires at least 1-D input");
+		const std::size_t ndim = in_shape.size();
+		const std::size_t saxis = axis < 0 ? static_cast<std::size_t>(axis + static_cast<std::ptrdiff_t>(ndim)) : static_cast<std::size_t>(axis);
+		if (saxis >= ndim) throw std::runtime_error("diff: axis out of range");
+
+		va::shape_type result_shape = in_shape;
+		const std::size_t along = result_shape[saxis];
+		result_shape[saxis] = n >= along ? std::size_t(0) : along - n;
+
+		_call_vfunc_unary(allocator, vfunc::tables::diff, target, result_shape, a, std::move(n), std::move(axis));
+	}
 	DEFINE_RFUNC_CALLER_UNARY0(mean)
 	DEFINE_RFUNC_CALLER_UNARY0(median)
 	DEFINE_RFUNC_CALLER_UNARY0(variance)

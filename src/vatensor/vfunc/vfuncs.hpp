@@ -324,6 +324,7 @@ namespace va::vfunc::impl {
 	IMPLEMENT_UNARY_RFUNC(prod, xt::prod<typename R::value_type>(a)(), xt::prod<typename R::value_type>(a, *axes))
 	IMPLEMENT_UNARY_AFUNC(cumsum, xt::cumsum<typename R::value_type>(a), xt::cumsum<typename R::value_type>(a, (*axes)[0]))
 	IMPLEMENT_UNARY_AFUNC(cumprod, xt::cumprod<typename R::value_type>(a), xt::cumprod<typename R::value_type>(a, (*axes)[0]))
+	IMPLEMENT_UNARY_VFUNC(diff, xt::diff(a, n, axis), std::size_t n, std::ptrdiff_t axis)
 	IMPLEMENT_UNARY_RFUNC(mean, xt::mean(a)(), xt::mean(a, *axes))
 	IMPLEMENT_UNARY_RFUNC(median, xt::median(a), va::op::median(a, *axes))
 	IMPLEMENT_UNARY_RFUNC(variance, xt::variance(a)(), xt::variance(a, *axes))

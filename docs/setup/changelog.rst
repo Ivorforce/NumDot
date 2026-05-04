@@ -20,6 +20,7 @@ Many bugs in this release were found by running NumDot against the `Python array
 - ``nd.where(condition, x, y)`` selects from ``x`` where ``condition`` is true and from ``y`` otherwise, with broadcasting across all three operands.
 - New elementwise math functions: ``nd.log2``, ``nd.log10``, ``nd.log1p``, ``nd.expm1``, ``nd.logaddexp``, ``nd.hypot``, ``nd.copysign``, ``nd.signbit``, and ``nd.floor_divide`` (Python-style floor toward ``-infinity``, including for integer inputs).
 - ``nd.cumsum`` and ``nd.cumprod`` compute cumulative sums and products along an axis (or over the flattened input when ``axis`` is null).
+- ``nd.diff(a, n, axis)`` computes the n-th discrete difference along the given axis. Output shrinks by ``n`` along that axis (empty if ``n`` exceeds the axis length).
 
 **Changed**
 

@@ -188,6 +188,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("prod", "a", "axes"), &nd::prod, DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("cumsum", "a", "axis"), &nd::cumsum, DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("cumprod", "a", "axis"), &nd::cumprod, DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("diff", "a", "n", "axis"), &nd::diff, DEFVAL(static_cast<int64_t>(1)), DEFVAL(static_cast<int64_t>(-1)));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("mean", "a", "axes"), &nd::mean, DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("median", "a", "axes"), &nd::median, DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("var", "a", "axes"), &nd::variance, DEFVAL(nullptr));
@@ -1162,6 +1163,13 @@ Ref<NDArray> nd::cumsum(const Variant& a, const Variant& axis) {
 
 Ref<NDArray> nd::cumprod(const Variant& a, const Variant& axis) {
 	return REDUCTION1(cumprod, a, axis);
+}
+
+Ref<NDArray> nd::diff(const Variant& a, const int64_t n, const int64_t axis) {
+	if (n < 0) ERR_FAIL_V_MSG({}, "diff: n must be non-negative");
+	return map_variants_as_arrays_with_target([n, axis](const va::VArrayTarget& target, const std::shared_ptr<va::VArray>& v) {
+		va::diff(va::store::default_allocator, target, v->data, static_cast<std::size_t>(n), static_cast<std::ptrdiff_t>(axis));
+	}, a);
 }
 
 Ref<NDArray> nd::mean(const Variant& a, const Variant& axes) {

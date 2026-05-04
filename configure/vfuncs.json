@@ -4363,6 +4363,29 @@
 			]
 		},
 		{
+			"name": "diff",
+			"specializations": [
+				"?->?",
+				"f->f",
+				"d->d",
+				"F->F",
+				"D->D",
+				"b->b",
+				"h->h",
+				"i->i",
+				"l->l",
+				"B->B",
+				"H->H",
+				"I->I",
+				"L->L"
+			],
+			"casts": [],
+			"vargs": [
+				"std::size_t",
+				"std::ptrdiff_t"
+			]
+		},
+		{
 			"name": "mean",
 			"specializations": [
 				"D->D",

@@ -48,6 +48,8 @@ __all__ = [
 	"reshape", "broadcast_to", "broadcast_arrays",
 	"concat", "stack", "unstack", "flip", "moveaxis", "permute_dims",
 	"squeeze", "tile",
+	# utility
+	"diff",
 	# selection
 	"where",
 	# dtype
@@ -375,6 +377,18 @@ def cumulative_sum(x, /, *, axis=None, dtype=None, include_initial=False):
 
 def cumulative_prod(x, /, *, axis=None, dtype=None, include_initial=False):
 	return _cumulative("cumprod", x, axis, dtype, include_initial, identity=1)
+
+
+def diff(x, /, *, axis=-1, n=1, prepend=None, append=None):
+	if prepend is not None or append is not None:
+		parts = []
+		if prepend is not None:
+			parts.append(prepend)
+		parts.append(x)
+		if append is not None:
+			parts.append(append)
+		x = _call("concatenate", parts, axis)
+	return _call("diff", x, n, axis)
 
 
 def var(x, /, *, axis=None, correction=0.0, keepdims=False):

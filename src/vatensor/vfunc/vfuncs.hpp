@@ -91,6 +91,24 @@ namespace va::op {
 		}
 	};
 
+	// std::log(complex<F>) computes 0.5 * log(re² + im²) + i·atan2(im, re),
+	// so the real part overflows when re² + im² exceeds F's max even though
+	// |z| is finite (e.g. complex64 with |z| ≈ 1.8e19, |z|² ≈ 3.4e38 — right
+	// at float32 max). hypot scales internally, dodging the intermediate
+	// overflow; this matches numpy's complex log.
+	struct log_fun {
+		template <class T>
+		constexpr auto operator()(T arg) const {
+			if constexpr (xtl::is_complex<T>::value) {
+				using F = typename T::value_type;
+				return T(std::log(std::hypot(arg.real(), arg.imag())), std::atan2(arg.imag(), arg.real()));
+			}
+			else {
+				return std::log(arg);
+			}
+		}
+	};
+
 	// std::log2 / std::log10 / std::log1p / std::expm1 don't take std::complex.
 	// Compose via natural log / exp for complex; defer to the std specials for
 	// real dtypes since they're more accurate near zero / for huge magnitudes
@@ -305,7 +323,7 @@ namespace va::vfunc::impl {
 	IMPLEMENT_UNARY_VFUNC(sqrt, xt::sqrt(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_VFUNC(exp, xt::exp(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_VFUNC(expm1, xt::detail::make_xfunction<va::op::expm1_fun>(va::promote::to_num(a)))
-	IMPLEMENT_UNARY_VFUNC(log, xt::log(va::promote::to_num(a)))
+	IMPLEMENT_UNARY_VFUNC(log, xt::detail::make_xfunction<va::op::log_fun>(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_VFUNC(log2, xt::detail::make_xfunction<va::op::log2_fun>(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_VFUNC(log10, xt::detail::make_xfunction<va::op::log10_fun>(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_VFUNC(log1p, xt::detail::make_xfunction<va::op::log1p_fun>(va::promote::to_num(a)))

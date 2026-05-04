@@ -50,7 +50,6 @@ array_api_tests/test_operators_and_elementwise_functions.py::test_atan
 array_api_tests/test_operators_and_elementwise_functions.py::test_atanh
 array_api_tests/test_operators_and_elementwise_functions.py::test_tan
 array_api_tests/test_operators_and_elementwise_functions.py::test_tanh
-array_api_tests/test_operators_and_elementwise_functions.py::test_log
 array_api_tests/test_operators_and_elementwise_functions.py::test_sign
 
 # --- NumDot bug: nd.real / nd.imag on real-valued inputs ---

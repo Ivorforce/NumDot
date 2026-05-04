@@ -857,6 +857,15 @@
 				Returns a 0-dimension scalar if axes is null. In that case, consider [method ndf.median] or [method ndi.median].
 			</description>
 		</method>
+		<method name="meshgrid" qualifiers="static">
+			<return type="NDArray[]" />
+			<param index="0" name="arrays" type="Variant" />
+			<param index="1" name="indexing" type="StringName" default="&amp;&quot;xy&quot;" />
+			<description>
+				Build coordinate grids from a list of 1-D arrays. Returns an array of N arrays, one per input, each of the same shape, with input [code]i[/code] varying along its own axis.
+				With the default [code]&amp;"xy"[/code] indexing the first two output axes are swapped (matching the image-coordinate convention numpy uses), so for inputs [code]x[/code] (length [code]Nx[/code]) and [code]y[/code] (length [code]Ny[/code]) the outputs have shape [code](Ny, Nx)[/code]. With [code]&amp;"ij"[/code] indexing they have shape [code](Nx, Ny)[/code]. For three or more inputs only the first two dims are affected by the indexing choice.
+			</description>
+		</method>
 		<method name="min" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />

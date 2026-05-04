@@ -294,6 +294,47 @@ std::shared_ptr<VArray> va::reshape(VStoreAllocator& allocator, const std::share
 	);
 }
 
+std::vector<std::shared_ptr<va::VArray>> va::meshgrid(VStoreAllocator& allocator, const std::vector<std::shared_ptr<VArray>>& inputs, bool xy_indexing) {
+	const std::size_t n = inputs.size();
+	if (n == 0) return {};
+
+	// All inputs must be 1-D; record their lengths.
+	va::shape_type lens(n);
+	for (std::size_t i = 0; i < n; ++i) {
+		if (inputs[i]->dimension() != 1) {
+			throw std::runtime_error("meshgrid: each input must be 1-D");
+		}
+		lens[i] = inputs[i]->shape()[0];
+	}
+
+	// "xy" indexing swaps the first two output dims; "ij" leaves them alone.
+	// Higher dims are never reordered.
+	auto axis_of = [n, xy_indexing](std::size_t i) -> std::size_t {
+		if (xy_indexing && n >= 2) {
+			if (i == 0) return 1;
+			if (i == 1) return 0;
+		}
+		return i;
+	};
+
+	va::shape_type out_shape(n);
+	for (std::size_t i = 0; i < n; ++i) out_shape[axis_of(i)] = lens[i];
+
+	std::vector<std::shared_ptr<VArray>> outputs(n);
+	for (std::size_t i = 0; i < n; ++i) {
+		// Reshape input i to (1, ..., len_i, ..., 1) so broadcast-assign fills
+		// each output cell with the right element.
+		va::strides_type reshape_dims(n, 1);
+		reshape_dims[axis_of(i)] = static_cast<std::ptrdiff_t>(lens[i]);
+		const auto reshaped = va::reshape(allocator, inputs[i], reshape_dims);
+
+		auto out = va::empty(allocator, inputs[i]->dtype(), out_shape);
+		va::assign(out->data, reshaped->data);
+		outputs[i] = out;
+	}
+	return outputs;
+}
+
 std::shared_ptr<VArray> va::flatten(VStoreAllocator& allocator, const std::shared_ptr<VArray>& varray) {
 	if (varray->dimension() == 1) {
 		// Fast lane return.

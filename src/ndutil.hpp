@@ -13,6 +13,8 @@ StringName axis_all();
 StringName newaxis();
 StringName ellipsis();
 StringName no_value();
+StringName indexing_xy();
+StringName indexing_ij();
 
 bool is_no_value(const Variant& variant);
 

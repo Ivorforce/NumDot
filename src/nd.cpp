@@ -189,6 +189,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("cumsum", "a", "axis"), &nd::cumsum, DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("cumprod", "a", "axis"), &nd::cumprod, DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("diff", "a", "n", "axis"), &nd::diff, DEFVAL(static_cast<int64_t>(1)), DEFVAL(static_cast<int64_t>(-1)));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("meshgrid", "arrays", "indexing"), &nd::meshgrid, DEFVAL(::indexing_xy()));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("mean", "a", "axes"), &nd::mean, DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("median", "a", "axes"), &nd::median, DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("var", "a", "axes"), &nd::variance, DEFVAL(nullptr));
@@ -1170,6 +1171,27 @@ Ref<NDArray> nd::diff(const Variant& a, const int64_t n, const int64_t axis) {
 	return map_variants_as_arrays_with_target([n, axis](const va::VArrayTarget& target, const std::shared_ptr<va::VArray>& v) {
 		va::diff(va::store::default_allocator, target, v->data, static_cast<std::size_t>(n), static_cast<std::ptrdiff_t>(axis));
 	}, a);
+}
+
+TypedArray<NDArray> nd::meshgrid(const Variant& arrays, const StringName& indexing) {
+	try {
+		const bool xy = indexing == ::indexing_xy();
+		if (!xy && indexing != ::indexing_ij()) {
+			ERR_FAIL_V_MSG({}, "meshgrid: indexing must be \"xy\" or \"ij\"");
+		}
+		const auto vector = variant_to_vector(arrays);
+		const auto outputs = va::meshgrid(va::store::default_allocator, vector, xy);
+
+		TypedArray<NDArray> godot_array;
+		godot_array.resize(static_cast<int64_t>(outputs.size()));
+		for (std::size_t i = 0; i < outputs.size(); ++i) {
+			godot_array[static_cast<int64_t>(i)] = { memnew(NDArray(outputs[i])) };
+		}
+		return godot_array;
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
 }
 
 Ref<NDArray> nd::mean(const Variant& a, const Variant& axes) {

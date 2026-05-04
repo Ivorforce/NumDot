@@ -232,6 +232,8 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`median<class_nd_method_median>`\ (\ a\: ``Variant``, axes\: ``Variant`` = null\ ) |static|                                                                                            |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`Array<class_Array>`\[:ref:`NDArray<class_NDArray>`\] | :ref:`meshgrid<class_nd_method_meshgrid>`\ (\ arrays\: ``Variant``, indexing\: ``StringName`` = &"xy"\ ) |static|                                                                           |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`min<class_nd_method_min>`\ (\ a\: ``Variant``, axes\: ``Variant`` = null\ ) |static|                                                                                                  |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`minimum<class_nd_method_minimum>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                    |
@@ -1894,6 +1896,20 @@ Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.m
 Compute the median along the specified axis. The median is the middle value when you sort the values.
 
 Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndf.median()<class_ndf_method_median>` or :ref:`ndi.median()<class_ndi_method_median>`.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_meshgrid:
+
+.. rst-class:: classref-method
+
+:ref:`Array<class_Array>`\[:ref:`NDArray<class_NDArray>`\] **meshgrid**\ (\ arrays\: ``Variant``, indexing\: ``StringName`` = &"xy"\ ) |static| :ref:`🔗<class_nd_method_meshgrid>`
+
+Build coordinate grids from a list of 1-D arrays. Returns an array of N arrays, one per input, each of the same shape, with input ``i`` varying along its own axis.
+
+With the default ``&"xy"`` indexing the first two output axes are swapped (matching the image-coordinate convention numpy uses), so for inputs ``x`` (length ``Nx``) and ``y`` (length ``Ny``) the outputs have shape ``(Ny, Nx)``. With ``&"ij"`` indexing they have shape ``(Nx, Ny)``. For three or more inputs only the first two dims are affected by the indexing choice.
 
 .. rst-class:: classref-item-separator
 

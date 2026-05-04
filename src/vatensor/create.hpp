@@ -18,6 +18,13 @@ namespace va {
 
 	std::shared_ptr<VArray> reshape(VStoreAllocator& allocator, const std::shared_ptr<VArray>& varray, strides_type new_shape);
 	std::shared_ptr<VArray> flatten(VStoreAllocator& allocator, const std::shared_ptr<VArray>& varray);
+
+	// Coordinate grids from N 1-D arrays. With "ij" indexing each output has
+	// shape (len(x0), len(x1), ..., len(xN-1)); with "xy" indexing the first
+	// two dims are swapped (and only that — higher dims are unchanged), so for
+	// 2-D inputs the result is the (rows=y, cols=x) image-coordinate layout.
+	// Outputs are independent materialized arrays (no shared storage).
+	std::vector<std::shared_ptr<VArray>> meshgrid(VStoreAllocator& allocator, const std::vector<std::shared_ptr<VArray>>& inputs, bool xy_indexing);
 }
 
 #endif //VATENSOR_FILL_H

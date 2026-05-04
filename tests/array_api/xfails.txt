@@ -10,11 +10,6 @@
 #   4. Bring a line to zero by either: implementing the missing shim in
 #      numdot_xp, fixing a NumDot bug, or filing one (and noting upstream).
 
-# === Section: missing adapter shim (work item: extend numdot_xp) ===
-# NumDot doesn't expose meshgrid; would need to either implement it via
-# nd primitives or file an issue.
-array_api_tests/test_creation_functions.py::test_meshgrid
-
 # === Section: NumDot bug — file issue ===
 # nd.full and nd.full_like both error with "Incompatible dimension of
 # arrays" when the fill_value is a 0-d complex and the dtype is complex.
@@ -114,7 +109,6 @@ array_api_tests/test_signatures.py::test_func_signature[argmin]
 array_api_tests/test_signatures.py::test_func_signature[nonzero]
 array_api_tests/test_signatures.py::test_func_signature[searchsorted]
 array_api_tests/test_signatures.py::test_func_signature[from_dlpack]
-array_api_tests/test_signatures.py::test_func_signature[meshgrid]
 array_api_tests/test_signatures.py::test_func_signature[tril]
 array_api_tests/test_signatures.py::test_func_signature[triu]
 array_api_tests/test_signatures.py::test_func_signature[expand_dims]

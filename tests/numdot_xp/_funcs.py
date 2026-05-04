@@ -23,7 +23,7 @@ from . import _call, ndarray
 __all__ = [
 	# creation
 	"asarray", "zeros", "ones", "full", "arange", "empty", "eye", "linspace",
-	"full_like", "ones_like", "zeros_like", "empty_like",
+	"full_like", "ones_like", "zeros_like", "empty_like", "meshgrid",
 	# elementwise (binary)
 	"add", "subtract", "multiply", "divide", "floor_divide", "pow", "remainder",
 	"equal", "not_equal", "less", "less_equal", "greater", "greater_equal",
@@ -450,6 +450,35 @@ def unstack(x, /, *, axis=0):
 	# returning a list of arrays (only one blob comes back today), so we do
 	# the split client-side via numpy.
 	return tuple(arr.view(ndarray) for arr in np.moveaxis(np.asarray(x), axis, 0))
+
+
+def meshgrid(*arrays, indexing="xy"):
+	# nd.meshgrid exists on the C++ side, but the bridge can't return a list of
+	# arrays in one call (same limitation as unstack/split). Build each output
+	# independently: reshape input i to a broadcast-shape, then materialize.
+	if not arrays:
+		return []
+	n = len(arrays)
+	if builtins.any(a.ndim != 1 for a in arrays):
+		raise ValueError("meshgrid: each input must be 1-D")
+	xy = (indexing == "xy") and n >= 2
+	def axis_of(i):
+		if xy and i == 0: return 1
+		if xy and i == 1: return 0
+		return i
+	out_shape = [None] * n
+	for i, a in enumerate(arrays):
+		out_shape[axis_of(i)] = a.shape[0]
+	out_shape = tuple(out_shape)
+	outs = []
+	for i, a in enumerate(arrays):
+		dims = [1] * n
+		dims[axis_of(i)] = a.shape[0]
+		reshaped = _call("reshape", a, list(dims))
+		# Materialize via broadcast_to (numpy-side; nd has no broadcast_to yet).
+		out = np.broadcast_to(np.asarray(reshaped), out_shape).copy()
+		outs.append(out.view(ndarray))
+	return outs
 
 
 def flip(x, /, *, axis=None):

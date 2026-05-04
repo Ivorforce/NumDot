@@ -21,6 +21,7 @@ Many bugs in this release were found by running NumDot against the `Python array
 - New elementwise math functions: ``nd.log2``, ``nd.log10``, ``nd.log1p``, ``nd.expm1``, ``nd.logaddexp``, ``nd.hypot``, ``nd.copysign``, ``nd.signbit``, and ``nd.floor_divide`` (Python-style floor toward ``-infinity``, including for integer inputs).
 - ``nd.cumsum`` and ``nd.cumprod`` compute cumulative sums and products along an axis (or over the flattened input when ``axis`` is null).
 - ``nd.diff(a, n, axis)`` computes the n-th discrete difference along the given axis. Output shrinks by ``n`` along that axis (empty if ``n`` exceeds the axis length).
+- ``nd.meshgrid(arrays, indexing)`` builds coordinate grids from a list of 1-D arrays. ``indexing`` is a ``StringName`` accepting ``&"xy"`` (default, swaps the first two output axes) or ``&"ij"``.
 
 **Changed**
 

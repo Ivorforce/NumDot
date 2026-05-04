@@ -575,7 +575,7 @@
 		<method name="hsplit" qualifiers="static">
 			<return type="NDArray[]" />
 			<param index="0" name="v" type="Variant" />
-			<param index="1" name="indices_or_section_size" type="Variant" />
+			<param index="1" name="indices_or_sections" type="Variant" />
 			<description>
 				Split an array into multiple sub-arrays horizontally (column-wise).
 				Please refer to [method split]. hsplit is equivalent to [method split] with axis=1, the array is always split along the second axis except for 1-D arrays, where it is split at axis=0.
@@ -1103,14 +1103,14 @@
 		<method name="split" qualifiers="static">
 			<return type="NDArray[]" />
 			<param index="0" name="v" type="Variant" />
-			<param index="1" name="indices_or_section_size" type="Variant" />
+			<param index="1" name="indices_or_sections" type="Variant" />
 			<param index="2" name="axis" type="int" default="0" />
 			<description>
 				Split an array into multiple sub-arrays as views into v.
 				This can be regarded as the opposite of [method concatenate].
-				[param indices_or_section_size] must be either:
-				An integer that the array can be evenly divided into.
-				A list of sorted indices to split the array at.
+				[param indices_or_sections] must be either:
+				An integer N — the array is divided into N equal sub-arrays along [param axis]. The axis length must be divisible by N.
+				A list of sorted indices marking where along [param axis] the array is split.
 			</description>
 		</method>
 		<method name="sqrt" qualifiers="static">
@@ -1322,7 +1322,7 @@
 		<method name="vsplit" qualifiers="static">
 			<return type="NDArray[]" />
 			<param index="0" name="v" type="Variant" />
-			<param index="1" name="indices_or_section_size" type="Variant" />
+			<param index="1" name="indices_or_sections" type="Variant" />
 			<description>
 				Split an array into multiple sub-arrays vertically (row-wise).
 				Please refer to [method split]. vsplit is equivalent to split with axis=0 (default), the array is always split along the first axis regardless of the array dimension.

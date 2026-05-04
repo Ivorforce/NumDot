@@ -123,9 +123,9 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("hstack", "v", "dtype"), &nd::hstack, DEFVAL(nd::DType::DTypeMax));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("vstack", "v", "dtype"), &nd::vstack, DEFVAL(nd::DType::DTypeMax));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("tile", "v", "reps", "inner"), &nd::tile, DEFVAL(false));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("split", "v", "indices_or_section_size", "axis"), &nd::split, DEFVAL(0));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("hsplit", "v", "indices_or_section_size"), &nd::hsplit);
-	godot::ClassDB::bind_static_method("nd", D_METHOD("vsplit", "v", "indices_or_section_size"), &nd::vsplit);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("split", "v", "indices_or_sections", "axis"), &nd::split, DEFVAL(0));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("hsplit", "v", "indices_or_sections"), &nd::hsplit);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("vsplit", "v", "indices_or_sections"), &nd::vsplit);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("squeeze", "v"), &nd::squeeze);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("real", "v"), &nd::real);
@@ -842,11 +842,14 @@ Ref<NDArray> nd::tile(const Variant& v, const Variant& reps, bool inner) {
 	}
 }
 
-TypedArray<NDArray> split_(const va::VArray& array, const std::size_t section_size, const size_t axis) {
-	ERR_FAIL_COND_V_MSG(array.shape()[axis] % section_size != 0, {}, "Cannot split array equally with this section size.");
+TypedArray<NDArray> split_(const va::VArray& array, const std::size_t n_sections, const size_t axis) {
+	ERR_FAIL_COND_V_MSG(n_sections == 0, {}, "Number of sections must be at least 1.");
+	ERR_FAIL_COND_V_MSG(array.shape()[axis] % n_sections != 0, {}, "Array does not divide evenly into the requested number of sections.");
+
+	const std::size_t section_size = array.shape()[axis] / n_sections;
 
 	auto godot_array = TypedArray<NDArray>();
-	godot_array.resize(static_cast<std::int64_t>(array.shape()[axis]) / section_size);
+	godot_array.resize(static_cast<std::int64_t>(n_sections));
 
 	xt::xstrided_slice_vector slice(axis + 1);
 	std::fill(slice.begin(), slice.end() - 1, xt::all());
@@ -879,40 +882,40 @@ TypedArray<NDArray> split_(const va::VArray& array, const va::strides_type indic
 	return godot_array;
 }
 
-TypedArray<NDArray> split_(const std::shared_ptr<va::VArray>& array, const Variant& indices_or_section_size, int64_t axis) {
+TypedArray<NDArray> split_(const std::shared_ptr<va::VArray>& array, const Variant& indices_or_sections, int64_t axis) {
 	if (axis < 0) axis += static_cast<int64_t>(array->dimension());
 	ERR_FAIL_COND_V_MSG(axis < 0 || axis >= array->dimension(), {}, "Axis out of range.");
 
-	if (indices_or_section_size.get_type() == Variant::Type::INT) {
-		return ::split_(*array, static_cast<std::size_t>(static_cast<int64_t>(indices_or_section_size)), static_cast<size_t>(axis));
+	if (indices_or_sections.get_type() == Variant::Type::INT) {
+		return ::split_(*array, static_cast<std::size_t>(static_cast<int64_t>(indices_or_sections)), static_cast<size_t>(axis));
 	}
 
-	const auto ints = variant_to_axes(indices_or_section_size);
+	const auto ints = variant_to_axes(indices_or_sections);
 	return ::split_(*array, ints, static_cast<size_t>(axis));
 }
 
-TypedArray<NDArray> nd::split(const Variant& v, const Variant& indices_or_section_size, int64_t axis) {
+TypedArray<NDArray> nd::split(const Variant& v, const Variant& indices_or_sections, int64_t axis) {
 	try {
 		const auto array = variant_as_array(v);
-		return split_(array, indices_or_section_size, axis);
+		return split_(array, indices_or_sections, axis);
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
 	}
 }
 
-TypedArray<NDArray> nd::hsplit(const Variant& v, const Variant& indices_or_section_size) {
+TypedArray<NDArray> nd::hsplit(const Variant& v, const Variant& indices_or_sections) {
 	try {
 		const auto array = variant_as_array(v);
-		return split_(array, indices_or_section_size, array->dimension() == 1 ? 0 : 1);
+		return split_(array, indices_or_sections, array->dimension() == 1 ? 0 : 1);
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
 	}
 }
 
-TypedArray<NDArray> nd::vsplit(const Variant& v, const Variant& indices_or_section_size) {
-	return nd::split(v, indices_or_section_size, 0);
+TypedArray<NDArray> nd::vsplit(const Variant& v, const Variant& indices_or_sections) {
+	return nd::split(v, indices_or_sections, 0);
 }
 
 Ref<NDArray> nd::squeeze(const Variant& v) {

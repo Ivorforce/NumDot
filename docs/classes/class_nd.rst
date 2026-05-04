@@ -166,7 +166,7 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`greater_equal<class_nd_method_greater_equal>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                        |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`Array<class_Array>`\[:ref:`NDArray<class_NDArray>`\] | :ref:`hsplit<class_nd_method_hsplit>`\ (\ v\: ``Variant``, indices_or_section_size\: ``Variant``\ ) |static|                                                                                |
+   | :ref:`Array<class_Array>`\[:ref:`NDArray<class_NDArray>`\] | :ref:`hsplit<class_nd_method_hsplit>`\ (\ v\: ``Variant``, indices_or_sections\: ``Variant``\ ) |static|                                                                                    |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`hstack<class_nd_method_hstack>`\ (\ v\: ``Variant``, dtype\: :ref:`DType<enum_nd_DType>` = 13\ ) |static|                                                                             |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -290,7 +290,7 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`sliding_window_view<class_nd_method_sliding_window_view>`\ (\ array\: ``Variant``, window_shape\: ``Variant``\ ) |static|                                                             |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`Array<class_Array>`\[:ref:`NDArray<class_NDArray>`\] | :ref:`split<class_nd_method_split>`\ (\ v\: ``Variant``, indices_or_section_size\: ``Variant``, axis\: ``int`` = 0\ ) |static|                                                              |
+   | :ref:`Array<class_Array>`\[:ref:`NDArray<class_NDArray>`\] | :ref:`split<class_nd_method_split>`\ (\ v\: ``Variant``, indices_or_sections\: ``Variant``, axis\: ``int`` = 0\ ) |static|                                                                  |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`sqrt<class_nd_method_sqrt>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                           |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -338,7 +338,7 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`vector_as_complex<class_nd_method_vector_as_complex>`\ (\ v\: ``Variant``, keepdims\: ``bool`` = false, dtype\: :ref:`DType<enum_nd_DType>` = 13\ ) |static|                          |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`Array<class_Array>`\[:ref:`NDArray<class_NDArray>`\] | :ref:`vsplit<class_nd_method_vsplit>`\ (\ v\: ``Variant``, indices_or_section_size\: ``Variant``\ ) |static|                                                                                |
+   | :ref:`Array<class_Array>`\[:ref:`NDArray<class_NDArray>`\] | :ref:`vsplit<class_nd_method_vsplit>`\ (\ v\: ``Variant``, indices_or_sections\: ``Variant``\ ) |static|                                                                                    |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`vstack<class_nd_method_vstack>`\ (\ v\: ``Variant``, dtype\: :ref:`DType<enum_nd_DType>` = 13\ ) |static|                                                                             |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1445,7 +1445,7 @@ Return (x1 >= x2) element-wise.
 
 .. rst-class:: classref-method
 
-:ref:`Array<class_Array>`\[:ref:`NDArray<class_NDArray>`\] **hsplit**\ (\ v\: ``Variant``, indices_or_section_size\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_hsplit>`
+:ref:`Array<class_Array>`\[:ref:`NDArray<class_NDArray>`\] **hsplit**\ (\ v\: ``Variant``, indices_or_sections\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_hsplit>`
 
 Split an array into multiple sub-arrays horizontally (column-wise).
 
@@ -2295,17 +2295,17 @@ Also known as rolling or moving window, the window slides across all dimensions 
 
 .. rst-class:: classref-method
 
-:ref:`Array<class_Array>`\[:ref:`NDArray<class_NDArray>`\] **split**\ (\ v\: ``Variant``, indices_or_section_size\: ``Variant``, axis\: ``int`` = 0\ ) |static| :ref:`🔗<class_nd_method_split>`
+:ref:`Array<class_Array>`\[:ref:`NDArray<class_NDArray>`\] **split**\ (\ v\: ``Variant``, indices_or_sections\: ``Variant``, axis\: ``int`` = 0\ ) |static| :ref:`🔗<class_nd_method_split>`
 
 Split an array into multiple sub-arrays as views into v.
 
 This can be regarded as the opposite of :ref:`concatenate()<class_nd_method_concatenate>`.
 
-\ ``indices_or_section_size`` must be either:
+\ ``indices_or_sections`` must be either:
 
-An integer that the array can be evenly divided into.
+An integer N — the array is divided into N equal sub-arrays along ``axis``. The axis length must be divisible by N.
 
-A list of sorted indices to split the array at.
+A list of sorted indices marking where along ``axis`` the array is split.
 
 .. rst-class:: classref-item-separator
 
@@ -2645,7 +2645,7 @@ This function will return a view if possible, but create a new array otherwise.
 
 .. rst-class:: classref-method
 
-:ref:`Array<class_Array>`\[:ref:`NDArray<class_NDArray>`\] **vsplit**\ (\ v\: ``Variant``, indices_or_section_size\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_vsplit>`
+:ref:`Array<class_Array>`\[:ref:`NDArray<class_NDArray>`\] **vsplit**\ (\ v\: ``Variant``, indices_or_sections\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_vsplit>`
 
 Split an array into multiple sub-arrays vertically (row-wise).
 

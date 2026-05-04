@@ -112,9 +112,9 @@ public:
 	static Ref<NDArray> hstack(const Variant& v, DType dtype = DType::DTypeMax);
 	static Ref<NDArray> vstack(const Variant& v, DType dtype = DType::DTypeMax);
 	static Ref<NDArray> tile(const Variant& v, const Variant& reps, bool inner = false);
-	static TypedArray<NDArray> split(const Variant& v, const Variant& indices_or_section_size, int64_t axis);
-	static TypedArray<NDArray> hsplit(const Variant& v, const Variant& indices_or_section_size);
-	static TypedArray<NDArray> vsplit(const Variant& v, const Variant& indices_or_section_size);
+	static TypedArray<NDArray> split(const Variant& v, const Variant& indices_or_sections, int64_t axis);
+	static TypedArray<NDArray> hsplit(const Variant& v, const Variant& indices_or_sections);
+	static TypedArray<NDArray> vsplit(const Variant& v, const Variant& indices_or_sections);
 	static Ref<NDArray> squeeze(const Variant& v);
 
 	// Complex.

@@ -24,6 +24,7 @@ The suite is made to test numpy-like APIs, and ended up surfacing a number of ed
 
 **Changed**
 
+- ``nd.split`` (and the ``nd.hsplit`` / ``nd.vsplit`` shorthands) now treats an integer ``indices_or_sections`` as the number of equal sub-arrays to produce, matching numpy. Previously the integer was interpreted as the size of each chunk, so ``nd.split(arr, 3, 0)`` on a length-3 axis returned one full-sized array instead of three length-1 arrays. The parameter has been renamed from ``indices_or_section_size`` to ``indices_or_sections`` to reflect this. Callers passing the chunk size will silently get different results — pass ``axis_length / old_value`` to recover the previous behavior.
 - Binary ops (``nd.add``, ``nd.subtract``, comparisons, bitwise, ...) no longer widen the result dtype when one operand is a GDScript ``int``/``float``/``bool`` scalar. ``nd.add(uint8_arr, 5)`` now stays ``uint8`` instead of returning ``int64``, matching the Array API spec and numpy 2.x's NEP-50 promotion. To keep the old widening behavior, wrap the scalar as a typed array (e.g. ``nd.array(5, nd.Int64)``).
 
 **Fixed**

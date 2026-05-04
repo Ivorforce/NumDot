@@ -43,6 +43,7 @@ __all__ = [
 	"clip",
 	# reductions
 	"all", "any", "sum", "prod", "max", "min", "mean", "std", "var",
+	"cumulative_sum", "cumulative_prod",
 	# manipulation
 	"reshape", "broadcast_to", "broadcast_arrays",
 	"concat", "stack", "unstack", "flip", "moveaxis", "permute_dims",
@@ -347,6 +348,33 @@ def prod(x, /, *, axis=None, dtype=None, keepdims=False):
 	if dtype is not None:
 		out = _call("array", out, dtype)
 	return out
+
+
+def _cumulative(nd_func, x, axis, dtype, include_initial, identity):
+	if axis is None:
+		out = _call(nd_func, x)
+		axis_norm = 0
+	else:
+		axis_norm = axis if axis >= 0 else axis + x.ndim
+		out = _call(nd_func, x, axis)
+	# Post-cast (mirrors sum/prod): nd's accumulator dtype already promotes
+	# narrow ints to int64; casting before would re-introduce overflow.
+	if dtype is not None:
+		out = _call("array", out, dtype)
+	if include_initial:
+		prefix_shape = list(out.shape)
+		prefix_shape[axis_norm] = 1
+		prefix = np.full(prefix_shape, identity, dtype=out.dtype)
+		out = _call("concatenate", [prefix, out], axis_norm)
+	return out
+
+
+def cumulative_sum(x, /, *, axis=None, dtype=None, include_initial=False):
+	return _cumulative("cumsum", x, axis, dtype, include_initial, identity=0)
+
+
+def cumulative_prod(x, /, *, axis=None, dtype=None, include_initial=False):
+	return _cumulative("cumprod", x, axis, dtype, include_initial, identity=1)
 
 
 def var(x, /, *, axis=None, correction=0.0, keepdims=False):

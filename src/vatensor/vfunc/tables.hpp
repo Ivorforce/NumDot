@@ -75,6 +75,8 @@ namespace va::vfunc::tables {
 	
 	VA_TABLES_EXTERN UFuncTableUnary sum;
 	VA_TABLES_EXTERN UFuncTableUnary prod;
+	VA_TABLES_EXTERN UFuncTableUnary cumsum;
+	VA_TABLES_EXTERN UFuncTableUnary cumprod;
 	VA_TABLES_EXTERN UFuncTableUnary mean;
 	VA_TABLES_EXTERN UFuncTableUnary median;
 	VA_TABLES_EXTERN UFuncTableUnary variance;

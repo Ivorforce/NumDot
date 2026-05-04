@@ -4319,6 +4319,50 @@
 			]
 		},
 		{
+			"name": "cumsum",
+			"specializations": [
+				"?->l",
+				"B->L",
+				"D->D",
+				"F->F",
+				"H->L",
+				"I->L",
+				"Q->L",
+				"b->l",
+				"d->d",
+				"f->f",
+				"h->l",
+				"i->l",
+				"q->q"
+			],
+			"casts": [],
+			"vargs": [
+				"const va::axes_type*"
+			]
+		},
+		{
+			"name": "cumprod",
+			"specializations": [
+				"?->l",
+				"B->L",
+				"D->D",
+				"F->F",
+				"H->L",
+				"I->L",
+				"Q->L",
+				"b->l",
+				"d->d",
+				"f->f",
+				"h->l",
+				"i->l",
+				"q->q"
+			],
+			"casts": [],
+			"vargs": [
+				"const va::axes_type*"
+			]
+		},
+		{
 			"name": "mean",
 			"specializations": [
 				"D->D",

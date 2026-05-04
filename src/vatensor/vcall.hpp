@@ -141,6 +141,28 @@ namespace va {
 		}
 	}
 
+	// Cumulative ops preserve input shape along the cumulated axis (or flatten
+	// to 1-D when no axis is given). Same dtype-promotion rules as reductions,
+	// but a different output-shape allocator, so it can't reuse call_rfunc_unary.
+	template<typename... Args>
+	void call_accumulate_unary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableUnary& table, const VArrayTarget& target, const VData& a, const va::axes_type* axes, Args&&... args) {
+		if (axes) {
+			if (axes->size() != 1) throw std::runtime_error("Cumulative op accepts exactly one axis.");
+			const va::axes_type axis_canon = canonicalize_reduction_axes(*axes, va::shape(a).size());
+			const va::shape_type result_shape = va::shape(a);
+
+			_call_vfunc_unary(allocator, table, target, result_shape, a, &axis_canon, std::forward<Args>(args)...);
+		}
+		else {
+			const auto& in_shape = va::shape(a);
+			std::size_t total = 1;
+			for (const auto d : in_shape) total *= d;
+			const va::shape_type result_shape { total };
+
+			_call_vfunc_unary(allocator, table, target, result_shape, a, nullptr, std::forward<Args>(args)...);
+		}
+	}
+
 	template<typename A, typename B, typename... Args>
 	void _call_vfunc_binary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableBinary& table, const VArrayTarget& target, const shape_type& result_shape, const A& a, const B& b, Args&&... args) {
 		const DType a_type = va::dtype(a);

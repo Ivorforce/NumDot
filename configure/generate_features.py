@@ -227,7 +227,7 @@ def main():
 		"casts": [],
 		"vargs": ["double", "double", "bool"]
 	})
-	for rfunc in ["sum", "prod"]:
+	for rfunc in ["sum", "prod", "cumsum", "cumprod"]:
 		vfuncs.append({
 			"name": rfunc,
 			"specializations": specializations_at_least_int64,

@@ -106,6 +106,10 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`cross<class_nd_method_cross>`\ (\ a\: ``Variant``, b\: ``Variant``, axisa\: ``int`` = -1, axisb\: ``int`` = -1, axisc\: ``int`` = -1\ ) |static|                                      |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`cumprod<class_nd_method_cumprod>`\ (\ a\: ``Variant``, axis\: ``Variant`` = null\ ) |static|                                                                                          |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`cumsum<class_nd_method_cumsum>`\ (\ a\: ``Variant``, axis\: ``Variant`` = null\ ) |static|                                                                                            |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDRandomGenerator<class_NDRandomGenerator>`          | :ref:`default_rng<class_nd_method_default_rng>`\ (\ seed\: ``Variant`` = null\ ) |static|                                                                                                   |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`deg2rad<class_nd_method_deg2rad>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                     |
@@ -1020,6 +1024,38 @@ Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndi.c
 Return the cross product of two (arrays of) vectors.
 
 The cross product of a and b in R3 is a vector perpendicular to both a and b. If a and b are arrays of vectors, the vectors are defined by the last axis of a and b by default, and these axes can have dimensions 2 or 3. Where the dimension of either a or b is 2, the third component of the input vector is assumed to be zero and the cross product calculated accordingly. In cases where both input vectors have dimension 2, the z-component of the cross product is returned.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_cumprod:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **cumprod**\ (\ a\: ``Variant``, axis\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_cumprod>`
+
+Cumulative product of array elements along the given axis. The output preserves the input shape; element ``i`` along ``axis`` holds the product of all elements at positions ``0..i``.
+
+If ``axis`` is null the input is flattened first and a 1-D result is returned.
+
+Like :ref:`prod()<class_nd_method_prod>`, the accumulator is widened to int64 / uint64 for narrow integer dtypes to avoid mid-pass overflow.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_cumsum:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **cumsum**\ (\ a\: ``Variant``, axis\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_cumsum>`
+
+Cumulative sum of array elements along the given axis. The output preserves the input shape; element ``i`` along ``axis`` holds the sum of all elements at positions ``0..i``.
+
+If ``axis`` is null the input is flattened first and a 1-D result is returned.
+
+Like :ref:`sum()<class_nd_method_sum>`, the accumulator is widened to int64 / uint64 for narrow integer dtypes to avoid mid-pass overflow.
 
 .. rst-class:: classref-item-separator
 

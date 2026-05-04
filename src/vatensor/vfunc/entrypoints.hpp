@@ -21,6 +21,11 @@ inline void UFUNC_NAME(VStoreAllocator& allocator, const VArrayTarget& target, c
 	va::call_rfunc_unary(allocator, vfunc::tables::UFUNC_NAME, target, a, axes);\
 }
 
+#define DEFINE_AFUNC_CALLER_UNARY0(UFUNC_NAME)\
+inline void UFUNC_NAME(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const va::axes_type* axes) {\
+	va::call_accumulate_unary(allocator, vfunc::tables::UFUNC_NAME, target, a, axes);\
+}
+
 #define DEFINE_VFUNC_CALLER_BINARY0(UFUNC_NAME)\
 inline void UFUNC_NAME(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b) {\
 	va::call_vfunc_binary(allocator, vfunc::tables::UFUNC_NAME, target, a, b);\
@@ -101,6 +106,8 @@ namespace va {
 
 	DEFINE_RFUNC_CALLER_UNARY0(sum)
 	DEFINE_RFUNC_CALLER_UNARY0(prod)
+	DEFINE_AFUNC_CALLER_UNARY0(cumsum)
+	DEFINE_AFUNC_CALLER_UNARY0(cumprod)
 	DEFINE_RFUNC_CALLER_UNARY0(mean)
 	DEFINE_RFUNC_CALLER_UNARY0(median)
 	DEFINE_RFUNC_CALLER_UNARY0(variance)

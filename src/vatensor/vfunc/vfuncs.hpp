@@ -231,6 +231,17 @@ inline void UFUNC_NAME(R& ret, const A& a, const va::axes_type* axes) {\
 	}\
 }
 
+#define IMPLEMENT_UNARY_AFUNC(UFUNC_NAME, FLAT, AXIS)\
+template <typename R, typename A>\
+inline void UFUNC_NAME(R& ret, const A& a, const va::axes_type* axes) {\
+	if (axes) {\
+		va::broadcasting_assign_typesafe(ret, AXIS);\
+	}\
+	else {\
+		va::broadcasting_assign_typesafe(ret, FLAT);\
+	}\
+}
+
 #define IMPLEMENT_BINARY_RFUNC(UFUNC_NAME, SINGLE, MULTI)\
 template <typename R, typename A, typename B>\
 inline void UFUNC_NAME(R& ret, const A& a, const B& b, const va::axes_type* axes) {\
@@ -311,6 +322,8 @@ namespace va::vfunc::impl {
 	// the wraparound propagates into the int64 result.
 	IMPLEMENT_UNARY_RFUNC(sum, xt::sum<typename R::value_type>(a)(), xt::sum<typename R::value_type>(a, *axes))
 	IMPLEMENT_UNARY_RFUNC(prod, xt::prod<typename R::value_type>(a)(), xt::prod<typename R::value_type>(a, *axes))
+	IMPLEMENT_UNARY_AFUNC(cumsum, xt::cumsum<typename R::value_type>(a), xt::cumsum<typename R::value_type>(a, (*axes)[0]))
+	IMPLEMENT_UNARY_AFUNC(cumprod, xt::cumprod<typename R::value_type>(a), xt::cumprod<typename R::value_type>(a, (*axes)[0]))
 	IMPLEMENT_UNARY_RFUNC(mean, xt::mean(a)(), xt::mean(a, *axes))
 	IMPLEMENT_UNARY_RFUNC(median, xt::median(a), va::op::median(a, *axes))
 	IMPLEMENT_UNARY_RFUNC(variance, xt::variance(a)(), xt::variance(a, *axes))

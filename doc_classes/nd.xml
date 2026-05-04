@@ -314,6 +314,26 @@
 				The cross product of a and b in R3 is a vector perpendicular to both a and b. If a and b are arrays of vectors, the vectors are defined by the last axis of a and b by default, and these axes can have dimensions 2 or 3. Where the dimension of either a or b is 2, the third component of the input vector is assumed to be zero and the cross product calculated accordingly. In cases where both input vectors have dimension 2, the z-component of the cross product is returned.
 			</description>
 		</method>
+		<method name="cumprod" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="axis" type="Variant" default="null" />
+			<description>
+				Cumulative product of array elements along the given axis. The output preserves the input shape; element [code]i[/code] along [code]axis[/code] holds the product of all elements at positions [code]0..i[/code].
+				If [code]axis[/code] is null the input is flattened first and a 1-D result is returned.
+				Like [method prod], the accumulator is widened to int64 / uint64 for narrow integer dtypes to avoid mid-pass overflow.
+			</description>
+		</method>
+		<method name="cumsum" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="axis" type="Variant" default="null" />
+			<description>
+				Cumulative sum of array elements along the given axis. The output preserves the input shape; element [code]i[/code] along [code]axis[/code] holds the sum of all elements at positions [code]0..i[/code].
+				If [code]axis[/code] is null the input is flattened first and a 1-D result is returned.
+				Like [method sum], the accumulator is widened to int64 / uint64 for narrow integer dtypes to avoid mid-pass overflow.
+			</description>
+		</method>
 		<method name="default_rng" qualifiers="static">
 			<return type="NDRandomGenerator" />
 			<param index="0" name="seed" type="Variant" default="null" />

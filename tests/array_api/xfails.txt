@@ -83,8 +83,6 @@ array_api_tests/test_operators_and_elementwise_functions.py::test_imag
 # failures below are either nd-binding gaps or known nd promotion divergences.
 
 # --- No nd binding (file issue if we want them) ---
-array_api_tests/test_statistical_functions.py::test_cumulative_sum
-array_api_tests/test_statistical_functions.py::test_cumulative_prod
 array_api_tests/test_utility_functions.py::test_diff
 array_api_tests/test_utility_functions.py::test_diff_append_prepend
 
@@ -110,7 +108,6 @@ array_api_tests/test_manipulation_functions.py::test_roll
 # These signatures fail because the corresponding shim is missing entirely.
 # Each will resolve when its containing test file is brought online (and the
 # shim is added to numdot_xp/_funcs.py).
-array_api_tests/test_signatures.py::test_func_signature[cumulative_sum]
 array_api_tests/test_signatures.py::test_func_signature[unique_all]
 array_api_tests/test_signatures.py::test_func_signature[unique_counts]
 array_api_tests/test_signatures.py::test_func_signature[unique_inverse]

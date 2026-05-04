@@ -186,6 +186,8 @@ void nd::_bind_methods() {
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("sum", "a", "axes"), &nd::sum, DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("prod", "a", "axes"), &nd::prod, DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("cumsum", "a", "axis"), &nd::cumsum, DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("cumprod", "a", "axis"), &nd::cumprod, DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("mean", "a", "axes"), &nd::mean, DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("median", "a", "axes"), &nd::median, DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("var", "a", "axes"), &nd::variance, DEFVAL(nullptr));
@@ -385,12 +387,12 @@ Ref<NDArray> like_visit(Visitor&& visitor, const Variant& model, nd::DType dtype
 #define REDUCTION1(func, varray1, axes1) \
 	reduction_new([](const va::VArrayTarget& target, const va::axes_type* axes, const va::VArray& array) {\
 		va::func(va::store::default_allocator, target, array.data, axes);\
-	}, axes, (varray1))
+	}, (axes1), (varray1))
 
 #define REDUCTION2(func, varray1, varray2, axes1) \
 	reduction_new([](const va::VArrayTarget& target, const va::axes_type* axes, const va::VArray& carray1, const va::VArray& carray2) {\
 		va::func(va::store::default_allocator, target, carray1.data, carray2.data, axes);\
-	}, axes, (varray1), (varray2))
+	}, (axes1), (varray1), (varray2))
 
 StringName nd::newaxis() {
 	return ::newaxis();
@@ -1149,6 +1151,14 @@ Ref<NDArray> nd::sum(const Variant& a, const Variant& axes) {
 
 Ref<NDArray> nd::prod(const Variant& a, const Variant& axes) {
 	return REDUCTION1(prod, a, axes);
+}
+
+Ref<NDArray> nd::cumsum(const Variant& a, const Variant& axis) {
+	return REDUCTION1(cumsum, a, axis);
+}
+
+Ref<NDArray> nd::cumprod(const Variant& a, const Variant& axis) {
+	return REDUCTION1(cumprod, a, axis);
 }
 
 Ref<NDArray> nd::mean(const Variant& a, const Variant& axes) {

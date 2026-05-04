@@ -47,6 +47,7 @@ Many bugs in this release were found by running NumDot against the `Python array
 - ``nd.flip`` accepts negative axes; ``nd.flip(arr, -1)`` used to crash.
 - Result dtype for ``nd.concatenate``, ``nd.linspace``, ``nd.arange``, ``nd.matmul`` / ``nd.dot``, and array-from-nested-array conversion follows numpy's ``result_type`` rules: ``uint8 + uint16 → uint16`` (was ``int32``), ``int32 + uint32 → int64``, ``int64 + uint64 → float64``.
 - ``nd.linspace(a, b, num)`` lands ``out[-1]`` exactly on ``b`` when ``endpoint`` is true (used to drift a few ULPs, e.g. ``29.000000000000004`` instead of ``29.0``). ``nd.linspace(a, b, 1)`` returns ``[a]`` instead of ``[nan]``.
+- ``nd.bitwise_right_shift`` on negative signed integers now sign-extends when the shift count meets or exceeds the dtype's bit width (e.g. ``int32(-1) >> 32`` now returns ``-1``, was ``0``), matching the array-api spec.
 - ``nd.arange`` returns an empty array when ``step`` has the wrong sign for ``stop - start`` (used to return garbage data).
 - ``nd.arange`` with ``step = 0`` is rejected with a clean error.
 - ``nd.arange`` with integer arguments above ``2**53`` could return the wrong number of elements; integer dtypes now use exact integer arithmetic.

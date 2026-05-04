@@ -13,19 +13,33 @@
 #include "xtensor/core/xoperation.hpp"
 #include "godot_cpp/core/error_macros.hpp"  // for WARN_PRINT_ONCE
 
-#define BIT_SHIFT_SAFE(NAME, OP)\
-struct NAME {\
-	template <class T1, class T2>\
-	constexpr std::decay_t<T1> operator()(T1&& arg1, T2&& arg2) const\
-	{\
-		constexpr std::decay_t<T2> bit_count = sizeof(arg1) * CHAR_BIT - std::is_signed<T1>::value;\
-		return (arg2 < 0 || arg2 >= bit_count) ? 0 : (std::forward<T1>(arg1) OP std::forward<T2>(arg2));\
-	}\
-};
-
 namespace va::op {
-	BIT_SHIFT_SAFE(left_shift_safe, <<)
-	BIT_SHIFT_SAFE(right_shift_safe, >>)
+	// Spec (array-api): if x2 >= bit_count, the result is 0. Shifting into the
+	// sign bit is UB in C++, so for signed types the safe range stops one short.
+	struct left_shift_safe {
+		template <class T1, class T2>
+		constexpr std::decay_t<T1> operator()(T1&& arg1, T2&& arg2) const {
+			constexpr std::decay_t<T2> bit_count = sizeof(arg1) * CHAR_BIT - std::is_signed<T1>::value;
+			return (arg2 < 0 || arg2 >= bit_count) ? 0 : (std::forward<T1>(arg1) << std::forward<T2>(arg2));
+		}
+	};
+
+	// Spec (array-api): if x2 >= bit_count, the result is 0 for non-negative x1
+	// and -1 for negative x1 (sign-extending arithmetic shift). The previous
+	// unified BIT_SHIFT_SAFE always returned 0 — wrong for negative inputs.
+	struct right_shift_safe {
+		template <class T1, class T2>
+		constexpr std::decay_t<T1> operator()(T1&& arg1, T2&& arg2) const {
+			using R = std::decay_t<T1>;
+			constexpr std::decay_t<T2> bit_count = sizeof(arg1) * CHAR_BIT;
+			if (arg2 < 0) return R(0);
+			if (arg2 >= bit_count) {
+				if constexpr (std::is_signed_v<R>) return arg1 < 0 ? R(-1) : R(0);
+				else return R(0);
+			}
+			return std::forward<T1>(arg1) >> std::forward<T2>(arg2);
+		}
+	};
 
 	struct bitwise_not_boolsafe {
 		template <class T1>

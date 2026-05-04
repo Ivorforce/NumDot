@@ -63,6 +63,16 @@ def asarray(obj, /, *, dtype=None, device=None, copy=None):
 	if device not in (None, "cpu"):
 		raise ValueError(f"unsupported device: {device!r}")
 	import numpy as np
+	if copy is False:
+		# Spec: copy=False must never copy. The bridge into Godot's address
+		# space always copies, so for copy=False we keep the array on the
+		# numpy side and re-view it as our ndarray subclass. Only allowed
+		# when no dtype conversion is needed.
+		if not isinstance(obj, np.ndarray):
+			raise ValueError("asarray: copy=False requires an array input")
+		if dtype is not None and np.dtype(dtype) != obj.dtype:
+			raise ValueError("asarray: copy=False but a dtype conversion would be needed")
+		return obj.view(ndarray)
 	arr = np.asarray(obj, dtype=dtype)
 	# NumDot exposes 'array' (not 'asarray'). We always round-trip through the
 	# bridge so the returned object behaves identically to results from other ops.

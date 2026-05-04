@@ -101,7 +101,7 @@ public:
 	static Ref<NDArray> transpose(const Variant& a, const Variant& permutation);
 	static Ref<NDArray> reshape(const Variant& a, const Variant& shape);
 	static Ref<NDArray> swapaxes(const Variant& v, int64_t a, int64_t b);
-	static Ref<NDArray> moveaxis(const Variant& v, int64_t src, int64_t dst);
+	static Ref<NDArray> moveaxis(const Variant& v, const Variant& src, const Variant& dst);
 	static Ref<NDArray> flip(const Variant& v, int64_t axis);
 	static Ref<NDArray> diagonal(const Variant& v, int64_t offset, int64_t axis1, int64_t axis2);
 	static Ref<NDArray> diag(const Variant& v, int64_t offset);

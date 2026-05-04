@@ -240,7 +240,7 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`minimum<class_nd_method_minimum>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                    |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`NDArray<class_NDArray>`                              | :ref:`moveaxis<class_nd_method_moveaxis>`\ (\ v\: ``Variant``, src\: ``int``, dst\: ``int``\ ) |static|                                                                                     |
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`moveaxis<class_nd_method_moveaxis>`\ (\ v\: ``Variant``, src\: ``Variant``, dst\: ``Variant``\ ) |static|                                                                             |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`multiply<class_nd_method_multiply>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                                                                                  |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1963,11 +1963,11 @@ Element-wise minimum of array elements.
 
 .. rst-class:: classref-method
 
-:ref:`NDArray<class_NDArray>` **moveaxis**\ (\ v\: ``Variant``, src\: ``int``, dst\: ``int``\ ) |static| :ref:`🔗<class_nd_method_moveaxis>`
+:ref:`NDArray<class_NDArray>` **moveaxis**\ (\ v\: ``Variant``, src\: ``Variant``, dst\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_moveaxis>`
 
-Move axes of an array to new positions.
+Move axes of an array to new positions. Other axes remain in their original order.
 
-Other axes remain in their original order.
+\ ``src`` and ``dst`` are each an int or a list of ints (same length); negatives count from the end.
 
 .. rst-class:: classref-item-separator
 

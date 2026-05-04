@@ -496,20 +496,9 @@ def flip(x, /, *, axis=None):
 
 
 def moveaxis(x, source, destination, /):
-	# TODO Drop this shim once nd.moveaxis accepts Variant src/dst (int or
-	# list) — it's currently single-axis only, so we compose a permutation
-	# and call nd.transpose for the Array-API tuple form.
-	if isinstance(source, int) and isinstance(destination, int):
-		return _call("moveaxis", x, source, destination)
-	src = (source,) if isinstance(source, int) else tuple(source)
-	dst = (destination,) if isinstance(destination, int) else tuple(destination)
-	ndim = x.ndim
-	src_norm = [s % ndim for s in src]
-	dst_norm = [d % ndim for d in dst]
-	order = [i for i in range(ndim) if i not in src_norm]
-	for d, s in sorted(zip(dst_norm, src_norm)):
-		order.insert(d, s)
-	return _call("transpose", x, order)
+	src = source if isinstance(source, int) else list(source)
+	dst = destination if isinstance(destination, int) else list(destination)
+	return _call("moveaxis", x, src, dst)
 
 
 def permute_dims(x, /, axes):

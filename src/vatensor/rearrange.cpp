@@ -73,6 +73,46 @@ VData va::moveaxis(const VData& data, std::ptrdiff_t src, std::ptrdiff_t dst) {
 	);
 }
 
+std::shared_ptr<VArray> va::moveaxis(const VArray& varray, const axes_type& src, const axes_type& dst) {
+	if (src.size() != dst.size()) {
+		throw std::runtime_error("moveaxis: source and destination must have the same length");
+	}
+	const std::size_t ndim = varray.dimension();
+
+	std::vector<std::size_t> src_norm(src.size());
+	std::vector<std::size_t> dst_norm(dst.size());
+	for (std::size_t i = 0; i < src.size(); ++i) {
+		src_norm[i] = va::util::normalize_axis(src[i], ndim);
+		dst_norm[i] = va::util::normalize_axis(dst[i], ndim);
+	}
+
+	std::set<std::size_t> src_set(src_norm.begin(), src_norm.end());
+	std::set<std::size_t> dst_set(dst_norm.begin(), dst_norm.end());
+	if (src_set.size() != src_norm.size() || dst_set.size() != dst_norm.size()) {
+		throw std::runtime_error("moveaxis: repeated axis");
+	}
+
+	axes_type order;
+	order.reserve(ndim);
+	for (std::size_t i = 0; i < ndim; ++i) {
+		if (!src_set.contains(i)) order.push_back(static_cast<std::ptrdiff_t>(i));
+	}
+
+	// Insert at smallest destination first so later insertions land where requested.
+	std::vector<std::pair<std::size_t, std::size_t>> pairs;
+	pairs.reserve(src_norm.size());
+	for (std::size_t i = 0; i < src_norm.size(); ++i) {
+		pairs.emplace_back(dst_norm[i], src_norm[i]);
+	}
+	std::sort(pairs.begin(), pairs.end());
+
+	for (const auto& [d, s] : pairs) {
+		order.insert(order.begin() + d, static_cast<std::ptrdiff_t>(s));
+	}
+
+	return va::transpose(varray, order);
+}
+
 std::shared_ptr<VArray> va::flip(const VArray& varray, std::ptrdiff_t axis) {
 	const auto axis_norm = va::util::normalize_axis(axis, varray.dimension());
 	return map(

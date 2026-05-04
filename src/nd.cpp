@@ -660,12 +660,20 @@ Ref<NDArray> nd::swapaxes(const Variant& v, const int64_t a, const int64_t b) {
 	);
 }
 
-Ref<NDArray> nd::moveaxis(const Variant& v, int64_t src, int64_t dst) {
-	return map_variants_as_arrays(
-		[src, dst](const std::shared_ptr<va::VArray>& v) {
-			return va::moveaxis(*v, src, dst);
-		}, v
-	);
+Ref<NDArray> nd::moveaxis(const Variant& v, const Variant& src, const Variant& dst) {
+	try {
+		const auto array = variant_as_array(v);
+		const bool single = src.get_type() == Variant::INT && dst.get_type() == Variant::INT;
+		if (single) {
+			return { memnew(NDArray(va::moveaxis(*array, static_cast<int64_t>(src), static_cast<int64_t>(dst)))) };
+		}
+		const auto src_ = variant_to_axes(src);
+		const auto dst_ = variant_to_axes(dst);
+		return { memnew(NDArray(va::moveaxis(*array, src_, dst_))) };
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
 }
 
 Ref<NDArray> nd::flip(const Variant& v, int64_t axis) {

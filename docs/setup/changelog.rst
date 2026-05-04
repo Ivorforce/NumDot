@@ -24,6 +24,7 @@ Many bugs in this release were found by running NumDot against the `Python array
 - ``nd.meshgrid(arrays, indexing)`` builds coordinate grids from a list of 1-D arrays. ``indexing`` is a ``StringName`` accepting ``&"xy"`` (default, swaps the first two output axes) or ``&"ij"``.
 - ``nd.expand_dims(v, axis)`` inserts a length-1 dimension at the given axis (counts from the end if negative). Returns a view, no copy.
 - ``nd.squeeze(v, axes)`` accepts an optional ``axes`` argument (int or list) selecting which length-1 axes to drop. The requested axes must all be size 1 or the call errors. Without ``axes`` the previous behavior is unchanged: drop every length-1 axis.
+- ``nd.moveaxis`` accepts lists for ``src`` and ``dst`` (in addition to single ints), moving multiple axes in one call. ``nd.moveaxis(arr, [0, 1], [-1, -2])`` swaps the first two axes to the end.
 
 **Changed**
 

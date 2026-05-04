@@ -896,11 +896,11 @@
 		<method name="moveaxis" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="v" type="Variant" />
-			<param index="1" name="src" type="int" />
-			<param index="2" name="dst" type="int" />
+			<param index="1" name="src" type="Variant" />
+			<param index="2" name="dst" type="Variant" />
 			<description>
-				Move axes of an array to new positions.
-				Other axes remain in their original order.
+				Move axes of an array to new positions. Other axes remain in their original order.
+				[param src] and [param dst] are each an int or a list of ints (same length); negatives count from the end.
 			</description>
 		</method>
 		<method name="multiply" qualifiers="static">

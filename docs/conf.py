@@ -168,8 +168,9 @@ html_theme_options = {
     "collapse_navigation": False,
     # Max depth of navigation in the sidebar.
     "navigation_depth": 2,
-    # Hide the documentation version name/number under the logo
-    "display_version": False,
+    # Hide the version/language pickers beneath the title (sphinx_rtd_theme 3.x).
+    "version_selector": False,
+    "language_selector": False,
 }
 
 html_title = supported_languages[language] % ( "(" + version + ")" )

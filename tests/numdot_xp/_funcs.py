@@ -482,8 +482,7 @@ def meshgrid(*arrays, indexing="xy"):
 
 
 def flip(x, /, *, axis=None):
-	# nd.flip crashes on negative axes; pre-normalize. Also, nd.flip requires
-	# an axis arg, so iterate for axis=None / tuples.
+	# nd.flip is single-axis; iterate for axis=None / tuples.
 	if axis is None:
 		axes = range(x.ndim)
 	elif isinstance(axis, int):
@@ -492,7 +491,7 @@ def flip(x, /, *, axis=None):
 		axes = tuple(axis)
 	out = x
 	for a in axes:
-		out = _call("flip", out, a % x.ndim)
+		out = _call("flip", out, a)
 	return out
 
 

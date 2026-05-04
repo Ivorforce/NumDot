@@ -73,10 +73,11 @@ VData va::moveaxis(const VData& data, std::ptrdiff_t src, std::ptrdiff_t dst) {
 	);
 }
 
-std::shared_ptr<VArray> va::flip(const VArray& varray, std::size_t axis) {
+std::shared_ptr<VArray> va::flip(const VArray& varray, std::ptrdiff_t axis) {
+	const auto axis_norm = va::util::normalize_axis(axis, varray.dimension());
 	return map(
-		[axis](auto& array) {
-			return xt::flip(array, axis);
+		[axis_norm](auto& array) {
+			return xt::flip(array, axis_norm);
 		}, varray
 	);
 }

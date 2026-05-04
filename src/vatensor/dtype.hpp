@@ -109,34 +109,17 @@ namespace va {
 		return size_of_dtype_in_bytes_unchecked(dtype);
 	}
 
-	// Function to create a lookup table for common DType
-	constexpr auto create_common_type_table() {
-		constexpr auto row_count = DType::DTypeMax + 1;
-		std::array<std::array<DType, row_count>, row_count> table{};
+}
 
-		for (int i = 0; i < DType::DTypeMax; ++i) {
-			for (int j = 0; j < DType::DTypeMax; ++j) {
-				table[i][j] = std::visit(
-					[](auto a, auto b) {
-						using CommonType = std::common_type_t<decltype(a), decltype(b)>;
-						return dtype_of_type<CommonType>();
-					},
-					dtype_to_variant_unchecked(DType(i)),
-					dtype_to_variant_unchecked(DType(j))
-				);
-			}
-		}
-		for (int i = 0; i <= DType::DTypeMax; ++i) {
-			table[DType::DTypeMax][i] = static_cast<DType>(i);
-			table[i][DType::DTypeMax] = static_cast<DType>(i);
-		}
+#include "gen/dtype_promotion_table.gen.hpp"
 
-		return table;
-	}
-
-	constexpr auto _common_type_table = create_common_type_table();
-
+namespace va {
 	constexpr DType dtype_common_type_unchecked(const DType a, const DType b) noexcept {
+		// DTypeMax is the "infer from peer" sentinel — preserve its identity
+		// behavior so callers (e.g. nd::concatenate, find_shape_and_dtype)
+		// can fold a stream of dtypes starting from DTypeMax.
+		if (a == DTypeMax) return b;
+		if (b == DTypeMax) return a;
 		return _common_type_table[static_cast<size_t>(a)][static_cast<size_t>(b)];
 	}
 

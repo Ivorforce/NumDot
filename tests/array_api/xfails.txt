@@ -111,13 +111,6 @@ array_api_tests/test_operators_and_elementwise_functions.py::test_abs[__abs__]
 
 
 # === test_manipulation_functions.py ===
-# nd.concatenate's mixed-dtype inference uses std::common_type_t, which
-# promotes uint8+uint16 → int (signed) instead of numpy's uint16. Same-
-# dtype concat works; bridge protocol gap is fixed (see $blobs spec).
-# Affects every nd call that uses dtype_common_type (linspace, arange,
-# linalg, etc.) — not specific to concatenate.
-array_api_tests/test_manipulation_functions.py::test_concat
-
 # NumDot bugs (FIXME):
 # - nd.flip on bool arrays produces wrong results (likely the same xsimd
 #   bool-load bug as #123 — nd.flip([True, True], 0) → [True, False]).

@@ -333,9 +333,25 @@ def main():
 		"vargs": ["const void*", "const void*", "std::size_t"],
 	})
 
+	# Numpy result_type table for the supported dtypes — the runtime equivalent
+	# of np.result_type(a, b). Used by va::dtype_common_type. Encoded as
+	# "{a.char}{b.char}{result.char}" rows so features.py can decode via
+	# the same code_to_dtype map it already uses for vfunc specs.
+	common_type_table = []
+	for a in supported_dtypes:
+		for b in supported_dtypes:
+			result = common_dtypes.get(a, {}).get(b)
+			if result is None:
+				continue
+			# Same long-double → double normalization that vfunc specs apply,
+			# since NumDot doesn't support long double.
+			row = f"{a.char}{b.char}{result.char}".replace("g", "d").replace("G", "D")
+			common_type_table.append(row)
+
 	with (pathlib.Path(__file__).parent / "vfuncs.json").open("w") as f:
 		json.dump({
 			"vfuncs": vfuncs,
+			"common_type_table": common_type_table,
 		}, f, indent='\t')
 
 if __name__ == "__main__":

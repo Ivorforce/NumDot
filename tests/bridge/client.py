@@ -72,15 +72,16 @@ def _encode_nd_args(args) -> tuple[list, list[bytes]]:
 			isinstance(x, int) and not isinstance(x, bool) for x in arg
 		):
 			specs.append({"$ints": [str(x) for x in arg]})
-		elif isinstance(arg, (list, tuple)) and all(isinstance(x, np.ndarray) for x in arg):
-			# Homogeneous list of ndarrays — ship one .npy blob per element
-			# and tag them with $blobs so the GD bridge can rebuild a GDScript
-			# Array of NDArray. This is what nd.concatenate / friends consume
-			# via variant_to_vector. Empty lists go through here too.
+		elif isinstance(arg, (list, tuple)) and all(isinstance(x, (np.ndarray, np.generic)) for x in arg):
+			# List of ndarrays (and/or numpy scalars, which become 0-d
+			# arrays). Ship one .npy blob per element and tag them with
+			# $blobs so the GD bridge can rebuild a GDScript Array of
+			# NDArray — what nd.concatenate / friends consume via
+			# variant_to_vector. Empty lists go through here too.
 			indices = []
 			for x in arg:
 				indices.append(len(blobs))
-				blobs.append(np_to_npy_bytes(x))
+				blobs.append(np_to_npy_bytes(np.asarray(x)))
 			specs.append({"$blobs": indices})
 		else:
 			specs.append({"$value": arg})

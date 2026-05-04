@@ -1125,7 +1125,7 @@ If the array has more than 2 dimensions, the given dimensions are removed, and t
 
 :ref:`NDArray<class_NDArray>` **diff**\ (\ a\: ``Variant``, n\: ``int`` = 1, axis\: ``int`` = -1\ ) |static| :ref:`🔗<class_nd_method_diff>`
 
-The n-th discrete difference of ``a`` along ``axis``. Each pass replaces neighbours with their difference, so output\ * = a\ ``i+1`` - a\ *; this repeats ``n`` times.
+The n-th discrete difference of ``a`` along ``axis``. Each pass replaces neighbours with their difference (``out[i] = a[i+1] - a[i]``); this repeats ``n`` times.
 
 The output shape matches the input except along ``axis``, where it shrinks by ``n``. If ``n`` is larger than the axis length, the output is empty along that axis.
 

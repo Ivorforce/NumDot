@@ -68,6 +68,9 @@ _NOISE_PATTERNS = (
 	# Unresolved primitive types (Variant, bool, int, ...) — godot's full
 	# class catalogue isn't shipped with NumDot, so these always trigger.
 	re.compile(r"^ERROR: .*Unresolved type "),
+	# `make_rst.py` auto-injects a "[b]Note:[/b] ... See [Packed*Array]" copy
+	# note on Packed*Array properties; the link target isn't in our doc set.
+	re.compile(r"^ERROR: .*Unrecognized opening tag \"\[Packed[A-Za-z0-9]+Array\]\""),
 	# The trailing "N errors were found" summary.
 	re.compile(r"^\d+ errors were found in the class reference XML\."),
 )

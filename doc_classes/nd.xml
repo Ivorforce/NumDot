@@ -275,7 +275,7 @@
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="b" type="Variant" />
 			<description>
-				Element-wise composition of [code]|a|[/code] with the sign of [code]b[/code]. Real dtypes only.
+				Element-wise composition of [code skip-lint]|a|[/code] with the sign of [param b]. Real dtypes only.
 			</description>
 		</method>
 		<method name="cos" qualifiers="static">
@@ -319,8 +319,8 @@
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="axis" type="Variant" default="null" />
 			<description>
-				Cumulative product of array elements along the given axis. The output preserves the input shape; element [code]i[/code] along [code]axis[/code] holds the product of all elements at positions [code]0..i[/code].
-				If [code]axis[/code] is null the input is flattened first and a 1-D result is returned.
+				Cumulative product of array elements along the given axis. The output preserves the input shape; element [code]i[/code] along [param axis] holds the product of all elements at positions [code]0..i[/code].
+				If [param axis] is null the input is flattened first and a 1-D result is returned.
 				Like [method prod], the accumulator is widened to int64 / uint64 for narrow integer dtypes to avoid mid-pass overflow.
 			</description>
 		</method>
@@ -329,8 +329,8 @@
 			<param index="0" name="a" type="Variant" />
 			<param index="1" name="axis" type="Variant" default="null" />
 			<description>
-				Cumulative sum of array elements along the given axis. The output preserves the input shape; element [code]i[/code] along [code]axis[/code] holds the sum of all elements at positions [code]0..i[/code].
-				If [code]axis[/code] is null the input is flattened first and a 1-D result is returned.
+				Cumulative sum of array elements along the given axis. The output preserves the input shape; element [code]i[/code] along [param axis] holds the sum of all elements at positions [code]0..i[/code].
+				If [param axis] is null the input is flattened first and a 1-D result is returned.
 				Like [method sum], the accumulator is widened to int64 / uint64 for narrow integer dtypes to avoid mid-pass overflow.
 			</description>
 		</method>
@@ -376,9 +376,9 @@
 			<param index="1" name="n" type="int" default="1" />
 			<param index="2" name="axis" type="int" default="-1" />
 			<description>
-				The n-th discrete difference of [code]a[/code] along [code]axis[/code]. Each pass replaces neighbours with their difference, so output[i] = a[i+1] - a[i]; this repeats [code]n[/code] times.
-				The output shape matches the input except along [code]axis[/code], where it shrinks by [code]n[/code]. If [code]n[/code] is larger than the axis length, the output is empty along that axis.
-				[code]axis[/code] is a single dimension and may be negative to count from the end.
+				The n-th discrete difference of [param a] along [param axis]. Each pass replaces neighbours with their difference ([code skip-lint]out[i] = a[i+1] - a[i][/code]); this repeats [param n] times.
+				The output shape matches the input except along [param axis], where it shrinks by [param n]. If [param n] is larger than the axis length, the output is empty along that axis.
+				[param axis] is a single dimension and may be negative to count from the end.
 			</description>
 		</method>
 		<method name="divide" qualifiers="static">

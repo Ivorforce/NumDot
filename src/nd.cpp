@@ -141,6 +141,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("subtract", "a", "b"), &nd::subtract);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("multiply", "a", "b"), &nd::multiply);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("divide", "a", "b"), &nd::divide);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("floor_divide", "a", "b"), &nd::floor_divide);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("remainder", "a", "b"), &nd::remainder);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("pow", "a", "b"), &nd::pow);
 
@@ -150,12 +151,20 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("where", "condition", "x", "y"), &nd::where);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("sign", "a"), &nd::sign);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("signbit", "a"), &nd::signbit);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("copysign", "a", "b"), &nd::copysign);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("abs", "a"), &nd::abs);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("square", "a"), &nd::square);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("sqrt", "a"), &nd::sqrt);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("hypot", "a", "b"), &nd::hypot);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("exp", "a"), &nd::exp);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("expm1", "a"), &nd::expm1);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("log", "a"), &nd::log);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("log2", "a"), &nd::log2);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("log10", "a"), &nd::log10);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("log1p", "a"), &nd::log1p);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("logaddexp", "a", "b"), &nd::logaddexp);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("rad2deg", "a"), &nd::rad2deg);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("deg2rad", "a"), &nd::deg2rad);
@@ -976,6 +985,10 @@ Ref<NDArray> nd::divide(const Variant& a, const Variant& b) {
 	return VARRAY_MAP2(divide, a, b);
 }
 
+Ref<NDArray> nd::floor_divide(const Variant& a, const Variant& b) {
+	return VARRAY_MAP2(floor_divide, a, b);
+}
+
 Ref<NDArray> nd::remainder(const Variant& a, const Variant& b) {
 	return VARRAY_MAP2(remainder, a, b);
 }
@@ -1018,6 +1031,14 @@ Ref<NDArray> nd::sign(const Variant& a) {
 	return VARRAY_MAP1(sign, a);
 }
 
+Ref<NDArray> nd::signbit(const Variant& a) {
+	return VARRAY_MAP1(signbit, a);
+}
+
+Ref<NDArray> nd::copysign(const Variant& a, const Variant& b) {
+	return VARRAY_MAP2(copysign, a, b);
+}
+
 Ref<NDArray> nd::abs(const Variant& a) {
 	return VARRAY_MAP1(abs, a);
 }
@@ -1030,12 +1051,36 @@ Ref<NDArray> nd::sqrt(const Variant& a) {
 	return VARRAY_MAP1(sqrt, a);
 }
 
+Ref<NDArray> nd::hypot(const Variant& a, const Variant& b) {
+	return VARRAY_MAP2(hypot, a, b);
+}
+
 Ref<NDArray> nd::exp(const Variant& a) {
 	return VARRAY_MAP1(exp, a);
 }
 
+Ref<NDArray> nd::expm1(const Variant& a) {
+	return VARRAY_MAP1(expm1, a);
+}
+
 Ref<NDArray> nd::log(const Variant& a) {
 	return VARRAY_MAP1(log, a);
+}
+
+Ref<NDArray> nd::log2(const Variant& a) {
+	return VARRAY_MAP1(log2, a);
+}
+
+Ref<NDArray> nd::log10(const Variant& a) {
+	return VARRAY_MAP1(log10, a);
+}
+
+Ref<NDArray> nd::log1p(const Variant& a) {
+	return VARRAY_MAP1(log1p, a);
+}
+
+Ref<NDArray> nd::logaddexp(const Variant& a, const Variant& b) {
+	return VARRAY_MAP2(logaddexp, a, b);
 }
 
 Ref<NDArray> nd::rad2deg(const Variant& a) {

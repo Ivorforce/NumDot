@@ -23,6 +23,36 @@ A NumDot tensor object.
 
 .. rst-class:: classref-reftable-group
 
+Properties
+----------
+
+.. table::
+   :widths: auto
+
+   +------------------------------------+--------------------------------------------------------------------------+
+   | ``int``                            | :ref:`buffer_dtype<class_NDArray_property_buffer_dtype>`                 |
+   +------------------------------------+--------------------------------------------------------------------------+
+   | ``int``                            | :ref:`buffer_size<class_NDArray_property_buffer_size>`                   |
+   +------------------------------------+--------------------------------------------------------------------------+
+   | ``int``                            | :ref:`buffer_size_in_bytes<class_NDArray_property_buffer_size_in_bytes>` |
+   +------------------------------------+--------------------------------------------------------------------------+
+   | :ref:`DType<enum_nd_DType>`        | :ref:`dtype<class_NDArray_property_dtype>`                               |
+   +------------------------------------+--------------------------------------------------------------------------+
+   | ``int``                            | :ref:`ndim<class_NDArray_property_ndim>`                                 |
+   +------------------------------------+--------------------------------------------------------------------------+
+   | ``PackedInt64Array``               | :ref:`shape<class_NDArray_property_shape>`                               |
+   +------------------------------------+--------------------------------------------------------------------------+
+   | ``int``                            | :ref:`size<class_NDArray_property_size>`                                 |
+   +------------------------------------+--------------------------------------------------------------------------+
+   | ``PackedInt64Array``               | :ref:`strides<class_NDArray_property_strides>`                           |
+   +------------------------------------+--------------------------------------------------------------------------+
+   | :ref:`Layout<enum_NDArray_Layout>` | :ref:`strides_layout<class_NDArray_property_strides_layout>`             |
+   +------------------------------------+--------------------------------------------------------------------------+
+   | ``int``                            | :ref:`strides_offset<class_NDArray_property_strides_offset>`             |
+   +------------------------------------+--------------------------------------------------------------------------+
+
+.. rst-class:: classref-reftable-group
+
 Methods
 -------
 
@@ -172,15 +202,7 @@ Methods
    +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`assign_var<class_NDArray_method_assign_var>`\ (\ a\: ``Variant``, axes\: ``Variant`` = null\ )                                                             |
    +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | ``int``                                                    | :ref:`buffer_dtype<class_NDArray_method_buffer_dtype>`\ (\ ) |const|                                                                                             |
-   +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | ``int``                                                    | :ref:`buffer_size<class_NDArray_method_buffer_size>`\ (\ ) |const|                                                                                               |
-   +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | ``int``                                                    | :ref:`buffer_size_in_bytes<class_NDArray_method_buffer_size_in_bytes>`\ (\ ) |const|                                                                             |
-   +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`copy<class_NDArray_method_copy>`\ (\ ) |const|                                                                                                             |
-   +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`DType<enum_nd_DType>`                                | :ref:`dtype<class_NDArray_method_dtype>`\ (\ ) |const|                                                                                                           |
    +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`flatten<class_NDArray_method_flatten>`\ (\ ) |const|                                                                                                       |
    +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -214,21 +236,9 @@ Methods
    +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``Vector4i``                                               | :ref:`get_vector4i<class_NDArray_method_get_vector4i>`\ (\ ...\ ) |const| |vararg|                                                                               |
    +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | ``int``                                                    | :ref:`ndim<class_NDArray_method_ndim>`\ (\ ) |const|                                                                                                             |
-   +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | |void|                                                     | :ref:`set<class_NDArray_method_set>`\ (\ value\: ``Variant``, ...\ ) |const| |vararg|                                                                            |
    +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | ``PackedInt64Array``                                       | :ref:`shape<class_NDArray_method_shape>`\ (\ ) |const|                                                                                                           |
-   +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | ``int``                                                    | :ref:`size<class_NDArray_method_size>`\ (\ ) |const|                                                                                                             |
-   +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`squeeze<class_NDArray_method_squeeze>`\ (\ ) |const|                                                                                                       |
-   +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | ``PackedInt64Array``                                       | :ref:`strides<class_NDArray_method_strides>`\ (\ ) |const|                                                                                                       |
-   +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`Layout<enum_NDArray_Layout>`                         | :ref:`strides_layout<class_NDArray_method_strides_layout>`\ (\ ) |const|                                                                                         |
-   +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | ``int``                                                    | :ref:`strides_offset<class_NDArray_method_strides_offset>`\ (\ ) |const|                                                                                         |
    +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``Basis``                                                  | :ref:`to_basis<class_NDArray_method_to_basis>`\ (\ ) |const|                                                                                                     |
    +------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -327,6 +337,195 @@ The array's strides are inconsistent in order.
 :ref:`Layout<enum_NDArray_Layout>` **Any** = ``3``
 
 Compatible with both row major and column major, i.e. 0D and 1D arrays.
+
+.. rst-class:: classref-section-separator
+
+----
+
+.. rst-class:: classref-descriptions-group
+
+Property Descriptions
+---------------------
+
+.. _class_NDArray_property_buffer_dtype:
+
+.. rst-class:: classref-property
+
+``int`` **buffer_dtype** :ref:`🔗<class_NDArray_property_buffer_dtype>`
+
+.. rst-class:: classref-property-setget
+
+- ``int`` **get_buffer_dtype**\ (\ )
+
+.. container:: contribute
+
+	There is currently no description for this property. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_property_buffer_size:
+
+.. rst-class:: classref-property
+
+``int`` **buffer_size** :ref:`🔗<class_NDArray_property_buffer_size>`
+
+.. rst-class:: classref-property-setget
+
+- ``int`` **get_buffer_size**\ (\ )
+
+.. container:: contribute
+
+	There is currently no description for this property. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_property_buffer_size_in_bytes:
+
+.. rst-class:: classref-property
+
+``int`` **buffer_size_in_bytes** :ref:`🔗<class_NDArray_property_buffer_size_in_bytes>`
+
+.. rst-class:: classref-property-setget
+
+- ``int`` **get_buffer_size_in_bytes**\ (\ )
+
+.. container:: contribute
+
+	There is currently no description for this property. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_property_dtype:
+
+.. rst-class:: classref-property
+
+:ref:`DType<enum_nd_DType>` **dtype** :ref:`🔗<class_NDArray_property_dtype>`
+
+.. rst-class:: classref-property-setget
+
+- :ref:`DType<enum_nd_DType>` **get_dtype**\ (\ )
+
+.. container:: contribute
+
+	There is currently no description for this property. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_property_ndim:
+
+.. rst-class:: classref-property
+
+``int`` **ndim** :ref:`🔗<class_NDArray_property_ndim>`
+
+.. rst-class:: classref-property-setget
+
+- ``int`` **get_ndim**\ (\ )
+
+.. container:: contribute
+
+	There is currently no description for this property. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_property_shape:
+
+.. rst-class:: classref-property
+
+``PackedInt64Array`` **shape** :ref:`🔗<class_NDArray_property_shape>`
+
+.. rst-class:: classref-property-setget
+
+- ``PackedInt64Array`` **get_shape**\ (\ )
+
+.. container:: contribute
+
+	There is currently no description for this property. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+**Note:** The returned array is *copied* and any changes to it will not update the original property value. See ``PackedInt64Array`` for more details.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_property_size:
+
+.. rst-class:: classref-property
+
+``int`` **size** :ref:`🔗<class_NDArray_property_size>`
+
+.. rst-class:: classref-property-setget
+
+- ``int`` **get_size**\ (\ )
+
+.. container:: contribute
+
+	There is currently no description for this property. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_property_strides:
+
+.. rst-class:: classref-property
+
+``PackedInt64Array`` **strides** :ref:`🔗<class_NDArray_property_strides>`
+
+.. rst-class:: classref-property-setget
+
+- ``PackedInt64Array`` **get_strides**\ (\ )
+
+.. container:: contribute
+
+	There is currently no description for this property. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+**Note:** The returned array is *copied* and any changes to it will not update the original property value. See ``PackedInt64Array`` for more details.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_property_strides_layout:
+
+.. rst-class:: classref-property
+
+:ref:`Layout<enum_NDArray_Layout>` **strides_layout** :ref:`🔗<class_NDArray_property_strides_layout>`
+
+.. rst-class:: classref-property-setget
+
+- :ref:`Layout<enum_NDArray_Layout>` **get_strides_layout**\ (\ )
+
+.. container:: contribute
+
+	There is currently no description for this property. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_NDArray_property_strides_offset:
+
+.. rst-class:: classref-property
+
+``int`` **strides_offset** :ref:`🔗<class_NDArray_property_strides_offset>`
+
+.. rst-class:: classref-property-setget
+
+- ``int`` **get_strides_offset**\ (\ )
+
+.. container:: contribute
+
+	There is currently no description for this property. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
 
 .. rst-class:: classref-section-separator
 
@@ -1329,44 +1528,6 @@ Assigns the result to this array, and returns it. The shape of the result must b
 
 ----
 
-.. _class_NDArray_method_buffer_dtype:
-
-.. rst-class:: classref-method
-
-``int`` **buffer_dtype**\ (\ ) |const| :ref:`🔗<class_NDArray_method_buffer_dtype>`
-
-Returns the natural dtype of the underlying buffer.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_NDArray_method_buffer_size:
-
-.. rst-class:: classref-method
-
-``int`` **buffer_size**\ (\ ) |const| :ref:`🔗<class_NDArray_method_buffer_size>`
-
-Returns the natural number of elements in the underlying buffer.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_NDArray_method_buffer_size_in_bytes:
-
-.. rst-class:: classref-method
-
-``int`` **buffer_size_in_bytes**\ (\ ) |const| :ref:`🔗<class_NDArray_method_buffer_size_in_bytes>`
-
-Returns the number of bytes used by the underlying buffer.
-
-This is equivalent to ``nd.size_of_dtype_in_bytes(x.buffer_dtype()) * x.buffer_size()``.
-
-.. rst-class:: classref-item-separator
-
-----
-
 .. _class_NDArray_method_copy:
 
 .. rst-class:: classref-method
@@ -1374,18 +1535,6 @@ This is equivalent to ``nd.size_of_dtype_in_bytes(x.buffer_dtype()) * x.buffer_s
 :ref:`NDArray<class_NDArray>` **copy**\ (\ ) |const| :ref:`🔗<class_NDArray_method_copy>`
 
 Creates a copy of this array.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_NDArray_method_dtype:
-
-.. rst-class:: classref-method
-
-:ref:`DType<enum_nd_DType>` **dtype**\ (\ ) |const| :ref:`🔗<class_NDArray_method_dtype>`
-
-Data-type of the array’s elements.
 
 .. rst-class:: classref-item-separator
 
@@ -1615,18 +1764,6 @@ See :ref:`get()<class_NDArray_method_get>` for documentation of slicing.
 
 ----
 
-.. _class_NDArray_method_ndim:
-
-.. rst-class:: classref-method
-
-``int`` **ndim**\ (\ ) |const| :ref:`🔗<class_NDArray_method_ndim>`
-
-Number of array dimensions.
-
-.. rst-class:: classref-item-separator
-
-----
-
 .. _class_NDArray_method_set:
 
 .. rst-class:: classref-method
@@ -1645,30 +1782,6 @@ If the index is a single integer array, it is treated as an index list.
 
 ----
 
-.. _class_NDArray_method_shape:
-
-.. rst-class:: classref-method
-
-``PackedInt64Array`` **shape**\ (\ ) |const| :ref:`🔗<class_NDArray_method_shape>`
-
-Array of array dimensions.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_NDArray_method_size:
-
-.. rst-class:: classref-method
-
-``int`` **size**\ (\ ) |const| :ref:`🔗<class_NDArray_method_size>`
-
-Number of elements in the array. Equal to nd.prod(a.shape()), i.e., the product of the array’s dimensions.
-
-.. rst-class:: classref-item-separator
-
-----
-
 .. _class_NDArray_method_squeeze:
 
 .. rst-class:: classref-method
@@ -1676,46 +1789,6 @@ Number of elements in the array. Equal to nd.prod(a.shape()), i.e., the product 
 :ref:`NDArray<class_NDArray>` **squeeze**\ (\ ) |const| :ref:`🔗<class_NDArray_method_squeeze>`
 
 Remove axes of length one from a copy of this array.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_NDArray_method_strides:
-
-.. rst-class:: classref-method
-
-``PackedInt64Array`` **strides**\ (\ ) |const| :ref:`🔗<class_NDArray_method_strides>`
-
-The strides of each dimension, in order, in the underlying data buffer.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_NDArray_method_strides_layout:
-
-.. rst-class:: classref-method
-
-:ref:`Layout<enum_NDArray_Layout>` **strides_layout**\ (\ ) |const| :ref:`🔗<class_NDArray_method_strides_layout>`
-
-The layout of the strides into the underlying data buffer.
-
-Arrays with RowMajor and ColumnMajor layout may have improved performance to those with dynamic layout.
-
-All arrays start with RowMajor layout, but rearranging (like :ref:`nd.transpose()<class_nd_method_transpose>`) can change the layout. To regain a consistent layout, consider making a copy of the array.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_NDArray_method_strides_offset:
-
-.. rst-class:: classref-method
-
-``int`` **strides_offset**\ (\ ) |const| :ref:`🔗<class_NDArray_method_strides_offset>`
-
-The offset of the first element in this array in the underlying data buffer.
 
 .. rst-class:: classref-item-separator
 

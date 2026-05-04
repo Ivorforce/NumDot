@@ -42,11 +42,11 @@ Methods
    +-----------+--------------------------------------------------------------------------------------------------------------------------------------+
    | ``float`` | :ref:`prod<class_ndf_method_prod>`\ (\ a\: ``Variant``\ ) |static|                                                                   |
    +-----------+--------------------------------------------------------------------------------------------------------------------------------------+
-   | ``float`` | :ref:`sum_product<class_ndf_method_sum_product>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                    |
-   +-----------+--------------------------------------------------------------------------------------------------------------------------------------+
    | ``float`` | :ref:`std<class_ndf_method_std>`\ (\ a\: ``Variant``\ ) |static|                                                                     |
    +-----------+--------------------------------------------------------------------------------------------------------------------------------------+
    | ``float`` | :ref:`sum<class_ndf_method_sum>`\ (\ a\: ``Variant``\ ) |static|                                                                     |
+   +-----------+--------------------------------------------------------------------------------------------------------------------------------------+
+   | ``float`` | :ref:`sum_product<class_ndf_method_sum_product>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                    |
    +-----------+--------------------------------------------------------------------------------------------------------------------------------------+
    | ``float`` | :ref:`trace<class_ndf_method_trace>`\ (\ v\: ``Variant``, offset\: ``int`` = 0, axis1\: ``int`` = 0, axis2\: ``int`` = 1\ ) |static| |
    +-----------+--------------------------------------------------------------------------------------------------------------------------------------+
@@ -134,18 +134,6 @@ No-axis equivalent of :ref:`nd.prod()<class_nd_method_prod>` that returns a floa
 
 ----
 
-.. _class_ndf_method_sum_product:
-
-.. rst-class:: classref-method
-
-``float`` **sum_product**\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static| :ref:`🔗<class_ndf_method_sum_product>`
-
-No-axis equivalent of :ref:`nd.sum_product()<class_nd_method_sum_product>` that returns a float.
-
-.. rst-class:: classref-item-separator
-
-----
-
 .. _class_ndf_method_std:
 
 .. rst-class:: classref-method
@@ -165,6 +153,18 @@ No-axis equivalent of :ref:`nd.std()<class_nd_method_std>` that returns a float.
 ``float`` **sum**\ (\ a\: ``Variant``\ ) |static| :ref:`🔗<class_ndf_method_sum>`
 
 No-axis equivalent of :ref:`nd.sum()<class_nd_method_sum>` that returns a float.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ndf_method_sum_product:
+
+.. rst-class:: classref-method
+
+``float`` **sum_product**\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static| :ref:`🔗<class_ndf_method_sum_product>`
+
+No-axis equivalent of :ref:`nd.sum_product()<class_nd_method_sum_product>` that returns a float.
 
 .. rst-class:: classref-item-separator
 

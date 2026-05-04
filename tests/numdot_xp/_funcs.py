@@ -25,17 +25,18 @@ __all__ = [
 	"asarray", "zeros", "ones", "full", "arange", "empty", "eye", "linspace",
 	"full_like", "ones_like", "zeros_like", "empty_like",
 	# elementwise (binary)
-	"add", "subtract", "multiply", "divide", "pow", "remainder",
+	"add", "subtract", "multiply", "divide", "floor_divide", "pow", "remainder",
 	"equal", "not_equal", "less", "less_equal", "greater", "greater_equal",
 	"logical_and", "logical_or", "logical_xor",
 	"bitwise_and", "bitwise_or", "bitwise_xor",
 	"bitwise_left_shift", "bitwise_right_shift",
-	"maximum", "minimum", "atan2",
+	"maximum", "minimum", "atan2", "hypot", "copysign", "logaddexp",
 	# elementwise (unary)
-	"negative", "positive", "abs", "sqrt", "square", "exp", "log",
+	"negative", "positive", "abs", "sqrt", "square", "exp", "expm1", "log",
+	"log2", "log10", "log1p",
 	"sin", "cos", "tan", "asin", "acos", "atan",
 	"sinh", "cosh", "tanh", "asinh", "acosh", "atanh",
-	"floor", "ceil", "round", "trunc", "sign",
+	"floor", "ceil", "round", "trunc", "sign", "signbit",
 	"logical_not", "bitwise_invert",
 	"isnan", "isfinite", "isinf",
 	"conj", "real", "imag",
@@ -187,6 +188,7 @@ def add(x1, x2, /):              return _call("add", x1, x2)
 def subtract(x1, x2, /):         return _call("subtract", x1, x2)
 def multiply(x1, x2, /):         return _call("multiply", x1, x2)
 def divide(x1, x2, /):           return _call("divide", x1, x2)
+def floor_divide(x1, x2, /):     return _call("floor_divide", x1, x2)
 def pow(x1, x2, /):              return _call("pow", x1, x2)  # noqa: A001
 def remainder(x1, x2, /):        return _call("remainder", x1, x2)
 def equal(x1, x2, /):            return _call("equal", x1, x2)
@@ -206,6 +208,9 @@ def bitwise_right_shift(x1, x2, /): return _call("bitwise_right_shift", x1, x2)
 def maximum(x1, x2, /):          return _call("maximum", x1, x2)
 def minimum(x1, x2, /):          return _call("minimum", x1, x2)
 def atan2(x1, x2, /):            return _call("atan2", x1, x2)
+def hypot(x1, x2, /):            return _call("hypot", x1, x2)
+def copysign(x1, x2, /):         return _call("copysign", x1, x2)
+def logaddexp(x1, x2, /):        return _call("logaddexp", x1, x2)
 
 
 # ---- elementwise unary ------------------------------------------------------
@@ -216,7 +221,11 @@ def abs(x, /):            return _call("abs", x)  # noqa: A001
 def sqrt(x, /):           return _call("sqrt", x)
 def square(x, /):         return _call("square", x)
 def exp(x, /):            return _call("exp", x)
+def expm1(x, /):          return _call("expm1", x)
 def log(x, /):            return _call("log", x)
+def log2(x, /):           return _call("log2", x)
+def log10(x, /):          return _call("log10", x)
+def log1p(x, /):          return _call("log1p", x)
 def sin(x, /):            return _call("sin", x)
 def cos(x, /):            return _call("cos", x)
 def tan(x, /):            return _call("tan", x)
@@ -234,6 +243,7 @@ def ceil(x, /):           return _call("ceil", x)
 def round(x, /):          return _call("round", x)         # noqa: A001
 def trunc(x, /):          return _call("trunc", x)
 def sign(x, /):           return _call("sign", x)
+def signbit(x, /):        return _call("signbit", x)
 def logical_not(x, /):    return _call("logical_not", x)
 def bitwise_invert(x, /): return _call("bitwise_not", x)  # spec name -> nd name
 def isnan(x, /):          return _call("is_nan", x)       # spec name -> nd name

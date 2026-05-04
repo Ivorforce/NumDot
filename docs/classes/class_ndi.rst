@@ -42,9 +42,9 @@ Methods
    +---------+--------------------------------------------------------------------------------------------------------------------------------------+
    | ``int`` | :ref:`prod<class_ndi_method_prod>`\ (\ a\: ``Variant``\ ) |static|                                                                   |
    +---------+--------------------------------------------------------------------------------------------------------------------------------------+
-   | ``int`` | :ref:`sum_product<class_ndi_method_sum_product>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                    |
-   +---------+--------------------------------------------------------------------------------------------------------------------------------------+
    | ``int`` | :ref:`sum<class_ndi_method_sum>`\ (\ a\: ``Variant``\ ) |static|                                                                     |
+   +---------+--------------------------------------------------------------------------------------------------------------------------------------+
+   | ``int`` | :ref:`sum_product<class_ndi_method_sum_product>`\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static|                                    |
    +---------+--------------------------------------------------------------------------------------------------------------------------------------+
    | ``int`` | :ref:`trace<class_ndi_method_trace>`\ (\ v\: ``Variant``, offset\: ``int`` = 0, axis1\: ``int`` = 0, axis2\: ``int`` = 1\ ) |static| |
    +---------+--------------------------------------------------------------------------------------------------------------------------------------+
@@ -130,18 +130,6 @@ No-axis equivalent of :ref:`nd.prod()<class_nd_method_prod>` that returns an int
 
 ----
 
-.. _class_ndi_method_sum_product:
-
-.. rst-class:: classref-method
-
-``int`` **sum_product**\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static| :ref:`🔗<class_ndi_method_sum_product>`
-
-No-axis equivalent of :ref:`nd.sum_product()<class_nd_method_sum_product>` that returns an int.
-
-.. rst-class:: classref-item-separator
-
-----
-
 .. _class_ndi_method_sum:
 
 .. rst-class:: classref-method
@@ -149,6 +137,18 @@ No-axis equivalent of :ref:`nd.sum_product()<class_nd_method_sum_product>` that 
 ``int`` **sum**\ (\ a\: ``Variant``\ ) |static| :ref:`🔗<class_ndi_method_sum>`
 
 No-axis equivalent of :ref:`nd.sum()<class_nd_method_sum>` that returns an int.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ndi_method_sum_product:
+
+.. rst-class:: classref-method
+
+``int`` **sum_product**\ (\ a\: ``Variant``, b\: ``Variant``\ ) |static| :ref:`🔗<class_ndi_method_sum_product>`
+
+No-axis equivalent of :ref:`nd.sum_product()<class_nd_method_sum_product>` that returns an int.
 
 .. rst-class:: classref-item-separator
 

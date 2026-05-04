@@ -50,6 +50,84 @@ namespace va::op {
 		constexpr std::decay_t<std::complex<T1>> operator()(const std::complex<T1>& arg1) const { return std::conj(arg1); }
 	};
 
+	struct signbit_fun {
+		template <class T1>
+		constexpr bool operator()(T1 arg1) const { return std::signbit(arg1); }
+	};
+
+	struct copysign_fun {
+		template <class T1, class T2>
+		constexpr std::decay_t<T1> operator()(T1 arg1, T2 arg2) const { return std::copysign(arg1, static_cast<T1>(arg2)); }
+	};
+
+	struct floor_divide_fun {
+		template <class T1, class T2>
+		constexpr auto operator()(T1 a, T2 b) const {
+			using R = std::common_type_t<T1, T2>;
+			if constexpr (std::is_integral_v<R>) {
+				const R aa = static_cast<R>(a);
+				const R bb = static_cast<R>(b);
+				const R q = aa / bb;
+				const R r = aa - q * bb;
+				return (r != 0 && (r < 0) != (bb < 0)) ? R(q - 1) : q;
+			}
+			else {
+				return std::floor(static_cast<R>(a) / static_cast<R>(b));
+			}
+		}
+	};
+
+	// std::log2 / std::log10 / std::log1p / std::expm1 don't take std::complex.
+	// Compose via natural log / exp for complex; defer to the std specials for
+	// real dtypes since they're more accurate near zero / for huge magnitudes
+	// than the naive composition.
+	struct log2_fun {
+		template <class T>
+		constexpr auto operator()(T arg) const {
+			if constexpr (xtl::is_complex<T>::value) {
+				using F = typename T::value_type;
+				return std::log(arg) / static_cast<F>(0.6931471805599453);  // ln(2)
+			}
+			else {
+				return std::log2(arg);
+			}
+		}
+	};
+	struct log10_fun {
+		template <class T>
+		constexpr auto operator()(T arg) const {
+			if constexpr (xtl::is_complex<T>::value) {
+				using F = typename T::value_type;
+				return std::log(arg) / static_cast<F>(2.302585092994046);  // ln(10)
+			}
+			else {
+				return std::log10(arg);
+			}
+		}
+	};
+	struct log1p_fun {
+		template <class T>
+		constexpr auto operator()(T arg) const {
+			if constexpr (xtl::is_complex<T>::value) {
+				return std::log(arg + T(1));
+			}
+			else {
+				return std::log1p(arg);
+			}
+		}
+	};
+	struct expm1_fun {
+		template <class T>
+		constexpr auto operator()(T arg) const {
+			if constexpr (xtl::is_complex<T>::value) {
+				return std::exp(arg) - T(1);
+			}
+			else {
+				return std::expm1(arg);
+			}
+		}
+	};
+
 	template <typename R, typename I>
 	R va_cast(I i) {
 		return static_cast<R>(i);
@@ -201,7 +279,11 @@ namespace va::vfunc::impl {
 	IMPLEMENT_UNARY_VFUNC(square, xt::square(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_VFUNC(sqrt, xt::sqrt(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_VFUNC(exp, xt::exp(va::promote::to_num(a)))
+	IMPLEMENT_UNARY_VFUNC(expm1, xt::detail::make_xfunction<va::op::expm1_fun>(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_VFUNC(log, xt::log(va::promote::to_num(a)))
+	IMPLEMENT_UNARY_VFUNC(log2, xt::detail::make_xfunction<va::op::log2_fun>(va::promote::to_num(a)))
+	IMPLEMENT_UNARY_VFUNC(log10, xt::detail::make_xfunction<va::op::log10_fun>(va::promote::to_num(a)))
+	IMPLEMENT_UNARY_VFUNC(log1p, xt::detail::make_xfunction<va::op::log1p_fun>(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_VFUNC(rad2deg, xt::rad2deg(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_VFUNC(deg2rad, xt::deg2rad(va::promote::to_num(a)))
 
@@ -212,10 +294,17 @@ namespace va::vfunc::impl {
 	IMPLEMENT_BINARY_VFUNC(subtract, xt::detail::make_xfunction<xt::detail::minus>(va::promote::to_num(a), va::promote::to_num(b)));
 	IMPLEMENT_BINARY_VFUNC(multiply, xt::detail::make_xfunction<xt::detail::multiplies>(va::promote::to_num(a), va::promote::to_num(b)))
 	IMPLEMENT_BINARY_VFUNC(divide, xt::detail::make_xfunction<xt::detail::divides>(va::promote::to_num(a), va::promote::to_num(b)))
+	IMPLEMENT_BINARY_VFUNC(floor_divide, xt::detail::make_xfunction<va::op::floor_divide_fun>(va::promote::to_num(a), va::promote::to_num(b)))
 	IMPLEMENT_BINARY_VFUNC(remainder, xt::remainder(va::promote::to_num(a), va::promote::to_num(b)))
 	IMPLEMENT_BINARY_VFUNC(pow, xt::pow(va::promote::to_num(a), va::promote::to_num(b)))
 	IMPLEMENT_BINARY_VFUNC(minimum, xt::minimum(a, b))
 	IMPLEMENT_BINARY_VFUNC(maximum, xt::maximum(a, b))
+	IMPLEMENT_BINARY_VFUNC(hypot, xt::hypot(va::promote::to_num(a), va::promote::to_num(b)))
+	IMPLEMENT_BINARY_VFUNC(copysign, xt::detail::make_xfunction<va::op::copysign_fun>(va::promote::to_num(a), va::promote::to_num(b)))
+	IMPLEMENT_BINARY_VFUNC(logaddexp,
+		xt::maximum(va::promote::to_num(a), va::promote::to_num(b))
+			+ xt::log1p(xt::exp(-xt::abs(va::promote::to_num(a) - va::promote::to_num(b)))))
+	IMPLEMENT_UNARY_VFUNC(signbit, xt::detail::make_xfunction<va::op::signbit_fun>(va::promote::to_num(a)))
 
 	// sum/prod must accumulate at the output cell's dtype (the vfunc table maps
 	// narrow ints to int64), or `prod(int32)` overflows during accumulation and

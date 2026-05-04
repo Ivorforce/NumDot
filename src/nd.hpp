@@ -133,6 +133,7 @@ public:
 	static Ref<NDArray> subtract(const Variant& a, const Variant& b);
 	static Ref<NDArray> multiply(const Variant& a, const Variant& b);
 	static Ref<NDArray> divide(const Variant& a, const Variant& b);
+	static Ref<NDArray> floor_divide(const Variant& a, const Variant& b);
 	static Ref<NDArray> remainder(const Variant& a, const Variant& b);
 	static Ref<NDArray> pow(const Variant& a, const Variant& b);
 
@@ -142,12 +143,20 @@ public:
 	static Ref<NDArray> where(const Variant& condition, const Variant& x, const Variant& y);
 
 	static Ref<NDArray> sign(const Variant& a);
+	static Ref<NDArray> signbit(const Variant& a);
+	static Ref<NDArray> copysign(const Variant& a, const Variant& b);
 	static Ref<NDArray> abs(const Variant& a);
 	static Ref<NDArray> square(const Variant& a);
 	static Ref<NDArray> sqrt(const Variant& a);
+	static Ref<NDArray> hypot(const Variant& a, const Variant& b);
 
 	static Ref<NDArray> exp(const Variant& a);
+	static Ref<NDArray> expm1(const Variant& a);
 	static Ref<NDArray> log(const Variant& a);
+	static Ref<NDArray> log2(const Variant& a);
+	static Ref<NDArray> log10(const Variant& a);
+	static Ref<NDArray> log1p(const Variant& a);
+	static Ref<NDArray> logaddexp(const Variant& a, const Variant& b);
 
 	static Ref<NDArray> rad2deg(const Variant& a);
 	static Ref<NDArray> deg2rad(const Variant& a);

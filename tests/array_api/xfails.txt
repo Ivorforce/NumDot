@@ -49,17 +49,6 @@ array_api_tests/test_creation_functions.py::test_arange
 # File enabled by adding an ndarray subclass with operator dunders that
 # dispatch back through nd. Residual failures bucketed below.
 
-# --- NumDot missing function (no shim possible until nd exposes it) ---
-array_api_tests/test_operators_and_elementwise_functions.py::test_copysign
-array_api_tests/test_operators_and_elementwise_functions.py::test_expm1
-array_api_tests/test_operators_and_elementwise_functions.py::test_floor_divide
-array_api_tests/test_operators_and_elementwise_functions.py::test_hypot
-array_api_tests/test_operators_and_elementwise_functions.py::test_log1p
-array_api_tests/test_operators_and_elementwise_functions.py::test_log2
-array_api_tests/test_operators_and_elementwise_functions.py::test_log10
-array_api_tests/test_operators_and_elementwise_functions.py::test_logaddexp
-array_api_tests/test_operators_and_elementwise_functions.py::test_signbit
-
 # --- NumDot bug: nd.bitwise_right_shift function-form fails on array×array ---
 # Both function-form and operator-form (x1, x2) variants fail; the (x, s)
 # scalar variant is already covered above under scalar-promotion.
@@ -139,15 +128,6 @@ array_api_tests/test_signatures.py::test_func_signature[repeat]
 array_api_tests/test_signatures.py::test_func_signature[roll]
 array_api_tests/test_signatures.py::test_func_signature[argsort]
 array_api_tests/test_signatures.py::test_func_signature[sort]
-array_api_tests/test_signatures.py::test_func_signature[copysign]
-array_api_tests/test_signatures.py::test_func_signature[expm1]
-array_api_tests/test_signatures.py::test_func_signature[floor_divide]
-array_api_tests/test_signatures.py::test_func_signature[hypot]
-array_api_tests/test_signatures.py::test_func_signature[log1p]
-array_api_tests/test_signatures.py::test_func_signature[log2]
-array_api_tests/test_signatures.py::test_func_signature[log10]
-array_api_tests/test_signatures.py::test_func_signature[logaddexp]
-array_api_tests/test_signatures.py::test_func_signature[signbit]
 array_api_tests/test_signatures.py::test_func_signature[matmul]
 array_api_tests/test_signatures.py::test_func_signature[matrix_transpose]
 array_api_tests/test_signatures.py::test_func_signature[tensordot]

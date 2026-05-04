@@ -56,9 +56,15 @@ namespace va {
 	DEFINE_VFUNC_CALLER_UNARY0(square)
 	DEFINE_VFUNC_CALLER_UNARY0(sqrt)
 	DEFINE_VFUNC_CALLER_UNARY0(exp)
+	DEFINE_VFUNC_CALLER_UNARY0(expm1)
 	DEFINE_VFUNC_CALLER_UNARY0(log)
+	DEFINE_VFUNC_CALLER_UNARY0(log2)
+	DEFINE_VFUNC_CALLER_UNARY0(log10)
+	DEFINE_VFUNC_CALLER_UNARY0(log1p)
+	DEFINE_VFUNC_CALLER_BINARY0(logaddexp)
 	DEFINE_VFUNC_CALLER_UNARY0(rad2deg)
 	DEFINE_VFUNC_CALLER_UNARY0(deg2rad)
+	DEFINE_VFUNC_CALLER_UNARY0(signbit)
 
 	DEFINE_VFUNC_CALLER_UNARY0(conjugate)
 
@@ -66,10 +72,13 @@ namespace va {
 	DEFINE_VFUNC_CALLER_BINARY0(subtract)
 	DEFINE_VFUNC_CALLER_BINARY0(multiply)
 	DEFINE_VFUNC_CALLER_BINARY0(divide)
+	DEFINE_VFUNC_CALLER_BINARY0(floor_divide)
 	DEFINE_VFUNC_CALLER_BINARY0(remainder)
 	DEFINE_VFUNC_CALLER_BINARY0(pow)
 	DEFINE_VFUNC_CALLER_BINARY0(minimum)
 	DEFINE_VFUNC_CALLER_BINARY0(maximum)
+	DEFINE_VFUNC_CALLER_BINARY0(hypot)
+	DEFINE_VFUNC_CALLER_BINARY0(copysign)
 	inline void clip(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& lo, const VData& hi) {
 		// TODO Re-evaluate if it's worth it to make it a ternary vfunc.
 		// TODO It should also be possible to do this without a temp variable.

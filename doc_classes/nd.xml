@@ -239,7 +239,7 @@
 		<method name="concatenate" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="v" type="Variant" />
-			<param index="1" name="axis" type="int" default="0" />
+			<param index="1" name="axis" type="Variant" default="0" />
 			<param index="2" name="dtype" type="int" enum="nd.DType" default="13" />
 			<description>
 				Join a sequence of arrays along an existing axis.
@@ -268,6 +268,14 @@
 			<param index="0" name="array" type="Variant" />
 			<description>
 				Creates a copy of the given array.
+			</description>
+		</method>
+		<method name="copysign" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+				Element-wise composition of [code]|a|[/code] with the sign of [code]b[/code]. Real dtypes only.
 			</description>
 		</method>
 		<method name="cos" qualifiers="static">
@@ -421,6 +429,13 @@
 				Calculate the exponential of all elements in the input array.
 			</description>
 		</method>
+		<method name="expm1" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				Element-wise [code]exp(a) - 1[/code], computed accurately for [code]|a|[/code] near zero.
+			</description>
+		</method>
 		<method name="eye" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="shape" type="Variant" />
@@ -486,6 +501,14 @@
 				The floor of the scalar x is the largest integer i, such that i &lt;= x.
 			</description>
 		</method>
+		<method name="floor_divide" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+				Element-wise floor of [code]a / b[/code] — Python-style "[code]//[/code]" rounding toward [code]-infinity[/code], including for integer inputs (so [code]nd.floor_divide(-7, 2) == -4[/code], not [code]-3[/code]). Real dtypes only.
+			</description>
+		</method>
 		<method name="from" qualifiers="static">
 			<return type="Vector4i" />
 			<param index="0" name="start" type="int" />
@@ -546,6 +569,14 @@
 				Stack arrays in sequence horizontally (column wise).
 				This is equivalent to concatenation along the second axis, except for 1-D arrays where it concatenates along the first axis. Rebuilds arrays divided by hsplit.
 				This function makes most sense for arrays with up to 3 dimensions. For instance, for pixel-data with a height (first axis), width (second axis), and r/g/b channels (third axis). The functions concatenate, stack and block provide more general stacking and concatenation operations.
+			</description>
+		</method>
+		<method name="hypot" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+				Element-wise [code]sqrt(a * a + b * b)[/code], computed without intermediate overflow.
 			</description>
 		</method>
 		<method name="imag" qualifiers="static">
@@ -682,6 +713,35 @@
 			<description>
 				Natural logarithm, element-wise.
 				The natural logarithm log is the inverse of the exponential function, so that log(exp(x)) = x. The natural logarithm is logarithm in base e.
+			</description>
+		</method>
+		<method name="log1p" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				Element-wise [code]log(1 + a)[/code], computed accurately for [code]|a|[/code] near zero.
+			</description>
+		</method>
+		<method name="log2" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				Base-2 logarithm, element-wise.
+			</description>
+		</method>
+		<method name="log10" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				Base-10 logarithm, element-wise.
+			</description>
+		</method>
+		<method name="logaddexp" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+				Element-wise [code]log(exp(a) + exp(b))[/code], computed without intermediate overflow. Real dtypes only.
 			</description>
 		</method>
 		<method name="logical_and" qualifiers="static">
@@ -980,6 +1040,13 @@
 			<description>
 				Returns an element-wise indication of the sign of a number.
 				The sign function returns -1 if x &lt; 0, 0 if x==0, 1 if x &gt; 0. nan is returned for nan inputs.
+			</description>
+		</method>
+		<method name="signbit" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				Element-wise test for whether the IEEE-754 sign bit is set. Returns [code]true[/code] for negative finite values, [code]-0.0[/code], and [code]-infinity[/code]. Real dtypes only.
 			</description>
 		</method>
 		<method name="sin" qualifiers="static">

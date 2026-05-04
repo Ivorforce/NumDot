@@ -13,14 +13,13 @@ Here you will find the release notes for each version of the library. Each secti
 Upcoming Changes (main branch)
 ------------------------------
 
-This release we're adding a new testing strategy, where we test NumDot against the `Python array-api-tests <https://github.com/data-apis/array-api-tests>`_ conformance suite by the Consortium for Python Data API Standards.
-The suite is made to test numpy-like APIs, and ended up surfacing a number of edge-case bugs in creation and conversion functions, most of which are fixed below.
+Many bugs in this release were found by running NumDot against the `Python array-api-tests <https://github.com/data-apis/array-api-tests>`_ conformance suite from the Consortium for Python Data API Standards.
 
 **Added**
 
 - ``nd.where(condition, x, y)`` selects from ``x`` where ``condition`` is true and from ``y`` otherwise, with broadcasting across all three operands.
-- New elementwise math functions: ``nd.log2``, ``nd.log10``, ``nd.log1p``, ``nd.expm1`` (real and complex inputs), ``nd.logaddexp``, ``nd.hypot``, ``nd.copysign``, ``nd.signbit``, and ``nd.floor_divide`` (Python-style floor toward ``-infinity`` for both integer and float inputs).
-- ``nd.cumsum`` and ``nd.cumprod`` compute cumulative sums and products along an axis (or over the flattened input when ``axis`` is null), with the same wide-accumulator promotion as ``nd.sum`` / ``nd.prod``.
+- New elementwise math functions: ``nd.log2``, ``nd.log10``, ``nd.log1p``, ``nd.expm1``, ``nd.logaddexp``, ``nd.hypot``, ``nd.copysign``, ``nd.signbit``, and ``nd.floor_divide`` (Python-style floor toward ``-infinity``, including for integer inputs).
+- ``nd.cumsum`` and ``nd.cumprod`` compute cumulative sums and products along an axis (or over the flattened input when ``axis`` is null).
 
 **Changed**
 
@@ -29,22 +28,23 @@ The suite is made to test numpy-like APIs, and ended up surfacing a number of ed
 
 **Fixed**
 
-- ``nd.round`` and ``nd.rint`` returned ``null`` on integer/bool arrays; they now pass the input through unchanged. ``nd.round`` also now works on complex arrays (rounding real and imaginary parts independently), instead of returning ``null``.
-- ``nd.clip(a, min, max)`` now treats a ``null`` ``min`` or ``max`` as "no bound on that side" (previously it errored). ``nd.clip(a, null, null)`` returns ``a`` unchanged. The weak-scalar promotion from binary ops now also applies here, so ``nd.clip(uint8_arr, 0, 255)`` stays uint8 instead of promoting to int64.
-- Reductions (``nd.sum``, ``nd.mean``, ``nd.min``, ``nd.max``, ``nd.std``, ``nd.var``, ...) now accept axes in any order and allow negative indices that wrap from the end. Previously, only sorted, non-negative axis lists worked; ``nd.mean(arr, [1, 0])`` returned ``null``.
-- ``nd.prod`` and ``nd.sum`` on narrow integer dtypes (``int8``/``int16``/``int32``, ``uint8``/``uint16``/``uint32``) now accumulate at the wider output dtype (``int64``/``uint64``) instead of overflowing at the input precision. ``nd.prod([1291, 1291, 1291])`` now returns ``2151685171`` instead of ``-2143282125``.
-- Casting an array between dtypes via ``nd.array(x, dtype)`` (and the underlying ``copy_as_dtype``) now supports complex sources: ``complex128 → complex64`` (precision-narrowing), ``complex → real`` (drops the imaginary part with a warning), and ``complex → bool``. Previously these all errored with "Cannot promote in this way."
-- ``nd.array(complex_arr, nd.Bool)`` and ``ndb.all`` / ``ndb.any`` on complex inputs now return ``true`` for nonzero values; the boolean test was inverted, so ``ndb.all([1+0j])`` came back as ``false``.
-- ``nd.concatenate`` now accepts ``null`` for ``axis``, flattening every input array before concatenating (matches numpy's ``axis=None``).
-- ``nd.dumpb`` now produces correct bytes for non-contiguous arrays. Previously it dumped the underlying storage from the view's starting pointer, so ``nd.dumpb(nd.flip(arr))`` (and any ``transpose`` / ``moveaxis`` / strided-slice result) wrote the original bytes with the new shape header — saving and reloading silently corrupted the data. Contiguous arrays still take the fast path.
-- ``nd.transpose`` accepts negative axes in the permutation, wrapping from the end (``nd.transpose(arr, [-1])`` no longer returns ``null``).
-- ``va::dtype_common_type`` (used by ``nd.concatenate``, ``nd.linspace``, ``nd.arange``, ``nd.matmul`` / ``nd.dot``, and array-from-nested-array conversion) now follows numpy's ``result_type`` rules. ``concatenate(uint8_arr, uint16_arr)`` is now ``uint16`` (was ``int32`` because the implementation used C++'s ``std::common_type_t``, which promotes both to ``int``). ``int32 + uint32`` is now ``int64``; ``int64 + uint64`` is ``float64`` (matches numpy).
-- ``nd.arange`` returned a garbage-sized array when the sign of ``step`` disagreed with the sign of ``stop - start``; it now returns an empty array, matching numpy.
-- ``nd.arange`` with ``step = 0`` is now rejected with a clean error (previously it relied on undefined division-by-zero behavior).
-- ``nd.arange`` with integer arguments above ``2**53`` could compute a wrong element count because the bounds were converted to ``float64`` before subtraction; integer dtypes now use exact integer arithmetic.
-- ``NDArray.to_godot_array`` returned wrong data and could crash Godot on arrays with more than two elements; it now returns the correct rows.
-- ``nd.concatenate``/``nd.hstack``/``nd.vstack`` failed with a shape-mismatch error when called on a single ``NDArray``.
-- Internal slice errors in array conversions (``to_godot_array``, ``to_packed_*``, ``to_vector*``/``to_color``/etc., ``copy``, ``as_type``, iteration) used to abort Godot; they now report a Godot error.
+- ``nd.round`` and ``nd.rint`` now pass integer/bool arrays through unchanged (used to return ``null``). ``nd.round`` also now works on complex arrays.
+- ``nd.clip`` accepts ``null`` for ``min`` and/or ``max`` to leave that side unbounded (used to error).
+- ``nd.clip`` follows the same scalar-promotion rule as binary ops, so ``nd.clip(uint8_arr, 0, 255)`` stays ``uint8``.
+- Reductions (``nd.sum``, ``nd.mean``, ``nd.min``, ``nd.max``, ``nd.std``, ``nd.var``, ...) accept axis lists in any order and with negative indices. ``nd.mean(arr, [1, 0])`` used to return ``null``.
+- ``nd.prod`` and ``nd.sum`` on narrow integer dtypes (``int8``..``int32``, ``uint8``..``uint32``) accumulate at the wider output dtype (``int64`` / ``uint64``) instead of overflowing. ``nd.prod([1291, 1291, 1291])`` now returns ``2151685171`` instead of ``-2143282125``.
+- ``nd.array(x, dtype)`` supports casting from complex sources: ``complex128 → complex64``, ``complex → real`` (drops the imaginary part with a warning), and ``complex → bool``. These previously errored.
+- Boolean conversion of complex arrays was inverted: ``ndb.all([1+0j])`` came back ``false``. ``nd.array(complex_arr, nd.Bool)``, ``ndb.all`` and ``ndb.any`` now return ``true`` for nonzero values.
+- ``nd.concatenate`` accepts ``null`` for ``axis``, flattening inputs before concatenating.
+- ``nd.dumpb`` produces correct bytes for non-contiguous arrays (e.g. results of ``nd.flip`` / ``nd.transpose`` / strided slices). Saving and reloading these used to silently corrupt the data.
+- ``nd.transpose`` accepts negative axes in the permutation; ``nd.transpose(arr, [-1])`` no longer returns ``null``.
+- Result dtype for ``nd.concatenate``, ``nd.linspace``, ``nd.arange``, ``nd.matmul`` / ``nd.dot``, and array-from-nested-array conversion follows numpy's ``result_type`` rules: ``uint8 + uint16 → uint16`` (was ``int32``), ``int32 + uint32 → int64``, ``int64 + uint64 → float64``.
+- ``nd.arange`` returns an empty array when ``step`` has the wrong sign for ``stop - start`` (used to return garbage data).
+- ``nd.arange`` with ``step = 0`` is rejected with a clean error.
+- ``nd.arange`` with integer arguments above ``2**53`` could return the wrong number of elements; integer dtypes now use exact integer arithmetic.
+- ``NDArray.to_godot_array`` returned wrong data (and could crash Godot) on arrays with more than two elements.
+- ``nd.concatenate`` / ``nd.hstack`` / ``nd.vstack`` no longer fail with a shape-mismatch error on a single ``NDArray``.
+- Slice errors in array conversions (``to_godot_array``, ``to_packed_*``, ``to_vector*``, ``copy``, ``as_type``, iteration) raise a Godot error instead of crashing.
 
 Version 0.11 - 2025-09-14
 -------------------------

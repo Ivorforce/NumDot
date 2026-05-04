@@ -465,8 +465,8 @@
 			<param index="0" name="v" type="Variant" />
 			<param index="1" name="axis" type="int" />
 			<description>
-				Insert a length-1 dimension at the given [code]axis[/code] of [code]v[/code]. Returns a view sharing the input's data — no copy.
-				[code]axis[/code] may be negative to count from the end. The valid range is [code][-ndim - 1, ndim][/code]; values outside that range error.
+				Insert a length-1 dimension at the given [param axis] of [param v]. Returns a view sharing the input's data — no copy.
+				[param axis] may be negative to count from the end. The valid range is [code][-ndim - 1, ndim][/code]; values outside that range error.
 			</description>
 		</method>
 		<method name="expm1" qualifiers="static">
@@ -1159,8 +1159,9 @@
 		<method name="squeeze" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="v" type="Variant" />
+			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
-				Remove axes of length one from [param v].
+				Remove length-1 axes from [param v]. If [param axes] is null (default), drops every length-1 axis; otherwise drops only the listed axes (int or list of ints, negatives count from the end). Errors if any requested axis is not size 1.
 			</description>
 		</method>
 		<method name="stack" qualifiers="static">

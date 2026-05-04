@@ -126,7 +126,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("split", "v", "indices_or_sections", "axis"), &nd::split, DEFVAL(0));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("hsplit", "v", "indices_or_sections"), &nd::hsplit);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("vsplit", "v", "indices_or_sections"), &nd::vsplit);
-	godot::ClassDB::bind_static_method("nd", D_METHOD("squeeze", "v"), &nd::squeeze);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("squeeze", "v", "axes"), &nd::squeeze, DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("expand_dims", "v", "axis"), &nd::expand_dims);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("real", "v"), &nd::real);
@@ -921,10 +921,14 @@ TypedArray<NDArray> nd::vsplit(const Variant& v, const Variant& indices_or_secti
 	return nd::split(v, indices_or_sections, 0);
 }
 
-Ref<NDArray> nd::squeeze(const Variant& v) {
+Ref<NDArray> nd::squeeze(const Variant& v, const Variant& axes) {
 	try {
 		const auto array = variant_as_array(v);
-		return { memnew(NDArray(va::squeeze(array))) };
+		if (axes.get_type() == Variant::NIL) {
+			return { memnew(NDArray(va::squeeze(array))) };
+		}
+		const auto axes_ = variant_to_axes(axes);
+		return { memnew(NDArray(va::squeeze(array, axes_))) };
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());

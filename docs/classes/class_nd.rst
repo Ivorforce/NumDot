@@ -302,7 +302,7 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`square<class_nd_method_square>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                       |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`NDArray<class_NDArray>`                              | :ref:`squeeze<class_nd_method_squeeze>`\ (\ v\: ``Variant``\ ) |static|                                                                                                                     |
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`squeeze<class_nd_method_squeeze>`\ (\ v\: ``Variant``, axes\: ``Variant`` = null\ ) |static|                                                                                          |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`stack<class_nd_method_stack>`\ (\ v\: ``Variant``, axis\: ``int`` = 0\ ) |static|                                                                                                     |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2389,9 +2389,9 @@ Return the element-wise square of the input.
 
 .. rst-class:: classref-method
 
-:ref:`NDArray<class_NDArray>` **squeeze**\ (\ v\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_squeeze>`
+:ref:`NDArray<class_NDArray>` **squeeze**\ (\ v\: ``Variant``, axes\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_squeeze>`
 
-Remove axes of length one from ``v``.
+Remove length-1 axes from ``v``. If ``axes`` is null (default), drops every length-1 axis; otherwise drops only the listed axes (int or list of ints, negatives count from the end). Errors if any requested axis is not size 1.
 
 .. rst-class:: classref-item-separator
 

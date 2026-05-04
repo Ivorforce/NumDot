@@ -356,3 +356,29 @@ std::shared_ptr<VArray> va::squeeze(const std::shared_ptr<VArray>& varray) {
 
 	return varray->sliced(v);
 }
+
+std::shared_ptr<VArray> va::squeeze(const std::shared_ptr<VArray>& varray, const axes_type& axes) {
+	const shape_type& shape = varray->shape();
+	const std::size_t ndim = shape.size();
+
+	std::set<std::size_t> drop;
+	for (const auto a : axes) {
+		const auto a_norm = va::util::normalize_axis(a, ndim);
+		if (shape[a_norm] != 1) {
+			throw std::runtime_error("squeeze: requested axis is not size 1");
+		}
+		drop.insert(a_norm);
+	}
+
+	if (drop.empty()) {
+		return varray;
+	}
+
+	xt::xstrided_slice_vector v(ndim);
+	for (std::size_t i = 0; i < ndim; ++i) {
+		v[i] = drop.contains(i)
+			? xt::xstrided_slice<std::ptrdiff_t>(0)
+			: xt::xstrided_slice<std::ptrdiff_t>(xt::xall_tag{});
+	}
+	return varray->sliced(v);
+}

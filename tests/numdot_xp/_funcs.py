@@ -524,19 +524,13 @@ def expand_dims(x, /, axis=0):
 
 
 def squeeze(x, /, axis):
-	# Array API requires axis (int or tuple); nd.squeeze takes none.
-	# Validate the requested axes have size 1, then reshape to drop them.
-	if isinstance(axis, int):
-		axes = (axis,)
-	else:
-		axes = tuple(axis)
-	axes = sorted({a % x.ndim for a in axes}, reverse=True)
-	new_shape = list(x.shape)
+	# Pre-validate: spec mandates ValueError on non-1 axes, but nd reports
+	# errors as null returns (→ BridgeError). Cheaper than re-typing the error.
+	axes = (axis,) if isinstance(axis, int) else tuple(axis)
 	for a in axes:
-		if new_shape[a] != 1:
+		if x.shape[a] != 1:
 			raise ValueError(f"cannot squeeze axis {a} of shape {x.shape}")
-		del new_shape[a]
-	return _call("reshape", x, new_shape)
+	return _call("squeeze", x, axis if isinstance(axis, int) else list(axis))
 
 
 def tile(x, repetitions, /):

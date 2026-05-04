@@ -192,6 +192,14 @@
 				Equivalent to [code]nd.as_array(array, nd.DType.Bool)[/code].
 			</description>
 		</method>
+		<method name="broadcast_to" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="v" type="Variant" />
+			<param index="1" name="shape" type="Variant" />
+			<description>
+				Return a view of [param v] stretched to [param shape]. Front-padded axes and any input axes of length 1 are broadcast (zero-stride); the rest must match the target dimension or the call errors. The result shares memory with [param v] — writing through it is not supported.
+			</description>
+		</method>
 		<method name="ceil" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />

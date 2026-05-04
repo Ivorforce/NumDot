@@ -78,6 +78,8 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`bool_<class_nd_method_bool_>`\ (\ array\: ``Variant``\ ) |static|                                                                                                                     |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`broadcast_to<class_nd_method_broadcast_to>`\ (\ v\: ``Variant``, shape\: ``Variant``\ ) |static|                                                                                      |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`ceil<class_nd_method_ceil>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                           |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`clip<class_nd_method_clip>`\ (\ a\: ``Variant``, min\: ``Variant``, max\: ``Variant``\ ) |static|                                                                                     |
@@ -836,6 +838,18 @@ Compute the bit-wise XOR of two arrays element-wise.
 Convert to a bool dtype tensor.
 
 Equivalent to ``nd.as_array(array, nd.DType.Bool)``.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_broadcast_to:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **broadcast_to**\ (\ v\: ``Variant``, shape\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_broadcast_to>`
+
+Return a view of ``v`` stretched to ``shape``. Front-padded axes and any input axes of length 1 are broadcast (zero-stride); the rest must match the target dimension or the call errors. The result shares memory with ``v`` — writing through it is not supported.
 
 .. rst-class:: classref-item-separator
 

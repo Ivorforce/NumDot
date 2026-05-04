@@ -422,3 +422,55 @@ std::shared_ptr<VArray> va::squeeze(const std::shared_ptr<VArray>& varray, const
 	}
 	return varray->sliced(v);
 }
+
+std::shared_ptr<VArray> va::broadcast_to(const VArray& varray, const shape_type& target_shape) {
+	const shape_type& in_shape = varray.shape();
+	const strides_type& in_strides = varray.strides();
+	const std::size_t in_ndim = in_shape.size();
+	const std::size_t out_ndim = target_shape.size();
+
+	if (out_ndim < in_ndim) {
+		throw std::runtime_error("broadcast_to: target shape has fewer dimensions than input");
+	}
+
+	// Right-align input axes against target. Front-padded axes get stride 0
+	// (they replicate the single underlying slice across the new dimension).
+	const std::size_t pad = out_ndim - in_ndim;
+	strides_type new_strides(out_ndim);
+	for (std::size_t i = 0; i < out_ndim; ++i) {
+		if (i < pad) {
+			new_strides[i] = 0;
+			continue;
+		}
+		const std::size_t in_idx = i - pad;
+		const auto in_dim = in_shape[in_idx];
+		const auto out_dim = target_shape[i];
+		if (in_dim == out_dim) {
+			new_strides[i] = in_strides[in_idx];
+		}
+		else if (in_dim == 1) {
+			new_strides[i] = 0;
+		}
+		else {
+			throw std::runtime_error("broadcast_to: input shape not broadcastable to target shape");
+		}
+	}
+
+	return std::visit(
+		[&varray, &target_shape, &new_strides](const auto& read) -> std::shared_ptr<VArray> {
+			using VT = typename std::decay_t<decltype(read)>::value_type;
+			return std::make_shared<VArray>(
+				VArray {
+					std::shared_ptr(varray.store),
+					make_compute<VT*>(
+						const_cast<VT*>(read.data()),
+						target_shape,
+						new_strides,
+						xt::layout_type::dynamic
+					),
+					varray.data_offset
+				}
+			);
+		}, varray.data
+	);
+}

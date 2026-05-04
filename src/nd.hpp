@@ -100,6 +100,7 @@ public:
 	// Rearrange.
 	static Ref<NDArray> transpose(const Variant& a, const Variant& permutation);
 	static Ref<NDArray> reshape(const Variant& a, const Variant& shape);
+	static Ref<NDArray> broadcast_to(const Variant& v, const Variant& shape);
 	static Ref<NDArray> swapaxes(const Variant& v, int64_t a, int64_t b);
 	static Ref<NDArray> moveaxis(const Variant& v, const Variant& src, const Variant& dst);
 	static Ref<NDArray> flip(const Variant& v, int64_t axis);

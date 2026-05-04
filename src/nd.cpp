@@ -111,6 +111,7 @@ void nd::_bind_methods() {
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("transpose", "a", "permutation"), &nd::transpose, DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("reshape", "a", "shape"), &nd::reshape);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("broadcast_to", "v", "shape"), &nd::broadcast_to);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("swapaxes", "v", "a", "b"), &nd::swapaxes);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("moveaxis", "v", "src", "dst"), &nd::moveaxis);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("flip", "v", "axis"), &nd::flip);
@@ -646,6 +647,17 @@ Ref<NDArray> nd::reshape(const Variant& a, const Variant& shape) {
 		const auto new_shape_ = variant_to_axes(shape);
 
 		return { memnew(NDArray(va::reshape(va::store::default_allocator, a_, new_shape_))) };
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
+}
+
+Ref<NDArray> nd::broadcast_to(const Variant& v, const Variant& shape) {
+	try {
+		const auto array = variant_as_array(v);
+		const auto target = variant_to_shape(shape);
+		return { memnew(NDArray(va::broadcast_to(*array, target))) };
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());

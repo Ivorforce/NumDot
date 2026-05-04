@@ -417,12 +417,15 @@ def reshape(x, /, shape, *, copy=None):
 
 
 def broadcast_to(x, /, shape):
-	# Pure shape op; numpy handles it on our np.ndarray subclass.
-	return np.broadcast_to(x, _shape(shape))
+	return _call("broadcast_to", x, _shape(shape))
 
 
 def broadcast_arrays(*arrays):
-	return list(np.broadcast_arrays(*arrays))
+	# Array API requires a list of broadcast views. nd has broadcast_to but
+	# no broadcast_shapes; use numpy to derive the common shape, then route
+	# each input through nd.broadcast_to.
+	target = np.broadcast_shapes(*[a.shape for a in arrays])
+	return [_call("broadcast_to", a, list(target)) for a in arrays]
 
 
 def concat(arrays, /, *, axis=0):
@@ -455,7 +458,7 @@ def unstack(x, /, *, axis=0):
 def meshgrid(*arrays, indexing="xy"):
 	# nd.meshgrid exists on the C++ side, but the bridge can't return a list of
 	# arrays in one call (same limitation as unstack/split). Build each output
-	# independently: reshape input i to a broadcast-shape, then materialize.
+	# independently: reshape to broadcast-shape, then nd.broadcast_to.
 	if not arrays:
 		return []
 	n = len(arrays)
@@ -469,15 +472,12 @@ def meshgrid(*arrays, indexing="xy"):
 	out_shape = [None] * n
 	for i, a in enumerate(arrays):
 		out_shape[axis_of(i)] = a.shape[0]
-	out_shape = tuple(out_shape)
 	outs = []
 	for i, a in enumerate(arrays):
 		dims = [1] * n
 		dims[axis_of(i)] = a.shape[0]
 		reshaped = _call("reshape", a, list(dims))
-		# Materialize via broadcast_to (numpy-side; nd has no broadcast_to yet).
-		out = np.broadcast_to(np.asarray(reshaped), out_shape).copy()
-		outs.append(out.view(ndarray))
+		outs.append(_call("broadcast_to", reshaped, list(out_shape)))
 	return outs
 
 

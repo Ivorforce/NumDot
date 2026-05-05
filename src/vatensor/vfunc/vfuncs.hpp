@@ -91,6 +91,25 @@ namespace va::op {
 		}
 	};
 
+	// xtensor's abs_fun routes complex arrays through xsimd's batched abs, which
+	// computes sqrt(re² + im²) and overflows when re² + im² > F's max even though
+	// |z| fits (e.g. complex64 at |z| ≈ 1.8e19). The scalar fallback via
+	// std::abs(complex) is hypot-safe; force the same behavior on the SIMD path.
+	struct abs_fun {
+		template <class T>
+		constexpr auto operator()(const T& x) const {
+			if constexpr (xtl::is_complex<T>::value) {
+				return std::hypot(x.real(), x.imag());
+			}
+			else if constexpr (std::is_unsigned_v<T>) {
+				return x;  // |unsigned| is identity
+			}
+			else {
+				return std::abs(x);
+			}
+		}
+	};
+
 	// xt::sign on complex returns sign(re or im) + 0j (a "which axis" indicator),
 	// but the array-api spec defines sign(z) = z / |z| for nonzero complex and 0
 	// for zero. Override the complex branch only; non-complex falls through to
@@ -338,7 +357,7 @@ namespace va::vfunc::impl {
 
 	IMPLEMENT_UNARY_VFUNC(negative, -va::promote::to_num(a))
 	IMPLEMENT_UNARY_VFUNC(sign, xt::detail::make_xfunction<va::op::sign_fun>(va::promote::to_num(a)))
-	IMPLEMENT_UNARY_VFUNC(abs, xt::abs(va::promote::to_num(a)))
+	IMPLEMENT_UNARY_VFUNC(abs, xt::detail::make_xfunction<va::op::abs_fun>(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_VFUNC(square, xt::square(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_VFUNC(sqrt, xt::sqrt(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_VFUNC(exp, xt::exp(va::promote::to_num(a)))

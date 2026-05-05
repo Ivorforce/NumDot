@@ -50,14 +50,9 @@ array_api_tests/test_operators_and_elementwise_functions.py::test_tanh
 
 
 # === Hypothesis-flaky at high example counts ===
-# Pass when isolated, fail with default --max-examples on some seeds:
-# - test_divide: numerical edge in nd.divide or hypothesis-shrinking artifact.
-# - test_abs[abs]: complex64 magnitude overflow on |z|^2 intermediate
-#   (Hypothesis finds c64 values where Re^2+Im^2 overflows even though |z| fits).
+# test_divide: numerical edge in nd.divide or hypothesis-shrinking artifact.
 array_api_tests/test_operators_and_elementwise_functions.py::test_divide[divide(x1, x2)]
 array_api_tests/test_operators_and_elementwise_functions.py::test_divide[__truediv__(x1, x2)]
-array_api_tests/test_operators_and_elementwise_functions.py::test_abs[abs]
-array_api_tests/test_operators_and_elementwise_functions.py::test_abs[__abs__]
 
 
 # === test_manipulation_functions.py ===

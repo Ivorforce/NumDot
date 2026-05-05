@@ -10,11 +10,6 @@
 #   4. Bring a line to zero by either: implementing the missing shim in
 #      numdot_xp, fixing a NumDot bug, or filing one (and noting upstream).
 
-# === Section: NumDot bugs in test_creation_functions ===
-# - test_eye: nd.eye truncates the `k` offset to 32 bits (k=2^32 returns
-#   diagonal of ones instead of all zeros for a 1x1 matrix).
-array_api_tests/test_creation_functions.py::test_eye
-
 # === Section: NumDot precision edges (file issue) ===
 # NumDot's va::arange computes num after converting all inputs to its
 # process_dtype (the common type). When start/stop are huge ints (>2^53)

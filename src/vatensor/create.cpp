@@ -77,15 +77,23 @@ std::shared_ptr<VArray> va::empty(VStoreAllocator& allocator, DType dtype, const
 	);
 }
 
-std::shared_ptr<VArray> va::eye(VStoreAllocator& allocator, DType dtype, const shape_type& shape, int k) {
-	// For some reason, xt::eye wants this specific type
+std::shared_ptr<VArray> va::eye(VStoreAllocator& allocator, DType dtype, const shape_type& shape, std::ptrdiff_t k) {
+	// xt::eye narrows k to int. Short-circuit |k| values that fall outside the
+	// matrix bounds (where the diagonal is empty anyway) so a 64-bit k can't
+	// wrap back into a valid offset on the way to xtensor.
+	const std::ptrdiff_t rows = !shape.empty() ? static_cast<std::ptrdiff_t>(shape[0]) : 0;
+	const std::ptrdiff_t cols = shape.size() > 1 ? static_cast<std::ptrdiff_t>(shape[1]) : rows;
+	if (k >= cols || k <= -rows) {
+		return va::full(allocator, va::static_cast_scalar(VScalar(int64_t(0)), dtype), shape);
+	}
+
 	auto shape_eye = std::vector<std::size_t>(shape.size());
 	std::copy_n(shape.begin(), shape.size(), shape_eye.begin());
 
 	return std::visit(
 		[&shape_eye, &allocator, k](auto t) -> std::shared_ptr<VArray> {
 			using T = std::decay_t<decltype(t)>;
-			return va::create_varray<T>(allocator, xt::eye<T>(shape_eye, k));
+			return va::create_varray<T>(allocator, xt::eye<T>(shape_eye, static_cast<int>(k)));
 		}, dtype_to_variant(dtype)
 	);
 }

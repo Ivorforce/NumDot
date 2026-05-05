@@ -44,10 +44,6 @@ array_api_tests/test_operators_and_elementwise_functions.py::test_tanh
 # failures below are either nd-binding gaps or known nd promotion divergences.
 
 
-# === Hypothesis-flaky at high example counts ===
-# test_divide: numerical edge in nd.divide or hypothesis-shrinking artifact.
-array_api_tests/test_operators_and_elementwise_functions.py::test_divide[divide(x1, x2)]
-array_api_tests/test_operators_and_elementwise_functions.py::test_divide[__truediv__(x1, x2)]
 
 
 # === test_manipulation_functions.py ===

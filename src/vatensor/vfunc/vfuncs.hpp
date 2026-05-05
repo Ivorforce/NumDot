@@ -91,6 +91,49 @@ namespace va::op {
 		}
 	};
 
+	// std::complex's operator/ computes (ac+bd)/(c²+d²) directly, so the
+	// denominator overflows when |c|² + |d|² exceeds F's max even though the
+	// quotient is finite (e.g. complex64 with |c| ≈ 1.8e19). Smith's algorithm
+	// scales by min(|c|,|d|)/max(|c|,|d|) first so neither intermediate squares.
+	// Numpy's complex divide uses the same trick.
+	struct divide_fun {
+		template <class T1, class T2>
+		constexpr auto operator()(const T1& a, const T2& b) const {
+			using R = std::common_type_t<T1, T2>;
+			if constexpr (xtl::is_complex<R>::value) {
+				using F = typename R::value_type;
+				const R z1 = static_cast<R>(a);
+				const R z2 = static_cast<R>(b);
+				const F c = z2.real();
+				const F d = z2.imag();
+				const F p = z1.real();
+				const F q = z1.imag();
+				if (std::abs(c) >= std::abs(d)) {
+					const F r = d / c;
+					const F t = c + d * r;
+					return R((p + q * r) / t, (q - p * r) / t);
+				}
+				else {
+					const F r = c / d;
+					const F t = d + c * r;
+					return R((p * r + q) / t, (q * r - p) / t);
+				}
+			}
+			else {
+				return a / b;
+			}
+		}
+		// xsimd's complex batch divide has the same overflow as the scalar path,
+		// so keep SIMD for non-complex only — complex falls back to operator()
+		// per element, which uses Smith's algorithm above.
+		template <class B>
+		auto simd_apply(const B& a, const B& b) const
+			-> std::enable_if_t<!xtl::is_complex<typename B::value_type>::value, decltype(a / b)>
+		{
+			return a / b;
+		}
+	};
+
 	// xtensor's abs_fun routes complex arrays through xsimd's batched abs, which
 	// computes sqrt(re² + im²) and overflows when re² + im² > F's max even though
 	// |z| fits (e.g. complex64 at |z| ≈ 1.8e19). The scalar fallback via
@@ -375,7 +418,7 @@ namespace va::vfunc::impl {
 	IMPLEMENT_BINARY_VFUNC(add, xt::detail::make_xfunction<xt::detail::plus>(va::promote::to_num(a), va::promote::to_num(b)))
 	IMPLEMENT_BINARY_VFUNC(subtract, xt::detail::make_xfunction<xt::detail::minus>(va::promote::to_num(a), va::promote::to_num(b)));
 	IMPLEMENT_BINARY_VFUNC(multiply, xt::detail::make_xfunction<xt::detail::multiplies>(va::promote::to_num(a), va::promote::to_num(b)))
-	IMPLEMENT_BINARY_VFUNC(divide, xt::detail::make_xfunction<xt::detail::divides>(va::promote::to_num(a), va::promote::to_num(b)))
+	IMPLEMENT_BINARY_VFUNC(divide, xt::detail::make_xfunction<va::op::divide_fun>(va::promote::to_num(a), va::promote::to_num(b)))
 	IMPLEMENT_BINARY_VFUNC(floor_divide, xt::detail::make_xfunction<va::op::floor_divide_fun>(va::promote::to_num(a), va::promote::to_num(b)))
 	IMPLEMENT_BINARY_VFUNC(remainder, xt::remainder(va::promote::to_num(a), va::promote::to_num(b)))
 	IMPLEMENT_BINARY_VFUNC(pow, xt::pow(va::promote::to_num(a), va::promote::to_num(b)))

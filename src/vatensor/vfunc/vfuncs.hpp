@@ -91,6 +91,26 @@ namespace va::op {
 		}
 	};
 
+	// xt::sign on complex returns sign(re or im) + 0j (a "which axis" indicator),
+	// but the array-api spec defines sign(z) = z / |z| for nonzero complex and 0
+	// for zero. Override the complex branch only; non-complex falls through to
+	// xtensor's existing impl. hypot avoids the re²+im² overflow that plain
+	// |z| via sqrt would hit near the dtype's max magnitude.
+	struct sign_fun {
+		template <class T>
+		constexpr auto operator()(T x) const {
+			if constexpr (xtl::is_complex<T>::value) {
+				using F = typename T::value_type;
+				const F mag = std::hypot(x.real(), x.imag());
+				if (mag == F(0)) return T(0, 0);
+				return T(x.real() / mag, x.imag() / mag);
+			}
+			else {
+				return xt::math::sign_impl<T>::run(x);
+			}
+		}
+	};
+
 	// std::log(complex<F>) computes 0.5 * log(re² + im²) + i·atan2(im, re),
 	// so the real part overflows when re² + im² exceeds F's max even though
 	// |z| is finite (e.g. complex64 with |z| ≈ 1.8e19, |z|² ≈ 3.4e38 — right
@@ -317,7 +337,7 @@ namespace va::vfunc::impl {
 	IMPLEMENT_INPLACE_VFUNC(fill_consecutive, va::op::consecutive<R>(start, step, num), const void* start, const void* step, std::size_t num)
 
 	IMPLEMENT_UNARY_VFUNC(negative, -va::promote::to_num(a))
-	IMPLEMENT_UNARY_VFUNC(sign, xt::sign(va::promote::to_num(a)))
+	IMPLEMENT_UNARY_VFUNC(sign, xt::detail::make_xfunction<va::op::sign_fun>(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_VFUNC(abs, xt::abs(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_VFUNC(square, xt::square(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_VFUNC(sqrt, xt::sqrt(va::promote::to_num(a)))

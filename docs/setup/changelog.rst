@@ -51,6 +51,7 @@ Many bugs in this release were found by running NumDot against the `Python array
 - ``nd.linspace(a, b, num)`` lands ``out[-1]`` exactly on ``b`` when ``endpoint`` is true (used to drift a few ULPs, e.g. ``29.000000000000004`` instead of ``29.0``). ``nd.linspace(a, b, 1)`` returns ``[a]`` instead of ``[nan]``.
 - ``nd.bitwise_right_shift`` on negative signed integers now sign-extends when the shift count meets or exceeds the dtype's bit width (e.g. ``int32(-1) >> 32`` now returns ``-1``, was ``0``), matching the array-api spec.
 - ``nd.log`` no longer returns ``nan`` on complex inputs whose magnitude is near the dtype's maximum (e.g. ``complex64`` with ``|z| ≈ 1.8e19``).
+- ``nd.sign`` on complex inputs now returns ``z / |z|`` (e.g. ``nd.sign(0.5+1j)`` is ``0.4472+0.8944j``, not ``1+0j``), matching the array-api spec.
 - ``nd.reshape`` from a 1-D array to a multi-dimensional shape used to silently produce column-major output (e.g. ``nd.reshape(nd.array([1, 2, 3, 4, 5, 6]), [2, 3])`` returned ``[[1, 3, 5], [2, 4, 6]]``); it now returns row-major ``[[1, 2, 3], [4, 5, 6]]`` to match numpy / NumDot's general convention.
 - ``nd.arange`` returns an empty array when ``step`` has the wrong sign for ``stop - start`` (used to return garbage data).
 - ``nd.arange`` with ``step = 0`` is rejected with a clean error.

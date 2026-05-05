@@ -43,7 +43,6 @@ array_api_tests/test_operators_and_elementwise_functions.py::test_atan
 array_api_tests/test_operators_and_elementwise_functions.py::test_atanh
 array_api_tests/test_operators_and_elementwise_functions.py::test_tan
 array_api_tests/test_operators_and_elementwise_functions.py::test_tanh
-array_api_tests/test_operators_and_elementwise_functions.py::test_sign
 
 # === Reductions: axis/keepdims/dtype wired ===
 # numdot_xp now passes axis/keepdims/dtype through to nd reductions. Residual

@@ -10,13 +10,6 @@
 #   4. Bring a line to zero by either: implementing the missing shim in
 #      numdot_xp, fixing a NumDot bug, or filing one (and noting upstream).
 
-# === Section: NumDot bug — file issue ===
-# nd.full and nd.full_like both error with "Incompatible dimension of
-# arrays" when the fill_value is a 0-d complex and the dtype is complex.
-# Both work correctly for non-complex inputs.
-array_api_tests/test_creation_functions.py::test_full
-array_api_tests/test_creation_functions.py::test_full_like
-
 # === Section: NumDot bugs in test_creation_functions ===
 # - test_eye: nd.eye truncates the `k` offset to 32 bits (k=2^32 returns
 #   diagonal of ones instead of all zeros for a 1x1 matrix).

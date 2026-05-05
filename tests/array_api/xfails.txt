@@ -52,13 +52,6 @@ array_api_tests/test_operators_and_elementwise_functions.py::test_tan
 array_api_tests/test_operators_and_elementwise_functions.py::test_tanh
 array_api_tests/test_operators_and_elementwise_functions.py::test_sign
 
-# --- NumDot bug: nd.real / nd.imag on real-valued inputs ---
-# Spec requires real(x) / imag(x) to work on any numeric dtype; NumDot's
-# implementation appears to choke on non-complex inputs.
-array_api_tests/test_operators_and_elementwise_functions.py::test_real
-array_api_tests/test_operators_and_elementwise_functions.py::test_imag
-
-
 # === Reductions: axis/keepdims/dtype wired ===
 # numdot_xp now passes axis/keepdims/dtype through to nd reductions. Residual
 # failures below are either nd-binding gaps or known nd promotion divergences.

@@ -22,8 +22,6 @@ array_api_tests/test_operators_and_elementwise_functions.py::test_acos
 array_api_tests/test_operators_and_elementwise_functions.py::test_acosh
 array_api_tests/test_operators_and_elementwise_functions.py::test_asin
 array_api_tests/test_operators_and_elementwise_functions.py::test_asinh
-array_api_tests/test_operators_and_elementwise_functions.py::test_atan
-array_api_tests/test_operators_and_elementwise_functions.py::test_atanh
 array_api_tests/test_operators_and_elementwise_functions.py::test_tan
 array_api_tests/test_operators_and_elementwise_functions.py::test_tanh
 

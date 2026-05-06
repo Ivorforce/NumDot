@@ -191,6 +191,46 @@ namespace va::op {
 		}
 	};
 
+	// std::atan / std::atanh on complex use formulas that overflow or pick the
+	// wrong branch at extreme magnitudes. Use the two-log identities — log(num)
+	// and log(den) are each individually well-defined, while the ratio's
+	// principal log is branch-cut-ambiguous when num/den ≈ -1. Non-complex
+	// falls through to std::atan / std::atanh.
+	struct atan_fun {
+		template <class T>
+		constexpr auto operator()(T z) const {
+			if constexpr (xtl::is_complex<T>::value) {
+				using F = typename T::value_type;
+				// atan(z) = (1/(2i)) · (log(1 + iz) - log(1 - iz))
+				const T iz(-z.imag(), z.real());
+				const T num(F(1) + iz.real(), iz.imag());
+				const T den(F(1) - iz.real(), -iz.imag());
+				const T diff = log_fun{}(num) - log_fun{}(den);
+				return T(diff.imag() / F(2), -diff.real() / F(2));
+			}
+			else {
+				return std::atan(z);
+			}
+		}
+	};
+
+	struct atanh_fun {
+		template <class T>
+		constexpr auto operator()(T z) const {
+			if constexpr (xtl::is_complex<T>::value) {
+				using F = typename T::value_type;
+				// atanh(z) = (1/2) · (log(1 + z) - log(1 - z))
+				const T num(F(1) + z.real(), z.imag());
+				const T den(F(1) - z.real(), -z.imag());
+				const T diff = log_fun{}(num) - log_fun{}(den);
+				return T(diff.real() / F(2), diff.imag() / F(2));
+			}
+			else {
+				return std::atanh(z);
+			}
+		}
+	};
+
 	// std::log2 / std::log10 / std::log1p / std::expm1 don't take std::complex.
 	// Compose via natural log / exp for complex; defer to the std specials for
 	// real dtypes since they're more accurate near zero / for huge magnitudes
@@ -458,14 +498,14 @@ namespace va::vfunc::impl {
 	IMPLEMENT_UNARY_VFUNC(tan, xt::tan(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_VFUNC(asin, xt::asin(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_VFUNC(acos, xt::acos(va::promote::to_num(a)))
-	IMPLEMENT_UNARY_VFUNC(atan, xt::atan(va::promote::to_num(a)))
+	IMPLEMENT_UNARY_VFUNC(atan, xt::detail::make_xfunction<va::op::atan_fun>(va::promote::to_num(a)))
 	IMPLEMENT_BINARY_VFUNC(atan2, xt::atan2(va::promote::to_num(a), va::promote::to_num(b)))
 	IMPLEMENT_UNARY_VFUNC(sinh, xt::sinh(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_VFUNC(cosh, xt::cosh(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_VFUNC(tanh, xt::tanh(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_VFUNC(asinh, xt::asinh(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_VFUNC(acosh, xt::acosh(va::promote::to_num(a)))
-	IMPLEMENT_UNARY_VFUNC(atanh, xt::atanh(va::promote::to_num(a)))
+	IMPLEMENT_UNARY_VFUNC(atanh, xt::detail::make_xfunction<va::op::atanh_fun>(va::promote::to_num(a)))
 
 	IMPLEMENT_UNARY_VFUNC(ceil, xt::ceil(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_VFUNC(floor, xt::floor(va::promote::to_num(a)))

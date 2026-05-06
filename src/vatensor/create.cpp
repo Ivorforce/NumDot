@@ -161,7 +161,17 @@ std::shared_ptr<VArray> va::arange(VStoreAllocator& allocator, VScalar start, VS
 
 	std::size_t num;
 
-	std::visit([&start, &stop, &step, &num](auto t) {
+	// Capture original-dtype info before the visit collapses everything to T:
+	// when start and stop come in as integers but process_dtype is float (because
+	// step is float), each int rounds to float independently and the difference
+	// loses 8+ ULPs above 2^53 — even when the integer diff itself is tiny. The
+	// integer-domain subtraction below preserves precision.
+	const DType start_dt = va::dtype(start);
+	const DType stop_dt = va::dtype(stop);
+	const bool start_is_int = start_dt >= Int8 && start_dt <= UInt64;
+	const bool stop_is_int = stop_dt >= Int8 && stop_dt <= UInt64;
+
+	std::visit([&start, &stop, &step, &num, start_is_int, stop_is_int](auto t) {
 		using T = std::decay_t<decltype(t)>;
 
 		if constexpr (xtl::is_complex<T>::value) {
@@ -174,6 +184,21 @@ std::shared_ptr<VArray> va::arange(VStoreAllocator& allocator, VScalar start, VS
 
 			if (step_ == T(0)) {
 				throw std::runtime_error("arange: step cannot be zero");
+			}
+
+			if constexpr (std::is_floating_point_v<T>) {
+				if (start_is_int && stop_is_int) {
+					// Integer-domain diff: avoids the double-rounding ULP loss
+					// when both ints get cast to T independently. Mirrors numpy.
+					const int64_t s_i = static_cast_scalar<int64_t>(start);
+					const int64_t e_i = static_cast_scalar<int64_t>(stop);
+					const int64_t diff = e_i - s_i;
+					const bool empty_range = (step_ > T(0)) ? (diff <= 0) : (diff >= 0);
+					num = empty_range ? 0 : static_cast<std::size_t>(std::ceil(static_cast<T>(diff) / step_));
+					start = start_;
+					step = step_;
+					return;
+				}
 			}
 
 			// numpy semantics: if step's direction disagrees with

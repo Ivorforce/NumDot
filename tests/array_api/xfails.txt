@@ -10,18 +10,6 @@
 #   4. Bring a line to zero by either: implementing the missing shim in
 #      numdot_xp, fixing a NumDot bug, or filing one (and noting upstream).
 
-# === Section: NumDot precision edges (file issue) ===
-# NumDot's va::arange computes num after converting all inputs to its
-# process_dtype (the common type). When start/stop are huge ints (>2^53)
-# and step is a float, both ints round independently to float64 BEFORE
-# the subtraction, losing 8+ bits of precision in the diff. numpy avoids
-# this by doing the int subtraction first. Hypothesis finds inputs that
-# exceed array-api-tests's ±10% size tolerance.
-# Pure-int and pure-float arange now work correctly (200+ examples) thanks
-# to the integer-arithmetic and direction-mismatch fixes.
-array_api_tests/test_creation_functions.py::test_arange
-
-
 # === test_operators_and_elementwise_functions.py — first wiring ===
 # File enabled by adding an ndarray subclass with operator dunders that
 # dispatch back through nd. Residual failures bucketed below.

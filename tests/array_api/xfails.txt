@@ -36,6 +36,17 @@ array_api_tests/test_operators_and_elementwise_functions.py::test_tanh
 # No nd binding (out of scope: would need new C++ funcs):
 
 
+# === test_searching_functions.py ===
+# No nd binding for argmax / argmin / nonzero / searchsorted yet.
+array_api_tests/test_searching_functions.py::test_argmax
+array_api_tests/test_searching_functions.py::test_argmin
+array_api_tests/test_searching_functions.py::test_nonzero
+array_api_tests/test_searching_functions.py::test_searchsorted
+# nd.where errors on empty mixed-precision complex inputs
+# (where(bool_arr, complex64_empty, complex128_empty) returns null).
+array_api_tests/test_searching_functions.py::test_where
+
+
 # === test_signatures.py — functions from still-skipped test files ===
 # These signatures fail because the corresponding shim is missing entirely.
 # Each will resolve when its containing test file is brought online (and the

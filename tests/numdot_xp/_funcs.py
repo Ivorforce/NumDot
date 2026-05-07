@@ -51,7 +51,7 @@ __all__ = [
 	# utility
 	"diff",
 	# selection
-	"where",
+	"where", "count_nonzero",
 	# dtype
 	"astype", "can_cast", "result_type", "isdtype",
 ]
@@ -565,6 +565,20 @@ def tile(x, repetitions, /):
 
 def where(condition, x1, x2, /):
 	return _call("where", condition, x1, x2)
+
+
+def count_nonzero(x, /, *, axis=None, keepdims=False):
+	# nd.count_nonzero takes axes (list-or-int-or-null), no keepdims; emulate.
+	norm = _normalize_axes(axis, x.ndim)
+	if norm is None:
+		out = _call("count_nonzero", x, None)
+	elif len(norm) == 1:
+		out = _call("count_nonzero", x, norm[0])
+	else:
+		out = _call("count_nonzero", x, norm)
+	if keepdims:
+		out = _call("reshape", out, _keepdims_shape(x.shape, norm))
+	return out
 
 
 # ---- dtype --------------------------------------------------------------------

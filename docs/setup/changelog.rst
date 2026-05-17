@@ -66,6 +66,7 @@ Many bugs in this release were found by running NumDot against the `Python array
 - ``nd.arange`` returns an empty array when ``step`` has the wrong sign for ``stop - start`` (used to return garbage data).
 - ``nd.arange`` with ``step = 0`` is rejected with a clean error.
 - ``nd.arange`` with integer arguments above ``2**53`` could return the wrong number of elements; integer dtypes now use exact integer arithmetic.
+- Reductions over a non-last axis of a multi-dimensional array (e.g. ``nd.mean(matrix, 0)``, ``nd.sum``, ``nd.std``, ``nd.var``, ``nd.max``) returned an empty or wrong-shaped result on Linux and Windows builds; macOS was unaffected.
 - ``NDArray.to_godot_array`` returned wrong data (and could crash Godot) on arrays with more than two elements.
 - ``nd.concatenate`` / ``nd.hstack`` / ``nd.vstack`` no longer fail with a shape-mismatch error on a single ``NDArray``.
 - Slice errors in array conversions (``to_godot_array``, ``to_packed_*``, ``to_vector*``, ``copy``, ``as_type``, iteration) raise a Godot error instead of crashing.

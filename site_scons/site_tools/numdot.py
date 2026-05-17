@@ -78,15 +78,6 @@ def generate(env, godot_cpp_env, sources):
             env.Append(CCFLAGS=["/bigobj"])
         else:
             env.Append(CCFLAGS=["-Wa,-mbig-obj"])
-            # MinGW: LTO emits one COFF section per template instantiation,
-            # each named with a full mangled symbol. The generated vfunc
-            # tables (src/vatensor/gen/base.cpp) produce enough of these to
-            # overflow the object's string table ("file too big"). Drop the
-            # -flto flags godot-cpp added for this toolchain.
-            def without_lto(flags):
-                return [f for f in flags if not str(f).startswith("-flto")]
-            env["CCFLAGS"] = without_lto(env["CCFLAGS"])
-            env["LINKFLAGS"] = without_lto(env["LINKFLAGS"])
 
     if env['platform'] == "web" and use_xsimd:
         # Not enabled by default, and xsimd doesn't have guards against it so we have to force-add it.

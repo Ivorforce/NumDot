@@ -70,7 +70,14 @@ if ARGUMENTS.get("optimize", None) is None and is_release:
 if ARGUMENTS.get("lto", None) is None and is_release:
     # Link-time optimization further lets the compiler optimize, reduce binary size (~.5mb) or inline functions (possibly improving speeds).
     # lto=auto disables LTO by default in some configurations. For us, it brings substantial improvements for configurations.
-    ARGUMENTS["lto"] = "full"
+    if ARGUMENTS.get("platform", None) == "windows":
+        # MinGW's LTO emits one COFF section per template instantiation, each
+        # named with a full mangled symbol. The generated vfunc tables produce
+        # enough of these to overflow the object's string table ("file too
+        # big"). Disable LTO here so godot-cpp and NumDot stay link-compatible.
+        ARGUMENTS["lto"] = "none"
+    else:
+        ARGUMENTS["lto"] = "full"
 
 if ARGUMENTS.get("build_profile", None) is None:
     # This improves compile time quite a lot, and can reduce the binary size too.

@@ -10,8 +10,11 @@ Here you will find the release notes for each version of the library. Each secti
    :local:
    :backlinks: none
 
-Upcoming Changes (main branch)
-------------------------------
+.. Upcoming Changes (main branch)
+.. ------------------------------
+
+Version 0.12 - 2026-06-17
+-------------------------
 
 Many bugs in this release were found by running NumDot against the `Python array-api-tests <https://github.com/data-apis/array-api-tests>`_ conformance suite from the Consortium for Python Data API Standards.
 

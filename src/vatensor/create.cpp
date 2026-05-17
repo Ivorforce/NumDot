@@ -192,9 +192,22 @@ std::shared_ptr<VArray> va::arange(VStoreAllocator& allocator, VScalar start, VS
 					// when both ints get cast to T independently. Mirrors numpy.
 					const int64_t s_i = static_cast_scalar<int64_t>(start);
 					const int64_t e_i = static_cast_scalar<int64_t>(stop);
-					const int64_t diff = e_i - s_i;
-					const bool empty_range = (step_ > T(0)) ? (diff <= 0) : (diff >= 0);
-					num = empty_range ? 0 : static_cast<std::size_t>(std::ceil(static_cast<T>(diff) / step_));
+					// Compare endpoints directly: the signed difference can
+					// overflow (e.g. INT64_MIN - 1) when start and stop sit at
+					// opposite extremes.
+					const bool empty_range = (step_ > T(0)) ? (e_i <= s_i) : (e_i >= s_i);
+					if (empty_range) {
+						num = 0;
+					}
+					else {
+						// Unsigned subtraction is modular and well-defined; for
+						// a non-empty range the true magnitude always fits in
+						// uint64 even when the signed diff would overflow.
+						const uint64_t diff = (step_ > T(0))
+							? static_cast<uint64_t>(e_i) - static_cast<uint64_t>(s_i)
+							: static_cast<uint64_t>(s_i) - static_cast<uint64_t>(e_i);
+						num = static_cast<std::size_t>(std::ceil(static_cast<T>(diff) / std::abs(step_)));
+					}
 					start = start_;
 					step = step_;
 					return;

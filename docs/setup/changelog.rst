@@ -28,6 +28,8 @@ Many bugs in this release were found by running NumDot against the `Python array
 - ``nd.moveaxis`` accepts lists for ``src`` and ``dst`` (in addition to single ints), moving multiple axes in one call. ``nd.moveaxis(arr, [0, 1], [-1, -2])`` swaps the first two axes to the end.
 - ``nd.roll(v, shift, axis)`` cyclically shifts elements; ``axis`` may be null (flatten), an int, or a list paired with ``shift``. Negative and over-sized shifts are normalized.
 - ``nd.repeat(v, repeats, axis)`` repeats each element along ``axis``. ``repeats`` is an int (every element) or an array (one count per element along the axis); a length-1 array broadcasts as a scalar. ``axis = null`` flattens first.
+- ``nd.argmax(a, axis)`` and ``nd.argmin(a, axis)`` return the int64 index of the max / min element along ``axis`` (flattened when ``axis`` is null).
+- ``nd.nonzero(a)`` returns one int64 1-D array per dimension with the indices of non-zero elements.
 
 **Changed**
 

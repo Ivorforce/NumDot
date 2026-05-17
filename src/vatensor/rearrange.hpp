@@ -60,6 +60,17 @@ namespace va {
 
 	std::shared_ptr<VArray> repeat(VStoreAllocator& allocator, const VArray& varray, std::size_t repeats, std::ptrdiff_t axis);
 	std::shared_ptr<VArray> repeat(VStoreAllocator& allocator, const VArray& varray, const std::vector<std::size_t>& repeats, std::ptrdiff_t axis);
+
+	// argmax / argmin: returns int64 indices. With axis=null, flatten and return
+	// a 0-D scalar; with a single axis, the axis is collapsed.
+	std::shared_ptr<VArray> argmax(VStoreAllocator& allocator, const VArray& varray);
+	std::shared_ptr<VArray> argmax(VStoreAllocator& allocator, const VArray& varray, std::ptrdiff_t axis);
+	std::shared_ptr<VArray> argmin(VStoreAllocator& allocator, const VArray& varray);
+	std::shared_ptr<VArray> argmin(VStoreAllocator& allocator, const VArray& varray, std::ptrdiff_t axis);
+
+	// nonzero: returns N int64 1-D arrays (one per dim) with the indices of
+	// elements that compare nonzero.
+	std::vector<std::shared_ptr<VArray>> nonzero(VStoreAllocator& allocator, const VArray& varray);
 }
 
 #endif //XV_H

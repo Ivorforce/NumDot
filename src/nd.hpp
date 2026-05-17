@@ -120,6 +120,9 @@ public:
 	static Ref<NDArray> expand_dims(const Variant& v, int64_t axis);
 	static Ref<NDArray> roll(const Variant& v, const Variant& shift, const Variant& axis);
 	static Ref<NDArray> repeat(const Variant& v, const Variant& repeats, const Variant& axis);
+	static Ref<NDArray> argmax(const Variant& a, const Variant& axis);
+	static Ref<NDArray> argmin(const Variant& a, const Variant& axis);
+	static TypedArray<NDArray> nonzero(const Variant& a);
 
 	// Complex.
 	static Ref<NDArray> real(const Variant& a);

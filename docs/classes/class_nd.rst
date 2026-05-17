@@ -48,6 +48,10 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`arange<class_nd_method_arange>`\ (\ start_or_stop\: ``Variant``, stop\: ``Variant`` = null, step\: ``Variant`` = 1, dtype\: :ref:`DType<enum_nd_DType>` = 13\ ) |static|              |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`argmax<class_nd_method_argmax>`\ (\ a\: ``Variant``, axis\: ``Variant`` = null\ ) |static|                                                                                            |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`argmin<class_nd_method_argmin>`\ (\ a\: ``Variant``, axis\: ``Variant`` = null\ ) |static|                                                                                            |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`array<class_nd_method_array>`\ (\ array\: ``Variant``, dtype\: :ref:`DType<enum_nd_DType>` = 13\ ) |static|                                                                           |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`as_array<class_nd_method_as_array>`\ (\ array\: ``Variant``, dtype\: :ref:`DType<enum_nd_DType>` = 13\ ) |static|                                                                     |
@@ -251,6 +255,8 @@ Methods
    | :ref:`NDArray<class_NDArray>`                              | :ref:`negative<class_nd_method_negative>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                   |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``StringName``                                             | :ref:`newaxis<class_nd_method_newaxis>`\ (\ ) |static|                                                                                                                                      |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`Array<class_Array>`\[:ref:`NDArray<class_NDArray>`\] | :ref:`nonzero<class_nd_method_nonzero>`\ (\ a\: ``Variant``\ ) |static|                                                                                                                     |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`norm<class_nd_method_norm>`\ (\ a\: ``Variant``, ord\: ``Variant`` = 2, axes\: ``Variant`` = null\ ) |static|                                                                         |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -650,6 +656,30 @@ Returns a 0-dimension boolean if axes is null. In that case, :ref:`ndb.any()<cla
 :ref:`NDArray<class_NDArray>` **arange**\ (\ start_or_stop\: ``Variant``, stop\: ``Variant`` = null, step\: ``Variant`` = 1, dtype\: :ref:`DType<enum_nd_DType>` = 13\ ) |static| :ref:`🔗<class_nd_method_arange>`
 
 Return evenly spaced values within a given interval.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_argmax:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **argmax**\ (\ a\: ``Variant``, axis\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_argmax>`
+
+Index of the maximum value along ``axis``, as int64. With ``axis`` null, the input is flattened and a 0-D scalar index into the flat data is returned. Errors on complex dtypes (no total order).
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_argmin:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **argmin**\ (\ a\: ``Variant``, axis\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_argmin>`
+
+Index of the minimum value along ``axis``, as int64. With ``axis`` null, the input is flattened and a 0-D scalar index into the flat data is returned. Errors on complex dtypes (no total order).
 
 .. rst-class:: classref-item-separator
 
@@ -2038,6 +2068,18 @@ For non-number types, generates an error.
 ``StringName`` **newaxis**\ (\ ) |static| :ref:`🔗<class_nd_method_newaxis>`
 
 An alias for the StringName &"newaxis". In a subscript, this will add a dimension of size one.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_nonzero:
+
+.. rst-class:: classref-method
+
+:ref:`Array<class_Array>`\[:ref:`NDArray<class_NDArray>`\] **nonzero**\ (\ a\: ``Variant``\ ) |static| :ref:`🔗<class_nd_method_nonzero>`
+
+Indices of elements that are non-zero. Returns an array of N int64 1-D arrays (one per dimension); together they index the non-zero elements of ``a``. Errors on 0-D inputs.
 
 .. rst-class:: classref-item-separator
 

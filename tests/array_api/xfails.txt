@@ -37,10 +37,7 @@ array_api_tests/test_operators_and_elementwise_functions.py::test_tanh
 
 
 # === test_searching_functions.py ===
-# No nd binding for argmax / argmin / nonzero / searchsorted yet.
-array_api_tests/test_searching_functions.py::test_argmax
-array_api_tests/test_searching_functions.py::test_argmin
-array_api_tests/test_searching_functions.py::test_nonzero
+# No nd binding for searchsorted yet.
 array_api_tests/test_searching_functions.py::test_searchsorted
 # nd.where errors on empty mixed-precision complex inputs
 # (where(bool_arr, complex64_empty, complex128_empty) returns null).
@@ -55,9 +52,6 @@ array_api_tests/test_signatures.py::test_func_signature[unique_all]
 array_api_tests/test_signatures.py::test_func_signature[unique_counts]
 array_api_tests/test_signatures.py::test_func_signature[unique_inverse]
 array_api_tests/test_signatures.py::test_func_signature[unique_values]
-array_api_tests/test_signatures.py::test_func_signature[argmax]
-array_api_tests/test_signatures.py::test_func_signature[argmin]
-array_api_tests/test_signatures.py::test_func_signature[nonzero]
 array_api_tests/test_signatures.py::test_func_signature[searchsorted]
 array_api_tests/test_signatures.py::test_func_signature[from_dlpack]
 array_api_tests/test_signatures.py::test_func_signature[tril]

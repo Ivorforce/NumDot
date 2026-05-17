@@ -19,6 +19,8 @@
 #include "vatensor//varray.hpp"         // for VArray, strides_type, axes_type
 #include "xtensor/core/xlayout.hpp"        // for layout_type
 #include "xtensor/misc/xmanipulation.hpp"  // for full, transpose, flip, moveaxis
+#include "xtensor/misc/xsort.hpp"          // for argmax, argmin
+#include "xtensor/core/xoperation.hpp"     // for nonzero
 #include "xtensor/views/xstrided_view.hpp"  // for reshape_view
 
 using namespace va;
@@ -557,4 +559,111 @@ std::shared_ptr<VArray> va::broadcast_to(const VArray& varray, const shape_type&
 			);
 		}, varray.data
 	);
+}
+
+namespace {
+	// Allocate a fresh int64 VArray of the given shape (row-major).
+	std::shared_ptr<VArray> make_int64_array(VStoreAllocator& allocator, const va::shape_type& shape) {
+		const std::size_t count = std::accumulate(shape.begin(), shape.end(), std::size_t(1), std::multiplies<>());
+		auto store = allocator.allocate(va::Int64, count);
+		auto* ptr = static_cast<int64_t*>(store->data());
+		auto data = va::make_compute<int64_t*>(std::move(ptr), shape, va::strides_type{}, xt::layout_type::row_major);
+		return std::make_shared<VArray>(VArray { std::move(store), std::move(data), 0 });
+	}
+}
+
+// Complex types have no total order, so xt::argmax/argmin won't instantiate
+// for them. Per the array-api spec, argmax/argmin accept only real dtypes,
+// so reject complex up front.
+namespace {
+	template <typename Visitor>
+	void visit_real_only(const VData& data, Visitor&& visitor) {
+		std::visit([&](const auto& in) {
+			using T = typename std::decay_t<decltype(in)>::value_type;
+			if constexpr (xtl::is_complex<T>::value) {
+				throw std::runtime_error("argmax / argmin not supported for complex dtypes");
+			}
+			else {
+				visitor(in);
+			}
+		}, data);
+	}
+}
+
+std::shared_ptr<VArray> va::argmax(VStoreAllocator& allocator, const VArray& varray) {
+	auto out = make_int64_array(allocator, va::shape_type{});
+	auto& out_compute = std::get<va::compute_case<int64_t*>>(out->data);
+	visit_real_only(varray.data, [&out_compute](const auto& in) {
+		va::broadcasting_assign_typesafe(out_compute, xt::argmax(in));
+	});
+	return out;
+}
+
+std::shared_ptr<VArray> va::argmax(VStoreAllocator& allocator, const VArray& varray, std::ptrdiff_t axis) {
+	const std::size_t axis_norm = va::util::normalize_axis(axis, varray.dimension());
+	va::shape_type out_shape;
+	out_shape.reserve(varray.dimension() - 1);
+	for (std::size_t i = 0; i < varray.dimension(); ++i) {
+		if (i != axis_norm) out_shape.push_back(varray.shape()[i]);
+	}
+	auto out = make_int64_array(allocator, out_shape);
+	auto& out_compute = std::get<va::compute_case<int64_t*>>(out->data);
+	visit_real_only(varray.data, [&out_compute, axis_norm](const auto& in) {
+		va::broadcasting_assign_typesafe(out_compute, xt::argmax(in, static_cast<std::ptrdiff_t>(axis_norm)));
+	});
+	return out;
+}
+
+std::shared_ptr<VArray> va::argmin(VStoreAllocator& allocator, const VArray& varray) {
+	auto out = make_int64_array(allocator, va::shape_type{});
+	auto& out_compute = std::get<va::compute_case<int64_t*>>(out->data);
+	visit_real_only(varray.data, [&out_compute](const auto& in) {
+		va::broadcasting_assign_typesafe(out_compute, xt::argmin(in));
+	});
+	return out;
+}
+
+std::shared_ptr<VArray> va::argmin(VStoreAllocator& allocator, const VArray& varray, std::ptrdiff_t axis) {
+	const std::size_t axis_norm = va::util::normalize_axis(axis, varray.dimension());
+	va::shape_type out_shape;
+	out_shape.reserve(varray.dimension() - 1);
+	for (std::size_t i = 0; i < varray.dimension(); ++i) {
+		if (i != axis_norm) out_shape.push_back(varray.shape()[i]);
+	}
+	auto out = make_int64_array(allocator, out_shape);
+	auto& out_compute = std::get<va::compute_case<int64_t*>>(out->data);
+	visit_real_only(varray.data, [&out_compute, axis_norm](const auto& in) {
+		va::broadcasting_assign_typesafe(out_compute, xt::argmin(in, static_cast<std::ptrdiff_t>(axis_norm)));
+	});
+	return out;
+}
+
+std::vector<std::shared_ptr<va::VArray>> va::nonzero(VStoreAllocator& allocator, const VArray& varray) {
+	const std::size_t ndim = varray.dimension();
+	if (ndim == 0) {
+		throw std::runtime_error("nonzero is not defined for 0-D arrays");
+	}
+	// xt::nonzero's element check is `if (x)`, which doesn't compile for
+	// complex — fall back to a bool view via the typed visit so the complex
+	// branch never instantiates xt::nonzero on a complex array.
+	auto indices = std::visit([&](const auto& in) {
+		using T = typename std::decay_t<decltype(in)>::value_type;
+		if constexpr (xtl::is_complex<T>::value) {
+			const auto as_bool = va::copy_as_dtype(allocator, varray.data, va::Bool);
+			return xt::nonzero(std::get<va::compute_case<bool*>>(as_bool->data));
+		}
+		else {
+			return xt::nonzero(in);
+		}
+	}, varray.data);
+
+	std::vector<std::shared_ptr<VArray>> outputs(ndim);
+	for (std::size_t d = 0; d < ndim; ++d) {
+		const auto& src = indices[d];
+		auto out = make_int64_array(allocator, va::shape_type { src.size() });
+		auto& out_compute = std::get<va::compute_case<int64_t*>>(out->data);
+		std::copy(src.begin(), src.end(), out_compute.begin());
+		outputs[d] = std::move(out);
+	}
+	return outputs;
 }

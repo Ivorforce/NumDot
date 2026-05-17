@@ -51,7 +51,7 @@ __all__ = [
 	# utility
 	"diff",
 	# selection
-	"where", "count_nonzero",
+	"where", "count_nonzero", "argmax", "argmin", "nonzero",
 	# dtype
 	"astype", "can_cast", "result_type", "isdtype",
 ]
@@ -565,6 +565,34 @@ def tile(x, repetitions, /):
 
 def where(condition, x1, x2, /):
 	return _call("where", condition, x1, x2)
+
+
+def argmax(x, /, *, axis=None, keepdims=False):
+	if axis is None:
+		out = _call("argmax", x, None)
+	else:
+		out = _call("argmax", x, int(axis))
+	if keepdims:
+		norm = _normalize_axes(axis, x.ndim)
+		out = _call("reshape", out, _keepdims_shape(x.shape, norm))
+	return out
+
+
+def argmin(x, /, *, axis=None, keepdims=False):
+	if axis is None:
+		out = _call("argmin", x, None)
+	else:
+		out = _call("argmin", x, int(axis))
+	if keepdims:
+		norm = _normalize_axes(axis, x.ndim)
+		out = _call("reshape", out, _keepdims_shape(x.shape, norm))
+	return out
+
+
+def nonzero(x, /):
+	# Bridge can't return a list of arrays; do the work client-side via numpy.
+	# (Same workaround as meshgrid / unstack.)
+	return tuple(arr.view(ndarray) for arr in np.nonzero(np.asarray(x)))
 
 
 def count_nonzero(x, /, *, axis=None, keepdims=False):

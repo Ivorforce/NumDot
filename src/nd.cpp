@@ -131,6 +131,9 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("expand_dims", "v", "axis"), &nd::expand_dims);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("roll", "v", "shift", "axis"), &nd::roll, DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("repeat", "v", "repeats", "axis"), &nd::repeat, DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("argmax", "a", "axis"), &nd::argmax, DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("argmin", "a", "axis"), &nd::argmin, DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("nonzero", "a"), &nd::nonzero);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("real", "v"), &nd::real);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("imag", "v"), &nd::imag);
@@ -977,6 +980,51 @@ Ref<NDArray> nd::roll(const Variant& v, const Variant& shift, const Variant& axi
 			result = va::roll(va::store::default_allocator, *result, shifts[i], axes[i]);
 		}
 		return { memnew(NDArray(result)) };
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
+}
+
+Ref<NDArray> nd::argmax(const Variant& a, const Variant& axis) {
+	try {
+		const auto array = variant_as_array(a);
+		if (axis.get_type() == Variant::NIL) {
+			return { memnew(NDArray(va::argmax(va::store::default_allocator, *array))) };
+		}
+		const std::ptrdiff_t axis_int = static_cast<std::ptrdiff_t>(static_cast<int64_t>(axis));
+		return { memnew(NDArray(va::argmax(va::store::default_allocator, *array, axis_int))) };
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
+}
+
+Ref<NDArray> nd::argmin(const Variant& a, const Variant& axis) {
+	try {
+		const auto array = variant_as_array(a);
+		if (axis.get_type() == Variant::NIL) {
+			return { memnew(NDArray(va::argmin(va::store::default_allocator, *array))) };
+		}
+		const std::ptrdiff_t axis_int = static_cast<std::ptrdiff_t>(static_cast<int64_t>(axis));
+		return { memnew(NDArray(va::argmin(va::store::default_allocator, *array, axis_int))) };
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
+}
+
+TypedArray<NDArray> nd::nonzero(const Variant& a) {
+	try {
+		const auto array = variant_as_array(a);
+		const auto outputs = va::nonzero(va::store::default_allocator, *array);
+
+		TypedArray<NDArray> godot_array;
+		godot_array.resize(static_cast<int64_t>(outputs.size()));
+		for (std::size_t i = 0; i < outputs.size(); ++i) {
+			godot_array[static_cast<int64_t>(i)] = { memnew(NDArray(outputs[i])) };
+		}
+		return godot_array;
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());

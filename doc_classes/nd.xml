@@ -76,6 +76,22 @@
 				Return evenly spaced values within a given interval.
 			</description>
 		</method>
+		<method name="argmax" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="axis" type="Variant" default="null" />
+			<description>
+				Index of the maximum value along [param axis], as int64. With [param axis] null, the input is flattened and a 0-D scalar index into the flat data is returned. Errors on complex dtypes (no total order).
+			</description>
+		</method>
+		<method name="argmin" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="axis" type="Variant" default="null" />
+			<description>
+				Index of the minimum value along [param axis], as int64. With [param axis] null, the input is flattened and a 0-D scalar index into the flat data is returned. Errors on complex dtypes (no total order).
+			</description>
+		</method>
 		<method name="array" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="array" type="Variant" />
@@ -130,6 +146,11 @@
 			<param index="0" name="a" type="Variant" />
 			<description>
 				Inverse hyperbolic tangent element-wise.
+			</description>
+		</method>
+		<method name="axis_all" qualifiers="static">
+			<return type="StringName" />
+			<description>
 			</description>
 		</method>
 		<method name="bitwise_and" qualifiers="static">
@@ -187,6 +208,14 @@
 				Equivalent to [code]nd.as_array(array, nd.DType.Bool)[/code].
 			</description>
 		</method>
+		<method name="broadcast_to" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="v" type="Variant" />
+			<param index="1" name="shape" type="Variant" />
+			<description>
+				Return a view of [param v] stretched to [param shape]. Front-padded axes and any input axes of length 1 are broadcast (zero-stride); the rest must match the target dimension or the call errors. The result shares memory with [param v] — writing through it is not supported.
+			</description>
+		</method>
 		<method name="ceil" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
@@ -234,7 +263,7 @@
 		<method name="concatenate" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="v" type="Variant" />
-			<param index="1" name="axis" type="int" default="0" />
+			<param index="1" name="axis" type="Variant" default="0" />
 			<param index="2" name="dtype" type="int" enum="nd.DType" default="13" />
 			<description>
 				Join a sequence of arrays along an existing axis.
@@ -263,6 +292,14 @@
 			<param index="0" name="array" type="Variant" />
 			<description>
 				Creates a copy of the given array.
+			</description>
+		</method>
+		<method name="copysign" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+				Element-wise composition of [code skip-lint]|a|[/code] with the sign of [param b]. Real dtypes only.
 			</description>
 		</method>
 		<method name="cos" qualifiers="static">
@@ -301,6 +338,26 @@
 				The cross product of a and b in R3 is a vector perpendicular to both a and b. If a and b are arrays of vectors, the vectors are defined by the last axis of a and b by default, and these axes can have dimensions 2 or 3. Where the dimension of either a or b is 2, the third component of the input vector is assumed to be zero and the cross product calculated accordingly. In cases where both input vectors have dimension 2, the z-component of the cross product is returned.
 			</description>
 		</method>
+		<method name="cumprod" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="axis" type="Variant" default="null" />
+			<description>
+				Cumulative product of array elements along the given axis. The output preserves the input shape; element [code]i[/code] along [param axis] holds the product of all elements at positions [code]0..i[/code].
+				If [param axis] is null the input is flattened first and a 1-D result is returned.
+				Like [method prod], the accumulator is widened to int64 / uint64 for narrow integer dtypes to avoid mid-pass overflow.
+			</description>
+		</method>
+		<method name="cumsum" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="axis" type="Variant" default="null" />
+			<description>
+				Cumulative sum of array elements along the given axis. The output preserves the input shape; element [code]i[/code] along [param axis] holds the sum of all elements at positions [code]0..i[/code].
+				If [param axis] is null the input is flattened first and a 1-D result is returned.
+				Like [method sum], the accumulator is widened to int64 / uint64 for narrow integer dtypes to avoid mid-pass overflow.
+			</description>
+		</method>
 		<method name="default_rng" qualifiers="static">
 			<return type="NDRandomGenerator" />
 			<param index="0" name="seed" type="Variant" default="null" />
@@ -335,6 +392,17 @@
 			<description>
 				Return specified matrix diagonals. This is a view of the given array.
 				If the array has more than 2 dimensions, the given dimensions are removed, and the new dimension is inserted as the new last (innermost) dimension.
+			</description>
+		</method>
+		<method name="diff" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="n" type="int" default="1" />
+			<param index="2" name="axis" type="int" default="-1" />
+			<description>
+				The n-th discrete difference of [param a] along [param axis]. Each pass replaces neighbours with their difference ([code skip-lint]out[i] = a[i+1] - a[i][/code]); this repeats [param n] times.
+				The output shape matches the input except along [param axis], where it shrinks by [param n]. If [param n] is larger than the axis length, the output is empty along that axis.
+				[param axis] is a single dimension and may be negative to count from the end.
 			</description>
 		</method>
 		<method name="divide" qualifiers="static">
@@ -416,6 +484,22 @@
 				Calculate the exponential of all elements in the input array.
 			</description>
 		</method>
+		<method name="expand_dims" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="v" type="Variant" />
+			<param index="1" name="axis" type="int" />
+			<description>
+				Insert a length-1 dimension at the given [param axis] of [param v]. Returns a view sharing the input's data — no copy.
+				[param axis] may be negative to count from the end. The valid range is [code][-ndim - 1, ndim][/code]; values outside that range error.
+			</description>
+		</method>
+		<method name="expm1" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				Element-wise [code]exp(a) - 1[/code], computed accurately for [code]|a|[/code] near zero.
+			</description>
+		</method>
 		<method name="eye" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="shape" type="Variant" />
@@ -481,6 +565,14 @@
 				The floor of the scalar x is the largest integer i, such that i &lt;= x.
 			</description>
 		</method>
+		<method name="floor_divide" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+				Element-wise floor of [code]a / b[/code] — Python-style "[code]//[/code]" rounding toward [code]-infinity[/code], including for integer inputs (so [code]nd.floor_divide(-7, 2) == -4[/code], not [code]-3[/code]). Real dtypes only.
+			</description>
+		</method>
 		<method name="from" qualifiers="static">
 			<return type="Vector4i" />
 			<param index="0" name="start" type="int" />
@@ -527,7 +619,7 @@
 		<method name="hsplit" qualifiers="static">
 			<return type="NDArray[]" />
 			<param index="0" name="v" type="Variant" />
-			<param index="1" name="indices_or_section_size" type="Variant" />
+			<param index="1" name="indices_or_sections" type="Variant" />
 			<description>
 				Split an array into multiple sub-arrays horizontally (column-wise).
 				Please refer to [method split]. hsplit is equivalent to [method split] with axis=1, the array is always split along the second axis except for 1-D arrays, where it is split at axis=0.
@@ -541,6 +633,14 @@
 				Stack arrays in sequence horizontally (column wise).
 				This is equivalent to concatenation along the second axis, except for 1-D arrays where it concatenates along the first axis. Rebuilds arrays divided by hsplit.
 				This function makes most sense for arrays with up to 3 dimensions. For instance, for pixel-data with a height (first axis), width (second axis), and r/g/b channels (third axis). The functions concatenate, stack and block provide more general stacking and concatenation operations.
+			</description>
+		</method>
+		<method name="hypot" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+				Element-wise [code]sqrt(a * a + b * b)[/code], computed without intermediate overflow.
 			</description>
 		</method>
 		<method name="imag" qualifiers="static">
@@ -679,6 +779,35 @@
 				The natural logarithm log is the inverse of the exponential function, so that log(exp(x)) = x. The natural logarithm is logarithm in base e.
 			</description>
 		</method>
+		<method name="log1p" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				Element-wise [code]log(1 + a)[/code], computed accurately for [code]|a|[/code] near zero.
+			</description>
+		</method>
+		<method name="log2" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				Base-2 logarithm, element-wise.
+			</description>
+		</method>
+		<method name="log10" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				Base-10 logarithm, element-wise.
+			</description>
+		</method>
+		<method name="logaddexp" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<description>
+				Element-wise [code]log(exp(a) + exp(b))[/code], computed without intermediate overflow. Real dtypes only.
+			</description>
+		</method>
 		<method name="logical_and" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
@@ -761,6 +890,15 @@
 				Returns a 0-dimension scalar if axes is null. In that case, consider [method ndf.median] or [method ndi.median].
 			</description>
 		</method>
+		<method name="meshgrid" qualifiers="static">
+			<return type="NDArray[]" />
+			<param index="0" name="arrays" type="Variant" />
+			<param index="1" name="indexing" type="StringName" default="&amp;&quot;xy&quot;" />
+			<description>
+				Build coordinate grids from a list of 1-D arrays. Returns an array of N arrays, one per input, each of the same shape, with input [code]i[/code] varying along its own axis.
+				With the default [code]&amp;"xy"[/code] indexing the first two output axes are swapped (matching the image-coordinate convention numpy uses), so for inputs [code]x[/code] (length [code]Nx[/code]) and [code]y[/code] (length [code]Ny[/code]) the outputs have shape [code](Ny, Nx)[/code]. With [code]&amp;"ij"[/code] indexing they have shape [code](Nx, Ny)[/code]. For three or more inputs only the first two dims are affected by the indexing choice.
+			</description>
+		</method>
 		<method name="min" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
@@ -782,11 +920,11 @@
 		<method name="moveaxis" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="v" type="Variant" />
-			<param index="1" name="src" type="int" />
-			<param index="2" name="dst" type="int" />
+			<param index="1" name="src" type="Variant" />
+			<param index="2" name="dst" type="Variant" />
 			<description>
-				Move axes of an array to new positions.
-				Other axes remain in their original order.
+				Move axes of an array to new positions. Other axes remain in their original order.
+				[param src] and [param dst] are each an int or a list of ints (same length); negatives count from the end.
 			</description>
 		</method>
 		<method name="multiply" qualifiers="static">
@@ -816,6 +954,13 @@
 			<return type="StringName" />
 			<description>
 				An alias for the StringName &amp;"newaxis". In a subscript, this will add a dimension of size one.
+			</description>
+		</method>
+		<method name="nonzero" qualifiers="static">
+			<return type="NDArray[]" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				Indices of elements that are non-zero. Returns an array of N int64 1-D arrays (one per dimension); together they index the non-zero elements of [param a]. Errors on 0-D inputs.
 			</description>
 		</method>
 		<method name="norm" qualifiers="static">
@@ -937,17 +1082,6 @@
 				If the argument is not complex, returns the argument.
 			</description>
 		</method>
-		<method name="sum_product" qualifiers="static">
-			<return type="NDArray" />
-			<param index="0" name="a" type="Variant" />
-			<param index="1" name="b" type="Variant" />
-			<param index="2" name="axes" type="Variant" default="null" />
-			<description>
-				Dot product of two arrays along the given axes.
-				Equivalent to [code]nd.sum(nd.multiply(a, b), axes)[/code].
-				Returns a 0-dimension scalar if axes is null. In that case, consider [method ndf.sum_product] or [method ndi.sum_product].
-			</description>
-		</method>
 		<method name="remainder" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
@@ -955,6 +1089,17 @@
 			<description>
 				Returns the element-wise remainder of division.
 				Computes the remainder complementary to the floor_divide function. It is equivalent to the modulus operator x1 % x2 and has the same sign as the divisor x2.
+			</description>
+		</method>
+		<method name="repeat" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="v" type="Variant" />
+			<param index="1" name="repeats" type="Variant" />
+			<param index="2" name="axis" type="Variant" default="null" />
+			<description>
+				Repeat each element of [param v] along [param axis]. The output has the same shape as the input except along [param axis], whose length becomes the sum of the repeat counts.
+				If [param axis] is null, the input is flattened first and the result is 1-D.
+				[param repeats] is either an int (every element repeated that many times) or an array. A length-1 array is treated as the scalar; otherwise it must have the same length as the axis being repeated and assigns one count per element.
 			</description>
 		</method>
 		<method name="reshape" qualifiers="static">
@@ -973,6 +1118,19 @@
 				Round elements of the array to the nearest integer.
 			</description>
 		</method>
+		<method name="roll" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="v" type="Variant" />
+			<param index="1" name="shift" type="Variant" />
+			<param index="2" name="axis" type="Variant" default="null" />
+			<description>
+				Cyclically shift elements of [param v] along [param axis]. Elements that fall off one end re-enter at the other.
+				If [param axis] is null, the input is treated as a flat row-major sequence and shifted by [param shift] (an int), then reshaped back to its original shape.
+				If [param axis] is an int, [param shift] is an int and elements are shifted along that single axis.
+				If both are arrays of the same length, each axis is shifted by the corresponding amount in sequence.
+				Negative shifts and shifts larger than the axis length are normalized.
+			</description>
+		</method>
 		<method name="round" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />
@@ -986,6 +1144,13 @@
 			<description>
 				Returns an element-wise indication of the sign of a number.
 				The sign function returns -1 if x &lt; 0, 0 if x==0, 1 if x &gt; 0. nan is returned for nan inputs.
+			</description>
+		</method>
+		<method name="signbit" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<description>
+				Element-wise test for whether the IEEE-754 sign bit is set. Returns [code]true[/code] for negative finite values, [code]-0.0[/code], and [code]-infinity[/code]. Real dtypes only.
 			</description>
 		</method>
 		<method name="sin" qualifiers="static">
@@ -1022,14 +1187,14 @@
 		<method name="split" qualifiers="static">
 			<return type="NDArray[]" />
 			<param index="0" name="v" type="Variant" />
-			<param index="1" name="indices_or_section_size" type="Variant" />
+			<param index="1" name="indices_or_sections" type="Variant" />
 			<param index="2" name="axis" type="int" default="0" />
 			<description>
 				Split an array into multiple sub-arrays as views into v.
 				This can be regarded as the opposite of [method concatenate].
-				[param indices_or_section_size] must be either:
-				An integer that the array can be evenly divided into.
-				A list of sorted indices to split the array at.
+				[param indices_or_sections] must be either:
+				An integer N — the array is divided into N equal sub-arrays along [param axis]. The axis length must be divisible by N.
+				A list of sorted indices marking where along [param axis] the array is split.
 			</description>
 		</method>
 		<method name="sqrt" qualifiers="static">
@@ -1049,8 +1214,9 @@
 		<method name="squeeze" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="v" type="Variant" />
+			<param index="1" name="axes" type="Variant" default="null" />
 			<description>
-				Remove axes of length one from [param v].
+				Remove length-1 axes from [param v]. If [param axes] is null (default), drops every length-1 axis; otherwise drops only the listed axes (int or list of ints, negatives count from the end). Errors if any requested axis is not size 1.
 			</description>
 		</method>
 		<method name="stack" qualifiers="static">
@@ -1088,6 +1254,17 @@
 			<description>
 				Sum of array elements over a given axis.
 				Returns a 0-dimension scalar if axes is null. In that case, consider [method ndf.sum] or [method ndi.sum].
+			</description>
+		</method>
+		<method name="sum_product" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="b" type="Variant" />
+			<param index="2" name="axes" type="Variant" default="null" />
+			<description>
+				Dot product of two arrays along the given axes.
+				Equivalent to [code]nd.sum(nd.multiply(a, b), axes)[/code].
+				Returns a 0-dimension scalar if axes is null. In that case, consider [method ndf.sum_product] or [method ndi.sum_product].
 			</description>
 		</method>
 		<method name="swapaxes" qualifiers="static">
@@ -1230,7 +1407,7 @@
 		<method name="vsplit" qualifiers="static">
 			<return type="NDArray[]" />
 			<param index="0" name="v" type="Variant" />
-			<param index="1" name="indices_or_section_size" type="Variant" />
+			<param index="1" name="indices_or_sections" type="Variant" />
 			<description>
 				Split an array into multiple sub-arrays vertically (row-wise).
 				Please refer to [method split]. vsplit is equivalent to split with axis=0 (default), the array is always split along the first axis regardless of the array dimension.
@@ -1244,6 +1421,16 @@
 				Stack arrays in sequence vertically (row wise).
 				This is equivalent to concatenation along the first axis after 1-D arrays of shape (N,) have been reshaped to (1,N). Rebuilds arrays divided by vsplit.
 				This function makes most sense for arrays with up to 3 dimensions. For instance, for pixel-data with a height (first axis), width (second axis), and r/g/b channels (third axis). The functions concatenate, stack and block provide more general stacking and concatenation operations.
+			</description>
+		</method>
+		<method name="where" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="condition" type="Variant" />
+			<param index="1" name="x" type="Variant" />
+			<param index="2" name="y" type="Variant" />
+			<description>
+				Element-wise selection. Returns elements from [param x] where [param condition] is true and from [param y] otherwise.
+				[param condition] must be a boolean tensor. All three operands broadcast against each other; the result dtype is the common type of [param x] and [param y].
 			</description>
 		</method>
 		<method name="zeros" qualifiers="static">

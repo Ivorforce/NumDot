@@ -20,6 +20,16 @@ StringName no_value() {
 	return no_value;
 }
 
+StringName indexing_xy() {
+	static const auto indexing_xy = StringName("xy", true);
+	return indexing_xy;
+}
+
+StringName indexing_ij() {
+	static const auto indexing_ij = StringName("ij", true);
+	return indexing_ij;
+}
+
 bool is_no_value(const Variant& variant) {
 	switch (variant.get_type()) {
 		case Variant::STRING_NAME:

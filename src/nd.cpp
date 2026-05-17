@@ -111,6 +111,7 @@ void nd::_bind_methods() {
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("transpose", "a", "permutation"), &nd::transpose, DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("reshape", "a", "shape"), &nd::reshape);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("broadcast_to", "v", "shape"), &nd::broadcast_to);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("swapaxes", "v", "a", "b"), &nd::swapaxes);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("moveaxis", "v", "src", "dst"), &nd::moveaxis);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("flip", "v", "axis"), &nd::flip);
@@ -123,10 +124,16 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("hstack", "v", "dtype"), &nd::hstack, DEFVAL(nd::DType::DTypeMax));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("vstack", "v", "dtype"), &nd::vstack, DEFVAL(nd::DType::DTypeMax));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("tile", "v", "reps", "inner"), &nd::tile, DEFVAL(false));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("split", "v", "indices_or_section_size", "axis"), &nd::split, DEFVAL(0));
-	godot::ClassDB::bind_static_method("nd", D_METHOD("hsplit", "v", "indices_or_section_size"), &nd::hsplit);
-	godot::ClassDB::bind_static_method("nd", D_METHOD("vsplit", "v", "indices_or_section_size"), &nd::vsplit);
-	godot::ClassDB::bind_static_method("nd", D_METHOD("squeeze", "v"), &nd::squeeze);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("split", "v", "indices_or_sections", "axis"), &nd::split, DEFVAL(0));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("hsplit", "v", "indices_or_sections"), &nd::hsplit);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("vsplit", "v", "indices_or_sections"), &nd::vsplit);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("squeeze", "v", "axes"), &nd::squeeze, DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("expand_dims", "v", "axis"), &nd::expand_dims);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("roll", "v", "shift", "axis"), &nd::roll, DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("repeat", "v", "repeats", "axis"), &nd::repeat, DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("argmax", "a", "axis"), &nd::argmax, DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("argmin", "a", "axis"), &nd::argmin, DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("nonzero", "a"), &nd::nonzero);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("real", "v"), &nd::real);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("imag", "v"), &nd::imag);
@@ -141,20 +148,30 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("subtract", "a", "b"), &nd::subtract);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("multiply", "a", "b"), &nd::multiply);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("divide", "a", "b"), &nd::divide);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("floor_divide", "a", "b"), &nd::floor_divide);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("remainder", "a", "b"), &nd::remainder);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("pow", "a", "b"), &nd::pow);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("minimum", "a", "b"), &nd::minimum);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("maximum", "a", "b"), &nd::maximum);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("clip", "a", "min", "max"), &nd::clip);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("where", "condition", "x", "y"), &nd::where);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("sign", "a"), &nd::sign);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("signbit", "a"), &nd::signbit);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("copysign", "a", "b"), &nd::copysign);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("abs", "a"), &nd::abs);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("square", "a"), &nd::square);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("sqrt", "a"), &nd::sqrt);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("hypot", "a", "b"), &nd::hypot);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("exp", "a"), &nd::exp);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("expm1", "a"), &nd::expm1);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("log", "a"), &nd::log);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("log2", "a"), &nd::log2);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("log10", "a"), &nd::log10);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("log1p", "a"), &nd::log1p);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("logaddexp", "a", "b"), &nd::logaddexp);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("rad2deg", "a"), &nd::rad2deg);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("deg2rad", "a"), &nd::deg2rad);
@@ -176,6 +193,10 @@ void nd::_bind_methods() {
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("sum", "a", "axes"), &nd::sum, DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("prod", "a", "axes"), &nd::prod, DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("cumsum", "a", "axis"), &nd::cumsum, DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("cumprod", "a", "axis"), &nd::cumprod, DEFVAL(nullptr));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("diff", "a", "n", "axis"), &nd::diff, DEFVAL(static_cast<int64_t>(1)), DEFVAL(static_cast<int64_t>(-1)));
+	godot::ClassDB::bind_static_method("nd", D_METHOD("meshgrid", "arrays", "indexing"), &nd::meshgrid, DEFVAL(::indexing_xy()));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("mean", "a", "axes"), &nd::mean, DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("median", "a", "axes"), &nd::median, DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("var", "a", "axes"), &nd::variance, DEFVAL(nullptr));
@@ -260,6 +281,35 @@ Ref<NDArray> map_variants_as_arrays_with_target(Visitor&& visitor, const Args&..
 	}
 }
 
+// NEP-50 / Array API "weak scalar" promotion for binary/ternary ops: when at
+// least one operand is an NDArray, any Variant scalar (BOOL/INT/FLOAT) adopts
+// the array's dtype so it doesn't widen the result (`arr_uint8 + 5` stays
+// uint8, not int64). Helper lives in gdconvert/conversion_array — also reused
+// by ndb/ndf/ndi for their binary methods.
+template<typename Visitor, typename... Args, std::size_t... Is>
+inline void _invoke_with_arrays(Visitor&& visitor, const va::VArrayTarget target,
+                                std::shared_ptr<va::VArray>* arrs, std::index_sequence<Is...>) {
+	std::forward<Visitor>(visitor)(target, arrs[Is]...);
+}
+
+template<typename Visitor, typename... Args>
+Ref<NDArray> map_with_weak_scalar(Visitor&& visitor, const Args&... args) {
+	try {
+		constexpr std::size_t N = sizeof...(Args);
+		const Variant* const in[N] = { (&args)... };
+		std::shared_ptr<va::VArray> out[N];
+		variants_as_arrays_weak(in, out, N);
+		std::shared_ptr<va::VArray> result;
+		_invoke_with_arrays<Visitor, Args...>(
+			std::forward<Visitor>(visitor), &result, out, std::make_index_sequence<N>{}
+		);
+		return { memnew(NDArray(result)) };
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
+}
+
 template<typename Visitor, typename VisitorNoaxes, typename... Args>
 inline Ref<NDArray> reduction(Visitor&& visitor, VisitorNoaxes&& visitor_noaxes, const Variant& axes, const Args&... args) {
 	try {
@@ -334,24 +384,24 @@ Ref<NDArray> like_visit(Visitor&& visitor, const Variant& model, nd::DType dtype
     }, (varray1))
 
 #define VARRAY_MAP2(func, varray1, varray2) \
-	map_variants_as_arrays_with_target([](const va::VArrayTarget& target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b) {\
+	map_with_weak_scalar([](const va::VArrayTarget& target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b) {\
         va::func(va::store::default_allocator, target, a->data, b->data);\
     }, (varray1), (varray2))
 
 #define VARRAY_MAP3(func, varray1, varray2, varray3) \
-	map_variants_as_arrays_with_target([](const va::VArrayTarget& target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b, const std::shared_ptr<va::VArray>& c) {\
+	map_with_weak_scalar([](const va::VArrayTarget& target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b, const std::shared_ptr<va::VArray>& c) {\
         va::func(va::store::default_allocator, target, a->data, b->data, c->data);\
     }, (varray1), (varray2), (varray3))
 
 #define REDUCTION1(func, varray1, axes1) \
 	reduction_new([](const va::VArrayTarget& target, const va::axes_type* axes, const va::VArray& array) {\
 		va::func(va::store::default_allocator, target, array.data, axes);\
-	}, axes, (varray1))
+	}, (axes1), (varray1))
 
 #define REDUCTION2(func, varray1, varray2, axes1) \
 	reduction_new([](const va::VArrayTarget& target, const va::axes_type* axes, const va::VArray& carray1, const va::VArray& carray2) {\
 		va::func(va::store::default_allocator, target, carray1.data, carray2.data, axes);\
-	}, axes, (varray1), (varray2))
+	}, (axes1), (varray1), (varray2))
 
 StringName nd::newaxis() {
 	return ::newaxis();
@@ -608,6 +658,17 @@ Ref<NDArray> nd::reshape(const Variant& a, const Variant& shape) {
 	}
 }
 
+Ref<NDArray> nd::broadcast_to(const Variant& v, const Variant& shape) {
+	try {
+		const auto array = variant_as_array(v);
+		const auto target = variant_to_shape(shape);
+		return { memnew(NDArray(va::broadcast_to(*array, target))) };
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
+}
+
 Ref<NDArray> nd::swapaxes(const Variant& v, const int64_t a, const int64_t b) {
 	return map_variants_as_arrays(
 		[a, b](const std::shared_ptr<va::VArray>& v) {
@@ -616,12 +677,20 @@ Ref<NDArray> nd::swapaxes(const Variant& v, const int64_t a, const int64_t b) {
 	);
 }
 
-Ref<NDArray> nd::moveaxis(const Variant& v, int64_t src, int64_t dst) {
-	return map_variants_as_arrays(
-		[src, dst](const std::shared_ptr<va::VArray>& v) {
-			return va::moveaxis(*v, src, dst);
-		}, v
-	);
+Ref<NDArray> nd::moveaxis(const Variant& v, const Variant& src, const Variant& dst) {
+	try {
+		const auto array = variant_as_array(v);
+		const bool single = src.get_type() == Variant::INT && dst.get_type() == Variant::INT;
+		if (single) {
+			return { memnew(NDArray(va::moveaxis(*array, static_cast<int64_t>(src), static_cast<int64_t>(dst)))) };
+		}
+		const auto src_ = variant_to_axes(src);
+		const auto dst_ = variant_to_axes(dst);
+		return { memnew(NDArray(va::moveaxis(*array, src_, dst_))) };
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
 }
 
 Ref<NDArray> nd::flip(const Variant& v, int64_t axis) {
@@ -724,15 +793,27 @@ Ref<NDArray> concatenate_(nd::DType dtype, const std::vector<std::shared_ptr<va:
 	return { memnew(NDArray(result)) };
 }
 
-Ref<NDArray> nd::concatenate(const Variant& v, int64_t axis, DType dtype) {
+Ref<NDArray> nd::concatenate(const Variant& v, const Variant& axis, DType dtype) {
 	try {
-		const auto vector = variant_to_vector(v);
+		auto vector = variant_to_vector(v);
 		ERR_FAIL_COND_V_MSG(vector.empty(), {}, "Need at least one array to concatenate.");
 
-		if (axis < 0) axis += static_cast<int64_t>(vector[0]->dimension());
-		ERR_FAIL_COND_V_MSG(axis < 0 || axis >= vector[0]->dimension(), {}, "Axis out of range.");
+		std::size_t axis_used;
+		if (axis.get_type() == Variant::NIL) {
+			// Per Array API: axis=null flattens each input before concatenation.
+			for (auto& varr : vector) {
+				varr = va::flatten(va::store::default_allocator, varr);
+			}
+			axis_used = 0;
+		}
+		else {
+			int64_t axis_ = axis;
+			if (axis_ < 0) axis_ += static_cast<int64_t>(vector[0]->dimension());
+			ERR_FAIL_COND_V_MSG(axis_ < 0 || axis_ >= vector[0]->dimension(), {}, "Axis out of range.");
+			axis_used = static_cast<std::size_t>(axis_);
+		}
 
-		return ::concatenate_(dtype, vector, static_cast<std::size_t>(axis));
+		return ::concatenate_(dtype, vector, axis_used);
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
@@ -789,11 +870,14 @@ Ref<NDArray> nd::tile(const Variant& v, const Variant& reps, bool inner) {
 	}
 }
 
-TypedArray<NDArray> split_(const va::VArray& array, const std::size_t section_size, const size_t axis) {
-	ERR_FAIL_COND_V_MSG(array.shape()[axis] % section_size != 0, {}, "Cannot split array equally with this section size.");
+TypedArray<NDArray> split_(const va::VArray& array, const std::size_t n_sections, const size_t axis) {
+	ERR_FAIL_COND_V_MSG(n_sections == 0, {}, "Number of sections must be at least 1.");
+	ERR_FAIL_COND_V_MSG(array.shape()[axis] % n_sections != 0, {}, "Array does not divide evenly into the requested number of sections.");
+
+	const std::size_t section_size = array.shape()[axis] / n_sections;
 
 	auto godot_array = TypedArray<NDArray>();
-	godot_array.resize(static_cast<std::int64_t>(array.shape()[axis]) / section_size);
+	godot_array.resize(static_cast<std::int64_t>(n_sections));
 
 	xt::xstrided_slice_vector slice(axis + 1);
 	std::fill(slice.begin(), slice.end() - 1, xt::all());
@@ -826,46 +910,173 @@ TypedArray<NDArray> split_(const va::VArray& array, const va::strides_type indic
 	return godot_array;
 }
 
-TypedArray<NDArray> split_(const std::shared_ptr<va::VArray>& array, const Variant& indices_or_section_size, int64_t axis) {
+TypedArray<NDArray> split_(const std::shared_ptr<va::VArray>& array, const Variant& indices_or_sections, int64_t axis) {
 	if (axis < 0) axis += static_cast<int64_t>(array->dimension());
 	ERR_FAIL_COND_V_MSG(axis < 0 || axis >= array->dimension(), {}, "Axis out of range.");
 
-	if (indices_or_section_size.get_type() == Variant::Type::INT) {
-		return ::split_(*array, static_cast<std::size_t>(static_cast<int64_t>(indices_or_section_size)), static_cast<size_t>(axis));
+	if (indices_or_sections.get_type() == Variant::Type::INT) {
+		return ::split_(*array, static_cast<std::size_t>(static_cast<int64_t>(indices_or_sections)), static_cast<size_t>(axis));
 	}
 
-	const auto ints = variant_to_axes(indices_or_section_size);
+	const auto ints = variant_to_axes(indices_or_sections);
 	return ::split_(*array, ints, static_cast<size_t>(axis));
 }
 
-TypedArray<NDArray> nd::split(const Variant& v, const Variant& indices_or_section_size, int64_t axis) {
+TypedArray<NDArray> nd::split(const Variant& v, const Variant& indices_or_sections, int64_t axis) {
 	try {
 		const auto array = variant_as_array(v);
-		return split_(array, indices_or_section_size, axis);
+		return split_(array, indices_or_sections, axis);
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
 	}
 }
 
-TypedArray<NDArray> nd::hsplit(const Variant& v, const Variant& indices_or_section_size) {
+TypedArray<NDArray> nd::hsplit(const Variant& v, const Variant& indices_or_sections) {
 	try {
 		const auto array = variant_as_array(v);
-		return split_(array, indices_or_section_size, array->dimension() == 1 ? 0 : 1);
+		return split_(array, indices_or_sections, array->dimension() == 1 ? 0 : 1);
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
 	}
 }
 
-TypedArray<NDArray> nd::vsplit(const Variant& v, const Variant& indices_or_section_size) {
-	return nd::split(v, indices_or_section_size, 0);
+TypedArray<NDArray> nd::vsplit(const Variant& v, const Variant& indices_or_sections) {
+	return nd::split(v, indices_or_sections, 0);
 }
 
-Ref<NDArray> nd::squeeze(const Variant& v) {
+Ref<NDArray> nd::squeeze(const Variant& v, const Variant& axes) {
 	try {
 		const auto array = variant_as_array(v);
-		return { memnew(NDArray(va::squeeze(array))) };
+		if (axes.get_type() == Variant::NIL) {
+			return { memnew(NDArray(va::squeeze(array))) };
+		}
+		const auto axes_ = variant_to_axes(axes);
+		return { memnew(NDArray(va::squeeze(array, axes_))) };
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
+}
+
+Ref<NDArray> nd::roll(const Variant& v, const Variant& shift, const Variant& axis) {
+	try {
+		const auto array = variant_as_array(v);
+
+		if (axis.get_type() == Variant::NIL) {
+			// Spec: axis=null flattens, then shifts a single int.
+			const auto shift_int = variant_to_axis(shift);
+			return { memnew(NDArray(va::roll(va::store::default_allocator, *array, shift_int))) };
+		}
+
+		const auto shifts = variant_to_axes(shift);
+		const auto axes = variant_to_axes(axis);
+		ERR_FAIL_COND_V_MSG(shifts.size() != axes.size(), {}, "roll: shift and axis must have the same length");
+
+		// Multi-axis roll = sequential single-axis rolls (each one materializes).
+		auto result = array;
+		for (std::size_t i = 0; i < shifts.size(); ++i) {
+			result = va::roll(va::store::default_allocator, *result, shifts[i], axes[i]);
+		}
+		return { memnew(NDArray(result)) };
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
+}
+
+Ref<NDArray> nd::argmax(const Variant& a, const Variant& axis) {
+	try {
+		const auto array = variant_as_array(a);
+		if (axis.get_type() == Variant::NIL) {
+			return { memnew(NDArray(va::argmax(va::store::default_allocator, *array))) };
+		}
+		const std::ptrdiff_t axis_int = static_cast<std::ptrdiff_t>(static_cast<int64_t>(axis));
+		return { memnew(NDArray(va::argmax(va::store::default_allocator, *array, axis_int))) };
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
+}
+
+Ref<NDArray> nd::argmin(const Variant& a, const Variant& axis) {
+	try {
+		const auto array = variant_as_array(a);
+		if (axis.get_type() == Variant::NIL) {
+			return { memnew(NDArray(va::argmin(va::store::default_allocator, *array))) };
+		}
+		const std::ptrdiff_t axis_int = static_cast<std::ptrdiff_t>(static_cast<int64_t>(axis));
+		return { memnew(NDArray(va::argmin(va::store::default_allocator, *array, axis_int))) };
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
+}
+
+TypedArray<NDArray> nd::nonzero(const Variant& a) {
+	try {
+		const auto array = variant_as_array(a);
+		const auto outputs = va::nonzero(va::store::default_allocator, *array);
+
+		TypedArray<NDArray> godot_array;
+		godot_array.resize(static_cast<int64_t>(outputs.size()));
+		for (std::size_t i = 0; i < outputs.size(); ++i) {
+			godot_array[static_cast<int64_t>(i)] = { memnew(NDArray(outputs[i])) };
+		}
+		return godot_array;
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
+}
+
+Ref<NDArray> nd::repeat(const Variant& v, const Variant& repeats, const Variant& axis) {
+	try {
+		auto array = variant_as_array(v);
+		std::ptrdiff_t axis_used;
+		if (axis.get_type() == Variant::NIL) {
+			array = va::flatten(va::store::default_allocator, array);
+			axis_used = 0;
+		}
+		else {
+			axis_used = static_cast<std::ptrdiff_t>(static_cast<int64_t>(axis));
+		}
+
+		if (repeats.get_type() == Variant::INT) {
+			const int64_t r = repeats;
+			if (r < 0) ERR_FAIL_V_MSG({}, "repeat: repeats must be non-negative");
+			return { memnew(NDArray(va::repeat(va::store::default_allocator, *array, static_cast<std::size_t>(r), axis_used))) };
+		}
+
+		// Per-element repeats. Decode as signed first (variant_to_axes handles
+		// arrays/PackedInt*Arrays), validate non-negative, then cast.
+		const auto signed_repeats = variant_to_axes(repeats);
+		std::vector<std::size_t> unsigned_repeats(signed_repeats.size());
+		for (std::size_t i = 0; i < signed_repeats.size(); ++i) {
+			if (signed_repeats[i] < 0) ERR_FAIL_V_MSG({}, "repeat: repeats must be non-negative");
+			unsigned_repeats[i] = static_cast<std::size_t>(signed_repeats[i]);
+		}
+
+		// Spec: a length-1 repeats array broadcasts as a scalar repeat.
+		if (unsigned_repeats.size() == 1) {
+			return { memnew(NDArray(va::repeat(va::store::default_allocator, *array, unsigned_repeats[0], axis_used))) };
+		}
+
+		return { memnew(NDArray(va::repeat(va::store::default_allocator, *array, unsigned_repeats, axis_used))) };
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
+}
+
+Ref<NDArray> nd::expand_dims(const Variant& v, const int64_t axis) {
+	try {
+		const auto array = variant_as_array(v);
+		return { memnew(NDArray(va::expand_dims(*array, static_cast<std::ptrdiff_t>(axis)))) };
+	}
+	catch (std::out_of_range& error) {
+		ERR_FAIL_V_MSG({}, error.what());
 	}
 	catch (std::runtime_error& error) {
 		ERR_FAIL_V_MSG({}, error.what());
@@ -934,6 +1145,10 @@ Ref<NDArray> nd::divide(const Variant& a, const Variant& b) {
 	return VARRAY_MAP2(divide, a, b);
 }
 
+Ref<NDArray> nd::floor_divide(const Variant& a, const Variant& b) {
+	return VARRAY_MAP2(floor_divide, a, b);
+}
+
 Ref<NDArray> nd::remainder(const Variant& a, const Variant& b) {
 	return VARRAY_MAP2(remainder, a, b);
 }
@@ -951,11 +1166,37 @@ Ref<NDArray> nd::maximum(const Variant& a, const Variant& b) {
 }
 
 Ref<NDArray> nd::clip(const Variant& a, const Variant& min, const Variant& max) {
+	// Per Array API: a null bound means "no clamp on that side". Reduce to
+	// minimum/maximum for one-sided cases, or pass through when both are null.
+	const bool min_is_null = min.get_type() == Variant::NIL;
+	const bool max_is_null = max.get_type() == Variant::NIL;
+	if (min_is_null && max_is_null) {
+		try {
+			return { memnew(NDArray(variant_as_array(a))) };
+		}
+		catch (std::runtime_error& error) {
+			ERR_FAIL_V_MSG({}, error.what());
+		}
+	}
+	if (min_is_null) return VARRAY_MAP2(minimum, a, max);
+	if (max_is_null) return VARRAY_MAP2(maximum, a, min);
 	return VARRAY_MAP3(clip, a, min, max);
+}
+
+Ref<NDArray> nd::where(const Variant& condition, const Variant& x, const Variant& y) {
+	return VARRAY_MAP3(where, condition, x, y);
 }
 
 Ref<NDArray> nd::sign(const Variant& a) {
 	return VARRAY_MAP1(sign, a);
+}
+
+Ref<NDArray> nd::signbit(const Variant& a) {
+	return VARRAY_MAP1(signbit, a);
+}
+
+Ref<NDArray> nd::copysign(const Variant& a, const Variant& b) {
+	return VARRAY_MAP2(copysign, a, b);
 }
 
 Ref<NDArray> nd::abs(const Variant& a) {
@@ -970,12 +1211,36 @@ Ref<NDArray> nd::sqrt(const Variant& a) {
 	return VARRAY_MAP1(sqrt, a);
 }
 
+Ref<NDArray> nd::hypot(const Variant& a, const Variant& b) {
+	return VARRAY_MAP2(hypot, a, b);
+}
+
 Ref<NDArray> nd::exp(const Variant& a) {
 	return VARRAY_MAP1(exp, a);
 }
 
+Ref<NDArray> nd::expm1(const Variant& a) {
+	return VARRAY_MAP1(expm1, a);
+}
+
 Ref<NDArray> nd::log(const Variant& a) {
 	return VARRAY_MAP1(log, a);
+}
+
+Ref<NDArray> nd::log2(const Variant& a) {
+	return VARRAY_MAP1(log2, a);
+}
+
+Ref<NDArray> nd::log10(const Variant& a) {
+	return VARRAY_MAP1(log10, a);
+}
+
+Ref<NDArray> nd::log1p(const Variant& a) {
+	return VARRAY_MAP1(log1p, a);
+}
+
+Ref<NDArray> nd::logaddexp(const Variant& a, const Variant& b) {
+	return VARRAY_MAP2(logaddexp, a, b);
 }
 
 Ref<NDArray> nd::rad2deg(const Variant& a) {
@@ -1046,6 +1311,42 @@ Ref<NDArray> nd::prod(const Variant& a, const Variant& axes) {
 	return REDUCTION1(prod, a, axes);
 }
 
+Ref<NDArray> nd::cumsum(const Variant& a, const Variant& axis) {
+	return REDUCTION1(cumsum, a, axis);
+}
+
+Ref<NDArray> nd::cumprod(const Variant& a, const Variant& axis) {
+	return REDUCTION1(cumprod, a, axis);
+}
+
+Ref<NDArray> nd::diff(const Variant& a, const int64_t n, const int64_t axis) {
+	if (n < 0) ERR_FAIL_V_MSG({}, "diff: n must be non-negative");
+	return map_variants_as_arrays_with_target([n, axis](const va::VArrayTarget& target, const std::shared_ptr<va::VArray>& v) {
+		va::diff(va::store::default_allocator, target, v->data, static_cast<std::size_t>(n), static_cast<std::ptrdiff_t>(axis));
+	}, a);
+}
+
+TypedArray<NDArray> nd::meshgrid(const Variant& arrays, const StringName& indexing) {
+	try {
+		const bool xy = indexing == ::indexing_xy();
+		if (!xy && indexing != ::indexing_ij()) {
+			ERR_FAIL_V_MSG({}, "meshgrid: indexing must be \"xy\" or \"ij\"");
+		}
+		const auto vector = variant_to_vector(arrays);
+		const auto outputs = va::meshgrid(va::store::default_allocator, vector, xy);
+
+		TypedArray<NDArray> godot_array;
+		godot_array.resize(static_cast<int64_t>(outputs.size()));
+		for (std::size_t i = 0; i < outputs.size(); ++i) {
+			godot_array[static_cast<int64_t>(i)] = { memnew(NDArray(outputs[i])) };
+		}
+		return godot_array;
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
+}
+
 Ref<NDArray> nd::mean(const Variant& a, const Variant& axes) {
 	return REDUCTION1(mean, a, axes);
 }
@@ -1108,7 +1409,17 @@ Ref<NDArray> nd::ceil(const Variant& a) {
 	return VARRAY_MAP1(ceil, a);
 }
 
+// round and rint have only float/complex specializations (numpy's `rint` ufunc
+// has no integer rows). For integer/bool inputs the value is already rounded,
+// so short-circuit to a no-op rather than hitting an empty dispatch cell.
+inline bool _is_integer_dtype(va::DType d) {
+	return d == va::Bool || d >= va::Int8;
+}
+
 Ref<NDArray> nd::round(const Variant& a) {
+	if (const auto ndarray = Object::cast_to<NDArray>(a); ndarray && _is_integer_dtype(ndarray->dtype())) {
+		return { memnew(NDArray(ndarray->array)) };
+	}
 	return VARRAY_MAP1(round, a);
 }
 
@@ -1117,6 +1428,9 @@ Ref<NDArray> nd::trunc(const Variant& a) {
 }
 
 Ref<NDArray> nd::rint(const Variant& a) {
+	if (const auto ndarray = Object::cast_to<NDArray>(a); ndarray && _is_integer_dtype(ndarray->dtype())) {
+		return { memnew(NDArray(ndarray->array)) };
+	}
 	return VARRAY_MAP1(rint, a);
 }
 

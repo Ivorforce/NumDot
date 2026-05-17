@@ -1,0 +1,28 @@
+[project]
+name = "numdot-tests"
+version = "0.0.0"
+description = "Test harness for NumDot — Python <-> Godot bridge and array-api-tests adapter."
+requires-python = ">=3.12"
+authors = [{name = "Lukas Tenbrink"}]
+
+# Runtime deps for the Python side of the bridge and the numdot_xp adapter.
+# array-api-tests itself is not on PyPI and not a Python package; it lives as
+# a git submodule under tests/array-api-tests/ and is added to sys.path by
+# tests/array_api/conftest.py.
+dependencies = [
+    "numpy>=2.0",
+    "pytest>=8.0",
+    "hypothesis>=6.0",
+    "ndindex>=1.10",  # array-api-tests dep
+    "pytest-json-report>=1.5",  # array-api-tests dep
+]
+
+[tool.poetry]
+package-mode = false  # we don't ship this; it's just a venv manifest.
+
+[tool.poetry.dependencies]
+python = ">=3.12,<4.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

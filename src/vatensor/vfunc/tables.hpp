@@ -49,7 +49,12 @@ namespace va::vfunc::tables {
 	VA_TABLES_EXTERN UFuncTableUnary square;
 	VA_TABLES_EXTERN UFuncTableUnary sqrt;
 	VA_TABLES_EXTERN UFuncTableUnary exp;
+	VA_TABLES_EXTERN UFuncTableUnary expm1;
 	VA_TABLES_EXTERN UFuncTableUnary log;
+	VA_TABLES_EXTERN UFuncTableUnary log2;
+	VA_TABLES_EXTERN UFuncTableUnary log10;
+	VA_TABLES_EXTERN UFuncTableUnary log1p;
+	VA_TABLES_EXTERN UFuncTablesBinaryCommutative logaddexp;
 	VA_TABLES_EXTERN UFuncTableUnary rad2deg;
 	VA_TABLES_EXTERN UFuncTableUnary deg2rad;
 
@@ -59,13 +64,20 @@ namespace va::vfunc::tables {
 	VA_TABLES_EXTERN UFuncTablesBinary subtract;
 	VA_TABLES_EXTERN UFuncTablesBinaryCommutative multiply;
 	VA_TABLES_EXTERN UFuncTablesBinary divide;
+	VA_TABLES_EXTERN UFuncTablesBinary floor_divide;
 	VA_TABLES_EXTERN UFuncTablesBinary remainder;
 	VA_TABLES_EXTERN UFuncTablesBinary pow;
 	VA_TABLES_EXTERN UFuncTablesBinaryCommutative minimum;
 	VA_TABLES_EXTERN UFuncTablesBinaryCommutative maximum;
+	VA_TABLES_EXTERN UFuncTablesBinaryCommutative hypot;
+	VA_TABLES_EXTERN UFuncTablesBinary copysign;
+	VA_TABLES_EXTERN UFuncTableUnary signbit;
 	
 	VA_TABLES_EXTERN UFuncTableUnary sum;
 	VA_TABLES_EXTERN UFuncTableUnary prod;
+	VA_TABLES_EXTERN UFuncTableUnary cumsum;
+	VA_TABLES_EXTERN UFuncTableUnary cumprod;
+	VA_TABLES_EXTERN UFuncTableUnary diff;
 	VA_TABLES_EXTERN UFuncTableUnary mean;
 	VA_TABLES_EXTERN UFuncTableUnary median;
 	VA_TABLES_EXTERN UFuncTableUnary variance;
@@ -123,6 +135,7 @@ namespace va::vfunc::tables {
 	VA_TABLES_EXTERN UFuncTableUnary isfinite;
 	VA_TABLES_EXTERN UFuncTableUnary isinf;
 
+	VA_TABLES_EXTERN UFuncTableBinary where;
 	VA_TABLES_EXTERN UFuncTablesBinaryCommutative is_close;
 	VA_TABLES_EXTERN UFuncTablesBinaryCommutative array_equiv;
 	VA_TABLES_EXTERN UFuncTablesBinaryCommutative all_close;

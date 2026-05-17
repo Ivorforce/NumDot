@@ -13,6 +13,64 @@ Here you will find the release notes for each version of the library. Each secti
 .. Upcoming Changes (main branch)
 .. ------------------------------
 
+Version 0.12 - 2026-06-17
+-------------------------
+
+Many bugs in this release were found by running NumDot against the `Python array-api-tests <https://github.com/data-apis/array-api-tests>`_ conformance suite from the Consortium for Python Data API Standards.
+
+**Added**
+
+- ``nd.where(condition, x, y)`` selects from ``x`` where ``condition`` is true and from ``y`` otherwise, with broadcasting across all three operands.
+- New elementwise math functions: ``nd.log2``, ``nd.log10``, ``nd.log1p``, ``nd.expm1``, ``nd.logaddexp``, ``nd.hypot``, ``nd.copysign``, ``nd.signbit``, and ``nd.floor_divide`` (Python-style floor toward ``-infinity``, including for integer inputs).
+- ``nd.cumsum`` and ``nd.cumprod`` compute cumulative sums and products along an axis (or over the flattened input when ``axis`` is null).
+- ``nd.diff(a, n, axis)`` computes the n-th discrete difference along the given axis. Output shrinks by ``n`` along that axis (empty if ``n`` exceeds the axis length).
+- ``nd.meshgrid(arrays, indexing)`` builds coordinate grids from a list of 1-D arrays. ``indexing`` is a ``StringName`` accepting ``&"xy"`` (default, swaps the first two output axes) or ``&"ij"``.
+- ``nd.expand_dims(v, axis)`` inserts a length-1 dimension at the given axis (counts from the end if negative). Returns a view, no copy.
+- ``nd.broadcast_to(v, shape)`` returns a view of ``v`` stretched to ``shape``. Front-padded axes and any input axes of length 1 are broadcast (zero-stride); the rest must match the target dimension or the call errors.
+- ``nd.squeeze(v, axes)`` accepts an optional ``axes`` argument (int or list) selecting which length-1 axes to drop. The requested axes must all be size 1 or the call errors. Without ``axes`` the previous behavior is unchanged: drop every length-1 axis.
+- ``nd.moveaxis`` accepts lists for ``src`` and ``dst`` (in addition to single ints), moving multiple axes in one call. ``nd.moveaxis(arr, [0, 1], [-1, -2])`` swaps the first two axes to the end.
+- ``nd.roll(v, shift, axis)`` cyclically shifts elements; ``axis`` may be null (flatten), an int, or a list paired with ``shift``. Negative and over-sized shifts are normalized.
+- ``nd.repeat(v, repeats, axis)`` repeats each element along ``axis``. ``repeats`` is an int (every element) or an array (one count per element along the axis); a length-1 array broadcasts as a scalar. ``axis = null`` flattens first.
+- ``nd.argmax(a, axis)`` and ``nd.argmin(a, axis)`` return the int64 index of the max / min element along ``axis`` (flattened when ``axis`` is null).
+- ``nd.nonzero(a)`` returns one int64 1-D array per dimension with the indices of non-zero elements.
+
+**Changed**
+
+- ``nd.split`` (and the ``nd.hsplit`` / ``nd.vsplit`` shorthands) now treats an integer ``indices_or_sections`` as the number of equal sub-arrays to produce, matching numpy. Previously the integer was interpreted as the size of each chunk, so ``nd.split(arr, 3, 0)`` on a length-3 axis returned one full-sized array instead of three length-1 arrays. The parameter has been renamed from ``indices_or_section_size`` to ``indices_or_sections`` to reflect this. Callers passing the chunk size will silently get different results — pass ``axis_length / old_value`` to recover the previous behavior.
+- Binary ops (``nd.add``, ``nd.subtract``, comparisons, bitwise, ...) no longer widen the result dtype when one operand is a GDScript ``int``/``float``/``bool`` scalar. ``nd.add(uint8_arr, 5)`` now stays ``uint8`` instead of returning ``int64``, matching the Array API spec and numpy 2.x's NEP-50 promotion. To keep the old widening behavior, wrap the scalar as a typed array (e.g. ``nd.array(5, nd.Int64)``).
+
+**Fixed**
+
+- ``nd.round`` and ``nd.rint`` now pass integer/bool arrays through unchanged (used to return ``null``). ``nd.round`` also now works on complex arrays.
+- ``nd.clip`` accepts ``null`` for ``min`` and/or ``max`` to leave that side unbounded (used to error).
+- ``nd.clip`` follows the same scalar-promotion rule as binary ops, so ``nd.clip(uint8_arr, 0, 255)`` stays ``uint8``.
+- Reductions (``nd.sum``, ``nd.mean``, ``nd.min``, ``nd.max``, ``nd.std``, ``nd.var``, ...) accept axis lists in any order and with negative indices. ``nd.mean(arr, [1, 0])`` used to return ``null``.
+- ``nd.prod`` and ``nd.sum`` on narrow integer dtypes (``int8``..``int32``, ``uint8``..``uint32``) accumulate at the wider output dtype (``int64`` / ``uint64``) instead of overflowing. ``nd.prod([1291, 1291, 1291])`` now returns ``2151685171`` instead of ``-2143282125``.
+- ``nd.array(x, dtype)`` supports casting from complex sources: ``complex128 → complex64``, ``complex → real`` (drops the imaginary part with a warning), and ``complex → bool``. These previously errored.
+- Boolean conversion of complex arrays was inverted: ``ndb.all([1+0j])`` came back ``false``. ``nd.array(complex_arr, nd.Bool)``, ``ndb.all`` and ``ndb.any`` now return ``true`` for nonzero values.
+- ``nd.concatenate`` accepts ``null`` for ``axis``, flattening inputs before concatenating.
+- ``nd.dumpb`` produces correct bytes for non-contiguous arrays (e.g. results of ``nd.flip`` / ``nd.transpose`` / strided slices). Saving and reloading these used to silently corrupt the data.
+- ``nd.transpose`` accepts negative axes in the permutation; ``nd.transpose(arr, [-1])`` no longer returns ``null``.
+- ``nd.flip`` accepts negative axes; ``nd.flip(arr, -1)`` used to crash.
+- Result dtype for ``nd.concatenate``, ``nd.linspace``, ``nd.arange``, ``nd.matmul`` / ``nd.dot``, and array-from-nested-array conversion follows numpy's ``result_type`` rules: ``uint8 + uint16 → uint16`` (was ``int32``), ``int32 + uint32 → int64``, ``int64 + uint64 → float64``.
+- ``nd.linspace(a, b, num)`` lands ``out[-1]`` exactly on ``b`` when ``endpoint`` is true (used to drift a few ULPs, e.g. ``29.000000000000004`` instead of ``29.0``). ``nd.linspace(a, b, 1)`` returns ``[a]`` instead of ``[nan]``.
+- ``nd.bitwise_right_shift`` on negative signed integers now sign-extends when the shift count meets or exceeds the dtype's bit width (e.g. ``int32(-1) >> 32`` now returns ``-1``, was ``0``), matching the array-api spec.
+- ``nd.log`` no longer returns ``nan`` on complex inputs whose magnitude is near the dtype's maximum (e.g. ``complex64`` with ``|z| ≈ 1.8e19``).
+- ``nd.sign`` on complex inputs now returns ``z / |z|`` (e.g. ``nd.sign(0.5+1j)`` is ``0.4472+0.8944j``, not ``1+0j``), matching the array-api spec.
+- ``nd.abs`` on multi-element complex arrays no longer returns ``nan`` for elements whose magnitude is near the dtype's maximum (e.g. ``complex64`` with ``|z| ≈ 1.8e19``); 0-D scalars were already correct.
+- ``nd.eye`` with a very large ``k`` returns all zeros instead of placing a diagonal of ones (e.g. ``nd.eye(1, k=2**32)`` now returns ``[[0.0]]``, used to return ``[[1.0]]``).
+- ``nd.divide`` on complex inputs whose magnitudes are near the dtype's maximum (e.g. ``complex64`` with ``|denom| ≈ 1.8e19``) used to return ``0`` or ``nan`` for the result; it now returns the correct quotient.
+- ``nd.arange`` with very large integer ``start`` / ``stop`` and a float ``step`` returned the wrong number of elements (e.g. ``nd.arange(-2305843009213692800, -2305843009213694530, -91.0)`` returned 17 instead of 20), and could return a non-empty array where it should have been empty.
+- ``nd.atan`` and ``nd.atanh`` on complex inputs at extreme magnitudes (e.g. ``atan(1+2.77e7j)``) used to return ``±π/2`` with the wrong sign, ``inf``, or ``nan``; they now return the correct value.
+- ``nd.reshape`` from a 1-D array to a multi-dimensional shape used to silently produce column-major output (e.g. ``nd.reshape(nd.array([1, 2, 3, 4, 5, 6]), [2, 3])`` returned ``[[1, 3, 5], [2, 4, 6]]``); it now returns row-major ``[[1, 2, 3], [4, 5, 6]]`` to match numpy / NumDot's general convention.
+- ``nd.arange`` returns an empty array when ``step`` has the wrong sign for ``stop - start`` (used to return garbage data).
+- ``nd.arange`` with ``step = 0`` is rejected with a clean error.
+- ``nd.arange`` with integer arguments above ``2**53`` could return the wrong number of elements; integer dtypes now use exact integer arithmetic.
+- Reductions over a non-last axis of a multi-dimensional array (e.g. ``nd.mean(matrix, 0)``, ``nd.sum``, ``nd.std``, ``nd.var``, ``nd.max``) returned an empty or wrong-shaped result on Linux and Windows builds; macOS was unaffected.
+- ``NDArray.to_godot_array`` returned wrong data (and could crash Godot) on arrays with more than two elements.
+- ``nd.concatenate`` / ``nd.hstack`` / ``nd.vstack`` no longer fail with a shape-mismatch error on a single ``NDArray``.
+- Slice errors in array conversions (``to_godot_array``, ``to_packed_*``, ``to_vector*``, ``copy``, ``as_type``, iteration) raise a Godot error instead of crashing.
+
 Version 0.11 - 2025-09-14
 -------------------------
 

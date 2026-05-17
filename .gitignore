@@ -38,6 +38,10 @@
 # Python generated files
 __pycache__
 *.pyc
+.venv
+
+# clangd index cache
+/.cache/
 
 # SCons
 .sconf_temp

@@ -21,6 +21,11 @@ inline void UFUNC_NAME(VStoreAllocator& allocator, const VArrayTarget& target, c
 	va::call_rfunc_unary(allocator, vfunc::tables::UFUNC_NAME, target, a, axes);\
 }
 
+#define DEFINE_AFUNC_CALLER_UNARY0(UFUNC_NAME)\
+inline void UFUNC_NAME(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const va::axes_type* axes) {\
+	va::call_accumulate_unary(allocator, vfunc::tables::UFUNC_NAME, target, a, axes);\
+}
+
 #define DEFINE_VFUNC_CALLER_BINARY0(UFUNC_NAME)\
 inline void UFUNC_NAME(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& b) {\
 	va::call_vfunc_binary(allocator, vfunc::tables::UFUNC_NAME, target, a, b);\
@@ -56,9 +61,15 @@ namespace va {
 	DEFINE_VFUNC_CALLER_UNARY0(square)
 	DEFINE_VFUNC_CALLER_UNARY0(sqrt)
 	DEFINE_VFUNC_CALLER_UNARY0(exp)
+	DEFINE_VFUNC_CALLER_UNARY0(expm1)
 	DEFINE_VFUNC_CALLER_UNARY0(log)
+	DEFINE_VFUNC_CALLER_UNARY0(log2)
+	DEFINE_VFUNC_CALLER_UNARY0(log10)
+	DEFINE_VFUNC_CALLER_UNARY0(log1p)
+	DEFINE_VFUNC_CALLER_BINARY0(logaddexp)
 	DEFINE_VFUNC_CALLER_UNARY0(rad2deg)
 	DEFINE_VFUNC_CALLER_UNARY0(deg2rad)
+	DEFINE_VFUNC_CALLER_UNARY0(signbit)
 
 	DEFINE_VFUNC_CALLER_UNARY0(conjugate)
 
@@ -66,10 +77,13 @@ namespace va {
 	DEFINE_VFUNC_CALLER_BINARY0(subtract)
 	DEFINE_VFUNC_CALLER_BINARY0(multiply)
 	DEFINE_VFUNC_CALLER_BINARY0(divide)
+	DEFINE_VFUNC_CALLER_BINARY0(floor_divide)
 	DEFINE_VFUNC_CALLER_BINARY0(remainder)
 	DEFINE_VFUNC_CALLER_BINARY0(pow)
 	DEFINE_VFUNC_CALLER_BINARY0(minimum)
 	DEFINE_VFUNC_CALLER_BINARY0(maximum)
+	DEFINE_VFUNC_CALLER_BINARY0(hypot)
+	DEFINE_VFUNC_CALLER_BINARY0(copysign)
 	inline void clip(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, const VData& lo, const VData& hi) {
 		// TODO Re-evaluate if it's worth it to make it a ternary vfunc.
 		// TODO It should also be possible to do this without a temp variable.
@@ -78,8 +92,36 @@ namespace va {
 		va::maximum(allocator, target, tmp->data, lo);
 	}
 
+	inline void where(VStoreAllocator& allocator, const VArrayTarget& target, const VData& cond, const VData& a, const VData& b) {
+		if (va::dtype(cond) != va::DType::Bool)
+			throw std::runtime_error("where: condition must be a boolean array");
+		const auto& cond_b = std::get<compute_case<bool*>>(cond);
+		const shape_type result_shape = combined_shape(
+			combined_shape(va::shape(cond), va::shape(a)),
+			va::shape(b)
+		);
+		_call_vfunc_binary(allocator, vfunc::tables::where, target, result_shape,
+		                   a, b, &cond_b);
+	}
+
 	DEFINE_RFUNC_CALLER_UNARY0(sum)
 	DEFINE_RFUNC_CALLER_UNARY0(prod)
+	DEFINE_AFUNC_CALLER_UNARY0(cumsum)
+	DEFINE_AFUNC_CALLER_UNARY0(cumprod)
+
+	inline void diff(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, std::size_t n, std::ptrdiff_t axis) {
+		const auto& in_shape = va::shape(a);
+		if (in_shape.empty()) throw std::runtime_error("diff requires at least 1-D input");
+		const std::size_t ndim = in_shape.size();
+		const std::size_t saxis = axis < 0 ? static_cast<std::size_t>(axis + static_cast<std::ptrdiff_t>(ndim)) : static_cast<std::size_t>(axis);
+		if (saxis >= ndim) throw std::runtime_error("diff: axis out of range");
+
+		va::shape_type result_shape = in_shape;
+		const std::size_t along = result_shape[saxis];
+		result_shape[saxis] = n >= along ? std::size_t(0) : along - n;
+
+		_call_vfunc_unary(allocator, vfunc::tables::diff, target, result_shape, a, std::move(n), std::move(axis));
+	}
 	DEFINE_RFUNC_CALLER_UNARY0(mean)
 	DEFINE_RFUNC_CALLER_UNARY0(median)
 	DEFINE_RFUNC_CALLER_UNARY0(variance)

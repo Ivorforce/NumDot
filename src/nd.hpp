@@ -100,22 +100,29 @@ public:
 	// Rearrange.
 	static Ref<NDArray> transpose(const Variant& a, const Variant& permutation);
 	static Ref<NDArray> reshape(const Variant& a, const Variant& shape);
+	static Ref<NDArray> broadcast_to(const Variant& v, const Variant& shape);
 	static Ref<NDArray> swapaxes(const Variant& v, int64_t a, int64_t b);
-	static Ref<NDArray> moveaxis(const Variant& v, int64_t src, int64_t dst);
+	static Ref<NDArray> moveaxis(const Variant& v, const Variant& src, const Variant& dst);
 	static Ref<NDArray> flip(const Variant& v, int64_t axis);
 	static Ref<NDArray> diagonal(const Variant& v, int64_t offset, int64_t axis1, int64_t axis2);
 	static Ref<NDArray> diag(const Variant& v, int64_t offset);
 	static Ref<NDArray> trace(const Variant& v, int64_t offset, int64_t axis1, int64_t axis2);
 	static Ref<NDArray> stack(const Variant& v, int64_t axis);
 	static Ref<NDArray> unstack(const Variant& v, int64_t axis);
-	static Ref<NDArray> concatenate(const Variant& v, int64_t axis, DType dtype = DType::DTypeMax);
+	static Ref<NDArray> concatenate(const Variant& v, const Variant& axis, DType dtype = DType::DTypeMax);
 	static Ref<NDArray> hstack(const Variant& v, DType dtype = DType::DTypeMax);
 	static Ref<NDArray> vstack(const Variant& v, DType dtype = DType::DTypeMax);
 	static Ref<NDArray> tile(const Variant& v, const Variant& reps, bool inner = false);
-	static TypedArray<NDArray> split(const Variant& v, const Variant& indices_or_section_size, int64_t axis);
-	static TypedArray<NDArray> hsplit(const Variant& v, const Variant& indices_or_section_size);
-	static TypedArray<NDArray> vsplit(const Variant& v, const Variant& indices_or_section_size);
-	static Ref<NDArray> squeeze(const Variant& v);
+	static TypedArray<NDArray> split(const Variant& v, const Variant& indices_or_sections, int64_t axis);
+	static TypedArray<NDArray> hsplit(const Variant& v, const Variant& indices_or_sections);
+	static TypedArray<NDArray> vsplit(const Variant& v, const Variant& indices_or_sections);
+	static Ref<NDArray> squeeze(const Variant& v, const Variant& axes);
+	static Ref<NDArray> expand_dims(const Variant& v, int64_t axis);
+	static Ref<NDArray> roll(const Variant& v, const Variant& shift, const Variant& axis);
+	static Ref<NDArray> repeat(const Variant& v, const Variant& repeats, const Variant& axis);
+	static Ref<NDArray> argmax(const Variant& a, const Variant& axis);
+	static Ref<NDArray> argmin(const Variant& a, const Variant& axis);
+	static TypedArray<NDArray> nonzero(const Variant& a);
 
 	// Complex.
 	static Ref<NDArray> real(const Variant& a);
@@ -133,20 +140,30 @@ public:
 	static Ref<NDArray> subtract(const Variant& a, const Variant& b);
 	static Ref<NDArray> multiply(const Variant& a, const Variant& b);
 	static Ref<NDArray> divide(const Variant& a, const Variant& b);
+	static Ref<NDArray> floor_divide(const Variant& a, const Variant& b);
 	static Ref<NDArray> remainder(const Variant& a, const Variant& b);
 	static Ref<NDArray> pow(const Variant& a, const Variant& b);
 
 	static Ref<NDArray> minimum(const Variant& a, const Variant& b);
 	static Ref<NDArray> maximum(const Variant& a, const Variant& b);
 	static Ref<NDArray> clip(const Variant& a, const Variant& min, const Variant& max);
+	static Ref<NDArray> where(const Variant& condition, const Variant& x, const Variant& y);
 
 	static Ref<NDArray> sign(const Variant& a);
+	static Ref<NDArray> signbit(const Variant& a);
+	static Ref<NDArray> copysign(const Variant& a, const Variant& b);
 	static Ref<NDArray> abs(const Variant& a);
 	static Ref<NDArray> square(const Variant& a);
 	static Ref<NDArray> sqrt(const Variant& a);
+	static Ref<NDArray> hypot(const Variant& a, const Variant& b);
 
 	static Ref<NDArray> exp(const Variant& a);
+	static Ref<NDArray> expm1(const Variant& a);
 	static Ref<NDArray> log(const Variant& a);
+	static Ref<NDArray> log2(const Variant& a);
+	static Ref<NDArray> log10(const Variant& a);
+	static Ref<NDArray> log1p(const Variant& a);
+	static Ref<NDArray> logaddexp(const Variant& a, const Variant& b);
 
 	static Ref<NDArray> rad2deg(const Variant& a);
 	static Ref<NDArray> deg2rad(const Variant& a);
@@ -170,6 +187,10 @@ public:
 	// Reductions.
 	static Ref<NDArray> sum(const Variant& a, const Variant& axes);
 	static Ref<NDArray> prod(const Variant& a, const Variant& axes);
+	static Ref<NDArray> cumsum(const Variant& a, const Variant& axis);
+	static Ref<NDArray> cumprod(const Variant& a, const Variant& axis);
+	static Ref<NDArray> diff(const Variant& a, int64_t n = 1, int64_t axis = -1);
+	static TypedArray<NDArray> meshgrid(const Variant& arrays, const StringName& indexing);
 	static Ref<NDArray> mean(const Variant& a, const Variant& axes);
 	static Ref<NDArray> median(const Variant& a, const Variant& axes);
 	static Ref<NDArray> variance(const Variant& a, const Variant& axes);

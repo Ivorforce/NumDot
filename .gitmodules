@@ -1,7 +1,6 @@
 [submodule "godot-cpp"]
 	path = godot-cpp
 	url = https://github.com/godotengine/godot-cpp
-	branch = 4.3
 [submodule "xtensor"]
 	path = xtensor
 	url = https://github.com/xtensor-stack/xtensor.git
@@ -17,3 +16,6 @@
 [submodule "xtensor-signal"]
 	path = xtensor-signal
 	url = https://github.com/xtensor-stack/xtensor-signal.git
+[submodule "tests/array-api-tests"]
+	path = tests/array-api-tests
+	url = https://github.com/data-apis/array-api-tests.git

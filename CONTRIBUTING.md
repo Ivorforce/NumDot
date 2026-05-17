@@ -9,7 +9,7 @@ New collaborators are very welcome! There's 3 quick ways to start:
 ## Understanding NumDot Technology
 
 First off, NumDot is a [GDExtension](https://docs.godotengine.org/en/stable/tutorials/scripting/gdextension/what_is_gdextension.html), that is, an extension for the [Godot engine](https://godotengine.org). 
-If you aren't familiar with them, I recommend doing the short [C++ GDExtension tutorial](https://docs.godotengine.org/en/stable/tutorials/scripting/gdextension/gdextension_cpp_example.html) to understand the tools involved.
+If you aren't familiar with them, I recommend doing the short [C++ GDExtension tutorial](https://docs.godotengine.org/en/stable/tutorials/scripting/cpp/gdextension_cpp_example.html) to understand the tools involved.
 
 NumDot itself is a very thin wrapper over [xtensor](https://xtensor.readthedocs.io/en/latest/index.html). That means little code is involved, but some of it involves fairly advanced concepts:
 
@@ -34,10 +34,10 @@ If you changed NumDot's public API, you should also update its documentation. St
 # Update the .xml files from source
 cd demo && godot --doctool ../ --gdextension-docs && cd ..
 # Update the .rst files from .xml files
-curl -sSL https://raw.githubusercontent.com/godotengine/godot/master/doc/tools/make_rst.py | python3 - -o "docs/classes" -l "en" doc_classes
+python3 configure/regenerate_docs.py
 ```
 
-Edit the new entries in `./doc_classes/` ([see the godot docs for more information](https://docs.godotengine.org/en/stable/tutorials/scripting/gdextension/gdextension_docs_system.html)).
+Edit the new entries in `./doc_classes/` ([see the godot docs for more information](https://docs.godotengine.org/en/stable/tutorials/scripting/gdextension/gdextension_docs_system.html)), then re-run `regenerate_docs.py`.
 
 ### Include Policy
 

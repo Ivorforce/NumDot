@@ -41,7 +41,8 @@ namespace va {
 	std::shared_ptr<VArray> swapaxes(const VArray& varray, std::ptrdiff_t a, std::ptrdiff_t b);
 	std::shared_ptr<VArray> moveaxis(const VArray& varray, std::ptrdiff_t src, std::ptrdiff_t dst);
 	VData moveaxis(const VData& data, std::ptrdiff_t src, std::ptrdiff_t dst);
-	std::shared_ptr<VArray> flip(const VArray& varray, std::size_t axis);
+	std::shared_ptr<VArray> moveaxis(const VArray& varray, const axes_type& src, const axes_type& dst);
+	std::shared_ptr<VArray> flip(const VArray& varray, std::ptrdiff_t axis);
 	std::shared_ptr<VArray> diagonal(const VArray& varray, std::ptrdiff_t offset, std::ptrdiff_t axis1, std::ptrdiff_t axis2);
 	std::shared_ptr<VArray> join_axes_into_last_dimension(const VData& varray, axes_type axes);
 
@@ -51,6 +52,25 @@ namespace va {
 	std::shared_ptr<VArray> vector_as_complex(VStoreAllocator& allocator, const VArray& varray, DType dtype, bool keepdims);
 
 	std::shared_ptr<VArray> squeeze(const std::shared_ptr<VArray>& vdata);
+	std::shared_ptr<VArray> squeeze(const std::shared_ptr<VArray>& vdata, const axes_type& axes);
+	std::shared_ptr<VArray> broadcast_to(const VArray& varray, const shape_type& target_shape);
+	std::shared_ptr<VArray> expand_dims(const VArray& varray, std::ptrdiff_t axis);
+	std::shared_ptr<VArray> roll(VStoreAllocator& allocator, const VArray& varray, std::ptrdiff_t shift);
+	std::shared_ptr<VArray> roll(VStoreAllocator& allocator, const VArray& varray, std::ptrdiff_t shift, std::ptrdiff_t axis);
+
+	std::shared_ptr<VArray> repeat(VStoreAllocator& allocator, const VArray& varray, std::size_t repeats, std::ptrdiff_t axis);
+	std::shared_ptr<VArray> repeat(VStoreAllocator& allocator, const VArray& varray, const std::vector<std::size_t>& repeats, std::ptrdiff_t axis);
+
+	// argmax / argmin: returns int64 indices. With axis=null, flatten and return
+	// a 0-D scalar; with a single axis, the axis is collapsed.
+	std::shared_ptr<VArray> argmax(VStoreAllocator& allocator, const VArray& varray);
+	std::shared_ptr<VArray> argmax(VStoreAllocator& allocator, const VArray& varray, std::ptrdiff_t axis);
+	std::shared_ptr<VArray> argmin(VStoreAllocator& allocator, const VArray& varray);
+	std::shared_ptr<VArray> argmin(VStoreAllocator& allocator, const VArray& varray, std::ptrdiff_t axis);
+
+	// nonzero: returns N int64 1-D arrays (one per dim) with the indices of
+	// elements that compare nonzero.
+	std::vector<std::shared_ptr<VArray>> nonzero(VStoreAllocator& allocator, const VArray& varray);
 }
 
 #endif //XV_H

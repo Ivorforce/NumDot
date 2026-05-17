@@ -1,0 +1,65 @@
+# Expected-failures within the test files that are NOT in skips.txt.
+# Each line is a test-ID substring matched by array-api-tests's --xfails-file.
+# Comment lines (#) and blank lines are ignored.
+#
+# Workflow:
+#   1. Run the suite (see tests/array_api/README.md).
+#   2. New failures (not listed here) break the build → real regression.
+#   3. Tests listed here are reported as xfailed; if any start passing they
+#      show up as XPASSED — investigate and remove the line.
+#   4. Bring a line to zero by either: implementing the missing shim in
+#      numdot_xp, fixing a NumDot bug, or filing one (and noting upstream).
+
+# === test_operators_and_elementwise_functions.py — first wiring ===
+# File enabled by adding an ndarray subclass with operator dunders that
+# dispatch back through nd. Residual failures bucketed below.
+
+# --- NumDot bug: numerical edges in trig / log / unary functions ---
+# These pass at low example counts but Hypothesis finds inputs (NaN/Inf,
+# domain edges, tiny denormals) where NumDot diverges from the spec.
+# Not a dispatch issue — both function-form and op-form fail.
+array_api_tests/test_operators_and_elementwise_functions.py::test_acos
+array_api_tests/test_operators_and_elementwise_functions.py::test_acosh
+array_api_tests/test_operators_and_elementwise_functions.py::test_asin
+array_api_tests/test_operators_and_elementwise_functions.py::test_asinh
+array_api_tests/test_operators_and_elementwise_functions.py::test_tan
+array_api_tests/test_operators_and_elementwise_functions.py::test_tanh
+
+# === Reductions: axis/keepdims/dtype wired ===
+# numdot_xp now passes axis/keepdims/dtype through to nd reductions. Residual
+# failures below are either nd-binding gaps or known nd promotion divergences.
+
+
+
+
+# === test_manipulation_functions.py ===
+# No nd binding (out of scope: would need new C++ funcs):
+
+
+# === test_searching_functions.py ===
+# No nd binding for searchsorted yet.
+array_api_tests/test_searching_functions.py::test_searchsorted
+# nd.where errors on empty mixed-precision complex inputs
+# (where(bool_arr, complex64_empty, complex128_empty) returns null).
+array_api_tests/test_searching_functions.py::test_where
+
+
+# === test_signatures.py — functions from still-skipped test files ===
+# These signatures fail because the corresponding shim is missing entirely.
+# Each will resolve when its containing test file is brought online (and the
+# shim is added to numdot_xp/_funcs.py).
+array_api_tests/test_signatures.py::test_func_signature[unique_all]
+array_api_tests/test_signatures.py::test_func_signature[unique_counts]
+array_api_tests/test_signatures.py::test_func_signature[unique_inverse]
+array_api_tests/test_signatures.py::test_func_signature[unique_values]
+array_api_tests/test_signatures.py::test_func_signature[searchsorted]
+array_api_tests/test_signatures.py::test_func_signature[from_dlpack]
+array_api_tests/test_signatures.py::test_func_signature[tril]
+array_api_tests/test_signatures.py::test_func_signature[triu]
+array_api_tests/test_signatures.py::test_func_signature[argsort]
+array_api_tests/test_signatures.py::test_func_signature[sort]
+array_api_tests/test_signatures.py::test_func_signature[matmul]
+array_api_tests/test_signatures.py::test_func_signature[matrix_transpose]
+array_api_tests/test_signatures.py::test_func_signature[tensordot]
+array_api_tests/test_signatures.py::test_func_signature[vecdot]
+array_api_tests/test_signatures.py::test_func_signature[take]

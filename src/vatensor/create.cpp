@@ -77,15 +77,23 @@ std::shared_ptr<VArray> va::empty(VStoreAllocator& allocator, DType dtype, const
 	);
 }
 
-std::shared_ptr<VArray> va::eye(VStoreAllocator& allocator, DType dtype, const shape_type& shape, int k) {
-	// For some reason, xt::eye wants this specific type
+std::shared_ptr<VArray> va::eye(VStoreAllocator& allocator, DType dtype, const shape_type& shape, std::ptrdiff_t k) {
+	// xt::eye narrows k to int. Short-circuit |k| values that fall outside the
+	// matrix bounds (where the diagonal is empty anyway) so a 64-bit k can't
+	// wrap back into a valid offset on the way to xtensor.
+	const std::ptrdiff_t rows = !shape.empty() ? static_cast<std::ptrdiff_t>(shape[0]) : 0;
+	const std::ptrdiff_t cols = shape.size() > 1 ? static_cast<std::ptrdiff_t>(shape[1]) : rows;
+	if (k >= cols || k <= -rows) {
+		return va::full(allocator, va::static_cast_scalar(VScalar(int64_t(0)), dtype), shape);
+	}
+
 	auto shape_eye = std::vector<std::size_t>(shape.size());
 	std::copy_n(shape.begin(), shape.size(), shape_eye.begin());
 
 	return std::visit(
 		[&shape_eye, &allocator, k](auto t) -> std::shared_ptr<VArray> {
 			using T = std::decay_t<decltype(t)>;
-			return va::create_varray<T>(allocator, xt::eye<T>(shape_eye, k));
+			return va::create_varray<T>(allocator, xt::eye<T>(shape_eye, static_cast<int>(k)));
 		}, dtype_to_variant(dtype)
 	);
 }
@@ -116,7 +124,10 @@ std::shared_ptr<VArray> va::linspace(VStoreAllocator& allocator, VScalar start, 
 	double stop_ = static_cast_scalar<double>(stop);
 
 	double step_ = 0.0;
-	if (num > 0) {
+	// num <= 1 leaves step at 0: out is empty (num=0) or just {start} (num=1).
+	// Computing the step would divide by zero (num=1 with endpoint) and bake nan
+	// into the single cell, even though numpy returns [start] for that case.
+	if (num > 1) {
 		step_ = (stop_ - start_) / (static_cast<double>(num) - (endpoint ? 1.0 : 0.0));
 	}
 
@@ -125,6 +136,14 @@ std::shared_ptr<VArray> va::linspace(VStoreAllocator& allocator, VScalar start, 
 
 	auto array = empty(allocator, process_dtype, shape_type {num});
 	_call_vfunc_inplace<const void*, const void*, std::size_t>(va::vfunc::tables::fill_consecutive, array->data, va::_call::get_value_ptr(start), va::_call::get_value_ptr(step), std::move(num));
+
+	// start + step*(num-1) drifts a few ULPs even in double, so the last cell
+	// almost never lands on `stop` exactly. Numpy fixes this by overwriting
+	// out[-1] = stop after the fill — same trick here.
+	if (endpoint && num > 1) {
+		va::axes_type last_idx { static_cast<std::ptrdiff_t>(num - 1) };
+		va::set_single_value(array->data, last_idx, static_cast_scalar(stop_, process_dtype));
+	}
 
 	if (dtype != process_dtype && dtype != DType::DTypeMax) {
 		return va::copy_as_dtype(allocator, array->data, dtype);
@@ -142,7 +161,17 @@ std::shared_ptr<VArray> va::arange(VStoreAllocator& allocator, VScalar start, VS
 
 	std::size_t num;
 
-	std::visit([&start, &stop, &step, &num](auto t) {
+	// Capture original-dtype info before the visit collapses everything to T:
+	// when start and stop come in as integers but process_dtype is float (because
+	// step is float), each int rounds to float independently and the difference
+	// loses 8+ ULPs above 2^53 — even when the integer diff itself is tiny. The
+	// integer-domain subtraction below preserves precision.
+	const DType start_dt = va::dtype(start);
+	const DType stop_dt = va::dtype(stop);
+	const bool start_is_int = start_dt >= Int8 && start_dt <= UInt64;
+	const bool stop_is_int = stop_dt >= Int8 && stop_dt <= UInt64;
+
+	std::visit([&start, &stop, &step, &num, start_is_int, stop_is_int](auto t) {
 		using T = std::decay_t<decltype(t)>;
 
 		if constexpr (xtl::is_complex<T>::value) {
@@ -153,8 +182,60 @@ std::shared_ptr<VArray> va::arange(VStoreAllocator& allocator, VScalar start, VS
 			T stop_ = static_cast_scalar<T>(stop);
 			T step_ = static_cast_scalar<T>(step);
 
-			// From arange_impl
-			num = std::ceil((stop_ - start_) / step_);
+			if (step_ == T(0)) {
+				throw std::runtime_error("arange: step cannot be zero");
+			}
+
+			if constexpr (std::is_floating_point_v<T>) {
+				if (start_is_int && stop_is_int) {
+					// Integer-domain diff: avoids the double-rounding ULP loss
+					// when both ints get cast to T independently. Mirrors numpy.
+					const int64_t s_i = static_cast_scalar<int64_t>(start);
+					const int64_t e_i = static_cast_scalar<int64_t>(stop);
+					// Compare endpoints directly: the signed difference can
+					// overflow (e.g. INT64_MIN - 1) when start and stop sit at
+					// opposite extremes.
+					const bool empty_range = (step_ > T(0)) ? (e_i <= s_i) : (e_i >= s_i);
+					if (empty_range) {
+						num = 0;
+					}
+					else {
+						// Unsigned subtraction is modular and well-defined; for
+						// a non-empty range the true magnitude always fits in
+						// uint64 even when the signed diff would overflow.
+						const uint64_t diff = (step_ > T(0))
+							? static_cast<uint64_t>(e_i) - static_cast<uint64_t>(s_i)
+							: static_cast<uint64_t>(s_i) - static_cast<uint64_t>(e_i);
+						num = static_cast<std::size_t>(std::ceil(static_cast<T>(diff) / std::abs(step_)));
+					}
+					start = start_;
+					step = step_;
+					return;
+				}
+			}
+
+			// numpy semantics: if step's direction disagrees with
+			// (stop - start), the result is empty. Guard before computing
+			// num so we never assign a negative ceil() to size_t (UB) or
+			// suffer signed-overflow inside the difference.
+			const bool empty_range = (step_ > T(0)) ? (stop_ <= start_) : (stop_ >= start_);
+			if (empty_range) {
+				num = 0;
+			}
+			else if constexpr (std::is_integral_v<T>) {
+				// Integer arithmetic preserves the exact difference. Casting
+				// to double first would lose ULPs above 2^53 even for tiny
+				// ranges (because each operand rounds independently).
+				// Overflow of (stop_ - start_) only happens for ranges so
+				// large that the subsequent allocation would fail anyway.
+				const T diff = stop_ - start_;
+				const T q = diff / step_;
+				const T r = diff % step_;
+				num = static_cast<std::size_t>(q + (r != T(0) ? T(1) : T(0)));
+			}
+			else {
+				num = static_cast<std::size_t>(std::ceil((stop_ - start_) / step_));
+			}
 
 			start = start_;
 			step = step_;
@@ -268,6 +349,47 @@ std::shared_ptr<VArray> va::reshape(VStoreAllocator& allocator, const std::share
 			);
 		}, varray->data
 	);
+}
+
+std::vector<std::shared_ptr<va::VArray>> va::meshgrid(VStoreAllocator& allocator, const std::vector<std::shared_ptr<VArray>>& inputs, bool xy_indexing) {
+	const std::size_t n = inputs.size();
+	if (n == 0) return {};
+
+	// All inputs must be 1-D; record their lengths.
+	va::shape_type lens(n);
+	for (std::size_t i = 0; i < n; ++i) {
+		if (inputs[i]->dimension() != 1) {
+			throw std::runtime_error("meshgrid: each input must be 1-D");
+		}
+		lens[i] = inputs[i]->shape()[0];
+	}
+
+	// "xy" indexing swaps the first two output dims; "ij" leaves them alone.
+	// Higher dims are never reordered.
+	auto axis_of = [n, xy_indexing](std::size_t i) -> std::size_t {
+		if (xy_indexing && n >= 2) {
+			if (i == 0) return 1;
+			if (i == 1) return 0;
+		}
+		return i;
+	};
+
+	va::shape_type out_shape(n);
+	for (std::size_t i = 0; i < n; ++i) out_shape[axis_of(i)] = lens[i];
+
+	std::vector<std::shared_ptr<VArray>> outputs(n);
+	for (std::size_t i = 0; i < n; ++i) {
+		// Reshape input i to (1, ..., len_i, ..., 1) so broadcast-assign fills
+		// each output cell with the right element.
+		va::strides_type reshape_dims(n, 1);
+		reshape_dims[axis_of(i)] = static_cast<std::ptrdiff_t>(lens[i]);
+		const auto reshaped = va::reshape(allocator, inputs[i], reshape_dims);
+
+		auto out = va::empty(allocator, inputs[i]->dtype(), out_shape);
+		va::assign(out->data, reshaped->data);
+		outputs[i] = out;
+	}
+	return outputs;
 }
 
 std::shared_ptr<VArray> va::flatten(VStoreAllocator& allocator, const std::shared_ptr<VArray>& varray) {

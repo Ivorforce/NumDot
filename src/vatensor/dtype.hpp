@@ -5,6 +5,7 @@
 #include <exception>
 #include <xtensor/core/xshape.hpp>
 #include <xtensor/misc/xcomplex.hpp>
+#include "godot_cpp/core/error_macros.hpp"  // for WARN_PRINT_ONCE
 
 namespace va {
 	// We should be using the same default types as xarray does, so we know for sure the ones we create /
@@ -108,34 +109,17 @@ namespace va {
 		return size_of_dtype_in_bytes_unchecked(dtype);
 	}
 
-	// Function to create a lookup table for common DType
-	constexpr auto create_common_type_table() {
-		constexpr auto row_count = DType::DTypeMax + 1;
-		std::array<std::array<DType, row_count>, row_count> table{};
+}
 
-		for (int i = 0; i < DType::DTypeMax; ++i) {
-			for (int j = 0; j < DType::DTypeMax; ++j) {
-				table[i][j] = std::visit(
-					[](auto a, auto b) {
-						using CommonType = std::common_type_t<decltype(a), decltype(b)>;
-						return dtype_of_type<CommonType>();
-					},
-					dtype_to_variant_unchecked(DType(i)),
-					dtype_to_variant_unchecked(DType(j))
-				);
-			}
-		}
-		for (int i = 0; i <= DType::DTypeMax; ++i) {
-			table[DType::DTypeMax][i] = static_cast<DType>(i);
-			table[i][DType::DTypeMax] = static_cast<DType>(i);
-		}
+#include "gen/dtype_promotion_table.gen.hpp"
 
-		return table;
-	}
-
-	constexpr auto _common_type_table = create_common_type_table();
-
+namespace va {
 	constexpr DType dtype_common_type_unchecked(const DType a, const DType b) noexcept {
+		// DTypeMax is the "infer from peer" sentinel — preserve its identity
+		// behavior so callers (e.g. nd::concatenate, find_shape_and_dtype)
+		// can fold a stream of dtypes starting from DTypeMax.
+		if (a == DTypeMax) return b;
+		if (b == DTypeMax) return a;
 		return _common_type_table[static_cast<size_t>(a)][static_cast<size_t>(b)];
 	}
 
@@ -162,8 +146,20 @@ namespace va {
 	template<typename VWrite, typename VRead>
 	VWrite static_cast_scalar(VRead v) {
 		if constexpr (std::is_same_v<VWrite, bool> && xtl::is_complex<VRead>::value) {
-			// This helps mostly complex dtypes to booleanize
+			// bool ← complex: nonzero in either component → true.
 			return v != static_cast<decltype(v)>(0);
+		}
+		else if constexpr (xtl::is_complex<VRead>::value && !xtl::is_complex<VWrite>::value) {
+			// real ← complex: drop the imaginary part. Matches numpy's
+			// ComplexWarning so users notice the silent truncation.
+			WARN_PRINT_ONCE("Casting complex scalar to real dtype discards the imaginary part.");
+			return static_cast<VWrite>(v.real());
+		}
+		else if constexpr (xtl::is_complex<VWrite>::value) {
+			// complex target: std::complex's converting constructor is
+			// `explicit` for narrowing precision, so static_cast handles
+			// both same- and cross-precision complex → complex.
+			return static_cast<VWrite>(v);
 		}
 		else if constexpr (!std::is_convertible_v<VRead, VWrite>) {
 			throw std::runtime_error("Cannot promote in this way.");

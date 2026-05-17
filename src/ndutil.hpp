@@ -5,6 +5,7 @@
 #include "godot_cpp/variant/variant.hpp"  // for Variant
 #include "godot_cpp/core/class_db.hpp"  // for Variant
 #include "godot_cpp/core/object.hpp"  // for Variant
+#include "godot_cpp/templates/local_vector.hpp"  // for LocalVector
 
 using namespace godot;
 
@@ -12,13 +13,15 @@ StringName axis_all();
 StringName newaxis();
 StringName ellipsis();
 StringName no_value();
+StringName indexing_xy();
+StringName indexing_ij();
 
 bool is_no_value(const Variant& variant);
 
 namespace numdot {
 	struct VarargMethodDefinition {
 		StringName name;
-		std::vector<PropertyInfo> args;
+		LocalVector<PropertyInfo> args;
 		VarargMethodDefinition() = default;
 		explicit VarargMethodDefinition(StringName&& p_name) : name(std::forward<StringName>(p_name)) {}
 	};
@@ -43,7 +46,7 @@ namespace numdot {
 			d_method.name,
 			p_method,
 			mi,
-			std::vector<Variant>(defaults...),
+			LocalVector<Variant>(defaults...),
 			p_return_nil_is_variant
 		);
 	}

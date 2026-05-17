@@ -2,7 +2,7 @@
 
 A tensor math and scientific computation library for the [Godot](https://godotengine.org) game engine. The project is still in its early stages. [Contributions are welcome](https://github.com/Ivorforce/NumDot/blob/main/CONTRIBUTING.md)!
 
-NumDot is inspired by the Python tensor math library, [NumPy](https://numpy.org), and uses [xtensor](https://github.com/xtensor-stack/xtensor) under the hood ([read up on differences here](https://numdot.readthedocs.io/en/latest/how-to-use/numpy-xtensor-numdot.html)).
+NumDot is inspired by the Python tensor math library, [NumPy](https://numpy.org), and uses [xtensor](https://github.com/xtensor-stack/xtensor) under the hood ([read up on differences here](https://numdot.readthedocs.io/en/latest/how-to-use/numpy-xtensor-numdot.html)). NumDot largely conforms to the [array-api spec](https://github.com/data-apis/array-api), ensuring consistency to what you might be used to from other tensor APIs.
 
 **Quick Start:**
 - [Motivation (why use NumDot?)](https://numdot.readthedocs.io/en/latest/index.html#motivation)

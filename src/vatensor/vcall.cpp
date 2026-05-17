@@ -55,14 +55,16 @@ void va::shape_reduce_axes(va::shape_type& shape, const va::axes_type& axes) {
 		mask[axis_normal] = false;
 	}
 
-	shape.erase(
-		std::remove_if(
-			shape.begin(),
-			shape.end(),
-			[&mask, index = 0](int) mutable -> bool { return !mask[index++]; }
-		),
-		shape.end()
-	);
+	// Compact the kept axes in place. A stateful predicate with std::remove_if
+	// is unsafe here: the algorithm may copy the predicate (libstdc++ runs
+	// std::find_if on a copy), desyncing the index counter.
+	std::size_t write = 0;
+	for (std::size_t read = 0; read < shape.size(); ++read) {
+		if (mask[read]) {
+			shape[write++] = shape[read];
+		}
+	}
+	shape.resize(write);
 }
 
 va::shape_type va::combined_shape(const shape_type& a_shape, const shape_type& b_shape) {

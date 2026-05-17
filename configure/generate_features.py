@@ -29,7 +29,12 @@ all_features = [
 	"square",
 	"sqrt",
 	"exp",
+	"expm1",
 	"log",
+	"log2",
+	"log10",
+	"log1p",
+	"logaddexp",
 	"rad2deg",
 	"deg2rad",
 
@@ -39,10 +44,14 @@ all_features = [
 	"subtract",
 	"multiply",
 	"divide",
+	"floor_divide",
 	"remainder",
 	"pow",
 	"minimum",
 	"maximum",
+	"hypot",
+	"copysign",
+	"signbit",
 
 	"sin",
 	"cos",
@@ -204,19 +213,33 @@ def main():
 		"casts": [],
 	})
 	vfuncs.append({
+		# Reuse 'multiply' dtype fanout for the (x, y) → common-type promotion.
+		# Condition is bool-only and rides along as a runtime arg (pointer to the
+		# bool xarray adaptor), so the vfunc table dispatches on (x, y) only.
+		**[vfunc for vfunc in vfuncs if vfunc["name"] == "multiply"][0],
+		"name": "where",
+		"vargs": ["const va::compute_case<bool*>*"]
+	})
+	vfuncs.append({
 		"name": "is_close",
 		# TODO Could implement other dtypes by just calling equals in the implementation.
 		"specializations": ["ff->b", "dd->b", "FF->b", "DD->b"],
 		"casts": [],
 		"vargs": ["double", "double", "bool"]
 	})
-	for rfunc in ["sum", "prod"]:
+	for rfunc in ["sum", "prod", "cumsum", "cumprod"]:
 		vfuncs.append({
 			"name": rfunc,
 			"specializations": specializations_at_least_int64,
 			"casts": [],
 			"vargs": ["const va::axes_type*"]
 		})
+	vfuncs.append({
+		"name": "diff",
+		"specializations": specializations_all,
+		"casts": [],
+		"vargs": ["std::size_t", "std::ptrdiff_t"]
+	})
 	for rfunc in ["mean", "median", "variance", "standard_deviation", "norm_l0", "norm_l1", "norm_l2", "norm_linf"]:
 		vfuncs.append({
 			"name": rfunc,
@@ -325,9 +348,25 @@ def main():
 		"vargs": ["const void*", "const void*", "std::size_t"],
 	})
 
+	# Numpy result_type table for the supported dtypes — the runtime equivalent
+	# of np.result_type(a, b). Used by va::dtype_common_type. Encoded as
+	# "{a.char}{b.char}{result.char}" rows so features.py can decode via
+	# the same code_to_dtype map it already uses for vfunc specs.
+	common_type_table = []
+	for a in supported_dtypes:
+		for b in supported_dtypes:
+			result = common_dtypes.get(a, {}).get(b)
+			if result is None:
+				continue
+			# Same long-double → double normalization that vfunc specs apply,
+			# since NumDot doesn't support long double.
+			row = f"{a.char}{b.char}{result.char}".replace("g", "d").replace("G", "D")
+			common_type_table.append(row)
+
 	with (pathlib.Path(__file__).parent / "vfuncs.json").open("w") as f:
 		json.dump({
 			"vfuncs": vfuncs,
+			"common_type_table": common_type_table,
 		}, f, indent='\t')
 
 if __name__ == "__main__":

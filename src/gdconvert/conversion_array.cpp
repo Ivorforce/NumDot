@@ -670,6 +670,60 @@ std::shared_ptr<va::VArray> ndarray_as_dtype(const NDArray& ndarray, const va::D
 	return va::copy_as_dtype(va::store::default_allocator, ndarray.array->data, dtype);
 }
 
+static bool _variant_is_ndarray(const Variant& v) {
+	return v.get_type() == Variant::OBJECT && Object::cast_to<NDArray>(v) != nullptr;
+}
+
+static bool _variant_is_weak_scalar(const Variant& v) {
+	switch (v.get_type()) {
+		case Variant::BOOL:
+		case Variant::INT:
+		case Variant::FLOAT:
+			return true;
+		default:
+			return false;
+	}
+}
+
+void variant_pair_as_arrays_weak(
+	const Variant& a,
+	const Variant& b,
+	std::shared_ptr<va::VArray>& out_a,
+	std::shared_ptr<va::VArray>& out_b
+) {
+	const Variant* in[] = { &a, &b };
+	std::shared_ptr<va::VArray> out[2];
+	variants_as_arrays_weak(in, out, 2);
+	out_a = std::move(out[0]);
+	out_b = std::move(out[1]);
+}
+
+void variants_as_arrays_weak(
+	const Variant* const* in_variants,
+	std::shared_ptr<va::VArray>* out_arrays,
+	const std::size_t n
+) {
+	// First pass: find a peer NDArray to source the dtype from.
+	std::shared_ptr<va::VArray> peer;
+	for (std::size_t i = 0; i < n; ++i) {
+		if (_variant_is_ndarray(*in_variants[i])) {
+			out_arrays[i] = variant_as_array(*in_variants[i]);
+			if (!peer) peer = out_arrays[i];
+		}
+	}
+	// Second pass: convert remaining operands. Weak scalars borrow the peer's
+	// dtype if there is one; everything else takes its natural conversion.
+	for (std::size_t i = 0; i < n; ++i) {
+		if (out_arrays[i]) continue;
+		if (peer && _variant_is_weak_scalar(*in_variants[i])) {
+			out_arrays[i] = variant_as_array(*in_variants[i], peer->dtype(), false);
+		}
+		else {
+			out_arrays[i] = variant_as_array(*in_variants[i]);
+		}
+	}
+}
+
 std::shared_ptr<va::VArray> variant_as_array(const Variant& array, const va::DType dtype, const bool copy) {
 	switch (array.get_type()) {
 		case Variant::OBJECT: {
@@ -700,7 +754,6 @@ std::vector<std::shared_ptr<va::VArray>> variant_to_vector(const Variant& array)
 			const std::size_t outer_dim_size = gdarray.size();
 			std::vector<std::shared_ptr<va::VArray>> vector(outer_dim_size);
 			for (std::size_t i = 0; i < outer_dim_size; i++) {
-				xt::xstrided_slice_vector idx {i};
 				vector[i] = variant_as_array(gdarray[static_cast<int64_t>(i)]);
 			}
 			return vector;
@@ -715,7 +768,7 @@ std::vector<std::shared_ptr<va::VArray>> variant_to_vector(const Variant& array)
 	const std::size_t outer_dim_size = ndarray->shape()[0];
 	std::vector<std::shared_ptr<va::VArray>> vector(outer_dim_size);
 	for (std::size_t i = 0; i < outer_dim_size; i++) {
-		xt::xstrided_slice_vector idx {i};
+		xt::xstrided_slice_vector idx {static_cast<std::ptrdiff_t>(i)};
 		vector[i] = ndarray->sliced(idx);
 	}
 	return vector;

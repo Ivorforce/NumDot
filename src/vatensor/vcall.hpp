@@ -115,16 +115,51 @@ namespace va {
 	void shape_reduce_axes(va::shape_type& shape, const va::axes_type& axes);
 	va::shape_type combined_shape(const shape_type& a_shape, const shape_type& b_shape);
 
+	// xtensor's reducers require axes to be sorted ascending and non-negative;
+	// the Array API allows any order and lets axes wrap from the end. Hide
+	// that contract from callers: normalize negatives and sort.
+	inline va::axes_type canonicalize_reduction_axes(const va::axes_type& axes, std::size_t ndim) {
+		va::axes_type out(axes);
+		for (auto& ax : out) {
+			if (ax < 0) ax += static_cast<std::ptrdiff_t>(ndim);
+		}
+		std::sort(out.begin(), out.end());
+		return out;
+	}
+
 	template<typename... Args>
 	void call_rfunc_unary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableUnary& table, const VArrayTarget& target, const VData& a, const va::axes_type* axes, Args&&... args) {
 		if (axes) {
+			const va::axes_type axes_sorted = canonicalize_reduction_axes(*axes, va::shape(a).size());
 			va::shape_type result_shape = va::shape(a);
-			shape_reduce_axes(result_shape, *axes);
+			shape_reduce_axes(result_shape, axes_sorted);
 
-			_call_vfunc_unary(allocator, table, target, result_shape, a, std::move(axes), std::forward<Args>(args)...);
+			_call_vfunc_unary(allocator, table, target, result_shape, a, &axes_sorted, std::forward<Args>(args)...);
 		}
 		else {
 			_call_vfunc_unary(allocator, table, target, va::shape_type(), a, nullptr, std::forward<Args>(args)...);
+		}
+	}
+
+	// Cumulative ops preserve input shape along the cumulated axis (or flatten
+	// to 1-D when no axis is given). Same dtype-promotion rules as reductions,
+	// but a different output-shape allocator, so it can't reuse call_rfunc_unary.
+	template<typename... Args>
+	void call_accumulate_unary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableUnary& table, const VArrayTarget& target, const VData& a, const va::axes_type* axes, Args&&... args) {
+		if (axes) {
+			if (axes->size() != 1) throw std::runtime_error("Cumulative op accepts exactly one axis.");
+			const va::axes_type axis_canon = canonicalize_reduction_axes(*axes, va::shape(a).size());
+			const va::shape_type result_shape = va::shape(a);
+
+			_call_vfunc_unary(allocator, table, target, result_shape, a, &axis_canon, std::forward<Args>(args)...);
+		}
+		else {
+			const auto& in_shape = va::shape(a);
+			std::size_t total = 1;
+			for (const auto d : in_shape) total *= d;
+			const va::shape_type result_shape { total };
+
+			_call_vfunc_unary(allocator, table, target, result_shape, a, nullptr, std::forward<Args>(args)...);
 		}
 	}
 
@@ -235,10 +270,12 @@ namespace va {
 	template<typename... Args>
 	void call_rfunc_binary(VStoreAllocator& allocator, const vfunc::tables::UFuncTableBinary& table, const VArrayTarget& target, const VData& a, const VData& b, const va::axes_type* axes, Args&&... args) {
 		if (axes) {
-			shape_type result_shape = combined_shape(va::shape(a), va::shape(b));
-			shape_reduce_axes(result_shape, *axes);
+			const shape_type combined = combined_shape(va::shape(a), va::shape(b));
+			const va::axes_type axes_sorted = canonicalize_reduction_axes(*axes, combined.size());
+			shape_type result_shape = combined;
+			shape_reduce_axes(result_shape, axes_sorted);
 
-			_call_vfunc_binary(allocator, table, target, result_shape, a, b, std::move(axes), std::forward<Args>(args)...);
+			_call_vfunc_binary(allocator, table, target, result_shape, a, b, &axes_sorted, std::forward<Args>(args)...);
 		}
 		else {
 			_call_vfunc_binary(allocator, table, target, va::shape_type(), a, b, nullptr, std::forward<Args>(args)...);

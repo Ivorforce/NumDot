@@ -33,7 +33,7 @@ jobs:
     runs-on: ${{ matrix.target.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: true
       # Add linux x86_32 toolchain
@@ -48,7 +48,7 @@ jobs:
           em-version: '3.1.55'  # FIXME Doesn't compile on the newest, xtensor has problems
           ndk-version: 'r27c'
       - name: Cache .scons_cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             ${{ github.workspace }}/.scons_cache
@@ -60,7 +60,7 @@ jobs:
         run: |
           scons target=${{ matrix.build_target_type }} platform=${{ matrix.target.platform }} arch=${{ matrix.target.arch }} precision=${{ matrix.float_precision }} scu_build=yes
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: NumDot-${{ matrix.target.platform }}-${{ matrix.target.arch }}-${{ matrix.float_precision }}-${{ matrix.build_target_type }}
           path: |
@@ -70,7 +70,7 @@ jobs:
     needs: build
     steps:
       - name: Merge Artifacts
-        uses: actions/upload-artifact/merge@v4
+        uses: actions/upload-artifact/merge@v7
         with:
           name: NumDot-all
           pattern: NumDot-*

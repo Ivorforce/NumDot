@@ -621,35 +621,10 @@
 				Assigns the result to this array, and returns it. The shape of the result must be broadcastable to this array's shape.
 			</description>
 		</method>
-		<method name="buffer_dtype" qualifiers="const">
-			<return type="int" />
-			<description>
-				Returns the natural dtype of the underlying buffer.
-			</description>
-		</method>
-		<method name="buffer_size" qualifiers="const">
-			<return type="int" />
-			<description>
-				Returns the natural number of elements in the underlying buffer.
-			</description>
-		</method>
-		<method name="buffer_size_in_bytes" qualifiers="const">
-			<return type="int" />
-			<description>
-				Returns the number of bytes used by the underlying buffer.
-				This is equivalent to [code]nd.size_of_dtype_in_bytes(x.buffer_dtype()) * x.buffer_size()[/code].
-			</description>
-		</method>
 		<method name="copy" qualifiers="const">
 			<return type="NDArray" />
 			<description>
 				Creates a copy of this array.
-			</description>
-		</method>
-		<method name="dtype" qualifiers="const">
-			<return type="int" enum="nd.DType" />
-			<description>
-				Data-type of the array’s elements.
 			</description>
 		</method>
 		<method name="flatten" qualifiers="const">
@@ -764,12 +739,6 @@
 				See [method get] for documentation of slicing.
 			</description>
 		</method>
-		<method name="ndim" qualifiers="const">
-			<return type="int" />
-			<description>
-				Number of array dimensions.
-			</description>
-		</method>
 		<method name="set" qualifiers="const vararg">
 			<return type="void" />
 			<param index="0" name="value" type="Variant" />
@@ -780,42 +749,10 @@
 				If the index is a single integer array, it is treated as an index list.
 			</description>
 		</method>
-		<method name="shape" qualifiers="const">
-			<return type="PackedInt64Array" />
-			<description>
-				Array of array dimensions.
-			</description>
-		</method>
-		<method name="size" qualifiers="const">
-			<return type="int" />
-			<description>
-				Number of elements in the array. Equal to nd.prod(a.shape()), i.e., the product of the array’s dimensions.
-			</description>
-		</method>
 		<method name="squeeze" qualifiers="const">
 			<return type="NDArray" />
 			<description>
 				Remove axes of length one from a copy of this array.
-			</description>
-		</method>
-		<method name="strides" qualifiers="const">
-			<return type="PackedInt64Array" />
-			<description>
-				The strides of each dimension, in order, in the underlying data buffer.
-			</description>
-		</method>
-		<method name="strides_layout" qualifiers="const">
-			<return type="int" enum="NDArray.Layout" />
-			<description>
-				The layout of the strides into the underlying data buffer.
-				Arrays with RowMajor and ColumnMajor layout may have improved performance to those with dynamic layout.
-				All arrays start with RowMajor layout, but rearranging (like [method nd.transpose]) can change the layout. To regain a consistent layout, consider making a copy of the array.
-			</description>
-		</method>
-		<method name="strides_offset" qualifiers="const">
-			<return type="int" />
-			<description>
-				The offset of the first element in this array in the underlying data buffer.
 			</description>
 		</method>
 		<method name="to_basis" qualifiers="const">
@@ -983,6 +920,28 @@
 			</description>
 		</method>
 	</methods>
+	<members>
+		<member name="buffer_dtype" type="int" setter="" getter="get_buffer_dtype">
+		</member>
+		<member name="buffer_size" type="int" setter="" getter="get_buffer_size">
+		</member>
+		<member name="buffer_size_in_bytes" type="int" setter="" getter="get_buffer_size_in_bytes">
+		</member>
+		<member name="dtype" type="int" setter="" getter="get_dtype" enum="nd.DType">
+		</member>
+		<member name="ndim" type="int" setter="" getter="get_ndim">
+		</member>
+		<member name="shape" type="PackedInt64Array" setter="" getter="get_shape">
+		</member>
+		<member name="size" type="int" setter="" getter="get_size">
+		</member>
+		<member name="strides" type="PackedInt64Array" setter="" getter="get_strides">
+		</member>
+		<member name="strides_layout" type="int" setter="" getter="get_strides_layout" enum="NDArray.Layout">
+		</member>
+		<member name="strides_offset" type="int" setter="" getter="get_strides_offset">
+		</member>
+	</members>
 	<constants>
 		<constant name="RowMajor" value="0" enum="Layout">
 			The array's strides increase consistently from the inner to the outer dimensions.

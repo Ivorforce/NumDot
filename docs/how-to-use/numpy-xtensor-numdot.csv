@@ -1,7 +1,7 @@
 NumPy;xtensor;NumDot;Notes
-``a.shape``;``a.shape()``;``a.shape()``;
-``a.size``;``a.size()``;``a.size()``;
-``a.ndim``;``a.dimension()``;``a.ndim()``;
+``a.shape``;``a.shape()``;``a.shape``;
+``a.size``;``a.size()``;``a.size``;
+``a.ndim``;``a.dimension()``;``a.ndim``;
 ``a[0]``;"| ``xt::view(a, { 0 })``
 | ``a(0)`` ";"| ``a.get(0)``
 | ``a.get_int(0)``

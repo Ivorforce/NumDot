@@ -27,11 +27,11 @@ NumDot arrays have several properties that give useful information about the arr
 
 .. code-block:: gdscript
 
-    print(arr1.shape())      # Outputs: [5]
-    print(arr2.shape())      # Outputs: [3, 2]
-    print(arr1.ndim())       # Outputs: 1
-    print(arr2.ndim())       # Outputs: 2
-    print(arr1.dtype())      # Outputs: Int64
+    print(arr1.shape)      # Outputs: [5]
+    print(arr2.shape)      # Outputs: [3, 2]
+    print(arr1.ndim)       # Outputs: 1
+    print(arr2.ndim)       # Outputs: 2
+    print(arr1.dtype)      # Outputs: Int64
 
 Indexing and Slicing
 --------------------

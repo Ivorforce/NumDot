@@ -108,6 +108,7 @@ namespace va {
 	DEFINE_RFUNC_CALLER_UNARY0(prod)
 	DEFINE_AFUNC_CALLER_UNARY0(cumsum)
 	DEFINE_AFUNC_CALLER_UNARY0(cumprod)
+    DEFINE_AFUNC_CALLER_UNARY0(cummax)
 
 	inline void diff(VStoreAllocator& allocator, const VArrayTarget& target, const VData& a, std::size_t n, std::ptrdiff_t axis) {
 		const auto& in_shape = va::shape(a);

@@ -189,6 +189,7 @@ public:
 	static Ref<NDArray> prod(const Variant& a, const Variant& axes);
 	static Ref<NDArray> cumsum(const Variant& a, const Variant& axis);
 	static Ref<NDArray> cumprod(const Variant& a, const Variant& axis);
+    static Ref<NDArray> cummax(const Variant& a, const Variant& axis);
 	static Ref<NDArray> diff(const Variant& a, int64_t n = 1, int64_t axis = -1);
 	static TypedArray<NDArray> meshgrid(const Variant& arrays, const StringName& indexing);
 	static Ref<NDArray> mean(const Variant& a, const Variant& axes);

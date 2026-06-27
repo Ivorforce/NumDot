@@ -195,6 +195,7 @@ void nd::_bind_methods() {
 	godot::ClassDB::bind_static_method("nd", D_METHOD("prod", "a", "axes"), &nd::prod, DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("cumsum", "a", "axis"), &nd::cumsum, DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("cumprod", "a", "axis"), &nd::cumprod, DEFVAL(nullptr));
+    godot::ClassDB::bind_static_method("nd", D_METHOD("cummax", "a", "axis"), &nd::cummax, DEFVAL(nullptr));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("diff", "a", "n", "axis"), &nd::diff, DEFVAL(static_cast<int64_t>(1)), DEFVAL(static_cast<int64_t>(-1)));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("meshgrid", "arrays", "indexing"), &nd::meshgrid, DEFVAL(::indexing_xy()));
 	godot::ClassDB::bind_static_method("nd", D_METHOD("mean", "a", "axes"), &nd::mean, DEFVAL(nullptr));
@@ -1317,6 +1318,10 @@ Ref<NDArray> nd::cumsum(const Variant& a, const Variant& axis) {
 
 Ref<NDArray> nd::cumprod(const Variant& a, const Variant& axis) {
 	return REDUCTION1(cumprod, a, axis);
+}
+
+Ref<NDArray> nd::cummax(const Variant& a, const Variant& axis) {
+    return REDUCTION1(cummax, a, axis);
 }
 
 Ref<NDArray> nd::diff(const Variant& a, const int64_t n, const int64_t axis) {

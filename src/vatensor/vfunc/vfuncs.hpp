@@ -471,6 +471,23 @@ namespace va::vfunc::impl {
 			+ xt::log1p(xt::exp(-xt::abs(va::promote::to_num(a) - va::promote::to_num(b)))))
 	IMPLEMENT_UNARY_VFUNC(signbit, xt::detail::make_xfunction<va::op::signbit_fun>(va::promote::to_num(a)))
 
+    // helper function for cummax.
+    //
+    // cummax is not an xtensor function; but it is a potential prototype for an accumulator function for
+    // additional unfunc-clones.
+    //
+    // TODO: Getting a dtype error on attempts to use cummax.
+    // Could it be that E is not properly defined here, and I need to squeeze this next to a definition in a different file?
+    template <typename T, typename E>
+    auto xt_cummax(const E& a) {
+        return xt::accumulate([](T x, T y) { return std::max(x, y); }, a);
+    }
+
+    template <typename T, typename E>
+    auto xt_cummax(const E& a, std::size_t axis) {
+        return xt::accumulate([](T x, T y) { return std::max(x, y); }, a, axis);
+    }
+
 	// sum/prod must accumulate at the output cell's dtype (the vfunc table maps
 	// narrow ints to int64), or `prod(int32)` overflows during accumulation and
 	// the wraparound propagates into the int64 result.
@@ -478,6 +495,7 @@ namespace va::vfunc::impl {
 	IMPLEMENT_UNARY_RFUNC(prod, xt::prod<typename R::value_type>(a)(), xt::prod<typename R::value_type>(a, *axes))
 	IMPLEMENT_UNARY_AFUNC(cumsum, xt::cumsum<typename R::value_type>(a), xt::cumsum<typename R::value_type>(a, (*axes)[0]))
 	IMPLEMENT_UNARY_AFUNC(cumprod, xt::cumprod<typename R::value_type>(a), xt::cumprod<typename R::value_type>(a, (*axes)[0]))
+    IMPLEMENT_UNARY_AFUNC(cummax, xt_cummax<typename R::value_type>(a), xt_cummax<typename R::value_type>(a, (*axes)[0]))
 	IMPLEMENT_UNARY_VFUNC(diff, xt::diff(a, n, axis), std::size_t n, std::ptrdiff_t axis)
 	IMPLEMENT_UNARY_RFUNC(mean, xt::mean(a)(), xt::mean(a, *axes))
 	IMPLEMENT_UNARY_RFUNC(median, xt::median(a), va::op::median(a, *axes))

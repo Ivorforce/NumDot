@@ -4,8 +4,9 @@ import importlib
 from dataclasses import dataclass
 from typing import Optional
 
+import csv
+
 import numpy as np
-import pandas as pd
 import os
 
 import argparse
@@ -555,7 +556,12 @@ func run():
 
 			result_columns["numpy"] = run_numpy_benchmark()
 
-		pd.DataFrame(result_columns).to_csv(gen_folder / "benchmark.csv")
+		row_names = list(dict.fromkeys(name for column in result_columns.values() for name in column))
+		with open(gen_folder / "benchmark.csv", "w", newline="") as f:
+			writer = csv.writer(f)
+			writer.writerow([""] + list(result_columns))
+			for name in row_names:
+				writer.writerow([name] + [column.get(name, "") for column in result_columns.values()])
 		print(gen_folder / "benchmark.csv")
 
 if __name__ == "__main__":

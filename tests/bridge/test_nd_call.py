@@ -136,9 +136,10 @@ def test_nd_call_where_scalar_branches(bridge):
 
 
 def test_nd_call_where_complex(bridge):
-	# Complex where dispatches through a scalar (non-SIMD) path — xsimd has no
-	# select() for complex value batches. Pre-fix these cells were absent from
-	# the vfunc table entirely and any complex where returned null.
+	# Complex where dispatches through a scalar (non-SIMD) path — xtl::select
+	# has no overload for std::complex, so xt::where's functor doesn't compile
+	# for complex operands. Pre-fix these cells were absent from the vfunc
+	# table entirely and any complex where returned null.
 	cond = np.array([True, False, True])
 	a = np.array([1 + 2j, 3 + 4j, 5 + 6j], dtype=np.complex64)
 	b = np.array([-1 - 1j, -2 - 2j, -3 - 3j], dtype=np.complex128)

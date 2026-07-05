@@ -13,6 +13,25 @@
 #include "xtensor/core/xoperation.hpp"
 #include "godot_cpp/core/error_macros.hpp"  // for WARN_PRINT_ONCE
 
+// xtensor/xsimd workarounds for bool and complex element types
+// =============================================================
+// Two upstream defects require workarounds in this file:
+//
+// 1. xsimd has no batch<bool> (acknowledged unsupported:
+//    https://github.com/xtensor-stack/xsimd/issues/945), yet xtensor's
+//    assignment layer opts bool into SIMD anyway (xassign.hpp,
+//    simd_size_impl). Depending on the instantiation path this either
+//    miscomputes (https://github.com/Ivorforce/NumDot/issues/123) or fails to
+//    compile (https://github.com/xtensor-stack/xtensor/issues/2733).
+//    Workaround: route bool data through uint8_t (identical memory layout) so
+//    SIMD uses the uint8 kernels — see vcast() and where_expr().
+//
+// 2. xtl::select is constrained to std::is_scalar types, so the scalar path
+//    of xt::where (xt::detail::conditional_ternary) does not compile for
+//    std::complex. xsimd's complex select() overload would resolve fine; it's
+//    the scalar fallback that's missing. Workaround: select_nosimd replaces
+//    the ternary for complex operands.
+
 namespace va::op {
 	// Spec (array-api): if x2 >= bit_count, the result is 0. Shifting into the
 	// sign bit is UB in C++, so for signed types the safe range stops one short.
@@ -41,6 +60,8 @@ namespace va::op {
 		}
 	};
 
+	// Plain C++ semantics, not xsimd: ~bool integer-promotes (~true == -2,
+	// still truthy), so bool needs logical not.
 	struct bitwise_not_boolsafe {
 		template <class T1>
 		constexpr std::decay_t<T1> operator()(T1&& arg1) const { return ~arg1; }
@@ -48,10 +69,11 @@ namespace va::op {
 	};
 
 	struct select_nosimd {
-		// Deliberately has no simd_apply: xt::detail::conditional_ternary
-		// declares one whose body doesn't compile for complex value batches
-		// (xsimd has no matching select()), so complex where uses this functor
-		// to keep the whole ternary on the scalar path.
+		// Replaces xt::detail::conditional_ternary for complex operands: its
+		// scalar path calls xtl::select, which has no overload for
+		// std::complex (workaround note 2 at the top of this file). Having no
+		// simd_apply keeps the whole ternary scalar, which also sidesteps the
+		// SIMD load of the bool condition (note 1).
 		template <class B, class A1, class A2>
 		constexpr auto operator()(const B& cond, const A1& v1, const A2& v2) const noexcept {
 			return cond ? v1 : v2;
@@ -346,9 +368,8 @@ namespace va::op {
 			return xt::xscalar<VWrite>();  // To give us a return type.
 		}
 #ifdef XTENSOR_USE_XSIMD
-		// For some reason, bool - to - bool assignments are broken in xsimd
-		// TODO Should make this reproducible, I haven't managed so far.
-		// See https://github.com/Ivorforce/NumDot/issues/123
+		// bool ← bool: SIMD assignment miscomputes (workaround note 1 at the
+		// top of this file); write through uint8 instead.
 		else if constexpr (std::is_same_v<VWrite, bool> && std::is_same_v<VRead, bool>) {
 			return xt::cast<uint8_t>(cvalue);
 		}
@@ -549,11 +570,10 @@ namespace va::vfunc::impl {
 	IMPLEMENT_UNARY_VFUNC(isfinite, xt::isfinite(va::promote::to_num(a)))
 	IMPLEMENT_UNARY_VFUNC(isinf, xt::isinf(va::promote::to_num(a)))
 
-	// Cast cond from bool to uint8_t (same memory layout) so the SIMD load uses
-	// the uint8 path instead of the broken bool path; comparison to 0 then
-	// produces a bool batch via the operation itself (cf. issue #123).
-	// Complex operands can't take that route — xsimd has no select() for
-	// complex value batches — so they go through a simd-less ternary functor.
+	// Cast cond from bool to uint8_t so the SIMD load uses the uint8 kernels
+	// (workaround note 1 at the top of this file); comparison to 0 then
+	// produces a bool batch via the operation itself. Complex operands bypass
+	// conditional_ternary entirely via select_nosimd (note 2).
 	template <typename A, typename B>
 	inline auto where_expr(const compute_case<bool*>& cond, const A& a, const B& b) {
 		if constexpr (xtl::is_complex<typename A::value_type>::value || xtl::is_complex<typename B::value_type>::value) {

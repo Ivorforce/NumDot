@@ -122,6 +122,10 @@ func _dispatch(op: String, request: Dictionary, blobs: Array) -> Dictionary:
 			return _op_echo_array(blobs)
 		"nd_call":
 			return _op_nd_call(request, blobs)
+		"nd_assign_call":
+			return _op_nd_assign_call(request, blobs)
+		"list_assign_methods":
+			return _op_list_assign_methods()
 		_:
 			return {"header": {"ok": false, "error": "unknown_op", "op": op}, "blobs": []}
 
@@ -164,6 +168,49 @@ func _op_nd_call(request: Dictionary, blobs: Array) -> Dictionary:
 	var dumped = nd.dumpb(result)
 	if dumped == null:
 		return _nd_error(func_name, "nd.dumpb returned null")
+	return {"header": {"ok": true}, "blobs": [dumped]}
+
+
+func _op_list_assign_methods() -> Dictionary:
+	var names: Array = []
+	for m in ClassDB.class_get_method_list("NDArray"):
+		var mname: String = m["name"]
+		if mname.begins_with("assign_"):
+			names.append(mname)
+	names.sort()
+	return {"header": {"ok": true, "methods": names}, "blobs": []}
+
+
+func _op_nd_assign_call(request: Dictionary, blobs: Array) -> Dictionary:
+	# Calls an NDArray.assign_* method in-place on a caller-provided target
+	# array (the first arg) and returns the target's contents afterwards.
+	var func_name: String = request.get("func", "")
+	if not func_name.begins_with("assign_"):
+		return _op_error("nd_assign_call", "func must be an assign_* method, got '%s'" % func_name)
+	if not ClassDB.class_has_method("NDArray", func_name):
+		return _op_error("nd_assign_call", "unknown method %s" % func_name)
+
+	var arg_specs: Array = request.get("args", [])
+	if arg_specs.is_empty():
+		return _op_error("nd_assign_call", "first arg must be the target array")
+	var decoded_args: Array = []
+	for i in arg_specs.size():
+		var decoded := _decode_arg(arg_specs[i], blobs)
+		if not decoded.get("ok", false):
+			return _op_error("nd_assign_call", "arg %d: %s" % [i, decoded.get("error", "decode failed")])
+		decoded_args.append(decoded["value"])
+
+	var target = decoded_args.pop_front()
+	if not (target is NDArray):
+		return _op_error("nd_assign_call", "target must be an NDArray blob")
+
+	# assign_* returns self even when the call errors internally (the error is
+	# only printed), so failures surface as an unmodified target, not here.
+	target.callv(func_name, decoded_args)
+
+	var dumped = nd.dumpb(target)
+	if dumped == null:
+		return _op_error("nd_assign_call", "nd.dumpb returned null")
 	return {"header": {"ok": true}, "blobs": [dumped]}
 
 

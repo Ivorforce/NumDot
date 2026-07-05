@@ -17,6 +17,7 @@ Upcoming Changes (main branch)
 
 - ``nd.where`` with GDScript scalar branches returns the branches' dtype instead of ``Bool``. ``nd.where(cond, 1.0, 0.0)`` used to return the condition itself; it now returns a ``float64`` array (the condition no longer participates in type promotion).
 - ``nd.where`` supports complex arrays for ``x`` and ``y`` (used to return ``null``).
+- ``nd.reshape`` errors when the requested shape doesn't match the array's element count (including a ``-1`` entry that doesn't divide evenly), matching numpy. It used to silently return an array claiming the new shape while backed by too little memory — writing to it (e.g. via ``assign_sum``) corrupted the heap and crashed.
 
 Version 0.12 - 2026-06-17
 -------------------------

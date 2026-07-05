@@ -181,6 +181,17 @@ class BridgeClient:
 			raise RuntimeError(f"expected 1 output blob, got {len(out_blobs)}")
 		return npy_bytes_to_np(out_blobs[0])
 
+	def call_assign(self, func: str, target: np.ndarray, *args) -> np.ndarray:
+		"""Run an NDArray.assign_* method in-place on `target` and return the
+		target's contents afterwards. `target` itself is not mutated locally."""
+		arg_specs, blobs = _encode_nd_args((target, *args))
+		header, out_blobs = self.call("nd_assign_call", blobs=blobs, func=func, args=arg_specs)
+		if not header.get("ok"):
+			raise BridgeError(header)
+		if len(out_blobs) != 1:
+			raise RuntimeError(f"expected 1 output blob, got {len(out_blobs)}")
+		return npy_bytes_to_np(out_blobs[0])
+
 	def call_array_op(self, func: str, *arrays: np.ndarray) -> np.ndarray:
 		# Backwards-compat shim: previously a hand-written op on the bridge,
 		# now routed through nd_call.

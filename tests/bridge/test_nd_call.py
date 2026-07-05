@@ -177,6 +177,24 @@ def test_nd_call_unknown_function(bridge):
 	assert header == {"ok": True, "pong": True}
 
 
+def test_nd_call_reshape_size_mismatch_is_clean_error(bridge):
+	# Pre-fix, reshape never validated the element count: the result claimed
+	# the new shape while backed by the old (smaller) store, so any write
+	# through it corrupted the heap (#180).
+	with pytest.raises(BridgeError):
+		bridge.call_nd("reshape", np.zeros((1,), dtype=np.uint8), [8, 8])
+	# -1 that doesn't divide evenly used to silently truncate (10 → [2, 4]).
+	with pytest.raises(BridgeError):
+		bridge.call_nd("reshape", np.arange(10, dtype=np.int32), [-1, 4])
+	# Valid -1 still resolves.
+	out = bridge.call_nd("reshape", np.arange(12, dtype=np.int32), [-1, 4])
+	assert out.shape == (3, 4)
+	assert np.array_equal(out, np.arange(12, dtype=np.int32).reshape(3, 4))
+	# Bridge should still be alive.
+	header, _ = bridge.call("ping")
+	assert header == {"ok": True, "pong": True}
+
+
 def test_nd_call_shape_mismatch(bridge):
 	a = np.arange(3, dtype=np.int32)
 	b = np.arange(4, dtype=np.int32)

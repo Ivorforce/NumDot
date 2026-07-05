@@ -309,7 +309,47 @@ std::shared_ptr<VArray> va::tile(VStoreAllocator& allocator, const VArray& array
 	return result;
 }
 
+static void validate_reshape(const std::shared_ptr<VArray>& varray, const strides_type& new_shape) {
+	// xt::reshape_view resolves a single -1 entry but never validates the
+	// element count; a mismatched shape would yield a view reading and
+	// writing past the end of the store.
+	std::ptrdiff_t known_product = 1;
+	std::size_t wildcards = 0;
+	for (const auto dim : new_shape) {
+		if (dim == -1) {
+			wildcards++;
+		}
+		else if (dim < 0) {
+			throw std::runtime_error("negative dimensions are not allowed");
+		}
+		else {
+			known_product *= dim;
+		}
+	}
+	if (wildcards > 1) {
+		throw std::runtime_error("can only specify one unknown dimension");
+	}
+
+	const auto size = static_cast<std::ptrdiff_t>(varray->size());
+	const bool fits = wildcards == 1
+		? known_product != 0 && size % known_product == 0
+		: known_product == size;
+	if (!fits) {
+		std::string shape_str = "(";
+		for (std::size_t i = 0; i < new_shape.size(); ++i) {
+			if (i > 0) shape_str += ", ";
+			shape_str += std::to_string(new_shape[i]);
+		}
+		shape_str += ")";
+		throw std::runtime_error(
+			"cannot reshape array of size " + std::to_string(size) + " into shape " + shape_str
+		);
+	}
+}
+
 std::shared_ptr<VArray> va::reshape(VStoreAllocator& allocator, const std::shared_ptr<VArray>& varray, strides_type new_shape) {
+	validate_reshape(varray, new_shape);
+
 	if (varray->is_contiguous()) {
 		// Do in-place reshape.
 		return map(

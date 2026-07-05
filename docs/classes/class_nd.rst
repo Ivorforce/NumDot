@@ -112,6 +112,10 @@ Methods
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`cross<class_nd_method_cross>`\ (\ a\: ``Variant``, b\: ``Variant``, axisa\: ``int`` = -1, axisb\: ``int`` = -1, axisc\: ``int`` = -1\ ) |static|                                      |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`cummax<class_nd_method_cummax>`\ (\ a\: ``Variant``, axis\: ``Variant`` = null\ ) |static|                                                                                            |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`NDArray<class_NDArray>`                              | :ref:`cummin<class_nd_method_cummin>`\ (\ a\: ``Variant``, axis\: ``Variant`` = null\ ) |static|                                                                                            |
+   +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`cumprod<class_nd_method_cumprod>`\ (\ a\: ``Variant``, axis\: ``Variant`` = null\ ) |static|                                                                                          |
    +------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`NDArray<class_NDArray>`                              | :ref:`cumsum<class_nd_method_cumsum>`\ (\ a\: ``Variant``, axis\: ``Variant`` = null\ ) |static|                                                                                            |
@@ -1078,6 +1082,42 @@ Returns a 0-dimension scalar if axes is null. In that case, consider :ref:`ndi.c
 Return the cross product of two (arrays of) vectors.
 
 The cross product of a and b in R3 is a vector perpendicular to both a and b. If a and b are arrays of vectors, the vectors are defined by the last axis of a and b by default, and these axes can have dimensions 2 or 3. Where the dimension of either a or b is 2, the third component of the input vector is assumed to be zero and the cross product calculated accordingly. In cases where both input vectors have dimension 2, the z-component of the cross product is returned.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_cummax:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **cummax**\ (\ a\: ``Variant``, axis\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_cummax>`
+
+Cumulative maximum of array elements along the given axis. The output preserves the input shape and dtype; element ``i`` along ``axis`` holds the maximum of all elements at positions ``0..i``.
+
+If ``axis`` is null the input is flattened first and a 1-D result is returned.
+
+On ``Bool`` arrays this acts as a cumulative "any": every element from the first ``true`` onward is ``true``.
+
+NaN handling matches :ref:`maximum()<class_nd_method_maximum>`: a NaN in the input does not stick to the running maximum.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_nd_method_cummin:
+
+.. rst-class:: classref-method
+
+:ref:`NDArray<class_NDArray>` **cummin**\ (\ a\: ``Variant``, axis\: ``Variant`` = null\ ) |static| :ref:`🔗<class_nd_method_cummin>`
+
+Cumulative minimum of array elements along the given axis. The output preserves the input shape and dtype; element ``i`` along ``axis`` holds the minimum of all elements at positions ``0..i``.
+
+If ``axis`` is null the input is flattened first and a 1-D result is returned.
+
+On ``Bool`` arrays this acts as a cumulative "all": every element from the first ``false`` onward is ``false``.
+
+NaN handling matches :ref:`minimum()<class_nd_method_minimum>`: a NaN in the input does not stick to the running minimum.
 
 .. rst-class:: classref-item-separator
 

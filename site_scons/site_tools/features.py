@@ -231,7 +231,7 @@ def make_module(env, sources, module_name: str, features: Features):
 		vfunc = features.vfunc_infos[specialization.vfunc_name]
 
 		complex_skip_funcs = {
-			"minimum", "maximum", "max", "min",
+			"minimum", "maximum", "max", "min", "cummax", "cummin",
 			"mean", "median", "variance", "standard_deviation",
 			"rint", "less_equal", "less", "greater", "greater_equal",
 		}

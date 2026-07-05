@@ -247,7 +247,7 @@ def main():
 			"casts": casts_at_least_float32,
 			"vargs": ["const va::axes_type*"]
 		})
-	for rfunc in ["max", "min"]:
+	for rfunc in ["max", "min", "cummax", "cummin"]:
 		vfuncs.append({
 			"name": rfunc,
 			"specializations": specializations_all,

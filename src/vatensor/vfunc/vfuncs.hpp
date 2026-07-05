@@ -342,6 +342,21 @@ namespace va::op {
 		return xt::median(t1, axes[0]);
 	}
 
+	// xtensor has no cummax/cummin, but its accumulate machinery composes them
+	// from a binary functor. The init functor must carry a concrete value type;
+	// the default accumulator_identity<void> fails to compile.
+	template <class BF, class E>
+	auto cumulate(E&& e) {
+		using value_type = typename std::decay_t<E>::value_type;
+		return xt::accumulate(xt::make_xaccumulator_functor(BF(), xt::detail::accumulator_identity<value_type>()), std::forward<E>(e));
+	}
+
+	template <class BF, class E>
+	auto cumulate(E&& e, std::ptrdiff_t axis) {
+		using value_type = typename std::decay_t<E>::value_type;
+		return xt::accumulate(xt::make_xaccumulator_functor(BF(), xt::detail::accumulator_identity<value_type>()), std::forward<E>(e), axis);
+	}
+
 	template <class VWrite, class I>
 	auto vcast(const I& cvalue) {
 		using VRead = typename I::value_type;
@@ -510,6 +525,10 @@ namespace va::vfunc::impl {
 	IMPLEMENT_UNARY_RFUNC(prod, xt::prod<typename R::value_type>(a)(), xt::prod<typename R::value_type>(a, *axes))
 	IMPLEMENT_UNARY_AFUNC(cumsum, xt::cumsum<typename R::value_type>(a), xt::cumsum<typename R::value_type>(a, (*axes)[0]))
 	IMPLEMENT_UNARY_AFUNC(cumprod, xt::cumprod<typename R::value_type>(a), xt::cumprod<typename R::value_type>(a, (*axes)[0]))
+	// Accumulated via the same functors that back maximum/minimum, including
+	// their NaN behavior.
+	IMPLEMENT_UNARY_AFUNC(cummax, va::op::cumulate<xt::math::maximum<void>>(a), va::op::cumulate<xt::math::maximum<void>>(a, (*axes)[0]))
+	IMPLEMENT_UNARY_AFUNC(cummin, va::op::cumulate<xt::math::minimum<void>>(a), va::op::cumulate<xt::math::minimum<void>>(a, (*axes)[0]))
 	IMPLEMENT_UNARY_VFUNC(diff, xt::diff(a, n, axis), std::size_t n, std::ptrdiff_t axis)
 	IMPLEMENT_UNARY_RFUNC(mean, xt::mean(a)(), xt::mean(a, *axes))
 	IMPLEMENT_UNARY_RFUNC(median, xt::median(a), va::op::median(a, *axes))

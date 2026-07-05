@@ -338,6 +338,28 @@
 				The cross product of a and b in R3 is a vector perpendicular to both a and b. If a and b are arrays of vectors, the vectors are defined by the last axis of a and b by default, and these axes can have dimensions 2 or 3. Where the dimension of either a or b is 2, the third component of the input vector is assumed to be zero and the cross product calculated accordingly. In cases where both input vectors have dimension 2, the z-component of the cross product is returned.
 			</description>
 		</method>
+		<method name="cummax" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="axis" type="Variant" default="null" />
+			<description>
+				Cumulative maximum of array elements along the given axis. The output preserves the input shape and dtype; element [code]i[/code] along [param axis] holds the maximum of all elements at positions [code]0..i[/code].
+				If [param axis] is null the input is flattened first and a 1-D result is returned.
+				On [code]Bool[/code] arrays this acts as a cumulative "any": every element from the first [code]true[/code] onward is [code]true[/code].
+				NaN handling matches [method maximum]: a NaN in the input does not stick to the running maximum.
+			</description>
+		</method>
+		<method name="cummin" qualifiers="static">
+			<return type="NDArray" />
+			<param index="0" name="a" type="Variant" />
+			<param index="1" name="axis" type="Variant" default="null" />
+			<description>
+				Cumulative minimum of array elements along the given axis. The output preserves the input shape and dtype; element [code]i[/code] along [param axis] holds the minimum of all elements at positions [code]0..i[/code].
+				If [param axis] is null the input is flattened first and a 1-D result is returned.
+				On [code]Bool[/code] arrays this acts as a cumulative "all": every element from the first [code]false[/code] onward is [code]false[/code].
+				NaN handling matches [method minimum]: a NaN in the input does not stick to the running minimum.
+			</description>
+		</method>
 		<method name="cumprod" qualifiers="static">
 			<return type="NDArray" />
 			<param index="0" name="a" type="Variant" />

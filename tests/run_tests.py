@@ -346,8 +346,11 @@ import time
 _timer = time.perf_counter
 """
 
-	test_code_nd = "extends RefCounted\n\n"
-	test_code_gd = "extends RefCounted\n\n"
+	# Explicit preload instead of the TestUtil class_name global: scripts loaded
+	# via GDScript.set_source_code don't resolve global classes on Godot 4.4+.
+	script_prologue = "extends RefCounted\n\nconst TestUtil = preload(\"res://tests/test_util.gd\")\n\n"
+	test_code_nd = script_prologue
+	test_code_gd = script_prologue
 
 	tests: list[Test] = []
 

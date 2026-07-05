@@ -1184,7 +1184,20 @@ Ref<NDArray> nd::clip(const Variant& a, const Variant& min, const Variant& max) 
 }
 
 Ref<NDArray> nd::where(const Variant& condition, const Variant& x, const Variant& y) {
-	return VARRAY_MAP3(where, condition, x, y);
+	try {
+		// The condition never participates in type promotion; only x and y
+		// are dtype peers for weak scalars.
+		const std::shared_ptr<va::VArray> condition_ = variant_as_array(condition);
+		std::shared_ptr<va::VArray> x_, y_;
+		variant_pair_as_arrays_weak(x, y, x_, y_);
+
+		std::shared_ptr<va::VArray> result;
+		va::where(va::store::default_allocator, &result, condition_->data, x_->data, y_->data);
+		return { memnew(NDArray(result)) };
+	}
+	catch (std::runtime_error& error) {
+		ERR_FAIL_V_MSG({}, error.what());
+	}
 }
 
 Ref<NDArray> nd::sign(const Variant& a) {

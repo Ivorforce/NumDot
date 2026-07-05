@@ -119,6 +119,52 @@ def test_nd_call_arange_step_zero_is_clean_error(bridge):
 	assert header == {"ok": True, "pong": True}
 
 
+# ---- weak-scalar promotion ----
+
+def test_nd_call_where_scalar_branches(bridge):
+	# The condition is excluded from weak-scalar dtype promotion; only x/y
+	# are dtype peers. Pre-fix, Python scalars adopted the Bool condition's
+	# dtype, so where(cond, 1.0, 0.0) returned the condition itself.
+	cond = np.array([[False, False], [False, True]])
+	out = bridge.call_nd("where", cond, 1.0, 0.0)
+	assert out.dtype == np.float64
+	assert np.array_equal(out, np.where(cond, 1.0, 0.0))
+	# Both branches int → default int, not Bool.
+	out_int = bridge.call_nd("where", cond, 0, 1)
+	assert out_int.dtype == np.int64
+	assert np.array_equal(out_int, np.where(cond, 0, 1))
+
+
+def test_nd_call_where_complex(bridge):
+	# Complex where dispatches through a scalar (non-SIMD) path — xsimd has no
+	# select() for complex value batches. Pre-fix these cells were absent from
+	# the vfunc table entirely and any complex where returned null.
+	cond = np.array([True, False, True])
+	a = np.array([1 + 2j, 3 + 4j, 5 + 6j], dtype=np.complex64)
+	b = np.array([-1 - 1j, -2 - 2j, -3 - 3j], dtype=np.complex128)
+	out = bridge.call_nd("where", cond, a, b)
+	assert out.dtype == np.complex128
+	assert np.array_equal(out, np.where(cond, a.astype(np.complex128), b))
+	# Empty inputs must survive too.
+	out_empty = bridge.call_nd(
+		"where",
+		np.zeros((0,), dtype=bool),
+		np.zeros((0,), dtype=np.complex64),
+		np.zeros((0,), dtype=np.complex128),
+	)
+	assert out_empty.shape == (0,)
+	assert out_empty.dtype == np.complex128
+
+
+def test_nd_call_where_scalar_adopts_branch_dtype(bridge):
+	# A scalar branch adopts the dtype of the array branch, not the condition's.
+	cond = np.array([True, False, True])
+	x = np.array([1.5, 2.5, 3.5], dtype=np.float32)
+	out = bridge.call_nd("where", cond, x, 0)
+	assert out.dtype == np.float32
+	assert np.array_equal(out, np.where(cond, x, np.float32(0)))
+
+
 # ---- error paths (bridge stays alive) ----
 
 def test_nd_call_unknown_function(bridge):

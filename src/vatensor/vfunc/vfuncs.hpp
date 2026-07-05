@@ -47,6 +47,17 @@ namespace va::op {
 		constexpr bool operator()(bool arg1) const { return !arg1; }
 	};
 
+	struct select_nosimd {
+		// Deliberately has no simd_apply: xt::detail::conditional_ternary
+		// declares one whose body doesn't compile for complex value batches
+		// (xsimd has no matching select()), so complex where uses this functor
+		// to keep the whole ternary on the scalar path.
+		template <class B, class A1, class A2>
+		constexpr auto operator()(const B& cond, const A1& v1, const A2& v2) const noexcept {
+			return cond ? v1 : v2;
+		}
+	};
+
 	struct round_fun {
 		template <class T1>
 		constexpr std::decay_t<T1> operator()(T1&& arg1) const { return ::round(std::forward<T1>(arg1)); }
@@ -541,8 +552,19 @@ namespace va::vfunc::impl {
 	// Cast cond from bool to uint8_t (same memory layout) so the SIMD load uses
 	// the uint8 path instead of the broken bool path; comparison to 0 then
 	// produces a bool batch via the operation itself (cf. issue #123).
+	// Complex operands can't take that route — xsimd has no select() for
+	// complex value batches — so they go through a simd-less ternary functor.
+	template <typename A, typename B>
+	inline auto where_expr(const compute_case<bool*>& cond, const A& a, const B& b) {
+		if constexpr (xtl::is_complex<typename A::value_type>::value || xtl::is_complex<typename B::value_type>::value) {
+			return xt::detail::make_xfunction<va::op::select_nosimd>(cond, a, b);
+		}
+		else {
+			return xt::where(xt::not_equal(xt::cast<uint8_t>(cond), static_cast<uint8_t>(0)), a, b);
+		}
+	}
 	IMPLEMENT_BINARY_VFUNC(where,
-		xt::where(xt::not_equal(xt::cast<uint8_t>(*cond_ptr), static_cast<uint8_t>(0)), a, b),
+		where_expr(*cond_ptr, a, b),
 		const compute_case<bool*>* cond_ptr)
 	IMPLEMENT_BINARY_VFUNC(is_close, xt::isclose(va::promote::to_num(a), va::promote::to_num(b), rtol, atol, equal_nan), double rtol, double atol, bool equal_nan)
 	IMPLEMENT_BINARY_VFUNC(array_equiv, xt::xscalar<bool>(xt::all(xt::equal(a, b))))

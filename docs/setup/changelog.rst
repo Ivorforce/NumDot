@@ -10,8 +10,13 @@ Here you will find the release notes for each version of the library. Each secti
    :local:
    :backlinks: none
 
-.. Upcoming Changes (main branch)
-.. ------------------------------
+Upcoming Changes (main branch)
+------------------------------
+
+**Fixed**
+
+- ``nd.where`` with GDScript scalar branches returns the branches' dtype instead of ``Bool``. ``nd.where(cond, 1.0, 0.0)`` used to return the condition itself; it now returns a ``float64`` array (the condition no longer participates in type promotion).
+- ``nd.where`` supports complex arrays for ``x`` and ``y`` (used to return ``null``).
 
 Version 0.12 - 2026-06-17
 -------------------------

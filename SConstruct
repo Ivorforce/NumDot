@@ -95,6 +95,12 @@ for opt in opts.options:
     if opt.key in options_env:
         env[opt.key] = options_env[opt.key]
 
+if env["platform"] == "android":
+  env.Append(SHLINKFLAGS=[
+    "-Wl,-z,max-page-size=16384",
+    "-Wl,-z,common-page-size=16384",
+  ])
+
 is_msvc = "is_msvc" in env and env["is_msvc"]
 
 # ============================= Actual source and lib setup =============================

@@ -85,7 +85,7 @@ if ARGUMENTS.get("build_profile", None) is None:
 
 if ARGUMENTS.get("ndk_version", None) is None:
     # Need a newer ndk version for C++20 (r26+)
-    ARGUMENTS["ndk_version"] = "27.2.12479018"
+    ARGUMENTS["ndk_version"] = "28.1.13356709"
 
 # Load godot-cpp
 godot_cpp_env = SConscript("godot-cpp/SConstruct", {"customs": customs})

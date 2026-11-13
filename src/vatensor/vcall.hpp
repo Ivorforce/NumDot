@@ -86,7 +86,7 @@ namespace va {
 		auto& target_ = evaluate_target(allocator, target, ufunc.output_dtype, result_shape, temp);
 
 		if (a_type == ufunc.input_types[0]) {
-			reinterpret_cast<_call::UnaryDummyFunction<Args...>>(ufunc.function_ptr)(
+            reinterpret_cast<_call::UnaryDummyFunction<std::decay_t<Args>...>>(ufunc.function_ptr)(
 				_call::get_value_ptr(target_),
 				_call::get_value_ptr(a),
 				std::forward<Args>(args)...
@@ -94,7 +94,7 @@ namespace va {
 		}
 		else {
 			const auto a_ = _call::_copy_as_dtype(allocator, a, ufunc.input_types[0]);
-			reinterpret_cast<_call::UnaryDummyFunction<Args...>>(ufunc.function_ptr)(
+            reinterpret_cast<_call::UnaryDummyFunction<std::decay_t<Args>...>>(ufunc.function_ptr)(
 				_call::get_value_ptr(target_),
 				_call::get_value_ptr(a_->data),
 				std::forward<Args>(args)...

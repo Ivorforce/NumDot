@@ -5,9 +5,12 @@
 #include "varray.hpp"
 #include "vassign.hpp"
 #include "vfunc/tables.hpp"
+#include <type_traits>
 
 namespace va {
 	namespace _call {
+		// The casts below use std::decay_t<Args>, so vfunc vargs must be by-value types.
+		// Pass anything that needs reference semantics as a pointer.
 		template<typename... Args>
 		using InplaceDummyFunction = void (*)(void* a, Args... args);
 		template<typename... Args>
@@ -54,7 +57,7 @@ namespace va {
 		const auto& function_ptr = table[a_type];
 		if (function_ptr == nullptr) throw std::runtime_error("Unsupported dtype for ufunc.");
 
-		reinterpret_cast<_call::InplaceDummyFunction<Args...>>(function_ptr)(
+		reinterpret_cast<_call::InplaceDummyFunction<std::decay_t<Args>...>>(function_ptr)(
 			_call::get_value_ptr(a),
 			std::forward<Args>(args)...
 		);
@@ -68,7 +71,7 @@ namespace va {
 		const auto& function_ptr = table[a_type][b_type];
 		if (function_ptr == nullptr) throw std::runtime_error("Unsupported dtype for ufunc.");
 
-		reinterpret_cast<_call::UnaryDummyFunction<Args...>>(function_ptr)(
+		reinterpret_cast<_call::UnaryDummyFunction<std::decay_t<Args>...>>(function_ptr)(
 			_call::get_value_ptr(a),
 			_call::get_value_ptr(b),
 			std::forward<Args>(args)...
@@ -86,7 +89,7 @@ namespace va {
 		auto& target_ = evaluate_target(allocator, target, ufunc.output_dtype, result_shape, temp);
 
 		if (a_type == ufunc.input_types[0]) {
-			reinterpret_cast<_call::UnaryDummyFunction<Args...>>(ufunc.function_ptr)(
+			reinterpret_cast<_call::UnaryDummyFunction<std::decay_t<Args>...>>(ufunc.function_ptr)(
 				_call::get_value_ptr(target_),
 				_call::get_value_ptr(a),
 				std::forward<Args>(args)...
@@ -94,7 +97,7 @@ namespace va {
 		}
 		else {
 			const auto a_ = _call::_copy_as_dtype(allocator, a, ufunc.input_types[0]);
-			reinterpret_cast<_call::UnaryDummyFunction<Args...>>(ufunc.function_ptr)(
+			reinterpret_cast<_call::UnaryDummyFunction<std::decay_t<Args>...>>(ufunc.function_ptr)(
 				_call::get_value_ptr(target_),
 				_call::get_value_ptr(a_->data),
 				std::forward<Args>(args)...
@@ -176,7 +179,7 @@ namespace va {
 
 		switch ((static_cast<uint8_t>(a_type == ufunc.input_types[0]) << 1) | static_cast<uint8_t>(b_type == ufunc.input_types[1])) {
 			case 0b11: {
-				reinterpret_cast<_call::BinaryDummyFunction<Args...>>(ufunc.function_ptr)(
+				reinterpret_cast<_call::BinaryDummyFunction<std::decay_t<Args>...>>(ufunc.function_ptr)(
 					_call::get_value_ptr(target_),
 					_call::get_value_ptr(a),
 					_call::get_value_ptr(b),
@@ -186,7 +189,7 @@ namespace va {
 			}
 			case 0b10: {
 				const auto b_ = _call::_copy_as_dtype(allocator, b, ufunc.input_types[1]);
-				reinterpret_cast<_call::BinaryDummyFunction<Args...>>(ufunc.function_ptr)(
+				reinterpret_cast<_call::BinaryDummyFunction<std::decay_t<Args>...>>(ufunc.function_ptr)(
 					_call::get_value_ptr(target_),
 					_call::get_value_ptr(a),
 					_call::get_value_ptr(_call::deref(b_)),
@@ -196,7 +199,7 @@ namespace va {
 			}
 			case 0b01: {
 				const auto a_ = _call::_copy_as_dtype(allocator, a, ufunc.input_types[0]);
-				reinterpret_cast<_call::BinaryDummyFunction<Args...>>(ufunc.function_ptr)(
+				reinterpret_cast<_call::BinaryDummyFunction<std::decay_t<Args>...>>(ufunc.function_ptr)(
 					_call::get_value_ptr(target_),
 					_call::get_value_ptr(_call::deref(a_)),
 					_call::get_value_ptr(b),
@@ -207,7 +210,7 @@ namespace va {
 			case 0b00: {
 				const auto a_ = _call::_copy_as_dtype(allocator, a, ufunc.input_types[0]);
 				const auto b_ = _call::_copy_as_dtype(allocator, b, ufunc.input_types[1]);
-				reinterpret_cast<_call::BinaryDummyFunction<Args...>>(ufunc.function_ptr)(
+				reinterpret_cast<_call::BinaryDummyFunction<std::decay_t<Args>...>>(ufunc.function_ptr)(
 					_call::get_value_ptr(target_),
 					_call::get_value_ptr(_call::deref(a_)),
 					_call::get_value_ptr(_call::deref(b_)),

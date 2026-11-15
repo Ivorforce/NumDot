@@ -5295,7 +5295,7 @@
 			],
 			"casts": [],
 			"vargs": [
-				"std::vector<std::vector<std::size_t>>&",
+				"const std::vector<std::vector<std::size_t>>*",
 				"xt::pad_mode",
 				"void*"
 			]
@@ -5505,7 +5505,7 @@
 			],
 			"casts": [],
 			"vargs": [
-				"xt::random::default_engine_type&"
+				"xt::random::default_engine_type*"
 			]
 		},
 		{
@@ -5516,7 +5516,7 @@
 			],
 			"casts": [],
 			"vargs": [
-				"xt::random::default_engine_type&"
+				"xt::random::default_engine_type*"
 			]
 		},
 		{
@@ -5534,7 +5534,7 @@
 			],
 			"casts": [],
 			"vargs": [
-				"xt::random::default_engine_type&",
+				"xt::random::default_engine_type*",
 				"long long",
 				"long long"
 			]

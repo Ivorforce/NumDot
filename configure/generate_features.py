@@ -309,7 +309,7 @@ def main():
 		"name": "pad",
 		"specializations": specializations_all,
 		"casts": [],
-		"vargs": ["std::vector<std::vector<std::size_t>>&", "xt::pad_mode", "void*"]
+		"vargs": ["const std::vector<std::vector<std::size_t>>*", "xt::pad_mode", "void*"]
 	})
 	vfuncs.append({
 		"name": "fill",
@@ -332,14 +332,14 @@ def main():
 			# TODO Can probably add support for complex numbers.
 			"specializations": ["d", "f"],
 			"casts": [],
-			"vargs": ["xt::random::default_engine_type&"],
+			"vargs": ["xt::random::default_engine_type*"],
 		})
 	vfuncs.append({
 		"name": "fill_random_int",
 		# TODO Can probably add support for complex numbers.
 		"specializations": [type_.char for type_ in supported_dtypes if np.isdtype(type_, 'integral') or np.isdtype(type_, 'bool')],
 		"casts": [],
-		"vargs": ["xt::random::default_engine_type&", "long long", "long long"],
+		"vargs": ["xt::random::default_engine_type*", "long long", "long long"],
 	})
 	vfuncs.append({
 		"name": "fill_consecutive",

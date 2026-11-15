@@ -458,10 +458,10 @@ inline void UFUNC_NAME(R& ret, const A& a, const B& b, const va::axes_type* axes
 namespace va::vfunc::impl {
 	IMPLEMENT_INPLACE_VFUNC(fill, xt::xscalar(*static_cast<typename R::value_type*>(fill_value)), void* fill_value)
 	IMPLEMENT_UNARY_VFUNC(assign, va::op::vcast<typename R::value_type>(a))
-	IMPLEMENT_INPLACE_VFUNC(fill_random_float, xt::random::rand<typename R::value_type>(ret.shape(), 0, 1, engine), xt::random::default_engine_type& engine)
+	IMPLEMENT_INPLACE_VFUNC(fill_random_float, xt::random::rand<typename R::value_type>(ret.shape(), 0, 1, *engine), xt::random::default_engine_type* engine)
 
 	template<typename R>
-	inline void fill_random_int(R& ret, xt::random::default_engine_type& engine, long long low, long long high) {
+	inline void fill_random_int(R& ret, xt::random::default_engine_type* engine, long long low, long long high) {
 		using T = typename R::value_type;
 		// TODO Should automatically figure out somehow which are supported, not hardcode it...
 #ifdef _WIN32
@@ -479,9 +479,9 @@ namespace va::vfunc::impl {
 		// Unix supports all integrals except bool
 		using TRandom = std::conditional_t<std::is_same_v<T, bool>, uint8_t, T>;
 #endif
-		va::broadcasting_assign_typesafe(ret, xt::random::randint<TRandom>(ret.shape(), low, high, engine));
+		va::broadcasting_assign_typesafe(ret, xt::random::randint<TRandom>(ret.shape(), low, high, *engine));
 	}
-	IMPLEMENT_INPLACE_VFUNC(fill_random_normal, xt::random::randn<typename R::value_type>(ret.shape(), 0, 1, engine), xt::random::default_engine_type& engine)
+	IMPLEMENT_INPLACE_VFUNC(fill_random_normal, xt::random::randn<typename R::value_type>(ret.shape(), 0, 1, *engine), xt::random::default_engine_type* engine)
 
 	IMPLEMENT_INPLACE_VFUNC(fill_consecutive, va::op::consecutive<R>(start, step, num), const void* start, const void* step, std::size_t num)
 
@@ -612,8 +612,8 @@ namespace va::vfunc::impl {
 	IMPLEMENT_UNARY_VFUNC(fft, xt::fft::fft(std::forward<decltype(a)>(a), axis), std::ptrdiff_t axis)
 	IMPLEMENT_UNARY_VFUNC(
 		pad,
-		xt::pad(std::forward<decltype(a)>(a), pad_width, pad_mode, *static_cast<typename A::value_type*>(pad_value)),
-		std::vector<std::vector<std::size_t>>& pad_width,
+		xt::pad(std::forward<decltype(a)>(a), *pad_width, pad_mode, *static_cast<typename A::value_type*>(pad_value)),
+		const std::vector<std::vector<std::size_t>>* pad_width,
 		xt::pad_mode pad_mode,
 		void* pad_value
 	)

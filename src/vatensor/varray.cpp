@@ -9,110 +9,110 @@
 #include "dtype.hpp"
 
 const va::shape_type& va::shape(const VData& read) {
-    return std::visit(
-        [](const auto& carray) -> const va::shape_type& {
-            return carray.shape();
-        }, read
-    );
+	return std::visit(
+		[](const auto& carray) -> const va::shape_type& {
+			return carray.shape();
+		}, read
+	);
 }
 
 const va::strides_type& va::strides(const VData& read) {
-    return std::visit(
-        [](const auto& carray) -> const va::strides_type& {
-            return carray.strides();
-        }, read
-    );
+	return std::visit(
+		[](const auto& carray) -> const va::strides_type& {
+			return carray.strides();
+		}, read
+	);
 }
 
 va::size_type va::offset(const VData& read) {
-    return std::visit(
-        [](const auto& carray) -> va::size_type {
-            return carray.data_offset();
-        }, read
-    );
+	return std::visit(
+		[](const auto& carray) -> va::size_type {
+			return carray.data_offset();
+		}, read
+	);
 }
 
 xt::layout_type va::layout(const VData& read) {
-    return std::visit(
-        [](const auto& carray) -> xt::layout_type {
-            return carray.layout();
-        }, read
-    );
+	return std::visit(
+		[](const auto& carray) -> xt::layout_type {
+			return carray.layout();
+		}, read
+	);
 }
 
 std::size_t va::size(const VData& read) {
-    return std::visit(
-        [](const auto& carray) -> std::size_t {
-            return carray.size();
-        }, read
-    );
+	return std::visit(
+		[](const auto& carray) -> std::size_t {
+			return carray.size();
+		}, read
+	);
 }
 
 std::size_t va::dimension(const VData& read) {
-    return std::visit(
-        [](const auto& carray) -> std::size_t {
-            return carray.dimension();
-        }, read
-    );
+	return std::visit(
+		[](const auto& carray) -> std::size_t {
+			return carray.dimension();
+		}, read
+	);
 }
 
 va::VScalar va::to_single_value(const VData& read) {
-    return std::visit(
-        [](const auto& carray) -> va::VScalar {
-            if (carray.size() != 1) {
-                throw std::runtime_error("Expected a single element after slicing.");
-            }
-            return *carray.data();
-        }, read
-    );
+	return std::visit(
+		[](const auto& carray) -> va::VScalar {
+			if (carray.size() != 1) {
+				throw std::runtime_error("Expected a single element after slicing.");
+			}
+			return *carray.data();
+		}, read
+	);
 }
 
 std::shared_ptr<va::VArray> va::VArray::sliced(const xt::xstrided_slice_vector& slices) const {
-    return std::visit(
-        [this, &slices](const auto& read) -> std::shared_ptr<VArray> {
-            std::ptrdiff_t new_offset = 0;
-            return std::make_shared<VArray>(
-                VArray {
-                    store,
-                    slice_compute(read, slices, new_offset),
-                    data_offset + new_offset
-                }
-            );
-        }, data
-    );
+	return std::visit(
+		[this, &slices](const auto& read) -> std::shared_ptr<VArray> {
+			std::ptrdiff_t new_offset = 0;
+			return std::make_shared<VArray>(
+				VArray {
+					store,
+					slice_compute(read, slices, new_offset),
+					data_offset + new_offset
+				}
+			);
+		}, data
+	);
 }
 
 std::shared_ptr<va::VArray> va::VArray::sliced(const xt::xstrided_slice<std::ptrdiff_t>& slice, std::ptrdiff_t axis) const {
-    return std::visit(
-    [this, &slice, axis](const auto& read) -> std::shared_ptr<VArray> {
-        std::ptrdiff_t new_offset = 0;
-        return std::make_shared<VArray>(
-            VArray {
-                store,
-                slice_compute(read, slice, axis, new_offset),
-                data_offset + new_offset
-            }
-        );
-    }, data
+	return std::visit(
+	[this, &slice, axis](const auto& read) -> std::shared_ptr<VArray> {
+		std::ptrdiff_t new_offset = 0;
+		return std::make_shared<VArray>(
+			VArray {
+				store,
+				slice_compute(read, slice, axis, new_offset),
+				data_offset + new_offset
+			}
+		);
+	}, data
 );
 }
 
 va::VData va::sliced_data(const VData& data, const xt::xstrided_slice_vector& slices) {
-    return std::visit(
-        [&slices](const auto& read) -> va::VData {
-            std::ptrdiff_t new_offset = 0;  // Not needed
-            return slice_compute(read, slices, new_offset);
-        }, data
-    );
+	return std::visit(
+		[&slices](const auto& read) -> va::VData {
+			std::ptrdiff_t new_offset = 0;  // Not needed
+			return slice_compute(read, slices, new_offset);
+		}, data
+	);
 }
 
 va::VData va::sliced_data(const VData& data, const xt::xstrided_slice<std::ptrdiff_t>& slice, std::ptrdiff_t axis) {
-    return std::visit(
-    [&slice, axis](const auto& read) -> va::VData {
-            std::ptrdiff_t new_offset = 0;  // Not needed
-            return slice_compute(read, slice, axis, new_offset);
-        }, data
-    );
+	return std::visit(
+	[&slice, axis](const auto& read) -> va::VData {
+			std::ptrdiff_t new_offset = 0;  // Not needed
+			return slice_compute(read, slice, axis, new_offset);
+		}, data
+	);
 }
 
 va::VArray::operator bool() const { return va::static_cast_scalar<bool>(to_single_value()); }

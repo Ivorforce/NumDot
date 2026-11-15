@@ -832,21 +832,21 @@ inline void reduction_inplace_new(Visitor&& visitor, va::VArray& target, const V
 
 #define VARRAY_MAP1(func, varray1) \
 	map_variants_as_arrays_inplace([this](const va::VArrayTarget& target, const std::shared_ptr<va::VArray>& varray) {\
-        va::func(va::store::default_allocator, target, varray->data);\
-    }, *this->array, (varray1));\
-    return {this}
+		va::func(va::store::default_allocator, target, varray->data);\
+	}, *this->array, (varray1));\
+	return {this}
 
 #define VARRAY_MAP2(func, varray1, varray2) \
 	map_variants_as_arrays_inplace([this](const va::VArrayTarget& target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b) {\
-        va::func(va::store::default_allocator, target, a->data, b->data);\
-    }, *this->array, (varray1), (varray2));\
-    return {this}
+		va::func(va::store::default_allocator, target, a->data, b->data);\
+	}, *this->array, (varray1), (varray2));\
+	return {this}
 
 #define VARRAY_MAP3(func, varray1, varray2, varray3) \
 	map_variants_as_arrays_inplace([this](const va::VArrayTarget& target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b, const std::shared_ptr<va::VArray>& c) {\
-        va::func(va::store::default_allocator, target, a->data, b->data, c->data);\
-    }, *this->array, (varray1), (varray2), (varray3));\
-    return {this}
+		va::func(va::store::default_allocator, target, a->data, b->data, c->data);\
+	}, *this->array, (varray1), (varray2), (varray3));\
+	return {this}
 
 #define REDUCTION1(func, varray1, axes1) \
 	reduction_inplace([this](const va::VArrayTarget& target, const va::axes_type& axes, const std::shared_ptr<va::VArray>& array) {\

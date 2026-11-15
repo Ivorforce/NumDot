@@ -96,9 +96,9 @@ std::shared_ptr<VArray> va::get_at_mask(VStoreAllocator& allocator, const VData&
 
 void va::set_at_mask(VData& varray, VData& mask, VData& value) {
 	// This case is not handled again later, so we actually need this 'performance' check.
-    if (va::dimension(value) == 0) {
-	    return set_at_mask(varray, mask, va::to_single_value(value));
-    }
+	if (va::dimension(value) == 0) {
+		return set_at_mask(varray, mask, va::to_single_value(value));
+	}
 
 	if (va::dtype(mask) != va::DType::Bool) throw std::runtime_error("mask must be boolean dtype");
 

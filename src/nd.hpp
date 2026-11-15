@@ -45,10 +45,10 @@ public:
 
 	// Mathematical Constants
 	static constexpr double pi = 3.141592653589793;
-    static constexpr double e = 2.718281828459045;
-    static constexpr double euler_gamma = 0.5772156649015329;
-    static constexpr double inf = std::numeric_limits<double>::infinity();
-    static constexpr double nan = std::numeric_limits<double>::quiet_NaN();
+	static constexpr double e = 2.718281828459045;
+	static constexpr double euler_gamma = 0.5772156649015329;
+	static constexpr double inf = std::numeric_limits<double>::infinity();
+	static constexpr double nan = std::numeric_limits<double>::quiet_NaN();
 
 	static constexpr double get_pi() { return pi; }
 	static constexpr double get_e() { return e; }

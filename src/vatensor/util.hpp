@@ -6,12 +6,12 @@ namespace va::util {
 		if (axis >= 0 && axis >= dimension) {
 			throw std::runtime_error("axis out of range");
 		}
-  		if (axis < 0 && -axis > dimension) {
+		if (axis < 0 && -axis > dimension) {
 			throw std::runtime_error("axis out of range");
 		}
 
 		return xt::normalize_axis(dimension, axis);
-    };
+	};
 
 	inline std::size_t normalize_index(const std::ptrdiff_t index, const std::size_t size) {
 		if (index >= 0 && index >= size) {
@@ -22,7 +22,7 @@ namespace va::util {
 		}
 
 		return xt::normalize_axis(size, index);
-    };
+	};
 }
 
 #endif //VATENSOR_UTIL_HPP

@@ -61,16 +61,16 @@ void nd::_bind_methods() {
 	BIND_ENUM_CONSTANT(Wrap);
 	BIND_ENUM_CONSTANT(Edge);
 
-    // Constants.
+	// Constants.
 	godot::ClassDB::bind_static_method("nd", D_METHOD("newaxis"), &nd::newaxis);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("ellipsis"), &nd::ellipsis);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("axis_all"), &nd::axis_all);
 
-    godot::ClassDB::bind_static_method("nd", D_METHOD("pi"), &nd::get_pi);
-    godot::ClassDB::bind_static_method("nd", D_METHOD("e"), &nd::get_e);
-    godot::ClassDB::bind_static_method("nd", D_METHOD("euler_gamma"), &nd::get_euler_gamma);
-    godot::ClassDB::bind_static_method("nd", D_METHOD("inf"), &nd::get_inf);
-    godot::ClassDB::bind_static_method("nd", D_METHOD("nan"), &nd::get_nan);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("pi"), &nd::get_pi);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("e"), &nd::get_e);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("euler_gamma"), &nd::get_euler_gamma);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("inf"), &nd::get_inf);
+	godot::ClassDB::bind_static_method("nd", D_METHOD("nan"), &nd::get_nan);
 
 	godot::ClassDB::bind_static_method("nd", D_METHOD("from", "start"), &nd::from);
 	godot::ClassDB::bind_static_method("nd", D_METHOD("to", "stop"), &nd::to);
@@ -382,18 +382,18 @@ Ref<NDArray> like_visit(Visitor&& visitor, const Variant& model, nd::DType dtype
 
 #define VARRAY_MAP1(func, varray1) \
 	map_variants_as_arrays_with_target([](const va::VArrayTarget& target, const std::shared_ptr<va::VArray>& varray) {\
-        va::func(va::store::default_allocator, target, varray->data);\
-    }, (varray1))
+		va::func(va::store::default_allocator, target, varray->data);\
+	}, (varray1))
 
 #define VARRAY_MAP2(func, varray1, varray2) \
 	map_with_weak_scalar([](const va::VArrayTarget& target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b) {\
-        va::func(va::store::default_allocator, target, a->data, b->data);\
-    }, (varray1), (varray2))
+		va::func(va::store::default_allocator, target, a->data, b->data);\
+	}, (varray1), (varray2))
 
 #define VARRAY_MAP3(func, varray1, varray2, varray3) \
 	map_with_weak_scalar([](const va::VArrayTarget& target, const std::shared_ptr<va::VArray>& a, const std::shared_ptr<va::VArray>& b, const std::shared_ptr<va::VArray>& c) {\
-        va::func(va::store::default_allocator, target, a->data, b->data, c->data);\
-    }, (varray1), (varray2), (varray3))
+		va::func(va::store::default_allocator, target, a->data, b->data, c->data);\
+	}, (varray1), (varray2), (varray3))
 
 #define REDUCTION1(func, varray1, axes1) \
 	reduction_new([](const va::VArrayTarget& target, const va::axes_type* axes, const va::VArray& array) {\
@@ -577,7 +577,7 @@ Ref<NDArray> nd::eye(const Variant& shape, int64_t k, nd::DType dtype) {
 	try {
 		va::shape_type used_shape = shape.get_type() == Variant::INT
 		                            ? va::shape_type { static_cast<va::size_type>(static_cast<int64_t>(shape)), static_cast<va::size_type>(static_cast<int64_t>(shape)) }
-		                            : variant_to_shape(shape);
+									: variant_to_shape(shape);
 
 		auto result = va::eye(va::store::default_allocator, dtype, used_shape, k);
 		return { memnew(NDArray(result)) };

@@ -28,6 +28,7 @@ Upcoming Changes (main branch)
 - ``nd.reshape`` errors when the requested shape doesn't match the array's element count (including a ``-1`` entry that doesn't divide evenly), matching numpy. It used to silently return an array claiming the new shape while backed by too little memory — writing to it (e.g. via ``assign_sum``) corrupted the heap and crashed.
 - ``nd.is_close`` respects ``rtol``, ``atol`` and ``equal_nan``. They used to be read as garbage, so results were wrong for any non-trivial tolerance.
 - ``nd.fft`` no longer crashes.
+- A GDScript ``float`` combined with an integer or ``Bool`` array, or an ``int`` with a ``Bool`` array, promotes the result like numpy instead of being cast to the array's dtype first. ``nd.multiply(int_arr, 0.5)`` used to multiply by ``0``; it now returns ``float64``. Scalars that fit the array's kind still adopt its dtype (``nd.add(uint8_arr, 5)`` stays ``uint8``).
 
 Version 0.12 - 2026-06-17
 -------------------------

@@ -674,14 +674,43 @@ static bool _variant_is_ndarray(const Variant& v) {
 	return v.get_type() == Variant::OBJECT && Object::cast_to<NDArray>(v) != nullptr;
 }
 
-static bool _variant_is_weak_scalar(const Variant& v) {
+// Kinds in promotion order: bool < integer < real < complex.
+enum class PromotionKind { Bool, Integer, Real, Complex, None };
+
+static PromotionKind _dtype_kind(const va::DType dtype) {
+	switch (dtype) {
+		case va::Bool:
+			return PromotionKind::Bool;
+		case va::Int8:
+		case va::Int16:
+		case va::Int32:
+		case va::Int64:
+		case va::UInt8:
+		case va::UInt16:
+		case va::UInt32:
+		case va::UInt64:
+			return PromotionKind::Integer;
+		case va::Float32:
+		case va::Float64:
+			return PromotionKind::Real;
+		case va::Complex64:
+		case va::Complex128:
+			return PromotionKind::Complex;
+		default:
+			return PromotionKind::None;
+	}
+}
+
+static PromotionKind _weak_scalar_kind(const Variant& v) {
 	switch (v.get_type()) {
 		case Variant::BOOL:
+			return PromotionKind::Bool;
 		case Variant::INT:
+			return PromotionKind::Integer;
 		case Variant::FLOAT:
-			return true;
+			return PromotionKind::Real;
 		default:
-			return false;
+			return PromotionKind::None;
 	}
 }
 
@@ -712,10 +741,12 @@ void variants_as_arrays_weak(
 		}
 	}
 	// Second pass: convert remaining operands. Weak scalars borrow the peer's
-	// dtype if there is one; everything else takes its natural conversion.
+	// dtype if it can represent their kind; a scalar of a higher kind (a float
+	// next to an int array) and everything else take their natural conversion.
 	for (std::size_t i = 0; i < n; ++i) {
 		if (out_arrays[i]) continue;
-		if (peer && _variant_is_weak_scalar(*in_variants[i])) {
+		const PromotionKind scalar_kind = _weak_scalar_kind(*in_variants[i]);
+		if (peer && scalar_kind != PromotionKind::None && scalar_kind <= _dtype_kind(peer->dtype())) {
 			out_arrays[i] = variant_as_array(*in_variants[i], peer->dtype(), false);
 		}
 		else {

@@ -25,7 +25,10 @@ std::shared_ptr<va::VArray> variant_as_array(const Variant& array, va::DType dty
 
 // NEP-50 / Array API "weak scalar" promotion for binary ops: when one operand
 // is an NDArray and the other is a Variant scalar (BOOL/INT/FLOAT), build the
-// scalar with the array's dtype so it doesn't widen the result.
+// scalar with the array's dtype so it doesn't widen the result. A scalar of a
+// higher kind than the array (bool < integer < float) keeps its own default
+// dtype instead, so `int_array * 0.5` promotes to float64 rather than
+// truncating the scalar.
 void variant_pair_as_arrays_weak(
 	const Variant& a,
 	const Variant& b,
@@ -34,8 +37,9 @@ void variant_pair_as_arrays_weak(
 );
 
 // Same idea, generalized to N operands: any Variant scalar (BOOL/INT/FLOAT)
-// adopts the dtype of the first NDArray operand. With no NDArray peer, every
-// operand falls back to plain dtype-driven conversion.
+// adopts the dtype of the first NDArray operand, unless its kind is higher.
+// With no NDArray peer, every operand falls back to plain dtype-driven
+// conversion.
 void variants_as_arrays_weak(
 	const Variant* const* in_variants,
 	std::shared_ptr<va::VArray>* out_arrays,

@@ -166,6 +166,25 @@ def test_nd_call_where_scalar_adopts_branch_dtype(bridge):
 	assert np.array_equal(out, np.where(cond, x, np.float32(0)))
 
 
+def test_nd_call_scalar_of_higher_kind_promotes(bridge):
+	# A scalar only adopts the array's dtype when that dtype can hold its
+	# kind (bool < int < float). Otherwise the scalar keeps its default dtype
+	# and the result promotes, as in numpy.
+	ints = np.arange(8, dtype=np.int32)
+	out = bridge.call_nd("multiply", ints, 0.5)
+	assert out.dtype == np.float64
+	assert np.array_equal(out, ints * 0.5)
+	bools = np.array([True, False, True, False])
+	out = bridge.call_nd("add", bools, 5)
+	assert out.dtype == np.int64
+	assert np.array_equal(out, bools + 5)
+	# Same or lower kind: the array's dtype wins.
+	assert bridge.call_nd("add", ints, 1).dtype == np.int32
+	assert bridge.call_nd("add", ints, True).dtype == np.int32
+	assert bridge.call_nd("add", ints.astype(np.float32), 1).dtype == np.float32
+	assert bridge.call_nd("add", ints.astype(np.float32), 0.5).dtype == np.float32
+
+
 # ---- error paths (bridge stays alive) ----
 
 def test_nd_call_unknown_function(bridge):

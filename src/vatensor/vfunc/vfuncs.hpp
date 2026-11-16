@@ -107,6 +107,40 @@ namespace va::op {
 		constexpr std::decay_t<T1> operator()(T1 arg1, T2 arg2) const { return std::copysign(arg1, static_cast<T1>(arg2)); }
 	};
 
+	// xsimd's batched pow computes exp(b * log(a)). It misses the special values
+	// (0 ** 0 gives 0; nan ** 0 and 1 ** nan give nan;
+	// https://github.com/xtensor-stack/xsimd/issues/1458) and lands a few ULP
+	// off exactly representable results (3. ** 2. gives 8.999...;
+	// https://github.com/xtensor-stack/xsimd/issues/1459). xtensor loads integer
+	// operands into that same double kernel, so the cast back truncates
+	// (3 ** 2 gives 8). Having no simd_apply keeps pow on std::pow, and integers
+	// on exact squaring.
+	struct pow_fun {
+		template <class T1, class T2>
+		constexpr auto operator()(const T1& base, const T2& exponent) const {
+			using R = std::common_type_t<T1, T2>;
+			if constexpr (std::is_integral_v<R>) {
+				// uint64 arithmetic wraps on overflow like numpy, without the UB
+				// of signed (or int-promoted uint16) multiplication.
+				uint64_t result = 1;
+				uint64_t factor = static_cast<uint64_t>(static_cast<R>(base));
+				for (uint64_t e = static_cast<uint64_t>(static_cast<R>(exponent)); e != 0; e >>= 1) {
+					if (e & 1) result *= factor;
+					factor *= factor;
+				}
+				return static_cast<R>(result);
+			}
+			else {
+				if constexpr (xtl::is_complex<R>::value) {
+					// Complex std::pow evaluates exp(b * log(a)), which is nan for
+					// 0 ** 0. Like numpy, anything to the power of zero is one.
+					if (exponent == R(0)) return R(1);
+				}
+				return std::pow(static_cast<R>(base), static_cast<R>(exponent));
+			}
+		}
+	};
+
 	struct floor_divide_fun {
 		template <class T1, class T2>
 		constexpr auto operator()(T1 a, T2 b) const {
@@ -508,7 +542,28 @@ namespace va::vfunc::impl {
 	IMPLEMENT_BINARY_VFUNC(divide, xt::detail::make_xfunction<va::op::divide_fun>(va::promote::to_num(a), va::promote::to_num(b)))
 	IMPLEMENT_BINARY_VFUNC(floor_divide, xt::detail::make_xfunction<va::op::floor_divide_fun>(va::promote::to_num(a), va::promote::to_num(b)))
 	IMPLEMENT_BINARY_VFUNC(remainder, xt::remainder(va::promote::to_num(a), va::promote::to_num(b)))
-	IMPLEMENT_BINARY_VFUNC(pow, xt::pow(va::promote::to_num(a), va::promote::to_num(b)))
+
+	// An integer raised to a negative integer has no integer result (numpy
+	// raises as well), so reject it before anything is written to ret.
+	template <typename R, typename A, typename B>
+	inline void pow(R& ret, const A& a, const B& b) {
+		using VA = va::promote::value_type_v<A>;
+		using VB = va::promote::value_type_v<B>;
+		if constexpr (std::is_integral_v<VA> && std::is_integral_v<VB> && std::is_signed_v<VB>) {
+			bool any_negative;
+			if constexpr (std::is_arithmetic_v<B>) {
+				any_negative = b < 0;
+			}
+			else {
+				any_negative = std::any_of(b.begin(), b.end(), [](const VB exponent) { return exponent < 0; });
+			}
+			if (any_negative) {
+				throw std::runtime_error("Integers to negative integer powers are not allowed.");
+			}
+		}
+		va::broadcasting_assign_typesafe(ret, xt::detail::make_xfunction<va::op::pow_fun>(a, b));
+	}
+
 	IMPLEMENT_BINARY_VFUNC(minimum, xt::minimum(a, b))
 	IMPLEMENT_BINARY_VFUNC(maximum, xt::maximum(a, b))
 	IMPLEMENT_BINARY_VFUNC(hypot, xt::hypot(va::promote::to_num(a), va::promote::to_num(b)))

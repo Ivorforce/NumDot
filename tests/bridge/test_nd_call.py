@@ -185,6 +185,67 @@ def test_nd_call_scalar_of_higher_kind_promotes(bridge):
 	assert bridge.call_nd("add", ints.astype(np.float32), 0.5).dtype == np.float32
 
 
+# ---- pow ----
+# Arrays are contiguous and longer than a SIMD batch, so a vectorized pow
+# kernel would be exercised as well as the scalar one.
+
+def test_nd_call_pow_zero_exponent_is_one(bridge):
+	base = np.array([0.0, -0.0, 1.0, 2.0, -2.0, np.nan, np.inf, -np.inf])
+	for dtype in (np.float32, np.float64):
+		x = base.astype(dtype)
+		for exponent in (np.zeros(8, dtype=dtype), 0.0, -0.0):
+			out = bridge.call_nd("pow", x, exponent)
+			assert out.dtype == dtype
+			assert np.array_equal(out, np.ones(8, dtype=dtype))
+	out = bridge.call_nd("pow", np.zeros(8, dtype=np.complex128), np.zeros(8, dtype=np.complex128))
+	assert np.array_equal(out, np.ones(8, dtype=np.complex128))
+
+
+def test_nd_call_pow_one_base_is_one(bridge):
+	exponent = np.array([np.nan, np.inf, -np.inf, 0.0, 2.5, -2.5, np.nan, np.inf])
+	out = bridge.call_nd("pow", np.ones(8), exponent)
+	assert np.array_equal(out, np.ones(8))
+
+
+def test_nd_call_pow_exact_on_whole_numbers(bridge):
+	x = np.arange(16, dtype=np.float64)
+	for exponent in (2.0, 3.0):
+		assert np.array_equal(bridge.call_nd("pow", x, exponent), x ** exponent)
+	for dtype in (np.int8, np.int32, np.int64, np.uint8, np.uint16, np.uint64):
+		ints = np.arange(16, dtype=dtype)
+		for exponent in (0, 2, 3):
+			out = bridge.call_nd("pow", ints, exponent)
+			assert out.dtype == dtype
+			assert np.array_equal(out, ints ** dtype(exponent))
+	# Exact above 2**53, where a round trip through float64 loses bits.
+	big = np.array([3, -3, 7, -7], dtype=np.int64)
+	assert np.array_equal(bridge.call_nd("pow", big, np.array([39, 39, 22, 21])), big ** np.array([39, 39, 22, 21]))
+
+
+def test_nd_call_pow_scalar_exponent_kinds(bridge):
+	ints = np.array([0, 1, 2, 3, -2, -1, 0, 4])
+	out = bridge.call_nd("pow", ints, 0.0)
+	assert out.dtype == np.float64
+	assert np.array_equal(out, np.ones(8))
+	out = bridge.call_nd("pow", ints, 0)
+	assert out.dtype == np.int64
+	assert np.array_equal(out, np.ones(8, dtype=np.int64))
+	out = bridge.call_nd("pow", np.abs(ints), 0.5)
+	assert np.allclose(out, np.abs(ints) ** 0.5)
+
+
+def test_nd_call_pow_negative_integer_exponent_is_clean_error(bridge):
+	ints = np.array([1, 2, 3, 4], dtype=np.int64)
+	for args in ((ints, -1), (ints, np.array([2, 1, 0, -1])), (2, np.array([1, -2]))):
+		with pytest.raises(BridgeError):
+			bridge.call_nd("pow", *args)
+	# A float exponent makes the result float, so negative values are fine.
+	out = bridge.call_nd("pow", ints, -1.0)
+	assert np.allclose(out, 1.0 / ints)
+	header, _ = bridge.call("ping")
+	assert header == {"ok": True, "pong": True}
+
+
 # ---- error paths (bridge stays alive) ----
 
 def test_nd_call_unknown_function(bridge):

@@ -28,6 +28,9 @@ Upcoming Changes (main branch)
 - ``nd.reshape`` errors when the requested shape doesn't match the array's element count (including a ``-1`` entry that doesn't divide evenly), matching numpy. It used to silently return an array claiming the new shape while backed by too little memory — writing to it (e.g. via ``assign_sum``) corrupted the heap and crashed.
 - ``nd.is_close`` respects ``rtol``, ``atol`` and ``equal_nan``. They used to be read as garbage, so results were wrong for any non-trivial tolerance.
 - ``nd.fft`` no longer crashes.
+- ``nd.pow`` returns ``1`` for any base raised to ``0`` and for ``1`` raised to any exponent, matching numpy. On larger arrays ``nd.pow(0, 0)`` used to return ``0``, and ``nan`` or ``inf`` operands returned ``nan``.
+- ``nd.pow`` is exact for whole numbers. On larger arrays, integer results used to be off by one (``nd.pow(3, 2)`` returned ``8``) and float results slightly below the true value (``8.999...``). Integer results also stay exact beyond 2^53.
+- ``nd.pow`` errors when an integer is raised to a negative integer, as numpy does (used to return meaningless values). Pass a ``float`` exponent to get fractional results.
 - A GDScript ``float`` combined with an integer or ``Bool`` array, or an ``int`` with a ``Bool`` array, promotes the result like numpy instead of being cast to the array's dtype first. ``nd.multiply(int_arr, 0.5)`` used to multiply by ``0``; it now returns ``float64``. Scalars that fit the array's kind still adopt its dtype (``nd.add(uint8_arr, 5)`` stays ``uint8``).
 
 Version 0.12 - 2026-06-17
